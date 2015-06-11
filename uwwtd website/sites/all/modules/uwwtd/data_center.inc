@@ -150,17 +150,17 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $timestamp){
 	$batch = array(
 		'title' => t('Data import'),
 		'operations' => array(
-			//array('uwwtd_import_rca_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_import_rca_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $datas, $timestamp)),
 			array('uwwtd_import_uww_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $datas, $timestamp)),
 			array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_bc_position_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_mega_links_batch_process', array($newFile, $annee, $datas, $timestamp)),
-			//array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $datas, $timestamp))
+			array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_bc_position_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_mega_links_batch_process', array($newFile, $annee, $datas, $timestamp)),
+			array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $datas, $timestamp))
 		),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_finished',
