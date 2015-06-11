@@ -1,0 +1,191 @@
+/**
+ * Legend =============================================================
+ */
+.openlayers-legends {
+  background: #fff;
+  border-radius: 3px;
+  bottom: 5px;
+  right: 5px;
+  -moz-border-radius: 3px;
+  padding: 5px;
+  position: absolute;
+  -webkit-border-radius: 3px;
+  z-index: 3000;
+}
+
+.openlayers-legends .legend {
+  background: #fff;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
+.openlayers-legends .legend .legend-item {
+  margin: 10px 0;
+}
+
+.openlayers-legends .swatch {
+  display: block;
+  float: left;
+  height: 15px;
+  margin-right: 5px;
+  width: 15px;
+}
+
+.openlayers-legends .clear-block {
+  clear: both;
+}
+
+/**
+ * Blockswitcher ======================================================
+ */
+.openlayers-blockswitcher span.key {
+  display: block;
+  float: left;
+  height: 20px;
+  margin-right: 5px;
+  width: 20px;
+}
+
+.openlayers-blockswitcher input.form-radio,
+.openlayers-blockswitcher input.form-checkbox {
+  margin-right: 5px;
+}
+
+div.openlayers-map .openlayers_plus-blockswitcher {
+  background: #fff;
+  width: auto;
+  z-index: 3000;
+}
+
+div.openlayers-map .openlayers_plus-blockswitcher.ne {
+  right: 0px;
+  top: 0px;
+}
+
+div.openlayers-map .openlayers_plus-blockswitcher.nw {
+  left: 0px;
+  top: 0px;
+}
+
+div.openlayers-map .openlayers_plus-blockswitcher.se {
+  bottom: 0px;
+  right: 0px;
+}
+
+div.openlayers-map .openlayers_plus-blockswitcher.sw {
+  bottom: 0px;
+  left: 0px;
+}
+
+.openlayers_plus-blockswitcher h2.block-title {
+  cursor: pointer;
+}
+
+.openlayers_plus-blockswitcher div.block-content {
+  display: none;
+}
+
+.openlayers_plus-blockswitcher div.radio {
+  background: #fff url('inactive.png');
+  background-repeat: no-repeat;
+  padding: 3px 0 3px 25px;
+}
+
+.openlayers_plus-blockswitcher div.activated {
+  background: #fff url('active.png');
+  background-repeat: no-repeat;
+  padding: 3px 0 3px 25px;
+}
+
+/**
+ * Blocktoggle ========================================================
+ */
+div.openlayers-map .block-openlayers_plus-blocktoggle {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  width: auto;
+  z-index: 3001;
+}
+
+div.openlayers-map .block-openlayers_plus-blocktoggle.ne {
+  right: 0px;
+  top: 0px;
+}
+
+div.openlayers-map .block-openlayers_plus-blocktoggle.nw {
+  left: 0px;
+  top: 0px;
+}
+
+div.openlayers-map .block-openlayers_plus-blocktoggle.se {
+  bottom: 0px;
+  right: 0px;
+}
+
+div.openlayers-map .block-openlayers_plus-blocktoggle.sw {
+  bottom: 0px;
+  left: 0px;
+}
+
+.block-openlayers_plus-blocktoggle h2.block-title {
+  display: none;
+}
+
+.block-openlayers_plus-blocktoggle .openlayers-blocktoggle-a,
+.block-openlayers_plus-blocktoggle .openlayers-blocktoggle-b {
+  background: url('point-button.png') #fff 5px 50% no-repeat;
+  color: #666;
+  cursor: pointer;
+  float: left;
+  line-height: 20px;
+  padding: 0px 5px 0px 20px;
+  width: 50px;
+}
+
+.block-openlayers_plus-blocktoggle .openlayers-blocktoggle-a {
+  border-right: 1px solid #ccc;
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
+}
+
+.block-openlayers_plus-blocktoggle .openlayers-blocktoggle-b {
+  background-image: url('point-choro.png');
+  -moz-border-radius: 0 3px 3px 0;
+  -webkit-border-radius: 0 3px 3px 0;
+}
+
+.block-openlayers_plus-blocktoggle .activated {
+  background-color: #eee;
+  color: #222;
+}
+
+/**  
+ * Sample themeregion css. You probably want to override this *
+ */
+.openlayers_plus-themeregion {
+  /* this is tricky, the layers are 999, the first OpenLayers control is 1001 */
+  position: absolute;
+  /* We do this in code, too, as some themes position the region by ID, so we lose */
+  z-index: 1000;
+}
+
+/*
+** For sample purposes, place the selected region at the top of the map
+** If you select more regions, that wont work too well.
+*/
+.openlayers_plus-themeregion.olControlNoSelect {
+  right: 0px;
+  top: 0px;
+}
+
+
+/**
+*  BlockPanel ===============================================================
+*/
+.olControlblockpanel left,
+.olControlblockpanel right {
+  height: 100%;
+}

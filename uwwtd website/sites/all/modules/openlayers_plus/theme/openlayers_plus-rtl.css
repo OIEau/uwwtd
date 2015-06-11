@@ -1,0 +1,57 @@
+/**
+ * Blockswitcher ======================================================
+ */
+.openlayers-blockswitcher span.key {
+  float: right;
+  margin-left: 5px;
+  margin-right: 0px;
+}
+
+.openlayers-blockswitcher input.form-radio,
+.openlayers-blockswitcher input.form-checkbox {
+  margin-left: 5px;
+  margin-right: 0px;
+}
+
+div.openlayers-map #block-openlayers_plus-blockswitcher.ne {
+  left: 0px;
+  right: auto;
+}
+
+div.openlayers-map #block-openlayers_plus-blockswitcher.nw {
+  left: auto;
+  right: 0px;
+}
+
+div.openlayers-map #block-openlayers_plus-blockswitcher.se {
+  left: 0px;
+  right: auto;
+}
+
+div.openlayers-map #block-openlayers_plus-blockswitcher.sw {
+  left: auto;
+  right: 0px;
+}
+
+/**
+ * Blocktoggle ========================================================
+ */
+div.openlayers-map #block-openlayers_plus-blocktoggle.ne {
+  left: 0px;
+  right: auto;
+}
+
+div.openlayers-map #block-openlayers_plus-blocktoggle.nw {
+  left: auto;
+  right: 0px;
+}
+
+div.openlayers-map #block-openlayers_plus-blocktoggle.se {
+  left: 0px;
+  right: auto;
+}
+
+div.openlayers-map #block-openlayers_plus-blocktoggle.sw {
+  left: auto;
+  right: 0px;
+}

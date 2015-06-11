@@ -1,0 +1,187 @@
+/****************************/
+/* CUSTOM STYLE CSS         */
+/****************************/
+/* 
+Put your custom css and css overrides in this file.  By restricting your css changes to 
+custom-style.css, your changes will not be overwritten when upgrading to a new version of this theme.
+
+Steps to customize your 0 Point theme:                       
+1. Add your custom css to this file                
+2. Uncomment different examples and modify data as you wish 
+3. Clear cached data at admin/settings/performance 
+4. Save a copy of this file with a different name to avoid loosing it after a theme update.
+*/
+/****************************/
+
+/* Erase or comment the lines below to get rid of the image in the right sidebar 
+ * and the brand image or choose another image and change the path instead. */
+
+#wrapper {
+	background: transparent url(../images/all/_sidebarimg.png) 99% 99% no-repeat;
+}
+
+#brand {
+	background: url(../images/all/_brand.png) 50% 30% no-repeat;
+	position: relative;
+	margin: 5px auto 0;
+	width: 250px;
+	height: 50px;
+}
+
+
+/********************/
+/* DROP DOWN SHADOW */
+/********************/
+
+ul.firstsublayer, 
+ul.sublayer {
+	background: url(../images/menushadow.png) no-repeat 7px 5px; 
+}
+
+
+
+
+/* Uncomment the first declaration below to hide all titles on the front page 
+ * Addapt the second declaration to hide a certain title on the frontpage. 
+ * Third one is for no "Read more" on the front page. */ 
+/*
+.front #main h2.title a {
+	display: none;
+}
+.front #main #node-XXX h2.title a {
+	display: none;
+}
+.front .node-readmore {
+	display: none;
+}
+*/
+
+
+/*******************************/
+/* CUSTOM FIXED or FLUID WIDTH */
+/*******************************/ 
+/* First choose "Custom Layout width" in 0 Point settings page.
+ * Uncomment the lines below and modify the value as you wish. 
+ * E.g. 1000px for fixed width or 85% for fluid width */
+/*
+.layout-fluid .sizer0 {
+	width: 90%;
+}
+.layout-fixed .sizer0 {
+	width: 980px;
+}
+*/
+
+
+/*******************************/
+/* CUSTOM Equal width sidebars */
+/*******************************/ 
+/* First choose "Equal width sidebars" in 0 Point settings page.
+ * Uncomment the lines below and modify the values keeping pair values. */
+/*
+.two-sidebars.eq .colleft, .sidebar-second.eq .colleft, .sidebar-first.eq .colleft {
+	width: 199px;
+	margin-left: -199px;
+}
+.two-sidebars.eq .colright, .sidebar-second.eq .colright, .sidebar-first.eq .colright {
+	width: 199px;
+	margin-right: -199px;
+}
+.two-sidebars.eq .outer, .sidebar-first.eq .outer, .sidebar-first.eq .outer {
+	margin-left: 199px;
+}
+.two-sidebars.eq .outer, .sidebar-second.eq .outer, .sidebar-second.eq .outer {
+	margin-right: 199px;
+}
+.sidebar-first.eq .colleft {
+	width: 199px;
+	margin-left: -199px;
+}
+.sidebar-second.eq .colright {
+	width: 199px;
+	margin-right: -199px;
+}
+*/
+
+
+/******************************/
+/* SPECIAL STATIC-MENU COLORS */
+/******************************/
+/* Uncomment this to have different colors for menu items. 
+ * Change the values below accordingly: XXX=menu item number; YYY=background color. */
+
+/* First menu item */
+/*
+#navlist li.first a {
+	background: #YYY;
+}
+*/
+
+/* Middle menu items */
+/*
+#navlist li.menu-XXX a {
+	background: #YYY;
+}
+*/
+
+/* Last menu item */
+/*
+#navlist li.last a {
+	background: #YYY;
+}
+*/
+
+/* NO drop down border */
+/*
+#navlinks ul li a, #navlist a {
+	border: none;
+	padding: 2px 22px;
+}
+*/
+
+
+/*******************************/
+/* UPDATE ICONS FOR NEW BLOCKS */
+/*******************************/
+/* where XXX is the block number */
+
+/*
+#block-block-XXX .block-icon {
+	background: transparent url(../images/contact_48.png) no-repeat;
+}
+*/
+
+
+/*************************/
+/* USER BLOCKS ALIGNMENT */
+/*************************/
+
+/* if you want to have user blocks aligned at bottom instead of top uncomment the lines below */
+
+/*
+td.section {
+	vertical-align: bottom;
+}
+*/
+
+/* to change the width of user blocks from auto to fixed width uncomment the lines below 
+and set "width" to 50% for two blocks, 33% for three blocks nas 25% for four blocks */
+
+/*
+#section1 td.section {
+  width: 25%;
+}
+#section2 td.section {
+  width: 33%;
+}
+*/
+
+
+/*************************/
+/* REMOVE DEVELOPER LINK */
+/*************************/
+
+.by {
+	display: none;
+}
+

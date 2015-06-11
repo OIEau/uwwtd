@@ -1,0 +1,35 @@
+<?php
+//add js needed for hover effects
+function custom_tooltips_init(){
+  drupal_add_js(drupal_get_path('module', 'custom_tooltips') .'/js/effects.js');
+}
+
+function custom_tooltips_form_alter(&$form, &$form_state){
+	if (strpos($form['#form_id'],'field_') !== false && strpos($form['#form_id'],'_edit_form')){
+		
+		$form['field']['custom_tooltip']['#type'] = 'textarea';
+		$form['field']['custom_tooltip']['#title'] = t('Tooltip');
+		$form['field']['custom_tooltip']['#default_value'] = (isset($form['#field']['custom_tooltip'])?$form['#field']['custom_tooltip']:'');
+		$form['field']['custom_tooltip']['#required'] = false;
+		$form['field']['custom_tooltip']['#description'] = t('The content to be shown when hovering over the label for this field.');
+	}
+}
+
+function custom_tooltips_preprocess_field(&$variables){
+	$field_info = field_info_field($variables['element']['#field_name']);
+	if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
+		if(isset($variables['items'][0]['#markup'])){
+			$nbcss = count($variables['classes_array']);
+			$variables['classes_array'][$nbcss] = 'custom_tooltip_wrapper';
+			// check boolean
+			if($variables['items'][0]['#markup'] == '1' || $variables['items'][0]['#markup'] == '0'){
+				$variables['items'][0]['#markup'] = '<div class="custom_tooltip">'.$field_info['custom_tooltip'].'</div>';
+			}
+			else{
+				$variables['items'][0]['#markup'] = '<div class="custom_tooltip">'.$field_info['custom_tooltip'].'</div>'.$variables['items'][0]['#markup'];
+			}
+			//dsm($field_info);
+			//dsm($variables);
+		}
+	}
+}

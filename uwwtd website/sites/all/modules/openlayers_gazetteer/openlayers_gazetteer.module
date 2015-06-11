@@ -1,0 +1,71 @@
+<?php
+/**
+ * @file
+ * Defines configuration menu/form and adds custom behavior.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function openlayers_gazetteer_menu() {
+  $items['admin/structure/openlayers/gazetteer'] = array(
+    'title' => 'Gazetteer',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('openlayers_gazetteer_config_form'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Configuration form.
+ */
+function openlayers_gazetteer_config_form($form, &$form_state) {
+  if (!is_array($form)) {
+    $form = array();
+  }
+  $form['geonames_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('GeoNames username'),
+    '#default_value' => variable_get('openlayers_gazetteer_geonames_username', ''),
+    '#description' => t('Enter your GeoNames username that will be used to make requests. If you don\'t have a GeoNames account, you can create one <a href="http://www.geonames.org/login" target="_blank">here</a>'),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+  return $form;
+}
+
+/**
+ * Submit handler for openlayers_gazetteer_config_form.
+ */
+function openlayers_gazetteer_config_form_submit($form, &$form_state) {
+  variable_set('openlayers_gazetteer_geonames_username', $form_state['values']['geonames_username']);
+  drupal_set_message(t('Your configuration has been saved.'));
+}
+
+/**
+ * Implements hook_openlayers_behaviors().
+ */
+function openlayers_gazetteer_openlayers_behaviors() {
+  return array(
+    'openlayers_behavior_gazetteer' => array(
+      'title' => t('Location search'),
+      'description' => t('Will allow for location search and zoom on location'),
+      'type' => 'layer',
+      'path' => drupal_get_path('module', 'openlayers_gazetteer') . '/inc',
+      'behavior' => array(
+        'file' => 'openlayers_behavior_gazetteer.inc',
+        'class' => 'openlayers_behavior_gazetteer',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+  );
+}

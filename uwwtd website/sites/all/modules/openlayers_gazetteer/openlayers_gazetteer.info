@@ -1,0 +1,7 @@
+name = OpenLayers Gazetteer
+description = Adds a new behavior option to OpenLayers maps that allows you to search for a location and display it on your map.
+core = 7.x
+package = "OpenLayers"
+dependencies[] = openlayers
+
+files[] = inc/openlayers_behavior_gazetteer.inc

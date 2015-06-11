@@ -1,0 +1,466 @@
+/*===========================================================================
+ * Maptext Styling by Joseph Ssekono
+ * =========================================================================*/
+
+.olControlPanel 
+.olButton {
+	width: 20px;
+	height: 20px;
+	float: left;
+}
+
+.olControlPanel {
+  background-color: gray;
+	display: block;
+}
+
+.olControlZoomBoxItemInactive {
+  background-color: yellow;
+	
+}
+
+.olControlMaptextItemInactive {
+  background-color: blue;
+}
+
+.olControlMaptextItemActive {
+  background-color: yellow;
+}
+
+.openlayers_plus_blockswitcher_title {
+	width: 100%;
+}
+
+.olControlMaptext {
+  width: 200px;
+}
+
+.olControlPanel.right,
+.olControlMaptext.right {
+  right: 40px;
+}
+
+.olControlPanel.left,
+.olControlMaptext.left {
+  left: 60px;
+}
+
+.olControlPanel.top,
+.olControlMaptext.top {
+  top: 0px;
+}
+
+.olControlPanel.bottom,
+.olControlMaptext.bottom {
+  bottom: 0px;
+}
+
+/*
+ * The popup Select Control button on the panel should be
+ * hidden.
+*/ 
+.olplusmaptextpopupbutton {
+	display: none;
+}
+
+
+
+.olControlMaptext a.toggle_button.down, a.mapeditor.down {
+  background: #ccc;
+  border-bottom: solid 2px #777;
+  border-left: solid 2px #eaeaea;
+  border-right: solid 2px #777;
+  border-top: solid 2px #eaeaea;
+  cursor: pointer;
+}
+
+.olControlMaptext a.toggle_button, a.mapeditor {
+  background: #bbb;
+  border-bottom: solid 2px #eaeaea;
+  border-left: solid 2px #777;
+  border-right: solid 2px #eaeaea;
+  border-top: solid 2px #777;
+  float: right;
+  margin-top: 10px;
+  padding: 5px 5px;
+  position: relative;
+}
+
+
+.olControlMaptext a ,
+.olControlMaptext a:hover {
+  color:#FFF;
+}
+
+/*============bnContainer==============*/
+
+.olControlMaptext .bnContainer {
+  overflow:hidden;
+}
+
+
+olControlMaptext .bnContainer a.toggle_button,
+olControlMaptext .bnContainer a.toggle_button.down {
+  background: url(../images/map-controls-sprite.png) no-repeat;
+  width: 30px;
+  height: 30px;
+	color: transparent;
+  overflow: hidden;
+	float: right;
+	cursor: pointer;
+}
+
+
+/*============olControlMaptext==============*/
+
+/*
+.olControlMaptext .maptext {
+  border: 1px solid #d2cccd;
+  position: relative;
+  left: -50px;
+  top: 0px;
+  width: 300px;
+	overflow:hidden;
+	background: url(../images/alpha-black-bg.png);
+}
+
+
+.olControlMaptext h2.popup-title {
+  background: url(../images/alpha-black-bg.png);
+  font-size: 1.0em;
+  margin: 0px;
+	padding: 5px;
+  text-transform: uppercase;
+}
+
+.olControlMaptext h2.popup-title a:hover {
+  text-decoration: underline;
+}
+
+.olControlMaptext a.popup-close {
+  background: url(../images/closer.png) no-repeat;
+  color: transparent;
+  height: 13px;
+  width: 14px;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+
+.olControlMaptext a.popup-close:hover {
+  color: transparent;
+}
+
+.olControlMaptext .popup-content {
+  color: #FFFFFF;
+}
+
+#openlayers_plus_blockswitcher .popup-content {
+  margin: 5px;
+}
+
+.olControlMaptext .popup-content .openlayers_plus-blockswitcher {
+  color: #333;
+  overflow: hidden;
+  /*background: #FFF;*/
+	padding: 10px;
+	opacity: 1;
+}
+
+.olControlMaptext .popup-content .openlayers_plus-blockswitcher h2.layers-title {
+  border: none;
+	margin: 0;
+}
+
+.olControlMaptext .popup-content .form-option.checkbox ,
+.olControlMaptext .popup-content .form-option.radio {
+  clear:both;
+  margin: 5px;
+}
+
+.olControlMaptext .popup-content .form-option.checkbox label ,
+.olControlMaptext .popup-content .form-option.radio label {
+  color:#000000;
+}
+
+.olControlMaptext .popup-content li.collapsed {
+	width: 100px;
+	float: left;
+	text-align:center;
+	list-style:none;
+}
+*/
+
+/*============olControlZoomPanel==============*/
+
+.olControlZoomPanel {
+  left: auto !important;
+  right: 20px !important;
+	top: 20px !important;
+}
+
+.olControlZoomPanel .olControlZoomInItemInactive,
+.olControlZoomPanel .olControlZoomOutItemInactive {
+	width: 30px;
+  height: 30px;
+	overflow: hidden;
+	position: static;
+	background: url(../images/map-controls-sprite.png) no-repeat;
+  margin: 5px;
+}
+
+.olControlZoomPanel .olControlZoomInItemInactive {
+  background-position: 0px 0px;
+}
+
+.olControlZoomPanel .olControlZoomOutItemInactive {
+  background-position: 0px -30px !important;
+}
+
+/*============olControlScaleLine==============*/
+
+.olControlScaleLine {
+  padding: 10px 20px;
+  background: url(../images/alpha-black-bg.png);
+  color: #FFF;
+  left: auto !important;
+  right: 20px;
+	font-size: x-small !important;
+	border-radius: 3px;
+}
+
+.olControlScaleLine .olControlScaleLineTop ,
+.olControlScaleLine .olControlScaleLineBottom {
+  border: solid 2px #FFF;
+  text-align: center;
+}
+
+.olControlScaleLine .olControlScaleLineTop {
+  border-top: none;
+}
+
+.olControlScaleLine .olControlScaleLineBottom {
+  border-bottom: none;
+  margin-top: -2px;
+}
+
+/*===================popup=======================*/
+
+.openlayers-popupbox {
+  background: url(../images/alpha-black-bg.png);
+  border: 1px solid #dedede;
+  color: #fff;
+  display: inline;
+  float: right;
+  font-family: sans-serif;
+  font-size: 100%;
+  opacity: 1.0;
+  position: absolute;
+  right: 70px;
+  top: 24px;
+  width: 300px;
+  z-index: 1015;
+}
+
+.openlayers-popupbox h2.popup-title {
+  color: #FFFFFF;
+  font-family: sans-serif;
+  font-weight: normal;
+  letter-spacing:normal;
+  background: url(../images/alpha-black-bg.png);
+  font-size: 1.0em;
+  margin: 0px;
+  padding: 5px 30px 5px 10px;
+  text-transform: uppercase;
+}
+
+.openlayers-popupbox h2.popup-title a {
+  color: #FFFFFF;
+}
+
+.openlayers-popupbox h2.popup-title a:hover {
+  text-decoration: underline;
+}
+
+.openlayers-popupbox a.popup-close {
+  background: url(../images/closer.png) no-repeat;
+  color: transparent;
+  height: 13px;
+  width: 14px;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  float: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.openlayers-popupbox a.popup-close:hover {
+  color: transparent;
+}
+
+.openlayers-popupbox .popup-content {
+  background-image: none;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size:0.9em;
+  padding: 0px;
+  overflow:hidden;
+}
+
+.openlayers-popupbox .popup-content .field-type-image ,
+.openlayers-popupbox .popup-content .field-type-date ,
+.openlayers-popupbox .popup-content .field-type-text-long ,
+.openlayers-popupbox .popup-content .field-type-ds {
+  padding: 5px 10px;
+}
+
+.openlayers-popupbox .popup-content .field-type-image {
+  float:left;
+}
+
+.openlayers-popupbox .popup-content .field-type-date {
+  font-style:italic;
+  padding-bottom:10px;
+}
+
+.openlayers-popupbox .popup-content .field-type-ds {
+  background: url(../images/popup-read-more.png) no-repeat 120px top;
+  overflow:hidden;
+  padding-right:20px;
+}
+
+.openlayers-popupbox .popup-content .field-type-ds a {
+  float:right;
+  color:#FFFFFF;
+}
+
+.openlayers-popupbox .popup-content .field-type-ds a:hover {
+  text-decoration:underline;
+}
+
+
+
+
+
+
+/*===========================================================================*\
+	Openlayers Control Panel Styles
+\*===========================================================================*/
+
+.olControlPanel.olControlNoSelect {
+	width: 40px;
+	background: none;
+}
+
+.olControlPanel.olControlNoSelect.top.left {
+	top: 20px;
+	left: 20px;
+}
+
+.olControlPanel.olControlNoSelect.top.right {
+	top: 20px;
+	right: 20px;
+}
+
+.olControlPanel.olControlNoSelect.bottom.right {
+	bottom: 20px;
+	right: 20px;
+}
+
+.olControlPanel.olControlNoSelect.bottom.left {
+	bottom: 20px;
+	left: 20px;
+}
+
+.olControlPanel.olControlNoSelect .olControlMaptextItemActive.olButton ,
+.olControlPanel.olControlNoSelect .olControlMaptextItemInactive.olButton {
+	width: 28px;
+	height: 28px;
+	margin: 5px;
+	background-color: #000000;
+	border-radius: 5px;
+}
+
+.olControlPanel.olControlNoSelect .olControlMaptextItemActive.olButton {
+	border: thin solid #FFFFFF;
+}
+
+.olControlPanel.olControlNoSelect .olControlMaptextItemInactive.olButton {
+	border: thin solid #777777;
+}
+
+.olControlPanel.olControlNoSelect .olControlMaptextItemInactive.olButton:hover {
+	border: thin solid #FFFFFF;
+}
+
+/*===========================================================================*\
+	Openlayers Control Control Maptext Styles
+\*===========================================================================*/
+
+.olControlMaptext {
+	background: #000000;
+	color: #FFFFFF;
+	font-family: sans-serif;
+	font-size: 0.9em;
+	border-radius: 5px;
+}
+
+.olControlMaptext.top.left {
+	top: 25px;
+	left: 70px;
+}
+
+.olControlMaptext.top.right {
+	top: 25px;
+	right: 70px;
+}
+
+.olControlMaptext.bottom.right {
+	bottom: 20px;
+	right: 70px;
+}
+
+.olControlMaptext.bottom.left {
+	bottom: 20px;
+	left: 70px;
+}
+
+#content .olControlMaptext h2.popup-title {
+	border-bottom: thin solid #FFFFFF;
+	font-size: 1.0em;
+	margin: 0px;
+	padding: 5px;
+	text-transform: uppercase;
+}
+
+#content .olControlMaptext #olplusmaptextpopup_content,
+#content .olControlMaptext .block .content {
+	padding: 5px;
+}
+
+#content .olControlMaptext .olPopupCloseBox {
+
+}
+
+
+/*===========================================================================*\
+	Extruderol Block Panel Styles
+\*===========================================================================*/
+
+#Extruderolblockpanel.olControlblockpanel.extruder {
+	background: #000000;
+	color: #FFFFFF;
+	font-family: sans-serif;
+	font-size: 0.9em;
+}
+
+#Extruderolblockpanel.olControlblockpanel.extruder .flap {
+	box-shadow: none;
+	margin-right: -40px;
+}
+
+text {
+	text-anchor: center;	
+}

@@ -1,0 +1,812 @@
+<?php
+/**
+ * @file
+ * template.php
+ */
+
+function uwwtd_adjustBrightness($hex, $steps){
+    // Steps should be between -255 and 255. Negative = darker, positive = lighter
+    $steps = max(-255, min(255, $steps));
+
+    // Format the hex color string
+    $hex = str_replace('#', '', $hex);
+    if (strlen($hex) == 3) {
+        $hex = str_repeat(substr($hex,0,1), 2).str_repeat(substr($hex,1,1), 2).str_repeat(substr($hex,2,1), 2);
+    }
+
+    // Get decimal values
+    $r = hexdec(substr($hex,0,2));
+    $g = hexdec(substr($hex,2,2));
+    $b = hexdec(substr($hex,4,2));
+
+    // Adjust number of steps and keep it inside 0 to 255
+    $r = max(0,min(255,$r + $steps));
+    $g = max(0,min(255,$g + $steps));  
+    $b = max(0,min(255,$b + $steps));
+
+    $r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
+    $g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
+    $b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+
+    return '#'.$r_hex.$g_hex.$b_hex;
+}
+
+function uwwtd_check_history($id, $annee){
+	//Get all the nodes with the same id
+	$query = db_select('field_data_field_inspireidlocalid', 'n');
+	$query->fields('n', array('entity_id'));
+	$query->condition('n.field_inspireidlocalid_value', $id, '=');
+	$ids = array();
+	$results = $query->execute();
+	foreach($results as $result){
+		$node = node_load($result->entity_id);		
+		$ids[] = $node->nid;
+	}
+
+	if(count($ids) == 0) return false;
+	else return $ids;
+}
+
+function uwwtd_preprocess_field(&$variables){
+
+	// For discharge point values
+	if (
+		$variables['element']['#field_name'] == 'field_rcatype' ||
+		$variables['element']['#field_name'] == 'field_dcpwaterbodytype'
+	){
+		// rcatype
+		if($variables['element']['#items']['0']['value'] == 'NA') $variables['items']['0']['#markup'] = t('Normal Area');
+		if($variables['element']['#items']['0']['value'] == 'SA') $variables['items']['0']['#markup'] = t('Sensitive Area');
+		if($variables['element']['#items']['0']['value'] == 'CSA') $variables['items']['0']['#markup'] = t('Catchment sensitive area');
+		if($variables['element']['#items']['0']['value'] == 'LSA') $variables['items']['0']['#markup'] = t('Less sensititve area');
+
+		// waterbody
+		if($variables['element']['#items']['0']['value'] == 'ES') $variables['items']['0']['#markup'] = t('Estuary');
+		if($variables['element']['#items']['0']['value'] == 'CW') $variables['items']['0']['#markup'] = t('Coastal waters');
+		if($variables['element']['#items']['0']['value'] == 'FW') $variables['items']['0']['#markup'] = t('Freshwater');
+	}
+
+	// For booleans
+	if (
+		$variables['element']['#field_name'] == 'field_uwwprimarytreatment' ||
+		$variables['element']['#field_name'] == 'field_uwwsecondarytreatment' ||
+		$variables['element']['#field_name'] == 'field_uwwpremoval' ||
+		$variables['element']['#field_name'] == 'field_uwwnremoval' ||
+		$variables['element']['#field_name'] == 'field_uwwuv' ||
+		$variables['element']['#field_name'] == 'field_uwwchlorination' ||
+		$variables['element']['#field_name'] == 'field_uwwozonation' ||
+		$variables['element']['#field_name'] == 'field_uwwsandfiltration' ||
+		$variables['element']['#field_name'] == 'field_uwwmicrofiltration' ||
+		$variables['element']['#field_name'] == 'field_uwwothertreat' ||
+		$variables['element']['#field_name'] == 'field_uwwaccidents' ||
+		$variables['element']['#field_name'] == 'field_dcpsurfacewaters' ||
+		$variables['element']['#field_name'] == 'field_aggcritb' ||
+		$variables['element']['#field_name'] == 'field_aggcritca' ||
+		$variables['element']['#field_name'] == 'field_aggcritcb' ||
+		$variables['element']['#field_name'] == 'field_aggchanges' ||
+		$variables['element']['#field_name'] == 'field_aggbesttechnicalknowledge' ||
+		$variables['element']['#field_name'] == 'field_agghaveregistrationsystem' ||
+		$variables['element']['#field_name'] == 'field_aggexistmaintenanceplan' ||
+		$variables['element']['#field_name'] == 'field_aggpressuretest' ||
+		$variables['element']['#field_name'] == 'field_aggvideoinspections' ||
+		$variables['element']['#field_name'] == 'field_aggothermeasures' ||
+		$variables['element']['#field_name'] == 'field_aggaccoverflows' ||
+		$variables['element']['#field_name'] == 'field_aggcapacity' ||
+		$variables['element']['#field_name'] == 'field_agg_dilution_rates' ||
+		$variables['element']['#field_name'] == 'field_rcaanitro' ||
+		$variables['element']['#field_name'] == 'field_rcaaphos' ||
+		$variables['element']['#field_name'] == 'field_rcab' ||
+		$variables['element']['#field_name'] == 'field_rcac' ||
+		$variables['element']['#field_name'] == 'field_rcamorphology' ||
+		$variables['element']['#field_name'] == 'field_rcahydrologie' ||
+		$variables['element']['#field_name'] == 'field_rcahydraulic' ||
+		$variables['element']['#field_name'] == 'field_rcaabsencerisk' ||
+		$variables['element']['#field_name'] == 'field_rca54applied' ||
+		$variables['element']['#field_name'] == 'field_rca_parameter_n' ||
+		$variables['element']['#field_name'] == 'field_rca_parameter_p' ||
+		$variables['element']['#field_name'] == 'field_rca_parameter_other' ||
+		$variables['element']['#field_name'] == 'field_rca52applied' ||
+		$variables['element']['#field_name'] == 'field_rca58applied'
+		
+
+	){
+		//check for custom tooltips
+		$tt = '';
+		$field_info = field_info_field($variables['element']['#field_name']);
+		if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
+			$tt = $variables['items'][0]['#markup'];
+		}
+		
+		if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
+			$variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
+		}
+		elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
+			$variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/cross.png" />';
+		}
+	}
+
+	// For percentage '%'
+	if (
+		$variables['element']['#field_name'] == 'field_aggc1' ||
+		$variables['element']['#field_name'] == 'field_aggc2' ||
+		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
+		$variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
+		$variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
+		$variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
+		
+		
+	){
+		$variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
+	}
+
+	// For compliance colors
+	if (
+		$variables['element']['#field_name'] == 'field_aggart3compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart4compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart5compliance' ||
+		$variables['element']['#field_name'] == 'field_aggcompliance' ||
+		$variables['element']['#field_name'] == 'field_uwwcompliance'
+	){
+		if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
+		if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
+		if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
+		if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
+		if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
+		if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
+		if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
+		if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
+
+		$variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
+	}
+}
+
+function uwwtd_timeline_output($node){
+	$output = '';
+	$histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+	if($histories != false){
+		$otherList = array();
+		$output .= '<div class="uwwtd-history">';
+		$output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
+		<legend class="panel-heading">
+		<div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
+		</legend>';
+		foreach($histories as $history){
+			$other = node_load($history);
+			$otherY = $other->field_anneedata['und'][0]['value'];
+			$otherList[$otherY] = array('node'=>$other);
+		}
+		ksort($otherList);
+		foreach($otherList as $other){
+			$ting = $other['node'];
+			if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
+			if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
+
+			//default colors
+			$color = '#6b6b6b'; $borderc = '#6b5e66';
+
+			if(isset($val)){
+				if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant');}
+				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');}
+				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');}
+				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information');}
+       			if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');}
+			}
+
+			$color = uwwtd_adjustBrightness($color, 50);
+
+			if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+				$output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
+				$output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+				if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+				$output .= '</div>';
+			}
+			else{
+				$output .= '<div class="uwwtd-history-element">';
+				$output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+				if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+				$output .= '</div>';
+			}
+		}
+		$output .= '</fieldset></div><br>';
+	}
+
+	return $output;
+}
+
+function uwwtd_field_attach_view_alter(&$output, $context){
+	if ($context['entity_type'] != 'node' || $context['view_mode'] != 'full') {
+		return;
+	}
+
+	$node = $context['entity'];
+	// Load all instances of the fields for the node.
+	$instances = _field_invoke_get_instances('node', $node->type, array('default' => TRUE, 'deleted' => FALSE));
+	//dsm($instances);
+ 
+	foreach($instances as $field_name => $instance){
+		// Set content for fields they are empty.
+		if(empty($node->{$field_name})){
+			$display = field_get_display($instance, 'full', $node);
+			// Do not add field that is hidden in current display.
+			if($display['type'] == 'hidden'){
+				continue;
+			}
+			// Load field settings.
+			$field = field_info_field($field_name);
+
+			// test for dates
+			//dsm($field['type']);
+			if($field['type'] === 'date'){
+				if(empty($output[$field_name]['#items'])){
+					$output[$field_name] = array(
+						'#theme' => 'field',
+						'#title' => $instance['label'],
+						'#label_display' => 'inline',
+						'#field_type' => $field['type'],
+						'#field_name' => $field_name,
+						'#bundle' => $node->type,
+						'#object' => $node,
+						'#items' => array(0 => array('value' => '')),
+						'#entity_type' => 'node',
+						'#weight' => $display['weight'],
+						0 => array('#markup' => '<p>'.t('-').'</p>'),
+					);
+					//dsm($output);
+				}
+			}
+
+			//dsm($field);
+			if(empty($output[$field_name]['#items'])){
+				$output[$field_name] = array(
+					'#theme' => 'field',
+					'#title' => $instance['label'],
+					'#label_display' => 'inline',
+					'#field_type' => $field['type'],
+					'#field_name' => $field_name,
+					'#bundle' => $node->type,
+					'#object' => $node,
+					'#items' => array(0 => array('value' => '')),
+					'#entity_type' => 'node',
+					'#weight' => $display['weight'],
+					0 => array('#markup' => '<p>'.t('Not provided').'</p>'),
+				);
+			}
+			//dsm($field);
+		}
+	}
+}
+
+function uwwtd_preprocess_node(&$vars){
+    if($vars["is_front"]){
+       $vars["theme_hook_suggestions"][] = "node__front";
+    }  
+}
+
+function uwwtd_render_article17($nid){
+	$art17 = node_load($nid);
+
+	$output = '';
+	//field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+	if(isset($art17->field_art_17_reason['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_reason', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_mesures_forseen['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_mesures_forseen', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_reason_uwwtp['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_reason_uwwtp', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_expected_completion['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_expected_completion', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_expected_start['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_expected_start', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_expected_system['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_expected_system', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_forcast_investment['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_forcast_investment', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_eu_fund['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_eu_fund', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_eu_fund_amount['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_eu_fund_amount', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_relative_comments['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_relative_comments', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_load_expected['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_load_expected', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_capacity_planned['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_capacity_planned', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_treatment_planned['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_treatment_planned', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_expected_date_comp['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_expected_date_comp', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	if(isset($art17->field_art_17_expected_comp_uwwtp['und'][0]['value'])){
+		$champ = field_view_field('node', $art17, 'field_art_17_expected_comp_uwwtp', array('display' => 'inline'));
+		$output .= render($champ);
+	}
+
+	return $output;
+}
+
+function uwwtd_insert_errors_tab($node){
+	$values = array();
+
+	// Get list of all elements
+	$raws = $node->field_uwwtd_error_link['und'];
+	$all = array();
+	foreach($raws as $raw){
+		$all[] = $raw['nid'];
+	}
+
+	// group by import
+	foreach($all as $single){
+		$error = node_load($single);
+		if($error->nid !== null){
+			$id = $error->field_uwwtd_err_identifier['und'][0]['value'];
+			$type = $error->field_uwwtd_err_type['und'][0]['value'];
+			$cat = $error->field_uwwtd_err_category['und'][0]['value'];
+
+			// Set values
+			$values[$id][$type][$cat][] = array(
+				'id' => $id,
+				'timestamp' => $error->field_uwwtd_err_timestamp['und'][0]['value'],
+				'time' => $error->field_uwwtd_err_time['und'][0]['value'],
+				'message' => $error->field_uwwtd_err_message['und'][0]['value'],
+				'type' => $type,
+				'category' => $error->field_uwwtd_err_category['und'][0]['value'],
+				'nid' => $error->nid
+			);
+		}
+	}
+
+	if(empty($values)) return false;
+
+	// get overall total errors for node
+	$overallTotal = 0;
+	foreach($values as $value){
+		foreach($value as $type){
+			$overallTotal = count($type['0'])+ count($type['1']) + count($type['2'])+ count($type['3']) + count($type['4']) +$overallTotal;
+		}
+	}
+	if($overallTotal === 0) $overallTotal = null;
+
+	// Start output
+	$output = '<div class="uwwtd_errors_tab">';
+		$output .= '<h3><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$overallTotal.'</span></span>Errors</h3>';
+		$count = 0 ;
+		foreach($values as $value){
+			$totalW = 0;$totalWI = 0;$totalWL = 0;$totalWG = 0;$totalWC = 0;$totalWF = 0;
+			$totalN = 0;$totalNI = 0;$totalNL = 0;$totalNG = 0;$totalNC = 0;$totalNF = 0;
+			$totalE = 0;$totalEI = 0;$totalEL = 0;$totalEG = 0;$totalEC = 0;$totalEF = 0;
+			$total= 0;
+			// get Category
+			$field = field_info_field('field_uwwtd_err_category');
+			$label = $field['settings']['allowed_values'];
+				
+			// get date
+			//type erreur warning
+			if(isset($value['1']))
+			{	
+				if(isset($value['1']['0']))
+				{
+					foreach ($value['1']['0'] as $categories){
+						$labelWI = 'Warning Input';$totalWI = count($value['1']['0']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['1']['1']))
+				{
+					foreach ($value['1']['1'] as $categories){
+						$labelWL = 'Warning Linking';$totalWL = count($value['1']['1']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['1']['2']))
+				{
+					foreach ($value['1']['2'] as $categories){
+						$labelWG = 'Warning Geometry';$totalWG = count($value['1']['2']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['1']['3']))
+				{
+					foreach ($value['1']['3'] as $categories){
+						$labelWC = 'Warning Conformity';$totalWC = count($value['1']['3']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['1']['4']))
+				{
+					foreach ($value['1']['4'] as $categories){
+						$labelWF = 'Warning Format';$totalWF = count($value['1']['4']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				$totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;	
+			}
+			//type erreur notification
+			if(isset($value['0']))
+			{
+				if(isset($value['0']['0']))
+				{
+					foreach ($value['0']['0'] as $categories){
+						$labelNI = 'Notification Input';$totalNI = count($value['0']['0']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['0']['1']))
+				{
+					foreach ($value['0']['1'] as $categories){
+						$labelNL = 'Notification Linking';$totalNL = count($value['0']['1']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['0']['2']))
+				{
+					foreach ($value['0']['2'] as $categories){
+						$labelNG = 'Notification Geometry';$totalNG = count($value['0']['2']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['0']['3']))
+				{
+					foreach ($value['0']['3'] as $categories){
+						$labelNC = 'Notification Conformity';$totalNC = count($value['0']['3']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['0']['4']))
+				{
+					foreach ($value['0']['4'] as $categories){
+						$labelNF = 'Notification Format';$totalNF = count($value['0']['4']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				$totalN = $totalNI + $totalNL + $totalNG + $totalNC + $totalNF;
+			}
+			//type erreur error
+			if(isset($value['2']))
+			{
+				if(isset($value['2']['0']))
+				{
+					foreach ($value['2']['0'] as $categories){
+						$labelEI = 'Error Input';$totalEI = count($value['2']['0']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['2']['1']))
+				{
+					foreach ($value['2']['1'] as $categories){
+						$labelEL = 'Error Linking';$totalEL = count($value['2']['1']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['2']['2']))
+				{
+					foreach ($value['2']['2'] as $categories){
+						$labelEG = 'Error Geometry';$totalEG = count($value['2']['2']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['2']['3']))
+				{
+					foreach ($value['2']['3'] as $categories){
+						$labelEC = 'Error Conformity';$totalEC = count($value['2']['3']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				if(isset($value['2']['4']))
+				{
+					foreach ($value['2']['4'] as $categories){
+						$labelEF = 'Error Format';$totalEF = count($value['2']['4']);
+						$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', strtotime($time));
+					}
+				}
+				$totalE = $totalEI + $totalEL + $totalEG + $totalEC + $totalEF;
+			}
+			$total = $totalW + $totalN + $totalE;
+			if($total === 0) $total = null;
+			$output .= '<div class="uwwtd_errors_tab_header">';
+				$output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Import le : '.$date.'</span></h4>';
+				
+				if(isset($value['0'])){
+					$output .= '<div class="uwwtd_errors_tab_type_header">';
+					
+					//catégorie notification input
+					if(isset($value['0']['0'])){
+						$output .= '<div class="uwwtd_error_Input">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNI">'.$totalNI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNI.':</span></h5>';	
+						foreach($value['0']['0'] as $error){
+							//dsm($error);
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						//$totalI = 0;
+					}
+					if(isset($value['0']['1']))
+					{//catégorie notification Linking
+						$output .= '<div class="uwwtd_error_Linking">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNL">'.$totalNL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNL.':</span></h5>';	
+						foreach($value['0']['1'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalL = 0;
+					}
+					if(isset($value['0']['2']))
+					{//catégorie notification Geometry
+						$output .= '<div class="uwwtd_error_Geometry">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNG">'.$totalNG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNG.':</span></h5>';	
+						foreach($value['0']['2'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalG = 0;
+					}
+					if(isset($value['0']['3']))
+					{//catégorie notification Conformity
+						$output .= '<div class="uwwtd_error_Conformity">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNC">'.$totalNC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNC.':</span></h5>';	
+						foreach($value['0']['3'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalC = 0;
+					}
+					if(isset($value['0']['4']))
+					{//catégorie notification Format
+						$output .= '<div class="uwwtd_error_Format">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNF">'.$totalNF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNF.':</span></h5>';	
+						foreach($value['0']['4'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalF = 0;
+					}
+					$output .= '</div>';
+					
+				}
+				if(isset($value['1'])){
+					$output .= '<div class="uwwtd_errors_tab_type_header">';
+					
+					//catégorie warning input
+					if(isset($value['1']['0'])){
+						$output .= '<div class="uwwtd_error_Input">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWI">'.$totalWI.'</span></span><span class="uwwtd_errors_tab_header_titleWI">'.$labelWI.':</span></h5>';	
+						foreach($value['1']['0'] as $error){
+							//dsm($error);
+							$output .= '<div class="uwwtd_error errorWI">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalI = 0;
+					}
+					if(isset($value['1']['1']))
+					{//catégorie warning Linking
+						$output .= '<div class="uwwtd_error_Linking">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWL">'.$totalWL.'</span></span><span class="uwwtd_errors_tab_header_titleWL">'.$labelWL.':</span></h5>';	
+						foreach($value['1']['1'] as $error){
+							$output .= '<div class="uwwtd_error errorWL">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalL = 0;
+					}
+					if(isset($value['1']['2']))
+					{//catégorie warning Geometry
+						$output .= '<div class="uwwtd_error_Geometry">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWG">'.$totalWG.'</span></span><span class="uwwtd_errors_tab_header_titleWG">'.$labelWG.':</span></h5>';	
+						foreach($value['1']['2'] as $error){
+							$output .= '<div class="uwwtd_error errorWG">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalG = 0;
+					}
+					if(isset($value['1']['3']))
+					{//catégorie warning Conformity
+						$output .= '<div class="uwwtd_error_Conformity">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWC">'.$totalWC.'</span></span><span class="uwwtd_errors_tab_header_titleWC">'.$labelWC.':</span></h5>';	
+						foreach($value['1']['3'] as $error){
+							$output .= '<div class="uwwtd_error errorWC">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalC = 0;
+					}
+					if(isset($value['1']['4']))
+					{//catégorie warning Format
+						$output .= '<div class="uwwtd_error_Format">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWF">'.$totalWF.'</span></span><span class="uwwtd_errors_tab_header_titleWF">'.$labelWF.':</span></h5>';	
+						foreach($value['1']['4'] as $error){
+							$output .= '<div class="uwwtd_error errorWF">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalF = 0;
+					}
+					$output .= '</div>';
+				}
+				if(isset($value['2'])){
+					$output .= '<div class="uwwtd_errors_tab_type_header">';
+					//catégorie error input
+					if(isset($value['2']['0'])){
+						$output .= '<div class="uwwtd_error_Input">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEI">'.$totalEI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEI.':</span></h5>';	
+						foreach($value['2']['0'] as $error){
+							//dsm($error);
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalI = 0;
+					}
+					if(isset($value['2']['1']))
+					{//catégorie error Linking
+						$output .= '<div class="uwwtd_error_Linking">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEL">'.$totalEL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEL.':</span></h5>';	
+						foreach($value['2']['1'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalL = 0;
+					}
+					if(isset($value['2']['2']))
+					{//catégorie error Geometry
+						$output .= '<div class="uwwtd_error_Geometry">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEG">'.$totalEG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEG.':</span></h5>';	
+						foreach($value['2']['2'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalG = 0;
+					}
+					if(isset($value['2']['3']))
+					{//catégorie error Conformity
+						$output .= '<div class="uwwtd_error_Conformity">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEC">'.$totalEC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEC.':</span></h5>';	
+						foreach($value['2']['3'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalC = 0;
+					}
+					if(isset($value['2']['4']))
+					{//catégorie error Format
+						$output .= '<div class="uwwtd_error_Format">';
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEF">'.$totalEF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEF.':</span></h5>';	
+						foreach($value['2']['4'] as $error){
+							$output .= '<div class="uwwtd_error">';
+								$output .= '<ul>';
+									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+									$output .= '<li>'.$error['message'].'</li>';
+									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+								$output .= '</ul>';
+							$output .= '</div>';							
+						}$output .= '</div>';
+						$totalF = 0;
+					}
+					$output .= '</div>';
+				}
+			$output .= '</div>';
+		}
+	$output .= '</div>';
+
+	return $output;
+}

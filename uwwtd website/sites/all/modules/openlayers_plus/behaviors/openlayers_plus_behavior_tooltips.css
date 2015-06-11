@@ -1,0 +1,15 @@
+.tooltip {
+  background: rgba(51, 51, 51, 0.85);
+  border-radius: 4px;
+  color: #fff;
+  -moz-border-radius: 4px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  -webkit-border-radius: 4px;
+  width: 100px;
+  z-index: 10;
+}
+.tooltip a{
+    color:#fff;
+}

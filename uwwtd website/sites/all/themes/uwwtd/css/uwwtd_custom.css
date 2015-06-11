@@ -1,0 +1,223 @@
+/* ac 09/09/14 */
+
+.view-agglomeration-conformity .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+	padding: 5px;
+}
+
+/* fin ac 09/09/14 */
+
+.pieLabelBackground {
+	opacity: auto;
+	background: none!important;
+}
+
+/* Geo field style */
+
+article h1{
+	position:relative;
+	z-index: 3;
+}
+
+.field-name-field-position-geo{
+	margin-top: 0;
+	margin-bottom: 0px;
+	padding: 0;
+	z-index: 2;
+	position: relative;
+	top: -15px;
+}
+
+/* field group style */
+fieldset.collapsible legend a{
+	outline: 0;
+	text-decoration: none;
+	position: relative;
+	-webkit-transition: all 200ms ease-in-out;
+	-moz-transition: all 200ms ease-in-out;
+	-ms-transition: all 200ms ease-in-out;
+	-o-transition: all 200ms ease-in-out;
+	transition: all 200ms ease-in-out;
+}
+
+fieldset.collapsible legend a:focus, fieldset.collapsible legend a:active, fieldset.collapsible legend a:visited{
+	text-decoration: none;
+}
+
+fieldset.collapsible legend a:after{
+	content: '+';
+	position: absolute;
+	right:20px;
+	top:50%;
+	margin-top:-10px;
+}
+
+fieldset.collapsible legend a:hover{
+	-webkit-box-shadow:inset 0 0 2px 0 #C7C7C7;
+	box-shadow:inset 0 0 2px 0 #C7C7C7;
+}
+
+.group-cont{
+	text-align: center;
+}
+
+.group-column1, .group-column2, .group-column3{
+	text-align: left;
+	width: 33%;
+	display: inline-block;
+	margin-bottom: 15px;
+	vertical-align: top;
+	padding: 1px;
+}
+
+.group-column1 legend, .group-column2 legend, .group-column3 legend{
+	text-align: center;
+}
+
+.field-group-fieldset{
+	width: 100%;
+	font-size: 13px;
+	line-height: 18px;
+	display: block;
+	margin: auto;
+}
+
+/* node title */
+
+article.node h1 small i{
+    font-family: lato;
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    line-height: 16px;
+}
+
+.uwwtd-title-compliance{
+	position: absolute;
+	right: 0;
+	top: 50%;
+	margin-top: -15px;
+	font-size: 20px;
+	line-height: 30px;
+	padding-left: 20px;
+	padding-right: 20px;
+	-webkit-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;
+	letter-spacing: 1px;
+	font-weight: 500;
+}
+
+/* node history */
+
+.uwwtd-history{
+	text-align: center;
+}
+
+.uwwtd-history-element{
+	display: inline-block;
+	padding: 8px;
+}
+
+.uwwtd-history-element span{
+	display: block;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 25px;
+	border: 1px solid grey;
+	font-size: 16px;
+}
+
+.uwwtd-history-element{
+	font-weight: bold;
+}
+
+.uwwtd-history-element h4{
+	font-weight: normal;
+	margin-top:0;
+}
+
+.uwwtd-history-element-current h4{
+	font-weight: bold;
+}
+
+/* geofield */
+
+.group-mapdiv{
+	margin-bottom: 10px;
+}
+
+.group-mapdiv fieldset{
+	width: 48%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.field-type-geofield{
+	position: relative;
+	top: 0;
+	width: 49%;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+/* remove title for view-waste-water-network and home page (node-2008)*/
+.view-waste-water-network h1, #node-2008 h1{
+	display: none;
+}
+
+/* openlayers popup */
+.openlayers-popup > span{
+	display: block;
+}
+
+div.openlayers-popup:first-child{
+	border-bottom-width: 1px;
+	border-bottom-color: #cccccc;
+	border-bottom-style: solid;
+	margin-bottom: 5px;
+}
+
+/* maps on hover fix */
+circle:hover, path:hover{
+	cursor: pointer;
+}
+
+/* Filters fix */
+.title-filters{
+	display: none;
+}
+
+.views-exposed-form{
+/*LG 22dec2014 	margin-bottom: 15px;
+	margin-top:20px;
+*/
+	margin-bottom: 5px;
+	margin-top:5px;
+}
+
+
+
+/* pie charts fix */
+.attachment-after .view-uwwtp-map, .attachment-after .view-uwwtp-treatment{
+	margin-top: 20px;
+	margin-bottom: 15px;
+}
+
+/* attemt to fix charts */
+.legendColorBox div{
+	margin-right: 5px !important;
+	width: 20px;
+}
+
+.legendColorBox div div{
+	width: 100% !important;
+}
+
+.view-uwwtp-map .attachment #views-aggregator-datatable, .view-uwwtp-treatment .attachment #views-aggregator-datatable{
+    text-align: center;
+    width: 100%;
+}
+
+.view-uwwtp-map .attachment #views-aggregator-datatable th, .view-uwwtp-treatment .attachment #views-aggregator-datatable th{
+    text-align: center;
+}

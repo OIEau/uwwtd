@@ -1,0 +1,3 @@
+Please download OFC zip from http://teethgrinder.co.uk/open-flash-chart-2/downloads.php
+extract the archive and copy open-flash-chart.swf file from the archive in the
+same directory as this readme file. Do not copy any other files. 

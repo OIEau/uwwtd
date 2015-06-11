@@ -1,0 +1,8 @@
+name = Field custom tooltips
+description = Tooltips to be shown next to field labels
+core = 7.x
+bundle = custom_tooltips
+version = 7.x-1.0
+project = custom_tooltips
+
+stylesheets[all][] = css/custom_tooltips.css

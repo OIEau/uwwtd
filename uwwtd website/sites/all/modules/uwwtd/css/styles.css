@@ -1,0 +1,16 @@
+#uwwtd-conformity-form .form-item{
+	display: inline-block;
+	width: 10%;
+}
+
+#uwwtd-conformity-form .form-item:nth-child(5n+2){
+	width: 45%;
+}
+
+#uwwtd-conformity-form .form-item:nth-child(5n+5){
+	width: 30%;
+}
+
+#uwwtd-conformity-form .form-item:first-child{
+	width: 100%;
+}

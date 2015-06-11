@@ -1,0 +1,51 @@
+/****************************/
+/* THEMER CSS         */
+/****************************/
+/* 
+If you delete this file you will se the native behaviour of the theme. 
+The below lines only help to look better :)
+*/
+/****************************/
+
+ul.links li {
+	border-left: 1px solid #d3d3d3; /* LTR */
+}
+
+/* MENU & link STYLES */
+
+#navlinks ul li a, #navlist a {
+	border: 1px solid #777;
+	border-bottom: none;
+	background-color: #fff;
+	text-transform: uppercase;
+}
+#navlinks ul li a:hover, #navlist li a:hover {
+	background-color: #dbdbdb;
+}
+#subnavlist a {
+	border: 1px solid #ddd;
+	background-color: #eee;
+}
+#subnavlist li a:hover {
+	background-color: #dbdbdb;
+}
+
+/* DROP DOWN LI */
+/* set li width & color */
+#navlinks ul li.expanded ul li a {
+	border: 1px solid #777;
+	background-color: #fff;
+}
+
+/* DROP DOWN UL */
+/* Sublevels */
+ul.firstsublayer {
+	top: 27px;
+}
+ul.sublayer {
+	top: 0;
+}
+#navlinks ul.firstsublayer li, #navlinks ul.sublayer li {
+	padding-top: 1px !important;
+}
+

@@ -1,0 +1,467 @@
+<?php
+// Fonction pour definir le lien de menu
+function uwwtd_menu(){
+	$items = array();
+	$items['data'] = array(
+		'title' => t('Data management center'),
+		'description' => t('A center to manage all the site data'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('uwwtd_data_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+		);
+	$items['data/import'] = array(
+		'title' => t('Data import'),
+		'description' => t('Form to upload new data'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('uwwtd_inport_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+		);
+	$items['data/shapes'] = array(
+		'title' => t('Receiving areas\' shapes upload'),
+		'description' => t('Form to upload the receiving areas\' shapes'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('uwwtd_shapes_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+		);
+	$items['data/check'] = array(
+		'title' => t('Data checking process'),
+		'description' => t('Process to check all the entered data for a given year'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('uwwtd_check_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+		);
+	$items['data/conformity'] = array(
+		'title' => t('Data conformity'),
+		'description' => t('Data conformity page'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('uwwtd_conformity_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+		);
+	$items['data/debug']=array(
+		'title' => t('Data debug'),
+		'page callback' => 'uwwtd_debug',
+		//'page arguments' => array('uwwtd_debug_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd')
+	);
+
+	$items['id/%/%'] = array(
+        'page callback' => 'uwwtd_node_redirect',
+        'page arguments' => array(1,2),
+        'access arguments' => true,
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+  $items['id/%/%/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['id/%/%/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'uwwtd_node_redirect',
+    'page arguments' => array(1,2,3),
+    'access callback' => 'node_access',
+    'access arguments' => array('update', 1),
+    'weight' => 0,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+  
+  //redirection treatment-plant
+  $items['treatment-plant/%'] = array(
+    'page callback' => 'uwwtd_node_redirection',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  //redirection agglomeration
+  $items['agglomeration/%'] = array(
+    'page callback' => 'uwwtd_node_redirection',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  //redirection receiving-area
+  $items['receiving-area/%'] = array(
+    'page callback' => 'uwwtd_node_redirection',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  //redirection discharge-point
+  $items['discharge-point/%'] = array(
+    'page callback' => 'uwwtd_node_redirection',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+
+	return $items;
+}
+
+function uwwtd_node_redirect($annee, $id, $action = null){
+	$query = db_select('field_data_field_siteid', 's');
+	$query->fields('s', array('entity_id', 'field_siteid_value'));
+	$query->condition('field_siteid_value', db_like($annee.'_'.$id), 'LIKE');
+
+	$result = $query->execute();
+	$node = false;
+	while($record = $result->fetchAssoc()) {
+		$node = node_load($record['entity_id']);
+	}
+
+	if($action == 'edit') {
+		drupal_goto('node/' . $node->nid . '/edit');
+	}
+
+	if($node == false){
+		drupal_set_message(t("The element you were searching for doesn't exist, sorry."), 'warning');
+		drupal_goto('<front>');
+	}
+	else{
+		drupal_set_title($node->title);
+		return render(node_view($node, 'full'));
+	}
+}
+//test
+function uwwtd_node_redirection($id){
+	$page_url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
+	//echo "<pre>";print_r($_SERVER['REQUEST_URI']);echo "</pre>";
+	$type= explode("/",$page_url);
+	$type= $type[4];
+	//echo "<pre>";print_r($type);echo "</pre>";
+	
+	if($type=='treatment-plant'){
+		$typeR='uww';
+		$id= strtolower($id);
+	}
+	if($type=='agglomeration'){
+		$typeR='agg';
+		$id= strtolower($id);
+	}
+	if($type=='receiving-area'){
+		$typeR='rca';
+		$id= strtolower($id);
+	}
+	if($type=='discharge-point'){
+		$typeR='dcp';
+		$id= strtolower($id);
+	}
+	//selectionne la dernière année
+	$query = "SELECT MAX(field_anneedata_value) FROM {field_data_field_anneedata}";
+	$result = db_query($query);
+	$annee = $result->fetchField();
+	
+	$query = db_select('field_data_field_siteid', 's');
+	$query->fields('s', array('entity_id', 'field_siteid_value'));
+	$query->condition('field_siteid_value', db_like($annee.'_'.$typeR.'_'.$id), 'LIKE');
+	$result = $query->execute();
+	$record = $result->fetchAssoc();
+	$node = false;
+	
+	if($record ==''){
+		$query = db_select('field_data_field_siteid', 's');
+		$query->fields('s', array('entity_id', 'field_siteid_value'));
+		$query->condition('field_siteid_value',  db_like($annee.'_'.$id), '=');
+		$result = $query->execute();
+		$record = $result->fetchAssoc();
+		$node=$record['entity_id'];
+	}else{
+		$node=$record['entity_id'];
+	}
+	if($node == false){
+		drupal_set_message(t("The element you were searching for doesn't exist, sorry."), 'warning');
+		drupal_goto('<front>');
+	}
+	else{
+		drupal_goto('http://uwwtd.oieau.fr/slovenia/'.$type.'/'.$id.'/'.$annee);
+		drupal_set_title($node->title);
+		//return render(node_view($node, 'full'));
+	}
+}
+
+function uwwtd_debug_form($form, &$form_state){
+	// definition du champ input de type file
+	$form['uwwtd_file'] = array(
+		'#type' => 'managed_file',
+		'#title' => t('Data file'),
+		'#upload_validators' => array('file_validate_extensions' => array('shp')),
+		'#required' => TRUE,
+	);
+	
+	// Bouton envoyer
+	$form['submit_button'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit'),
+	);
+	
+	// Fonction a appeller quand on clique sur envoyer
+	$form['#submit'][] = 'uwwtd_debug_submit_handler';
+    return $form;
+}
+
+function uwwtd_views_pre_build(&$view){
+	//dsm($view);
+	if(
+		$view->name == 'waste_water_network' || 
+		$view->name == 'uwwtp_map' ||
+		$view->name == 'uwwtp_treatment' ||
+		$view->name == 'agglomeration' ||
+		$view->name == 'agglomeration_conformity' ||
+		$view->name == 'data_deletion'
+	){
+		$year = db_query(
+			"SELECT MAX(field_anneedata_value) FROM {field_data_field_anneedata}"
+		)->fetchField();
+		if(!empty($year)) $view->filter['field_anneedata_value']->value = $year;
+	}
+}
+
+function uwwtd_views_pre_render(&$view){
+	//dsm($view);
+
+	// if uwwtd treatment view
+	if($view->name == 'uwwtp_treatment' && $view->result !== TRUE){
+		foreach($view->result as $r => $result){
+			//dsm($result);
+		    //$view->result[$r]->field = 1;
+		    if(isset($view->result[$r]->field_field_uwwprimarytreatment[0]['raw']['value'])){
+		    	//dsm($view->result[$r]->field_field_uwwprimarytreatment[0]);
+		    	if($view->result[$r]->field_field_uwwprimarytreatment[0]['raw']['value'] === '1') $view->result[$r]->field_field_uwwprimarytreatment[0]['rendered']['#markup'] = t('Yes');
+		    	else $view->result[$r]->field_field_uwwprimarytreatment[0]['rendered']['#markup'] = t('No');
+		    }
+		    if(isset($view->result[$r]->field_field_uwwsecondarytreatment[0]['raw']['value'])){
+		    	if($view->result[$r]->field_field_uwwsecondarytreatment[0]['raw']['value'] === '1') $view->result[$r]->field_field_uwwsecondarytreatment[0]['rendered']['#markup'] = t('Yes');
+		    	else $view->result[$r]->field_field_uwwsecondarytreatment[0]['rendered']['#markup'] = t('No');
+		    }
+		    if(isset($view->result[$r]->field_field_uwwnremoval[0]['raw']['value'])){
+		    	if($view->result[$r]->field_field_uwwnremoval[0]['raw']['value'] === '1') $view->result[$r]->field_field_uwwnremoval[0]['rendered']['#markup'] = t('Yes');
+		    	else $view->result[$r]->field_field_uwwnremoval[0]['rendered']['#markup'] = t('No');
+		    }
+		    if(isset($view->result[$r]->field_field_uwwpremoval[0]['raw']['value'])){
+		    	if($view->result[$r]->field_field_uwwpremoval[0]['raw']['value'] === '1') $view->result[$r]->field_field_uwwpremoval[0]['rendered']['#markup'] = t('Yes');
+		    	else $view->result[$r]->field_field_uwwpremoval[0]['rendered']['#markup'] = t('No');
+		    }
+		} 
+	}
+}
+
+function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
+	//dsm($form);
+		// for treatment plant booleans
+		if($form['#id'] == "views-exposed-form-uwwtp-treatment-page"){
+			$options = array(
+				'All' => t('- All -'),
+				'1' => t('Yes'),
+				'0' => t('No')
+			);
+
+			$form['field_uwwprimarytreatment_value'] = array(
+				'#type' => 'select',
+				'#options' => $options
+			);
+			$form['field_uwwsecondarytreatment_value'] = array(
+				'#type' => 'select',
+				'#options' => $options
+			);
+			$form['field_uwwnremoval_value'] = array(
+				'#type' => 'select',
+				'#options' => $options
+			);
+			$form['field_uwwpremoval_value'] = array(
+				'#type' => 'select',
+				'#options' => $options
+			);
+		}
+
+		if(
+			$form['#id'] == "views-exposed-form-waste-water-network-page" || 
+			$form['#id'] == 'views-exposed-form-uwwtp-map-page' ||
+			$form['#id'] == 'views-exposed-form-waste-water-network-openlayers-1' ||
+			$form['#id'] == 'views-exposed-form-waste-water-network-openlayers-2' ||
+			$form['#id'] == 'views-exposed-form-waste-water-network-openlayers-3' ||
+			$form['#id'] == 'views-exposed-form-uwwtp-treatment-page' ||
+			$form['#id'] == 'views-exposed-form-uwwtp-treatment-openlayers-2' ||
+			$form['#id'] == 'views-exposed-form-uwwtp-treatment-attachment-1' ||
+			$form['#id'] == 'views-exposed-form-agglomeration-page' ||
+			$form['#id'] == 'views-exposed-form-agglomeration-openlayers-1' ||
+			$form['#id'] == 'views-exposed-form-agglomeration-conformity-page' ||
+			$form['#id'] == 'views-exposed-form-agglomeration-conformity-openlayers-1' ||
+			$form['#id'] == 'views-exposed-form-data-deletion-page'
+		){
+
+			// Get all available years
+			$query = db_select('field_data_field_anneedata', 'a');
+			$query->fields('a', array('field_anneedata_value'));
+			$query->orderBy('field_anneedata_value', 'DESC');
+			$results = $query->execute();
+			$years = array();
+			while($record = $results->fetchAssoc()) {
+				$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+			}
+			//dsm($years);
+
+			//$form_state['input']['field_anneedata_value'] = '2010';
+			$form['field_anneedata_value'] = array(
+				'#type' => 'select',
+				'#options' => $years,
+				//'#default_value' => array('2000' => '2000'),
+			);
+		} 
+    if(in_array($form['#id'], array("views-exposed-form-uwwtp-map-page"))){
+		if(isset($form['field_physicalcapacityinput_value_op'])){
+			$cap_op_options= $form['field_physicalcapacityinput_value_op']['#options'];
+			unset($cap_op_options['between'], $cap_op_options['not between'], $cap_op_options['empty'], $cap_op_options['not empty']);
+			$form['field_physicalcapacityinput_value_op']['#options'] = $cap_op_options;
+		}
+		if(isset($form['field_uwwnuts_value'])){
+			$query = db_select('field_data_field_uwwnuts', 'nuts');
+				$query->fields('nuts', array('field_uwwnuts_value'));
+				$query->condition('deleted', 0,'=');
+				$query->groupBy('nuts.field_uwwnuts_value');//GROUP BY user ID
+			$result = $query->execute();
+			$nuts_options=array();
+			while($record = $result->fetchAssoc()) {
+				//dsm($record);
+				$nuts_options[$record['field_uwwnuts_value']]=$record['field_uwwnuts_value'];
+			}
+			
+			$old = $form['field_uwwnuts_value'];
+			//dsm($old);
+			//dsm($form_state);
+			$form['field_uwwnuts_value'] = array(
+				'#type'=>'select',
+				'#options'=>$nuts_options,
+				'#default_value'=>$old['#default_value'],
+				'#empty_value'=>'',
+				'#empty_option'=>t('- All -')
+			);
+		}
+	}
+}
+
+function uwwtd_debug_submit_handler($form, &$form_state){
+	//require_once ( dirname(__FILE__) . '/shpParser.php');
+	require_once ( dirname(__FILE__) . '/ShapeFile.inc.php');
+	$file = file_load($form_state['values']['uwwtd_file']);
+	$uri = $file->uri;
+	
+	// On upload le file et la fonction renvoie le nouveau nom du fichier
+	$ext = '.shp';
+	$newFile = uwwtd_file_upload($file, $ext);
+	$path = file_create_url($newFile->uri);
+	$shp = new ShapeFile($path, array('noparts' => false));
+	  $records = array();
+		foreach($shp->records as $record){
+		$dbf_data = $record->getDbfData();
+		$shp_data = $record->getShpData();
+
+		//Dump the information
+		$obj = array(
+		  'type' => $shp->getShpTypeName($record->getShpType())
+		);
+
+		$obj['shape'] = $shp_data;
+		$obj['meta'] = $dbf_data;
+
+		$records[] = $obj;
+	}
+	dsm($records);
+}
+
+function uwwtd_debug(){
+	$e = array('lol', 'cake');
+	uwwtd_add_errors($e);
+
+	return 'debug';
+}
+
+// permission to view data pages
+function uwwtd_permission() {
+  return array(
+    'Data-management access' => array(
+      'title' => t('Access to the data management pages'),
+    )
+  );
+}
+
+function uwwtd_cron(){
+	// Requires postgres for DROP TABLE IF
+	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
+	CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+	AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
+	CREATE TABLE wfs."UWWTD_Agglomeration"
+	AS SELECT * from public."UWWTD_Agglomeration"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_Agglomeration"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
+	CREATE TABLE wfs."UWWTD_ReceivingArea"
+	AS SELECT * from public."UWWTD_ReceivingArea"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_ReceivingArea"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_BigCity";
+	CREATE TABLE wfs."UWWTD_BigCity"
+	AS SELECT * from public."UWWTD_BigCity"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_BigCity"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_Agglo";
+	CREATE TABLE wfs."UWWTD_Compliance_Agglo"
+	AS SELECT * from public."UWWTD_Compliance_Agglo"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_Compliance_Agglo"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_UWWTP";
+	CREATE TABLE wfs."UWWTD_Compliance_UWWTP"
+	AS SELECT * from public."UWWTD_Compliance_UWWTP"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_Compliance_UWWTP"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
+	CREATE TABLE wfs."UWWTD_DischargePoint"
+	AS SELECT * from public."UWWTD_DischargePoint"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_DischargePoint"
+	ADD PRIMARY KEY ("siteId"); 
+
+	DROP TABLE IF EXISTS wfs."UWWTD_UWWTPs_Agglo";
+	CREATE TABLE wfs."UWWTD_UWWTPs_Agglo"
+	AS SELECT * from public."UWWTD_UWWTPs_Agglo"
+	WHERE 1=1;
+	ALTER TABLE wfs."UWWTD_UWWTPs_Agglo"
+	ADD PRIMARY KEY ("uwwSiteId", "aggSiteId");');
+}

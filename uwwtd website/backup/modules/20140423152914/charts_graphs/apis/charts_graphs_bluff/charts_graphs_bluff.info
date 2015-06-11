@@ -1,0 +1,15 @@
+
+name = "Charts and Graphs: Bluff"
+description = "Bluff (Beautiful Graphs in JavaScript) implementation for Charts and Graphs."
+dependencies[] = charts_graphs
+package = "Charts"
+core = 7.x
+php = 5.1
+
+
+; Information added by drupal.org packaging script on 2012-07-12
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "charts_graphs"
+datestamp = "1342051766"
+

@@ -1,0 +1,60 @@
+CHANGELOG - 0 Point for Drupal 7
+
+0 Point (Oct 22, 2013)
+-------------------------
+  Bug fixes:
+    - CSS fixes;
+
+  New features:
+    o Possibility to change "Submitted by" display on all nodes;
+    o Rebuild theme registry on every page, during theme development;
+
+0 Point (Jun 27, 2013)
+-------------------------
+  Bug fixes:
+    o #537974: Collection of layout issues
+
+0 Point (Mar 26, 2013)
+----------------------
+  Security update and bug fixes:
+    o #1513176: Notice: Undefined variable: themed_regions in zeropoint_preprocess_block()
+    o hoverIntent r6 update
+
+0 Point (Feb 24, 2013)
+-------------------------
+  Added a proper RTL header
+
+0 Point (Feb 21, 2013)
+-------------------------
+  Bug fixes:
+    - Page title of internal pages has wrong dimmensions
+
+0 Point (Jan 18, 2013)
+----------------------
+  Bug fixes:
+    o #1853910: Construct page title
+
+0 Point (Nov 28, 2012)
+----------------------
+  Security update:
+    o #1830812: Cross site scripting through URLS in Zero Point theme
+
+0 Point (Sep 22, 2012)
+----------------------
+  Bug fixes:
+    Some images not showing right in RTL languages.
+
+0 Point (Jul 29, 2012)
+----------------------
+  Bug fixes:
+    o #1126168: Using <li> for breadcrumbs.
+    o #1051786: The numbers in ordered lists render outside of basic page.
+    o #1420478: Advanced forums icons not displaying correctly.
+    o #1179176: "Undefined variable: admin_links" in views. 
+    o #1347088: Subtheming not possible.
+    o #1620678: ZeroPoint new color style. Thanks to mindfree (http://drupal.org/user/1877354).
+    o #1635390: Dropdown menus partially hidden behind second row of main menu (IE8, Chrome, & FF).
+
+  Other changes:
+    o Added rel="nofollow" to ZeroPoint login/register links.
+

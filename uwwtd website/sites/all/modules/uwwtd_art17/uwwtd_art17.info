@@ -1,0 +1,7 @@
+name = UWWTD Article 17
+description = UWWTD Article 17 module
+core = 7.x
+version = 7.x-1.0
+project = uwwtd
+dependencies[] = uwwtd
+package = uwwtd

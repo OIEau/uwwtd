@@ -1,0 +1,241 @@
+/****************/
+/* GENERAL CSS  */
+/****************/
+
+#body_bg {
+	border-bottom: 1px solid #ddd;
+}
+#body_left {
+	background: transparent url(../images/all/fill_left.png) 0 0 repeat-y;
+}
+#body_right {
+	background: transparent url(../images/all/fill_right.png) 100% 0 repeat-y;
+}
+
+ul.links li {
+	border-left: 1px solid #d3d3d3; /* LTR */
+}
+td.section.divider {
+	border-left: 1px dashed #ddd; /* LTR */
+}
+.node.teaser {
+	border-bottom: 1px dashed #ddd;
+}
+.submitted, .links {
+	color: #3f3f3f;
+}
+.comment {
+	border: 1px solid #d3d3d3;
+}
+.comment .title {
+	background: transparent url(../images/all/icon-comment.png) left center no-repeat; /* LTR */
+}
+blockquote, .messages {
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+.form-item label, .item-list .title {
+	color: #222;
+}
+#site-slogan {
+	color: #000;
+}
+#search .form-text, #search .form-submit {
+	border: 1px solid #555;
+}
+#mission {
+	color: #535353;
+	border: solid 1px #ddd;
+}
+#breadcrumb, #breadcrumb a {
+	color: #1e201b !important;
+}
+#footer, #footer a {
+	color: #888 !important;
+}
+#footer ul.links li {
+	border-left: 1px solid #909090;
+}
+.by, .by a, .by a:hover {
+	color: #ddd !important;
+}
+#aggregator .feed-source {
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+#forum td.forum, #forum td.posts {
+	background-color: #eee;
+}
+#forum td.topics, #forum td.last-reply {
+	background-color: #ddd;
+}
+#forum td.statistics, #forum td.settings, #forum td.pager {
+	border: 1px solid #bbb;
+}
+#forum td.container {
+	background: #cdcdcd url(../images/all/forum-container.jpg) right top no-repeat; /* LTR */
+}
+#forum td.container .name a {
+	background: transparent url(../images/all/forum-link.png) left center no-repeat;
+}
+#profile .profile {
+	border: 1px solid #abc;
+}
+
+/* MENU & link STYLES */
+
+ul li.leaf {
+	list-style-image: url(../images/all/menu-leaf.png);
+}
+ul li.expanded {
+	list-style-image: url(../images/all/menu-expanded.png);
+}
+ul li.collapsed {
+	list-style-image: url(../images/all/menu-collapsed.png); /* LTR */
+}
+
+#subnavlist a {
+	border: 1px solid #ddd;
+	color: #555 !important;
+	background-color: #eee;
+}
+#subnavlist li a:hover {
+	background-color: #dbdbdb;
+}
+#navlist2 a {
+	color: #888 !important;
+}
+#navlist2 a:hover, #navlist2 a.active, 
+#footer a:hover, #footer a.active {
+	color: #f60 !important;
+}
+
+/* MODULE SPECIFIC STYLES */
+
+.book-navigation .page-links {
+	border-top: 1px dashed #d3d3d3;
+	border-bottom: 1px dashed #d3d3d3;
+}
+.cart-block-title-bar .arrow-up {
+	background: transparent url(../images/all/menu-up.png) no-repeat center center !important;
+}
+.cart-block-title-bar .arrow-down {
+	background: transparent url(../images/all/menu-expanded.png) no-repeat center center !important;
+}
+.category-grid-products table	{
+	border-top: 1px dashed #ddd !important;
+	border-left: 1px dashed #ddd !important;
+}
+.category-grid-products td {
+	border-right: 1px dashed #ddd !important;
+	border-bottom: 1px dashed #ddd !important;
+	background-color: transparent !important;
+}
+
+
+/****************/
+/* GRAPHICS CSS */
+/****************/
+
+#top_bg {
+	background: transparent url(../images/orange/fill_top.png) 0 100% repeat-x;
+}
+/*#top_left {
+	background: transparent url(../images/orange/fill_top_left1.png) 0 100% no-repeat;
+}
+#top_right {
+	background: transparent url(../images/orange/fill_top_right1.png) 100% 100% no-repeat;
+}*/
+
+h1, h2, h3 {
+	color: #fd8b0c;
+}
+
+a, a:link,
+.title, .title a,
+.node .terms,
+#aggregator .news-item .categories, #aggregator .source, #aggregator .age,
+#forum td .name,
+.admin-panel .description {
+	color: #fd8b0c;
+}
+
+.block.themed-block {
+	background: #fff url(../images/orange/fill_block.png) 0 100% repeat-x;
+	border: 1px solid #ddd;
+}
+
+
+#navlinks ul li a, #navlist a {
+	background: #fd8b0c;
+	color: #fff !important;
+	text-transform: uppercase;
+	font-family: "times new roman", sans-serif, Arial, Verdana, Helvetica;
+}
+#navlinks ul li a:hover, #navlist li a:hover {
+	color: #fff !important;
+	background-color: #fa0;
+}
+
+/* DROP DOWN LI */
+/* set li width & color */
+#navlinks ul li.expanded ul li {
+	border-left: 1px solid #fda039;
+	border-top: 1px solid #fda039;
+	border-right: 1px solid #f28102;
+	border-bottom: 1px solid #f28102;
+}
+
+/* DROP DOWN Anchors */
+/* first level */
+#navlinks ul li.expanded a.expandfirst {
+	background: #fd8b0c url(../images/orange/nav-down.png) no-repeat 7px 50%;
+}
+#navlinks ul li.expanded a.expandfirst:hover {
+	background: #fa0 url(../images/orange/nav-down.png) no-repeat 7px 50%;
+}
+
+/* sublevels */
+#navlinks ul li.expanded a {
+	background: #fd8b0c;
+}
+#navlinks ul li ul li a:hover {
+	color: #fff !important;
+	background: #fa0;
+}
+#navlinks ul li.expanded a.expand,
+#navlinks ul li.expanded ul li a.expand {
+	background: #fd8b0c url(../images/orange/nav-right.png) no-repeat 95% 9px;
+}
+#navlinks ul li ul li.expanded a.expand:hover {
+	background: #fa0 url(../images/orange/nav-right.png) no-repeat 95% 9px;
+}
+
+
+/* Form Button */
+.form-submit {
+  /*-moz-transition: all 0.2s ease-in-out 0s;
+  border-radius: 5px;*/
+  cursor: pointer;
+  background: none repeat scroll 0 0  #fd8b0c;
+  border:  1px outset  #000000;
+  color: #000;
+  padding: 4px 8px;
+  /*text-shadow: 1px 1px 1px #fff;*/
+  margin-right: 1px;
+  margin-bottom: 1px;
+  font-weight: normal;
+}
+.form-submit:hover {
+	background: none repeat scroll 0 0  #fa0;
+}
+.form-text {
+  /*border-radius: 3px;*/
+  border: 1px solid #acacac;
+  padding: 4px 5px;
+  background-color: #dfdfdf;
+}
+.form-text:focus {
+  background-color: #FFFFFF;
+  border:   1px  outset #FF6600;
+}

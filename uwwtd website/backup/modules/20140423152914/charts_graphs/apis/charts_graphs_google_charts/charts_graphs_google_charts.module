@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file drupal module file implementing Google Charts charting.
+ */
+
+/**
+ * Implements hook_chartgraph_provider().
+ **/
+function charts_graphs_google_charts_chartgraph_provider() {
+
+  drupal_get_path($type, $project);
+
+  $provider = array(
+    'path' => drupal_get_path('module', 'charts_graphs_google_charts') . '/charts_graphs_google_charts.class.inc', // must be full path
+    'clazz' => 'ChartsGraphsGoogleCharts', // implementation class' name
+    'name' => 'google-charts', // name used when invoking through a factory method
+    'nice_name' => 'Google Charts',
+    'chart_types' => array(
+      'line' => t('Line'),
+      'bar' => t('Bar'),
+      'pie' => t('Pie'),
+      'pie_3d' => t('3D Pie'),
+      'area' => t('Area'),
+      'side_bar' => t('Side Bar'),
+      'stacked_side_bar' => t('Stacked Side Bar'),
+      'queued_bar' => t('Queued Bar'),
+      'stacked_bar' => t('Stacked Bar'),
+    ),
+    'themes' => array(),
+  );
+
+  return (object) $provider;
+}

@@ -1,0 +1,6 @@
+name = Statistics for UWWTD
+description = Adds a new section which provides statistics based on regions and basins.
+core = 7.x
+version = 7.x-1.0
+package = uwwtd
+dependencies[] = uwwtd

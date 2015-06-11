@@ -1,0 +1,243 @@
+<?php
+
+/**
+ * @file
+ * Add tooltips to fields.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function field_tooltips_requirements($phase) {
+  $requirements = array();
+
+  // Check requirements during the runtime phase
+  if ($phase == 'runtime') {
+    // Check if the site is running >= jQuery 1.7
+    if (($library = drupal_get_library('system', 'jquery')) && $library['version'] >= 1.7) {
+      $requirements['field_tooltips_jquery'] = array(
+        'title' => t('Field Tooltips jQuery version'),
+        'value' => t('jQuery @version', array('@version' => $library['version'])),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    else {
+      $destination = drupal_get_destination();
+
+      $requirements['field_tooltips_jquery'] = array(
+        'title' => t('Field Tooltips jQuery version'),
+        'value' => t('jQuery @version', array('@version' => $library['version'])),
+        'description' => t('Field Tooltips requires jQuery 1.7 or greater. Configure <a href="@jquery_update">jQuery Update</a>.', array('@jquery_update' => url('admin/config/development/jquery_update', array('query' => $destination)))),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_library().
+ */
+function field_tooltips_library() {
+  // jQuery Tools.
+  $libraries['tools'] = array(
+    'title' => 'jQuery Tools: Core',
+    'website' => 'http://jquerytools.org',
+    'version' => '1.2.7',
+  );
+  $libraries['tools.dateinput'] = array(
+    'title' => 'jQuery Tools: Dateinput',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/dateinput/dateinput.js' => array(),
+    ),
+  );
+  $libraries['tools.overlay'] = array(
+    'title' => 'jQuery Tools: Overlay',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/overlay/overlay.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/overlay/overlay.apple.js' => array(),
+    ),
+  );
+  $libraries['tools.rangeinput'] = array(
+    'title' => 'jQuery Tools: Rangeinput',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/rangeinput/rangeinput.js' => array(),
+    ),
+  );
+  $libraries['tools.scrollable'] = array(
+    'title' => 'jQuery Tools: Scrollable',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/scrollable/scrollable.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/scrollable/scrollable.autoscroll.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/scrollable/scrollable.navigator.js' => array(),
+    ),
+  );
+  $libraries['tools.tabs'] = array(
+    'title' => 'jQuery Tools: Tabs',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/tabs/tabs.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/tabs/tabs.slideshow.js' => array(),
+    ),
+  );
+  $libraries['tools.toolbox'] = array(
+    'title' => 'jQuery Tools: Toolbox',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/toolbox/toolbox.expose.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/toolbox/toolbox.flashembed.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/toolbox/toolbox.history.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/toolbox/toolbox.mousewheel.js' => array(),
+    ),
+  );
+  $libraries['tools.tooltip'] = array(
+    'title' => 'jQuery Tools: Tooltip',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/tooltip/tooltip.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/tooltip/tooltip.dynamic.js' => array(),
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/tooltip/tooltip.slide.js' => array(),
+    ),
+  );
+  $libraries['tools.validator'] = array(
+    'title' => 'jQuery Tools: Validator',
+    'website' => $libraries['tools']['website'],
+    'version' => $libraries['tools']['version'],
+    'js' => array(
+      drupal_get_path('module', 'field_tooltips') . '/jquerytools/src/validator/validator.js' => array(),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function field_tooltips_field_info_alter(&$info) {
+  // Add the tooltips instance setting to all field types.
+  foreach ($info as $field_type => &$field_type_info) {
+    $field_type_info += array('instance_settings' => array());
+    $field_type_info['instance_settings'] += array(
+      'field_tooltips_enabled' => FALSE,
+      'field_tooltips_tooltip' => array(
+        'value' => '',
+        'format' => NULL,
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_i18n_object_info_alter().
+ */
+function field_tooltips_i18n_object_info_alter(&$info) {
+  $info['field_instance']['class'] = 'field_tooltips_instance';
+  $info['field_instance']['string translation']['properties']['field_tooltips_tooltip'] = array(
+    'title' => t('Tooltip'),
+    'format' => 'format',
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add tooltips instance settings on the 'edit field instance' form.
+ */
+function field_tooltips_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
+  $instance = $form['#instance'];
+
+  $form['instance']['settings']['field_tooltips_enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable tooltip'),
+    '#default_value' => $instance['settings']['field_tooltips_enabled'],
+    // Display at the bottom of the form.
+    '#weight' => 50,
+  );
+  $form['instance']['settings']['field_tooltips_container'] = array(
+    '#type' => 'container',
+    // Display just below the 'field_tooltips_enabled' checkbox.
+    '#weight' => $form['instance']['settings']['field_tooltips_enabled']['#weight'] + .1,
+    '#states' => array(
+      'visible' => array('input[name="instance[settings][field_tooltips_enabled]"]' => array('checked' => TRUE)),
+    ),
+  );
+  $form['instance']['settings']['field_tooltips_container']['field_tooltips_tooltip'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Tooltip'),
+    '#default_value' => $instance['settings']['field_tooltips_tooltip']['value'],
+    '#format' => $instance['settings']['field_tooltips_tooltip']['format'],
+    // The field edit form automatically saves instance settings according to
+    // their position in the form array. Manually remove the container to
+    // prevent it from being saved as part of the instance settings.
+    '#parents' => array('instance', 'settings', 'field_tooltips_tooltip'),
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function field_tooltips_form_alter(&$form, &$form_state, $form_id) {
+  // Add tooltips to any form which has a known entity type and bundle.
+  if (!empty($form['#entity_type']) && !empty($form['#bundle'])) {
+    // Grab entity information from the form.
+    $entity_type = $form['#entity_type'];
+    $bundle = $form['#bundle'];
+
+    // Lookup field instance information for all of the entity's fields.
+    $instances = field_info_instances($entity_type, $bundle);
+
+    // Add tooltips to each of the form's fields where appropriate.
+    foreach ($instances as $field_name => $instance) {
+      if (isset($form[$field_name])) {
+        if (!empty($instance['settings']['field_tooltips_enabled']) && !empty($instance['settings']['field_tooltips_tooltip'])) {
+          // Translate field tooltip.
+          if (module_exists('i18n_field')) {
+            $instance['settings']['field_tooltips_tooltip']['value'] = i18n_field_translate_tooltip($instance, $instance['settings']['field_tooltips_tooltip']['value']);
+          }
+
+          // Add a class to the parent field form item. This will be used by
+          // the tooltip JS to target the child field form items.
+          $form[$field_name]['#attributes']['class'][] = 'field-tooltips';
+
+          // Find all field form items and add the sanitized tooltip text as a
+          // title attribute.
+          foreach($form[$field_name][LANGUAGE_NONE] as $key => &$field) {
+            if (is_numeric($key) && is_array($field)) {
+              if (isset($field['value'])) {
+                $field['value']['#attributes']['title'] = check_markup($instance['settings']['field_tooltips_tooltip']['value'], $instance['settings']['field_tooltips_tooltip']['format']);
+              }
+              else {
+                $field['#attributes']['title'] = check_markup($instance['settings']['field_tooltips_tooltip']['value'], $instance['settings']['field_tooltips_tooltip']['format']);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Attach the tooltip library.
+    $form['#attached']['library'][] = array('field_tooltips', 'tools.tooltip');
+    $form['#attached']['js'][] = drupal_get_path('module', 'field_tooltips') . '/field_tooltips.js';
+    $form['#attached']['css'][] = drupal_get_path('module', 'field_tooltips') . '/field_tooltips.css';
+  }
+}
+
+/**
+ * Translate field tooltip.
+ */
+function i18n_field_translate_tooltip($instance, $value, $langcode = NULL) {
+  return i18n_string_translate(array('field', $instance['field_name'], $instance['bundle'], 'field_tooltips_tooltip'), $value, array('langcode' => $langcode));
+}

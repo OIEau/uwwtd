@@ -1,0 +1,8 @@
+.tooltip {
+  background: url(images/black.png);
+  color: #fff;
+  display: none;
+  height: 57px;
+  padding: 25px;
+  width: 160px;
+}

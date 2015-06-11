@@ -1,0 +1,12 @@
+.openlayers-gazetteer-search-textfield {
+  position: absolute;
+  border: 3px solid #aaaaaa;
+  border-radius: 4px;
+  height: 28px;
+  padding: 0;
+  text-indent: 8px;
+  top: 5px;
+  left: 24%;
+  width: 50%;
+  z-index: 10000;
+}

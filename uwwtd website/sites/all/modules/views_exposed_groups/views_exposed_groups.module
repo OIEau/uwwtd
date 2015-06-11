@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * Implements hook_views_api().
+ */
+function views_exposed_groups_views_api() {
+  return array(
+    'api' => 3.0,
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function views_exposed_groups_theme() {
+  return array(
+      'views_exposed_groups_reorder_filter_form' => array(
+        'render element' => 'form',
+      ),
+    );
+}
+
+/**
+ * Theme callback to render the option form as a draggable table.
+ */
+function theme_views_exposed_groups_reorder_filter_form($vars) {
+  $form = $vars['form'];
+  $rows = array();
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['weight'])) {
+      $group = (is_numeric($form[$key]['group']['#default_value']))
+               ? $form[$key]['group']['#default_value']
+               : 0;      
+      $row = array();
+      $row[] = $form[$key]['weight']['#title'];
+      
+      $form[$key]['weight']['#attributes']['class'] = array('weight', 'weight-'. $group);
+      $form[$key]['group']['#attributes']['class'] = array('group-select', 'field-group-'. $group);
+      $row[] = drupal_render($form[$key]['group']);
+      $row[] = drupal_render($form[$key]['weight']);
+      $class = array('draggable');
+      $styles = array();
+      $rows[$group][] = array('data' => $row, 'class' => $class, 'id' => 'display-row-' . $key, 'style' => $styles);
+    }
+  }
+  $groups = explode("\n", $form['groups']['#default_value']);
+  $table_rows = array();
+  foreach($groups as $k => $group) {
+    $table_rows[] = array(array('data' => '<strong>'. $group .'</strong>', 'colspan' => 3, 'attributes' => array('class' => array('field-group-header'))));
+    foreach($rows[$k] as $row) {
+      $table_rows[] = $row;
+    }
+  }
+  foreach($groups as $k => $group) {
+    drupal_add_tabledrag('reorder-group-filters', 'match', 'sibling', 'group-select', 'field-group-' . $k, NULL, FALSE);
+    drupal_add_tabledrag('reorder-group-filters', 'order', 'sibling', 'weight', 'weight-' . $k);
+  }
+
+  $header = array(t('Filter'), t('Group'), t('Weight'));
+  $output = '';
+  
+
+  $output = drupal_render($form['override']);
+  $output .= theme('table',
+    array('header' => $header,
+    'rows' => $table_rows,
+    'attributes' => array('id' => 'reorder-group-filters'),
+  ));
+  $output .= drupal_render_children($form);
+
+  return $output;
+}

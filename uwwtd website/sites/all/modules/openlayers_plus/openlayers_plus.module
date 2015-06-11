@@ -1,0 +1,318 @@
+<?php
+/**
+ * @file
+ * Openlayers_plus module file.
+ */
+
+
+/**
+ * Implements hook_block_info().
+ */
+function openlayers_plus_block_info() {
+  $blocks = array(
+    'blockswitcher' => array('info' => t('OL+ Blockswitcher')),
+    'blocktoggle' => array('info' => t('OL+ BlockToggle')),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function openlayers_plus_block_view($delta) {
+  switch ($delta) {
+    case 'blockswitcher':
+      // TODO Please change this theme call to use an associative array
+      // for the $variables parameter.
+      return array(
+        'subject' => t('Map layers'),
+        'content' => array(
+          '#theme' => 'openlayers_plus_blockswitcher',
+          '#title' => t('Map layers'),
+        ),
+      );
+
+    case 'blocktoggle':
+      // TODO Please change this theme call to use an associative array
+      // for the $variables parameter.
+      return array(
+        'subject' => t('Map layers'),
+        'content' => array(
+          '#theme' => 'openlayers_plus_blocktoggle',
+          '#title' => t('Map layers'),
+        ),
+      );
+
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function openlayers_plus_theme() {
+  return array(
+    'openlayers_plus_blockswitcher' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
+      'template' => 'openlayers-plus-blockswitcher',
+      'file' => 'theme.inc',
+    ),
+    'openlayers_plus_blocktoggle' => array(
+      'variables' => array(
+        'a_label' => '',
+        'b_label' => '',
+      ),
+
+      'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
+      'template' => 'openlayers-plus-blocktoggle',
+      'file' => 'theme.inc',
+    ),
+    'openlayers_plus_legend_raw' => array(
+      'variables' => array(
+        'raw' => '',
+        'layer' => array(),
+        'layer_id' => array(),
+      ),
+      'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
+      'template' => 'openlayers-plus-legend-raw',
+      'file' => 'theme.inc',
+    ),
+    'openlayers_plus_legend' => array(
+      'variables' => array(
+        'legend' => array(),
+        'layer' => array(),
+        'layer_id' => array(),
+      ),
+      'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
+      'template' => 'openlayers-plus-legend',
+      'file' => 'theme.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_openlayers_behaviors().
+ *
+ * This is a ctools plugins hook.
+ */
+function openlayers_plus_openlayers_behaviors() {
+  return array(
+    'openlayers_plus_behavior_blockpanel' => array(
+          'type' => 'layer',
+          'title' => t('OL+: Block Panel'),
+          'description' => t('Provides sliding panels of block on top of the map.'),
+          'behavior' => array(
+              'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+              'file' => 'openlayers_plus_behavior_blockpanel.inc',
+              'class' => 'openlayers_plus_behavior_blockpanel',
+              'parent' => 'openlayers_behavior',
+          ),
+      ),
+    'openlayers_plus_behavior_legend' => array(
+      'title' => t('OL+: Map legend'),
+      'type' => 'layer',
+      'description' => t('A block in a corner of a map that provides information on layers.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_legend.inc',
+        'class' => 'openlayers_plus_behavior_legend',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_permalink' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Permalink'),
+      'description' => t('A version of Permalink optimized to persist layers between pages with different layer setups and without explicitly using the control.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_permalink.inc',
+        'class' => 'openlayers_plus_behavior_permalink',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_scalepoints' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Scalepoints'),
+      'description' => t('Dynamic styling, changing point radii based on a certain value.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_scalepoints.inc',
+        'class' => 'openlayers_plus_behavior_scalepoints',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_piechart' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Pie chart'),
+      'description' => t('Dynamic styling, changing point radii based on a certain value and genration of pie chart base on column of feature.').l('Require D3 module', 'https://www.drupal.org/project/d3'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_piechart.inc',
+        'class' => 'openlayers_plus_behavior_piechart',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_tooltips' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Tooltips'),
+      'description' => t('An interaction with point-based maps that results in following links on hover.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_tooltips.inc',
+        'class' => 'openlayers_plus_behavior_tooltips',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_tooltips_field' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Tooltips Field'),
+      'description' => t('An interaction with point-based maps that results in following links on hover that you specify the field.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_tooltips_field.inc',
+        'class' => 'openlayers_plus_behavior_tooltips_field',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_maptext' => array(
+      'type' => 'layer',
+      'title' => t('OL+: MapText'),
+      'description' => t('Display Controls and text on the map.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_maptext.inc',
+        'class' => 'openlayers_plus_behavior_maptext',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+      'openlayers_plus_behavior_mapeditor' => array(
+          'type' => 'layer',
+          'title' => t('OL+: Map Editor'),
+          'description' => t('Display a link to OSM editor on the map.'),
+          'behavior' => array(
+              'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+              'file' => 'openlayers_plus_behavior_mapeditor.inc',
+              'class' => 'openlayers_plus_behavior_mapeditor',
+              'parent' => 'openlayers_behavior',
+          ),
+      ),
+    'openlayers_plus_behavior_popup' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Popups'),
+      'description' => t('An interaction with point-based, clustered maps that allows clicking on points that results in scanning between items.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_popup.inc',
+        'class' => 'openlayers_plus_behavior_popup',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_blockswitcher' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Blockswitcher'),
+      'description' => t('A clone of LayerSwitcher, with better themability and positioning via the Drupal block system.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_blockswitcher.inc',
+        'class' => 'openlayers_plus_behavior_blockswitcher',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_blocktoggle' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Blocktoggle'),
+      'description' => t('A version of BlockSwitcher that toggles between two different layers only. Useful for situations in which layers represent the same data in slightly different ways.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_blocktoggle.inc',
+        'class' => 'openlayers_plus_behavior_blocktoggle',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+  );
+}
+
+/**
+ * Openlayers_plus_hex2rgb().
+ */
+function _openlayers_plus_hex2rgb($colour) {
+  if ($colour[0] == '#') {
+    $colour = substr($colour, 1);
+  }
+  if (strlen($colour) == 6) {
+    list($r, $g, $b) = array(
+      $colour[0] . $colour[1],
+      $colour[2] . $colour[3],
+      $colour[4] . $colour[5],
+    );
+  }
+  elseif (strlen($colour) == 3) {
+    list($r, $g, $b) = array(
+      $colour[0] . $colour[0],
+      $colour[1] . $colour[1],
+      $colour[2] . $colour[2],
+    );
+  }
+  else {
+    return FALSE;
+  }
+
+  $r = hexdec($r);
+  $g = hexdec($g);
+  $b = hexdec($b);
+
+  return array('red' => $r, 'green' => $g, 'blue' => $b);
+}
+
+/**
+ * Openlayers_plus_layer_compare().
+ */
+function openlayers_plus_layer_compare($a, $b) {
+  if ($a['title'] == $b['title']) {
+    return 0;
+  }
+
+  return ($a['title'] < $b['title']) ? -1 : 1;
+}
+
+/*
+ * Implements function hook_libraries_info()
+ */
+function openlayers_plus_libraries_info() {
+  $libraries['jquery-mb-extruder'] = array(
+    'name' => 'JQuery MB Extruder',
+    'vendor url' => 'http://pupunzi.open-lab.com/mb-jquery-components/jquery-mb-extruder/',
+    'download url' => 'http://pupunzi.open-lab.com/mb-jquery-components/jquery-mb-extruder/',
+    'version arguments' => array(
+      'file' => 'README.md',
+      // Best practice: Document the actual version strings for later reference.
+      // 1.x: Version 1.0
+      'pattern' => '/mb.extruder (\d+)/',
+      'lines' => 1,
+    ),
+    'files' => array(
+      'js' => array(
+        'inc/mbExtruder.js',
+        'inc/jquery.metadata.js',
+        'inc/jquery.mb.flipText.js',
+        'inc/jquery.hoverIntent.min.js',
+      ),
+      'css' => array(
+        'css/mbExtruder.css',
+      ),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Implements hook_system_info_alter()
+ *
+ * Adds regions to all themes that can be used on top of the map
+ */
+function openlayers_plus_system_info_alter(&$info, $file, $type) {
+  if ($type == 'theme') {
+    $info['regions']['olblockpanel'] = t('OL+ Block Panel Region');
+    $info['regions']['olmaptext_1'] = t('OL+ Maptext Region 1');
+  }
+}

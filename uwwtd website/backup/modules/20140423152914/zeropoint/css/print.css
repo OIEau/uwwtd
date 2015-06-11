@@ -1,0 +1,52 @@
+/* print.css
+*/
+
+
+.page0, .sizer0, .expander0, 
+body.two-sidebars .outer,
+body.sidebar-first .outer,
+body.sidebar-second .outer {
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100% !important;
+}
+
+#toolbar,
+#above,
+#top-elements,
+#header .block,
+#navlist, #navlinks, #subnavlist, #navlist2,
+#breadcrumb,
+#mission,
+#section1,
+.colleft,
+.colright,
+#section2,
+#bar,
+#footer,
+.user-picture,
+.field-name-field-tags,
+.terms,
+.tabs,
+.feed-icon,
+.links,
+.messages,
+.by {
+	display: none;
+}
+
+#content,
+.content,
+.title {
+	margin:20px 0;
+	width: auto;
+}
+
+a:hover, a:active, a:link, a:visited {
+	color: #000;
+}
+
+.comment .title {
+	padding: 0;
+	margin: 0;
+}

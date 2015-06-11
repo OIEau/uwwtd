@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Handles actions upon enabling and disabling the module.
+ */
+
+/**
+ * Implements hook_enable().
+ */
+function gdal_enable() {
+  // Clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+
+/**
+ * Implements hook_disable().
+ */
+function gdal_disable() {
+  // Clear the cache to display in Feeds as available plugin.
+  cache_clear_all('plugins:feeds:plugins', 'cache');
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function gdal_requirements($phase) {
+  $t = get_t();
+
+  $gdal_version = NULL;
+  if (extension_loaded("gdal")) {
+    $gdal_version = gdalversioninfo("--version");
+
+    // add version number of the gdal-extension
+    $gdal_version .= "<br>" . $t('PHP extension version: ');
+    if (function_exists("gdalextversioninfo")) {
+      $gdal_version .= gdalextversioninfo();
+    }
+    else {
+      $gdal_version .= $t('unknown (< 0.1.3)');
+    }
+  }
+
+  $requirements['gdal-extension'] = array(
+    'title' => $t('GDAL extension'),
+    'value' => !empty($gdal_version) ? $gdal_version : $t('GDAL extension not installed.'),
+    'severity' => !empty($gdal_version) ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+  );
+  return $requirements;
+}
+
+// vim: ft=php tabstop=2 shiftwidth=2

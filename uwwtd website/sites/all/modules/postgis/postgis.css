@@ -1,0 +1,11 @@
+.form-item-postgis-map {
+  display: block;
+}
+
+.form-item-postgis-wkt {
+  display: none;
+}
+
+.form-item-postgis-map.error {
+  border: 1px red solid;
+}

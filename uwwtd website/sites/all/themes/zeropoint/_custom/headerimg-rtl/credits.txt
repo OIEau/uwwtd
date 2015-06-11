@@ -1,0 +1,4 @@
+Banner images originaly designed by Nate Legaspi, 
+Philippines (http://www.wiredfractal.com/).
+
+Rotate.php by Matteo Leoni (http://www.signalkuppe.com)
