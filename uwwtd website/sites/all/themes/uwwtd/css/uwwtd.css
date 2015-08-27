@@ -394,3 +394,67 @@ display: none;
 	background-color: #DB3737;
 	color: white;
 }
+/* Impression */
+#printer {
+	float:right;
+	padding:20px 20px 0 0;
+	clear:both;
+}
+#printer a {
+	text-decoration : none;
+}
+#printer a img {
+	margin-right : 5px;
+}
+body#impression{
+	font:11px/14px Verdana,Arial,Helvetica,sans-serif;
+	margin:0;
+	padding:0;
+
+}
+body#impression, #impression .node, #impression .node_top, #impression .node_bottom {
+	background-image:none;
+}
+/*
+body#impression a:link:after, body#impression a:visited:after {
+  content: " (" attr(href) ") ";
+}
+body#impression a[href^="/"]:after {
+  content: " (http://gesteau.eaufrance.fr" attr(href) ") ";
+}*/
+body#impression ul.treeview a{
+	display:none;
+}
+/*body#impression div.hitarea{
+	display:inline;
+}*/
+
+body#impression div#content, body#impression div#content div{
+	overflow: visible !important;
+	/*float: none !important;*/
+	position: relative !important;;
+}
+body#impression ul.pager{
+	display:none;
+}
+body#impression  div.field .field-label-inline{
+	visibility:visible !important;
+}
+/*html.js body#impression fieldset.collapsed *{
+	display:block;
+}*/
+
+#footerImp {
+	border : 1px solid #9C9D9F;
+	margin-top:30px;
+	padding : 10px;
+	width:95%;
+	clear:both;
+}
+#footerImp div {
+	color : #9C9D9F;
+}
+#footerImp img {
+	float : left;
+	padding-right:10px;
+}

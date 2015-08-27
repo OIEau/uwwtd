@@ -93,6 +93,18 @@
     <?php /* region--content.tpl.php */ ?>
     <div class="region region-content col-sm-12">
         <?php print render($page['content']); ?>
+		<div id="printer">
+		<?php
+			$options = array();
+			//Le titre est le nom du site
+			$options['title'] = $title;
+			//Le sous titre le nom de la page
+			//$options['subtitle'] ='Le glossaire librement réutilisable que chacun peut améliorer';
+			//Description de la page (en fait le titre)
+			//if($title!='') $options['comment'] = str_replace("'", "&#039;", $title);
+			print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);			
+		?>
+		</div>
     </div>
     <?php /* region--sidebar.tpl.php */ ?>
     <?php if ($page['sidebar_second']): ?>

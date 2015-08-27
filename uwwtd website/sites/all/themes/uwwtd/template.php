@@ -144,6 +144,7 @@ function uwwtd_preprocess_field(&$variables){
 		$variables['element']['#field_name'] == 'field_aggart3compliance' ||
 		$variables['element']['#field_name'] == 'field_aggart4compliance' ||
 		$variables['element']['#field_name'] == 'field_aggart5compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart6compliance' ||
 		$variables['element']['#field_name'] == 'field_aggcompliance' ||
 		$variables['element']['#field_name'] == 'field_uwwcompliance'
 	){

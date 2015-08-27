@@ -150,6 +150,7 @@
               //print render($content['field_article_4_compliance_expli']);
               print render($content['field_aggart5compliance']);
               //print render($content['field_article_5_compliance_expli']);
+			   print render($content['field_aggart6compliance']);
             print '</div>';
         print '</div>';
       print '</fieldset>';
