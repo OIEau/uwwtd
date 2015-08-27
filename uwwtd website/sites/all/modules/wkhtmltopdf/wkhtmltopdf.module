@@ -1,0 +1,432 @@
+<?php 
+
+function wkhtmltopdf_menu() {
+     $items = array();
+     $items['wkhtmltopdf/print'] = array(
+          'page callback'		=> 'wkhtmltopdf_print_js',
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+          'file' => 'WkHtmlToPdf.php',
+          'file path' => drupal_get_path('module', 'wkhtmltopdf').'/lib',
+     );
+     $items['wkhtmltopdf/getCache/%'] = array(
+          'page callback'		=> 'wkhtmltopdf_getCache',
+          'page arguments' => array(2),
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+     );
+     $items['wkhtmltopdf/getContent'] = array(
+          'page callback'		=> 'wkhtmltopdf_getContent',
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+     );
+     /*$items['wkhtmltopdf/getFooter'] = array(
+          'page callback'		=> 'wkhtmltopdf_getFooter',
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+     );
+     $items['wkhtmltopdf/getHeader'] = array(
+          'page callback'		=> 'wkhtmltopdf_getHeader',
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+     );
+     */
+     $items['wkhtmltopdf/getCover'] = array(
+          'page callback'		=> 'wkhtmltopdf_getCover',
+		  //'access callback' => 'node_access',
+		  'access arguments' => true,
+		  'access callback' => true,
+          'type'				=> MENU_NORMAL_ITEM,
+     );
+     $items['admin/config/wkhtmltopdf'] = array (
+		'title'=>t('WKHTMLTOPDF'),
+		'access arguments' => array('administer wkhtmltopdf'),
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('wkhtmltopdf_admin_settings'),
+		'file' => 'wkhtmltopdf.admin.inc',
+		'file path' => drupal_get_path('module', 'wkhtmltopdf'),
+	);
+     return $items;
+}
+
+function wkhtmltopdf_init(){
+    drupal_add_css(drupal_get_path('module', 'wkhtmltopdf') . '/style/wkhtmltopdf_form.css'); 
+	drupal_add_js(drupal_get_path('module', 'wkhtmltopdf') . '/js/wkhtmltopdf.js');
+	drupal_add_library('system', 'ui.dialog');
+}
+
+function wkhtmltopdf_getCache($cid, $exit=true){
+    $cache=cache_get($cid);
+    if($cache && !empty($cache->data)){
+        $html = $cache->data;
+    }
+    else{
+        $html ='<html><body>bad cache !!!</body></html>';
+    }
+    if($exit){
+        exit($html);
+    }
+    else{
+        return $html;
+    }
+}
+
+function wkhtmltopdf_print_js(){
+    $path =  wkhtmltopdf_print($_POST);
+    exit(drupal_json_encode(array('file'=>$path)));
+}
+
+//fonction de lancement de l'impression
+//tous les les elements dans params doivent avoir une clé commencant par wkhtmltopdf_*
+function wkhtmltopdf_print($params=array()){
+    $conf =wkhtmltopdf_get_conf();
+    if(empty($conf)){
+        exit("wkhtmltopdf n'est pas configuré");
+    }
+    //On traite les paramétres afin de ne recuperer que ceux destinés à wkhtmltopdf
+    $data =wkhtmltopdf_getData($params);
+    //On recupere les valeurs par défaut
+    $dd = wkhtmltopdf_getDefaultData($conf);
+    //On fusionne les tableaux afin de ne garder que l'essentiel
+    $data = wkhtmltopdf_array_merge_recursive_distinct($dd, $data);
+    //Id generique pour le cache
+    $cid = 'wkhtmltopdf_'.time();
+    
+    //On regarde si on a le minimum syndicale pour lancer une impression à savoir :  un titre et un contenu
+    if($data['title']['value']==''){
+        exit("ERREUR : les paramètres d'impression ne contiennent pas de titre");
+    }
+    if($data['content']['value']==''){
+        exit("ERREUR : les paramètres d'impression ne contiennent pas de contenu");
+    }
+    //krumo($data);
+    //Generation des header, footer, cover et content
+    $content=wkhtmltopdf_getContent($data);
+        cache_set($cid.'_content', $content);
+        //exit($content);
+    if($conf['header_display']){
+        $header=wkhtmltopdf_getHeader($data);
+        cache_set($cid.'_header', $header);
+    }
+    if($conf['footer_display']){
+        $footer=wkhtmltopdf_getFooter($data);
+        cache_set($cid.'_footer', $footer);
+    }
+    if($conf['cover_display']){
+        $cover=wkhtmltopdf_getCover($data);
+        //exit($cover);
+        cache_set($cid.'_cover', $cover);
+    } 
+    
+    //exit($cid);
+    try {
+        //Check if  wkhtmltopdf directory exist
+        $dir = file_default_scheme().'://wkhtmltopdf'; 
+        file_prepare_directory($dir, $mode = FILE_CREATE_DIRECTORY);
+        
+        //On fait le ménage sur le disk en supprimant tous les fichiers qui on plus de 24 heures
+        //file_scan_directory($dir, '[.pdf|.html]', array(), 'wkhtmltopdf_remove_old_file');
+        
+        $options= array(
+            //'path' => $conf['path'], ///var/www/html/dev/pdf
+            'path'=>drupal_realpath($dir).'/',
+            'binpath'=>$conf['bin_path'], //'binpath'=>'/home/wkhtmltopdf-i386',
+            'html'=>$content,
+        );
+		
+        if($conf['disablePdfCompression']){$options['pdfCompression']=false;}
+        if($conf['footer_display']){$options['footer_html']=url('wkhtmltopdf/getCache/'.$cid.'_footer', array('absolute'=>true));}
+        if($conf['header_display']){$options['header_html']=url('wkhtmltopdf/getCache/'.$cid.'_header', array('absolute'=>true));}
+        if($conf['cover_display']){$options['cover_html']=url('wkhtmltopdf/getCache/'.$cid.'_cover', array('absolute'=>true));}
+        if($conf['margins']){$options['margins']=$conf['margins'];}
+		if($conf['toc_display']){
+            $options['toc']=true;
+            if($conf['toc_depth']){$options['toc_depth']=$conf['toc_depth'];}
+        }
+		
+        $wkhtmltopdf = new Wkhtmltopdf($options);
+		//exit($wkhtmltopdf);
+        $wkhtmltopdf->setTitle(utf8_decode($data['title']['value'])); //pdf are encode in ISO-8859-1
+        
+        $wkhtmltopdf->output(Wkhtmltopdf::MODE_SAVE, ($data['filename']['value']!=''?$data['filename']['value'].'.pdf':"file.pdf"));
+        
+        //On fait le ménage dans le cache
+        cache_clear_all($cid, 'cache', true);
+       
+	    $path = $dir.'/'.($data['filename']['value']!=''?$data['filename']['value'].'.pdf':"file.pdf");
+        return file_create_url($path);
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+
+function wkhtmltopdf_array_merge_recursive_distinct(){
+    $aArrays = func_get_args();
+    $aMerged = $aArrays[0];
+   
+    for($i = 1; $i < count($aArrays); $i++){
+        if (is_array($aArrays[$i])){
+            foreach ($aArrays[$i] as $key => $val){
+                if (is_array($aArrays[$i][$key])){
+                    $aMerged[$key] = is_array($aMerged[$key]) ? wkhtmltopdf_array_merge_recursive_distinct($aMerged[$key], $aArrays[$i][$key]) : $aArrays[$i][$key];
+                }
+                else{
+                    $aMerged[$key] = $val;
+                }
+            }
+        }
+    }
+   
+    return $aMerged;
+}
+
+function wkhtmltopdf_getData($params=array()){
+    foreach((array)$params as $key=>$value){
+        if(substr($key, 0, 12)=='wkhtmltopdf_'){
+            $data[substr($key, 12)]['value']=(string)$value;
+        }
+    }
+    return $data;
+}
+function wkhtmltopdf_getDefaultData($conf = array()){
+    $dd=wkhtmltopdf_conf_default_metadata_to_array($conf);
+    $dd['title']=array('label'=>'Titre');
+    $dd['identifier']=array('label'=>'Identifiant');
+    $dd['date']=array('label'=>"Date",'value'=>date('d/m/Y'));
+    
+    
+    /*
+    $dd['author']=array('label'=>'Auteur','value'=>"Office National de l'Eau et des Milieux Aquatiques (ONEMA)");
+    $dd['contributor']=array('label'=>'Contributeur','value'=>"Office International de l'Eau (OIEau)");
+    $dd['author']=array('label'=>"Auteur",'value'=>"Gest'eau");
+    $dd['editor']=array('label'=>"Editeur",'value'=>"République française. Office National de l'Eau et des Milieux Aquatiques (ONEMA)");
+    $dd['language']=array('label'=>"Langue",'value'=>"Fr");
+    $dd['spatial']=array('label'=>"Couverture géographique",'value'=>"France entière");
+    $dd['rights']=array('label'=>"Droits d'usage",'value'=>l("http://creativecommons.org/licenses/by-nc-sa/2.0/fr", "http://creativecommons.org/licenses/by-nc-sa/2.0/fr"));
+    */
+    
+    return $dd;
+}
+
+function wkhtmltopdf_conf_default_metadata_to_array($conf=array()){
+    $dd=array();
+    if(isset($conf['default_metadata'])){
+        $lines=explode("\n", $conf['default_metadata']);
+        foreach($lines as $line){
+            $l = explode('|', trim($line));
+            $dd[trim($l[0])]=array(
+                'label'=>trim($l[1]),
+                'value'=>trim($l[2])
+            );
+        }
+    }
+    
+    return $dd;
+}
+
+//Fonction de génération du header
+function wkhtmltopdf_getHeader($data=array()){   
+    return theme('wkhtmltopdf_header', array());
+}
+//Fonction de génération du header
+function wkhtmltopdf_getFooter($data=array()){
+    return theme('wkhtmltopdf_footer', array());
+}
+//Fonction de génération du Cover
+function wkhtmltopdf_getCover($data=array()){
+    $variables=array();
+    
+    $variables['title'] = '<div class="wkhtmltopdf_title">'.$data['title']['value'].'</div>';
+    if($data['subtitle']['value']!='') $variables['subtitle'] = '<div class="wkhtmltopdf_subtitle">'.$data['subtitle']['value'].'</div>';
+    if($data['creator']['value']!='') $variables['creator'] = '<div class="wkhtmltopdf_creator">'.$data['creator']['value'].'</div>';
+    if($data['date']['value']!='') $variables['date'] = '<div class="wkhtmltopdf_date">'.$data['date']['value'].'</div>';
+    
+	$variables['doc-info'] =  $variables['title'].$variables['subtitle']. $variables['creator'].$variables['date'];
+    
+    if($data['comment']['value']!=''){$variables['comment']='<p><b>Votre commentaire : </b></p><p>'.$data['comment']['value'].'</p>';}
+    
+    $variables['cartouche']=wkhtmltopdf_AddDCMetadata($data); 
+    return theme('wkhtmltopdf_cover', $variables);
+}
+
+//Fonction de génération du Content
+function wkhtmltopdf_getContent($data=array()){
+    drupal_theme_initialize();
+
+    $html = $data['content']['value'];
+    
+    //=================== Spécial geosie
+    //Si les module existe et qu'on a des éléments portant à croire que le contenu courant peut contenir une carte...alors attention 
+    if(module_exists('geosie') && strpos($html,'<div id="container_geosie_brique">')!==false){
+        geosie_add_common_js_css();
+    }
+    //===================
+    $variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'openlayers_plus' ) . '/theme/openlayers_plus.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
+	$variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'contextual' ) . '/contextual.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
+	$variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'openlayers_gazetteer' ) . '/css/openlayers_gazetteer.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
+	$variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'views' ) . '/js/views-contextual.js'); 
+	
+	$variables['css'] = wkhtmltopdf_make_link_absolute(drupal_get_css());
+    $variables['js'] = wkhtmltopdf_make_link_absolute(drupal_get_js());
+    //$variables['js_footer'] = wkhtmltopdf_make_link_absolute(drupal_get_js('js_footer'));
+    $variables['footer'] = wkhtmltopdf_make_link_absolute(drupal_get_js('footer'));
+	$variables['title'] = $data['title']['value'];
+
+    //On remplace dans les fiedsets collapse pour voir tout le texte
+    $html = str_replace('collapse', 'collapsible',$html); // base64_decode($_POST['contenu'])
+    $html = wkhtmltopdf_make_link_absolute($html);
+    $variables['content'] = $html;
+	//exit($html);
+    return theme('wkhtmltopdf_content', $variables);
+}
+
+function wkhtmltopdf_make_link_absolute($str){
+    //New remote file notation -> return to old way
+    $str = str_replace('src="//', 'src="http://', $str);
+    $str = str_replace('href="//', 'href="http://', $str);
+    
+    //Local path
+    $str = str_replace('href="/', 'href="http://'.$_SERVER['SERVER_NAME'].'/',$str); 
+    $str = str_replace('src="/', 'src="http://'.$_SERVER['SERVER_NAME'].'/',$str);
+
+    return $str;
+}
+
+//Fonction de chargement de la configuration du module
+function wkhtmltopdf_get_conf(){
+	return variable_get('wkhtmltopdf_configurations', array());
+}
+//Fonction d'enregistrement de la configuration du module
+function wkhtmltopdf_set_conf($conf){
+    //dsm($conf);
+	return variable_set('wkhtmltopdf_configurations', $conf);
+}
+
+//TODO: mettre cette fonction comme un theme
+//$selector : selecteur jquery pour la selection d'un element html 
+function wkhtmltopdf_tag($selector=array('body'), $options=array()){
+$s = drupal_json_encode((array)$selector);
+//if(!isset($options['title'])) $options['title'] = variable_get('site_name', '');
+$options = drupal_json_encode($options);
+
+$tag ='
+<div class="wkhtmltopdf_printer">
+    <div class="wkhtmltopdf_starter"><a name="wkhtmltopdf" rel="nofollow" onclick=\'wkhtmltopdf_print('.$s.', this, Drupal.settings.basePath, '.$options.');\'>'.t('Print').'</a></div>
+    <div id="wkhtmltopdf_dialog"></div>
+    <div id="wkhtmltopdf_dialogResult"></div>
+</div>
+';
+    return $tag;
+}
+
+function wkhtmltopdf_theme( &$existing, &$type, &$theme, &$path ){
+  return array(
+    'wkhtmltopdf_footer' => array(
+		'template' => 'tpl/wkhtmltopdf_footer',
+        'variables' => array( 'variables' => null )
+    ),
+    'wkhtmltopdf_header' => array(
+		'template' => 'tpl/wkhtmltopdf_header',
+        'variables' => array( 'variables' => null )
+    ),
+    'wkhtmltopdf_cover' => array(
+		'template' => 'tpl/wkhtmltopdf_cover',
+        'variables' => array( 'variables' => null )
+    ),
+    'wkhtmltopdf_content' => array(
+		'template' => 'tpl/wkhtmltopdf_content',
+        'variables' => array( 'variables' => null )
+    )
+  );
+}
+
+//Cartouche de métadonnée => selon les champs Dublin Core
+function wkhtmltopdf_AddDCMetadata($data){
+	$md = array();
+	//Liste des champs Dublin Core => l'ordre dans le tableau defini l'ordre d'apparition dans le cartouche
+	$dc=array(
+		'title',
+		'alternative',
+		'creator',
+		'subject',
+		'description',
+			'tableOfcontenus',
+			'abstract',
+		'publisher',
+		'contributor',
+		'date',
+			'created',
+			'valid',
+			'available',
+			'issued',
+			'modified',
+			'dateAccepted',
+			'dateCopyrighted',
+			'dateSubmitted',
+		'type',
+		'format',
+			'extent',
+			'medium',
+		'identifier', 
+		'source',
+		'language',
+		'coverage',
+			'spatial',
+			'temporal',
+		'relation',
+			'isVersionOf',
+			'hasVersion',
+			'isReplacedBy',
+			'replaces',
+			'isRequiredBy',
+			'requires',
+			'isPartOf',
+			'hasPart',
+			'isReferencedBy',
+			'references',
+			'isFormatOf',
+			'hasFormat',
+			'conformsTo',
+		'rights',
+		'audience',
+			'mediator',
+			'educationLevel',
+	);
+	foreach($dc as $metadata){
+		if(isset($data[$metadata])){ $cartouche[]=$data[$metadata];}
+	}
+	if(!empty($cartouche)){
+		foreach($cartouche as $ligne){
+			if(!empty($ligne)){
+				//Si la ligne est vide
+                if($ligne['value']=="") $ligne['value']="-";
+                //Si la ligne est une URL
+                if(substr($ligne['value'],0,4)=='http'){
+                    $ligne['value'] = l($ligne['value'], $ligne['value']);
+                }
+				$md['rows'][]= array('<b>'.$ligne['label'] .' :</b> '.$ligne['value']);
+			}
+		}
+        return theme('table',$md);
+	}
+    else return false;
+}
+
+//Cette permet de supprimer un fichier s'il date de plus 24 heures
+function wkhtmltopdf_remove_old_file($file){
+    $crea_date = (int)@filectime($file);
+    if((time() - $crea_date) > (60*60*24)){
+        @unlink($file);
+    }
+}

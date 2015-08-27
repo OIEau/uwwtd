@@ -1,0 +1,6 @@
+name = WKHTMLTOPDF
+description = Allow pdf export of webpage with webkit stuff.
+core = 7.x
+package = PDF
+version = "7.x-1.0"
+files[] = lib/WkHtmlToPdf.php

@@ -1,0 +1,43 @@
+#wkhtmltopdf_wait{
+    background:url(../images/wait.gif) bottom left no-repeat;
+}
+
+.wkhtmltopdf_starter{
+    padding-top:12px;
+    width:100%;
+    text-align:right;
+}
+.wkhtmltopdf_starter a{
+    background:url(../images/btn_imprimer_Ottoman.png) center left no-repeat transparent;
+    color:#3D6098;
+    font-weight:bold;
+    text-decoration:none;
+    padding-left:20px;
+}
+
+.formulaire-public ul{
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+.formulaire-public li{
+    margin-bottom:12px;
+}
+.formulaire-public li label{
+    display:block;
+    font-weight:bold;
+}
+
+.formulaire-public li input[type=text], .formulaire-public li textarea{
+    min-width:350px;
+    *width:350px;
+}
+.formulaire-public li.obligatoire label {
+    color:red;
+}
+.formulaire-public li.obligatoire label span.obligatoire{
+    display:none;
+}
+div.ui-dialog-buttonpane{
+    text-align:center;
+}
