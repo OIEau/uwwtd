@@ -2,6 +2,45 @@
 //==========FIX ME : add repcode foreach import batch
 
 $GLOBALS['uwwtd_errors']=array();
+
+$GLOBALS['uwwtd_value']['treatementmet'] = array(
+    'false' => 0,
+    'true' => 1,
+    'not_calculable' => 2,
+);
+$GLOBALS['uwwtd_value']['performancemet'] = array(
+    'false' => 0,
+    'true' => 1,
+    'not_calculable' => 2,
+);
+$GLOBALS['uwwtd_value']['compliance'] = array(
+    'not_compliantQC'  => 'AddQC', //AddQC|Not compliant  (art3comp)
+    'compliant'      => 'C',    //C|Compliant       (agglo	art3comp	art4com	art5com	art6com	uwwtd)  
+    'not_compliant'  => 'NC',  //NC|Not compliant   (agglo	art3comp	art4com	art5com	art6com	uwwtd)  
+    'no_information' => 'NI',  //NI|No information  (agglo	art3comp	art4com	art5com	art6com	uwwtd)  
+    'not_relevant'   => 'NR',   //NR|Not relevant  (agglo	art3comp	art4com	art5com	art6com	uwwtd)   
+    'not_compliantR'  => 'RNC', //RNC|Not compliant    (art4com, art6com)
+    'compliantQC'      => 'QC', //QC|Compliant     (art3comp)     
+    'compliant_on_equipment_only' => 'CE', //CE|Compliant on equipment only   (uwwtd)
+);
+$GLOBALS['uwwtd_value']['rcatype'] = array(
+    '?' => 'CSA',
+    '?' => 'LSA',
+    '?' => 'NA',
+    '?' => 'SA',
+    '?' => 'A58',
+);
+$GLOBALS['uwwtd_value']['required'] = array(
+    'primary' => 'P',
+    'secondary' => 'S',
+    'appropriate' => 'Appropriate',
+    'nitrogen' => 'N',
+    'phosphorus' => 'MP',
+    'other' => 'O',
+    'nitrogen_phosphorus' => 'NP',
+    'notrelevant' => 'NR',
+    'morestringent' => 'MS',    
+);
 ################################ DATA CENTER PAGE ################################
 function uwwtd_data_form($form, &$form_state){
 
@@ -1392,6 +1431,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs information found.', $timestamp, $i, $node);
         
+        //TODO pourquoi le refaire ?   peut être écraser par PL112 ? dans ce cas changer al condition plus haut non ?
         if($rep == 'LT'){
             $node->field_regionnuts['und'][0]['value'] = 'LT00';
         }
@@ -4208,7 +4248,10 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
 			// Get information on all connected treatment plants
 			$listUwws = array();
 			$required = 'Appropriate';
-			$total =0;
+            //e.vincent / 2015/08/28 / refactor code
+            //$infoAllAggUww = uwwtd_get_all_info_agguwww($node);
+            
+			$total = 0; // -> $infoAllAggUww['total']            
 			foreach($node->field_agguwwliste['und'] as $agguwwlist){
 				$uww = node_load($agguwwlist['nid']);
 				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
@@ -4291,7 +4334,12 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
 		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
 		//dsm('percLoadCollecting : '.$percLoadCollecting);
 		//dsm('required : '.$required);
+        //e.vincent : correction for all uwwtp
 		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
+//         if (percLoadCollecting == 0 || true === uwwtd_all_uwwtp_required_in(
+//                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
+//                                                                       $GLOBALS['uwwtd_value']['required']['notrelevant']), 
+//                                                                 $infoAllAggUww)) {        
 			$art4Comp = 'NR';
 			$art5Comp = 'NR';
 			$art6Comp = 'NR';
@@ -4313,7 +4361,9 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
 			//if($total >= $var1 && $total <= 2000)
 			//dsm('total : '.$total);
             //% de charge perdue dans les réseaux
+            //e.vincent / 2015/08/28 /c hange with refactoring
             $load_lost = $CS-$total;
+            //$load_lost = $CS - $infoAllAggUww['total'];
             //charge perdue dans les réseaux en EH
             $load_lost_eq = abs($load_lost)*$maxgen/100;
             
@@ -4321,14 +4371,23 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
                 //dsm('maxgen : '.$maxgen);
 				if($maxgen<= 10000){
 					//one of the treatment required is secondary
+                    //e.vincent / 2015/08/28 / correction for all uwwtp
 					if($required == 'S'){
-						$nblink = count($node->field_linked_treatment_plants['und']);
+//                     if (true === uwwtd_atleastone_uwwtp_required_in(
+//                                                     array($GLOBALS['uwwtd_value']['required']['secondary']), 
+//                                                     $infoAllAggUww)) {                      
+// 						$nblink = count($node->field_linked_treatment_plants['und']);
 						//dsm('nblink : '.$nblink);
 						//dsm('compB : '.$compB);
-						if($nblink == 1){
-							$link = $node->field_linked_treatment_plants['und'][0]['nid'];	
+// 						if($nblink == 1){
+							//$link = $node->field_linked_treatment_plants['und'][0]['nid'];	
 							//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
+                            //e.vincent / 2015/08/28 / coorection for all uwwtp TODO
 							if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
+//                             if ($compB == 'C' && true === uwwtd_all_uwwtp_required_notin(
+//                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
+//                                                                       $GLOBALS['uwwtd_value']['required']['primary']), 
+//                                                                 $infoAllAggUww)) { 
 								$art4Comp = 'C';
 								$art5Comp = 'NR';
 							}else{
@@ -4344,28 +4403,28 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
 									$art5Comp = 'NR';
 								}
 							}
-						}elseif($nblink >1){
-							for($links = 0;$links <= $nblink-1;$links++){
-								$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
-								//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
-								if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
-									$art4Comp = 'C';
-									$art5Comp = 'NR';
-								}else{
-									//deadline of article4 is before or equal to reporting reference year
-									$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-									$dateArt4 = explode('-', $dateArt4);
-									//$year = date('Y');
-									if($dateArt4[0] <= $yearReporting){
-										$art4Comp = 'NC';
-										$art5Comp = 'NR';
-									}else{
-										$art4Comp = 'NR';
-										$art5Comp = 'NR';
-									}
-								}
-							}//return array($art4Comp, $art5Comp);	
-						}
+// 						}elseif($nblink >1){
+// 							for($links = 0;$links <= $nblink-1;$links++){
+// 								//$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
+// 								//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
+// 								if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
+// 									$art4Comp = 'C';
+// 									$art5Comp = 'NR';
+// 								}else{
+// 									//deadline of article4 is before or equal to reporting reference year
+// 									$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 									$dateArt4 = explode('-', $dateArt4);
+// 									//$year = date('Y');
+// 									if($dateArt4[0] <= $yearReporting){
+// 										$art4Comp = 'NC';
+// 										$art5Comp = 'NR';
+// 									}else{
+// 										$art4Comp = 'NR';
+// 										$art5Comp = 'NR';
+// 									}
+// 								}
+// 							}//return array($art4Comp, $art5Comp);	
+// 						}
 					}else{
 						$art4Comp = 'NR';
 						$art5Comp = 'NR';
@@ -4374,8 +4433,20 @@ function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, 
 				}else{
 					//dsm('required : '.$required);
 					//at least one treatment required is more stringent treatment
+                    //e.vincent / 2015/08/28 / correction for all uwwtp
 					if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
+//                     if (true === uwwtd_atleastone_uwwtp_required_in(
+//                                                     array(
+//                                                         $GLOBALS['uwwtd_value']['required']['morestringent'],
+//                                                         $GLOBALS['uwwtd_value']['required']['nitrogen'],
+//                                                         $GLOBALS['uwwtd_value']['required']['phosphorus'],
+//                                                         $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
+//                                                         $GLOBALS['uwwtd_value']['required']['other'],
+//                                                     ), 
+//                                                     $infoAllAggUww)) {                    
 						//Compliance STEP B for all uwwtps with treatment required secondary and more stringent =C
+                        //e.vincent / 2015/08/28 / correction for all uwwtp
+                        //TODO problème ici! que veut dire l'algo!
 						if(($compB == 'C') && ($secondary == '1' || $treatmenttype == 'MS')){
 								$art4Comp = 'C';
 								$art5Comp = 'C';
@@ -4821,8 +4892,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		$reason = 'Station found to have no information on agglomerations';
 		uwwtd_add_error(1, 3, 'Station found to have no information on agglomerations.', $timestamp, null, $node);
 		$truereqtreatment = 'NI';
-		$treatment = '0';
-		$performance = '0';
+		$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+		$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 		return (array($truereqtreatment, $comp, $reason, $treatment, $performance));
 	}
 
@@ -4869,8 +4940,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		$reason = 'Station found to have no information on discharge points';
 		uwwtd_add_error(1, 3, 'Station found to have no information on discharge points.', $timestamp, null, $node);
 		$truereqtreatment = 'NI';
-		$treatment = '0';
-		$performance = '0';
+		$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+		$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 		return (array($truereqtreatment, $comp, $reason, $treatment, $performance));
 	}
 
@@ -4892,29 +4963,29 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 
 	if($truereqtreatment == 'P'){
 		if(isset($node->field_uwwprimarytreatment['und'][0]['value']) && $node->field_uwwprimarytreatment['und'][0]['value'] == '1'){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
-				$performance = '1';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because primary performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
@@ -4922,29 +4993,29 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 	if($truereqtreatment == 'S'){
 		
 		if(isset($node->field_uwwsecondarytreatment['und'][0]['value']) && $node->field_uwwsecondarytreatment['und'][0]['value'] == '1'){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because secondary performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
@@ -4956,7 +5027,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$node->field_uwwnremoval['und'][0]['value'] == '1' && 
 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
 		){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -4967,16 +5038,16 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -4987,12 +5058,12 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because nitrogen treatment is not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
@@ -5004,7 +5075,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$node->field_uwwpremoval['und'][0]['value'] == '1' && 
 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
 		){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -5015,16 +5086,16 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because phosphorus treatment is in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -5035,12 +5106,12 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because phosphorus treatment is not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
@@ -5054,7 +5125,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
 			$node->field_uwwnremoval['und'][0]['value'] == '1'
 		){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -5067,16 +5138,16 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(
 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
@@ -5089,12 +5160,12 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
@@ -5121,7 +5192,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 				
 			)
 		){
-			$treatment = '1';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
 				isset($node->field_uwwotherperf['und'][0]['value']) &&
@@ -5131,16 +5202,16 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			){
 				$comp = 'C';
 				$reason = 'Station found to be compliant because other treatment is in place and performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because other treatment is in place but performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 		else{
-			$treatment = '0';
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
 				isset($node->field_uwwcodperf['und'][0]['value']) &&
 				isset($node->field_uwwotherperf['und'][0]['value']) &&
@@ -5150,43 +5221,48 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			{
 				$comp = 'NC';
 				$reason = 'Station found to be not compliant because other treatment is not in place but performance is met';
-				$performance = '1';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
 			else{
 				$comp = 'NC';
 				$reason = 'Station found to be non compliant because other treatment is not in place and performance is not met';
-				$performance = '0';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
 			}
 		}
 	}
 	
-	if($truereqtreatment == 'Appropriate'){
-		if(isset($node->field_uwwtreatmenttype['und'][0]['value']) && $node->field_uwwtreatmenttype['und'][0]['value'] == 'MS'){
-			$treatment = '1';
-			if(isset($node->field_uwwntotperf['und'][0]['value']) && isset($node->field_uwwptotperf['und'][0]['value']) && $node->field_uwwntotperf['und'][0]['value'] == 'P' && $node->field_uwwptotperf['und'][0]['value'] == 'P'){
-				$comp = 'C'; 
-				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
-				$performance = '1';
-			}
-			else{
-				$comp = 'NR'; // Ou NC si date dépassée
-				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
-				$performance = '0';
-			}
-		}
-		else{
-			$treatment = '0';
-			if(isset($node->field_uwwntotperf['und'][0]['value']) && isset($node->field_uwwptotperf['und'][0]['value']) && $node->field_uwwntotperf['und'][0]['value'] == 'P' && $node->field_uwwptotperf['und'][0]['value'] == 'P'){
-				$comp = 'NC'; // Ou NR si date dépassée
-				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
-				$performance = '1';
-			}
-			else{
-				$comp = 'NR';// Ou NC si date dépassée
-				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
-				$performance = '0';
-			}
-		}
+	if($truereqtreatment == 'Appropriate'){    
+        //e.vincent / 2015/08/27 / ask from b.fribourg-blanc
+        $treatment = $GLOBALS['uwwtd_value']['treatementmet']['not_calculable'];
+        $performance = $GLOBALS['uwwtd_value']['performancemet']['not_calculable'];
+        $comp = 'NR';
+        $reason = 'Treatment found to be appropriate, treatment to implement and performance can therefore not be calculated';        
+// 		if(isset($node->field_uwwtreatmenttype['und'][0]['value']) && $node->field_uwwtreatmenttype['und'][0]['value'] == 'MS'){
+// 			$treatment = '1';
+// 			if(isset($node->field_uwwntotperf['und'][0]['value']) && isset($node->field_uwwptotperf['und'][0]['value']) && $node->field_uwwntotperf['und'][0]['value'] == 'P' && $node->field_uwwptotperf['und'][0]['value'] == 'P'){
+// 				$comp = 'C'; 
+// 				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
+// 				$performance = '1';
+// 			}
+// 			else{
+// 				$comp = 'NR'; // Ou NC si date dépassée
+// 				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
+// 				$performance = '0';
+// 			}
+// 		}
+// 		else{
+// 			$treatment = '0';
+// 			if(isset($node->field_uwwntotperf['und'][0]['value']) && isset($node->field_uwwptotperf['und'][0]['value']) && $node->field_uwwntotperf['und'][0]['value'] == 'P' && $node->field_uwwptotperf['und'][0]['value'] == 'P'){
+// 				$comp = 'NC'; // Ou NR si date dépassée
+// 				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
+// 				$performance = '1';
+// 			}
+// 			else{
+// 				$comp = 'NR';// Ou NC si date dépassée
+// 				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
+// 				$performance = '0';
+// 			}
+// 		}
 	}
 	
 	return (array($truereqtreatment, $comp, $reason, $treatment, $performance));	
@@ -5648,6 +5724,143 @@ function uwwtd_get_required_treatment($dcps, $maxgen){
 	$truereqtreatment = $reqtreatments[0];
 	
 	return $truereqtreatment;
+}
+
+/**
+ * Return a list of all the uwwtp with there infirmation
+ * 
+ * @param   object   $node    a valid node of an agglomeration 
+ * 
+ * @return  array    
+ *                      $result['total'] = numerical val =  sum of all the uww_agglo data field_agglo_uww_perc_ent_uw
+ *                                                          for each uwwtp 
+ *                      $result['listUww'][] = array(    
+ *                           node  = uwwtp node
+ *                           required  =  node value
+ *                           bod5      =  node value
+ *                           cod       =  node value
+ *                           collecting =  node value
+ *                           compB      =  node value
+ *                           secondary  =  node  value
+ *                           treatmenttype = node value 
+ *                      )  
+ */
+function uwwtd_get_all_info_agguwww($node) {
+    $aResult = array();
+    $aResult['total']   = 0;
+//     $aResult['allRequired'] = array();
+    $aResult['listUww'] = array();
+    
+	foreach($node->field_agguwwliste['und'] as $agguwwlist){
+		$uww = node_load($agguwwlist['nid']);
+// 		$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
+// 		$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
+// 		$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
+// 		$cod = $uww->field_uwwcodperf['und'][0]['value'];
+// 		$compB = $uww->field_uwwcompliance['und'][0]['value'];
+// 		$secondary = $uww->field_uwwsecondarytreatment['und'][0]['value'];
+// 		$treatmenttype = $uww->field_uwwtreatmenttype['und'][0]['value'];
+        
+//         $aResult['allRequired'][] = $uww->field_uwwtreatmentrequired['und'][0]['value'];
+		$aResult['listUww'][] = array(
+			'node' => $uww,
+			'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
+			'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
+			'cod' => $uww->field_uwwcodperf['und'][0]['value'],
+			'collecting' => $uww->field_uwwloadenteringuwwtp['und'][0]['value'],
+            'compB' => $uww->field_uwwcompliance['und'][0]['value'],
+            'secondary' => $uww->field_uwwsecondarytreatment['und'][0]['value'],
+            'treatmenttype' => $uww->field_uwwtreatmenttype['und'][0]['value'],
+		);        
+
+		// get reste of information from node that collected joint information
+		$query = db_select('node', 'n');
+		$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+		$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+		$query->fields('n',array('title','created'))
+		->condition('a.entity_id', $node->nid, '=')
+		->condition('u.entity_id', $uww->nid, '=')
+		->fields('n',array('nid'));
+
+		$result = $query->execute();
+
+		while($record = $result->fetchAssoc()){
+			$agguww = node_load($record['nid']);
+			$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+			//$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+			$aResult['total'] += $uwwperccollec;
+		}
+	}
+    
+    return $aResult;
+}
+
+/**
+ * Check if all uwwtp required value are in a list of autorized value
+ * return false at the first uwwtp which is not in  $authorizeValue
+ * 
+ * @param   array    $authorizeValue    List of authorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key required with the value "required" 
+ * 
+ * @return  boolean                     if all the uwwtp required value are in the $authorizeValue, true is return   
+ */         
+function uwwtd_all_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
+    $bResult = true;
+    
+    foreach($infoAllAggUww['listUww'] as $aUwwtp) {
+        if (false === in_array($aUwwtp['required'], $authorizeValue)) {
+            $bResult = false;
+            break;
+        }
+    }
+    
+    return $bResult;    
+}
+
+
+/**
+ * Check if all uwwtp required value are in a list of autorized value
+ * return false at the first uwwtp which is in  $unauthorizeValue
+ *  
+ * @param   array    $unauthorizeValue    List of unauthorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key required with the value "required" 
+ * 
+ * @return  boolean                     if all the uwwtp required value are not in the $unauthorizeValue, true is return   
+ */         
+function uwwtd_all_uwwtp_required_notin($unauthorizeValue, $infoAllAggUww) {
+    $bResult = true;
+    
+    foreach($infoAllAggUww['listUww'] as $aUwwtp) {
+        if (true === in_array($aUwwtp['required'], $unauthorizeValue)) {
+            $bResult = false;
+            break;
+        }
+    }
+    
+    return $bResult;    
+}
+
+
+/**
+ * Check if at least one uwwtp required value are in a list of autorized value
+ * return true at the first uwwtp which is in  $authorizeValue
+ *  
+ * @param   array    $authorizeValue    List of authorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key required with the value "required" 
+ * 
+ * @return  boolean                     if at least one of the uwwtp required value are in the $authorizeValue, true is return   
+ */         
+function uwwtd_atleastone_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
+    $bResult = false;
+    
+    foreach($infoAllAggUww['listUww'] as $aUwwtp) {
+        if (true === in_array($aUwwtp['required'], $authorizeValue)) {
+            $bResult = true;
+            break;
+        }
+    }
+    
+    return $bResult;    
 }
 
 // No longer needed but could be useful
