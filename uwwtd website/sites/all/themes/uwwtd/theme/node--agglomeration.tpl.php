@@ -155,7 +155,21 @@
         print '</div>';
       print '</fieldset>';
     print '</div>';
+/* e.vincent / 2015/08/31 / add dev from alexander */
+/*
+    print '<div class="uwwcontainer">';
+      print '<fieldset class="uwwfull group-agggraphic field-group-fieldset group-description panel panel-default form-wrapper">';
+        print '<legend class="panel-heading">';
+          print '<div class="panel-title fieldset-legend">'.t('Graphical network summary').'</div>';
+            print '</legend>';
+          print '<div class="panel-body">';
+              
+            echo uwwtd_get_agglo_graphic($node);
 
+          print '</div>';
+      print '</fieldset>';
+    print '</div>';
+*/
     print '<div class="uwwcontainer">';
       print '<div class="uwwthird">';
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';

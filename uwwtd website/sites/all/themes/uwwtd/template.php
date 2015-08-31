@@ -811,3 +811,319 @@ function uwwtd_insert_errors_tab($node){
 
 	return $output;
 }
+
+function uwwtd_get_uww_graphic($node){
+	global $base_url;
+	$src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+
+	$nbAgglos = 0;
+	$reseau = array();
+	$reseau['nid'] = $node->nid;
+	$reseau['title'] = $node->title;
+	$reseau['id'] = $node->field_siteid['und'][0]['value'];
+	$reseau['compliance'] = $node->field_uwwcompliance['und'][0]['value'];
+	$reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
+
+	$reseau['primary'] = array(
+		'treatment' => $node->field_uwwprimarytreatment['und'][0]['value']
+	);
+
+	$reseau['secondary'] = array(
+		'treatment' => $node->field_uwwsecondarytreatment['und'][0]['value']
+	);
+
+	$reseau['n-removal'] = array(
+		'treatment' => $node->field_uwwnremoval['und'][0]['value'],
+		'performance' => $node->field_uwwntotperf['und'][0]['value']
+	);
+
+	$reseau['p-removal'] = array(
+		'treatment' => $node->field_uwwpremoval['und'][0]['value'],
+		'performance' => $node->field_uwwptotperf['und'][0]['value']
+	);
+
+	$reseau['uv'] = array(
+		'treatment' => $node->field_uwwuv['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['micro'] = array(
+		'treatment' => $node->uwwmicrofiltration['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['chlorination'] = array(
+		'treatment' => $node->field_uwwchlorination['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['ozonation'] = array(
+		'treatment' => $node->field_uwwozonation['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['other'] = array(
+		'treatment' => $node->field_uwwothertreat['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['sand'] = array(
+		'treatment' => $node->field_uwwsandfiltration['und'][0]['value'],
+		'performance' => $node->field_uwwotherperf['und'][0]['value']
+	);
+
+	$reseau['agglos'] = array();
+	foreach($node->field_linked_agglomerations['und'] as $aggs){
+		$nbAgglos++;
+		$agg = node_load($aggs['nid']);
+		$reseau['agglos'][$agg->nid]['nid'] = $agg->nid;
+		$reseau['agglos'][$agg->nid]['title'] = $agg->title;
+		$reseau['agglos'][$agg->nid]['id'] = $agg->field_siteid['und'][0]['value'];
+		$reseau['agglos'][$agg->nid]['generated'] = $agg->field_agggenerated['und'][0]['value'];
+	}
+
+	$nbDcps = 0;
+	foreach($node->field_linked_discharge_points['und'] as $dcps){
+		$nbDcps++;
+		$dcp = node_load($dcps['nid']);
+		$rca = node_load($dcp->field_linked_receiving_areas['und'][0]['nid']);
+		$reseau['dcps'][$dcp->nid]['nid'] = $dcp->nid;
+		$reseau['dcps'][$dcp->nid]['title'] = $dcp->title;
+		$reseau['dcps'][$dcp->nid]['id'] = $dcp->field_siteid['und'][0]['value'];
+		$reseau['dcps'][$dcp->nid]['rcaNid'] = $rca->nid;
+		$reseau['dcps'][$dcp->nid]['rcaTitle'] = $rca->title;
+		$reseau['dcps'][$dcp->nid]['rcaType'] = $dcp->field_rcatype['und'][0]['value'];
+	}
+	dsm($reseau);
+
+	$output = '<div class="graphic-container">';
+
+	$output .= '<div class="agglomeration-graphic">
+	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
+	        <div class="uww-graphic-title">';
+
+	foreach($reseau['agglos'] as $agglo){
+	          $output .= ''.l($agglo['title'], "node/".$agglo['nid']).'
+	          ('.$agglo['generated'].' p.e)<br>';
+	}
+
+	$output .= '</div></div>';
+
+	$output .= '<div class="connectors">';
+        $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
+    $output .= '</div>';
+
+    $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
+
+	    if($reseau['compliance'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
+	    elseif($reseau['compliance'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
+	    else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
+	  
+		$output .= '<div class="graphic-title">
+			'.l($reseau['title'], "node/".$reseau['nid']).'
+		</div>
+		<div class="station-load">'.$reseau['load'].' p.e</div>
+	</div>';
+
+	$output .= '<div class="more-wrapper">';
+		if($reseau['n-removal']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['n-removal']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['n-removal']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('N').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['p-removal']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['p-removal']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['p-removal']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('P').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['uv']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['uv']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['uv']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('UV').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['micro']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['micro']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['micro']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('MICRO').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['chlorination']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['chlorination']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['chlorination']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('CHLOR').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['ozonation']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['ozonation']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['ozonation']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('OZONE').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['sand']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['sand']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['sand']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('SAND').'</div>';
+			$output .= '</div>';
+		}
+
+		if($reseau['other']['treatment'] == '1'){
+			$output .= '<div class="more">';
+			if($reseau['other']['performance'] == 'P'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+			}
+			elseif($reseau['other']['performance'] == 'F'){
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+			}
+			else{
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+			}
+			$output .= '<div class="more-text">'.t('O').'</div>';
+			$output .= '</div>';
+		}
+	$output .= '</div>';
+
+	$offset = 16;
+    $totalDcps = 0;
+    $totalDcpsT = 0;
+    $totalDcpsB = 0;
+
+    $output .= '<div class="dcp-connections" style="top: -'.$offset.'px">';
+
+	$nbDcps = count($reseau['dcps']);
+	$totalDcps = $totalDcps + $nbDcps;
+	$nbDcpsT = 0;
+	$nbDcpsB = 0;
+	for ($i=0; $i <= $nbDcps; $i++) { 
+
+		if($i > 1){    
+
+		  if($i % 2 == 0){
+		    $nbDcpsT ++;
+		    $totalDcpsT++;
+		  }
+		  else{
+		    $nbDcpsB ++;
+		    $totalDcpsB++;
+		  }
+		}
+	}
+	if($nbDcpsT == 1) $topMarge = 50;
+	else $topMarge = 0 + ($nbDcpsT * 48);
+	if($nbPlants > 1) $topMarge = $topMarge - 1;
+	if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
+	if($topMarge < 0) $topMarge = 0;
+	$topMarge = $topMarge - (2 * $topMarge);
+
+
+	$output .= '<div class="station-dcp-connections">';
+	  $output .= '<div style="margin-top: '.$topMarge.'px">';
+
+	for ($i=0; $i < $nbDcpsT; $i++) { 
+	  $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
+	}
+
+	if($nbDcps > 0){ 
+	  $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
+	}
+
+	for ($i=0; $i < $nbDcpsB; $i++) { 
+	  $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
+	}
+
+	    $output .= '</div>
+	  </div>';
+
+    $output .= '</div>
+
+    <div class="dcps-wrapper">';
+
+	if($nbDcps == 1) $offset = $totalDcps * 1.75;
+	if($nbDcps == 2) $offset = $totalDcps * -0.5;
+	if($nbDcps == 3) $offset = $totalDcps * 15.3;
+	if($nbDcps == 4) $offset = $totalDcps * 11.75;
+	if($nbDcps == 5) $offset = $totalDcps * 18.8;
+	if($nbDcps == 6) $offset = $totalDcps * 15.5;
+
+	foreach($reseau['dcps'] as $dcp) {
+
+	$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+		<div>
+		  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
+		  <div class="graphic-title">
+		    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
+		    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
+		  </div>
+		</div>
+	</div>';
+
+	}
+
+    $output .= '</div>';
+
+	return $output;   
+}

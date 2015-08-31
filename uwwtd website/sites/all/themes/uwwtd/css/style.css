@@ -6489,6 +6489,8 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 .graphic-container{
   font-size: 0;
   display: inline-block;
+  overflow: hidden;
+  width: 100%;
 }
 
 .graphic-container div{
@@ -6520,7 +6522,7 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .ms-wrapper{
   position: relative;
-  width: 60px;
+  width: 150px;
   vertical-align: middle;
   top: -60px;
 }
@@ -6545,9 +6547,10 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 .graphic-title{
   position: absolute;
   top: -17px;
-  right: 0px;
-  font-size: 8px;
+  left: 0px;
+  font-size: 12px;
   width: 190px;
+  text-align: left;
 }
 
 .ms-type{
@@ -6557,4 +6560,126 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   font-size: 14px;
   text-align: center;
   width: 100%;
+}
+
+.dcp-connections{
+  position: relative;
+  width: 75px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.station-dcp-connections{
+  width: 75px;
+  height: 60px;
+  margin-top: 35px;
+  position: relative;
+  white-space: nowrap;
+  font: 0/0 a;
+}
+
+.station-dcp-connections:before {
+  content: ' ';
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.station-dcp-connections > div{
+  width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+  position: absolute;
+  top: 50%;
+}
+
+.station-dcp-connections img{
+  display: block;
+}
+
+.dcps-wrapper{
+  position: relative;
+}
+
+.station-dcp{
+ position: relative;
+ text-align: left;
+}
+
+.station-dcp .graphic-title{
+  left: auto;
+  right: -172px;
+  top: 0px;
+}
+
+.agglomeration-graphic .graphic-title{
+  left: 50%;
+  margin-left: -95px;
+  text-align: center;
+  top: -30px;
+  line-height: 1.2;
+}
+
+.agglo-load{
+  position: absolute;
+  top: 116px;
+  right: -28px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.station-load{
+  position: absolute;
+  font-size: 10px;
+  left: -95px;
+  top: 14px;
+}
+
+.dischage-wot{
+  position: relative;
+  top: -25px;
+}
+
+.dischage-wot .graphic-title{
+  top: 0px;
+  left: 50px;
+  width: auto;
+}
+
+.ias{
+  position: relative;
+  top: 10px;
+  margin-top:0px;
+}
+
+.ias .graphic-title{
+  top: auto;
+  bottom: 0px;
+  left: 50px;
+  width: auto;
+}
+
+.graphic-container .more{
+  position: relative;
+  display: inline-block;
+}
+
+.more-text{
+  position: absolute;
+  text-align: center;
+  font-size: 8px;
+  top: 6px;
+  width: 100%;
+  left: 5px;
+}
+
+.uww-graphic-title{
+  font-size: 12px;
+  width: 190px;
+  position: absolute;
+  right: -122px;
+  margin-left: -95px;
+  text-align: left;
+  top: -1px;
+  line-height: 1.2;
 }
