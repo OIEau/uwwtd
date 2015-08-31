@@ -187,7 +187,7 @@
               print render($content['field_uwwpdischarge']);
               if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
                 print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                  print '<div class="field-label">'.t('Rate for Phosphore:').'</div>';
+                  print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
                   print '<div class="field-items">';
                     print '<div class="field-item">';
                       print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%';
