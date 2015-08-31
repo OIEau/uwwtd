@@ -894,7 +894,7 @@ function uwwtd_get_uww_graphic($node){
 		$reseau['dcps'][$dcp->nid]['rcaTitle'] = $rca->title;
 		$reseau['dcps'][$dcp->nid]['rcaType'] = $dcp->field_rcatype['und'][0]['value'];
 	}
-	dsm($reseau);
+// 	dsm($reseau);
 
 	$output = '<div class="graphic-container">';
 
