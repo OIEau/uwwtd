@@ -9,9 +9,9 @@
  * All Drupal code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt.
  */
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', TRUE);
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
+// ini_set('display_startup_errors', TRUE);
 /**
  * Root directory of Drupal installation.
  */
