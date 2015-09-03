@@ -207,7 +207,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 
 function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
     if(!empty($datas)){
-        dsm($datas);
+//         dsm($datas);
         // Variables
         $siteId = $annee.'_mslevel';
 
