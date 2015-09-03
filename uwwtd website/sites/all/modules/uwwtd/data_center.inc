@@ -3376,14 +3376,22 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 // 	list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
     //ALGO4 
     list($art3comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
-		
+	
+//     $file = drupal_realpath('public://data_errors/e.vincent.txt');
+//     $r = fopen($file, 'a');
+//     fputs($r, 'title = ' . $node->title . "\n");
+//     fputs($r, '$art3comp = ' . $art3comp . "\n");
+//     fputs($r, 'field_aggc1 = ' . $node->field_aggc1['und'][0]['value'] . "\n");    
+    	
     if($art3comp == 'NI'){ //ALGO4 too
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
         $node->field_aggart4compliance['und'][0]['value'] = 'NI';
         $node->field_aggart5compliance['und'][0]['value'] = 'NI';
         $node->field_aggart6compliance['und'][0]['value'] = 'NI';
+//         fputs($r, "all NI\n");
     }
     elseif($art3comp == 'NR'){  //ALGO4 too
+//         fputs($r, "all NR\n");
     	//$nbArtCompar = count($art3Compar);
     	$node->field_compliance_explication['und'][0]['value'] = $reason;
     	// each article compliance
@@ -3413,6 +3421,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     //ALGO5 
     //article456_compliance step A : 2015/08/31 / e.vincent / new step A
 	elseif($node->field_aggc1['und'][0]['value'] > 0){  //here $art3comp = NC or C
+//         fputs($r, "in  field_aggc1 > 0\n");
 		//if($art3Comp == 'AddQC') $art3Comp = 'NC';
 		//if($art3Comp == 'QC') $art3Comp = 'C';
 		//if($art4Comp == 'RNC') $art4Comp = 'NC';
@@ -3423,8 +3432,11 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         //ALGO5 too
         $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
         $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, $infoAllAggUww);
+        
+//         fputs($r, "aArtCompliance =  " . var_export($aArtCompliance, true) . "\n");
                  
-        if (true === empty($aArtCompliance)) {
+        if (false === empty($aArtCompliance)) {
+//             fputs($r, "in  empty(aArtCompliance) > 0\n");
 			$node->field_aggart3compliance['und'][0]['value'] = $aArtCompliance['compArt3'];
 			$node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
 			$node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
@@ -3432,6 +3444,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         } else {  
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
             //ALGO6-7-8-9
+//             fputs($r, "in ! empty(aArtCompliance) > 0\n");
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
 			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
 			$node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
@@ -3439,7 +3452,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 			$node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
             
             //ALGO10    
-            $node->field_aggcompliance = uwwtd_agglomeration_compliance($node,  $infoAllAggUww['total']);
+            $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww['total']);
+//             fputs($r, "field_aggcompliance = " . $node->field_aggcompliance['und'][0]['value'] . "\n");
             unset($infoAllAggUww);
 
             //old algo with a,b,c step               
@@ -3475,6 +3489,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         }
 	}
     //dsm($node);
+//     fputs($r, "node_save\n");
 	node_save($node);
 
 	$context['sandbox']['progress']++;
@@ -5334,7 +5349,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		return (array($truereqtreatment, $comp, $reason, $treatment, $performance));        
 	}
     
-	if($truereqtreatment == 'Appropriate'){    
+	if($truereqtreatment == 'Appropriate' || $truereqtreatment == 'NR'){    
         //e.vincent / 2015/08/27 / ask from b.fribourg-blanc
         $treatment = $GLOBALS['uwwtd_value']['treatementmet']['not_calculable'];
         $performance = $GLOBALS['uwwtd_value']['performancemet']['not_calculable'];
@@ -5374,8 +5389,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
             //if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {
-				$comp = 'C';
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('tssperf', 'bod5perf'))) {
+				$comp = 'C';                            
 				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
 				$performance = $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
@@ -5389,7 +5404,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
 //             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('tssperf', 'bod5perf'))) {            
 				$comp = 'NC';
 				$reason = 'Station found to be compliant because primary performance is met';
 				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6089,7 +6104,7 @@ function uwwtd_get_required_treatment($dcps, $maxgen){
     // 				}
     
     			// For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
-    			if($maxgen >= 150000){
+    			if($maxgen > 150000){
     				// secondary treatment must be present
     				$reqtreatments = 'S';
                 // For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
@@ -6611,6 +6626,11 @@ function uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, $listperf) {
                     return false;
                 }
                 break; 
+            case 'tssperf':
+                if (!isset($uwwtp->field_uwwtssperf['und'][0]['value']) || $uwwtp->field_uwwtssperf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break;
             case 'ntotperf':
                 if (!isset($uwwtp->field_uwwntotperf['und'][0]['value']) || $uwwtp->field_uwwntotperf['und'][0]['value'] != 'P') {
                     return false;
