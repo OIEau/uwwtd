@@ -13,6 +13,8 @@ $GLOBALS['uwwtd_value']['performancemet'] = array(
     'true' => 1,
     'not_calculable' => 2,
 );
+//$GLOBALS['uwwtd_value']['compliance']['not_relevant']
+//$GLOBALS['uwwtd_value']['compliance']['compliant']
 $GLOBALS['uwwtd_value']['compliance'] = array(
     'not_compliantQC'  => 'AddQC', //AddQC|Not compliant  (art3comp)
     'compliant'      => 'C',    //C|Compliant       (agglo	art3comp	art4com	art5com	art6com	uwwtd)  
@@ -22,14 +24,18 @@ $GLOBALS['uwwtd_value']['compliance'] = array(
     'not_compliantR'  => 'RNC', //RNC|Not compliant    (art4com, art6com)
     'compliantQC'      => 'QC', //QC|Compliant     (art3comp)     
     'compliant_on_equipment_only' => 'CE', //CE|Compliant on equipment only   (uwwtd)
+    'unknown'       => '?',  //(art4,5,6, uwwtp)
 );
 $GLOBALS['uwwtd_value']['rcatype'] = array(
     '?' => 'CSA',
-    '?' => 'LSA',
+    '?' => 'LSA', //Less Sensitive Area
     '?' => 'NA',
     '?' => 'SA',
     '?' => 'A58',
 );
+//$GLOBALS['uwwtd_value']['required']['appropriate']
+//$GLOBALS['uwwtd_value']['required']['notrelevant']
+//$GLOBALS['uwwtd_value']['required']['primary']
 $GLOBALS['uwwtd_value']['required'] = array(
     'primary' => 'P',
     'secondary' => 'S',
@@ -41,6 +47,7 @@ $GLOBALS['uwwtd_value']['required'] = array(
     'notrelevant' => 'NR',
     'morestringent' => 'MS',    
 );
+
 ################################ DATA CENTER PAGE ################################
 function uwwtd_data_form($form, &$form_state){
 
@@ -969,6 +976,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
         $node->field_aggart4compliance['und'][0]['value'] = 'NI';
         $node->field_aggart5compliance['und'][0]['value'] = 'NI';
+        $node->field_aggart6compliance['und'][0]['value'] = 'NI';
         $geoData = uwwtd_coord_transform(uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $timestamp, $i, $node), uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $timestamp, $i, $node));
         if($geoData != false){
             $node->field_position_geo['und'][0] = array(
@@ -998,11 +1006,11 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // data mapping
             $node->field_repcode['und'][0]['value'] = $repCode;
-            $repcode_f = str_replace('_', '-',  $repCode);
-            $boom = explode('-', $repcode_f);
-            $boom = explode(' ', $boom[0]);
-            $rep = $boom[0];
-
+//             $repcode_f = str_replace('_', '-',  $repCode);
+//             $boom = explode('-', $repcode_f);
+//             $boom = explode(' ', $boom[0]);
+//             $rep = $boom[0];
+            $rep = uwwtd_get_countrycode_from_repcode($repCode);
             if($rep == 'LT'){
                 $node->field_regionnuts['und'][0]['value'] = 'LT00';
             }
@@ -1393,11 +1401,11 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         // data mapping
             $node->field_repcode['und'][0]['value'] =  $repCode;
-            $repcode_f = str_replace('_', '-',  $repCode);
-            $boom = explode('-', $repcode_f);
-            $boom = explode(' ', $boom[0]);
-            $rep = $boom[0];
-
+//             $repcode_f = str_replace('_', '-',  $repCode);
+//             $boom = explode('-', $repcode_f);
+//             $boom = explode(' ', $boom[0]);
+//             $rep = $boom[0];
+            $rep = uwwtd_get_countrycode_from_repcode($repCode);
             if($rep == 'LT'){
                 $node->field_regionnuts['und'][0]['value'] = 'LT00';
             }
@@ -1895,11 +1903,11 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 
             // data mapping
                 $node->field_repcode['und'][0]['value'] =  $repCode;
-                $repcode_f = str_replace('_', '-',  $repCode);
-                $boom = explode('-', $repcode_f);
-                $boom = explode(' ', $boom[0]);
-                $rep = $boom[0];
-
+//                 $repcode_f = str_replace('_', '-',  $repCode);
+//                 $boom = explode('-', $repcode_f);
+//                 $boom = explode(' ', $boom[0]);
+//                 $rep = $boom[0];
+                $rep = uwwtd_get_countrycode_from_repcode($repCode);
                 if($rep == 'LT'){
                     $node->field_regionnuts['und'][0]['value'] = 'LT00';
                 }
@@ -3038,7 +3046,8 @@ function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
 			array('uwwtd_add_csa_criterions_batch_process', array($csas, $timestamp)),
 			array('uwwtd_station_conformity_batch_process', array($annee, $timestamp)),
 			array('uwwtd_agglo_conformity_batch_process', array($annee, $timestamp)),
-			array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
+            //replace by new algo in uwwtd_agglo_conformity_batch_process
+			//array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
 		),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_conformity_finished',
@@ -3136,7 +3145,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 	$node = node_load($data['nid']);
 
 	// Function that checks the required treatment, the compliance and the reason for the compliance in the following form array(requiredTreatment, compliance, reason)
-	$results = uwwtd_station_compliance_algo($node, $timestamp);
+	$results = uwwtd_station_compliance_algo($node, $timestamp); //ALGO2 (et ALGO1)
 	$required = $results[0];
 	$compB = $results[1];
 	$reason = $results[2];
@@ -3151,35 +3160,48 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 	$node->field_uwwtreatment_met['und'][0]['value'] = $treatmet;
 	$node->field_uwwperformance_met['und'][0]['value'] = $uwwperf;
 
+    //2015/08/31 / e.vincent / TODO check if still to do 
 	// Check to see if one of the agglomerations is NR
-	$isNR = 1;
-	foreach($node->field_uwwaggliste['und'] as $nragg){
-		$nraggli = node_load($nragg['nid']);
-		if($nraggli->field_aggcompliance['und'][0]['value'] != 'NR') $isNR = 0;
-	}
+// 	$isNR = 1;
+// 	foreach($node->field_uwwaggliste['und'] as $nragg){
+// 		$nraggli = node_load($nragg['nid']);
+// 		if($nraggli->field_aggcompliance['und'][0]['value'] != 'NR') $isNR = 0;
+// 	}
 	
-	// Station compliance , step B
+    $dateReportingReference = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
+    $deadLineBeforeReference = false;
+	// Station compliance , step B, on of the agglo has at least one date before reference date
+    //ALGO3
 	foreach($node->field_uwwaggliste['und'] as $agg){
 		$dateaggl = node_load($agg['nid']);
-		$dateArt4 = $dateaggl->field_aggperiodover4['und'][0]['value'];
-		$dateArt5 = $dateaggl->field_aggperiodover5['und'][0]['value'];
-		$dateArt6 = $dateaggl->field_aggperiodover6['und'][0]['value'];
+        
+// 		$dateArt4 = $dateaggl->field_aggperiodover4['und'][0]['value'];
+// 		$dateArt5 = $dateaggl->field_aggperiodover5['und'][0]['value'];
+// 		$dateArt6 = $dateaggl->field_aggperiodover6['und'][0]['value'];
+        if ( $dateaggl->field_aggperiodover4['und'][0]['value'] < $dateReportingReference
+            ||$dateaggl->field_aggperiodover5['und'][0]['value'] < $dateReportingReference
+            || $dateaggl->field_aggperiodover6['und'][0]['value'] < $dateReportingReference) {
+            $deadLineBeforeReference = true;
+            break;
+        }        
 	}
 
 	// if deadline agglo is not passed compliance = NR else compliance = NC
 	//$today = date('Y-m-j'); 
-	$today = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
+// 	$dateReportingReference = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
 	//$dateArt3 = $node->field_aggperiodover3['und'][0]['value'];
 	//$dateSup = $dateArt3;
 	
-	
-	$dateSup = $dateArt4;
+	//2015/08/31 / e.vincent / correction 
+	/*
+    $dateSup = $dateArt4;
 	if($dateArt5 > $dateSup) $dateSup = $dateArt5;
 	if($dateArt6 > $dateArt5) $dateSup = $dateArt6;
-	if($dateArt6 > $dateSup) $dateSup = $dateArt6;
+	if($dateArt6 > $dateSup) $dateSup = $dateArt6;    
 	
-	if($dateSup < $today)
-	{
+	if($dateSup < $dateReportingReference)
+    */
+    if (true === $deadLineBeforeReference) {
 		$compB = $results[1];
 	}else{
 		if($results[1] == 'C'){
@@ -3188,12 +3210,12 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 			$compB = 'NR';
 		}
 	}
-
+    //2015/08/31 / e.vincent / TODO check if still to do
 	// If agglomeration is NR and the station compliance is not C then the station takes the agglomeration's compliance of non relative
-	if($isNR == 1 && $compB != 'C'){
-		$compB = 'NR';
-		$reason = 'The station was found to be non relevant because the agglomeration is non relevant';
-	}
+// 	if($isNR == 1 && $compB != 'C'){
+// 		$compB = 'NR';
+// 		$reason = 'The station was found to be non relevant because the agglomeration is non relevant';
+// 	}
 
 	$node->field_uwwcompliance['und'][0]['value'] = $compB;
 	$node->field_compliance_explication['und'][0]['value'] = $reason;
@@ -3289,135 +3311,168 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     
     node_object_prepare($node);
     
-	// need rcaType waterBodyType rcaanitro rcaaphos
-	$rcaAPhos = 0;
-	$rcaANitro = 0;
-	$rcaType = '';
-	$waterBodyTypes = array();
-	if(isset($node->field_agguwwliste['und'])){
-		foreach($node->field_agguwwliste['und'] as $uww){
-			$uwwtd = node_load($uww['nid']);
-			if(isset($uwwtd->field_uwwdcpliste['und'])){
-				$dcpNid = $uwwtd->field_uwwdcpliste['und'][0]['nid'];
-				foreach($uwwtd->field_uwwdcpliste['und'] as $dc){
-					$dcp = node_load($dc['nid']);
-
-					// add waterBodyType
-					$waterBodyTypes[] = $dcp->field_dcpwaterbodytype['und'][0]['value'];
-
-					// different cases for rcaType
-					if($rcaType == '' && isset($dcp->field_rcatype['und'][0]['value'])){
-						$rcaType = $dcp->field_rcatype['und'][0]['value'];
-						$dcpNid = $dcp->nid;
-					}
-					if(isset($dcp->field_rcatype['und'][0]['value']) && $rcaType == 'LSA'){
-						$rcaType = $dcp->field_rcatype['und'][0]['value'];
-						$dcpNid = $dcp->nid;
-					}
-					if(isset($dcp->field_rcatype['und'][0]['value']) && $rcaType == 'NA' && $dcp->field_rcatype['und'][0]['value'] == 'SA'){
-						$rcaType = $dcp->field_rcatype['und'][0]['value'];
-						$dcpNid = $dcp->nid;
-					}
-				}
-				// time to get rca nitro and phos
-				$trueDcp = node_load($dcpNid);
-				if(isset($trueDcp->field_dcprcaliste['und'])){
-					foreach($trueDcp->field_dcprcaliste['und'] as $dcpRca){
-						$trueRca = node_load($dcpRca['nid']);
-						if(isset($trueRca->field_rcaaphos['und'][0]['value']) && ($trueRca->field_rcaaphos['und'][0]['value'] == 1 || $trueRca->field_rcaaphos['und'][0]['value'] == '1')){
-							$rcaAPhos = 1;
-						}
-						if(isset($trueRca->field_rcaanitro['und'][0]['value']) && ($trueRca->field_rcaanitro['und'][0]['value'] == 1 || $trueRca->field_rcaanitro['und'][0]['value'] == '1')){
-							$rcaANitro = 1;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// cas ou l'ensemble du pays est en zone sensible
-	$repcode = $node->field_repcode['und'][0]['value'];
-	$repcode = str_replace('_', '-', $repcode);
-	$boom = explode('-', $repcode);
-	$boom = explode(' ', $boom[0]);
-	$rep = $boom[0];
-	if($rep == 'LT'){
-		$rcaType = 'SA';
-		$rcaANitro = 1;
-		$rcaAPhos = 1;
-	}
+// 	// need rcaType waterBodyType rcaanitro rcaaphos
+// 	$rcaAPhos = 0;
+// 	$rcaANitro = 0;
+// 	$rcaType = '';
+// 	$waterBodyTypes = array();
+// 	if(isset($node->field_agguwwliste['und'])){
+// 		foreach($node->field_agguwwliste['und'] as $uww){
+// 			$uwwtd = node_load($uww['nid']);
+// 			if(isset($uwwtd->field_uwwdcpliste['und'])){
+// 				$dcpNid = $uwwtd->field_uwwdcpliste['und'][0]['nid'];
+// 				foreach($uwwtd->field_uwwdcpliste['und'] as $dc){
+// 					$dcp = node_load($dc['nid']);
+// 
+// 					// add waterBodyType
+// 					$waterBodyTypes[] = $dcp->field_dcpwaterbodytype['und'][0]['value'];
+// 
+// 					// different cases for rcaType
+// 					if($rcaType == '' && isset($dcp->field_rcatype['und'][0]['value'])){
+// 						$rcaType = $dcp->field_rcatype['und'][0]['value'];
+// 						$dcpNid = $dcp->nid;
+// 					}
+// 					if(isset($dcp->field_rcatype['und'][0]['value']) && $rcaType == 'LSA'){
+// 						$rcaType = $dcp->field_rcatype['und'][0]['value'];
+// 						$dcpNid = $dcp->nid;
+// 					}
+// 					if(isset($dcp->field_rcatype['und'][0]['value']) && $rcaType == 'NA' && $dcp->field_rcatype['und'][0]['value'] == 'SA'){
+// 						$rcaType = $dcp->field_rcatype['und'][0]['value'];
+// 						$dcpNid = $dcp->nid;
+// 					}
+// 				}
+// 				// time to get rca nitro and phos
+// 				$trueDcp = node_load($dcpNid);
+// 				if(isset($trueDcp->field_dcprcaliste['und'])){
+// 					foreach($trueDcp->field_dcprcaliste['und'] as $dcpRca){
+// 						$trueRca = node_load($dcpRca['nid']);
+// 						if(isset($trueRca->field_rcaaphos['und'][0]['value']) && ($trueRca->field_rcaaphos['und'][0]['value'] == 1 || $trueRca->field_rcaaphos['und'][0]['value'] == '1')){
+// 							$rcaAPhos = 1;
+// 						}
+// 						if(isset($trueRca->field_rcaanitro['und'][0]['value']) && ($trueRca->field_rcaanitro['und'][0]['value'] == 1 || $trueRca->field_rcaanitro['und'][0]['value'] == '1')){
+// 							$rcaANitro = 1;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 
+// 	// cas ou l'ensemble du pays est en zone sensible
+// // 	$repcode = $node->field_repcode['und'][0]['value'];
+// // 	$repcode = str_replace('_', '-', $repcode);
+// // 	$boom = explode('-', $repcode);
+// // 	$boom = explode(' ', $boom[0]);
+// // 	$rep = $boom[0];
+//     $rep = uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value']);
+// 	if($rep == 'LT'){
+// 		$rcaType = 'SA';
+// 		$rcaANitro = 1;
+// 		$rcaAPhos = 1;
+// 	}
+    
 	$yearReporting = $node->field_anneedata['und'][0]['value'];
-	list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
+// 	list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
+    //ALGO4 
+    list($art3comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
 		
-        if($art3comp == 'NI'){
-            $node->field_aggart3compliance['und'][0]['value'] = 'NI';
-            $node->field_aggart4compliance['und'][0]['value'] = 'NI';
-            $node->field_aggart5compliance['und'][0]['value'] = 'NI';
-            $node->field_aggart6compliance['und'][0]['value'] = 'NI';
+    if($art3comp == 'NI'){ //ALGO4 too
+        $node->field_aggart3compliance['und'][0]['value'] = 'NI';
+        $node->field_aggart4compliance['und'][0]['value'] = 'NI';
+        $node->field_aggart5compliance['und'][0]['value'] = 'NI';
+        $node->field_aggart6compliance['und'][0]['value'] = 'NI';
+    }
+    elseif($art3comp == 'NR'){  //ALGO4 too
+    	//$nbArtCompar = count($art3Compar);
+    	$node->field_compliance_explication['und'][0]['value'] = $reason;
+    	// each article compliance
+
+		$node->field_aggart3compliance['und'][0]['value'] = 'NR';
+		//dsm('3C '.$art3Compar[0]);
+		/*if(isset($art3Compar[4])){
+			$node->field_article_3_compliance_expli['und'][0]['value'] = $art3Compar[1];
+		}*/
+		$node->field_aggart4compliance['und'][0]['value'] = 'NR';
+		//dsm('4C '.$art3Compar[1]);
+		/*if(isset($art3Compar[4])){
+			$node->field_article_4_compliance_expli['und'][0]['value'] = $art3Compar[4];
+		}*/
+		$node->field_aggart5compliance['und'][0]['value'] = 'NR';
+		//dsm('5C '.$art3Compar[2]);
+		/*if(isset($art3Compar[4])){
+			$node->field_article_5_compliance_expli['und'][0]['value'] = $art3Compar[4];
+		}*/
+		
+		$node->field_aggart6compliance['und'][0]['value'] = 'NR';
+		//dsm('6C '.$art3Compar[3]);
+		/*if(isset($art3Compar[4])){
+			$node->field_article_6_compliance_expli['und'][0]['value'] = $art3Compar[4];
+		}*/	
+	}    
+    //ALGO5 
+    //article456_compliance step A : 2015/08/31 / e.vincent / new step A
+	elseif($node->field_aggc1 > 0){  //here $art3comp = NC or C
+		//if($art3Comp == 'AddQC') $art3Comp = 'NC';
+		//if($art3Comp == 'QC') $art3Comp = 'C';
+		//if($art4Comp == 'RNC') $art4Comp = 'NC';
+		/*dsm('art3comp : '.$art3comp);
+		dsm($node);*/
+        //article456_compliance A
+        //Agglo At least connexted to one uwwtp
+        //ALGO5 too
+        $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
+        $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, $infoAllAggUww);
+                 
+        if (true === empty($aArtCompliance)) {
+			$node->field_aggart3compliance['und'][0]['value'] = $aArtCompliance['compArt3'];
+			$node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
+			$node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
+			$node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
+        } else {  
+            //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
+            //ALGO6-7-8-9
+            $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
+			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+			$node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
+			$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
+			$node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
+            
+            //ALGO10    
+            $node->field_aggcompliance = uwwtd_agglomeration_compliance($node,  $infoAllAggUww['total']);
+            unset($infoAllAggUww);
+
+            //old algo with a,b,c step               
+//     		list($art4Compar,$art5Compar, $art6Compar) = uwwtd_article_compliance_b($node, $rcaType, $waterBodyTypes, $art3comp, $yearReporting);
+//     		/*dsm($node);
+//     		dsm('art3comp : '.$art3comp);
+//     		dsm('art4Compar : '.$art4Compar);
+//     		dsm('art5Compar : '.$art5Compar);
+//     		dsm('art6Compar : '.$art6Compar);
+//     		dsm('ArtCompC : '.$ArtCompC);
+//     		dsm('ArtCompB : '.$ArtCompB);*/
+//     		if(is_array($art4Compar)){
+//     			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+//     			$node->field_aggart4compliance['und'][0]['value'] = $art4Compar[0];
+//     			$node->field_aggart5compliance['und'][0]['value'] = $art4Compar[1];
+//     			$node->field_aggart6compliance['und'][0]['value'] = $art4Compar[2];
+//     		}elseif(is_array($art5Compar)){
+//     			$node->field_aggart3compliance['und'][0]['value'] = $art5Compar[0];
+//     			$node->field_aggart4compliance['und'][0]['value'] = $art5Compar[1];
+//     			$node->field_aggart5compliance['und'][0]['value'] = $art5Compar[2];
+//     			$node->field_aggart6compliance['und'][0]['value'] = $art5Compar[3];
+//     		}elseif(is_array($art6Compar)&& $art6Compar !=''){
+//     			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+//     			$node->field_aggart4compliance['und'][0]['value'] = $art6Compar[0];
+//     			$node->field_aggart5compliance['und'][0]['value'] = $art6Compar[1];
+//     			$node->field_aggart6compliance['und'][0]['value'] = $art6Compar[2];
+//     		}else{
+//     			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+//     			$node->field_aggart4compliance['und'][0]['value'] = $art4Compar;
+//     			$node->field_aggart5compliance['und'][0]['value'] = $art5Compar;
+//     			$node->field_aggart6compliance['und'][0]['value'] = $art6Compar;
+//     		}
         }
-		elseif($art3comp != 'NR'){
-			//if($art3Comp == 'AddQC') $art3Comp = 'NC';
-			//if($art3Comp == 'QC') $art3Comp = 'C';
-			//if($art4Comp == 'RNC') $art4Comp = 'NC';
-			/*dsm('art3comp : '.$art3comp);
-			dsm($node);*/
-			list($art4Compar,$art5Compar, $art6Compar) = uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3comp, $yearReporting);
-			/*dsm($node);
-			dsm('art3comp : '.$art3comp);
-			dsm('art4Compar : '.$art4Compar);
-			dsm('art5Compar : '.$art5Compar);
-			dsm('art6Compar : '.$art6Compar);
-			dsm('ArtCompC : '.$ArtCompC);
-			dsm('ArtCompB : '.$ArtCompB);*/
-			if(is_array($art4Compar)){
-				$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
-				$node->field_aggart4compliance['und'][0]['value'] = $art4Compar[0];
-				$node->field_aggart5compliance['und'][0]['value'] = $art4Compar[1];
-				$node->field_aggart6compliance['und'][0]['value'] = $art4Compar[2];
-			}elseif(is_array($art5Compar)){
-				$node->field_aggart3compliance['und'][0]['value'] = $art5Compar[0];
-				$node->field_aggart4compliance['und'][0]['value'] = $art5Compar[1];
-				$node->field_aggart5compliance['und'][0]['value'] = $art5Compar[2];
-				$node->field_aggart6compliance['und'][0]['value'] = $art5Compar[3];
-			}elseif(is_array($art6Compar)&& $art6Compar !=''){
-				$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
-				$node->field_aggart4compliance['und'][0]['value'] = $art6Compar[0];
-				$node->field_aggart5compliance['und'][0]['value'] = $art6Compar[1];
-				$node->field_aggart6compliance['und'][0]['value'] = $art6Compar[2];
-			}else{
-				$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
-				$node->field_aggart4compliance['und'][0]['value'] = $art4Compar;
-				$node->field_aggart5compliance['und'][0]['value'] = $art5Compar;
-				$node->field_aggart6compliance['und'][0]['value'] = $art6Compar;
-			}
-		}elseif($art3comp == 'NR'){
-			//$nbArtCompar = count($art3Compar);
-			$node->field_compliance_explication['und'][0]['value'] = $reason;
-			// each article compliance
-		
-				$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
-				//dsm('3C '.$art3Compar[0]);
-				/*if(isset($art3Compar[4])){
-					$node->field_article_3_compliance_expli['und'][0]['value'] = $art3Compar[1];
-				}*/
-				$node->field_aggart4compliance['und'][0]['value'] = $art4comp;
-				//dsm('4C '.$art3Compar[1]);
-				/*if(isset($art3Compar[4])){
-					$node->field_article_4_compliance_expli['und'][0]['value'] = $art3Compar[4];
-				}*/
-				$node->field_aggart5compliance['und'][0]['value'] = $art5comp;
-				//dsm('5C '.$art3Compar[2]);
-				/*if(isset($art3Compar[4])){
-					$node->field_article_5_compliance_expli['und'][0]['value'] = $art3Compar[4];
-				}*/
-				
-				$node->field_aggart6compliance['und'][0]['value'] = $art6comp;
-				//dsm('6C '.$art3Compar[3]);
-				/*if(isset($art3Compar[4])){
-					$node->field_article_6_compliance_expli['und'][0]['value'] = $art3Compar[4];
-				}*/	
-		}
+	}
     //dsm($node);
 	node_save($node);
 
@@ -3431,156 +3486,415 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 	}
 }
 
-function uwwtd_agglo_reconformity_batch_process($annee, $timestamp, &$context){
+/**
+ * Get the agglomeration compliance base on the agglomeration art4,5,6 compliance
+ * 
+ * @param   object  $node    agglomeration node
+ * @param   float   $maxgen  % of load entering the treatment plants 
+ * @return  string  afgglomeration compliance (NC,NR,NI,...)   
+ */ 
+function uwwtd_agglomeration_compliance($node, $maxgen)
+{
+    //(load collected in collecting system- sum of load entering the treatment plants) is <1% or <=2000p.e.
+    $percentage_lost = $node->field_aggc1['und'][0]['value'] - $maxgen;
+    $pe_lost = $percentage_lost / 100 * $node->field_agggenerated['und'][0]['value'];
+     
+    if (false === ($percentage_lost < 1 && $pe_lost <= 2000)) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
+    
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
 
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
-	
-		//Get the agglos
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-		$query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-		$query->fields('n', array('nid', 'title'));
-		$query->condition('n.type', 'agglomeration', '=');
-		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-		$query->orderBy('field_agggenerated_value', 'DESC');
-		$agglos = $query->execute();
-		foreach($agglos as $agglo){
-			$ids[] = array('nid'=>$agglo->nid, 'title'=>$agglo->title);
-		}
-		
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
-	}
-	$i = $context['sandbox']['progress'];
-	
-	$data = $context['sandbox']['ids'][$i];
-	$node = node_load($data['nid']);
-	node_object_prepare($node);
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']
+        || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']
+        || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']
+        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']    
+    ) {
+        return $GLOBALS['uwwtd_value']['compliance']['no_information'];
+    }
 
-	// We need to get our current compliance
-	// LG : we take the compliance info from agglo
-	$comp = $node->field_aggcompliance['und'][0]['value'];
-	$reason = $node->field_compliance_explication['und'][0]['value'];
-	$comp_art3_from_tp = $node->field_aggart3compliance['und'][0]['value'];
-	$comp_art4_from_tp = $node->field_aggart4compliance['und'][0]['value'];
-	$comp_art5_from_tp = $node->field_aggart5compliance['und'][0]['value'];
-	$comp_art6_from_tp = $node->field_aggart6compliance['und'][0]['value'];
-	$comp_art4_from_tp_reason = $node->field_article_4_compliance_expli['und'][0]['value'];
-	
-	
-	//LG 1 er avril : on regarde pour toute les agglo
-	if($comp_art4_from_tp != 'NR'){
-		foreach($node->field_agguwwliste['und'] as $uww){
-			$uwwtp = node_load($uww['nid']);
-			// LG 1er avril 2015 ici => si le TP n'est pas conforme alors c'est l'article 4 de l'agglo que l'on modifie et pas la compliance totale
-			$comp_tp = $uwwtp->field_uwwcompliance['und'][0]['value'];
-			if($comp_tp != 'C'){
-				if($comp_tp == 'NC'){
-					$comp_art4_from_tp = $comp_tp;
-					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to be not compliant because one of the TP is not.');
-				}
-				if($comp_tp == 'NR' && $comp_art4_from_tp != 'NC'){
-					$comp_art4_from_tp = $comp_tp;
-					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to be non relevant because one of the TP is not.');
-				}
-				if($comp_tp == 'NI' && $comp_art4_from_tp != 'NC' && $comp_art4_from_tp != 'NR'){
-					$comp_art4_from_tp = $comp_tp;
-					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to have no information.');
-				}
-			}
-		}
-	}
+    
+    if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']
+        && $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']
+        && $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']    
+    
+    ) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    }
+    
+    if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    } 
+    
+    if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }             
 
-	// LG : on recalcule la compliance totale
-    //Art 3
-	if($comp_art3_from_tp == 'NR'){
-		$comp = 'NR';
-		$reason = t('The agglomeration has been found to be non relevant with all of the articles.');
-	}
-	elseif($comp_art3_from_tp == 'NC'){
-		$comp = 'NC';
-		$reason = t('The agglomeration has been found to be non compliant with article 3.');
-	}
-	elseif($comp_art3_from_tp == 'NI'){
-		$comp = 'NI';
-		$reason = t('The agglomeration has been found to have no information for article 3.');
-	}
-	elseif($comp_art3_from_tp == 'C'){
-        //Art 4
-		if($comp_art4_from_tp == 'NC'){
-			$comp = 'NC';
-			$reason = t('The agglomeration has been found to be non compliant with article 4.');
-		}
-		elseif($comp_art4_from_tp == 'NI'){
-			$comp = 'NI';
-			$reason = t('The agglomeration has been found to have no information for article 4.');
-		}
-		elseif($comp_art4_from_tp == 'NR'){
-            $comp = 'NR';
-			if($comp_art5_from_tp == 'NR'){
-				$reason = t('The agglomeration has been found to be non relevant for article 4 & 5.');
-			}
-            else{
-                $reason = t('The agglomeration has been found to be non relevant for article 4.');
-            }
-		}
-		elseif($comp_art4_from_tp == 'C'){
-			if($comp_art5_from_tp == 'NC'){
-				$comp = 'NC';
-				$reason = t('The agglomeration has been found to be non compliant with article 5.');
-			}
-			elseif($comp_art5_from_tp == 'NI'){
-				$comp = 'NI';
-				$reason = t('The agglomeration has been found to have no information for article 5.');
-			}
-			elseif($comp_art5_from_tp == 'C'){
-				$comp = 'C';
-				$reason = t('The agglomeration has been found to be compliant with article 5.');
-			}
-            /* Les cas ou cette condition s'applique reflétent la réalité et ne sont pas liés aux problématiques de deadline
-            elseif($comp_art5_from_tp == 'NR'){
-                $comp = 'NR';
-				$reason = t('The agglomeration has been found to be non relevant for article 5.');
-			}
-            */
-		}
-        
-        //Art 6
-		if($comp_art6_from_tp == 'NC'){
-			$comp = 'NC';
-			$reason = t('The agglomeration has been found to be non compliant with article 6.');
-		}
-		elseif($comp_art6_from_tp == 'NI'){
-			$comp = 'NI';
-			$reason = t('The agglomeration has been found to have no information for article 6.');
-		}
-		elseif($comp_art6_from_tp == 'C'){
-			$comp = 'C';
-			$reason = t('The agglomeration has been found to be compliant with article 6.');
-		}
-	}
-	// Lg 1er avril : on met Pour l'article 4 dans l'agglo
-	//$node->field_aggart4compliance['und'][0]['value'] = $comp_art4_from_tp;
-	$node->field_article_4_compliance_expli['und'][0]['value'] = $comp_art4_from_tp_reason;
-	
-	$node->field_aggcompliance['und'][0]['value'] = $comp;
-	$node->field_compliance_explication['und'][0]['value'] = $reason;
-
-
-	node_save($node);
-
-	$context['sandbox']['progress']++;
-	$context['message'] = t('Reprocessing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid);
-	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);	
-	
-
-	if($context['sandbox']['progress'] != $context['sandbox']['max']){
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }  
+    
+    return $GLOBALS['uwwtd_value']['compliance']['compliant'];
 }
+
+/**
+ * Get the compliance art 4,5,6 of an agglomaeration
+ *
+ * @param   object  $agg            the agglomeration node of the uwwtp node
+ * @param   array   $infoAllAggUww  list of all uwwtp of the agglomeration with their information    
+ * @return array    an array with 3 keys : compArt4, compArt5, compArt6 which contains the compliance calculated  
+ */ 
+function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUww)
+{   
+    //collected in collectiove system = 0 or all uwwtp treatment required in (appropriate or NR)
+    if ($agg->field_aggc1['und'][0]['value'] == 0       
+        || true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'],
+                                                      $GLOBALS['uwwtd_value']['required']['notrelevant'],
+                                                        ), $infoAllAggUww)) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];                                                        
+        return $aResult;
+    }    
+    
+    $listStationArticleAndUwwtpCompliance = array();
+	foreach($infoAllAggUww as $uwwtp){
+        //ALGO 6
+        $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
+    }
+    
+    //ALGO 7
+    $aResult['compArt4'] = uwwtd_articleN_agglomeration_compliance('compArt4', $listStationArticleAndUwwtpCompliance);
+    //ALGO 8
+    $aResult['compArt5'] = uwwtd_articleN_agglomeration_compliance('compArt6', $listStationArticleAndUwwtpCompliance);
+    //ALGO 9                                                          
+    $aResult['compArt6'] = uwwtd_articleN_agglomeration_compliance('compArt5', $listStationArticleAndUwwtpCompliance);
+    unset($listStationArticleAndUwwtpCompliance);
+    
+    return $aResult;    
+}
+
+/**
+ * Return the cagglomeration compliance of the article $article based on the compliance article of all his station
+ * 
+ * @param   string   $article               key of the article to look in the second parameter 
+ * @param   array    $listUwwtpCompliance   List of all the sstation with all there article 4,5,6 compliance
+ * @return  string      The agglomeration article compliance asked with $article                                              
+ */ 
+function uwwtd_articleN_agglomeration_compliance($article, $listUwwtpCompliance) 
+{
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
+
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['no_information']), $listUwwtpCompliance)) {
+        return $GLOBALS['uwwtd_value']['compliance']['no_information'];
+    }
+        
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+    }
+    
+    return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+}
+
+/**
+ * Get the compliance art 4,5,6 of an uwwtp
+ *
+ * @param   object  $agg        the agglomeration node of the uwwtp node
+ * @param   object  $uwwtp      the uwwtp node we need to calculate the complaince   
+ * @return  array    an array with 3 keys : compArt4, compArt5, compArt6 which contains the compliance calculated  
+ */ 
+function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
+{
+    //treatement required = primary
+    if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['primary']) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        
+        if ($uwwtp->field_uwwcompliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']) {
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];    
+        } else {
+           if (true === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover6['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+           } else {
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+           }                             
+        }
+        return $aResult;         
+    }
+    
+                          
+    $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    
+    //treatement required = secondary && treatment in place = primary
+    if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
+        && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('primary'))) {
+        
+       if (true === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       } else {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       }
+       
+       return $aResult;          
+    }
+    
+    //treatement required = secondary && treatement in place = secondary
+    if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
+        && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))) {  
+                    
+//         if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
+        if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {          
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];            
+        } else {
+           if (true === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+           } else {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+           }            
+        } 
+        return $aResult;            
+    }
+    
+//     //treatment required = more stringent
+//     if (false === uwwtd_required_treatement_morestingent($uwwtp)) {
+//         //TODO missing art 4 compliance here 
+//         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+//         return $aResult;   
+//     }
+    
+    //cod and bod5 pass
+//     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
+    if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {       
+        if ($uwwtp->field_uwwcompliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];            
+        } else {
+           if (true === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+           } else {
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+           }              
+        }
+        
+        return $aResult;   
+    }
+    
+    //cod and bod5 not pass
+   if (false === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+    $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+   } else {
+       if (true === deadline_beforeorequal_to_referenceyear($uwwtp->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+       } else {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       } 
+   } 
+   return $aResult;   
+}
+
+//todelete
+// function uwwtd_primarytreatement_inplace($uwwtp) 
+// {
+//     return (isset($uwwtp->field_uwwprimarytreatment['und'][0]['value']) &&  
+//                  $uwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1');
+// }
+// 
+// function uwwtd_secondarytreatement_inplace($uwwtp) 
+// {
+//     return (isset($uwwtp->field_uwwsecondarytreatment['und'][0]['value']) &&  
+//                  $uwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1');
+// }
+
+// function uwwtd_bod5perf_pass($uwwtp) 
+// {
+//     return (isset($uwwtp->field_uwwbod5perf['und'][0]['value']) &&  
+//                  $uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P');
+// }
+// 
+// function uwwtd_codperf_pass($uwwtp) 
+// {
+//     return (isset($uwwtp->field_uwwcodperf['und'][0]['value']) &&  
+//                  $uwwtp->field_uwwcodperf['und'][0]['value'] == 'P');
+// }
+
+/**
+ * Check if the first parameter year is before or equal the second parameter year
+ * 
+ * @param   string   $deadlinedate      a date formated YYYY-mm-dd
+ * @param   string   $referenceyear     the reference year YYYY to compare with
+ * @return  boolean   
+ */ 
+function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear) 
+{
+	$date = explode('-', $deadlinedate);
+	return $date[0] <= $referenceyear;
+}
+
+
+// function uwwtd_agglo_reconformity_batch_process($annee, $timestamp, &$context){
+// 
+// 	if (!isset($context['sandbox']['progress'])) {
+// 	
+// 		$ids = array();
+// 	
+// 		//Get the agglos
+// 		$query = db_select('node', 'n');
+// 		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+// 		$query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
+// 		$query->fields('n', array('nid', 'title'));
+// 		$query->condition('n.type', 'agglomeration', '=');
+// 		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+// 		$query->orderBy('field_agggenerated_value', 'DESC');
+// 		$agglos = $query->execute();
+// 		foreach($agglos as $agglo){
+// 			$ids[] = array('nid'=>$agglo->nid, 'title'=>$agglo->title);
+// 		}
+// 		
+// 		$context['sandbox']['max'] = count($ids);
+// 		$context['sandbox']['progress'] = 0;
+// 		$context['sandbox']['ids'] = $ids;
+// 	}
+// 	$i = $context['sandbox']['progress'];
+// 	
+// 	$data = $context['sandbox']['ids'][$i];
+// 	$node = node_load($data['nid']);
+// 	node_object_prepare($node);
+// 
+// 	// We need to get our current compliance
+// 	// LG : we take the compliance info from agglo
+// 	$comp = $node->field_aggcompliance['und'][0]['value'];
+// 	$reason = $node->field_compliance_explication['und'][0]['value'];
+// 	$comp_art3_from_tp = $node->field_aggart3compliance['und'][0]['value'];
+// 	$comp_art4_from_tp = $node->field_aggart4compliance['und'][0]['value'];
+// 	$comp_art5_from_tp = $node->field_aggart5compliance['und'][0]['value'];
+// 	$comp_art6_from_tp = $node->field_aggart6compliance['und'][0]['value'];
+// 	$comp_art4_from_tp_reason = $node->field_article_4_compliance_expli['und'][0]['value'];
+// 	
+// 	
+// 	//LG 1 er avril : on regarde pour toute les agglo
+// 	if($comp_art4_from_tp != 'NR'){
+// 		foreach($node->field_agguwwliste['und'] as $uww){
+// 			$uwwtp = node_load($uww['nid']);
+// 			// LG 1er avril 2015 ici => si le TP n'est pas conforme alors c'est l'article 4 de l'agglo que l'on modifie et pas la compliance totale
+// 			$comp_tp = $uwwtp->field_uwwcompliance['und'][0]['value'];
+// 			if($comp_tp != 'C'){
+// 				if($comp_tp == 'NC'){
+// 					$comp_art4_from_tp = $comp_tp;
+// 					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to be not compliant because one of the TP is not.');
+// 				}
+// 				if($comp_tp == 'NR' && $comp_art4_from_tp != 'NC'){
+// 					$comp_art4_from_tp = $comp_tp;
+// 					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to be non relevant because one of the TP is not.');
+// 				}
+// 				if($comp_tp == 'NI' && $comp_art4_from_tp != 'NC' && $comp_art4_from_tp != 'NR'){
+// 					$comp_art4_from_tp = $comp_tp;
+// 					$comp_art4_from_tp_reason = t('The agglomeration article 4 has been found to have no information.');
+// 				}
+// 			}
+// 		}
+// 	}
+// 
+// 	// LG : on recalcule la compliance totale
+//     //Art 3
+// 	if($comp_art3_from_tp == 'NR'){
+// 		$comp = 'NR';
+// 		$reason = t('The agglomeration has been found to be non relevant with all of the articles.');
+// 	}
+// 	elseif($comp_art3_from_tp == 'NC'){
+// 		$comp = 'NC';
+// 		$reason = t('The agglomeration has been found to be non compliant with article 3.');
+// 	}
+// 	elseif($comp_art3_from_tp == 'NI'){
+// 		$comp = 'NI';
+// 		$reason = t('The agglomeration has been found to have no information for article 3.');
+// 	}
+// 	elseif($comp_art3_from_tp == 'C'){
+//         //Art 4
+// 		if($comp_art4_from_tp == 'NC'){
+// 			$comp = 'NC';
+// 			$reason = t('The agglomeration has been found to be non compliant with article 4.');
+// 		}
+// 		elseif($comp_art4_from_tp == 'NI'){
+// 			$comp = 'NI';
+// 			$reason = t('The agglomeration has been found to have no information for article 4.');
+// 		}
+// 		elseif($comp_art4_from_tp == 'NR'){
+//             $comp = 'NR';
+// 			if($comp_art5_from_tp == 'NR'){
+// 				$reason = t('The agglomeration has been found to be non relevant for article 4 & 5.');
+// 			}
+//             else{
+//                 $reason = t('The agglomeration has been found to be non relevant for article 4.');
+//             }
+// 		}
+// 		elseif($comp_art4_from_tp == 'C'){
+// 			if($comp_art5_from_tp == 'NC'){
+// 				$comp = 'NC';
+// 				$reason = t('The agglomeration has been found to be non compliant with article 5.');
+// 			}
+// 			elseif($comp_art5_from_tp == 'NI'){
+// 				$comp = 'NI';
+// 				$reason = t('The agglomeration has been found to have no information for article 5.');
+// 			}
+// 			elseif($comp_art5_from_tp == 'C'){
+// 				$comp = 'C';
+// 				$reason = t('The agglomeration has been found to be compliant with article 5.');
+// 			}
+//             /* Les cas ou cette condition s'applique reflétent la réalité et ne sont pas liés aux problématiques de deadline
+//             elseif($comp_art5_from_tp == 'NR'){
+//                 $comp = 'NR';
+// 				$reason = t('The agglomeration has been found to be non relevant for article 5.');
+// 			}
+//             */
+// 		}
+//         
+//         //Art 6
+// 		if($comp_art6_from_tp == 'NC'){
+// 			$comp = 'NC';
+// 			$reason = t('The agglomeration has been found to be non compliant with article 6.');
+// 		}
+// 		elseif($comp_art6_from_tp == 'NI'){
+// 			$comp = 'NI';
+// 			$reason = t('The agglomeration has been found to have no information for article 6.');
+// 		}
+// 		elseif($comp_art6_from_tp == 'C'){
+// 			$comp = 'C';
+// 			$reason = t('The agglomeration has been found to be compliant with article 6.');
+// 		}
+// 	}
+// 	// Lg 1er avril : on met Pour l'article 4 dans l'agglo
+// 	//$node->field_aggart4compliance['und'][0]['value'] = $comp_art4_from_tp;
+// 	$node->field_article_4_compliance_expli['und'][0]['value'] = $comp_art4_from_tp_reason;
+// 	
+// 	$node->field_aggcompliance['und'][0]['value'] = $comp;
+// 	$node->field_compliance_explication['und'][0]['value'] = $reason;
+// 
+// 
+// 	node_save($node);
+// 
+// 	$context['sandbox']['progress']++;
+// 	$context['message'] = t('Reprocessing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid);
+// 	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);	
+// 	
+// 
+// 	if($context['sandbox']['progress'] != $context['sandbox']['max']){
+// 		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+// 	}
+// }
 
 function uwwtd_conformity_finished($success, $results, $operations) {
 	if ($success) {
@@ -4144,11 +4458,17 @@ function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node 
 	return $coord;
 }
 
+/**
+ * return art3 compliance and a reason
+ * 
+ * @return  array      (art3compliance, reason)
+ *                      possible value of art3 => NI,NR,C,NC 
+ */ 
 function uwwtd_article3_compliance($node, $yearReporting){
 	// only send nodes of type 'agglomeration' here
 	//check if aggGenerated exists
 	if(!isset($node->field_agggenerated['und'][0]['value'])){
-		return 'NI';
+		return array('NI', 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
 	}
 
 	//============================= CAS DES PAYS
@@ -4161,716 +4481,765 @@ function uwwtd_article3_compliance($node, $yearReporting){
 	// check if aggGenerated over 2000
 	if($node->field_agggenerated['und'][0]['value'] < 2000){
 		$art3comp = 'NR';
-		$art4comp = 'NR';
-		$art5comp = 'NR';
-		$art6comp = 'NR';
+// 		$art4comp = 'NR';
+// 		$art5comp = 'NR';
+// 		$art6comp = 'NR';
 		$reason = 'Article 3 compliance found to be non relevant because the agglomeration has a population of less than 2 000.';
-		return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
+// 		return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
+        return array($art3comp, $reason);
 	}
-	else{
+    
+// 	else{
 		// check variables that we need exist
-		if(!isset($node->field_aggpercwithouttreatment['und'][0]['value']) || !isset($node->field_aggc2['und'][0]['value'])){
-			$art3comp = 'NI';
-			$reason = 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment" or "treated through IAS".';
+// 	if(!isset($node->field_aggpercwithouttreatment['und'][0]['value']) || !isset($node->field_aggc2['und'][0]['value'])){
+// 		$art3comp = 'NI';
+// 		$reason = 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment" or "treated through IAS".';
+// 		return array($art3comp, $reason);
+// 	}
+	if(!isset($node->field_aggpercwithouttreatment['und'][0]['value'])){
+		return array('NI', 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment".');
+	}
+        
+// 		else{
+	// get and calculate variables
+	// var1 = Sum "Not collected in collecting system and not adressed by IAS"
+	$var1 = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggpercwithouttreatment['und'][0]['value'];
+	//$var1 = $node->field_agggenerated['und'][0]['value'] / 100;
+	// var2 = Sum "Adressed under IAS"
+	//$var2 = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc2['und'][0]['value'];
+	//$var2 = ($node->field_aggc1['und'][0]['value'] + $node->field_aggc2['und'][0]['value']) / 100;
+	// var3 = % "Not collected in collecting system and not adressed by IAS"
+	$var3 = $node->field_aggpercwithouttreatment['und'][0]['value'];
+	// var4 = % "Adressed under IAS"
+	//$var4 = $node->field_aggc2['und'][0]['value'];
+	// start calculations
+	if($var1 <= 2000 &&  $var3 <= 2){
+		$art3comp = 'C';
+		$reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
+		return array($art3comp, $reason);
+	}
+    
+// 	else{//Deadline of Art3 is before or equal to reporting reference date
+// 	$today = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
+// 	if($node->field_aggperiodover3['und'][0]['value'] <= $today){
+    if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+		$art3comp = 'NC';
+		$reason = 'Not relevant with article 3 because it is not compliant and the deadline has not been reached';
+		return array($art3comp, $reason);
+	}
+//     else{
+	$art3comp = 'NR';
+// 		$art4comp = 'NR';
+// 		$art5comp = 'NR';
+// 		$art6comp = 'NR';
+	$reason = 'Article 3 compliance found to be non relevant because it is not compliant and the deadline has been reached';
+    return array($art3comp, $reason);
+// 	}
+	/*if(($var1*100) > 2000 || $var3 > 2){
+		if(($var2*100) > 1000 || $var4 > 2){
+			$art3comp = 'AddQC';
+			$reason = 'Article 3 compliance found to be additional questionnable compliance because the amount of "waste discharged without treatment" is more than 2 000 or the percentage of "waste discharged without treatment" is more than 2% of total waste. Also the amount of waste "treated through IAS" is more than 1 000 or the percentage of waste "treated through IAS" is more than 2% of total waste.';
 			//return array($art3comp, $reason);
 		}
 		else{
-			// get and calculate variables
-			// var1 = Sum "Not collected in collecting system and not adressed by IAS"
-			$var1 = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggpercwithouttreatment['und'][0]['value'];
-			//$var1 = $node->field_agggenerated['und'][0]['value'] / 100;
-			// var2 = Sum "Adressed under IAS"
-			//$var2 = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc2['und'][0]['value'];
-			//$var2 = ($node->field_aggc1['und'][0]['value'] + $node->field_aggc2['und'][0]['value']) / 100;
-			// var3 = % "Not collected in collecting system and not adressed by IAS"
-			$var3 = $node->field_aggpercwithouttreatment['und'][0]['value'];
-			// var4 = % "Adressed under IAS"
-			//$var4 = $node->field_aggc2['und'][0]['value'];
-			// start calculations
-			if($var1 <= 2000 &&  $var3 <= 2){
-				$art3comp = 'C';
-				$reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
-				//return array($art3comp, $reason);
-			}
-			else{//Deadline of Art3 is before or equal to reporting reference date
-				$today = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
-				if($node->field_aggperiodover3['und'][0]['value'] <= $today){
-					$art3comp = 'NC';
-					$reason = 'Not relevant with article 3 because it is not compliant and the deadline has not been reached';
-					//return array($art3comp, $reason);
-				}else{
-					$art3comp = 'NR';
-					$art4comp = 'NR';
-					$art5comp = 'NR';
-					$art6comp = 'NR';
-					$reason = 'Article 3 compliance found to be non relevant because it is not compliant and the deadline has been reached';
-					//return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
-				}
-				/*if(($var1*100) > 2000 || $var3 > 2){
-					if(($var2*100) > 1000 || $var4 > 2){
-						$art3comp = 'AddQC';
-						$reason = 'Article 3 compliance found to be additional questionnable compliance because the amount of "waste discharged without treatment" is more than 2 000 or the percentage of "waste discharged without treatment" is more than 2% of total waste. Also the amount of waste "treated through IAS" is more than 1 000 or the percentage of waste "treated through IAS" is more than 2% of total waste.';
-						//return array($art3comp, $reason);
-					}
-					else{
-						$art3comp = 'NC';
-						$reason = 'Article 3 compliance found to be non compliant because the amount of "waste discharged without treatment" is more than 2 000 or the percentage of "waste discharged without treatment" is more than 2% of total waste. Also the amount of waste "treated through IAS" is equal or less than 1 000 or the percentage of waste "treated through IAS" equal or less than 2% of total waste.';
-						//return array($art3comp, $reason);
-					}
-				}
-				else{
-					$art3comp = 'QC';
-					$reason = 'Article 3 compliance found to be questionnable compliance because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" equal or less than 2% of total waste.';
-					return array($art3comp, $reason);
-				}*/
-			}
+			$art3comp = 'NC';
+			$reason = 'Article 3 compliance found to be non compliant because the amount of "waste discharged without treatment" is more than 2 000 or the percentage of "waste discharged without treatment" is more than 2% of total waste. Also the amount of waste "treated through IAS" is equal or less than 1 000 or the percentage of waste "treated through IAS" equal or less than 2% of total waste.';
+			//return array($art3comp, $reason);
 		}
-	}return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
+	}
+	else{
+		$art3comp = 'QC';
+		$reason = 'Article 3 compliance found to be questionnable compliance because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" equal or less than 2% of total waste.';
+		return array($art3comp, $reason);
+	}*/
+// 	}
+// 		}
+// 	}
+//     return array($art3comp, $reason);
 }
 
-function uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, $yearReporting){
-	//============================= CAS DES PAYS
-	/*$country = uwwtd_country_cases($node);
-	if($country[0] == 'NR') {
-		return array($country[0], $country[1]);
-	}*/
-	//============================= FIN CAS DES PAYS
-	if($art3Comp == 'C'){
-		// Get information on all connected treatment plants
-		$listUwws = array();
-		// Check that there is information on connected treatment plants
-		if(!isset($node->field_agguwwliste['und'])){
-			$art4comp = 'NI';
-			$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
-			return array($art4comp, $reason);
-		}
-        else{
-			// Get information on all connected treatment plants
-			$listUwws = array();
-			$required = 'Appropriate';
-            //e.vincent / 2015/08/28 / refactor code
-            //$infoAllAggUww = uwwtd_get_all_info_agguwww($node);
-            
-			$total = 0; // -> $infoAllAggUww['total']            
-			foreach($node->field_agguwwliste['und'] as $agguwwlist){
-				$uww = node_load($agguwwlist['nid']);
-				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
-				$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
-				$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
-				$cod = $uww->field_uwwcodperf['und'][0]['value'];
-				$compB = $uww->field_uwwcompliance['und'][0]['value'];
-				$secondary = $uww->field_uwwsecondarytreatment['und'][0]['value'];
-				$treatmenttype = $uww->field_uwwtreatmenttype['und'][0]['value'];
+/**
+ * Return art3,4,5,6 agglomeration compliance for some first case
+ * @param   object      $node       agglomeration node
+ * @param   string      $art3comp   art3 agglomeration compliance
+ * @return array        empty array if the cases must be treated later
+ *                      array with key compArt3, compArt4, compArt5, compArt6      
+ */ 
+function uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, &$infoAllAggUww) 
+{
+    $aResult = array();
+//     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
+    //todo add value ? in drupal field display
+    if (count($infoAllAggUww['listUww'] == 0)) {
+		$aResult['compArt3'] = $art3comp;
+		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+    }elseif (true === uwwtd_atleastone_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown']),
+                                                     $infoAllAggUww)
+        && true === uwwtd_all_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown'],
+                                                $GLOBALS['uwwtd_value']['compliance']['compliant'],
+                                                $GLOBALS['uwwtd_value']['compliance']['not_relevant'],
+                                                ), $infoAllAggUww)) {
+		$aResult['compArt3'] = $art3comp;
+		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];                                                    
+    }
+//     unset($infoAllAggUww); 
+    
+    return $aResult;
+}
 
-				// get reste of information from node that collected joint information
-				$query = db_select('node', 'n');
-				$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
-				$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
-				$query->fields('n',array('title','created'))
-				->condition('a.entity_id', $node->nid, '=')
-				->condition('u.entity_id', $uww->nid, '=')
-				->fields('n',array('nid'));
+// function uwwtd_article_compliance_b($node, $rcaType, $waterBodyTypes, $art3Comp, $yearReporting){
+// 	//============================= CAS DES PAYS
+// 	/*$country = uwwtd_country_cases($node);
+// 	if($country[0] == 'NR') {
+// 		return array($country[0], $country[1]);
+// 	}*/
+// 	//============================= FIN CAS DES PAYS
+//     if($art3Comp != 'C'){
+//         //TODO check type of return value
+// 		$ArtCompC = uwwtd_article_compliance_d($node, $art3Comp, $yearReporting);
+// 		return array ($ArtCompC);    
+//     }
+//     
+// // 	if($art3Comp == 'C'){
+// 		// Get information on all connected treatment plants
+// // 		$listUwws = array();
+// 		// Check that there is information on connected treatment plants
+// 	if(!isset($node->field_agguwwliste['und'])){
+// 		$art4comp = 'NI';
+// 		$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
+// 		return array($art4comp, $reason);  //todo error here , no reson waited in return
+// 	}
+// //     else{
+// 		// Get information on all connected treatment plants
+// // 			$listUwws = array();
+// 	$required = 'Appropriate';
+//     //e.vincent / 2015/08/28 / refactor code
+//     //$infoAllAggUww = uwwtd_get_all_info_agguwww($node);
+//     
+// 	$total = 0; // -> $infoAllAggUww['total']            
+// 	foreach($node->field_agguwwliste['und'] as $agguwwlist){
+// 		$uww = node_load($agguwwlist['nid']);
+// 		$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
+// 		$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
+// 		$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
+// 		$cod = $uww->field_uwwcodperf['und'][0]['value'];
+// 		$compB = $uww->field_uwwcompliance['und'][0]['value'];
+// 		$secondary = $uww->field_uwwsecondarytreatment['und'][0]['value'];
+// 		$treatmenttype = $uww->field_uwwtreatmenttype['und'][0]['value'];
+// 
+// 		// get reste of information from node that collected joint information
+// 		$query = db_select('node', 'n');
+// 		$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+// 		$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+// 		$query->fields('n',array('title','created'))
+// 		->condition('a.entity_id', $node->nid, '=')
+// 		->condition('u.entity_id', $uww->nid, '=')
+// 		->fields('n',array('nid'));
+// 
+// 		$result = $query->execute();
+// 
+// 		while($record = $result->fetchAssoc()){
+// 			$agguww = node_load($record['nid']);
+// 			$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+// 			//$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+// 			$total = $total +$uwwperccollec;
+// 		}
+// 		//dsm($total);
+// // 				$listUwws[] = array(
+// // 					'node' => $uww,
+// // 					'required' => $required,
+// // 					'bod5' => $bod5,
+// // 					'cod' => $cod,
+// // 					'collecting' => $collecting
+// // 				);
+// 	}
+// 	/*if($art3Comp == 'C' || $art3Comp == 'QC'){
+// 		// specific case where 1% or less or less than 2000pe of the load collected in a collecting system does not receive secondary treatment
+// 		$totalpercnotsec = '';
+// 		$totalquantnotsec = '';
+// 		foreach($listUwws as $connecteduww){
+// 			if($connecteduww['secondary'] == '0'){
+// 				$totalpercnotsec = $totalpercnotsec + $connecteduww['perc'];
+// 				$totalquantnotsec = $totalquantnotsec + $connecteduww['quant'];
+// 			}
+// 		}
+// 		if($totalpercnotsec != '' && $totalquantnotsec != ''){
+// 			if($totalpercnotsec <= 1 && $totalquantnotsec <= 2000){
+// 				$art4comp = 'RNC';
+// 				$reason = 'Article 4 compliance found to be non relative non compliance because of the specific case in the article 4 where the article 3 was either C or QC and where 1% or less or less than 2000pe of the load collected in a collecting system does not receive secondary treatment.';
+// 				return array($art4comp, $reason);
+// 			}
+// 			else{
+// 				$art4comp = 'NC';
+// 				$reason = 'Article 4 compliance found to be non non compliant because of the specific case in the article 4 where the article 3 was either C or QC and where 1% or more or more than 2000pe of the load collected in a collecting system does not receive secondary treatment.';
+// 				return array($art4comp, $reason);
+// 			}
+// 		}
+// 
+// 
+// 		// Specific case where percentage of load collected in collecting system = 0 and art3 compliance = QC
+// 		if($percLoadCollecting == '0' && $art3Comp == 'QC'){
+// 			$node->field_aggart5compliance['und'][0]['value'] = 'NR';
+// 			$node->field_article_5_compliance_expli['und'][0]['value'] = 'Article 5 found to be non relevant because of the special case in article 4 where the percentage of load collected in collecting system = 0% and the article 3 compliance was QC.';
+// 			node_save($node);
+// 			$art4comp = 'NR';
+// 			$reason = 'Article 4 compliance found to be non relevant because of the special case in article 4 where the percentage of load collected in collecting system = 0% and the article 3 compliance was QC.';
+// 			return array($art4comp, $reason);
+// 		}
+// 		}*/
+// // 	}
+// 	// removes all agglos discharging into Less Sensitive Areas
+// 	if($rcaType == 'LSA'){
+// 		$art4comp = 'NR';
+// 		$reason = 'Article 4 compliance found to be non relevant because the agglomeration discharges into a Less Sensitive Area.';
+// 		//return array($art4comp, $reason);
+// 	}
+// 
+// 	//collected in collective system =0 or treatment required=appropriate or NR
+// 	$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
+// 	//dsm('percLoadCollecting : '.$percLoadCollecting);
+// 	//dsm('required : '.$required);
+//     //e.vincent : correction for all uwwtp
+// 	if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
+// //         if (percLoadCollecting == 0 || true === uwwtd_all_uwwtp_required_in(
+// //                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
+// //                                                                       $GLOBALS['uwwtd_value']['required']['notrelevant']), 
+// //                                                                 $infoAllAggUww)) {        
+// 		$art4Comp = 'NR';
+// 		$art5Comp = 'NR';
+// 		$art6Comp = 'NR';
+// 		return array($art4Comp, $art5Comp, $art6Comp);
+// 	}else{
+// 		
+// 		//sum of collected load entering the treatment plants >=99% and <= 2000 pe
+// 		$maxgen = $node->field_agggenerated['und'][0]['value'];
+// 		//$var1 = ($collecting / $maxgen) * 100;
+// 		//$var1 = ($maxgen /100) * 99;
+// 		$CS = $node->field_aggc1['und'][0]['value'];
+// 		$IAS = $node->field_aggc2['und'][0]['value'];
+// 		/*dsm('CS : '.$CS);
+// 		dsm('IAS : '.$IAS);*/
+// 		//$var1 = $CS + $IAS;
+// 		//$var2 = (($maxgen / 100) * $CS) + (($maxgen / 100) * $IAS);
+// 		$var2 = ($maxgen * ($CS/100));
+// 		//$var3 = ($total / $CS) *100 ;
+// 		//if($total >= $var1 && $total <= 2000)
+// 		//dsm('total : '.$total);
+//         //% de charge perdue dans les réseaux
+//         //e.vincent / 2015/08/28 /c hange with refactoring
+//         $load_lost = $CS-$total;
+//         //$load_lost = $CS - $infoAllAggUww['total'];
+//         //charge perdue dans les réseaux en EH
+//         $load_lost_eq = abs($load_lost)*$maxgen/100;
+//         
+// 		if($load_lost>1 && $load_lost_eq > 2000){
+//             //dsm('maxgen : '.$maxgen);
+// 			if($maxgen<= 10000){
+// 				//one of the treatment required is secondary
+//                 //e.vincent / 2015/08/28 / correction for all uwwtp
+// 				if($required == 'S'){
+// //                     if (true === uwwtd_atleastone_uwwtp_required_in(
+// //                                                     array($GLOBALS['uwwtd_value']['required']['secondary']), 
+// //                                                     $infoAllAggUww)) {                      
+// // 						$nblink = count($node->field_linked_treatment_plants['und']);
+// 					//dsm('nblink : '.$nblink);
+// 					//dsm('compB : '.$compB);
+// // 						if($nblink == 1){
+// 						//$link = $node->field_linked_treatment_plants['und'][0]['nid'];	
+// 						//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
+//                         //e.vincent / 2015/08/28 / coorection for all uwwtp TODO
+// 						if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
+// //                             if ($compB == 'C' && true === uwwtd_all_uwwtp_required_notin(
+// //                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
+// //                                                                       $GLOBALS['uwwtd_value']['required']['primary']), 
+// //                                                                 $infoAllAggUww)) { 
+// 							$art4Comp = 'C';
+// 							$art5Comp = 'NR';
+// 						}else{
+// 							//deadline of article4 is before or equal to reporting reference year
+// 							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 							$dateArt4 = explode('-', $dateArt4);
+// 							//$year = $yearReporting;
+// 							if($dateArt4[0] <= $yearReporting){
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NR';
+// 							}else{
+// 								$art4Comp = 'NR';
+// 								$art5Comp = 'NR';
+// 							}
+// 						}
+// // 						}elseif($nblink >1){
+// // 							for($links = 0;$links <= $nblink-1;$links++){
+// // 								//$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
+// // 								//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
+// // 								if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
+// // 									$art4Comp = 'C';
+// // 									$art5Comp = 'NR';
+// // 								}else{
+// // 									//deadline of article4 is before or equal to reporting reference year
+// // 									$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// // 									$dateArt4 = explode('-', $dateArt4);
+// // 									//$year = date('Y');
+// // 									if($dateArt4[0] <= $yearReporting){
+// // 										$art4Comp = 'NC';
+// // 										$art5Comp = 'NR';
+// // 									}else{
+// // 										$art4Comp = 'NR';
+// // 										$art5Comp = 'NR';
+// // 									}
+// // 								}
+// // 							}//return array($art4Comp, $art5Comp);	
+// // 						}
+// 				}else{
+// 					$art4Comp = 'NR';
+// 					$art5Comp = 'NR';
+// 				}
+// 				
+// 			}else{
+// 				//dsm('required : '.$required);
+// 				//at least one treatment required is more stringent treatment
+//                 //e.vincent / 2015/08/28 / correction for all uwwtp
+// 				if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
+// //                     if (true === uwwtd_atleastone_uwwtp_required_in(
+// //                                                     array(
+// //                                                         $GLOBALS['uwwtd_value']['required']['morestringent'],
+// //                                                         $GLOBALS['uwwtd_value']['required']['nitrogen'],
+// //                                                         $GLOBALS['uwwtd_value']['required']['phosphorus'],
+// //                                                         $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
+// //                                                         $GLOBALS['uwwtd_value']['required']['other'],
+// //                                                     ), 
+// //                                                     $infoAllAggUww)) {                    
+// 					//Compliance STEP B for all uwwtps with treatment required secondary and more stringent =C
+//                     //e.vincent / 2015/08/28 / correction for all uwwtp
+//                     //TODO problème ici! que veut dire l'algo!
+// 					if(($compB == 'C') && ($secondary == '1' || $treatmenttype == 'MS')){
+// 							$art4Comp = 'C';
+// 							$art5Comp = 'C';
+// 					}else{
+// 						//deadline of article4 is before or equal to reporting reference year
+// 						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 						$dateArt4 = explode('-', $dateArt4);
+// 						//$year = date('Y');
+// 						//dsm('dateArt4 : '.$dateArt4[0]);
+// 						//dsm('yearReporting : '.$yearReporting);
+// 						if($dateArt4[0] <= $yearReporting){
+// 							//deadline of article5 is before or equal to reporting reference year
+// 							$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
+// 							$dateArt5 = explode('-', $dateArt5);
+// 							//$year = date('Y');
+// 							if($dateArt5 <= $yearReporting){
+// 								//Treatment in place for all UWWTPs with treatment required S or more is at least secondary and BOD and COD performance are pass
+// 								if(($required == 'S' || $required == 'P')&&($bod5 == 'P' && $cod == 'P')){
+// 									$art4Comp = 'C';
+// 									$art5Comp = 'NC';
+// 								}else{
+// 									$art4Comp = 'NC';
+// 									$art5Comp = 'NC';
+// 								}
+// 							}else{
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NR';
+// 							}
+// 						}else{
+// 							$art4Comp = 'NR';
+// 							$art5Comp = 'NR';
+// 						}
+// 					}
+// 				}else{
+// 					//Compliance STEP B for all UWWWTPs with treatment required secondary = C
+// 					if($compB == 'C' && $required == 'S'){
+// 						$art4Comp = 'C';
+// 						$art5Comp = 'NR';
+// 					}else{
+// 						//deadline of article4 is before or equal to reporting reference year
+// 						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 						$dateArt4 = explode('-', $dateArt4);
+// 						//$year = date('Y');
+// 						if($dateArt4[0] <= $yearReporting){
+// 							$art4Comp = 'NC';
+// 							$art5Comp = 'NR';
+// 						}
+// 						else{
+// 							$art4Comp = 'NR';
+// 							$art5Comp = 'NR';
+// 						}
+// 					}
+// 				}
+// 			}
+// 			//One of the treatment required is a primary treatment
+// 			if($required == 'P'){
+// 				//Compliance STEP B for all UWWTPs treatment required = primary =C
+// 				if($compB == 'C' && $required == 'P'){
+// 					$art6Comp = 'C';
+// 					return array ($art4Comp, $art5Comp, $art6Comp);
+// 				}else{
+// 					//deadline of article6 is before or equal to reporting reference year
+// 					$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
+// 					$dateArt6 = explode('-', $dateArt6);
+// 					//$year = date('Y');
+// 					if($dateArt6[0] <= $yearReporting){
+// 						$art6Comp = 'NC';
+// 						return array ($art4Comp, $art5Comp, $art6Comp);
+// 					}else{
+// 						$art6Comp = 'NR';
+// 						return array ($art4Comp, $art5Comp, $art6Comp);
+// 					}
+// 				}
+// 			}else{
+// 				$art6Comp = 'NR';
+// 				return array ($art4Comp, $art5Comp, $art6Comp);
+// 			}
+// 		}else{
+// 			//art 4-5-6 B
+// 			$ArtCompB = uwwtd_article_compliance_c($node, $art3Comp, $yearReporting);
+// 			return array ($ArtCompB);
+// 		}//return array ($art4Comp, $art5Comp, $art6Comp);
+// 	}
+// 			
+// // 	}else{
+// // 		//voir art 4-5-6 C
+// // 		$ArtCompC = uwwtd_article_compliance_d($node, $art3Comp, $yearReporting);
+// // 		return array ($ArtCompC);
+// // 	}
+// 
+// }
 
-				$result = $query->execute();
-
-				while($record = $result->fetchAssoc()){
-					$agguww = node_load($record['nid']);
-					$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-					//$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
-					$total = $total +$uwwperccollec;
-				}
-				//dsm($total);
-				$listUwws[] = array(
-					'node' => $uww,
-					'required' => $required,
-					'bod5' => $bod5,
-					'cod' => $cod,
-					'collecting' => $collecting
-				);
-			}
-			/*if($art3Comp == 'C' || $art3Comp == 'QC'){
-				// specific case where 1% or less or less than 2000pe of the load collected in a collecting system does not receive secondary treatment
-				$totalpercnotsec = '';
-				$totalquantnotsec = '';
-				foreach($listUwws as $connecteduww){
-					if($connecteduww['secondary'] == '0'){
-						$totalpercnotsec = $totalpercnotsec + $connecteduww['perc'];
-						$totalquantnotsec = $totalquantnotsec + $connecteduww['quant'];
-					}
-				}
-				if($totalpercnotsec != '' && $totalquantnotsec != ''){
-					if($totalpercnotsec <= 1 && $totalquantnotsec <= 2000){
-						$art4comp = 'RNC';
-						$reason = 'Article 4 compliance found to be non relative non compliance because of the specific case in the article 4 where the article 3 was either C or QC and where 1% or less or less than 2000pe of the load collected in a collecting system does not receive secondary treatment.';
-						return array($art4comp, $reason);
-					}
-					else{
-						$art4comp = 'NC';
-						$reason = 'Article 4 compliance found to be non non compliant because of the specific case in the article 4 where the article 3 was either C or QC and where 1% or more or more than 2000pe of the load collected in a collecting system does not receive secondary treatment.';
-						return array($art4comp, $reason);
-					}
-				}
-
-
-				// Specific case where percentage of load collected in collecting system = 0 and art3 compliance = QC
-				if($percLoadCollecting == '0' && $art3Comp == 'QC'){
-					$node->field_aggart5compliance['und'][0]['value'] = 'NR';
-					$node->field_article_5_compliance_expli['und'][0]['value'] = 'Article 5 found to be non relevant because of the special case in article 4 where the percentage of load collected in collecting system = 0% and the article 3 compliance was QC.';
-					node_save($node);
-					$art4comp = 'NR';
-					$reason = 'Article 4 compliance found to be non relevant because of the special case in article 4 where the percentage of load collected in collecting system = 0% and the article 3 compliance was QC.';
-					return array($art4comp, $reason);
-				}
-			}*/
-		}
-		// removes all agglos discharging into Less Sensitive Areas
-		if($rcaType == 'LSA'){
-			$art4comp = 'NR';
-			$reason = 'Article 4 compliance found to be non relevant because the agglomeration discharges into a Less Sensitive Area.';
-			//return array($art4comp, $reason);
-		}
-	
-		//collected in collective system =0 or treatment required=appropriate or NR
-		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
-		//dsm('percLoadCollecting : '.$percLoadCollecting);
-		//dsm('required : '.$required);
-        //e.vincent : correction for all uwwtp
-		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
-//         if (percLoadCollecting == 0 || true === uwwtd_all_uwwtp_required_in(
-//                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
-//                                                                       $GLOBALS['uwwtd_value']['required']['notrelevant']), 
-//                                                                 $infoAllAggUww)) {        
-			$art4Comp = 'NR';
-			$art5Comp = 'NR';
-			$art6Comp = 'NR';
-			return array($art4Comp, $art5Comp, $art6Comp);
-		}else{
-			
-			//sum of collected load entering the treatment plants >=99% and <= 2000 pe
-			$maxgen = $node->field_agggenerated['und'][0]['value'];
-			//$var1 = ($collecting / $maxgen) * 100;
-			//$var1 = ($maxgen /100) * 99;
-			$CS = $node->field_aggc1['und'][0]['value'];
-			$IAS = $node->field_aggc2['und'][0]['value'];
-			/*dsm('CS : '.$CS);
-			dsm('IAS : '.$IAS);*/
-			//$var1 = $CS + $IAS;
-			//$var2 = (($maxgen / 100) * $CS) + (($maxgen / 100) * $IAS);
-			$var2 = ($maxgen * ($CS/100));
-			//$var3 = ($total / $CS) *100 ;
-			//if($total >= $var1 && $total <= 2000)
-			//dsm('total : '.$total);
-            //% de charge perdue dans les réseaux
-            //e.vincent / 2015/08/28 /c hange with refactoring
-            $load_lost = $CS-$total;
-            //$load_lost = $CS - $infoAllAggUww['total'];
-            //charge perdue dans les réseaux en EH
-            $load_lost_eq = abs($load_lost)*$maxgen/100;
-            
-			if($load_lost>1 && $load_lost_eq > 2000){
-                //dsm('maxgen : '.$maxgen);
-				if($maxgen<= 10000){
-					//one of the treatment required is secondary
-                    //e.vincent / 2015/08/28 / correction for all uwwtp
-					if($required == 'S'){
-//                     if (true === uwwtd_atleastone_uwwtp_required_in(
-//                                                     array($GLOBALS['uwwtd_value']['required']['secondary']), 
-//                                                     $infoAllAggUww)) {                      
+// function uwwtd_article_compliance_c($node, $art3Comp, $yearReporting){
+// 	if($art3Comp == 'C'){
+// 		// Get information on all connected treatment plants
+// // 		$listUwws = array();
+// 		// Check that there is information on connected treatment plants
+// 		if(!isset($node->field_agguwwliste['und'])){
+// 			$art4comp = 'NI';
+// 			$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
+// 			return array($art4comp, $reason);
+// 		}else{
+// 			// Get information on all connected treatment plants
+// // 			$listUwws = array();
+// 			$required = 'Appropriate';
+// 			$total = 0;
+// 			foreach($node->field_agguwwliste['und'] as $agguwwlist){
+// 				$uww = node_load($agguwwlist['nid']);
+// 				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
+// 				$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
+// 				$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
+// 				$cod = $uww->field_uwwcodperf['und'][0]['value'];
+// 				$compB = $uww->field_uwwcompliance['und'][0]['value'];
+// 				
+// 				// get reste of information from node that collected joint information
+// 				$query = db_select('node', 'n');
+// 				$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+// 				$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+// 				$query->fields('n',array('title','created'))
+// 				->condition('a.entity_id', $node->nid, '=')
+// 				->condition('u.entity_id', $uww->nid, '=')
+// 				->fields('n',array('nid'));
+// 
+// 				$result = $query->execute();
+// 
+// 				while($record = $result->fetchAssoc()) {
+// 					$agguww = node_load($record['nid']);
+// 					$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+// 					$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+// 					$total = $total +$uwwperccollec;
+// 				}
+// // 				$listUwws[] = array(
+// // 					'node' => $uww,
+// // 					'required' => $required,
+// // 					'bod5' => $bod5,
+// // 					'cod' => $cod,
+// // 					'collecting' => $collecting
+// // 				);
+// 			}
+// 		}
+// 		//collected in collective system =0 or treatment required=appropriate or NR
+// 		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
+// 		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
+// 			$art4Comp = 'NR';
+// 			$art5Comp = 'NR';
+// 			$art6Comp = 'NR';
+// 			return array($art4comp, $art5comp, $art6comp);
+// 		}else{
+// 			//sum of collected load entering the treatment plants >=99% and <= 2000 pe
+// 			$CS = $node->field_aggc1['und'][0]['value'];
+// 			$IAS = $node->field_aggc2['und'][0]['value'];
+// 			$var2 = ($maxgen * ($CS/100));
+// 			if(($total >= 99 || $total == $CS) && $var2 <= 2000)
+// 			{
+// 				//art 4-5-6 B
+// 				$ArtCompA = uwwtd_article_compliance_a($node, $art3Comp);
+// 			}else{
+// 				if($maxgen<= 10000){
+// 					//one of the treatment required is secondary
+// 					if($required == 'S'){
 // 						$nblink = count($node->field_linked_treatment_plants['und']);
-						//dsm('nblink : '.$nblink);
-						//dsm('compB : '.$compB);
 // 						if($nblink == 1){
-							//$link = $node->field_linked_treatment_plants['und'][0]['nid'];	
-							//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
-                            //e.vincent / 2015/08/28 / coorection for all uwwtp TODO
-							if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
-//                             if ($compB == 'C' && true === uwwtd_all_uwwtp_required_notin(
-//                                                                 array($GLOBALS['uwwtd_value']['required']['appropriate'], 
-//                                                                       $GLOBALS['uwwtd_value']['required']['primary']), 
-//                                                                 $infoAllAggUww)) { 
-								$art4Comp = 'C';
-								$art5Comp = 'NR';
-							}else{
-								//deadline of article4 is before or equal to reporting reference year
-								$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-								$dateArt4 = explode('-', $dateArt4);
-								//$year = $yearReporting;
-								if($dateArt4[0] <= $yearReporting){
-									$art4Comp = 'NC';
-									$art5Comp = 'NR';
-								}else{
-									$art4Comp = 'NR';
-									$art5Comp = 'NR';
-								}
-							}
+// 							//deadline of article4 is before or equal to reporting reference year
+// 							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 							$dateArt4 = explode('-', $dateArt4);
+// 							//$year = date('Y');
+// 							if($dateArt4[0] <= $yearReporting){
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NR';
+// 							}else{
+// 								$art4Comp = 'NR';
+// 								$art5Comp = 'NR';
+// 							}
 // 						}elseif($nblink >1){
 // 							for($links = 0;$links <= $nblink-1;$links++){
-// 								//$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
-// 								//compliance STEP B for all stations with treatment required <> primary || appropriate =  C
-// 								if(($compB == 'C') && ($required != 'P' || $required != 'Appropriate')){
-// 									$art4Comp = 'C';
+// 								$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
+// 								//deadline of article4 is before or equal to reporting reference year
+// 								$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 								$dateArt4 = explode('-', $dateArt4);
+// 								//$year = date('Y');
+// 								if($dateArt4[0] <= $yearReporting){
+// 									$art4Comp = 'NC';
 // 									$art5Comp = 'NR';
 // 								}else{
-// 									//deadline of article4 is before or equal to reporting reference year
-// 									$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-// 									$dateArt4 = explode('-', $dateArt4);
-// 									//$year = date('Y');
-// 									if($dateArt4[0] <= $yearReporting){
-// 										$art4Comp = 'NC';
-// 										$art5Comp = 'NR';
-// 									}else{
-// 										$art4Comp = 'NR';
-// 										$art5Comp = 'NR';
-// 									}
+// 									$art4Comp = 'NR';
+// 									$art5Comp = 'NR';
 // 								}
-// 							}//return array($art4Comp, $art5Comp);	
+// 							}
 // 						}
-					}else{
-						$art4Comp = 'NR';
-						$art5Comp = 'NR';
-					}
-					
-				}else{
-					//dsm('required : '.$required);
-					//at least one treatment required is more stringent treatment
-                    //e.vincent / 2015/08/28 / correction for all uwwtp
-					if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
-//                     if (true === uwwtd_atleastone_uwwtp_required_in(
-//                                                     array(
-//                                                         $GLOBALS['uwwtd_value']['required']['morestringent'],
-//                                                         $GLOBALS['uwwtd_value']['required']['nitrogen'],
-//                                                         $GLOBALS['uwwtd_value']['required']['phosphorus'],
-//                                                         $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
-//                                                         $GLOBALS['uwwtd_value']['required']['other'],
-//                                                     ), 
-//                                                     $infoAllAggUww)) {                    
-						//Compliance STEP B for all uwwtps with treatment required secondary and more stringent =C
-                        //e.vincent / 2015/08/28 / correction for all uwwtp
-                        //TODO problème ici! que veut dire l'algo!
-						if(($compB == 'C') && ($secondary == '1' || $treatmenttype == 'MS')){
-								$art4Comp = 'C';
-								$art5Comp = 'C';
-						}else{
-							//deadline of article4 is before or equal to reporting reference year
-							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-							$dateArt4 = explode('-', $dateArt4);
-							//$year = date('Y');
-							//dsm('dateArt4 : '.$dateArt4[0]);
-							//dsm('yearReporting : '.$yearReporting);
-							if($dateArt4[0] <= $yearReporting){
-								//deadline of article5 is before or equal to reporting reference year
-								$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
-								$dateArt5 = explode('-', $dateArt5);
-								//$year = date('Y');
-								if($dateArt5 <= $yearReporting){
-									//Treatment in place for all UWWTPs with treatment required S or more is at least secondary and BOD and COD performance are pass
-									if(($required == 'S' || $required == 'P')&&($bod5 == 'P' && $cod == 'P')){
-										$art4Comp = 'C';
-										$art5Comp = 'NC';
-									}else{
-										$art4Comp = 'NC';
-										$art5Comp = 'NC';
-									}
-								}else{
-									$art4Comp = 'NC';
-									$art5Comp = 'NR';
-								}
-							}else{
-								$art4Comp = 'NR';
-								$art5Comp = 'NR';
-							}
-						}
-					}else{
-						//Compliance STEP B for all UWWWTPs with treatment required secondary = C
-						if($compB == 'C' && $required == 'S'){
-							$art4Comp = 'C';
-							$art5Comp = 'NR';
-						}else{
-							//deadline of article4 is before or equal to reporting reference year
-							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-							$dateArt4 = explode('-', $dateArt4);
-							//$year = date('Y');
-							if($dateArt4[0] <= $yearReporting){
-								$art4Comp = 'NC';
-								$art5Comp = 'NR';
-							}
-							else{
-								$art4Comp = 'NR';
-								$art5Comp = 'NR';
-							}
-						}
-					}
-				}
-				//One of the treatment required is a primary treatment
-				if($required == 'P'){
-					//Compliance STEP B for all UWWTPs treatment required = primary =C
-					if($compB == 'C' && $required == 'P'){
-						$art6Comp = 'C';
-						return array ($art4Comp, $art5Comp, $art6Comp);
-					}else{
-						//deadline of article6 is before or equal to reporting reference year
-						$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
-						$dateArt6 = explode('-', $dateArt6);
-						//$year = date('Y');
-						if($dateArt6[0] <= $yearReporting){
-							$art6Comp = 'NC';
-							return array ($art4Comp, $art5Comp, $art6Comp);
-						}else{
-							$art6Comp = 'NR';
-							return array ($art4Comp, $art5Comp, $art6Comp);
-						}
-					}
-				}else{
-					$art6Comp = 'NR';
-					return array ($art4Comp, $art5Comp, $art6Comp);
-				}
-			}else{
-				//art 4-5-6 B
-				$ArtCompB = uwwtd_article_compliance_b($node, $art3Comp, $yearReporting);
-				return array ($ArtCompB);
-			}//return array ($art4Comp, $art5Comp, $art6Comp);
-		}
-			
-	}else{
-		//voir art 4-5-6 C
-		$ArtCompC = uwwtd_article_compliance_c($node, $art3Comp, $yearReporting);
-		return array ($ArtCompC);
-	}
-
-}
-
-function uwwtd_article_compliance_b($node, $art3Comp, $yearReporting){
-	if($art3Comp == 'C'){
-		// Get information on all connected treatment plants
-		$listUwws = array();
-		// Check that there is information on connected treatment plants
-		if(!isset($node->field_agguwwliste['und'])){
-			$art4comp = 'NI';
-			$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
-			return array($art4comp, $reason);
-		}else{
-			// Get information on all connected treatment plants
-			$listUwws = array();
-			$required = 'Appropriate';
-			$total = 0;
-			foreach($node->field_agguwwliste['und'] as $agguwwlist){
-				$uww = node_load($agguwwlist['nid']);
-				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
-				$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
-				$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
-				$cod = $uww->field_uwwcodperf['und'][0]['value'];
-				$compB = $uww->field_uwwcompliance['und'][0]['value'];
-				
-				// get reste of information from node that collected joint information
-				$query = db_select('node', 'n');
-				$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
-				$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
-				$query->fields('n',array('title','created'))
-				->condition('a.entity_id', $node->nid, '=')
-				->condition('u.entity_id', $uww->nid, '=')
-				->fields('n',array('nid'));
-
-				$result = $query->execute();
-
-				while($record = $result->fetchAssoc()) {
-					$agguww = node_load($record['nid']);
-					$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-					$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
-					$total = $total +$uwwperccollec;
-				}
-				$listUwws[] = array(
-					'node' => $uww,
-					'required' => $required,
-					'bod5' => $bod5,
-					'cod' => $cod,
-					'collecting' => $collecting
-				);
-			}
-		}
-		//collected in collective system =0 or treatment required=appropriate or NR
-		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
-		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
-			$art4Comp = 'NR';
-			$art5Comp = 'NR';
-			$art6Comp = 'NR';
-			return array($art4comp, $art5comp, $art6comp);
-		}else{
-			//sum of collected load entering the treatment plants >=99% and <= 2000 pe
-			$CS = $node->field_aggc1['und'][0]['value'];
-			$IAS = $node->field_aggc2['und'][0]['value'];
-			$var2 = ($maxgen * ($CS/100));
-			if(($total >= 99 || $total == $CS) && $var2 <= 2000)
-			{
-				//art 4-5-6 B
-				$ArtCompA = uwwtd_article_compliance_a($node, $art3Comp);
-			}else{
-				if($maxgen<= 10000){
-					//one of the treatment required is secondary
-					if($required == 'S'){
-						$nblink = count($node->field_linked_treatment_plants['und']);
-						if($nblink == 1){
-							//deadline of article4 is before or equal to reporting reference year
-							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-							$dateArt4 = explode('-', $dateArt4);
-							//$year = date('Y');
-							if($dateArt4[0] <= $yearReporting){
-								$art4Comp = 'NC';
-								$art5Comp = 'NR';
-							}else{
-								$art4Comp = 'NR';
-								$art5Comp = 'NR';
-							}
-						}elseif($nblink >1){
-							for($links = 0;$links <= $nblink-1;$links++){
-								$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
-								//deadline of article4 is before or equal to reporting reference year
-								$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-								$dateArt4 = explode('-', $dateArt4);
-								//$year = date('Y');
-								if($dateArt4[0] <= $yearReporting){
-									$art4Comp = 'NC';
-									$art5Comp = 'NR';
-								}else{
-									$art4Comp = 'NR';
-									$art5Comp = 'NR';
-								}
-							}
-						}
-					}else{
-						$art4Comp = 'NR';
-						$art5Comp = 'NR';
-					}
-				}else{
-					//at least one treatment required is more stringent treatment
-					if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
-						
-						//deadline of article4 is before or equal to reporting reference year
-						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-						$dateArt4 = explode('-', $dateArt4);
-						//$year = date('Y');
-						if($dateArt4[0] <= $yearReporting){
-							//deadline of article5 is before or equal to reporting reference year
-							$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
-							$dateArt5 = explode('-', $dateArt5);
-							//$year = date('Y');
-							if($dateArt5[0] <= $yearReporting){
-								$art4Comp = 'NC';
-								$art5Comp = 'NC';
-							}else{
-								$art4Comp = 'NC';
-								$art5Comp = 'NR';
-							}
-						}else{
-							$art4Comp = 'NR';
-							$art5Comp = 'NR';
-						}
-					}else{
-						//deadline of article4 is before or equal to reporting reference year
-						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-						$dateArt4 = explode('-', $dateArt4);
-						$year = date('Y');
-						if($dateArt4[0] <= $year){
-							$art4Comp = 'NC';
-							$art5Comp = 'NR';
-						}else{
-							$art4Comp = 'NR';
-							$art5Comp = 'NR';
-						}
-					}
-				}
-				//One of the treatment required is a primary treatment
-				if($required == 'P'){
-					//deadline of article6 is before or equal to reporting reference year
-					$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
-					$dateArt6 = explode('-', $dateArt6);
-					//$year = date('Y');
-					if($dateArt6[0] <= $yearReporting){
-						$art6Comp = 'NC';
-						return array($art4Comp, $art5Comp, $art6Comp);
-					}else{
-						$art6Comp = 'NR';
-						return array($art4Comp, $art5Comp, $art6Comp);
-					}
-				}else{
-					$art6Comp = 'NR';
-					return array($art4Comp, $art5Comp, $art6Comp);
-				}
-			}
-		}	
-	}else{
-			//voir art 4-5-6 C
-			$ArtCompC = uwwtd_article_compliance_c($node, $art3Comp);
-			return array($ArtCompC);
-	}
-	
-}
-
-function uwwtd_article_compliance_c($node, $art3Comp, $yearReporting){
-	if($art3Comp == 'NC'){
-		// Get information on all connected treatment plants
-		$listUwws = array();
-		// Check that there is information on connected treatment plants
-		if(!isset($node->field_agguwwliste['und'])){
-			$art4comp = 'NI';
-			$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
-			return array($art4comp, $reason);
-		}else{
-			// Get information on all connected treatment plants
-			$listUwws = array();
-			$required = 'Appropriate';
-			foreach($node->field_agguwwliste['und'] as $agguwwlist){
-				$uww = node_load($agguwwlist['nid']);;
-				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
-				$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
-				$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
-				$cod = $uww->field_uwwcodperf['und'][0]['value'];
-				$compB = $uww->field_uwwcompliance['und'][0]['value'];
-			
-				// get reste of information from node that collected joint information
-				$query = db_select('node', 'n');
-				$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
-				$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
-				$query->fields('n',array('title','created'))
-				->condition('a.entity_id', $node->nid, '=')
-				->condition('u.entity_id', $uww->nid, '=')
-				->fields('n',array('nid'));
-
-				$result = $query->execute();
-				
-				while($record = $result->fetchAssoc()) {
-					$agguww = node_load($record['nid']);
-					$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-					$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
-				}
-				$listUwws[] = array(
-					'node' => $uww,
-					'required' => $required,
-					'collecting' => $collecting
-				);
-				
-			}
-			
-		}
-		//collected in collective system =0 or treatment required=appropriate or NR
-		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
-		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
-			$art4Comp = 'NR';
-			$art5Comp = 'NR';
-			$art6Comp = 'NR';
-			return array($art4comp, $art5comp, $art6comp);
-		}else{
-			//sum of collected load entering the treatment plants >=99% and <= 2000 pe
-			$maxgen = $node->field_agggenerated['und'][0]['value'];
-			if($maxgen<= 10000){
-				//one of the treatment required is secondary
-				if($required == 'S'){
-					
-					$nblink = count($node->field_linked_treatment_plants['und']);
-					if($nblink == 1){	
-						//deadline of article4 is before or equal to reporting reference year
-						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-						$dateArt4 = explode('-', $dateArt4);
-						//$year = date('Y');
-						if($dateArt4[0] <= $yearReporting){
-							$art4Comp = 'NC';
-							$art5Comp = 'NR';
-							//return array($art4Comp, $art5Comp);
-						}else{
-							$art4Comp = 'NR';
-							$art5Comp = 'NR';
-							//return array($art4Comp, $art5Comp);
-						}
-					}elseif($nblink >1){
-						for($links = 0;$links <= $nblink-1;$links++){
-							$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
-							//deadline of article4 is before or equal to reporting reference year
-							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-							$dateArt4 = explode('-', $dateArt4);
-							//$year = date('Y');
-							
-							if($dateArt4[0] <= $yearReporting){
-								$art4Comp = 'NC';
-								$art5Comp = 'NR';
-							}else{
-								$art4Comp = 'NR';
-								$art5Comp = 'NR';
-							}
-						}
-					}
-				}else{
-					$art4Comp = 'NR';
-					$art5Comp = 'NR';
-				}
-			}else{
-				//at least one treatment required is more stringent treatment
-				if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
-					//deadline of article4 is before or equal to reporting reference year
-					$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-					$dateArt4 = explode('-', $dateArt4);
-					//$year = date('Y');
-					if($dateArt4[0] <= $yearReporting){
-						//deadline of article5 is before or equal to reporting reference year
-						$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
-						$dateArt5 = explode('-', $dateArt5);
-						//$year = date('Y');
-						if($dateArt5[0] <= $yearReporting){
-							$art4Comp = 'NC';
-							$art5Comp = 'NC';
-						}else{
-							$art4Comp = 'NC';
-							$art5Comp = 'NR';
-						}
-					}else{
-						$art4Comp = 'NR';
-						$art5Comp = 'NR';
-					}
-				}else{
-					//deadline of article4 is before or equal to reporting reference year
-					$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
-					$dateArt4 = explode('-', $dateArt4);
-					//$year = date('Y');
-					if($dateArt4[0] <= $yearReporting){
-						$art4Comp = 'NC';
-						$art5Comp = 'NR';
-					}else{
-						$art4Comp = 'NR';
-						$art5Comp = 'NR';
-					}
-				}
-			}
-			//One of the treatment required is a primary treatment
-			if($required == 'P'){
-				//deadline of article6 is before or equal to reporting reference year
-				$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
-				$dateArt6 = explode('-', $dateArt6);
-				//$year = date('Y');
-				if($dateArt6[0] <= $yearReporting){
-					$art6Comp = 'NC';
-					return array($art4Comp, $art5Comp, $art6Comp);
-				}else{
-					$art6Comp = 'NR';
-					return array($art4Comp, $art5Comp, $art6Comp);
-				}
-			}else{
-				
-				$art6Comp = 'NR';
-				return array($art4Comp, $art5Comp, $art6Comp);
-			}
-		}
-	}else{
-			//voir art 4-5-6 A && B
-			$ArtCompA = uwwtd_article4_compliance($node, $rcaType, $waterBodyTypes, $art3Comp, $yearReporting);
-			$ArtCompB = uwwtd_article_compliance_b($node, $art3Comp);
-			return array($ArtCompA, $ArtCompB);
-	}
-}
+// 					}else{
+// 						$art4Comp = 'NR';
+// 						$art5Comp = 'NR';
+// 					}
+// 				}else{
+// 					//at least one treatment required is more stringent treatment
+// 					if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
+// 						
+// 						//deadline of article4 is before or equal to reporting reference year
+// 						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 						$dateArt4 = explode('-', $dateArt4);
+// 						//$year = date('Y');
+// 						if($dateArt4[0] <= $yearReporting){
+// 							//deadline of article5 is before or equal to reporting reference year
+// 							$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
+// 							$dateArt5 = explode('-', $dateArt5);
+// 							//$year = date('Y');
+// 							if($dateArt5[0] <= $yearReporting){
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NC';
+// 							}else{
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NR';
+// 							}
+// 						}else{
+// 							$art4Comp = 'NR';
+// 							$art5Comp = 'NR';
+// 						}
+// 					}else{
+// 						//deadline of article4 is before or equal to reporting reference year
+// 						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 						$dateArt4 = explode('-', $dateArt4);
+// 						$year = date('Y');
+// 						if($dateArt4[0] <= $year){
+// 							$art4Comp = 'NC';
+// 							$art5Comp = 'NR';
+// 						}else{
+// 							$art4Comp = 'NR';
+// 							$art5Comp = 'NR';
+// 						}
+// 					}
+// 				}
+// 				//One of the treatment required is a primary treatment
+// 				if($required == 'P'){
+// 					//deadline of article6 is before or equal to reporting reference year
+// 					$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
+// 					$dateArt6 = explode('-', $dateArt6);
+// 					//$year = date('Y');
+// 					if($dateArt6[0] <= $yearReporting){
+// 						$art6Comp = 'NC';
+// 						return array($art4Comp, $art5Comp, $art6Comp);
+// 					}else{
+// 						$art6Comp = 'NR';
+// 						return array($art4Comp, $art5Comp, $art6Comp);
+// 					}
+// 				}else{
+// 					$art6Comp = 'NR';
+// 					return array($art4Comp, $art5Comp, $art6Comp);
+// 				}
+// 			}
+// 		}	
+// 	}else{
+// 			//voir art 4-5-6 C
+// 			$ArtCompC = uwwtd_article_compliance_d($node, $art3Comp);
+// 			return array($ArtCompC);
+// 	}
+// 	
+// }
+//   // 
+// function uwwtd_article_compliance_d($node, $art3Comp, $yearReporting){
+// 	if($art3Comp == 'NC'){
+// 		// Get information on all connected treatment plants
+// // 		$listUwws = array();
+// 		// Check that there is information on connected treatment plants
+// 		if(!isset($node->field_agguwwliste['und'])){
+// 			$art4comp = 'NI';
+// 			$reason = 'Article 4 compliance found to have no information because the data on the connected treatment plants is missing.';
+// 			return array($art4comp, $reason);
+// 		}else{
+// 			// Get information on all connected treatment plants
+// // 			$listUwws = array();
+// 			$required = 'Appropriate';
+// 			foreach($node->field_agguwwliste['und'] as $agguwwlist){
+// 				$uww = node_load($agguwwlist['nid']);;
+// 				$collecting = $uww->field_uwwloadenteringuwwtp['und'][0]['value'];
+// 				$required  = $uww->field_uwwtreatmentrequired['und'][0]['value'];
+// 				$bod5= $uww->field_uwwbod5perf['und'][0]['value'];
+// 				$cod = $uww->field_uwwcodperf['und'][0]['value'];
+// 				$compB = $uww->field_uwwcompliance['und'][0]['value'];
+// 			
+// 				// get reste of information from node that collected joint information
+// 				$query = db_select('node', 'n');
+// 				$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+// 				$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+// 				$query->fields('n',array('title','created'))
+// 				->condition('a.entity_id', $node->nid, '=')
+// 				->condition('u.entity_id', $uww->nid, '=')
+// 				->fields('n',array('nid'));
+// 
+// 				$result = $query->execute();
+// 				
+// 				while($record = $result->fetchAssoc()) {
+// 					$agguww = node_load($record['nid']);
+// 					$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+// 					$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+// 				}
+// // 				$listUwws[] = array(
+// // 					'node' => $uww,
+// // 					'required' => $required,
+// // 					'collecting' => $collecting
+// // 				);
+// 				
+// 			}
+// 			
+// 		}
+// 		//collected in collective system =0 or treatment required=appropriate or NR
+// 		$percLoadCollecting = $node->field_aggc1['und'][0]['value'];
+// 		if($percLoadCollecting == 0 || $required == 'Appropriate' || $required == 'NR'){
+// 			$art4Comp = 'NR';
+// 			$art5Comp = 'NR';
+// 			$art6Comp = 'NR';
+// 			return array($art4comp, $art5comp, $art6comp);
+// 		}else{
+// 			//sum of collected load entering the treatment plants >=99% and <= 2000 pe
+// 			$maxgen = $node->field_agggenerated['und'][0]['value'];
+// 			if($maxgen<= 10000){
+// 				//one of the treatment required is secondary
+// 				if($required == 'S'){
+// 					
+// 					$nblink = count($node->field_linked_treatment_plants['und']);
+// 					if($nblink == 1){	
+// 						//deadline of article4 is before or equal to reporting reference year
+// 						$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 						$dateArt4 = explode('-', $dateArt4);
+// 						//$year = date('Y');
+// 						if($dateArt4[0] <= $yearReporting){
+// 							$art4Comp = 'NC';
+// 							$art5Comp = 'NR';
+// 							//return array($art4Comp, $art5Comp);
+// 						}else{
+// 							$art4Comp = 'NR';
+// 							$art5Comp = 'NR';
+// 							//return array($art4Comp, $art5Comp);
+// 						}
+// 					}elseif($nblink >1){
+// 						for($links = 0;$links <= $nblink-1;$links++){
+// 							$link = $node->field_linked_treatment_plants['und'][$links]['nid'];
+// 							//deadline of article4 is before or equal to reporting reference year
+// 							$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 							$dateArt4 = explode('-', $dateArt4);
+// 							//$year = date('Y');
+// 							
+// 							if($dateArt4[0] <= $yearReporting){
+// 								$art4Comp = 'NC';
+// 								$art5Comp = 'NR';
+// 							}else{
+// 								$art4Comp = 'NR';
+// 								$art5Comp = 'NR';
+// 							}
+// 						}
+// 					}
+// 				}else{
+// 					$art4Comp = 'NR';
+// 					$art5Comp = 'NR';
+// 				}
+// 			}else{
+// 				//at least one treatment required is more stringent treatment
+// 				if($required == 'MS' || $required == 'N' || $required == 'MP' || $required == 'NP' || $required == 'O'){
+// 					//deadline of article4 is before or equal to reporting reference year
+// 					$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 					$dateArt4 = explode('-', $dateArt4);
+// 					//$year = date('Y');
+// 					if($dateArt4[0] <= $yearReporting){
+// 						//deadline of article5 is before or equal to reporting reference year
+// 						$dateArt5 = $node->field_aggperiodover5['und'][0]['value'];
+// 						$dateArt5 = explode('-', $dateArt5);
+// 						//$year = date('Y');
+// 						if($dateArt5[0] <= $yearReporting){
+// 							$art4Comp = 'NC';
+// 							$art5Comp = 'NC';
+// 						}else{
+// 							$art4Comp = 'NC';
+// 							$art5Comp = 'NR';
+// 						}
+// 					}else{
+// 						$art4Comp = 'NR';
+// 						$art5Comp = 'NR';
+// 					}
+// 				}else{
+// 					//deadline of article4 is before or equal to reporting reference year
+// 					$dateArt4 = $node->field_aggperiodover4['und'][0]['value'];
+// 					$dateArt4 = explode('-', $dateArt4);
+// 					//$year = date('Y');
+// 					if($dateArt4[0] <= $yearReporting){
+// 						$art4Comp = 'NC';
+// 						$art5Comp = 'NR';
+// 					}else{
+// 						$art4Comp = 'NR';
+// 						$art5Comp = 'NR';
+// 					}
+// 				}
+// 			}
+// 			//One of the treatment required is a primary treatment
+// 			if($required == 'P'){
+// 				//deadline of article6 is before or equal to reporting reference year
+// 				$dateArt6 = $node->field_aggperiodover6['und'][0]['value'];
+// 				$dateArt6 = explode('-', $dateArt6);
+// 				//$year = date('Y');
+// 				if($dateArt6[0] <= $yearReporting){
+// 					$art6Comp = 'NC';
+// 					return array($art4Comp, $art5Comp, $art6Comp);
+// 				}else{
+// 					$art6Comp = 'NR';
+// 					return array($art4Comp, $art5Comp, $art6Comp);
+// 				}
+// 			}else{
+// 				
+// 				$art6Comp = 'NR';
+// 				return array($art4Comp, $art5Comp, $art6Comp);
+// 			}
+// 		}
+// 	}else{
+// 			//voir art 4-5-6 A && B
+// 			$ArtCompA = uwwtd_article_compliance_b($node, $rcaType, $waterBodyTypes, $art3Comp, $yearReporting);
+// 			$ArtCompB = uwwtd_article_compliance_c($node, $art3Comp);
+// 			return array($ArtCompA, $ArtCompB);
+// 	}
+// }
 
 function uwwtd_station_compliance_algo($node, $timestamp){
 	// Start compliance check
-	$comps = array();
+// 	$comps = array();
 	// Here we setup our variable that will take all the levels or treatment required and put them into an array
-	$reqtreatments = array();
-	$typeTreat = 'NR';
+// 	$reqtreatments = array();
+// 	$typeTreat = 'NR';
 
 	// Get all data needed to calculate compliance
 	// Get aglo data first
@@ -4906,16 +5275,19 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 			$nrec = '0';
 			$prec = '0';
 			/* Cas des pays avec l'ensemble du pays en zone sensible */
-			$repcode = $node->field_repcode['und'][0]['value'];
-			$repcode = str_replace('_', '-', $repcode);
-			$boom = explode('-', $repcode);
-			$boom = explode(' ', $boom[0]);
-			$rep = $boom[0];
+// 			$repcode = $node->field_repcode['und'][0]['value'];
+// 			$repcode = str_replace('_', '-', $repcode);
+// 			$boom = explode('-', $repcode);
+// 			$boom = explode(' ', $boom[0]);
+// 			$rep = $boom[0];
 
 			$rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-			if($rep == 'LT'){
+			if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
 				$rcaTypeid = 'SA';
-			}
+			}            
+// 			if($rep == 'LT'){
+// 				$rcaTypeid = 'SA';
+// 			}         
 			foreach($dcp->field_dcprcaliste['und'] as $rcalist){
 				$rca = node_load($rcalist['nid']);
 				if($rca->field_rcaanitro['und'][0]['value'] == '1') $nrec = '1';
@@ -4936,7 +5308,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 	
 	// If we cant find any discharge points attached to this station then we return no information to the user
 	if(count($dcps) == 0){
-		$comp = 'NI';
+		$comp = $GLOBALS['uwwtd_value']['compliance']['unknown'];
 		$reason = 'Station found to have no information on discharge points';
 		uwwtd_add_error(1, 3, 'Station found to have no information on discharge points.', $timestamp, null, $node);
 		$truereqtreatment = 'NI';
@@ -4945,292 +5317,22 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		return (array($truereqtreatment, $comp, $reason, $treatment, $performance));
 	}
 
-	$truereqtreatment = uwwtd_get_required_treatment($dcps, $maxgen);
-	
-	/*if($truereqtreatment == 'NI'){
-		$comp = 'NI';
-		$treatment = '1';
-		$performance = '1';
-		$reason = 'Station found to be missing information required to calculate proper compliance';
-	}
+    //$dcps MUST not be empty
+    //ALGO1
+	list($truereqtreatment, $reason) = uwwtd_get_required_treatment($dcps, $maxgen);
+    unset($dcps);
 
-	if($truereqtreatment == 'NR'){
-		$comp = 'NR';
-		$treatment = '1';
-		$performance = '1';
-		$reason = 'Station found to be non relevant';
-	}*/
-
-	if($truereqtreatment == 'P'){
-		if(isset($node->field_uwwprimarytreatment['und'][0]['value']) && $node->field_uwwprimarytreatment['und'][0]['value'] == '1'){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
-				$comp = 'NC';
-				$reason = 'Station found to be compliant because primary performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
+    //same case as below for count($dcp), missing information on dcp    
+    if($truereqtreatment == 'NI'){        
+		$comp = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+		$reason = $reason;
+		uwwtd_add_error(1, 3, $reason, $timestamp, null, $node);
+		$truereqtreatment = 'NI';
+		$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+		$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+		return (array($truereqtreatment, $comp, $reason, $treatment, $performance));        
 	}
-
-	if($truereqtreatment == 'S'){
-		
-		if(isset($node->field_uwwsecondarytreatment['und'][0]['value']) && $node->field_uwwsecondarytreatment['und'][0]['value'] == '1'){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
-				$comp = 'NC';
-				$reason = 'Station found to be compliant because secondary performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
-
-	if($truereqtreatment == 'N'){
-		if(
-			isset($node->field_uwwnremoval['und'][0]['value']) &&
-			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
-			$node->field_uwwnremoval['und'][0]['value'] == '1' && 
-			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
-		){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwntotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwntotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwntotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwntotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'NC';
-				$reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because nitrogen treatment is not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
-
-	if($truereqtreatment == 'MP'){
-		if(
-			isset($node->field_uwwpremoval['und'][0]['value']) &&
-			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
-			$node->field_uwwpremoval['und'][0]['value'] == '1' && 
-			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
-		){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwptotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwptotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because phosphorus treatment is in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwptotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwptotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'NC';
-				$reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because phosphorus treatment is not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
-
-	if($truereqtreatment == 'NP'){
-		if(
-			isset($node->field_uwwpremoval['und'][0]['value']) &&
-			isset($node->field_uwwnremoval['und'][0]['value']) &&
-			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
-			$node->field_uwwpremoval['und'][0]['value'] == '1' && 
-			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
-			$node->field_uwwnremoval['und'][0]['value'] == '1'
-		){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwptotperf['und'][0]['value']) &&
-				isset($node->field_uwwntotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwptotperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwntotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(
-				isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwptotperf['und'][0]['value']) &&
-				isset($node->field_uwwntotperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwptotperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwntotperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'NC';
-				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
-
-	if($truereqtreatment == 'O'){
-		if(
-			(isset($node->field_uwwsecondarytreatment['und'][0]['value'])	&&
-			(isset($node->field_uwwuv['und'][0]['value']) ||
-				isset($node->field_uwwchlorination['und'][0]['value']) ||
-				isset($node->field_uwwozonation['und'][0]['value']) ||
-				isset($node->field_uwwsandfiltration['und'][0]['value']) ||
-				isset($node->field_uwwmicrofiltration['und'][0]['value']) ||
-				isset($node->field_uwwothertreat['und'][0]['value']))
-				
-			) &&
-			(
-				$node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
-				($node->field_uwwuv['und'][0]['value'] == '1' ||
-				$node->field_uwwchlorination['und'][0]['value'] == '1' ||
-				$node->field_uwwozonation['und'][0]['value'] == '1' ||
-				$node->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-				$node->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-				$node->field_uwwothertreat['und'][0]['value'] == '1')
-				
-			)
-		){
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
-			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwotherperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwotherperf['und'][0]['value'] == 'P'
-			){
-				$comp = 'C';
-				$reason = 'Station found to be compliant because other treatment is in place and performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because other treatment is in place but performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
-				isset($node->field_uwwcodperf['und'][0]['value']) &&
-				isset($node->field_uwwotherperf['und'][0]['value']) &&
-				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
-				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
-				$node->field_uwwotherperf['und'][0]['value'] == 'P')
-			{
-				$comp = 'NC';
-				$reason = 'Station found to be not compliant because other treatment is not in place but performance is met';
-				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$comp = 'NC';
-				$reason = 'Station found to be non compliant because other treatment is not in place and performance is not met';
-				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
-	
+    
 	if($truereqtreatment == 'Appropriate'){    
         //e.vincent / 2015/08/27 / ask from b.fribourg-blanc
         $treatment = $GLOBALS['uwwtd_value']['treatementmet']['not_calculable'];
@@ -5263,7 +5365,309 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 // 				$performance = '0';
 // 			}
 // 		}
+	}         
+
+	if($truereqtreatment == 'P'){
+		//if(isset($node->field_uwwprimarytreatment['und'][0]['value']) && $node->field_uwwprimarytreatment['und'][0]['value'] == '1'){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('primary'))) {
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
+            //if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {
+				$comp = 'C';
+				$reason = 'Station found to be compliant because primary treatment is in place and performance is met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
+				$comp = 'NC';
+				$reason = 'Station found to be compliant because primary performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
 	}
+
+	if($truereqtreatment == 'S'){		
+		//if(isset($node->field_uwwsecondarytreatment['und'][0]['value']) && $node->field_uwwsecondarytreatment['und'][0]['value'] == '1'){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))) {
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
+				$comp = 'C';
+				$reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+			//if(isset($node->field_uwwcodperf['und'][0]['value']) && isset($node->field_uwwbod5perf['und'][0]['value']) && $node->field_uwwcodperf['und'][0]['value'] == 'P' && $node->field_uwwbod5perf['und'][0]['value'] == 'P'){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
+				$comp = 'NC';
+				$reason = 'Station found to be compliant because secondary performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+	}
+
+	if($truereqtreatment == 'N'){
+// 		if(
+// 			isset($node->field_uwwnremoval['und'][0]['value']) &&
+// 			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
+// 			$node->field_uwwnremoval['und'][0]['value'] == '1' && 
+// 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
+// 		){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwntotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwntotperf['und'][0]['value'] == 'P'
+// 			){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {            
+				$comp = 'C';
+				$reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwntotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwntotperf['und'][0]['value'] == 'P'
+// 			){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {             
+				$comp = 'NC';
+				$reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because nitrogen treatment is not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+	}
+
+	if($truereqtreatment == 'MP'){
+// 		if(
+// 			isset($node->field_uwwpremoval['und'][0]['value']) &&
+// 			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
+// 			$node->field_uwwpremoval['und'][0]['value'] == '1' && 
+// 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1'
+// 		){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'premoval'))) {     
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwptotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwptotperf['und'][0]['value'] == 'P'
+// 			){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_pperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {             
+				$comp = 'C';
+				$reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because phosphorus treatment is in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwptotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwptotperf['und'][0]['value'] == 'P'
+// 			){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_pperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {             
+				$comp = 'NC';
+				$reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because phosphorus treatment is not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+	}
+
+	if($truereqtreatment == 'NP'){
+// 		if(
+// 			isset($node->field_uwwpremoval['und'][0]['value']) &&
+// 			isset($node->field_uwwnremoval['und'][0]['value']) &&
+// 			isset($node->field_uwwsecondarytreatment['und'][0]['value']) &&
+// 			$node->field_uwwpremoval['und'][0]['value'] == '1' && 
+// 			$node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+// 			$node->field_uwwnremoval['und'][0]['value'] == '1'
+// 		){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'premoval', 'nremoval'))) {      
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwptotperf['und'][0]['value']) &&
+// 				isset($node->field_uwwntotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwptotperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwntotperf['und'][0]['value'] == 'P'
+// 			){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_pperf_pass($node) && true === uwwtd_nperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {             
+				$comp = 'C';
+				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+// 			if(
+// 				isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwptotperf['und'][0]['value']) &&
+// 				isset($node->field_uwwntotperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwptotperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwntotperf['und'][0]['value'] == 'P'
+// 			){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_pperf_pass($node) && true === uwwtd_nperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {             
+				$comp = 'NC';
+				$reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+	}
+
+	if($truereqtreatment == 'O'){
+// 		if(
+// 			(isset($node->field_uwwsecondarytreatment['und'][0]['value'])	&&
+// 			(isset($node->field_uwwuv['und'][0]['value']) ||
+// 				isset($node->field_uwwchlorination['und'][0]['value']) ||
+// 				isset($node->field_uwwozonation['und'][0]['value']) ||
+// 				isset($node->field_uwwsandfiltration['und'][0]['value']) ||
+// 				isset($node->field_uwwmicrofiltration['und'][0]['value']) ||
+// 				isset($node->field_uwwothertreat['und'][0]['value']))
+// 				
+// 			) &&
+// 			(
+// 				$node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+// 				($node->field_uwwuv['und'][0]['value'] == '1' ||
+// 				$node->field_uwwchlorination['und'][0]['value'] == '1' ||
+// 				$node->field_uwwozonation['und'][0]['value'] == '1' ||
+// 				$node->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+// 				$node->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+// 				$node->field_uwwothertreat['und'][0]['value'] == '1')
+// 				
+// 			)
+// 		){
+        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))
+            && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
+                            array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
+                        )) {                   
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+// 			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwotherperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwotherperf['und'][0]['value'] == 'P'
+// 			){
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_otherperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'otherperf'))) {             
+				$comp = 'C';
+				$reason = 'Station found to be compliant because other treatment is in place and performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because other treatment is in place but performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+		else{
+			$treatment = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+// 			if(isset($node->field_uwwbod5perf['und'][0]['value']) &&
+// 				isset($node->field_uwwcodperf['und'][0]['value']) &&
+// 				isset($node->field_uwwotherperf['und'][0]['value']) &&
+// 				$node->field_uwwbod5perf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+// 				$node->field_uwwotherperf['und'][0]['value'] == 'P')
+// 			{
+//             if(true === uwwtd_codperf_pass($node) && true === uwwtd_bod5perf_pass($node) && true === uwwtd_otherperf_pass($node)){
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'otherperf'))) {               
+				$comp = 'NC';
+				$reason = 'Station found to be not compliant because other treatment is not in place but performance is met';
+				$performance =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+			}
+			else{
+				$comp = 'NC';
+				$reason = 'Station found to be non compliant because other treatment is not in place and performance is not met';
+				$performance = $GLOBALS['uwwtd_value']['performancemet']['false'];
+			}
+		}
+	}
+	
+
 	
 	return (array($truereqtreatment, $comp, $reason, $treatment, $performance));	
 }
@@ -5534,11 +5938,12 @@ function uwwtd_check_sensitive($nid){
 }
 
 function uwwtd_country_cases($node){
-	$repcode = $node->field_repcode['und'][0]['value'];
-	$repcode = str_replace('_', '-', $repcode);
-	$boom = explode('-', $repcode);
-	$boom = explode(' ', $boom[0]);
-	$rep = $boom[0];
+// 	$repcode = $node->field_repcode['und'][0]['value'];
+// 	$repcode = str_replace('_', '-', $repcode);
+// 	$boom = explode('-', $repcode);
+// 	$boom = explode(' ', $boom[0]);
+// 	$rep = $boom[0];
+    $rep = uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value']);
 	if($rep == 'SI' || $rep == 'si'){
 		$sens = uwwtd_check_sensitive($node->nid);
 		if(new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31') <= new DateTime('2008-12-31')){
@@ -5623,107 +6028,161 @@ function uwwtd_zipped_csvs_to_array($files){
 	return $combined;
 }
 
+/**
+ * @param   array    $dcps
+ * @param   numeric  $maxgen    max pe generated among all agglo attach to the uwwt treated 
+ * @return  string              require treatement (NI,NR, ...)
+ *                              possible value : Appropriate, S, P, N, NP, MP, O
+ *                                               NI if no case found in algorythm  
+ */ 
 function uwwtd_get_required_treatment($dcps, $maxgen){
-	$reqtreatments = array();
+// 	$reqtreatments = array();
+//     $reqtreatments = 'NI';
+//     $reason = 'Station found to be missing information required to calculate proper compliance';
 	
-	if(count($dcps) == 0){
-		$reqtreatments[] = 'NR';
-	}elseif(count($dcps) > 0){
-		foreach($dcps as $dcp){
-			if($maxgen < 2000){
-				$reqtreatments[] = 'Appropriate';
-			}else{
-				// If the discharge point is in a Less Sensitive Area
-				if($dcp['rcatype'] == 'LSA'){
+// 	if(count($dcps) == 0){
+// 		return 'NR';
+// 	}
+    $reason = '';
+	if($maxgen < 2000){
+		return array('Appropriate', $reason); //OR NR ??
+	}    
+// elseif(count($dcps) > 0){
 
-					// For dcps in a LSA with water body type LC or CW
-					if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+    //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
+    $typePriority = array(
+        'SA'   => 1, //biggest priority
+        'CSA'  => 2,
+        'A58'  => 3,
+        'NA'   => 4,
+        'LSA'  => 5, //lower priority
+    );
+//     if(count($dcps) > 0){
+    foreach($dcps as $oneDcp){
+        if (false === isset($dcp)) {
+            $dcp = $oneDcp;
+        }  
+        //if priority of the current dcp is superior than the priority of the last dcp, we take it  
+        if ($typePriority[ $oneDcp['rcatype'] ] < $typePriority[ $dcp['rcatype'] ]) {
+            $dcp = $oneDcp;
+        }
+    }            
+//     } else {
+//         $dcp = $dcps[0]; 
+//     }
 
-						// For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-						if($maxgen < 150000){
-							$reqtreatments[] = 'P';
-						}
-
-						// For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
-						if($maxgen >= 150000){
-							// secondary treatment must be present
-							$reqtreatments[] = 'S';
-						}
-					}
-
-					// For stations in a LSA with water body type ES
-					if($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
-
-						// For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
-						if($maxgen >= 2000 && $maxgen <= 10000){
-							// primary treatment must be present
-							$reqtreatments[] = 'P';
-						}else{
-							// secondary treatment must be present
-							$reqtreatments[] = 'S';
-						}
-					}
-				}
-
-				// If the discharge point is in a Normal Area
-				if($dcp['rcatype'] == 'NA'){
-
-					// For stations in a NA with water body type LC or CW
-					if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-
-						// For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-						if($maxgen < 10000){
-							$reqtreatments[] = 'Appropriate';
-						}
-
-						// For stations in a NA with water body type LC or CW and having an agg population (p.e) of > 10000
-						if($maxgen >= 10000){
-							// secondary treatment must be present
-							// LG pas la bonne variable mise à jour :  $typeTreat = 'S';
-							$reqtreatments[] = 'S';					
-						}
-					}
-
-					// For stations in a NA with water body type ES or FW
-					if($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
-
-						// secondary treatment must be present
-						$reqtreatments[] = 'S';
-					}
-				}
-
-				// If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
-				if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'CSA' || $dcp['rcatype'] == 'A58'){
-
-					// For stations in a SA or CSA with an agg population (p.e) of 2000 - 10000
-					if($maxgen >= 2000 && $maxgen <= 10000){
-						// secondary treatment must be present
-						$reqtreatments[] = 'S';
-					}else{
-						//if Receiving Area demands Nitrogen
-						if($dcp['rcan'] == 1){
-							//if Receiving Area demands Phosphorus
-							if($dcp['rcap'] == 1){
-								$reqtreatments[] = 'NP';
-							}else{
-								$reqtreatments[] = 'N';
-							}
-						}else{
-							//if Receiving Area demands Phosphorus
-							if($dcp['rcap'] == 1){
-								$reqtreatments[] = 'MP';
-							}else{
-								$reqtreatments[] = 'O';
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	$truereqtreatment = $reqtreatments[0];
+// 	foreach($dcps as $dcp){
+// 		if($maxgen < 2000){
+// 			$reqtreatments[] = 'Appropriate';
+// 		}else{
+		// If the discharge point is in a Less Sensitive Area
+    switch($dcp['rcatype']) {
+	   //if($dcp['rcatype'] == 'LSA'){
+       case 'LSA':
+    		// For dcps in a LSA with water body type LC or CW
+    		if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+    
+    // 				// For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+    // 				if($maxgen < 150000){
+    // 					$reqtreatments[] = 'P';
+    // 				}
+    
+    			// For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
+    			if($maxgen >= 150000){
+    				// secondary treatment must be present
+    				$reqtreatments = 'S';
+                // For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+    			} else {
+                    $reqtreatments = 'P';
+                }
+            // For stations in a LSA with water body type ES
+    		}elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
+    
+    			// For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
+    			if($maxgen >= 2000 && $maxgen <= 10000){
+    				// primary treatment must be present
+    				$reqtreatments = 'P';
+    			}else{
+    				// secondary treatment must be present
+    				$reqtreatments = 'S';
+    			}
+    		} else {
+                //problem
+//                 dsm('rcatype = LSA waterbody not in LS,CW,ES,LF for dcp ' . $dcp['nid'] . '/' . $dcp['title']);
+                $reqtreatments = 'NI';
+                $reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
+            }
+// 	}
+            break;
+	// If the discharge point is in a Normal Area
+	//if($dcp['rcatype'] == 'NA'){
+        case 'NA':    
+    		// For stations in a NA with water body type LC or CW
+    		if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+    
+    			// For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+    			if($maxgen < 10000){
+    				$reqtreatments = 'Appropriate';
+                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of > 10000
+    			} else {
+    				// secondary treatment must be present
+    				// LG pas la bonne variable mise à jour :  $typeTreat = 'S';
+    				$reqtreatments = 'S';					
+    			}
+            // For stations in a NA with water body type ES or FW
+    		} elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
+    
+    			// secondary treatment must be present
+    			$reqtreatments = 'S';
+    		} else {
+                //problem
+//                 dsm('rcatype = NA waterbody not in LS,CW,ES,FW,LF for dcp ' . $dcp['nid'] . '/' . $dcp['title']);
+                $reqtreatments = 'NI';
+                $reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
+            }
+    // 	}
+            break;
+    	// If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
+    	//if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'CSA' || $dcp['rcatype'] == 'A58'){
+        case 'SA':
+        case 'CSA':
+        case 'A58':
+    		// For stations in a SA or CSA with an agg population (p.e) of 2000 - 10000
+    		if($maxgen >= 2000 && $maxgen <= 10000){
+    			// secondary treatment must be present
+    			$reqtreatments = 'S';
+    		}else{
+    			//if Receiving Area demands Nitrogen
+    			if($dcp['rcan'] == 1){
+    				//if Receiving Area demands Phosphorus
+    				if($dcp['rcap'] == 1){
+    					$reqtreatments = 'NP';
+    				}else{
+    					$reqtreatments = 'N';
+    				}
+    			}else{
+    				//if Receiving Area demands Phosphorus
+    				if($dcp['rcap'] == 1){
+    					$reqtreatments = 'MP';
+    				}else{
+    					$reqtreatments = 'O';
+    				}
+    			}
+    		}
+            break;
+        default:
+            //dsm('rcatype unknown : "' . $dcp['rcatype'] .'" /' . $dcp['nid'] . '/' . $dcp['title']);
+            $reqtreatments = 'NI';
+            $reason = 'Station found to be missing rcatype information required to calculate proper compliance';            
+            break;
+// 	}
+    }
+// 		}
+// 	}
+// 	}
+// 	$truereqtreatment = $reqtreatments[0];
 	
-	return $truereqtreatment;
+	return array($reqtreatments, $reason);
 }
 
 /**
@@ -5796,6 +6255,72 @@ function uwwtd_get_all_info_agguwww($node) {
 }
 
 /**
+ * Check if at least one uwwtp compliance value are in a list of autorized value
+ * return true at the first uwwtp which is in  $authorizeValue
+ *  
+ * @param   array    $authorizeValue    List of authorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key compB with the value "compliance" 
+ * 
+ * @return  boolean                     if at least one of the uwwtp compliance value are in the $authorizeValue, true is return   
+ */        
+function uwwtd_atleastone_uwwtp_complianceart_in($article, $authorizeValue, $infoAllAggUww) {
+    $bResult = false;
+
+    foreach($infoAllAggUww as $aUwwtp) {
+        if (true === in_array($aUwwtp[$article], $authorizeValue)) {
+            $bResult = true;
+            break;
+        }
+    }
+    
+    return $bResult;    
+}
+
+/**
+ * Check if at least one uwwtp compliance value are in a list of autorized value
+ * return true at the first uwwtp which is in  $authorizeValue
+ *  
+ * @param   array    $authorizeValue    List of authorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key compB with the value "compliance" 
+ * 
+ * @return  boolean                     if at least one of the uwwtp compliance value are in the $authorizeValue, true is return   
+ */        
+function uwwtd_atleastone_uwwtp_compliance_in($authorizeValue, &$infoAllAggUww) {
+    $bResult = false;
+    
+    foreach($infoAllAggUww['listUww'] as $aUwwtp) {
+        if (true === in_array($aUwwtp['compB'], $authorizeValue)) {
+            $bResult = true;
+            break;
+        }
+    }
+    
+    return $bResult;    
+}
+
+/**
+ * Check if all uwwtp compliance value are in a list of autorized value
+ * return false at the first uwwtp which is not in  $authorizeValue
+ * 
+ * @param   array    $authorizeValue    List of authorize values
+ * @param   array    $infoAllAggUww     List of all uwwtp with a key compB with the value "compliance" 
+ * 
+ * @return  boolean                     if all the uwwtp compliance value are in the $authorizeValue, true is return   
+ */         
+function uwwtd_all_uwwtp_compliance_in($authorizeValue, &$infoAllAggUww) {
+    $bResult = true;
+    
+    foreach($infoAllAggUww['listUww'] as $aUwwtp) {
+        if (false === in_array($aUwwtp['compB'], $authorizeValue)) {
+            $bResult = false;
+            break;
+        }
+    }
+    
+    return $bResult;    
+}
+
+/**
  * Check if all uwwtp required value are in a list of autorized value
  * return false at the first uwwtp which is not in  $authorizeValue
  * 
@@ -5804,7 +6329,7 @@ function uwwtd_get_all_info_agguwww($node) {
  * 
  * @return  boolean                     if all the uwwtp required value are in the $authorizeValue, true is return   
  */         
-function uwwtd_all_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
+function uwwtd_all_uwwtp_required_in($authorizeValue, &$infoAllAggUww) {
     $bResult = true;
     
     foreach($infoAllAggUww['listUww'] as $aUwwtp) {
@@ -5827,7 +6352,7 @@ function uwwtd_all_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
  * 
  * @return  boolean                     if all the uwwtp required value are not in the $unauthorizeValue, true is return   
  */         
-function uwwtd_all_uwwtp_required_notin($unauthorizeValue, $infoAllAggUww) {
+function uwwtd_all_uwwtp_required_notin($unauthorizeValue, &$infoAllAggUww) {
     $bResult = true;
     
     foreach($infoAllAggUww['listUww'] as $aUwwtp) {
@@ -5850,7 +6375,7 @@ function uwwtd_all_uwwtp_required_notin($unauthorizeValue, $infoAllAggUww) {
  * 
  * @return  boolean                     if at least one of the uwwtp required value are in the $authorizeValue, true is return   
  */         
-function uwwtd_atleastone_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
+function uwwtd_atleastone_uwwtp_required_in($authorizeValue, &$infoAllAggUww) {
     $bResult = false;
     
     foreach($infoAllAggUww['listUww'] as $aUwwtp) {
@@ -5928,3 +6453,182 @@ function uwwtd_atleastone_uwwtp_required_in($authorizeValue, $infoAllAggUww) {
 	if($nbRows == 0) return 0;
 	else return array($r[0]);
 }*/
+
+/**
+ * Return country code (lt, LT, cy, cyc,...) ifrom the repcode
+ */             
+function uwwtd_get_countrycode_from_repcode($repcode)
+{
+	$repcode = str_replace('_', '-', $repcode);
+	$boom = explode('-', $repcode);
+	$boom = explode(' ', $boom[0]);
+	$rep = $boom[0];
+    return $rep; 
+}  
+
+
+function uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, $listtreatement) {
+    $bResult = true;
+    
+    foreach($listtreatement as $treatement) {
+        switch ($treatement) {
+            case 'primary':
+                if(!isset($uwwtp->field_uwwprimarytreatment['und'][0]['value']) || $uwwtp->field_uwwprimarytreatment['und'][0]['value'] != '1') {
+                    return false;
+                }
+                break;
+            case 'secondary':
+                if(!isset($uwwtp->field_uwwsecondarytreatment['und'][0]['value']) || $uwwtp->field_uwwsecondarytreatment['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'premoval':
+                if(!isset($uwwtp->field_uwwpremoval['und'][0]['value']) || $uwwtp->field_uwwpremoval['und'][0]['value'] != '1'){
+                    return false;
+                }    
+                break;          
+            case 'nremoval':
+                if(!isset($uwwtp->field_uwwnremoval['und'][0]['value']) || $uwwtp->field_uwwnremoval['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'uv':
+                if(!isset($uwwtp->field_uwwuv['und'][0]['value']) || $uwwtp->field_uwwuv['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'chlorination':
+                if(!isset($uwwtp->field_uwwchlorination['und'][0]['value']) || $uwwtp->field_uwwchlorination['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'ozonation':
+                if(!isset($uwwtp->field_uwwozonation['und'][0]['value']) || $uwwtp->field_uwwozonation['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'sandfiltration':
+                if(!isset($uwwtp->field_uwwsandfiltration['und'][0]['value']) || $uwwtp->field_uwwsandfiltration['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'microfiltration':
+                if(!isset($uwwtp->field_uwwmicrofiltration['und'][0]['value']) || $uwwtp->field_uwwmicrofiltration['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break; 
+            case 'other':
+                if(!isset($uwwtp->field_uwwothertreat['und'][0]['value']) || $uwwtp->field_uwwothertreat['und'][0]['value'] != '1'){
+                    return false;
+                }
+                break;                                                                                                                                              
+            default:
+                return false;                   
+        }
+    }
+    
+    return $bResult;    
+}
+              
+function uwwtd_atleastone_uwwtp_treatement_inplace_in($uwwtp, $listtreatement) {
+    $bResult = false;
+    
+    foreach($listtreatement as $treatement) {
+        switch ($treatement) {
+            case 'primary':
+                if(isset($uwwtp->field_uwwprimarytreatment['und'][0]['value']) && $uwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
+                    return true;
+                }
+                break;
+            case 'secondary':
+                if(isset($uwwtp->field_uwwsecondarytreatment['und'][0]['value']) && $uwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'premoval':
+                if(isset($uwwtp->field_uwwpremoval['und'][0]['value']) && $uwwtp->field_uwwpremoval['und'][0]['value'] == '1'){
+                    return true;
+                }    
+                break;          
+            case 'nremoval':
+                if(isset($uwwtp->field_uwwnremoval['und'][0]['value']) && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'uv':
+                if(isset($uwwtp->field_uwwuv['und'][0]['value']) && $uwwtp->field_uwwuv['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'chlorination':
+                if(isset($uwwtp->field_uwwchlorination['und'][0]['value']) && $uwwtp->field_uwwchlorination['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'ozonation':
+                if(isset($uwwtp->field_uwwozonation['und'][0]['value']) && $uwwtp->field_uwwozonation['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'sandfiltration':
+                if(isset($uwwtp->field_uwwsandfiltration['und'][0]['value']) && $uwwtp->field_uwwsandfiltration['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'microfiltration':
+                if(isset($uwwtp->field_uwwmicrofiltration['und'][0]['value']) && $uwwtp->field_uwwmicrofiltration['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break; 
+            case 'other':
+                if(isset($uwwtp->field_uwwothertreat['und'][0]['value']) && $uwwtp->field_uwwothertreat['und'][0]['value'] == '1'){
+                    return true;
+                }
+                break;                                                                                                                                              
+            default:
+                ;               
+        }
+    }
+    
+    return $bResult;    
+}
+
+
+
+function uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, $listperf) {
+    $bResult = true;
+
+    foreach($listperf as $perf) {
+        switch($perf) {
+            case 'codperf':
+                if (!isset($uwwtp->field_uwwcodperf['und'][0]['value']) || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break;
+            case 'bod5perf':
+                if (!isset($uwwtp->field_uwwbod5perf['und'][0]['value']) || $uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break; 
+            case 'ntotperf':
+                if (!isset($uwwtp->field_uwwntotperf['und'][0]['value']) || $uwwtp->field_uwwntotperf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break;
+            case 'ptotperf':
+                if (!isset($uwwtp->field_uwwptotperf['und'][0]['value']) || $uwwtp->field_uwwptotperf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break;  
+            case 'otherperf':
+                if (!isset($uwwtp->field_uwwotherperf['und'][0]['value']) || $uwwtp->field_uwwotherperf['und'][0]['value'] != 'P') {
+                    return false;
+                }
+                break;     
+            default:
+                return false;                
+        }
+    }
+    
+    return $bResult;    
+}
