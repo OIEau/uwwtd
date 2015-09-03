@@ -26,6 +26,7 @@ $GLOBALS['uwwtd_value']['compliance'] = array(
     'compliant_on_equipment_only' => 'CE', //CE|Compliant on equipment only   (uwwtd)
     'unknown'       => '?',  //(art4,5,6, uwwtp)
 );
+//TODO add label for each value
 $GLOBALS['uwwtd_value']['rcatype'] = array(
     '?' => 'CSA',
     '?' => 'LSA', //Less Sensitive Area
@@ -3411,7 +3412,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 	}    
     //ALGO5 
     //article456_compliance step A : 2015/08/31 / e.vincent / new step A
-	elseif($node->field_aggc1 > 0){  //here $art3comp = NC or C
+	elseif($node->field_aggc1['und'][0]['value'] > 0){  //here $art3comp = NC or C
 		//if($art3Comp == 'AddQC') $art3Comp = 'NC';
 		//if($art3Comp == 'QC') $art3Comp = 'C';
 		//if($art4Comp == 'RNC') $art4Comp = 'NC';
