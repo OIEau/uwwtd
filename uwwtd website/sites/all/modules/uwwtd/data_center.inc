@@ -3073,9 +3073,9 @@ function uwwtd_add_sa_criterions_batch_process($sas, $timestamp, &$context){
 		$data = $sas[$i];
 		$node = node_load($data['nid']);
 
-		$node->field_aggcritb['und'][0]['value'] = $data['art5b'];
-		$node->field_aggcritca['und'][0]['value'] = $data['art5ca'];
-		$node->field_aggcritcb['und'][0]['value'] = $data['art5cb'];
+		$node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
+		$node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
+		$node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
 		
 		node_save($node);
 	}
@@ -3103,9 +3103,9 @@ function uwwtd_add_csa_criterions_batch_process($csas, $timestamp, &$context){
 		$data = $csas[$i];
 		$node = node_load($data['nid']);
 
-		$node->field_aggcritb['und'][0]['value'] = $data['art5b'];
-		$node->field_aggcritca['und'][0]['value'] = $data['art5ca'];
-		$node->field_aggcritcb['und'][0]['value'] = $data['art5cb'];
+		$node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
+		$node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
+		$node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
 		
 		node_save($node);
 	}
@@ -3173,6 +3173,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     $deadLineBeforeReference = false;
 	// Station compliance , step B, on of the agglo has at least one date before reference date
     //ALGO3
+    if (true === isset($node->field_uwwaggliste['und'])) {
 	foreach($node->field_uwwaggliste['und'] as $agg){
 		$dateaggl = node_load($agg['nid']);
         
@@ -3186,6 +3187,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
             break;
         }        
 	}
+    }
 
 	// if deadline agglo is not passed compliance = NR else compliance = NC
 	//$today = date('Y-m-j'); 
@@ -3375,52 +3377,43 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 	$yearReporting = $node->field_anneedata['und'][0]['value'];
 // 	list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
     //ALGO4 
-    list($art3comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
+    list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
 	
 //     $file = drupal_realpath('public://data_errors/e.vincent.txt');
 //     $r = fopen($file, 'a');
 //     fputs($r, 'title = ' . $node->title . "\n");
 //     fputs($r, '$art3comp = ' . $art3comp . "\n");
 //     fputs($r, 'field_aggc1 = ' . $node->field_aggc1['und'][0]['value'] . "\n");    
-    	
+    
+    $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
+    
+    $bDone = false;	
     if($art3comp == 'NI'){ //ALGO4 too
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
         $node->field_aggart4compliance['und'][0]['value'] = 'NI';
         $node->field_aggart5compliance['und'][0]['value'] = 'NI';
         $node->field_aggart6compliance['und'][0]['value'] = 'NI';
+        $bDone = true;
 //         fputs($r, "all NI\n");
     }
-    elseif($art3comp == 'NR'){  //ALGO4 too
-//         fputs($r, "all NR\n");
-    	//$nbArtCompar = count($art3Compar);
-    	$node->field_compliance_explication['und'][0]['value'] = $reason;
-    	// each article compliance
+    //case < 2000p.e  algo4 too
+    if ($bDone === false && $art3comp == 'NR' && true === isset($art4comp) && $art4comp == 'NR') {
+        $node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+        $node->field_aggart4compliance['und'][0]['value'] = $art4comp;
+        $node->field_aggart5compliance['und'][0]['value'] = $art5comp;
+        $node->field_aggart6compliance['und'][0]['value'] = $art6comp;
+        $node->field_compliance_explication['und'][0]['value'] = $reason;
+        $bDone = true;    
+    }
+    
+    if($bDone === false) {
+        $node->field_aggart3compliance['und'][0]['value'] = $art3comp;  //NR/NC/C ALGO4 too
+        if($node->field_aggc1['und'][0]['value'] <= 0){  //no change algo5  
+            $bDone = true;   
+        }          
+    } 
 
-		$node->field_aggart3compliance['und'][0]['value'] = 'NR';
-		//dsm('3C '.$art3Compar[0]);
-		/*if(isset($art3Compar[4])){
-			$node->field_article_3_compliance_expli['und'][0]['value'] = $art3Compar[1];
-		}*/
-		$node->field_aggart4compliance['und'][0]['value'] = 'NR';
-		//dsm('4C '.$art3Compar[1]);
-		/*if(isset($art3Compar[4])){
-			$node->field_article_4_compliance_expli['und'][0]['value'] = $art3Compar[4];
-		}*/
-		$node->field_aggart5compliance['und'][0]['value'] = 'NR';
-		//dsm('5C '.$art3Compar[2]);
-		/*if(isset($art3Compar[4])){
-			$node->field_article_5_compliance_expli['und'][0]['value'] = $art3Compar[4];
-		}*/
-		
-		$node->field_aggart6compliance['und'][0]['value'] = 'NR';
-		//dsm('6C '.$art3Compar[3]);
-		/*if(isset($art3Compar[4])){
-			$node->field_article_6_compliance_expli['und'][0]['value'] = $art3Compar[4];
-		}*/	
-	}    
-    //ALGO5 
-    //article456_compliance step A : 2015/08/31 / e.vincent / new step A
-	elseif($node->field_aggc1['und'][0]['value'] > 0){  //here $art3comp = NC or C
+    if($bDone === false){
 //         fputs($r, "in  field_aggc1 > 0\n");
 		//if($art3Comp == 'AddQC') $art3Comp = 'NC';
 		//if($art3Comp == 'QC') $art3Comp = 'C';
@@ -3429,15 +3422,14 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 		dsm($node);*/
         //article456_compliance A
         //Agglo At least connexted to one uwwtp
-        //ALGO5 too
-        $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
-        $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, $infoAllAggUww);
+        //ALGO5 too        
+        $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $infoAllAggUww);
         
 //         fputs($r, "aArtCompliance =  " . var_export($aArtCompliance, true) . "\n");
                  
         if (false === empty($aArtCompliance)) {
 //             fputs($r, "in  empty(aArtCompliance) > 0\n");
-			$node->field_aggart3compliance['und'][0]['value'] = $aArtCompliance['compArt3'];
+// 			$node->field_aggart3compliance['und'][0]['value'] = $aArtCompliance['compArt3'];
 			$node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
 			$node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
 			$node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
@@ -3446,15 +3438,12 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
             //ALGO6-7-8-9
 //             fputs($r, "in ! empty(aArtCompliance) > 0\n");
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
-			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
+// 			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
 			$node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
 			$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
 			$node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
             
-            //ALGO10    
-            $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww['total']);
-//             fputs($r, "field_aggcompliance = " . $node->field_aggcompliance['und'][0]['value'] . "\n");
-            unset($infoAllAggUww);
+
 
             //old algo with a,b,c step               
 //     		list($art4Compar,$art5Compar, $art6Compar) = uwwtd_article_compliance_b($node, $rcaType, $waterBodyTypes, $art3comp, $yearReporting);
@@ -3488,6 +3477,11 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 //     		}
         }
 	}
+    
+    //ALGO10    
+    $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww['total']);
+//             fputs($r, "field_aggcompliance = " . $node->field_aggcompliance['und'][0]['value'] . "\n");
+    unset($infoAllAggUww);    
     //dsm($node);
 //     fputs($r, "node_save\n");
 	node_save($node);
@@ -4475,16 +4469,17 @@ function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node 
 }
 
 /**
- * return art3 compliance and a reason
+ * return art3,4,5,6 compliance and a reason (4,5,6 are optional)
  * 
- * @return  array      (art3compliance, reason)
- *                      possible value of art3 => NI,NR,C,NC 
+ * @return  array      (art3compliance, 4 or null,5 or null,6, or nullreason)
+ *                      possible value of art3 => NI,NR,C,NC
+ *                      possible value for art4,5,6 => NR or null  
  */ 
 function uwwtd_article3_compliance($node, $yearReporting){
 	// only send nodes of type 'agglomeration' here
 	//check if aggGenerated exists
 	if(!isset($node->field_agggenerated['und'][0]['value'])){
-		return array('NI', 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
+		return array('NI', null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
 	}
 
 	//============================= CAS DES PAYS
@@ -4497,12 +4492,12 @@ function uwwtd_article3_compliance($node, $yearReporting){
 	// check if aggGenerated over 2000
 	if($node->field_agggenerated['und'][0]['value'] < 2000){
 		$art3comp = 'NR';
-// 		$art4comp = 'NR';
-// 		$art5comp = 'NR';
-// 		$art6comp = 'NR';
+		$art4comp = 'NR';
+		$art5comp = 'NR';
+		$art6comp = 'NR';
 		$reason = 'Article 3 compliance found to be non relevant because the agglomeration has a population of less than 2 000.';
 // 		return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
-        return array($art3comp, $reason);
+        return array($art3comp, $art4comp, $art5comp, $art6comp, $reason);
 	}
     
 // 	else{
@@ -4513,7 +4508,7 @@ function uwwtd_article3_compliance($node, $yearReporting){
 // 		return array($art3comp, $reason);
 // 	}
 	if(!isset($node->field_aggpercwithouttreatment['und'][0]['value'])){
-		return array('NI', 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment".');
+		return array('NI', null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment".');
 	}
         
 // 		else{
@@ -4532,7 +4527,7 @@ function uwwtd_article3_compliance($node, $yearReporting){
 	if($var1 <= 2000 &&  $var3 <= 2){
 		$art3comp = 'C';
 		$reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
-		return array($art3comp, $reason);
+		return array($art3comp, null, null, null, $reason);
 	}
     
 // 	else{//Deadline of Art3 is before or equal to reporting reference date
@@ -4541,7 +4536,7 @@ function uwwtd_article3_compliance($node, $yearReporting){
     if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
 		$art3comp = 'NC';
 		$reason = 'Not relevant with article 3 because it is not compliant and the deadline has not been reached';
-		return array($art3comp, $reason);
+		return array($art3comp, null, null, null, $reason);
 	}
 //     else{
 	$art3comp = 'NR';
@@ -4549,7 +4544,7 @@ function uwwtd_article3_compliance($node, $yearReporting){
 // 		$art5comp = 'NR';
 // 		$art6comp = 'NR';
 	$reason = 'Article 3 compliance found to be non relevant because it is not compliant and the deadline has been reached';
-    return array($art3comp, $reason);
+    return array($art3comp, null, null, null, $reason);
 // 	}
 	/*if(($var1*100) > 2000 || $var3 > 2){
 		if(($var2*100) > 1000 || $var4 > 2){
@@ -4581,13 +4576,13 @@ function uwwtd_article3_compliance($node, $yearReporting){
  * @return array        empty array if the cases must be treated later
  *                      array with key compArt3, compArt4, compArt5, compArt6      
  */ 
-function uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, &$infoAllAggUww) 
+function uwwtd_article4_5_6_agglomeration_compliance_step_a($node, &$infoAllAggUww) 
 {
     $aResult = array();
 //     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
     //todo add value ? in drupal field display
     if (count($infoAllAggUww['listUww'] == 0)) {
-		$aResult['compArt3'] = $art3comp;
+// 		$aResult['compArt3'] = $art3comp;
 		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
 		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
 		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
@@ -4597,7 +4592,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a($node, $art3comp, &$
                                                 $GLOBALS['uwwtd_value']['compliance']['compliant'],
                                                 $GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                                                 ), $infoAllAggUww)) {
-		$aResult['compArt3'] = $art3comp;
+// 		$aResult['compArt3'] = $art3comp;
 		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
 		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
 		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];                                                    
