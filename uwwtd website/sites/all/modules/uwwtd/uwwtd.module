@@ -211,25 +211,25 @@ function uwwtd_node_redirection($id){
 	}
 }
 
-function uwwtd_debug_form($form, &$form_state){
-	// definition du champ input de type file
-	$form['uwwtd_file'] = array(
-		'#type' => 'managed_file',
-		'#title' => t('Data file'),
-		'#upload_validators' => array('file_validate_extensions' => array('shp')),
-		'#required' => TRUE,
-	);
-	
-	// Bouton envoyer
-	$form['submit_button'] = array(
-		'#type' => 'submit',
-		'#value' => t('Submit'),
-	);
-	
-	// Fonction a appeller quand on clique sur envoyer
-	$form['#submit'][] = 'uwwtd_debug_submit_handler';
-    return $form;
-}
+// function uwwtd_debug_form($form, &$form_state){
+// 	// definition du champ input de type file
+// 	$form['uwwtd_file'] = array(
+// 		'#type' => 'managed_file',
+// 		'#title' => t('Data file'),
+// 		'#upload_validators' => array('file_validate_extensions' => array('shp')),
+// 		'#required' => TRUE,
+// 	);
+// 	
+// 	// Bouton envoyer
+// 	$form['submit_button'] = array(
+// 		'#type' => 'submit',
+// 		'#value' => t('Submit'),
+// 	);
+// 	
+// 	// Fonction a appeller quand on clique sur envoyer
+// 	$form['#submit'][] = 'uwwtd_debug_submit_handler';
+//     return $form;
+// }
 
 function uwwtd_views_pre_build(&$view){
 	//dsm($view);
@@ -371,42 +371,40 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 	}
 }
 
-function uwwtd_debug_submit_handler($form, &$form_state){
-	//require_once ( dirname(__FILE__) . '/shpParser.php');
-	require_once ( dirname(__FILE__) . '/ShapeFile.inc.php');
-	$file = file_load($form_state['values']['uwwtd_file']);
-	$uri = $file->uri;
-	
-	// On upload le file et la fonction renvoie le nouveau nom du fichier
-	$ext = '.shp';
-	$newFile = uwwtd_file_upload($file, $ext);
-	$path = file_create_url($newFile->uri);
-	$shp = new ShapeFile($path, array('noparts' => false));
-	  $records = array();
-		foreach($shp->records as $record){
-		$dbf_data = $record->getDbfData();
-		$shp_data = $record->getShpData();
-
-		//Dump the information
-		$obj = array(
-		  'type' => $shp->getShpTypeName($record->getShpType())
-		);
-
-		$obj['shape'] = $shp_data;
-		$obj['meta'] = $dbf_data;
-
-		$records[] = $obj;
-	}
-	dsm($records);
-}
+// function uwwtd_debug_submit_handler($form, &$form_state){
+// 	//require_once ( dirname(__FILE__) . '/shpParser.php');
+// 	require_once ( dirname(__FILE__) . '/ShapeFile.inc.php');
+// 	$file = file_load($form_state['values']['uwwtd_file']);
+// 	$uri = $file->uri;
+// 	
+// 	// On upload le file et la fonction renvoie le nouveau nom du fichier
+// 	$ext = '.shp';
+// 	$newFile = uwwtd_file_upload($file, $ext);
+// 	$path = file_create_url($newFile->uri);
+// 	$shp = new ShapeFile($path, array('noparts' => false));
+// 	  $records = array();
+// 		foreach($shp->records as $record){
+// 		$dbf_data = $record->getDbfData();
+// 		$shp_data = $record->getShpData();
+// 
+// 		//Dump the information
+// 		$obj = array(
+// 		  'type' => $shp->getShpTypeName($record->getShpType())
+// 		);
+// 
+// 		$obj['shape'] = $shp_data;
+// 		$obj['meta'] = $dbf_data;
+// 
+// 		$records[] = $obj;
+// 	}
+// 	dsm($records);
+// }
 
 function uwwtd_debug(){
-    $newFile = array('uri'=>"public://data_sources/sidata2012_1434649753.xml");
-	$datas = uwwtd_xml_to_array($newFile['uri']);
-    //dsm($datas);
-    uwwtd_update_mslevel($newFile, 2012, $datas['UWWTD_Report']['MSLevel'], time());
-    //dsm(language_default());
-	return 'debug';
+    return '';
+//     $node = node_load(171466);
+//     echo '<pre>';var_export(uwwtd_get_all_info_agguwww($node));echo '</pre>';                                               
+    return 'debug';                                                
 }
 
 // permission to view data pages
