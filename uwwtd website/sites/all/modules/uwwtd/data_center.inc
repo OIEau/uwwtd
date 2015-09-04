@@ -1,7 +1,7 @@
 <?php
 //==========FIX ME : add repcode foreach import batch
 
-define('DEBUG_ALGO', false);
+define('DEBUG_ALGO', true);
 function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
         $file = drupal_realpath('public://data_errors/e.vincent.txt');
@@ -3638,9 +3638,9 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO 7
     $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance('compArt4', $listStationArticleAndUwwtpCompliance);
     //ALGO 8
-    $aResult['compArt5'] = uwwtd_article6_agglomeration_compliance('compArt6', $listStationArticleAndUwwtpCompliance);
+    $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance('compArt6', $listStationArticleAndUwwtpCompliance);
     //ALGO 9                                                          
-    $aResult['compArt6'] = uwwtd_article5_agglomeration_compliance('compArt5', $listStationArticleAndUwwtpCompliance);
+    $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance('compArt5', $listStationArticleAndUwwtpCompliance);
     unset($listStationArticleAndUwwtpCompliance);
     
     return $aResult;    
