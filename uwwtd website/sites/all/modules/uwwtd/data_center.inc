@@ -62,6 +62,8 @@ $GLOBALS['uwwtd_value']['required'] = array(
 ); 
 
 //$GLOBALS['uwwtd_value']['inplace']['noinformation']
+// $GLOBALS['uwwtd_value']['inplace']['secondary']
+// $GLOBALS['uwwtd_value']['inplace']['morestringent']
 $GLOBALS['uwwtd_value']['inplace'] = array(
     'primary' => 'P',
     'secondary' => 'S',
@@ -3882,8 +3884,16 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
 {
     uwwtd_trace('uwwtd_article4_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
     $aTmp['listUww'] = $listUwwtpCompliance;
+       
     uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
-    if (false === uwwtd_atleastone_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['secondary']), $aTmp)) {
+    if (false === uwwtd_atleastone_uwwtp_required_in(array(
+            $GLOBALS['uwwtd_value']['required']['secondary'],
+            $GLOBALS['uwwtd_value']['required']['morestringent'],
+            $GLOBALS['uwwtd_value']['required']['nitrogen'],
+            $GLOBALS['uwwtd_value']['required']['phosphorus'],
+            $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
+            $GLOBALS['uwwtd_value']['required']['other'],
+            ), $aTmp)) {
         uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
@@ -4093,8 +4103,10 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     
     //treatement required = secondary && treatement in place = secondary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
-        && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))) {  
-       uwwtd_trace('treatement required = secondary && treatement in place = secondary');             
+        //&& true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))
+        && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array(
+                        $GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
+       uwwtd_trace('treatement required = secondary && treatement in place = secondary or more stringent');             
 //         if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
         if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
             uwwtd_trace('uwwtd_all_uwwtp_treatementperf_pass_in codperf, bod5perf');          
@@ -4136,6 +4148,35 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
        }      
        return $aResult;          
     }
+    
+    //treatement required = tertiary && treatement in place = NI (not provided on treatement inplace)
+    if (true === in_array($uwwtp->field_uwwtreatmentrequired['und'][0]['value'],array(
+                            $GLOBALS['uwwtd_value']['required']['morestringent'],
+                            $GLOBALS['uwwtd_value']['required']['nitrogen'],
+                            $GLOBALS['uwwtd_value']['required']['phosphorus'],
+                            $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
+                            $GLOBALS['uwwtd_value']['required']['other'],
+                        ))
+        && $uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['noinformation']) { 
+       uwwtd_trace('treatement required = tertiary && treatement in place = NI');
+       if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+        uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
+           if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 true');
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+           } else {
+            uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 false');
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+           } 
+       } else {
+        uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       }      
+       return $aResult;          
+    }    
     
     //cod and bod5 pass
 //     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
@@ -6982,10 +7023,8 @@ function uwwtd_get_countrycode_from_repcode($repcode)
     return $rep; 
 }  
 
-
 function uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, $listtreatement) {
     $bResult = true;
-    
     foreach($listtreatement as $treatement) {
         switch ($treatement) {
             case 'primary':
