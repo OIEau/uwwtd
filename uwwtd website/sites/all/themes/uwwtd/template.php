@@ -191,6 +191,7 @@ function uwwtd_timeline_output($node){
 				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');}
 				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information');}
        			if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');}
+                if($val == '?') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('?');}
 			}
 
 			$color = uwwtd_adjustBrightness($color, 50);
