@@ -127,6 +127,16 @@ function uwwtd_menu(){
 		'file' => 'pdf.inc',
 		'file path' => drupal_get_path('module', 'uwwtd')
 	);
+  $items['debug-create-xml/nid-agglo/%'] = array(
+    'page callback' => 'debug_create_xml',
+    'page arguments' => array(1,2),
+//     'access callback' => true,
+    'access arguments' => array('Data-management access'),
+    'type' => MENU_CALLBACK,
+	'file' => 'data_center.inc',
+	'file path' => drupal_get_path('module', 'uwwtd')    
+  );    
+    
 	return $items;
 }
 
@@ -399,6 +409,239 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 // 	}
 // 	dsm($records);
 // }
+
+/**
+ * Extract an xml for only one agglo from a xml source
+ */ 
+function debug_create_xml($type, $value)
+{
+    if ($type != 'nid-agglo') {
+        return '';
+    }
+//     echo '<pre>';var_export($type);echo '</pre>';
+//     echo '<pre>';var_export($value);echo '</pre>';
+//     exit;
+    $agg = node_load($value);
+    $xml = uwwtd_xml_to_array($agg->field_sourcefile['und'][0]['uri']);
+    $currentCodeAgglo = $agg->field_inspireidlocalid['und'][0]['value'];
+//     codeagglo in $agg->field_inspireidlocalid['und'][0]['value']
+//     copier xml node /Reporter
+//                     /ReportPeriod
+//                     /Contacts
+//                     /BigCityDischargers     
+//     Agglomerations/Agglomeration/aggCode = codeagglo
+//         copier l'agglo
+//     UwwtpAgglos/UwwtpAgglo/aucAggCode =  codeagglo
+//         copier UwwtpAgglo de l'agglo
+//     UwwtpAgglos/UwwtpAgglo/aucUwwCode =  codeuwwtp
+//         copier les uwwtp de l'agglo avec contenu de UwwtpAgglos
+//     UWWTPs/UWWTP/uwwCode = codeuwwtp
+//         !! copier toutes les agglo de ce uwwtp (et agglo et agglo_uwwtp) 
+//     DischargePoints/DischargePoint/uwwID = codeuwwtp
+//         copier les dcp de chaque uwwtp
+//     DischargePoints/DischargePoint/rcaID = rcacode
+//         copier les rca de chaque dcp
+//     ReceivingAreas/ReceivingArea/rcaCode = rcacode
+    $xmlTest = array();
+    $xmlTest['UWWTD_Report']['Reporter'] = $xml['UWWTD_Report']['Reporter'];
+    $xmlTest['UWWTD_Report']['ReportPeriod'] = $xml['UWWTD_Report']['ReportPeriod'];
+    $xmlTest['UWWTD_Report']['Contacts'] = $xml['UWWTD_Report']['Contacts'];
+    $xmlTest['UWWTD_Report']['BigCityDischargers'] = $xml['UWWTD_Report']['BigCityDischargers'];
+    
+    //AGGLO ======================================================
+    if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
+        $imports[0] = $xml['UWWTD_Report']['Agglomerations'];
+    }
+    else{
+        $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+    }
+    $aggloFound = false;
+    foreach($imports as $agglo) {
+        if ($agglo['aggCode'] == $currentCodeAgglo) {
+            $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
+            $aggloFound = true;
+            break; //only one agglo
+        }
+    }
+//     echo '<pre>';var_export($xmlTest);echo '</pre>';
+    if ($aggloFound == false) {
+        return "error, can't find agglo in xml " . $currentCodeAgglo . "</br>";
+    }
+    //UwwtpAgglos for agglo ======================================================
+    if(isset($xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
+        $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos'];
+    }
+    else{
+        $imports = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
+    } 
+    $uwwtd_aggloFound = false;
+    foreach($imports as $uwwtp_agglo) {
+        if ($uwwtp_agglo['aucAggCode'] == $currentCodeAgglo) {
+            $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
+            $uwwCode[] = $uwwtp_agglo['aucUwwCode'];  //list of uwwtp attach to the agglo
+            $uwwtd_aggloFound = true;
+        }
+    }
+    if ($uwwtd_aggloFound == false) {
+        return "error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "</br>";
+    }
+// echo '<pre>';var_export($xmlTest);echo '</pre>';    
+    //UwwtpAgglos for uwwtp======================================================
+    foreach($imports as $uwwtp_agglo) {
+        if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && $uwwtp_agglo['aucAggCode'] != $currentCodeAgglo) {
+            $listeAgglo[] = $uwwtp_agglo['aucAggCode']; //all other agglo attach to the uwwtp (need for calculation)
+            $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
+        }
+    }
+// echo '<pre>';var_export($xmlTest);echo '</pre>';    
+    
+    //Agglo for uwwtp======================================================
+    if (true === isset($listeAgglo)) {
+        if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
+            $imports[0] = $xml['UWWTD_Report']['Agglomerations'];
+        }
+        else{
+            $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+        }
+        $bAggloFound = false;
+        foreach($imports as $agglo) {
+            if (true === in_array($agglo['aggCode'], $listeAgglo)) {
+                $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
+                $bAggloFound = true;
+            }
+        }
+        if ($bAggloFound == false) {
+            return "error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "</br>";
+        } 
+    }    
+    
+    //uwwtp======================================================
+    if(isset($xml['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
+        $imports[0] = $xml['UWWTD_Report']['UWWTPs'];
+    }
+    else{
+        $imports = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
+    } 
+    $buwwtpFound = false;
+    foreach($imports as $uwwtp) {
+        if (true === in_array($uwwtp['uwwCode'],$uwwCode)) {
+            $xmlTest['UWWTD_Report']['UWWTPs']['UWWTP'][] = $uwwtp;
+            $buwwtpFound = true;
+        }
+    }
+    if ($buwwtpFound == false) {
+        return "error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "</br>";
+    } 
+    
+    //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
+    if(isset($xml['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
+        $imports[0] = $xml['UWWTD_Report']['DischargePoints'];
+    }
+    else{
+        $imports = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
+    } 
+    $bdcpFound = false;
+    foreach($imports as $dcp) {
+        if (true === in_array($dcp['uwwID'],$uwwCode)) {
+            $xmlTest['UWWTD_Report']['DischargePoints']['DischargePoint'][] = $dcp;
+            $rcaCode[] = $dcp['rcaID'];
+            $bdcpFound = true;
+        }
+    }
+    if ($bdcpFound == false) {
+        return "error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "</br>";
+    } 
+    //RCA====================================================== 
+    if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
+        $imports[0] = $xml['UWWTD_Report']['ReceivingAreas'];
+    }
+    else{
+        $imports = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+    }   
+    $brcaFound = false;
+    foreach($imports as $rca) {
+        if (true === in_array($rca['rcaCode'],$rcaCode)) {
+            $xmlTest['UWWTD_Report']['ReceivingAreas']['ReceivingArea'][] = $rca;
+            $brcaFound = true;
+        }
+    }
+    if ($brcaFound == false) {
+        return "error, can't find rca in xml for rca " . implode(',', $rcaCode) . "</br>";
+    }
+    
+    //CREATE XML======================================================
+//     echo '<pre>';var_export($xmlTest);echo '</pre>';
+//     exit;
+    $s = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>
+<UWWTD_Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="http://water.eionet.europa.eu/schemas/dir91271eec/UWWTD2011.xsd">
+
+';
+   
+    $s .= uwwtd_debug_create_tag_from_array($xmlTest, '');
+    
+    $s .= '
+
+</UWWTD_Data>';
+//     echo '<pre>';var_export($s);echo '</pre>';
+//     exit;
+    ini_set("auto_detect_line_endings", false); //for Mac user    
+    $aHeaders = array(
+          'Content-Type'        => 'text/xml',   
+          'Content-Disposition' => 'attachment; filename="agglo'.$value.'.xml' . '"',
+          'Expires'             => '0',
+          'Cache-Control'       => 'must-revalidate',
+          'Pragma'              =>'public',
+//           'Content-Length'      => mb_strlen($filename),
+      );            
+    foreach ($aHeaders as $sName => $sValue) {
+        drupal_add_http_header($sName, $sValue);
+    }
+    echo $s; 
+    exit();      
+}              
+
+//TODO better !! 
+function uwwtd_debug_create_tag_from_array($array, $parentkey)
+{
+//     echo '<pre>';var_export('uwwtd_debug_create_tag_from_array');echo '</pre>';
+    if (false === is_array($array)) {
+//         echo '<pre>';var_export('not array');echo '</pre>';
+        return $array;
+    }
+    $s = '';  
+//     if (true === isset($array[0]) && $parentkey != '') {
+// //         echo '<pre>';var_export('$bListOfXmlElement true');echo '</pre>';
+//         $bListOfXmlElement = true;
+//     } else {
+// //         echo '<pre>';var_export('$bListOfXmlElement false');echo '</pre>';
+//         $bListOfXmlElement = false;
+//     }  
+//     echo '<pre>';var_export($array);echo '</pre>';
+    foreach($array as $key => $value) {
+//         echo '<pre>';var_export("$key");echo '</pre>';
+        if (true === is_int($key)) {
+//             echo '<pre>';var_export('$bListOfXmlElement is true ' . $parentkey);echo '</pre>';
+            $s .= '<'.$parentkey.'>';
+//             echo '<pre>';var_export('write parent');echo '</pre>';
+        }elseif (false === is_array($value) || false === isset($value[0])) {
+//             echo '<pre>';var_export('not int and not isset array[0] ' . $key);echo '</pre>';
+            $s .= '<'.$key.'>';
+//             echo '<pre>';var_export('write tag');echo '</pre>';
+        }
+        
+        $s .= uwwtd_debug_create_tag_from_array($value, $key);
+
+        if (true === is_int($key)) {
+//             echo '<pre>';var_export('$bListOfXmlElement is true / ' . $parentkey);echo '</pre>';
+            $s .= '</'.$parentkey.'>';
+        }elseif (false === is_array($value) || false === isset($value[0])) {
+//             echo '<pre>';var_export('not int and not isset array[0] / ' . $key);echo '</pre>';
+            $s .= '</'.$key.'>';    
+        }               
+        $s .= "\n";
+    }    
+    return $s;
+} 
 
 function uwwtd_debug(){
     return '';

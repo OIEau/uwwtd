@@ -1,10 +1,11 @@
 <?php
 //==========FIX ME : add repcode foreach import batch
-
-define('DEBUG_ALGO', true);
+// TODO : check if all liste agguwwliste are unset on update => otherwise duplicate can appear on the list ()
+//          field_uwwaggliste and field_uwwdcpliste 
+define('DEBUG_ALGO', false);
 function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
-        $file = drupal_realpath('public://data_errors/e.vincent.txt');
+        $file = drupal_realpath('public://data_errors/trace.log');
         $r = fopen($file, 'a');
         fputs($r, $message . "\n");
         fclose($r);
@@ -47,6 +48,7 @@ $GLOBALS['uwwtd_value']['rcatype'] = array(
 //$GLOBALS['uwwtd_value']['required']['appropriate']
 //$GLOBALS['uwwtd_value']['required']['notrelevant']
 //$GLOBALS['uwwtd_value']['required']['primary']
+//$GLOBALS['uwwtd_value']['required']['secondary']
 $GLOBALS['uwwtd_value']['required'] = array(
     'primary' => 'P',
     'secondary' => 'S',
@@ -57,6 +59,20 @@ $GLOBALS['uwwtd_value']['required'] = array(
     'nitrogen_phosphorus' => 'NP',
     'notrelevant' => 'NR',
     'morestringent' => 'MS',    
+); 
+
+//$GLOBALS['uwwtd_value']['inplace']['noinformation']
+$GLOBALS['uwwtd_value']['inplace'] = array(
+    'primary' => 'P',
+    'secondary' => 'S',
+    'appropriate' => 'Appropriate',
+    'nitrogen' => 'N',
+    'phosphorus' => 'MP',
+    'other' => 'O',
+    'nitrogen_phosphorus' => 'NP',
+    'notrelevant' => 'NR',
+    'morestringent' => 'MS',
+    'noinformation' => 'NI',    
 );
 
 ################################ DATA CENTER PAGE ################################
@@ -166,6 +182,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
 	$annee = $_SESSION['uwwtd_annee'];
+//     uwwtd_trace('$annee = ' . $annee);
 	$file = file_load($form_state['values']['uwwtd_file']);
 	$uri = $file->uri;
 
@@ -193,7 +210,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 			$datas = uwwtd_xml_to_array($newFile->uri);
 		break;
 	}
-
+//     uwwtd_trace('file xml = ' . $uri);
 	// get current timestamp
 	//$time = time();
 	$timestamp = strtotime('now');
@@ -263,21 +280,36 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
 
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;
-
-        if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_chiffre($datas['mslSludgeProduction'], $timestamp, 0, $node);
-        if(isset($datas['mslDischargePipelines'])) $node->field_msldischargepipelines['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDischargePipelines'], $timestamp, 0, $node);
-        if(isset($datas['mslDischargeShips'])) $node->field_msldischargeships['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDischargeShips'], $timestamp, 0, $node);
-        if(isset($datas['mslDischargeOthers'])) $node->field_msldischargeothers['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDischargeOthers'], $timestamp, 0, $node);
-        if(isset($datas['mslReuseSoilAgriculture'])) $node->field_mslreusesoilagriculture['und'][0]['value'] = uwwtd_check_chiffre($datas['mslReuseSoilAgriculture'], $timestamp, 0, $node);
-        if(isset($datas['mslReuseOthers'])) $node->field_mslreuseothers['und'][0]['value'] = uwwtd_check_chiffre($datas['mslReuseOthers'], $timestamp, 0, $node);
-        if(isset($datas['mslDisposalLandfill'])) $node->field_msldisposallandfill['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDisposalLandfill'], $timestamp, 0, $node);
-        if(isset($datas['mslDisposalIncineration'])) $node->field_msldisposalincineration['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDisposalIncineration'], $timestamp, 0, $node);
-        if(isset($datas['mslDisposalOthers'])) $node->field_msldisposalothers['und'][0]['value'] = uwwtd_check_chiffre($datas['mslDisposalOthers'], $timestamp, 0, $node);
+        //todo
+        //numeric
+        if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_numeric($datas['mslSludgeProduction'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDischargePipelines'])) $node->field_msldischargepipelines['und'][0]['value'] = uwwtd_check_decimal($datas['mslDischargePipelines'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDischargeShips'])) $node->field_msldischargeships['und'][0]['value'] = uwwtd_check_decimal($datas['mslDischargeShips'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDischargeOthers'])) $node->field_msldischargeothers['und'][0]['value'] = uwwtd_check_decimal($datas['mslDischargeOthers'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslReuseSoilAgriculture'])) $node->field_mslreusesoilagriculture['und'][0]['value'] = uwwtd_check_decimal($datas['mslReuseSoilAgriculture'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslReuseOthers'])) $node->field_mslreuseothers['und'][0]['value'] = uwwtd_check_decimal($datas['mslReuseOthers'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDisposalLandfill'])) $node->field_msldisposallandfill['und'][0]['value'] = uwwtd_check_decimal($datas['mslDisposalLandfill'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDisposalIncineration'])) $node->field_msldisposalincineration['und'][0]['value'] = uwwtd_check_decimal($datas['mslDisposalIncineration'], $timestamp, 0, $node);
+        //decimal
+        if(isset($datas['mslDisposalOthers'])) $node->field_msldisposalothers['und'][0]['value'] = uwwtd_check_decimal($datas['mslDisposalOthers'], $timestamp, 0, $node);
+        //text
         if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = uwwtd_check_text($datas['mslRemarks']);
-        if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_pourc($datas['mslWWReusePerc'], $timestamp, 0, $node);
+        //numeric
+        if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_numeric($datas['mslWWReusePerc'], $timestamp, 0, $node);
+        //bool
         if(isset($datas['mslWWReuseAgri'])) $node->field_mslwwreuseagri['und'][0]['value'] = uwwtd_check_bool($datas['mslWWReuseAgri'], $timestamp, 0, $node);
+        //bool
         if(isset($datas['mslWWReuseInd'])) $node->field_mslwwreuseind['und'][0]['value'] = uwwtd_check_bool($datas['mslWWReuseInd'], $timestamp, 0, $node);
+        //bool
         if(isset($datas['mslWWReuseOther']))  $node->field_mslwwreuseother['und'][0]['value'] = uwwtd_check_bool($datas['mslWWReuseOther'], $timestamp, 0, $node);
+        //text
         if(isset($datas['mslWWReuseExplain'])) $node->field_mslwwreuseexplain['und'][0]['value'] = uwwtd_check_text($datas['mslWWReuseExplain']);
         // save node
         node_save($node);
@@ -300,9 +332,10 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
 	);
     //ReceivingAreas
+//     uwwtd_trace('$datas = ' . var_export($datas, true));
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-            $imports[0] = $datas['UWWTD_Report']['ReceivingAreas'];
+            $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
         }
         else{
             $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
@@ -313,7 +346,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //BigCityDischargers
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
         if(isset($datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger']['bigCityID'])){
-            $imports[0] = $datas['UWWTD_Report']['BigCityDischargers'];
+            $imports[0] = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
         }
         else{
             $imports = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
@@ -323,7 +356,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //Agglomerations
     if(isset($datas['UWWTD_Report']['Agglomerations'])){
         if(isset($datas['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
-            $imports[0] = $datas['UWWTD_Report']['Agglomerations'];
+            $imports[0] = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
         }
         else{
             $imports = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
@@ -333,7 +366,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //UWWTPs
     if(isset($datas['UWWTD_Report']['UWWTPs'])){
         if(isset($datas['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
-            $imports[0] = $datas['UWWTD_Report']['UWWTPs'];
+            $imports[0] = $datas['UWWTD_Report']['UWWTPs']['UWWTP'];
         }
         else{
             $imports = $datas['UWWTD_Report']['UWWTPs']['UWWTP'];
@@ -343,7 +376,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //DischargePoints
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
         if(isset($datas['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
-            $imports[0] = $datas['UWWTD_Report']['DischargePoints'];
+            $imports[0] = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
         }
         else{
             $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
@@ -366,7 +399,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //UwwtpAgglos
     if(isset($datas['UWWTD_Report']['UwwtpAgglos'])){
         if(isset($datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
-            $imports[0] = $datas['UWWTD_Report']['UwwtpAgglos'];
+            $imports[0] = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
         }
         else{
             $imports = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
@@ -375,8 +408,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     }
     //BigCityDischargers
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
-        if(isset($datas['UWWTD_Report']['BigCityDischargers']['BigCityDischargers']['bigCityID'])){
-            $imports[0] = $datas['UWWTD_Report']['BigCityDischargers'];
+        if(isset($datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger']['bigCityID'])){
+            $imports[0] = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
         }
         else{
             $imports = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
@@ -396,6 +429,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 }
 
 function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
+//     uwwtd_trace('uwwtd_import_rca_batch_process = ' . var_export($datas, true));
 	if(!empty($datas)){
 		if (!isset($context['sandbox']['progress'])) {
 		
@@ -437,6 +471,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 }
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
+//     uwwtd_trace('uwwtd_update_rca_node = ' . var_export($data, true));
     global $language;
     // Check basic elements exist
     // errors
@@ -481,6 +516,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->type = 'receiving_area';
             $_SESSION['upRca']++;
         }
+        //text
         $node->title = uwwtd_check_text($data['rcaName']);
 
         // site mapping
@@ -498,25 +534,31 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 )
             )
         );
+        //unset liste for case the rca is updated, we recalcultaed it later
         unset($node->field_rcadcpliste['und']);
 
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;
         
+        //text
         if(isset($data['rcaState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['rcaState']);}
         else uwwtd_add_error(1, 0, 'No receiving area status found.', $timestamp, $i, $node);
         
+        //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
 
+        //text
         if(isset($data['rcaType'])){
             $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaType']);}
         else uwwtd_add_error(1, 0, 'No receiving area specialised zone type found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['rcaSensitiveArea'])){
             $node->field_rcadateart5854['und'][0]['value'] = uwwtd_check_text($data['rcaSensitiveArea']);}
         else uwwtd_add_error(1, 0, 'No receiving area Related Sensitive area found.', $timestamp, $i, $node);
         
+        //date
         if(isset($data['rcaDateArt58'])){
             if(uwwtd_check_date($data['rcaDateArt58'], $i, $node) !==false){
                 $node->field_rcadateart5854['und'][0]['value'] = uwwtd_check_date($data['rcaDateArt58'], $i, $node);
@@ -524,6 +566,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }	
         else uwwtd_add_error(1, 0, 'No receiving area article 58 date found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaParameterN'])){
             if(uwwtd_check_bool($data['rcaParameterN'], $timestamp, $i, $node) !== false){
                 $node->field_rca_parameter_n['und'][0]['value'] = uwwtd_check_bool($data['rcaParameterN'], $timestamp, $i, $node);
@@ -531,6 +574,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area nitrogen parameter found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaParameterP'])){
             if(uwwtd_check_bool($data['rcaParameterP'], $timestamp, $i, $node) !== false){
                 $node->field_rca_parameter_p['und'][0]['value'] = uwwtd_check_bool($data['rcaParameterP'], $timestamp, $i, $node);
@@ -538,6 +582,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area phosphorus parameter found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaParameterOther'])){
             if(uwwtd_check_bool($data['rcaParameterOther'], $timestamp, $i, $node) !== false){
                 $node->field_rca_parameter_other['und'][0]['value'] = uwwtd_check_bool($data['rcaParameterOther'], $timestamp, $i, $node);
@@ -545,6 +590,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area other parameter found.', $timestamp, $i, $node);
 
+        //date
         if(isset($data['rcaDateDesignation'])){
             if(uwwtd_check_date($data['rcaDateDesignation'], $i, $node) !== false){
                 $node->field_rcadatedesignation61['und'][0]['value'] = uwwtd_check_date($data['rcaDateDesignation'], $i, $node);
@@ -553,6 +599,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area designation date found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaANitro'])){
             if(uwwtd_check_bool($data['rcaANitro'], $timestamp, $i, $node) !== false){
                 $node->field_rcaanitro['und'][0]['value'] = uwwtd_check_bool($data['rcaANitro'], $timestamp, $i, $node);
@@ -560,6 +607,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area nitrogen information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaAPhos'])){
             if(uwwtd_check_bool($data['rcaAPhos'], $timestamp, $i, $node) !== false){
                 $node->field_rcaaphos['und'][0]['value'] = uwwtd_check_bool($data['rcaAPhos'], $timestamp, $i, $node);
@@ -567,6 +615,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area phosphorus information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaB'])){
             if( uwwtd_check_bool($data['rcaB'], $timestamp, $i, $node) !== false){
                 $node->field_rcab['und'][0]['value'] = uwwtd_check_bool($data['rcaB'], $timestamp, $i, $node);
@@ -574,6 +623,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area B information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaC'])){
             if(uwwtd_check_bool($data['rcaB'], $timestamp, $i, $node) !== false){
                 $node->field_rcac['und'][0]['value'] = uwwtd_check_bool($data['rcaC'], $timestamp, $i, $node);
@@ -581,10 +631,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area C information found.', $timestamp, $i, $node);
         
+        //memo ? text ?
         if(isset($data['rcaCRelevantDirective'])){
             $node->field_rcacrelevantdirective['und'][0]['value'] = uwwtd_check_text($data['rcaCRelevantDirective']);}
         else uwwtd_add_error(1, 0, 'No receiving area relevant directive information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaMorphology'])){
             if(uwwtd_check_bool($data['rcaMorphology'], $timestamp, $i, $node) !== false){
                 $node->field_rcamorphology['und'][0]['value'] = uwwtd_check_bool($data['rcaMorphology'], $timestamp, $i, $node);
@@ -592,6 +644,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area morphology information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaHydrologie'])){
             if(uwwtd_check_bool($data['rcaHydrologie'], $timestamp, $i, $node) !== false){
                 $node->field_rcahydrologie['und'][0]['value'] = uwwtd_check_bool($data['rcaHydrologie'], $timestamp, $i, $node);
@@ -599,6 +652,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area hydrology information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaHydraulic'])){
             if(uwwtd_check_bool($data['rcaHydraulic'], $timestamp, $i, $node) !== false){
                 $node->field_rcahydraulic['und'][0]['value'] = uwwtd_check_bool($data['rcaHydraulic'], $timestamp, $i, $node);
@@ -606,6 +660,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area hydraulic information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['rcaAbsenceRisk'])){
             if(uwwtd_check_bool($data['rcaAbsenceRisk'], $timestamp, $i, $node) !== false){
                 $node->field_rcaabsencerisk['und'][0]['value'] = uwwtd_check_bool($data['rcaAbsenceRisk'], $timestamp, $i, $node);
@@ -613,6 +668,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area absence risk information found.', $timestamp, $i, $node);
         
+        //date
         if(isset($data['rcaDateArt54'])){
             if(uwwtd_check_date($data['rcaDateArt54'], $i, $node) !==false){
                 $node->field_rcadateart54['und'][0]['value'] = uwwtd_check_date($data['rcaDateArt54'], $i, $node);
@@ -620,112 +676,129 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }	
         else uwwtd_add_error(1, 0, 'No receiving area article 54 date found.', $timestamp, $i, $node);
         
+        //numeric
         if(isset($data['rcaPlants'])){
-            if(uwwtd_check_chiffre($data['rcaPlants'], $timestamp, $i, $node) !==false){
-                $node->field_rcaPlants['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPlants'], $timestamp, $i, $node);
+            if(uwwtd_check_numeric($data['rcaPlants'], $timestamp, $i, $node) !==false){
+                $node->field_rcaPlants['und'][0]['value'] = uwwtd_check_numeric($data['rcaPlants'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area plants information found.', $timestamp, $i, $node);
         
+        //numeric
         if(isset($data['rcaPlantsCapacity'])){
-            if(uwwtd_check_chiffre($data['rcaPlantsCapacity'], $timestamp, $i, $node) !==false){
-                $node->field_rcaplantscapacity['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPlantsCapacity'], $timestamp, $i, $node);
+            if(uwwtd_check_numeric($data['rcaPlantsCapacity'], $timestamp, $i, $node) !==false){
+                $node->field_rcaplantscapacity['und'][0]['value'] = uwwtd_check_numeric($data['rcaPlantsCapacity'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area plants capacity information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNIncomingMeasured'])){
-            if(uwwtd_check_chiffre($data['rcaNIncomingMeasured'], $timestamp, $i, $node) !==false){
-                $node->field_rcanincomingmeasured['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNIncomingMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNIncomingMeasured'], $timestamp, $i, $node) !==false){
+                $node->field_rcanincomingmeasured['und'][0]['value'] = uwwtd_check_decimal($data['rcaNIncomingMeasured'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming N-tot measured information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNIncomingCalculated'])){
-            if(uwwtd_check_chiffre($data['rcaNIncomingCalculated'], $timestamp, $i, $node) !==false){
-                $node->field_rcanincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNIncomingCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNIncomingCalculated'], $timestamp, $i, $node) !==false){
+                $node->field_rcanincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['rcaNIncomingCalculated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming N-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['rcaNIncomingEstimated'], $timestamp, $i, $node) !==false){
-                $node->field_rcanincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNIncomingEstimated'], $timestamp, $i, $node) !==false){
+                $node->field_rcanincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['rcaNIncomingEstimated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming N-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaPIncomingMeasured'])){
-            if(uwwtd_check_chiffre($data['rcaPIncomingMeasured'], $timestamp, $i, $node) !==false){
-                $node->field_rcapincomingmeasured['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPIncomingMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPIncomingMeasured'], $timestamp, $i, $node) !==false){
+                $node->field_rcapincomingmeasured['und'][0]['value'] = uwwtd_check_decimal($data['rcaPIncomingMeasured'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming P-tot measured information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaPIncomingCalculated'])){
-            if(uwwtd_check_chiffre($data['rcaPIncomingCalculated'], $timestamp, $i, $node) !==false){
-                $node->field_rcapincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPIncomingCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPIncomingCalculated'], $timestamp, $i, $node) !==false){
+                $node->field_rcapincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['rcaPIncomingCalculated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming P-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaPIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['rcaPIncomingEstimated'], $timestamp, $i, $node) !==false){
-                $node->field_rcapincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPIncomingEstimated'], $timestamp, $i, $node) !==false){
+                $node->field_rcapincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['rcaPIncomingEstimated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area incoming P-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNDischargedMeasured'])){
-            if(uwwtd_check_chiffre($data['rcaNDischargedMeasured'], $timestamp, $i, $node) !==false){
-                $node->field_rcandischargedmeasured['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNDischargedMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNDischargedMeasured'], $timestamp, $i, $node) !==false){
+                $node->field_rcandischargedmeasured['und'][0]['value'] = uwwtd_check_decimal($data['rcaNDischargedMeasured'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged N-tot measured information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNDischargedCalculated'])){
-            if(uwwtd_check_chiffre($data['rcaNDischargedCalculated'], $timestamp, $i, $node) !==false){
-                $node->field_rcandischargedcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNDischargedCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNDischargedCalculated'], $timestamp, $i, $node) !==false){
+                $node->field_rcandischargedcalculated['und'][0]['value'] = uwwtd_check_decimal($data['rcaNDischargedCalculated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged N-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaNDischargedEstimated'])){
-            if(uwwtd_check_chiffre($data['rcaNDischargedEstimated'], $timestamp, $i, $node) !==false){
-                $node->field_rcandischargedestimated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaNDischargedEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaNDischargedEstimated'], $timestamp, $i, $node) !==false){
+                $node->field_rcandischargedestimated['und'][0]['value'] = uwwtd_check_decimal($data['rcaNDischargedEstimated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged N-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaPDischargedMeasured'])){
-            if(uwwtd_check_chiffre($data['rcaPDischargedMeasured'], $timestamp, $i, $node) !==false){
-                $node->field_rcapdischargedmeasured['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPDischargedMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPDischargedMeasured'], $timestamp, $i, $node) !==false){
+                $node->field_rcapdischargedmeasured['und'][0]['value'] = uwwtd_check_decimal($data['rcaPDischargedMeasured'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged P-tot measured information found.', $timestamp, $i, $node);
     
+        //decimal
         if(isset($data['rcaPDischargedCalculated'])){
-            if(uwwtd_check_chiffre($data['rcaPDischargedCalculated'], $timestamp, $i, $node) !==false){
-                $node->field_rcapdischargedcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPDischargedCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPDischargedCalculated'], $timestamp, $i, $node) !==false){
+                $node->field_rcapdischargedcalculated['und'][0]['value'] = uwwtd_check_decimal($data['rcaPDischargedCalculated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged P-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['rcaPDischargedEstimated'])){
-            if(uwwtd_check_chiffre($data['rcaPDischargedEstimated'], $timestamp, $i, $node) !==false){
-                $node->field_rcapdischargedestimated['und'][0]['value'] = uwwtd_check_chiffre($data['rcaPDischargedEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['rcaPDischargedEstimated'], $timestamp, $i, $node) !==false){
+                $node->field_rcapdischargedestimated['und'][0]['value'] = uwwtd_check_decimal($data['rcaPDischargedEstimated'], $timestamp, $i, $node);
             }
         }	
         else uwwtd_add_error(1, 0, 'No receiving area discharged P-tot estimated information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['rcaGIS'])){
             $node->field_rcagis['und'][0]['value'] = uwwtd_check_text($data['rcaGIS']);}
         else uwwtd_add_error(1, 0, 'No receiving area root of corresponding GIS-data file found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['rcaCIDOtherDirective'])){
             $node->field_rcacidotherdirective['und'][0]['value'] = uwwtd_check_text($data['rcaCIDOtherDirective']);}
         else uwwtd_add_error(1, 0, 'No receiving area other directive information found.', $timestamp, $i, $node);
 
+        //date
         if(isset($data['rcaCDateOtherDirective'])){
             if(uwwtd_check_date($data['rcaCDateOtherDirective'], $i, $node) !== false){
                 $node->field_rcacdateotherdirective['und'][0]['value'] = uwwtd_check_date($data['rcaCDateOtherDirective'], $i, $node);
@@ -733,10 +806,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No receiving area other directive information date found.', $timestamp, $i, $node);
 
+        //memo ? text ?
         if(isset($data['rcaRemarks'])){
             $node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcaRemarks']);}
         else uwwtd_add_error(1, 0, 'No receiving area root of correspo GIS-data file found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['rcaArt54Applied'])){
             if(uwwtd_check_bool($data['rcaArt54Applied'], $timestamp, $i, $node) !== false){
                 $node->field_rca54applied['und'][0]['value'] = uwwtd_check_bool($data['rcaArt54Applied'], $timestamp, $i, $node);
@@ -795,7 +870,7 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 		// Check if no errors were found
 		if($e == 0){
 
-			// Variables
+			// Variables  //text
 			$siteId = $annee.'_big_'.uwwtd_check_text($data['bigCityID']);
 
 			// Check if id exists
@@ -841,10 +916,13 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
             // data mapping
             $node->field_repcode['und'][0]['value'] = $repCode;
 
+            //text
             $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['bigCityID']);
 
+            //text
             $node->title = uwwtd_check_text($data['bigCity']);
 
+            //text
             $node->field_bigcountrycode['und'][0]['value'] = uwwtd_check_text($data['bigCountryCode']);
 
             // save node
@@ -1035,25 +1113,31 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         $node->title = uwwtd_check_text($data['aggName']);
 
+        //text
         if(isset($data['aggState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['aggState']);}
         else uwwtd_add_error(1, 0, 'No agglomeration status information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggNUTS'])){
             $node->field_regionnuts['und'][0]['value'] = uwwtd_check_text($data['aggNUTS']);}
         else uwwtd_add_error(1, 0, 'No agglomeration nut code information found.', $timestamp, $i, $node);
         
+        //decimal
         $node->field_agglatitude['und'][0]['value'] = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $timestamp, $i);
         
+        //decimal
         $node->field_agglongitude['und'][0]['value'] = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $timestamp, $i);
         
+        //numeric
         if(isset($data['aggGenerated'])){
-            if(uwwtd_check_chiffre($data['aggGenerated'], $timestamp, $i, $node) !== false){
-                $node->field_agggenerated['und'][0]['value'] = uwwtd_check_chiffre($data['aggGenerated'], $timestamp, $i, $node);
+            if(uwwtd_check_numeric($data['aggGenerated'], $timestamp, $i, $node) !== false){
+                $node->field_agggenerated['und'][0]['value'] = uwwtd_check_numeric($data['aggGenerated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No agglomeration generated load information found.', $timestamp, $i, $node);
-            
+        
+        //text    
         if(isset($data['bigID']) || isset($data['aggBigID'])){
             if(isset($data['bigID'])){
             $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigID']);}
@@ -1062,18 +1146,22 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(0, 0, 'No agglomeration big id information found.', $timestamp, $i, $node);
 
+        //memo
         if(isset($data['aggCalculation'])){
             $node->field_aggcalculation['und'][0]['value'] = uwwtd_check_text($data['aggCalculation']);}
         else uwwtd_add_error(1, 0, 'No agglomeration calculation information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggChanges'])){
             $node->field_aggchanges['und'][0]['value'] = uwwtd_check_text($data['aggChanges']);}
         else uwwtd_add_error(1, 0, 'No agglomeration changes information found.', $timestamp, $i, $node);
 
+        //memo
         if(isset($data['aggChangesComment'])){
             $node->field_aggchangescomment['und'][0]['value'] = uwwtd_check_text($data['aggChangesComment']);}
         else uwwtd_add_error(1, 0, 'No agglomeration changes comment information found.', $timestamp, $i, $node);
 
+        //date
         if(isset($data['aggPeriodOver'])){
             if(uwwtd_check_date($data['aggPeriodOver'], $timestamp, $i, $node) !== false){
                 $node->field_aggperiodover3['und'][0] = array(
@@ -1107,6 +1195,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration period over information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggC1'])){
             if(uwwtd_check_pourc($data['aggC1'], $timestamp, $i, $node) !== false){
                 $node->field_aggc1['und'][0]['value'] = uwwtd_check_pourc($data['aggC1'], $timestamp, $i, $node);
@@ -1114,10 +1203,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration c1 information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggMethodC1'])){
             $node->field_aggmethodc1['und'][0]['value'] = uwwtd_check_text($data['aggMethodC1']);}
         else uwwtd_add_error(1, 0, 'No agglomeration c1 method information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggC2'])){
             if(uwwtd_check_pourc($data['aggC2'], $timestamp, $i, $node) !== false){
                 $node->field_aggc2['und'][0]['value'] = uwwtd_check_pourc($data['aggC2'], $timestamp, $i, $node);
@@ -1125,10 +1216,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration c2 information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggMethodC2'])){
             $node->field_aggmethodc2['und'][0]['value'] = uwwtd_check_text($data['aggMethodC2']);}
         else uwwtd_add_error(1, 0, 'No agglomeration c2 method information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggPercWithoutTreatment'])){
             if(uwwtd_check_pourc($data['aggPercWithoutTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_aggpercwithouttreatment['und'][0]['value'] = uwwtd_check_pourc($data['aggPercWithoutTreatment'], $timestamp, $i, $node);
@@ -1136,10 +1229,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration percentage without treatment information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggMethodWithoutTreatment'])){
             $node->field_aggmethodwithouttreatment['und'][0]['value'] = uwwtd_check_text($data['aggMethodWithoutTreatment']);}
         else uwwtd_add_error(1, 0, 'No agglomeration method percentage without treatment information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggPercPrimTreatment'])){
             if(uwwtd_check_pourc($data['aggPercPrimTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_aggpercprimtreatment['und'][0]['value'] = uwwtd_check_pourc($data['aggPercPrimTreatment'], $timestamp, $i, $node);
@@ -1147,6 +1242,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration percentage with primary treatment information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggPercSecTreatment'])){
             if(uwwtd_check_pourc($data['aggPercSecTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_aggpercsectreatment['und'][0]['value'] = uwwtd_check_pourc($data['aggPercSecTreatment'], $timestamp, $i, $node);
@@ -1154,20 +1250,24 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration percentage with secondary treatment information found.', $timestamp, $i, $node);
 
+        //decimal
         if(isset($data['aggPercStringentTreatment'])){
             if(uwwtd_check_pourc($data['aggPercStringentTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_aggpercstringenttreatment['und'][0]['value'] = uwwtd_check_pourc($data['aggPercStringentTreatment'], $timestamp, $i, $node);}
             }
             else uwwtd_add_error(1, 0, 'No agglomeration percentage with more stringent treatment information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggHaveRegistrationSystem'])){
             $node->field_agghaveregistrationsystem['und'][0]['value'] = uwwtd_check_text($data['aggHaveRegistrationSystem']);}
         else uwwtd_add_error(1, 0, 'No agglomeration registration system information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggExistMaintenancePlan'])){
             $node->field_aggexistmaintenanceplan['und'][0]['value'] = uwwtd_check_text($data['aggExistMaintenancePlan']);}
         else uwwtd_add_error(1, 0, 'No agglomeration maintenance plan information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggPressureTest'])){
             if(uwwtd_check_bool($data['aggPressureTest'], $timestamp, $i, $node) !== false){
                 $node->field_aggpressuretest['und'][0]['value'] = uwwtd_check_bool($data['aggPressureTest'], $timestamp, $i, $node);
@@ -1175,6 +1275,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration pressure test information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggVideoInspections'])){
             if(uwwtd_check_bool($data['aggVideoInspections'], $timestamp, $i, $node) !== false){
                 $node->field_aggvideoinspections['und'][0]['value'] = uwwtd_check_bool($data['aggVideoInspections'], $timestamp, $i, $node);
@@ -1182,6 +1283,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration video inspections information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggOtherMeasures'])){
             if(uwwtd_check_bool($data['aggOtherMeasures'], $timestamp, $i, $node) !== false){
                 $node->field_aggothermeasures['und'][0]['value'] = uwwtd_check_bool($data['aggOtherMeasures'], $timestamp, $i, $node);
@@ -1189,18 +1291,22 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration other mesures information found.', $timestamp, $i, $node);
 
+        //memo
         if(isset($data['aggExplanationOther'])){
             $node->field_aggexplanationother['und'][0]['value'] = uwwtd_check_text($data['aggExplanationOther']);}
         else uwwtd_add_error(1, 0, 'No agglomeration explanation of other measures information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['aggSewageNetwork'])){
             $node->field_aggsewagenetwork['und'][0]['value'] = uwwtd_check_text($data['aggSewageNetwork']);}
         else uwwtd_add_error(1, 0, 'No agglomeration type of collecing system information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['aggBestTechnicalKnowledge'])){
             $node->field_aggbesttechnicalknowledge['und'][0]['value'] = uwwtd_check_text($data['aggBestTechnicalKnowledge']);}
         else uwwtd_add_error(1, 0, 'No agglomeration best technical knowledge information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggDilutionRates'])){
             if(uwwtd_check_bool($data['aggDilutionRates'], $timestamp, $i, $node) !== false){
                 $node->field_agg_dilution_rates['und'][0]['value'] = uwwtd_check_bool($data['aggDilutionRates'], $timestamp, $i, $node);
@@ -1208,6 +1314,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration the measures based on: Dilution rates information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggCapacity'])){
             if(uwwtd_check_bool($data['aggCapacity'], $timestamp, $i, $node) !== false){
                 $node->field_aggcapacity['und'][0]['value'] = uwwtd_check_bool($data['aggCapacity'], $timestamp, $i, $node);
@@ -1215,6 +1322,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration the measures based on: Capacity in relation to dry weather flow information found.', $timestamp, $i, $node);
 
+        //bool
         if(isset($data['aggAccOverflows'])){
             if(uwwtd_check_bool($data['aggAccOverflows'], $timestamp, $i, $node) !== false){
                 $node->field_aggaccoverflows['und'][0]['value'] = uwwtd_check_bool($data['aggAccOverflows'], $timestamp, $i, $node);
@@ -1222,31 +1330,36 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No agglomeration the measures based on: Acceptable number of overflows per year information found.', $timestamp, $i, $node);
 
+        //numeric
         if(isset($data['aggAccOverflowNumber'])){
-            if(uwwtd_check_chiffre($data['aggAccOverflowNumber'], $timestamp, $i, $node) !== false){
-                $node->field_aggaccoverflownumber['und'][0]['value'] = uwwtd_check_chiffre($data['aggAccOverflowNumber'], $timestamp, $i, $node);
+            if(uwwtd_check_numeric($data['aggAccOverflowNumber'], $timestamp, $i, $node) !== false){
+                $node->field_aggaccoverflownumber['und'][0]['value'] = uwwtd_check_numeric($data['aggAccOverflowNumber'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No agglomeration indicate number of overflows information found.', $timestamp, $i, $node);
 
+        //numeric
         if(isset($data['aggSewerOverflows_m3'])){
-            if(uwwtd_check_int($data['aggSewerOverflows_m3'], $i, $node) !== false){
-                $node->field_aggseweroverflows_m3['und'][0]['value'] = uwwtd_check_int($data['aggSewerOverflows_m3'], $i, $node);
+            if(uwwtd_check_numeric($data['aggSewerOverflows_m3'], $i, $node) !== false){
+                $node->field_aggseweroverflows_m3['und'][0]['value'] = uwwtd_check_numeric($data['aggSewerOverflows_m3'], $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No agglomeration number of raw sewage discharged from combined sewer overflows (CSOs) in the reporting year : m3 / year found.', $timestamp, $i, $node);
     
+        //numeric
         if(isset($data['aggSewerOverflows_pe'])){
-            if(uwwtd_check_int($data['aggSewerOverflows_pe'], $i, $node) !== false){
-                $node->field_aggseweroverflows_pe['und'][0]['value'] = uwwtd_check_int($data['aggSewerOverflows_pe'], $i, $node);
+            if(uwwtd_check_numeric($data['aggSewerOverflows_pe'], $i, $node) !== false){
+                $node->field_aggseweroverflows_pe['und'][0]['value'] = uwwtd_check_numeric($data['aggSewerOverflows_pe'], $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No agglomeration number of raw sewage has been discharged through combined sewer overflows (CSOs) in the year reported: p.e. found.', $timestamp, $i, $node);
         
+        //memo
         if(isset($data['aggRemarks'])){
             $node->field_aggremarks['und'][0]['value'] = uwwtd_check_text($data['aggRemarks']);}
         else uwwtd_add_error(1, 0, 'No agglomeration remarks information found.', $timestamp, $i, $node);
         
+        //date
         if(isset($data['aggForecast'])){
             if(uwwtd_check_date($data['aggForecast'], $i, $node) !== false){
                 $node->field_aggforecast['und'][0]['value'] = uwwtd_check_date($data['aggForecast'], $i, $node);
@@ -1367,15 +1480,25 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // site mapping
         // calculate treatment type
         $treatment = 'NI';
+        //bool
         if(isset($data['uwwPrimaryTreatment']) && uwwtd_check_bool($data['uwwPrimaryTreatment'], $timestamp, $i, $node) == 1) $treatment = 'P';
+        //bool
         if(isset($data['uwwSecondaryTreatment']) && uwwtd_check_bool($data['uwwSecondaryTreatment'], $timestamp, $i, $node) == 1) $treatment = 'S';
+        //bool
         if(isset($data['uwwNRemoval']) && uwwtd_check_bool($data['uwwNRemoval'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwPRemoval']) && uwwtd_check_bool($data['uwwPRemoval'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwUV']) && uwwtd_check_bool($data['uwwUV'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwChlorination']) && uwwtd_check_bool($data['uwwChlorination'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwOzonation']) && uwwtd_check_bool($data['uwwOzonation'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwSandFiltration']) && uwwtd_check_bool($data['uwwSandFiltration'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwMicroFiltration']) && uwwtd_check_bool($data['uwwMicroFiltration'], $timestamp, $i, $node) == 1) $treatment = 'MS';
+        //bool
         if(isset($data['uwwOtherTreatment']) && uwwtd_check_bool($data['uwwOtherTreatment'], $timestamp, $i, $node) == 1) $treatment = 'MS';
         $node->field_uwwtreatmenttype['und'][0]['value'] = $treatment;
 
@@ -1407,6 +1530,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 )
             )
         );
+        //TODO : Why is thse 2 lines commented ?
         //unset($node->field_uwwaggliste['und']);
         //unset($node->field_uwwdcpliste['und']);
         
@@ -1425,55 +1549,69 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_regionnuts['und'][0]['value'] = 'PL112';
             }
 
+        //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['uwwCode']);
         
+        //text
         $node->title = uwwtd_check_text($data['uwwName']);
         
+        //text
         if(isset($data['uwwState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['uwwState']);
         }else uwwtd_add_error(1, 0, 'No UWWTP status information found.', $timestamp, $i, $node);
 
+        //text
         if(isset($data['aggID'])){
             $node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggID']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs ID of agglomeration information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwCollectingSystem']))$node->field_uwwcollectingsystem['und'][0]['value'] = uwwtd_check_text($data['uwwCollectingSystem']);
         
+        //text
         if(isset($data['uwwDateClosing'])){
             $node->field_validto['und'][0]['value'] = uwwtd_check_text($data['uwwDateClosing']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs date of closing information found.', $timestamp, $i, $node);
         
+        //memo
         if(isset($data['uwwHistorie'])){
             $node->field_uwwhistorie['und'][0]['value'] = uwwtd_check_text($data['uwwHistorie']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs information found.', $timestamp, $i, $node);
         
         //TODO pourquoi le refaire ?   peut être écraser par PL112 ? dans ce cas changer al condition plus haut non ?
+        //text
         if($rep == 'LT'){
             $node->field_regionnuts['und'][0]['value'] = 'LT00';
         }
+        //decimal
         $node->field_uwwlatitude['und'][0]['value'] = uwwtd_check_coordinate($data['uwwLatitude']);
         
+        //decimal
         $node->field_uwwlongitude['und'][0]['value'] = uwwtd_check_coordinate($data['uwwLongitude']);
         
+        //text
         if(isset($data['uwwNUTS']))$node->field_regionnuts['und'][0]['value'] = uwwtd_check_text($data['uwwNUTS']);
         
+        //numeric
         if(isset($data['uwwLoadEnteringUWWTP'])){
-            if(uwwtd_check_chiffre($data['uwwLoadEnteringUWWTP'], $timestamp, $i, $node) !== false){
-                $node->field_uwwloadenteringuwwtp['und'][0]['value'] = uwwtd_check_int($data['uwwLoadEnteringUWWTP'], $timestamp, $i, $node);
+            if(uwwtd_check_numeric($data['uwwLoadEnteringUWWTP'], $timestamp, $i, $node) !== false){
+                $node->field_uwwloadenteringuwwtp['und'][0]['value'] = uwwtd_check_numeric($data['uwwLoadEnteringUWWTP'], $timestamp, $i, $node);
             }	
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs load entering found.', $timestamp, $i, $node);
         
+        //numeric
         if(isset($data['uwwCapacity'])){
-            if(uwwtd_check_int($data['uwwCapacity'], $i, $node) !== false){
-                $node->field_physicalcapacityactivity['und'][0]['value'] = uwwtd_check_int($data['uwwCapacity'], $i, $node);
+            if(uwwtd_check_numeric($data['uwwCapacity'], $i, $node) !== false){
+                $node->field_physicalcapacityactivity['und'][0]['value'] = uwwtd_check_numeric($data['uwwCapacity'], $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs physical capacity found.', $timestamp, $i, $node);
-            
+        
+        //bool    
         if(isset($data['uwwPrimaryTreatment'])){
             if(uwwtd_check_bool($data['uwwPrimaryTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_uwwprimarytreatment['und'][0]['value'] = uwwtd_check_bool($data['uwwPrimaryTreatment'], $timestamp, $i, $node);
@@ -1481,13 +1619,15 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs Primary treatment information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwSecondaryTreatment'])){
             if(uwwtd_check_bool($data['uwwSecondaryTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_uwwsecondarytreatment['und'][0]['value'] = uwwtd_check_bool($data['uwwSecondaryTreatment'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs Secondary treatment information found.', $timestamp, $i, $node);
-            
+        
+        //bool    
         if(isset($data['uwwOtherTreatment'])){
             if(uwwtd_check_bool($data['uwwOtherTreatment'], $timestamp, $i, $node) !== false){
                 $node->field_uwwothertreat['und'][0]['value'] = uwwtd_check_bool($data['uwwOtherTreatment'], $timestamp, $i, $node);
@@ -1495,6 +1635,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs other treatment found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwNRemoval'])){
             if(uwwtd_check_bool($data['uwwNRemoval'], $timestamp, $i, $node) !== false){
                 $node->field_uwwnremoval['und'][0]['value'] = uwwtd_check_bool($data['uwwNRemoval'], $timestamp, $i, $node);
@@ -1502,6 +1643,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs N removal information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwPRemoval'])){
             if(uwwtd_check_bool($data['uwwPRemoval'], $timestamp, $i, $node) !== false){
                 $node->field_uwwpremoval['und'][0]['value'] = uwwtd_check_bool($data['uwwPRemoval'], $timestamp, $i, $node);
@@ -1509,6 +1651,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs P removal information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwUV'])){
             if(uwwtd_check_bool($data['uwwUV'], $timestamp, $i, $node) !== false){
                 $node->field_uwwuv['und'][0]['value'] = uwwtd_check_bool($data['uwwUV'], $timestamp, $i, $node);
@@ -1516,6 +1659,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs UV information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwChlorination'])){
             if(uwwtd_check_bool($data['uwwChlorination'], $timestamp, $i, $node) !== false){
                 $node->field_uwwchlorination['und'][0]['value'] = uwwtd_check_bool($data['uwwChlorination'], $timestamp, $i, $node);
@@ -1523,6 +1667,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs chlorination information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwOzonation'])){
             if(uwwtd_check_bool($data['uwwOzonation'], $timestamp, $i, $node) !== false){
                 $node->field_uwwozonation['und'][0]['value'] = uwwtd_check_bool($data['uwwOzonation'], $timestamp, $i, $node);
@@ -1530,6 +1675,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs ozonation information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwSandFiltration'])){
             if(uwwtd_check_bool($data['uwwSandFiltration'], $timestamp, $i, $node) !==false){
                 $node->field_uwwsandfiltration['und'][0]['value'] = uwwtd_check_bool($data['uwwSandFiltration'], $timestamp, $i, $node);
@@ -1537,6 +1683,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs sand filtration information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwMicroFiltration'])){
             if(uwwtd_check_bool($data['uwwMicroFiltration'], $timestamp, $i, $node) !== false){
                 $node->field_uwwmicrofiltration['und'][0]['value'] = uwwtd_check_bool($data['uwwMicroFiltration'], $timestamp, $i, $node);
@@ -1544,6 +1691,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs micro filtration information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwOther'])){
             if(uwwtd_check_bool($data['uwwOther'], $timestamp, $i, $node) !== false){
                 $node->field_uwwother['und'][0]['value'] = uwwtd_check_bool($data['uwwOther'], $timestamp, $i, $node);
@@ -1551,41 +1699,49 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs other type information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwSpecification'])){
             $node->field_uwwspecification['und'][0]['value'] = uwwtd_check_text($data['uwwSpecification']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs specify other type of more stringent treatment information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwBOD5Perf'])){
             $node->field_uwwbod5perf['und'][0]['value'] = uwwtd_check_text($data['uwwBOD5Perf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: BOD5 information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwCODPerf'])){
             $node->field_uwwcodperf['und'][0]['value'] = uwwtd_check_text($data['uwwCODPerf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: COD information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwTSSPerf'])){
             $node->field_uwwtssperf['und'][0]['value'] = uwwtd_check_text($data['uwwTSSPerf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: TSS information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwNTotPerf'])){
             $node->field_uwwntotperf['und'][0]['value'] = uwwtd_check_text($data['uwwNTotPerf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: N information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwPTotPerf'])){
             $node->field_uwwptotperf['und'][0]['value'] = uwwtd_check_text($data['uwwPTotPerf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: P information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwOtherPerf'])){
             $node->field_uwwotherperf['und'][0]['value'] = uwwtd_check_text($data['uwwOtherPerf']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs treatment performance: Others information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwBadPerformance'])){
             if(uwwtd_check_bool($data['uwwBadPerformance'], $timestamp, $i, $node) !== false){
                 $node->field_uwwbadperfdesign['und'][0]['value'] = uwwtd_check_bool($data['uwwBadPerformance'], $timestamp, $i, $node);
@@ -1593,6 +1749,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs bad performance information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwAccidents'])){
             if(uwwtd_check_bool($data['uwwAccidents'], $timestamp, $i, $node) !== false){
                 $node->field_uwwaccidents['und'][0]['value'] = uwwtd_check_bool($data['uwwAccidents'], $timestamp, $i, $node);
@@ -1600,6 +1757,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs accidents information found.', $timestamp, $i, $node);
         
+        //bool
         if(isset($data['uwwBadDesign'])){
             if(uwwtd_check_bool($data['uwwBadDesign'], $timestamp, $i, $node) !== false){
                 $node->field_uwwbaddesign['und'][0]['value'] = uwwtd_check_bool($data['uwwBadDesign'], $timestamp, $i, $node);
@@ -1607,191 +1765,219 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs bad design or dimensioning information found.', $timestamp, $i, $node);
         
+        //memo
         if(isset($data['uwwInformation'])){
             $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text($data['uwwInformation']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODIncomingMeasured'])){
-            if( uwwtd_check_chiffre($data['uwwBODIncomingMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwbodincoming['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODIncomingMeasured'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwBODIncomingMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwbodincoming['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODIncomingMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads BOD information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODIncomingCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwBODIncomingCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwbodincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODIncomingCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwBODIncomingCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwbodincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODIncomingCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads BOD-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['uwwBODIncomingEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwbodincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwBODIncomingEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwbodincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODIncomingEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads BOD-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODIncomingMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwCODIncomingMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcodincoming['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODIncomingMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwCODIncomingMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcodincoming['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODIncomingMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads COD information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODIncomingCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwCODIncomingCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcodincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODIncomingCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwCODIncomingCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcodincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODIncomingCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads COD-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['uwwCODIncomingEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcodincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwCODIncomingEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcodincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODIncomingEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads COD-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNIncomingMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwNIncomingMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwnincoming['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNIncomingMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwNIncomingMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwnincoming['und'][0]['value'] = uwwtd_check_decimal($data['uwwNIncomingMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads Nto information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNIncomingCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwNIncomingCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwnincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNIncomingCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwNIncomingCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwnincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwNIncomingCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads N-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['uwwNIncomingEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwnincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwNIncomingEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwnincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwNIncomingEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads N-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPIncomingMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwPIncomingMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpincoming['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPIncomingMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwPIncomingMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpincoming['und'][0]['value'] = uwwtd_check_decimal($data['uwwPIncomingMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads Ptot information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPIncomingCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwPIncomingCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpincomingcalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPIncomingCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwPIncomingCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpincomingcalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwPIncomingCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads P-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPIncomingEstimated'])){
-            if(uwwtd_check_chiffre($data['uwwPIncomingEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpincomingestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPIncomingEstimated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwPIncomingEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpincomingestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwPIncomingEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs incoming loads P-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODDischargeMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwBODDischargeMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwboddischarge['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODDischargeMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwBODDischargeMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwboddischarge['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODDischargeMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads BOD information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODDischargeCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwBODDischargeCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwboddischargecalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODDischargeCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwBODDischargeCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwboddischargecalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODDischargeCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads BOD-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwBODDischargeEstimated'])){
-            if( uwwtd_check_chiffre($data['uwwBODDischargeEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwboddischargeestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwBODDischargeEstimated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwBODDischargeEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwboddischargeestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwBODDischargeEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads BOD-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODDischargeMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwCODDischargeMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcoddischarge['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODDischargeMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwCODDischargeMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcoddischarge['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODDischargeMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads COD information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODDischargeCalculated'])){
-            if( uwwtd_check_chiffre($data['uwwCODDischargeCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcoddischargecalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODDischargeCalculated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwCODDischargeCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcoddischargecalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODDischargeCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads COD-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwCODDischargeEstimated'])){
-            if( uwwtd_check_chiffre($data['uwwCODDischargeEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwcoddischargeestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwCODDischargeEstimated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwCODDischargeEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwcoddischargeestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwCODDischargeEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads COD-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNDischargeMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwNDischargeMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwndischarge['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNDischargeMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwNDischargeMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwndischarge['und'][0]['value'] = uwwtd_check_decimal($data['uwwNDischargeMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads Ntot information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNDischargeCalculated'])){
-            if(uwwtd_check_chiffre($data['uwwNDischargeCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwndischargecalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNDischargeCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwNDischargeCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwndischargecalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwNDischargeCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads N-tot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwNDischargeEstimated'])){
-            if( uwwtd_check_chiffre($data['uwwNDischargeEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwndischargeestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwNDischargeEstimated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwNDischargeEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwndischargeestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwNDischargeEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads N-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPDischargeMeasured'])){
-            if(uwwtd_check_chiffre($data['uwwPDischargeMeasured'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpdischarge['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPDischargeMeasured'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwPDischargeMeasured'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpdischarge['und'][0]['value'] = uwwtd_check_decimal($data['uwwPDischargeMeasured'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads Ptot information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPDischargeCalculated'])){
-            if(uwwtd_check_chiffre($data['uwwPDischargeCalculated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpdischargecalculated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPDischargeCalculated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwPDischargeCalculated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpdischargecalculated['und'][0]['value'] = uwwtd_check_decimal($data['uwwPDischargeCalculated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads Ptot calculated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwPDischargeEstimated'])){
-            if( uwwtd_check_chiffre($data['uwwPDischargeEstimated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwpdischargeestimated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwPDischargeEstimated'], $timestamp, $i, $node);
+            if( uwwtd_check_decimal($data['uwwPDischargeEstimated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwpdischargeestimated['und'][0]['value'] = uwwtd_check_decimal($data['uwwPDischargeEstimated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs discharged loads P-tot estimated information found.', $timestamp, $i, $node);
         
+        //decimal
         if(isset($data['uwwWasteWaterTreated'])){
-            if(uwwtd_check_chiffre($data['uwwWasteWaterTreated'], $timestamp, $i, $node) !== false){
-                $node->field_uwwwastewatertreated['und'][0]['value'] = uwwtd_check_chiffre($data['uwwWasteWaterTreated'], $timestamp, $i, $node);
+            if(uwwtd_check_decimal($data['uwwWasteWaterTreated'], $timestamp, $i, $node) !== false){
+                $node->field_uwwwastewatertreated['und'][0]['value'] = uwwtd_check_decimal($data['uwwWasteWaterTreated'], $timestamp, $i, $node);
             }
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs waste water treated  information found.', $timestamp, $i, $node);
         
+        //text
         if(isset($data['uwwMethodWasteWaterTreated'])){
             $node->field_uwwmethodwastewatertreated['und'][0]['value'] = uwwtd_check_text($data['uwwMethodWasteWaterTreated']);
         }
         else uwwtd_add_error(1, 0, 'No uwwTPs method used to determine the volume of waste water treated information found.', $timestamp, $i, $node);
         
+        //memo
         if(isset($data['uwwRemarks'])){
             $node->field_uwwremarks['und'][0]['value'] = uwwtd_check_text($data['uwwRemarks']);
         }
@@ -1927,82 +2113,104 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     $node->field_regionnuts['und'][0]['value'] = 'PL112';
                 }
             
+            //text
             $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['dcpCode']);
 
+            //text
             $node->title = uwwtd_check_text($data['dcpName']);
 
+            //text
             if(isset($data['dcpState'])){
                 $node->field_status['und'][0]['value'] = uwwtd_check_text($data['dcpState']);}
             else uwwtd_add_error(1, 0, 'No discharge point status information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['uwwID'])){
                 $node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwID']);}
             else uwwtd_add_error(1, 0, 'No discharge point waste water treatment plant connexion information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['dcpNUTS'])){
                 $node->field_regionnuts['und'][0]['value'] = uwwtd_check_text($data['dcpNUTS']);}
             else uwwtd_add_error(1, 0, 'No discharge point nut code information found.', $timestamp, $i, $node);
 
+            //decimal
             $node->field_dcplatitude['und'][0]['value'] = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $timestamp, $i);
             
+            //decimal
             $node->field_dcplongitude['und'][0]['value'] = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $timestamp, $i);
 
+            //text
             if(isset($data['dcpWaterBodyType'])){
                 $node->field_dcpwaterbodytype['und'][0]['value'] = uwwtd_check_text($data['dcpWaterBodyType']);}
             else uwwtd_add_error(1, 0, 'No discharge point water body type information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpIrrigation'])){
                 $node->field_dcpirrigation['und'][0]['value'] = uwwtd_check_text($data['dcpIrrigation']);}
             else uwwtd_add_error(1, 0, 'No discharge point no discharge point en case of discharge on land please specify the purpose type information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpTypeOfReceivingArea'])){
                 $node->field_rcatype['und'][0]['value'] = uwwtd_check_text($data['dcpTypeOfReceivingArea']);}
             else uwwtd_add_error(1, 0, 'No discharge point type of receiving area information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['rcaID'])){
                 $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaID']);}
             else uwwtd_add_error(1, 0, 'No discharge point receiving area connexion information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpSurfaceWaters'])){
                 $node->field_dcpsurfacewaters['und'][0]['value'] = uwwtd_check_text($data['dcpSurfaceWaters']);}
             else uwwtd_add_error(1, 0, 'No discharge point surface waters information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['dcpWaterbodyID'])){
                 $node->field_dcpwaterbodyid['und'][0]['value'] = uwwtd_check_text($data['dcpWaterbodyID']);}
             else uwwtd_add_error(1, 0, 'No discharge point water body connexion information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['dcpNotAffect'])){
                 $node->field_dcpnotaffect['und'][0]['value'] = uwwtd_check_text($data['dcpNotAffect']);}
             else uwwtd_add_error(1, 0, 'No discharge point information  do comprehensive studies indicate that the discharge does not adversely affect the environment found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['dcpMSProvide'])){
                 $node->field_dcpmsprovide['und'][0]['value'] = uwwtd_check_text($data['dcpMSProvide']);}
             else uwwtd_add_error(1, 0, 'No discharge point has the Member State provided these studies to the Commission information found.', $timestamp, $i, $node);
 
+            //text
             if(isset($data['dcpCOMAccept'])){
                 $node->field_ddcpcomaccept['und'][0]['value'] = uwwtd_check_text($data['dcpCOMAccept']);}
             else uwwtd_add_error(1, 0, 'No discharge point Has the Commission formally accepts that the conditions of art. 6 (2) are met information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpGroundWater'])){
                 $node->field_dcpgroundwater['und'][0]['value'] = uwwtd_check_text($data['dcpGroundWater']);}
             else uwwtd_add_error(1, 0, 'No discharge point ID of WFD groundwater body type information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpReceivingWater'])){
                 $node->field_dcpreceivingwater['und'][0]['value'] = uwwtd_check_text($data['dcpReceivingWater']);}
             else uwwtd_add_error(1, 0, 'No discharge point water body connexion information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpWFDSubUnit'])){
                 $node->field_dcpwfdsubunit['und'][0]['value'] = uwwtd_check_text($data['dcpWFDSubUnit']);}
             else uwwtd_add_error(1, 0, 'No discharge point ID of WFD sub-unit information found.', $timestamp, $i, $node);
             
+            //text
             if(isset($data['dcpWFDRBD'])){
                 $node->field_dcpwfdrbd['und'][0]['value'] = uwwtd_check_text($data['dcpWFDRBD']);}
             else uwwtd_add_error(1, 0, 'No discharge point WFD river basin district connexion information found.', $timestamp, $i, $node);
 
+            //memo
             if(isset($data['dcpRemarks'])){
                 $node->field_dcpremarks['und'][0]['value'] = uwwtd_check_text($data['dcpRemarks']);}
             else uwwtd_add_error(1, 0, 'No discharge point remarks information found.', $timestamp, $i, $node);
             
+            //date
             if(isset($data['dcpWaterBodyReferenceDate'])){
                 if(uwwtd_check_date($data['dcpWaterBodyReferenceDate'], $timestamp, $i, $node) !== false){
                     $node->field_dcpwaterbodyreferencedate['und'][0] = array(
@@ -2015,6 +2223,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error(1, 0, 'No discharge point water body reference date information found.', $timestamp, $i, $node);
 
+            //date
             if(isset($data['dcpGroundWaterReferenceDate'])){
                 if(uwwtd_check_date($data['dcpGroundWaterReferenceDate'], $timestamp, $i, $node) !== false){
                     $node->field_dcpdcpgroundwaterreference['und'][0] = array(
@@ -2027,6 +2236,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error(1, 0, 'No discharge point ground water reference date information found.', $timestamp, $i, $node);
 
+            //date
             if(isset($data['dcpReceivingWaterReferenceDate'])){
                 if(uwwtd_check_date($data['dcpReceivingWaterReferenceDate'], $timestamp, $i, $node) !== false){
                     $node->field_dcpreceivingwaterreference['und'][0] = array(
@@ -2039,6 +2249,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error(1, 0, 'No discharge point receiving water reference date information found.', $timestamp, $i, $node);
             
+            //date
             if(isset($data['dcpWFDSubUnitReferenceDate'])){
                 if(uwwtd_check_date($data['dcpWFDSubUnitReferenceDate'], $timestamp, $i, $node) !== false){
                     $node->field_dcp_wfdsubunitrefdate['und'][0] = array(
@@ -2051,6 +2262,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error(1, 0, 'No discharge point WFD sub unit reference date information found.', $timestamp, $i, $node);
 
+            //date
             if(isset($data['dcpWFDRBDReferenceDate'])){
                 if(uwwtd_check_date($data['dcpWFDRBDReferenceDate'], $timestamp, $i, $node) !== false){
                     $node->field_dcpwfdrbdreferencedate['und'][0] = array(
@@ -2208,7 +2420,9 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 $agglouww->title = $annee.' data '.$agg->title.' - '.$uww->title;
                 $agglouww->field_agglo_uww_agglo['und'][0]['nid'] = $agg->nid;
                 $agglouww->field_agglo_uww_uww['und'][0]['nid'] = $uww->nid;
+                //decimal
                 $agglouww->field_agglo_uww_perc_ent_uw['und'][0]['value'] = uwwtd_check_pourc($data['aucPercEnteringUWWTP']);
+                //text
                 $agglouww->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = uwwtd_check_text($data['aucMethodPercEnteringUWWTP']);
                 $agglouww->field_anneedata['und'][0]['value'] = $annee;
                 node_save($agglouww);
@@ -3452,7 +3666,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 			$node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
         } else {  
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
-            //ALGO6-7-8-9
+            //ALGO6-algo7-algo8-algo9
 
                 uwwtd_trace( "in true === empty(aArtCompliance) > 0");
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
@@ -3530,11 +3744,28 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
 {            
     $maxgen = $infoAllAggUww['total'];
     //(load collected in collecting system- sum of load entering the treatment plants) is <1% or <=2000p.e.
-    $percentage_lost = $node->field_aggc1['und'][0]['value'] - $maxgen;
+    $percentage_lost = $node->field_aggc1['und'][0]['value'] - $maxgen;    
+    //$percentage_lost = bcsub($node->field_aggc1['und'][0]['value'], $maxgen, 2);
     $pe_lost = $percentage_lost / 100 * $node->field_agggenerated['und'][0]['value'];
-     
+    //$pe_lost = bcmul(bcdiv($percentage_lost,100,2),$node->field_agggenerated['und'][0]['value'],2);
+    uwwtd_trace('field_aggc1 = ' . $node->field_aggc1['und'][0]['value']);
+    uwwtd_trace('total = ' . $maxgen);
+    uwwtd_trace('$percentage_lost = ' . $percentage_lost);
+    uwwtd_trace('field_agggenerated = ' . $node->field_agggenerated['und'][0]['value']);
+    uwwtd_trace('$pe_lost = ' . $pe_lost);
+    uwwtd_trace('$percentage_lost = ' . var_export(($percentage_lost < 1), true));
+    uwwtd_trace('$pe_lost <= 2000 = ' . var_export(($pe_lost <= 2000), true));
+    uwwtd_trace('($percentage_lost < 1 && $pe_lost <= 2000) = ' . var_export(($percentage_lost < 1 && $pe_lost <= 2000), true));
+         
     if (false === ($percentage_lost < 1 && $pe_lost <= 2000)) {
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
+        || true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
+        || true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
+        || true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover6['und'][0]['value'], $node->field_anneedata['und'][0]['value'])){
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        } else {
+            return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        }
     }
     
     if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
@@ -3588,7 +3819,7 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     $listStationArticleAndUwwtpCompliance = array();
     
 	foreach($infoAllAggUww['listUww'] as $uwwtp){
-        //ALGO 6
+        //ALGO6
         uwwtd_trace('start-2 uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($node, $uwwtp['node']);
         uwwtd_trace('end-2 uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
@@ -3627,27 +3858,41 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     $listStationArticleAndUwwtpCompliance = array();
     
 	foreach($infoAllAggUww['listUww'] as $uwwtp){
-        //ALGO 6
+        //ALGO6
         uwwtd_trace('start uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
+        //$agg->field_aggart3compliance['und'][0]['value']
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
         uwwtd_trace('end uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
     }
     
     uwwtd_trace('$listStationArticleAndUwwtpCompliance = ' . var_export($listStationArticleAndUwwtpCompliance, true));
     
-    //ALGO 7
-    $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance('compArt4', $listStationArticleAndUwwtpCompliance);
-    //ALGO 8
-    $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance('compArt6', $listStationArticleAndUwwtpCompliance);
-    //ALGO 9                                                          
-    $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance('compArt5', $listStationArticleAndUwwtpCompliance);
+    //ALGO7
+    $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
+    //ALGO8
+    $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance($agg, 'compArt6', $listStationArticleAndUwwtpCompliance);
+    //ALGO9                                                          
+    $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $aResult['compArt4']);
     unset($listStationArticleAndUwwtpCompliance);
     
     return $aResult;    
 }
 
-function uwwtd_article4_agglomeration_compliance($article, $listUwwtpCompliance) 
+function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
+    uwwtd_trace('uwwtd_article4_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
+    $aTmp['listUww'] = $listUwwtpCompliance;
+    uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
+    if (false === uwwtd_atleastone_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['secondary']), $aTmp)) {
+        uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
+        return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    }
+    uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
+
+    if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
+    
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
@@ -3670,8 +3915,21 @@ function uwwtd_article4_agglomeration_compliance($article, $listUwwtpCompliance)
  * @param   array    $listUwwtpCompliance   List of all the sstation with all there article 4,5,6 compliance
  * @return  string      The agglomeration article compliance asked with $article                                              
  */ 
-function uwwtd_article6_agglomeration_compliance($article, $listUwwtpCompliance) 
+function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
+    uwwtd_trace('uwwtd_article6_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
+    $aTmp['listUww'] = $listUwwtpCompliance;
+    uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
+    if (false === uwwtd_atleastone_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['primary']), $aTmp)) {
+        uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, primary)');
+        return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    }
+    uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
+    
+    if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
+    
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
@@ -3687,8 +3945,33 @@ function uwwtd_article6_agglomeration_compliance($article, $listUwwtpCompliance)
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
 }
 
-function uwwtd_article5_agglomeration_compliance($article, $listUwwtpCompliance) 
+function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $complianceAggloArt4) 
 {
+    if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    }
+    
+    uwwtd_trace('uwwtd_article5_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
+    $aTmp['listUww'] = $listUwwtpCompliance;
+    uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
+        
+    if (false === uwwtd_atleastone_uwwtp_required_in(array(
+                            $GLOBALS['uwwtd_value']['required']['morestringent'],
+                            $GLOBALS['uwwtd_value']['required']['nitrogen'],
+                            $GLOBALS['uwwtd_value']['required']['phosphorus'],
+                            $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
+                            $GLOBALS['uwwtd_value']['required']['other'],
+                            ), $aTmp)) {
+        uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, more stringent)');
+        return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    }
+    uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, more stringent)');    
+    
+    if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']
+       || $complianceAggloArt4 == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    }
+    
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
@@ -3714,8 +3997,8 @@ function uwwtd_atleastone_uwwtp_with_required_morestringent_has_complianceart5_n
 {
     $bResult = false; 
     
-    foreach($infoAllAggUww as $aUwwtp) {
-        if (true === in_array($aUwwtp['treatementrequired'], array(
+    foreach($listUwwtpCompliance as $aUwwtp) {
+        if (true === in_array($aUwwtp['required'], array(
             $GLOBALS['uwwtd_value']['required']['nitrogen'],
             $GLOBALS['uwwtd_value']['required']['phosphorus'],
             $GLOBALS['uwwtd_value']['required']['other'],
@@ -3739,8 +4022,8 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
 {
     $bResult = true; 
     
-    foreach($infoAllAggUww as $aUwwtp) {
-        if (true === in_array($aUwwtp['treatementrequired'], array(
+    foreach($listUwwtpCompliance as $aUwwtp) {
+        if (true === in_array($aUwwtp['required'], array(
             $GLOBALS['uwwtd_value']['required']['nitrogen'],
             $GLOBALS['uwwtd_value']['required']['phosphorus'],
             $GLOBALS['uwwtd_value']['required']['other'],
@@ -3766,7 +4049,7 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
  */ 
 function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
 {
-    $aResult['treatementrequired'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
+    $aResult['required'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
     //treatement required = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['primary']) {
         uwwtd_trace('uwwtp treatement required = primary');
@@ -3819,11 +4102,11 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];            
         } else {
            if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-            uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 true');
+            uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            } else {
-            uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 false');
+            uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }            
@@ -3837,6 +4120,22 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
 //         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
 //         return $aResult;   
 //     }
+
+    //treatement required = secondary && treatement in place = NI (not provided on treatement inplace)
+    if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
+        && $uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['noinformation']) {
+       uwwtd_trace('treatement required = secondary && treatement in place = NI');
+       if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+        uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       } else {
+        uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+       }      
+       return $aResult;          
+    }
     
     //cod and bod5 pass
 //     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
@@ -4507,39 +4806,67 @@ function uwwtd_check_bool($bool, $timestamp, $index = null, $node = null){
 		}
 }
 
-function uwwtd_check_chiffre($chif, $timestamp, $index = null, $node = null){
-	//chiffre > 0
-	if(is_numeric($chif))
-	{
-		$chif = intval($chif);
-		return $chif;	
-	}else{
-		uwwtd_add_error(2, 4, 'The input data is not in digital format.', $timestamp, $index, $node);
-		return false;
-		}
-}
+// function uwwtd_check_chiffre($chif, $timestamp, $index = null, $node = null){
+// 	//chiffre > 0
+// 	if(is_numeric($chif))
+// 	{
+// 		$chif = intval($chif);
+// 		return $chif;	
+// 	}else{
+// 		uwwtd_add_error(2, 4, 'The input data is not in digital format.', $timestamp, $index, $node);
+// 		return false;
+// 		}
+// }
 
-function uwwtd_check_int($int, $timestamp, $index = null, $node = null){
-	
-	if(is_numeric($int))
-	{	
-		$int = intval($int);
-		if(is_int($int))
-		{
-			return $int;	
-		}else{
-			uwwtd_add_error(2, 4, 'The input data is not in integer format.', $timestamp, $i, $node);
-			return false;
-		}
+/**
+ * Check if the value is an integer
+ * return int value if ok, else false 
+ */ 
+function uwwtd_check_numeric($value, $timestamp, $index = null, $node = null) 
+{
+	if(true === ctype_digit($value)) {
+		return (int)$value;
+	}else{
+		uwwtd_add_error(2, 4, 'The input data is not in numeric format.', $timestamp, $index, $node);
+		return false;
 	}
 }
+
+//<uwwPIncomingCalculated>0.352225</uwwPIncomingCalculated>
+/**
+ * check if a value is a decimal (or numeric) value and return a float
+ */ 
+function uwwtd_check_decimal($value, $timestamp, $index = null, $node = null){
+	if(is_numeric($value)) {
+		return (float)$value;	
+	}else{
+		uwwtd_add_error(2, 4, 'The input data is not in numeric or decimal format.', $timestamp, $index, $node);
+		return false;
+	}
+}
+
+// function uwwtd_check_int($int, $timestamp, $index = null, $node = null){
+// 	
+// 	if(is_numeric($int))
+// 	{	
+// 		$int = intval($int);
+// 		if(is_int($int))
+// 		{
+// 			return $int;	
+// 		}else{
+// 			uwwtd_add_error(2, 4, 'The input data is not in integer format.', $timestamp, $i, $node);
+// 			return false;
+// 		}
+// 	}
+// }
 
 function uwwtd_check_pourc($pourc, $timestamp, $index = null, $node = null){
 	if(is_numeric($pourc))
 	{
 		if(($pourc >= "0") && ($pourc <="100")){
-			$pourc = intval($pourc);
-			return $pourc;	
+            return uwwtd_check_decimal($pourc, $timestamp, $index = null, $node = null);
+// 			$pourc = intval($pourc);
+// 			return $pourc;	
 		}else{
 			uwwtd_add_error(2, 4, 'The number must be between 0 and 100.', $timestamp, $index, $node);
 			return false;
