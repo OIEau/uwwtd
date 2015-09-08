@@ -252,9 +252,9 @@
             print '<div class="panel-title fieldset-legend">'.t('Waste Water Network Connexions').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-            print render($content['field_linked_receiving_areas']);
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_discharge_points']);
+            print render($content['field_linked_receiving_areas']); 
             //print render($content['field_uwwaggliste']);
             //print render($content['field_uwwdcpliste']);
           print '</div>';

@@ -195,9 +195,9 @@
             print '<div class="panel-title fieldset-legend">'.t('Waste Water Network Connexions').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-            print render($content['field_linked_receiving_areas']);
             print render($content['field_linked_treatment_plants']);
             print render($content['field_linked_discharge_points']);
+            print render($content['field_linked_receiving_areas']); 
             //print render($content['field_agguwwliste']);
           print '</div>';
         print '</fieldset>';
