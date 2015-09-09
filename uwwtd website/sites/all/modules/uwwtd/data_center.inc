@@ -557,7 +557,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         if(isset($data['rcaSensitiveArea'])){
-            $node->field_rcadateart5854['und'][0]['value'] = uwwtd_check_text($data['rcaSensitiveArea']);}
+            $node->field_rca_sensitive_area['und'][0]['value'] = uwwtd_check_text($data['rcaSensitiveArea']);}
         else uwwtd_add_error(1, 0, 'No receiving area Related Sensitive area found.', $timestamp, $i, $node);
         
         //date
@@ -3768,6 +3768,14 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         } else {
             return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         }
+    }
+    
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+        || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+        || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+    ) {
+        return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
     
     if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
