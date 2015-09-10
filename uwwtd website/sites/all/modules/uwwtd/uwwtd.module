@@ -215,7 +215,7 @@ function uwwtd_node_redirection($id){
 		drupal_goto('<front>');
 	}
 	else{
-		drupal_goto('http://uwwtd.oieau.fr/slovenia/'.$type.'/'.$id.'/'.$annee);
+        drupal_goto($GLOBALS['base_url'] . '/'.$type.'/'.$id.'/'.$annee);
 		drupal_set_title($node->title);
 		//return render(node_view($node, 'full'));
 	}
@@ -450,7 +450,7 @@ function debug_create_xml($type, $value)
     
     //AGGLO ======================================================
     if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
-        $imports[0] = $xml['UWWTD_Report']['Agglomerations'];
+        $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
     }
     else{
         $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
@@ -469,7 +469,7 @@ function debug_create_xml($type, $value)
     }
     //UwwtpAgglos for agglo ======================================================
     if(isset($xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
-        $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos'];
+        $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
     }
     else{
         $imports = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
@@ -498,7 +498,7 @@ function debug_create_xml($type, $value)
     //Agglo for uwwtp======================================================
     if (true === isset($listeAgglo)) {
         if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
-            $imports[0] = $xml['UWWTD_Report']['Agglomerations'];
+            $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
         }
         else{
             $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
@@ -517,7 +517,7 @@ function debug_create_xml($type, $value)
     
     //uwwtp======================================================
     if(isset($xml['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
-        $imports[0] = $xml['UWWTD_Report']['UWWTPs'];
+        $imports[0] = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
     }
     else{
         $imports = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
@@ -535,7 +535,7 @@ function debug_create_xml($type, $value)
     
     //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
     if(isset($xml['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
-        $imports[0] = $xml['UWWTD_Report']['DischargePoints'];
+        $imports[0] = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
     }
     else{
         $imports = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
@@ -553,11 +553,12 @@ function debug_create_xml($type, $value)
     } 
     //RCA====================================================== 
     if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-        $imports[0] = $xml['UWWTD_Report']['ReceivingAreas'];
+        $imports[0] = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
     }
     else{
         $imports = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
     }   
+    
     $brcaFound = false;
     foreach($imports as $rca) {
         if (true === in_array($rca['rcaCode'],$rcaCode)) {

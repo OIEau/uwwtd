@@ -1,0 +1,160 @@
+<?php 
+function uwwtd_install() {
+    /*
+        CREATE SCHEMA IF NOT EXISTS wfs;
+    
+    
+    
+    */
+    
+    
+}
+
+function uwwtd_uninstall() {}
+
+function uwwtd_schema() {
+    $schema['uwwtd_import_errors'] = array(
+    'description' => 'Table for storing all import errors',
+    'fields' => array(
+      'errid' => array(
+        'description' => 'The primary identifier for a error.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Type of the error.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'category' => array(
+        'description' => 'Category of the error',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'year' => array(
+          'description' => 'reference year of data',
+          'type' => 'int',
+          'not null' => false,
+          'default' => NULL,
+      ),
+      'error' => array(
+        'description' => 'description of the error.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+      ),
+      'date' => array(
+          'description' => 'The Unix timestamp of the error.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+      ),
+      'entity_type' => array(
+          'description' => 'The type of entity.',
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => FALSE,
+      ),
+      'entity_id' => array(
+          'description' => 'The primary identifier for an entity.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+       ),
+       'bundle' => array(
+          'description' => 'The bundle to which this entity belongs.',
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => FALSE,
+        ),
+    ),
+    'indexes' => array(
+      'uwwtd_err_date'        => array('date'),
+      'uwwtd_err_entity_id'        => array('entity_id'),
+      'uwwtd_err_type'        => array('type'),
+      'uwwtd_err_cat'        => array('category'),
+      
+    ),
+    'primary key' => array('errid'),
+  );
+  return $schema; 
+}
+
+/**
+ * create table uwwtd_import_errors (if table already exist, table will be truncate and update will be displayed as failed, but it is not important,
+ * we run this update only to tell drupal this table exist and it can use it now) 
+ */ 
+function uwwtd_update_7100() 
+{
+    $schema['uwwtd_import_errors'] = array(
+    'description' => 'Table for storing all import errors',
+    'fields' => array(
+      'errid' => array(
+        'description' => 'The primary identifier for a error.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'Type of the error.',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'category' => array(
+        'description' => 'Category of the error',
+        'type' => 'int',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+      'year' => array(
+          'description' => 'reference year of data',
+          'type' => 'int',
+          'not null' => false,
+          'default' => NULL,
+      ),
+      'error' => array(
+        'description' => 'description of the error.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'medium',
+      ),
+      'date' => array(
+          'description' => 'The Unix timestamp of the error.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+      ),
+      'entity_type' => array(
+          'description' => 'The type of entity.',
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => FALSE,
+      ),
+      'entity_id' => array(
+          'description' => 'The primary identifier for an entity.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+       ),
+       'bundle' => array(
+          'description' => 'The bundle to which this entity belongs.',
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => FALSE,
+        ),
+    ),
+    'indexes' => array(
+      'uwwtd_err_date'        => array('date'),
+      'uwwtd_err_entity_id'        => array('entity_id'),
+      'uwwtd_err_type'        => array('type'),
+      'uwwtd_err_cat'        => array('category'),
+      
+    ),
+    'primary key' => array('errid'),
+  );   
+   db_create_table('uwwtd_import_errors', $schema['uwwtd_import_errors']); 
+}

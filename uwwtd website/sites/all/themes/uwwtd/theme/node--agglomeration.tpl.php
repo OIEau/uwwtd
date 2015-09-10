@@ -83,14 +83,14 @@
   $editor = 'editor';
   $roles = $GLOBALS['user']->roles;
   //dsm($roles);
-  foreach($roles as $role){
-	  if(($role == $admin)|| ($role == $editor)){
-	   $errors = uwwtd_insert_errors_tab($node);
-		if($errors !== false){
-    print $errors;
-	}
-  }
-  }
+//   foreach($roles as $role){
+// 	  if(($role == $admin)|| ($role == $editor)){
+// 	   $errors = uwwtd_insert_errors_tab($node);
+// 		if($errors !== false){
+//     print $errors;
+// 	}
+//   }
+//   }
   
   $nodetype = t('Agglomeration');
   //dsm($content);

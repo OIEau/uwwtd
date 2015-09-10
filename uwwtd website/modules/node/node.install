@@ -44,7 +44,7 @@ function node_schema() {
       'title' => array(
         'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 1000,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -215,7 +215,7 @@ function node_schema() {
       'title' => array(
         'description' => 'The title of this version.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 1000,
         'not null' => TRUE,
         'default' => '',
       ),
