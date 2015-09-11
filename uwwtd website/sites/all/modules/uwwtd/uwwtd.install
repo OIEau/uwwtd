@@ -6,6 +6,18 @@
 function uwwtd_install() 
 {
     uwwtd_install_trace(__FUNCTION__);
+    
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_BigCity');
+    uwwtd_delete_view('UWWTD_Compliance_Agglo');
+    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+    uwwtd_delete_view('UWWTD_DischargePoint');
+    uwwtd_delete_view('UWWTD_ReceivingArea');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
+        
+    uwwtd_update_node_title_size();
+    
     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
     uwwtd_create_or_replace_view('UWWTD_BigCity');
     uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
