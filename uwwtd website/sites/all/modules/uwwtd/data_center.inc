@@ -7,7 +7,7 @@ function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
         $file = drupal_realpath('public://data_errors/trace.log');
         $r = fopen($file, 'a');
-        fputs($r, $message . "\n");
+        fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
         fclose($r);
     }
 }

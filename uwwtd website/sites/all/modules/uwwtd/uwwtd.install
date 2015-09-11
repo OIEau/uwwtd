@@ -1,18 +1,42 @@
 <?php 
-function uwwtd_install() {
-    /*
-        CREATE SCHEMA IF NOT EXISTS wfs;
+
+/***************************************************************************/
+// HOOK
+/***************************************************************************/
+function uwwtd_install() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_BigCity');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+    uwwtd_create_or_replace_view('UWWTD_DischargePoint');
+    uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
     
-    
-    
-    */
-    
-    
+    uwwtd_create_schema_wfs(); 
 }
 
-function uwwtd_uninstall() {}
+function uwwtd_enable() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+} 
 
-function uwwtd_schema() {
+function uwwtd_disable() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+}    
+
+function uwwtd_uninstall() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+}
+
+function uwwtd_schema() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
     $schema['uwwtd_import_errors'] = array(
     'description' => 'Table for storing all import errors',
     'fields' => array(
@@ -83,78 +107,105 @@ function uwwtd_schema() {
   return $schema; 
 }
 
+
+
 /**
  * create table uwwtd_import_errors (if table already exist, table will be truncate and update will be displayed as failed, but it is not important,
  * we run this update only to tell drupal this table exist and it can use it now) 
  */ 
 function uwwtd_update_7100() 
 {
-    $schema['uwwtd_import_errors'] = array(
-    'description' => 'Table for storing all import errors',
-    'fields' => array(
-      'errid' => array(
-        'description' => 'The primary identifier for a error.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'type' => array(
-        'description' => 'Type of the error.',
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => NULL,
-      ),
-      'category' => array(
-        'description' => 'Category of the error',
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => NULL,
-      ),
-      'year' => array(
-          'description' => 'reference year of data',
-          'type' => 'int',
-          'not null' => false,
-          'default' => NULL,
-      ),
-      'error' => array(
-        'description' => 'description of the error.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'medium',
-      ),
-      'date' => array(
-          'description' => 'The Unix timestamp of the error.',
-          'type' => 'int',
-          'not null' => TRUE,
-          'default' => 0,
-      ),
-      'entity_type' => array(
-          'description' => 'The type of entity.',
-          'type' => 'varchar',
-          'length' => 32,
-          'not null' => FALSE,
-      ),
-      'entity_id' => array(
-          'description' => 'The primary identifier for an entity.',
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => FALSE,
-       ),
-       'bundle' => array(
-          'description' => 'The bundle to which this entity belongs.',
-          'type' => 'varchar',
-          'length' => 128,
-          'not null' => FALSE,
-        ),
-    ),
-    'indexes' => array(
-      'uwwtd_err_date'        => array('date'),
-      'uwwtd_err_entity_id'        => array('entity_id'),
-      'uwwtd_err_type'        => array('type'),
-      'uwwtd_err_cat'        => array('category'),
-      
-    ),
-    'primary key' => array('errid'),
-  );   
-   db_create_table('uwwtd_import_errors', $schema['uwwtd_import_errors']); 
+    uwwtd_install_trace(__FUNCTION__);
+    $schema = module_invoke('uwwtd', 'schema');
+    $sTableName ='uwwtd_import_errors';
+    if (true === db_table_exists($sTableName)) {
+        db_drop_table($sTableName);
+    }
+    db_create_table($sTableName, $schema['uwwtd_import_errors']);
+}
+
+/**
+ * Create or replace views for geoserver
+ * Create if not exists schema wfs use by hook_cron to create tables for geoserver based on the views of the same name 
+ */ 
+function uwwtd_update_7101() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //delete views for updating drupal node field title size
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_BigCity');
+    uwwtd_delete_view('UWWTD_Compliance_Agglo');
+    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+    uwwtd_delete_view('UWWTD_DischargePoint');
+    uwwtd_delete_view('UWWTD_ReceivingArea');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
+    
+    uwwtd_update_node_title_size();
+
+    //recreate the view
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_BigCity');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+    uwwtd_create_or_replace_view('UWWTD_DischargePoint');
+    uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
+    
+    uwwtd_create_schema_wfs();
+}
+
+
+/***************************************************************************/
+// Function utils
+/***************************************************************************/
+function uwwtd_install_trace($message) 
+{
+    $file = drupal_realpath('public://data_errors/install_trace.log');
+    $r = fopen($file, 'a');
+    fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+    fclose($r);
+}
+
+/**
+ * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
+ * in module/script/{$sViewName}.sql  
+ */ 
+function uwwtd_create_or_replace_view($sViewName)
+{
+    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
+    $path = drupal_get_path('module', 'uwwtd') . '/script/' . $sViewName . '.sql';
+    $select = file_get_contents($path);
+    db_query('CREATE OR REPLACE VIEW "' . $sViewName .  '" AS ' . $select);
+}
+
+/**
+ * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
+ * in module/script/{$sViewName}.sql  
+ */ 
+function uwwtd_delete_view($sViewName)
+{
+    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
+    db_query('DROP VIEW IF EXISTS "' . $sViewName .  '"');
+}
+
+/**
+ * create schema wfs
+ */ 
+function uwwtd_create_schema_wfs() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    db_query('CREATE SCHEMA IF NOT EXISTS "wfs"');    
+} 
+
+/**
+ * create schema wfs
+ */ 
+function uwwtd_update_node_title_size() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //udpate node.title and node_revision.title from 255 to 1000 (for ro et pl long name)
+    db_query('ALTER TABLE drupal_node ALTER COLUMN title TYPE varchar(1000)');
+    db_query('ALTER TABLE drupal_node_revision ALTER COLUMN title TYPE varchar(1000)');
 }
