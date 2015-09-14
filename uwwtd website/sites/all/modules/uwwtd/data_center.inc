@@ -15,6 +15,28 @@ function uwwtd_trace($message) {
 
 
 $GLOBALS['uwwtd_errors']=array();
+// 0|Input
+// 1|Linking
+// 2|Geometry
+// 3|Conformity
+// 4|Format     
+//$GLOBALS['uwwtd_errors_type']['category']['format']
+$GLOBALS['uwwtd_errors_type']['category'] = array(
+    'input' => 0,
+    'linking' => 1,
+    'geometry' => 2,
+    'conformity' => 3,
+    'format' => 4,
+);
+// 0|Notification
+// 1|Warning
+// 2|Error
+//$GLOBALS['uwwtd_errors_type']['type']['error']
+$GLOBALS['uwwtd_errors_type']['type'] = array(
+    'notification' => 0,
+    'warning' => 1,
+    'error' => 2,
+);
 
 $GLOBALS['uwwtd_value']['treatementmet'] = array(
     'false' => 0,
@@ -2982,7 +3004,10 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$shptype = '1';
 			$geoType = 'LSA';
 		}
-
+        //for IE missing  type EUCD_SA_CA here
+//         if (false === isset($geoType)) {
+//             uwwtd_trace(var_export($record, true));
+//         }     
 		//dsm($id);
 
 		if(isset($record->dbf_data['ISO2'])){
@@ -3001,6 +3026,8 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		else{
 			$shpdata = $record->shp_data['parts'][0]['points'];
 		}
+        
+        
 
 		//dsm($shpdata);
 
@@ -3020,6 +3047,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		}
 
 		//dsm($ids);
+//         $ids[]['nid'] = 173356;
 
 		if(count($ids) > 0){
 			// get node
@@ -3027,8 +3055,20 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$node = node_load($nid);
 
 			// get polgon geo data
-			if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
-			if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
+            try {
+    			if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
+    			if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
+            } catch (Exception $e) {
+                //shape file malformed    uwwtd_errors
+//                 uwwtd_trace('Exception');
+                $sErrorMessage = 'An error was found in the shape file for the receiving area "'.$node->title.'" : ' . $e->getMessage();
+                uwwtd_add_error($GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['format'], $sErrorMessage, strtotime('now'), 0, $node);
+//                 uwwtd_trace($e->getMessage());
+//                 uwwtd_trace($e);
+                drupal_set_message($sErrorMessage, $GLOBALS['uwwtd_errors_type']['type']['error']);
+                continue;
+            }
+//             uwwtd_trace('continue?');
 
 			$node->field_rca_geotype['und'][0]['value'] = $geoType;
 
@@ -3043,6 +3083,8 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		}
 
 	}
+    
+    uwwtd_flush_errors();
 
 	unset($shp);
 
@@ -3072,6 +3114,17 @@ function uwwtd_shapes_finished($success, $results, $operations) {
 			)
 		);
 	}
+//     uwwtd_trace('uwwtd_shapes_finished');
+// 	if(isset($GLOBALS['uwwtd_errors'])){
+//         uwwtd_trace('error found');
+//         uwwtd_trace(var_export($GLOBALS['uwwtd_errors'], true));
+// 		foreach($GLOBALS['uwwtd_errors'] as $listError){
+//             foreach($listError as $error){
+// 			     drupal_set_message($error['error'], $error['type']);
+//             }
+// 		}
+// //         uwwtd_flush_errors();
+// 	}   
 }
 
 
@@ -4779,7 +4832,7 @@ function uwwtd_coord_transform_polygon($parts){
 }
 
 function uwwtd_coord_transform_multipolygon($parts){
-
+//    uwwtd_trace(var_export($parts, true));
 	$sql = "SELECT ST_Transform(ST_GeomFromText('MULTIPOLYGON(";
 
 	$numParts = count($parts);
@@ -4820,11 +4873,13 @@ function uwwtd_coord_transform_multipolygon($parts){
 
 	$sql .= ")', 4258),4326) AS geo";
 
+//     uwwtd_trace($sql);
+    
 	$result = db_query($sql);
 	foreach ($result as $record) {
   		$geo = $record->geo;
 	}
-//     uwwtd_trace($sql);
+    
 	// create array
 	$table = array();
 // 	$sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
@@ -6292,6 +6347,7 @@ function uwwtd_unzip_files($file, $target){
 //encore moins besoin d'aller chercher le contenu complet du fichier de log pour ajouter une erreur => au niveau charge serveur c'est ce qu'il y a de pir.
 //Il faudrait encore améliorer en envoyant un lot de message au lieu d'un à la fois
 function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $node = null){
+//     uwwtd_trace('uwwtd_add_error');
     if($node){
         $key = $node->nid;
     }
@@ -6305,6 +6361,8 @@ function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $n
         'timestamp'=>$timestamp,
         'index'=>$index,
     );
+    
+//     uwwtd_trace(var_export($GLOBALS['uwwtd_errors'], true));
     
     
     
@@ -6468,6 +6526,7 @@ function uwwtd_flush_errors(){
                         'bundle'=>($node?$node->type:null), //todo if
                     );
                     drupal_write_record("uwwtd_import_errors", $record);
+//                     uwwtd_trace('uwwtd_import_errors');
 //                     uwwtd_trace(var_export($record, true));
                 }
                 /*if($node != NULL){
