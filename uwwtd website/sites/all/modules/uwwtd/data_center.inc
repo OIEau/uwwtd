@@ -325,7 +325,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         return $node;
     }
     else{
-        uwwtd_add_error(1, 0, 'No MsLevel found in the dataset', $timestamp, 0);
+        uwwtd_add_error(1, 0, 'No MsLevel found in the dataset ' . $annee, $timestamp, 0);
         
     }
 
@@ -475,7 +475,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
 	}else{
-			uwwtd_add_error(1, 0, 'No receiving areas found in the dataset', $timestamp, $i);
+			uwwtd_add_error(1, 0, 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
 	}
 }
 
@@ -955,7 +955,7 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
 	}else{
-		uwwtd_add_error(1, 0, 'No big cities found in the dataset', $timestamp);
+		uwwtd_add_error(1, 0, 'No big cities found in the dataset ' . $annee, $timestamp);
 	}
 }
 
@@ -995,7 +995,7 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
 	}else{
-		uwwtd_add_error(1, 0, 'No Agglomerations found in the dataset', $timestamp);
+		uwwtd_add_error(1, 0, 'No Agglomerations found in the dataset ' . $annee, $timestamp);
 	}
 }
 
@@ -1420,7 +1420,7 @@ function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
 	}else{
-		uwwtd_add_error(1, 0, 'No UWWTPs found in the dataset', $timestamp);
+		uwwtd_add_error(1, 0, 'No UWWTPs found in the dataset ' . $annee, $timestamp);
 	}
 }
 function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i){
@@ -2301,7 +2301,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
 	}else{
-		uwwtd_add_error(1, 0, 'No Discharge points found in the dataset', $timestamp);
+		uwwtd_add_error(1, 0, 'No Discharge points found in the dataset ' . $annee, $timestamp);
 	}
 }
 
@@ -2442,8 +2442,8 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 node_save($agglouww);
                 $context['results'][] = $agglouww->nid . ' : ' . check_plain($agglouww->title);
             }
-            else{
-                uwwtd_add_error(1, 1, 'No link between agglomerations and waste water treatment plant ', $timestamp, $k);
+            else{                                                               
+                uwwtd_add_error(1, 1, 'No link between agglomeration ' . $siteAggId . ' and waste water treatment plant ' . $siteUwwId . '', $timestamp, $k);
             }
 
             
@@ -2486,7 +2486,7 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
 			$context['sandbox']['ids'] = $ids;
 		}
 		if($context['sandbox']['max'] === 0){
-			uwwtd_add_error(2, 1, 'No link between agglomerations and big cities because no found <bigID> in the dataset', $timestamp);
+			uwwtd_add_error(2, 1, 'No link between agglomerations and big cities because no found <bigID> in the dataset ' . $annee, $timestamp);
 	
 		}
         else{
@@ -2524,7 +2524,7 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
 			}
 		}
 	}else{
-		uwwtd_add_error(1, 1, 'No link between agglomerations and big cities because no found big cities in the dataset', $timestamp);
+		uwwtd_add_error(1, 1, 'No link between agglomerations and big cities because no found big cities in the dataset ' . $annee, $timestamp);
 	}
 }
 
@@ -4824,11 +4824,24 @@ function uwwtd_coord_transform_multipolygon($parts){
 	foreach ($result as $record) {
   		$geo = $record->geo;
 	}
-
+//     uwwtd_trace($sql);
 	// create array
 	$table = array();
-	$sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
-	$result = db_query($sql);
+// 	$sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    
+    $sql = "SELECT ST_AsBinary(:thegeom) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
+    $aParam = array(
+                ':thegeom' => $geo,
+                    );
+//     uwwtd_trace($sql);
+//     uwwtd_trace(var_export($aParam, true));
+//     try{
+	$result = db_query($sql, $aParam);
+//     }catch(Exception $e) {
+// //         uwwtd_trace(var_export($e, true));
+//         throw $e;
+//     } 
+
 	foreach ($result as $record) {
   		$table['bin'] = $record->bin;
   		$table['polygon'] = 'multipolygon';

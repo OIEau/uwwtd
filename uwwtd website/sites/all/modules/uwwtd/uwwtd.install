@@ -168,6 +168,13 @@ function uwwtd_update_7101()
     uwwtd_create_schema_wfs();
 }
 
+/**
+ * Delete node type error if still in database
+ */ 
+function uwwtd_update_7102()
+{
+    uwwtd_delete_node_type_error();
+}    
 
 /***************************************************************************/
 // Function utils
@@ -220,4 +227,20 @@ function uwwtd_update_node_title_size()
     //udpate node.title and node_revision.title from 255 to 1000 (for ro et pl long name)
     db_query('ALTER TABLE drupal_node ALTER COLUMN title TYPE varchar(1000)');
     db_query('ALTER TABLE drupal_node_revision ALTER COLUMN title TYPE varchar(1000)');
+}
+
+function uwwtd_delete_node_type_error()
+{
+	$ids = array();
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'uwwtd_error', '=');
+	$errors = $query->execute();
+	foreach($errors as $error){
+		$ids[] = array('nid'=>$error->nid);
+	}
+    foreach($ids as $nid) {
+        node_delete($nid);
+    }
+    unset($errors, $ids);        
 }
