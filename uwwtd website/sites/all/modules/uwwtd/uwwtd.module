@@ -418,9 +418,6 @@ function debug_create_xml($type, $value)
     if ($type != 'nid-agglo') {
         return '';
     }
-//     echo '<pre>';var_export($type);echo '</pre>';
-//     echo '<pre>';var_export($value);echo '</pre>';
-//     exit;
     $agg = node_load($value);
     $xml = uwwtd_xml_to_array($agg->field_sourcefile['und'][0]['uri']);
     $currentCodeAgglo = $agg->field_inspireidlocalid['und'][0]['value'];
@@ -463,7 +460,6 @@ function debug_create_xml($type, $value)
             break; //only one agglo
         }
     }
-//     echo '<pre>';var_export($xmlTest);echo '</pre>';
     if ($aggloFound == false) {
         return "error, can't find agglo in xml " . $currentCodeAgglo . "</br>";
     }
@@ -483,9 +479,9 @@ function debug_create_xml($type, $value)
         }
     }
     if ($uwwtd_aggloFound == false) {
-        return "error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "</br>";
+//         return "error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "</br>";
+        drupal_set_message("error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo);
     }
-// echo '<pre>';var_export($xmlTest);echo '</pre>';    
     //UwwtpAgglos for uwwtp======================================================
     foreach($imports as $uwwtp_agglo) {
         if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && $uwwtp_agglo['aucAggCode'] != $currentCodeAgglo) {
@@ -493,7 +489,6 @@ function debug_create_xml($type, $value)
             $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
         }
     }
-// echo '<pre>';var_export($xmlTest);echo '</pre>';    
     
     //Agglo for uwwtp======================================================
     if (true === isset($listeAgglo)) {
@@ -511,7 +506,8 @@ function debug_create_xml($type, $value)
             }
         }
         if ($bAggloFound == false) {
-            return "error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "</br>";
+//             return "error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "</br>";
+            drupal_set_message("error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo));
         } 
     }    
     
@@ -530,7 +526,8 @@ function debug_create_xml($type, $value)
         }
     }
     if ($buwwtpFound == false) {
-        return "error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "</br>";
+//         return "error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "</br>";
+        drupal_set_message("error, can't find uwwtp in xml  " . implode(',', $uwwCode));
     } 
     
     //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
@@ -549,7 +546,8 @@ function debug_create_xml($type, $value)
         }
     }
     if ($bdcpFound == false) {
-        return "error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "</br>";
+//         return "error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "</br>";
+        drupal_set_message("error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode));
     } 
     //RCA====================================================== 
     if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
@@ -567,24 +565,43 @@ function debug_create_xml($type, $value)
         }
     }
     if ($brcaFound == false) {
-        return "error, can't find rca in xml for rca " . implode(',', $rcaCode) . "</br>";
+//         return "error, can't find rca in xml for rca " . implode(',', $rcaCode) . "</br>";
+        drupal_set_message("error, can't find rca in xml for rca " . implode(',', $rcaCode));
     }
     
     //CREATE XML======================================================
-//     echo '<pre>';var_export($xmlTest);echo '</pre>';
-//     exit;
     $s = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>
 <UWWTD_Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="http://water.eionet.europa.eu/schemas/dir91271eec/UWWTD2011.xsd">
 
 ';
    
+    if ($uwwtd_aggloFound == false) {
+        $s .= "<!-- error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "-->
+        ";
+    }
+    if ($bAggloFound == false) {
+        $s .= "<!-- error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "-->
+        ";
+    } 
+    
+    if ($buwwtpFound == false) {
+        $s .= "<!-- error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "-->
+        ";
+    } 
+    if ($bdcpFound == false) {
+        $s .= "<!-- error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "-->
+        ";
+    }
+    if ($brcaFound == false) {
+        $s .= "<!-- error, can't find rca in xml for rca " . implode(',', $rcaCode) . "-->
+        ";
+    }
+       
     $s .= uwwtd_debug_create_tag_from_array($xmlTest, '');
     
     $s .= '
 
 </UWWTD_Data>';
-//     echo '<pre>';var_export($s);echo '</pre>';
-//     exit;
     ini_set("auto_detect_line_endings", false); //for Mac user    
     $aHeaders = array(
           'Content-Type'        => 'text/xml',   
@@ -604,39 +621,22 @@ function debug_create_xml($type, $value)
 //TODO better !! 
 function uwwtd_debug_create_tag_from_array($array, $parentkey)
 {
-//     echo '<pre>';var_export('uwwtd_debug_create_tag_from_array');echo '</pre>';
     if (false === is_array($array)) {
-//         echo '<pre>';var_export('not array');echo '</pre>';
         return $array;
     }
     $s = '';  
-//     if (true === isset($array[0]) && $parentkey != '') {
-// //         echo '<pre>';var_export('$bListOfXmlElement true');echo '</pre>';
-//         $bListOfXmlElement = true;
-//     } else {
-// //         echo '<pre>';var_export('$bListOfXmlElement false');echo '</pre>';
-//         $bListOfXmlElement = false;
-//     }  
-//     echo '<pre>';var_export($array);echo '</pre>';
     foreach($array as $key => $value) {
-//         echo '<pre>';var_export("$key");echo '</pre>';
         if (true === is_int($key)) {
-//             echo '<pre>';var_export('$bListOfXmlElement is true ' . $parentkey);echo '</pre>';
             $s .= '<'.$parentkey.'>';
-//             echo '<pre>';var_export('write parent');echo '</pre>';
         }elseif (false === is_array($value) || false === isset($value[0])) {
-//             echo '<pre>';var_export('not int and not isset array[0] ' . $key);echo '</pre>';
             $s .= '<'.$key.'>';
-//             echo '<pre>';var_export('write tag');echo '</pre>';
         }
         
         $s .= uwwtd_debug_create_tag_from_array($value, $key);
 
         if (true === is_int($key)) {
-//             echo '<pre>';var_export('$bListOfXmlElement is true / ' . $parentkey);echo '</pre>';
             $s .= '</'.$parentkey.'>';
         }elseif (false === is_array($value) || false === isset($value[0])) {
-//             echo '<pre>';var_export('not int and not isset array[0] / ' . $key);echo '</pre>';
             $s .= '</'.$key.'>';    
         }               
         $s .= "\n";
@@ -646,8 +646,7 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
 
 function uwwtd_debug(){
     return '';
-//     $node = node_load(171466);
-//     echo '<pre>';var_export(uwwtd_get_all_info_agguwww($node));echo '</pre>';                                               
+                         
     return 'debug';                                                
 }
 

@@ -208,7 +208,6 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
 	$annee = $_SESSION['uwwtd_annee'];
-//     uwwtd_trace('$annee = ' . $annee);
 	$file = file_load($form_state['values']['uwwtd_file']);
 	$uri = $file->uri;
 
@@ -228,10 +227,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 		case 'application/zip':
 			$newFile = uwwtd_file_upload($file, '.zip');
 			$files = uwwtd_unzip_files($newFile, 'public://data_sources/');
-//             uwwtd_trace(var_export($files, true));
 			$datas = uwwtd_zipped_csvs_to_array($files);            
-//             uwwtd_trace(var_export($datas, true)); 
-//             exit;
 		break;
 
 		case 'application/xml':
@@ -239,9 +235,6 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 			$datas = uwwtd_xml_to_array($newFile->uri);
 		break;
 	}
-//     uwwtd_trace('file xml = ' . $uri);
-	// get current timestamp
-	//$time = time();
 	$timestamp = strtotime('now');
 
 	//dsm($timestamp);
@@ -292,7 +285,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
             $node->type = 'ms_level';
         }
         $node->title = 'Data on MS level - '.$annee;
-//         uwwtd_trace($node->type . ':' . $node->title);
+
         // site mapping
         $node->field_siteid['und'][0]['value'] = $siteId;
         //$node->field_valid['und'][0]['value'] = 0;
@@ -363,7 +356,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
 	);
     //ReceivingAreas
-//     uwwtd_trace('$datas = ' . var_export($datas, true));
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
             $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
@@ -460,7 +452,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 }
 
 function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-//     uwwtd_trace('uwwtd_import_rca_batch_process = ' . var_export($datas, true));
 	if(!empty($datas)){
 		if (!isset($context['sandbox']['progress'])) {
 		
@@ -502,7 +493,6 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 }
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
-//     uwwtd_trace('uwwtd_update_rca_node = ' . var_export($data, true));
     global $language;
     // Check basic elements exist
     // errors
@@ -549,7 +539,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         //text
         $node->title = uwwtd_check_text($data['rcaName']);
-//         uwwtd_trace($node->type . ':' . $node->title);
 
         // site mapping
         $node->field_siteid['und'][0]['value'] = $siteId;
@@ -953,7 +942,6 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 
             //text
             $node->title = uwwtd_check_text($data['bigCity']);
-//             uwwtd_trace($node->type . ':' . $node->title);
 
             //text
             $node->field_bigcountrycode['und'][0]['value'] = uwwtd_check_text($data['bigCountryCode']);
@@ -1145,7 +1133,6 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['aggCode']);
 
         $node->title = uwwtd_check_text($data['aggName']);
-//         uwwtd_trace($node->type . ':' . $node->title);
 
         //text
         if(isset($data['aggState'])){
@@ -1588,7 +1575,6 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         $node->title = uwwtd_check_text($data['uwwName']);
-//         uwwtd_trace($node->type . ':' . $node->title);
         
         //text
         if(isset($data['uwwState'])){
@@ -2153,7 +2139,6 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 
             //text
             $node->title = uwwtd_check_text($data['dcpName']);
-//             uwwtd_trace($node->type . ':' . $node->title);
 
             //text
             if(isset($data['dcpState'])){
@@ -3005,10 +2990,6 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$geoType = 'LSA';
 		}
         //for IE missing  type EUCD_SA_CA here
-//         if (false === isset($geoType)) {
-//             uwwtd_trace(var_export($record, true));
-//         }     
-		//dsm($id);
 
 		if(isset($record->dbf_data['ISO2'])){
 			$shptype = '2';
@@ -3060,15 +3041,11 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
     			if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
             } catch (Exception $e) {
                 //shape file malformed    uwwtd_errors
-//                 uwwtd_trace('Exception');
                 $sErrorMessage = 'An error was found in the shape file for the receiving area "'.$node->title.'" : ' . $e->getMessage();
                 uwwtd_add_error($GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['format'], $sErrorMessage, strtotime('now'), 0, $node);
-//                 uwwtd_trace($e->getMessage());
-//                 uwwtd_trace($e);
                 drupal_set_message($sErrorMessage, $GLOBALS['uwwtd_errors_type']['type']['error']);
                 continue;
             }
-//             uwwtd_trace('continue?');
 
 			$node->field_rca_geotype['und'][0]['value'] = $geoType;
 
@@ -3114,17 +3091,6 @@ function uwwtd_shapes_finished($success, $results, $operations) {
 			)
 		);
 	}
-//     uwwtd_trace('uwwtd_shapes_finished');
-// 	if(isset($GLOBALS['uwwtd_errors'])){
-//         uwwtd_trace('error found');
-//         uwwtd_trace(var_export($GLOBALS['uwwtd_errors'], true));
-// 		foreach($GLOBALS['uwwtd_errors'] as $listError){
-//             foreach($listError as $error){
-// 			     drupal_set_message($error['error'], $error['type']);
-//             }
-// 		}
-// //         uwwtd_flush_errors();
-// 	}   
 }
 
 
@@ -3671,13 +3637,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     //ALGO4 
     list($art3comp, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
 	
-//     uwwtd_trace('title = ' . $node->title);
-//     uwwtd_trace('$art3comp = ' . $art3comp);
-//     uwwtd_trace('field_aggc1 = ' . $node->field_aggc1['und'][0]['value']);
-    
+   
     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
-
-//         uwwtd_trace("infoAllAggUww =  " . var_export($infoAllAggUww, true));
     
     $bDone = false;	
     if($art3comp == 'NI'){ //ALGO4 too
@@ -3687,7 +3648,6 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         $node->field_aggart6compliance['und'][0]['value'] = 'NI';
         $bDone = true;
 
-//             uwwtd_trace( "all NI");
     }
     //case < 2000p.e  algo4 too
     if ($bDone === false && $art3comp == 'NR' && true === isset($art4comp) && $art4comp == 'NR') {
@@ -3697,22 +3657,17 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         $node->field_aggart6compliance['und'][0]['value'] = $art6comp;
         $node->field_compliance_explication['und'][0]['value'] = $reason;
         $bDone = true;  
-
-//             uwwtd_trace( "all NR");
     }
     
     if($bDone === false) {
         $node->field_aggart3compliance['und'][0]['value'] = $art3comp;  //NR/NC/C ALGO4 too
         if($node->field_aggc1['und'][0]['value'] <= 0){  //no change algo5  
             $bDone = true;   
-
-//                 uwwtd_trace( "nothing change");
         }          
     } 
 
     if($bDone === false){
     
-//             uwwtd_trace( "in  field_aggc1 > 0");
 		//if($art3Comp == 'AddQC') $art3Comp = 'NC';
 		//if($art3Comp == 'QC') $art3Comp = 'C';
 		//if($art4Comp == 'RNC') $art4Comp = 'NC';
@@ -3723,11 +3678,9 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         //ALGO5 too        
         $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($infoAllAggUww);
 
-//             uwwtd_trace( "aArtCompliance =  " . var_export($aArtCompliance, true));
                  
         if (false === empty($aArtCompliance)) {
 
-//                 uwwtd_trace( "in false === empty(aArtCompliance) > 0");
 // 			$node->field_aggart3compliance['und'][0]['value'] = $aArtCompliance['compArt3'];
 			$node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
 			$node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
@@ -3736,15 +3689,12 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
             //ALGO6-algo7-algo8-algo9
 
-//                 uwwtd_trace( "in true === empty(aArtCompliance) > 0");
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
 // 			$node->field_aggart3compliance['und'][0]['value'] = $art3comp;
 			$node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
 			$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
 			$node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
             
-
-//                 uwwtd_trace( "aggArt456Compliance =  " . var_export($aggArt456Compliance, true));
 
 
             //old algo with a,b,c step               
@@ -3784,11 +3734,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
             
 
-//     uwwtd_trace( "field_aggcompliance = " . $node->field_aggcompliance['und'][0]['value']);
     unset($infoAllAggUww);    
-    //dsm($node);
 
-//     uwwtd_trace( "node_save");
 	node_save($node);
 
 	$context['sandbox']['progress']++;
@@ -3816,15 +3763,7 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     //$percentage_lost = bcsub($node->field_aggc1['und'][0]['value'], $maxgen, 2);
     $pe_lost = $percentage_lost / 100 * $node->field_agggenerated['und'][0]['value'];
     //$pe_lost = bcmul(bcdiv($percentage_lost,100,2),$node->field_agggenerated['und'][0]['value'],2);
-//     uwwtd_trace('field_aggc1 = ' . $node->field_aggc1['und'][0]['value']);
-//     uwwtd_trace('total = ' . $maxgen);
-//     uwwtd_trace('$percentage_lost = ' . $percentage_lost);
-//     uwwtd_trace('field_agggenerated = ' . $node->field_agggenerated['und'][0]['value']);
-//     uwwtd_trace('$pe_lost = ' . $pe_lost);
-//     uwwtd_trace('$percentage_lost = ' . var_export(($percentage_lost < 1), true));
-//     uwwtd_trace('$pe_lost <= 2000 = ' . var_export(($pe_lost <= 2000), true));
-//     uwwtd_trace('($percentage_lost < 1 && $pe_lost <= 2000) = ' . var_export(($percentage_lost < 1 && $pe_lost <= 2000), true));
-         
+        
     if (false === ($percentage_lost < 1 && $pe_lost <= 2000)) {
         if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
         || true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
@@ -3896,13 +3835,9 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     
 	foreach($infoAllAggUww['listUww'] as $uwwtp){
         //ALGO6
-//         uwwtd_trace('start-2 uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($node, $uwwtp['node']);
-//         uwwtd_trace('end-2 uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
     }
     
-//     uwwtd_trace('$listStationArticleAndUwwtpCompliance-2 = ' . var_export($listStationArticleAndUwwtpCompliance, true));
-        
     if (true === uwwtd_atleastone_uwwtp_with_required_morestringent_has_complianceart5_notrelevant($listStationArticleAndUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];    
     }        
@@ -3924,7 +3859,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         || true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'],
                                                       $GLOBALS['uwwtd_value']['required']['notrelevant'],
                                                         ), $infoAllAggUww)) {
-//         uwwtd_trace('collected in collectiove system = 0 or all uwwtp treatment required in (appropriate or NR)');                                                        
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];                                                        
@@ -3935,13 +3869,9 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     
 	foreach($infoAllAggUww['listUww'] as $uwwtp){
         //ALGO6
-//         uwwtd_trace('start uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
         //$agg->field_aggart3compliance['und'][0]['value']
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
-//         uwwtd_trace('end uwwtd_article4_5_6_station_compliance / ' . $uwwtp['node']->title);
     }
-    
-//     uwwtd_trace('$listStationArticleAndUwwtpCompliance = ' . var_export($listStationArticleAndUwwtpCompliance, true));
     
     //ALGO7
     $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
@@ -3956,10 +3886,8 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
 
 function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
-//     uwwtd_trace('uwwtd_article4_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
     $aTmp['listUww'] = $listUwwtpCompliance;
        
-//     uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
     if (false === uwwtd_atleastone_uwwtp_required_in(array(
             $GLOBALS['uwwtd_value']['required']['secondary'],
             $GLOBALS['uwwtd_value']['required']['morestringent'],
@@ -3968,10 +3896,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
             $GLOBALS['uwwtd_value']['required']['other'],
             ), $aTmp)) {
-//         uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
-//     uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
 
     if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -4001,14 +3927,10 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
  */ 
 function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
-//     uwwtd_trace('uwwtd_article6_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
     $aTmp['listUww'] = $listUwwtpCompliance;
-//     uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
     if (false === uwwtd_atleastone_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['primary']), $aTmp)) {
-//         uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, primary)');
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
-//     uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, secondary)');
     
     if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -4035,9 +3957,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
     
-//     uwwtd_trace('uwwtd_article5_agglomeration_compliance = ' .var_export($listUwwtpCompliance, true));
     $aTmp['listUww'] = $listUwwtpCompliance;
-//     uwwtd_trace('$aTmp[listUww] = ' .var_export($aTmp, true));
         
     if (false === uwwtd_atleastone_uwwtp_required_in(array(
                             $GLOBALS['uwwtd_value']['required']['morestringent'],
@@ -4046,10 +3966,8 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                             $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'],
                             $GLOBALS['uwwtd_value']['required']['other'],
                             ), $aTmp)) {
-//         uwwtd_trace('false === uwwtd_atleastone_uwwtp_required_in($aTmp, more stringent)');
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
-//     uwwtd_trace('true === uwwtd_atleastone_uwwtp_required_in($aTmp, more stringent)');    
     
     if ($agg->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']
        || $complianceAggloArt4 == $GLOBALS['uwwtd_value']['compliance']['not_compliant']) {
@@ -4136,7 +4054,6 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     $aResult['required'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
     //treatement required = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['primary']) {
-//         uwwtd_trace('uwwtp treatement required = primary');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         
@@ -4144,10 +4061,8 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];    
         } else {
            if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover6['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//            uwwtd_trace('deadline_beforeorequal_to_referenceyear 6 true');
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
            } else {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 6 false');
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }                             
         }
@@ -4156,18 +4071,14 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     
                           
     $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-//     uwwtd_trace('uwwtp compArt6 = NR');
     //treatement required = secondary && treatment in place = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
         && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('primary'))) {
         
-//        uwwtd_trace('treatement required = secondary && treatment in place = primary');
        if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } else {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }
@@ -4180,19 +4091,15 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         //&& true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))
         && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array(
                         $GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
-//        uwwtd_trace('treatement required = secondary && treatement in place = secondary or more stringent');             
 //         if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
         if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
-//             uwwtd_trace('uwwtd_all_uwwtp_treatementperf_pass_in codperf, bod5perf');          
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];            
         } else {
            if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            } else {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }            
@@ -4210,13 +4117,10 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     //treatement required = secondary && treatement in place = NI (not provided on treatement inplace)
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
         && $uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['noinformation']) {
-//        uwwtd_trace('treatement required = secondary && treatement in place = NI');
        if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } else {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }      
@@ -4232,20 +4136,15 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
                             $GLOBALS['uwwtd_value']['required']['other'],
                         ))
         && $uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['noinformation']) { 
-//        uwwtd_trace('treatement required = tertiary && treatement in place = NI');
        if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 true');
            if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 true');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
            } else {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 false');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            } 
        } else {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }      
@@ -4255,18 +4154,14 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     //cod and bod5 pass
 //     if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
     if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
-//         uwwtd_trace('cod and bod5 pass');       
         if ($uwwtp->field_uwwcompliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']) {
-//             uwwtd_trace('field_uwwcompliance C');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];            
         } else {
            if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 true');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
            } else {
-//             uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 false');
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }              
@@ -4276,18 +4171,14 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     }
     
     //cod and bod5 not pass
-//     uwwtd_trace('cod and bod5 not pass');
    if (false === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//     uwwtd_trace('deadline_beforeorequal_to_referenceyear 4 false');
     $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
     $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
    } else {
        if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 true');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
        } else {
-//         uwwtd_trace('deadline_beforeorequal_to_referenceyear 5 false');
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } 
@@ -4832,7 +4723,6 @@ function uwwtd_coord_transform_polygon($parts){
 }
 
 function uwwtd_coord_transform_multipolygon($parts){
-//    uwwtd_trace(var_export($parts, true));
 	$sql = "SELECT ST_Transform(ST_GeomFromText('MULTIPOLYGON(";
 
 	$numParts = count($parts);
@@ -4873,8 +4763,6 @@ function uwwtd_coord_transform_multipolygon($parts){
 
 	$sql .= ")', 4258),4326) AS geo";
 
-//     uwwtd_trace($sql);
-    
 	$result = db_query($sql);
 	foreach ($result as $record) {
   		$geo = $record->geo;
@@ -4888,14 +4776,7 @@ function uwwtd_coord_transform_multipolygon($parts){
     $aParam = array(
                 ':thegeom' => $geo,
                     );
-//     uwwtd_trace($sql);
-//     uwwtd_trace(var_export($aParam, true));
-//     try{
 	$result = db_query($sql, $aParam);
-//     }catch(Exception $e) {
-// //         uwwtd_trace(var_export($e, true));
-//         throw $e;
-//     } 
 
 	foreach ($result as $record) {
   		$table['bin'] = $record->bin;
@@ -4954,6 +4835,7 @@ function uwwtd_check_bool($bool, $timestamp, $index = null, $node = null){
  */ 
 function uwwtd_check_numeric($value, $timestamp, $index = null, $node = null) 
 {
+    $value = str_replace(",",".",trim($value));
 	if(true === ctype_digit($value)) {
 		return (int)$value;
 	}else{
@@ -4967,6 +4849,7 @@ function uwwtd_check_numeric($value, $timestamp, $index = null, $node = null)
  * check if a value is a decimal (or numeric) value and return a float
  */ 
 function uwwtd_check_decimal($value, $timestamp, $index = null, $node = null){
+    $value = str_replace(",",".",trim($value));
 	if(is_numeric($value)) {
 		return (float)$value;	
 	}else{
@@ -4991,6 +4874,7 @@ function uwwtd_check_decimal($value, $timestamp, $index = null, $node = null){
 // }
 
 function uwwtd_check_pourc($pourc, $timestamp, $index = null, $node = null){
+    $pourc = str_replace(",",".",trim($pourc));
 	if(is_numeric($pourc))
 	{
 		if(($pourc >= "0") && ($pourc <="100")){
@@ -5060,6 +4944,7 @@ function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
 function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node = null){
 	$coord = trim($coord);
 
+    //exemple in PL 2010 csv file, ',' instead of '.'
 	$coord = str_replace(",",".",$coord);
 
 	// In europe a coordinate will never have more than 2 numbers before the decimal. This corrects coordinates that have misplaced decimals
@@ -5069,8 +4954,9 @@ function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node 
 	$exploded = explode('.', $coord);
 	if(strlen($exploded[0]) > 2){
 		$after = substr($exploded[0], 2);
-		$coord = mb_substr($coord, $exploded[0], 2, 'utf-8').'.'.$after.$exploded[1];
+// 		$coord = mb_substr($coord, $exploded[0], 2, 'utf-8').'.'.$after.$exploded[1];
 		uwwtd_add_error(1, 4, 'Decimal point for this coordinate was inproperly placed', $timestamp, $index, $node);
+        $coord = mb_substr($coord, 0, 2, 'utf-8') . '.' . $after . $exploded[1];
 	}
 
 	// In europe the bounding box for latitude is defined between 24 - 80 
@@ -5087,7 +4973,7 @@ function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node 
 		}
 	}
 
-	return $coord;
+	return $first.$coord;
 }
 
 /**
@@ -6347,7 +6233,6 @@ function uwwtd_unzip_files($file, $target){
 //encore moins besoin d'aller chercher le contenu complet du fichier de log pour ajouter une erreur => au niveau charge serveur c'est ce qu'il y a de pir.
 //Il faudrait encore améliorer en envoyant un lot de message au lieu d'un à la fois
 function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $node = null){
-//     uwwtd_trace('uwwtd_add_error');
     if($node){
         $key = $node->nid;
     }
@@ -6361,10 +6246,6 @@ function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $n
         'timestamp'=>$timestamp,
         'index'=>$index,
     );
-    
-//     uwwtd_trace(var_export($GLOBALS['uwwtd_errors'], true));
-    
-    
     
     /*
     $error = trim($error);
@@ -6441,7 +6322,6 @@ function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $n
 }
 function uwwtd_flush_errors(){
     if(!empty($GLOBALS['uwwtd_errors'])){
-//         uwwtd_trace(var_export($GLOBALS['uwwtd_errors'], true));
         // get label for type
         $field = field_info_field('field_uwwtd_err_type');
         $err_type = $field['settings']['allowed_values'];
@@ -6526,8 +6406,6 @@ function uwwtd_flush_errors(){
                         'bundle'=>($node?$node->type:null), //todo if
                     );
                     drupal_write_record("uwwtd_import_errors", $record);
-//                     uwwtd_trace('uwwtd_import_errors');
-//                     uwwtd_trace(var_export($record, true));
                 }
                 /*if($node != NULL){
                     node_save($node);
