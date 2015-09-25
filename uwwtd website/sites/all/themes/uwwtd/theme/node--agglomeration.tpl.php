@@ -79,18 +79,19 @@
  * @ingroup themeable
  */
 //dsm($node);
- $admin = 'administrator';
-  $editor = 'editor';
-  $roles = $GLOBALS['user']->roles;
-  //dsm($roles);
+echo uwwtd_insert_errors_tab($node);    
+//  $admin = 'administrator';
+//   $editor = 'editor';
+//   $roles = $GLOBALS['user']->roles;
+// // dsm($roles);
 //   foreach($roles as $role){
 // 	  if(($role == $admin)|| ($role == $editor)){
 // 	   $errors = uwwtd_insert_errors_tab($node);
 // 		if($errors !== false){
 //     print $errors;
-// 	}
+// 	}        
 //   }
-//   }
+//   }     
   
   $nodetype = t('Agglomeration');
   //dsm($content);
@@ -135,7 +136,7 @@
             print '<div class="uwwrealthird">';
               print render($content['field_agggenerated']);
               print render($content['field_aggc1']);
-              print render($content['field_aggc2']);
+              print render($content['field_aggc2']);                                                           
               print render(field_view_field('node', $node, 'field_aggpercwithouttreatment', array('label' => 'inline')));
             print '</div>';
             print '<div class="uwwrealthird">';

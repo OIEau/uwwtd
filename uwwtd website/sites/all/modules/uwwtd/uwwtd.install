@@ -1,5 +1,7 @@
 <?php 
 
+//todo desactivate cron
+//todo check mobule exist and enabled
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
@@ -7,27 +9,35 @@ function uwwtd_install()
 {
     uwwtd_install_trace(__FUNCTION__);
     
-    uwwtd_delete_view('UWWTD_Agglomeration');
-    uwwtd_delete_view('UWWTD_BigCity');
-    uwwtd_delete_view('UWWTD_Compliance_Agglo');
-    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
-    uwwtd_delete_view('UWWTD_DischargePoint');
-    uwwtd_delete_view('UWWTD_ReceivingArea');
-    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
-    uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
-        
-    uwwtd_update_node_title_size();
-    
-    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
-    uwwtd_create_or_replace_view('UWWTD_BigCity');
-    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
-    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
-    uwwtd_create_or_replace_view('UWWTD_DischargePoint');
-    uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
-    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
-    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
-    
-    uwwtd_create_schema_wfs(); 
+    //on install,,execute all update function defined
+    for ($i = 7100; $i < 7199; $i++) {
+        $candidate = 'uwwtd_update_' . $i;
+        if (function_exists($candidate)) {
+          $candidate();
+        }
+    }
+  
+//     uwwtd_delete_view('UWWTD_Agglomeration');
+//     uwwtd_delete_view('UWWTD_BigCity');
+//     uwwtd_delete_view('UWWTD_Compliance_Agglo');
+//     uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+//     uwwtd_delete_view('UWWTD_DischargePoint');
+//     uwwtd_delete_view('UWWTD_ReceivingArea');
+//     uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+//     uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
+//         
+//     uwwtd_update_node_title_size();
+//     
+//     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+//     uwwtd_create_or_replace_view('UWWTD_BigCity');
+//     uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+//     uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+//     uwwtd_create_or_replace_view('UWWTD_DischargePoint');
+//     uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
+//     uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+//     uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
+//     
+//     uwwtd_create_schema_wfs(); 
 }
 
 function uwwtd_enable() 
@@ -173,8 +183,710 @@ function uwwtd_update_7101()
  */ 
 function uwwtd_update_7102()
 {
+    uwwtd_install_trace(__FUNCTION__);
     uwwtd_delete_node_type_error();
-}    
+} 
+
+/**
+ * Add more choice in some field (uwwcompliance, aggcompliance, ...) and change label of some field 
+ * add value in 
+ * - field_uwwperformance_met, field_uwwtreatment_met, field_uwwcompliance
+ * - field_aggcompliance, field_aggart3compliance, field_aggart4compliance, field_aggart5compliance, field_aggart6compliance
+ * change label in
+ *   field_linked_agglomerations     Linked agglomeration(s)
+ *   field_linked_discharge_points   Linked discharge point(s)
+ *   ...
+ */
+function uwwtd_update_7103()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    $msg_error = '';
+    // Clear the field cache so we've got a clean slate to start on
+    field_cache_clear();
+    
+    $field = array (
+      'field_name' => 'field_uwwperformance_met',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          2 => 'Not Calculable',
+          1 => 'Yes',
+          0 => 'No',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_uwwtreatment_met',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          2 => 'Not Calculable',
+          1 => 'Yes',
+          0 => 'No',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_uwwcompliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'NI' => 'No information',
+          'NR' => 'Not relevant',
+          'C' => 'Compliant',
+          'NC' => 'Not compliant',
+          'CE' => 'Compliant on equipment only',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_aggcompliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'NI' => 'No information',
+          'NR' => 'Not relevant',
+          'NC' => 'Not compliant',
+          'C' => 'Compliants',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_aggart3compliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'NI' => 'No information',
+          'C' => 'Compliant',
+          'AddQC' => 'Not compliant',
+          'QC' => 'Compliant',
+          'NC' => 'Not compliant',
+          'NR' => 'Not relevant',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_aggart4compliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'C' => 'Compliant',
+          'NC' => 'Not compliant',
+          'NR' => 'Not relevant',
+          'NI' => 'No information',
+          'RNC' => 'Not compliant',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }    
+    
+    $field = array (
+      'field_name' => 'field_aggart5compliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'NI' => 'No information',
+          'NR' => 'Not relevant',
+          'C' => 'Compliant',
+          'NC' => 'Not compliant',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    $field = array (
+      'field_name' => 'field_aggart6compliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'C' => 'Compliant',
+          'NC' => 'Not compliant',
+          'NR' => 'Not relevant',
+          'NI' => 'No information',
+          'RNC' => 'Not compliant',
+          '?' => '?',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+    
+    //change label on some field
+    $list_field = array(
+        'field_linked_agglomerations'     => 'Linked agglomeration(s)',
+        'field_linked_discharge_points'   => 'Linked discharge point(s)',
+        'field_linked_receiving_areas'    => 'Linked receiving area(s)',
+        'field_uwwotherperf'              => 'Treatment performance: Other',
+        'field_uwwbodincoming'            => 'Incoming load BOD (t per year)',
+        'field_uwwcodincoming'            => 'Incoming load COD (t per year)',
+        'field_uwwnincoming'              => 'Incoming load Ntot (t per year)',
+        'field_uwwpincoming'              => 'Incoming load Ptot (t per year)',
+        'field_uwwboddischarge'           => 'Discharged load BOD (t per year)',
+        'field_uwwcoddischarge'           => 'Discharged load COD (t per year)',
+        'field_uwwndischarge'             => 'Discharged load Ntot (t per year)',
+        'field_uwwpdischarge'             => 'Discharged load Ptot (t per year)',
+        'field_uwwbodincomingcalculated'  => 'Incoming load BOD-tot Calculated',
+        'field_uwwcodincomingcalculated'  => 'Incoming load COD-tot Calculated',
+        'field_uwwnincomingcalculated'    => 'Incoming load N-tot Calculated',
+        'field_uwwpincomingcalculated'    => 'Incoming load P-tot Calculated',
+        'field_uwwboddischargecalculated' => 'Discharged load BOD-tot Calculated',
+        'field_uwwboddischargeestimated'  => 'Discharged load BOD-tot Estimated',
+        'field_uwwcoddischargecalculated' => 'Discharged load COD-tot Calculated',
+        'field_uwwcoddischargeestimated'  => 'Discharged load COD-tot Estimated',
+        'field_uwwndischargeestimated'    => 'Discharged load N-tot Estimated',
+        'field_uwwpdischargecalculated'   => 'Discharged load P-tot Calculated',
+        'field_uwwpdischargeestimated'    => 'Discharged load P-tot Estimated',
+        'field_uwwbodincomingestimated'   => 'Incoming load BOD-tot Estimated',
+        'field_uwwcodincomingestimated'   => 'Incoming load COD-tot Estimated',
+        'field_uwwnincomingestimated'     => 'Incoming load N-tot Estimated',
+        'field_uwwpincomingestimated'     => 'Incoming load P-tot Estimated',
+        'field_uwwndischargecalculated'   => 'Discharged load N-tot Calculated',
+    );
+    
+    
+    foreach($list_field as $field_name => $new_label) {
+        $field_instance = field_info_instance('node', $field_name, 'uwwtp');
+        if (is_null($field_instance)) {
+            $msg = "Unknown field instance : $field_name => $new_label";
+            uwwtd_install_trace($msg);
+            $msg_error .= $msg . "\n";
+            continue;
+        }
+        $field_instance['label'] = $new_label;
+        try {
+            field_update_instance($field_instance);
+        } catch (Exception $e) {
+            $msg = "Error update field instance : $field_name => $new_label" . "\n";
+            $msg .= $e->getMessage() . "\n"; 
+            uwwtd_install_trace($msg);
+            $msg_error .= $msg . "\n";    
+        }      
+    }
+    
+    if ('' !== $msg_error) {
+        throw new DrupalUpdateException($msg_error);
+    } 
+} 
+
+/**
+ * Delete all view creating in the UI
+ * After this activate module uwwtd_views 
+ */ 
+function uwwtd_update_7104()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    $msg_error = '';
+    $list_view = array(
+        'agglomeration_conformity',
+        'uwwtp_treatment',
+        'uwwtp_map',
+        'waste_water_network',
+        'agglomeration',
+        'data_deletion',
+        'uwwtd_error_list',
+        'test_receiving_areas',    
+    );
+    ctools_include('export');    
+    foreach ($list_view as $view_name) {
+        $view = ctools_export_crud_load('views_view', $view_name);
+        if ($view) {
+            try {
+                $view->delete();
+                uwwtd_install_trace('delete view ' . $view_name);
+            } catch (Exception $e) {
+                $msg = "Error, can\'t delete view " . $view_name . "\n" . $e->getMessage();
+                uwwtd_install_trace($msg);
+                $msg_error .= $msg;    
+            }            
+        } else {
+            uwwtd_install_trace('view don\'t exists, can\'t delete view ' . $view_name);
+        }
+    }
+    
+    if ('' !== $msg_error) {
+        throw new DrupalUpdateException($msg_error);
+    }
+    
+    if (false === module_enable(array('uwwtd_views'))) {
+        $msg = "Error, the module uwwtd_views can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }     
+}
+/**
+ * replace all map and overlay previously created
+ */ 
+function uwwtd_update_7105()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    $list_map = array(
+        'agg_compliance_map.inc',  //agglomeration/compliance
+//         'agglomeration.inc',
+//         'receiving_area_test.inc',
+//         'uwwtd_network_map.inc',
+//         'uwwtp_compliance_map.inc',
+//         'uwwtp_treatment_map.inc',
+        'waste_water_treatment_network_map.inc', //block home       
+    );
+    $list_overlay = array(
+//         'agglomeration_conformity_openlayers_1.inc',
+//         'agglomeration_openlayers_1.inc',
+        'agglomerations.inc', //home
+        'compliance_map.inc', //agglomeration/compliance
+        'dcp.inc',            //home
+//         'test_receiving_areas_openlayers_1.inc',
+        'uwwtp.inc',         //home
+//         'uwwtp_map_openlayers_1.inc',
+//         'uwwtp_treatment_openlayers_2.inc',
+//         'waste_water_network_openlayers_1.inc',
+//         'waste_water_network_openlayers_2.inc',
+//         'waste_water_network_openlayers_3.inc',
+    ); 
+    $list_style = array(
+        'agglomerations_style.inc',
+        'carr_bleu.inc',
+//         'discharge_points_style.inc',
+        'triangle_violet.inc',
+//         'waste_water_treatment_plant_style.inc',
+    );        
+    $path = drupal_get_path('module', 'uwwtd') . '/script/openlayers/';
+    $pathtomap     = $path . 'map/'; 
+    $pathtooverlay = $path . 'overlay/';
+    $pathtostyle = $path . 'style/';
+    $msgexception = ''; 
+    
+    foreach($list_overlay as $filename) {
+        include($pathtooverlay . $filename);
+        
+        uwwtd_install_trace($pathtooverlay . $filename);
+        
+        if (! isset($openlayers_layers)) {
+            uwwtd_install_trace('Error on ' . $pathtooverlay . $filename . '.$openlayers_layers don\'t exists.');
+        }  
+        
+        if (isset($openlayers_layers)) {
+//             $s .=  $filename.'<br>';
+//             $b = openlayers_preset_save($openlayers_layers);
+//             $s.=':'.var_export($b, true).'<br>';
+//              check all table openlayer _style, projection
+            $row = array();
+            $row['name'] = $openlayers_layers->name;
+            $row['title'] = $openlayers_layers->title;
+            $row['description'] = $openlayers_layers->description;
+            $row['data'] = $openlayers_layers->data;
+//             $result = drupal_write_record('openlayers_layers', $row, 'name');
+//             echo '"'.$result.'"'; //2 = updatek, 1  insert, false == error
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_layers', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
+            }
+// 
+//             if ($result == 1) {
+//                 $msgresult = 'insert';
+//             } elseif ($result == 2) {
+//                 $msgresult = 'update';
+//             } elseif ($result == false) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
+//             } else { //unknown
+//                 $msgresult = 'unknown';
+//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
+//             }
+            uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
+        }
+    }
+       
+    foreach($list_map as $filename) {
+        include($pathtomap . $filename);
+        if (isset($openlayers_maps)) {
+//             $s .= $filename.'<br>';
+//             $b = openlayers_preset_save($openlayers_maps);
+//             $s.=':'.var_export($b, true).'<br>';
+            $row = array();
+            $row['name'] = $openlayers_maps->name;
+            $row['title'] = $openlayers_maps->title;
+            $row['description'] = $openlayers_maps->description;
+            $row['data'] = $openlayers_maps->data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_maps', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+            }
+                        
+//             $result = drupal_write_record('openlayers_maps', $row, 'name');
+//             
+//             if ($result == 1) {
+//                 $msgresult = 'insert';
+//             } elseif ($result == 2) {
+//                 $msgresult = 'update';
+//             } elseif ($result == false) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+//             } else { //unknown
+//                 $msgresult = 'unknown';
+//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+//             }
+            uwwtd_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
+        }
+    }
+    
+    foreach($list_style as $filename) {
+        include($pathtostyle . $filename);
+        if (isset($openlayers_styles)) {
+//             $s .= $filename.'<br>';
+//             $b = openlayers_preset_save($openlayers_maps);
+//             $s.=':'.var_export($b, true).'<br>';
+            $row = array();
+            $row['name'] = $openlayers_styles->name;
+            $row['title'] = $openlayers_styles->title;
+            $row['description'] = $openlayers_styles->description;
+            $row['data'] = $openlayers_styles->data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_styles', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
+            }
+                        
+//             $result = drupal_write_record('openlayers_styles', $row, 'name');
+//             
+//             if ($result == 1) {
+//                 $msgresult = 'insert';
+//             } elseif ($result == 2) {
+//                 $msgresult = 'update';
+//             } elseif ($result == false) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
+//             } else { //unknown
+//                 $msgresult = 'unknown';
+//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
+//             }
+            uwwtd_install_trace('style ' . $filename . ' result : ' . $msgresult);                             
+        }
+    }    
+
+    if ($msgexception != '') {
+        throw new DrupalUpdateException($msgexception);
+    }
+//     throw new DrupalUpdateException($msgexception . 'test');    
+} 
+
+/**
+ * activate new block home
+ * and desactivate home block view map 
+ */ 
+function uwwtd_update_7106()
+{
+    _block_rehash('uwwtd'); //theme name here
+    //Change block settings old view
+      db_update('block')
+      ->fields(array(
+          'pages' => "",
+          'visibility' => 1,
+      ))
+      ->condition('module', 'views')
+      ->condition('delta', 'waste_water_network-block_1')
+      ->execute();
+      
+      
+     db_merge('block')
+        ->key(array(
+          'theme' => 'uwwtd',
+          'delta' => 'map_home',
+          'module' => 'uwwtd',
+        ))
+        ->fields(array(
+          'region' => 'content',
+          'status' => 1,
+          'weight' => -13,
+          'pages' => "<front>",
+          'visibility' => 1,
+        ))
+        ->execute();
+                  
+//     //new module
+//     table block
+//     module       uwwtd                  views
+//     delta        map_home               waste_water_network-block_1
+//     theme        uwwtd                  uwwtd
+//     status       1                      1                          
+//     pages        <front>                ''
+//     region      content                 content
+//     weight      -13
+    drupal_flush_all_caches();
+}
+
+/**
+ * Set country code for each country, set new map/layer, set map configuration accordingly
+ */ 
+function uwwtd_update_7107()
+{
+    global $conf;
+    uwwtd_install_trace(__FUNCTION__);
+    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+//     uwwtd_install_trace(var_export($path, true));
+    include($path);
+    
+    if (false === isset($country_config)) {
+        throw new DrupalUpdateException('Can\'t find the config country file in '. $path);
+    }
+    
+    $error_message = 'Please, configure the file ' . DRUPAL_ROOT . 'sites/default/settings.php. Add the line
+        $conf[\'siif_eru_country_code\'] = \'XX\';  
+        at the end of the file and replace the XX by your country code you will find in this list ('.implode(',', array_keys($country_config)).')';
+        
+    if (! isset($conf['siif_eru_country_code'])) {            
+        throw new DrupalUpdateException($error_message);
+    }
+//     
+//     set database country code
+    if (false === in_array($conf['siif_eru_country_code'], array_keys($country_config))) {
+        throw new DrupalUpdateException($error_message);    
+    }
+    
+//     uwwtd_install_trace(var_export($conf['siif_eru_country_code'], true));
+//     uwwtd_install_trace(var_export($country_config, true));
+//     uwwtd_install_trace(var_export(array_keys($country_config), true));
+//     uwwtd_install_trace(var_export(in_array($conf['siif_eru_country_code'], array_keys($country_config)), true));
+    
+//     throw new DrupalUpdateException('test' . $error_message);  
+    
+    $country_code_to_save = strtolower($conf['siif_eru_country_code']);
+    variable_set('siif_eru_country_code', $country_code_to_save);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    if ($country_code != $country_code_to_save) {
+        throw new DrupalUpdateException('An error occured when saving the country code from settings.php');    
+    }
+        
+    // home            map     waste_water_treatment_network_map
+    //                 layer     agglomerations        
+    //                             uwwtp       
+    //                             dcp
+    // agg/compliance  map       agg_compliance_map
+    //                 layer     compliance_map
+    // agg/treatement  map       agglomeration
+    //                 layer    agglomeration_treatment
+    // uwwtp/compliance  map     uwwtp_compliance_map
+    //                 layer     uwwtp_compliance_map
+    // uwwtp/treatement  map     uwwtp_treatment_map
+    //                    layer   uwwtp_treatment
+    //                        
+    $list_map = array(
+        'waste_water_treatment_network_map.inc',
+        'agg_compliance_map.inc',
+        'agglomeration.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_treatment_map.inc',
+    );
+    $list_overlay = array(
+        'agglomerations.inc',
+        'uwwtp.inc',
+        'dcp.inc',
+        'compliance_map.inc',
+        'agglomeration_treatment.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_treatment.inc',
+    ); 
+    $list_style = array(
+        'agglomerations_style.inc',
+        'carr_bleu.inc',
+        'triangle_violet.inc',
+    );        
+    $path = drupal_get_path('module', 'uwwtd') . '/script/openlayers/';
+    $pathtomap     = $path . 'map/'; 
+    $pathtooverlay = $path . 'overlay/';
+    $pathtostyle = $path . 'style/';
+    $msgexception = ''; 
+    foreach($list_overlay as $filename) {
+        include($pathtooverlay . $filename);
+        if (isset($openlayers_layers)) {
+            $row = array();
+            $row['name'] = $openlayers_layers->name;
+            $row['title'] = $openlayers_layers->title;
+            $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_layers->description;
+            $row['data'] = $openlayers_layers->data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_layers', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
+            }
+            uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
+        } else {
+            uwwtd_install_trace('Error, $openlayers_layers not found');          
+        }
+    }
+       
+    foreach($list_map as $filename) {
+        include($pathtomap . $filename);
+        if (isset($openlayers_maps)) {
+//             uwwtd_install_trace(var_export($openlayers_maps , true));
+            $row = array();
+            $row['name'] = $openlayers_maps->name;
+            $row['title'] = $openlayers_maps->title;            
+            $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_maps->description;
+            $openlayers_maps->data['center'] = $country_config[$country_code]['openlayers_maps']['center'];
+            $openlayers_maps->data['behaviors']['openlayers_behavior_gazetteer'] = $country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'];
+            $row['data'] = $openlayers_maps->data;
+//             uwwtd_install_trace(var_export($openlayers_maps , true));
+//             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['center'] , true));
+//             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'] , true));
+                 
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_maps', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+            }
+//             throw new DrupalUpdateException('test7108'); 
+            uwwtd_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
+        }  else {
+            uwwtd_install_trace('Error, $openlayers_maps not found');          
+        }
+    }
+    
+    foreach($list_style as $filename) {
+        include($pathtostyle . $filename);
+        if (isset($openlayers_styles)) {
+            $row = array();
+            $row['name'] = $openlayers_styles->name;
+            $row['title'] = $openlayers_styles->title;
+            $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_styles->description;
+            $row['data'] = $openlayers_styles->data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_styles', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
+            }
+                    
+            uwwtd_install_trace('style ' . $filename . ' result : ' . $msgresult);                             
+        }  else {
+            uwwtd_install_trace('Error, $openlayers_styles not found');          
+        }
+    }    
+
+    if ($msgexception != '') {
+        throw new DrupalUpdateException($msgexception);
+    }    
+    
+    //set version
+    variable_set('siif_eru_version', '7107');
+
+    drupal_flush_all_caches();
+        
+//     throw new DrupalUpdateException('test7107');    
+}
+
+/**
+ * Rebuild all cache data for all year
+ */ 
+function uwwtd_update_7108()
+{
+    drupal_load('module', 'uwwtd');
+    uwwtd_update_cache_data();
+    variable_set('siif_eru_version', '7108');
+}
+
+
 
 /***************************************************************************/
 // Function utils
@@ -194,7 +906,7 @@ function uwwtd_install_trace($message)
 function uwwtd_create_or_replace_view($sViewName)
 {
     uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
-    $path = drupal_get_path('module', 'uwwtd') . '/script/' . $sViewName . '.sql';
+    $path = drupal_get_path('module', 'uwwtd') . '/script/view/' . $sViewName . '.sql';
     $select = file_get_contents($path);
     db_query('CREATE OR REPLACE VIEW "' . $sViewName .  '" AS ' . $select);
 }
@@ -243,4 +955,32 @@ function uwwtd_delete_node_type_error()
         node_delete($nid);
     }
     unset($errors, $ids);        
+}
+
+function uwwtd_insert_openlayers($table, $row)
+{
+    if (db_select($table)
+                  ->fields($table, array('name'))
+                  ->condition('name', $row['name'])
+                  ->execute()
+                  ->fetchCol()) {
+          $resultupdate = db_update($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->condition('name', $row['name'], '=')       
+          ->execute();                    
+    } else {
+          db_insert($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->execute();    
+    }
 }

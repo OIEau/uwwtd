@@ -79,18 +79,18 @@
  * @ingroup themeable
  */
 //dsm($node);
-
-  $admin = 'administrator';
-  $editor = 'editor';
-  $roles = $GLOBALS['user']->roles;
-  //dsm($roles);
+echo uwwtd_insert_errors_tab($node);   
+//   $admin = 'administrator';
+//   $editor = 'editor';
+//   $roles = $GLOBALS['user']->roles;
+//   //dsm($roles);
 //   foreach($roles as $role){
 // 	  if(($role == $admin)|| ($role == $editor)){
 // 	   $errors = uwwtd_insert_errors_tab($node);
 // 		if($errors !== false){
 //     print $errors;
 // 	}
-//   }
+//   }      
 //   }
   
  

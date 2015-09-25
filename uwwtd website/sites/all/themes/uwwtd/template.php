@@ -137,7 +137,15 @@ function uwwtd_preprocess_field(&$variables){
 		
 	){
 		$variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
+//         dsm($variables);
 	}
+    
+//     if ($variables['element']['#field_name'] == 'field_aggc1' ||
+// 		$variables['element']['#field_name'] == 'field_aggc2' ||
+// 		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment') {
+//         $pe = $variables['element']['#object']->field_agggenerated['und'][0]['value'] * $variables['element']['#object']->{$variables['element']['#field_name']}['und'][0]['value']/ 100;
+//         $variables['items']['0']['#markup'] .= ' (' . $pe .')';
+//     }
 
 	// For compliance colors
 	if (
@@ -368,35 +376,78 @@ function uwwtd_render_article17($nid){
 }
 
 function uwwtd_insert_errors_tab($node){
+    global $user;
+    $admin = 'administrator';
+    $editor = 'editor';
+    $roles = $user->roles;
+    //dsm($roles);
+    $bFound = false;
+    foreach($roles as $role){
+        if($role == $admin || $role == $editor){
+            $bFound = true;
+            break; 
+        }    
+    }
+    if ($bFound === false) {
+        return '';
+    }
+
 	$values = array();
 
-	// Get list of all elements
-	$raws = $node->field_uwwtd_error_link['und'];
-	$all = array();
-	foreach($raws as $raw){
-		$all[] = $raw['nid'];
-	}
-
-	// group by import
-	foreach($all as $single){
-		$error = node_load($single);
-		if($error->nid !== null){
-			$id = $error->field_uwwtd_err_identifier['und'][0]['value'];
-			$type = $error->field_uwwtd_err_type['und'][0]['value'];
-			$cat = $error->field_uwwtd_err_category['und'][0]['value'];
-
-			// Set values
-			$values[$id][$type][$cat][] = array(
-				'id' => $id,
-				'timestamp' => $error->field_uwwtd_err_timestamp['und'][0]['value'],
-				'time' => $error->field_uwwtd_err_time['und'][0]['value'],
-				'message' => $error->field_uwwtd_err_message['und'][0]['value'],
-				'type' => $type,
-				'category' => $error->field_uwwtd_err_category['und'][0]['value'],
-				'nid' => $error->nid
-			);
-		}
-	}
+// 	// Get list of all elements
+// 	$raws = $node->field_uwwtd_error_link['und'];
+// 	$all = array();
+// 	foreach($raws as $raw){
+// 		$all[] = $raw['nid'];
+// 	}
+// 
+// 	// group by import
+// 	foreach($all as $single){
+// 		$error = node_load($single);
+// 		if($error->nid !== null){
+// 			$id = $error->field_uwwtd_err_identifier['und'][0]['value'];
+// 			$type = $error->field_uwwtd_err_type['und'][0]['value'];
+// 			$cat = $error->field_uwwtd_err_category['und'][0]['value'];
+// 
+// 			// Set values
+// 			$values[$id][$type][$cat][] = array(
+// 				'id' => $id,
+// 				'timestamp' => $error->field_uwwtd_err_timestamp['und'][0]['value'],
+// 				'time' => $error->field_uwwtd_err_time['und'][0]['value'],
+// 				'message' => $error->field_uwwtd_err_message['und'][0]['value'],
+// 				'type' => $type,
+// 				'category' => $error->field_uwwtd_err_category['und'][0]['value'],
+// 				'nid' => $error->nid
+// 			);
+// 		}
+// 	}
+                      
+    $query = 'select errid as id, 
+                    type, category, 
+                    error as message, 
+                    date as timestamp, 
+                    errid as nid  
+        from {uwwtd_import_errors} 
+        where year = :year 
+        and entity_type = :entity_type 
+        and entity_id = :entity_id';
+    
+    $param = array(
+        ':year' => $node->field_anneedata['und'][0]['value'],
+        ':entity_type' => 'node',
+        ':entity_id' => $node->nid,        
+    );                        
+    $result = db_query($query, $param);
+    while($row = $result->fetchAssoc()) {
+        $values[ $row['id'] ][ $row['type'] ][ $row['category'] ][] = array(
+        	'id' => $row['id'],
+        	'timestamp' => $row['timestamp'],
+        	'message' => $row['message'],
+        	'type' => $row['type'],
+        	'category' => $row['category'],
+        	'nid' => $row['nid'],
+        );
+    }    
 
 	if(empty($values)) return false;
 
@@ -419,8 +470,8 @@ function uwwtd_insert_errors_tab($node){
 			$totalE = 0;$totalEI = 0;$totalEL = 0;$totalEG = 0;$totalEC = 0;$totalEF = 0;
 			$total= 0;
 			// get Category
-			$field = field_info_field('field_uwwtd_err_category');
-			$label = $field['settings']['allowed_values'];
+// 			$field = field_info_field('field_uwwtd_err_category');
+// 			$label = $field['settings']['allowed_values'];
 				
 			// get date
 			//type erreur warning
@@ -430,40 +481,40 @@ function uwwtd_insert_errors_tab($node){
 				{
 					foreach ($value['1']['0'] as $categories){
 						$labelWI = 'Warning Input';$totalWI = count($value['1']['0']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['1']['1']))
 				{
 					foreach ($value['1']['1'] as $categories){
 						$labelWL = 'Warning Linking';$totalWL = count($value['1']['1']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['1']['2']))
 				{
 					foreach ($value['1']['2'] as $categories){
 						$labelWG = 'Warning Geometry';$totalWG = count($value['1']['2']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['1']['3']))
 				{
 					foreach ($value['1']['3'] as $categories){
 						$labelWC = 'Warning Conformity';$totalWC = count($value['1']['3']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['1']['4']))
 				{
 					foreach ($value['1']['4'] as $categories){
 						$labelWF = 'Warning Format';$totalWF = count($value['1']['4']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				$totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;	
@@ -475,40 +526,40 @@ function uwwtd_insert_errors_tab($node){
 				{
 					foreach ($value['0']['0'] as $categories){
 						$labelNI = 'Notification Input';$totalNI = count($value['0']['0']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['0']['1']))
 				{
 					foreach ($value['0']['1'] as $categories){
 						$labelNL = 'Notification Linking';$totalNL = count($value['0']['1']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['0']['2']))
 				{
 					foreach ($value['0']['2'] as $categories){
 						$labelNG = 'Notification Geometry';$totalNG = count($value['0']['2']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['0']['3']))
 				{
 					foreach ($value['0']['3'] as $categories){
 						$labelNC = 'Notification Conformity';$totalNC = count($value['0']['3']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['0']['4']))
 				{
 					foreach ($value['0']['4'] as $categories){
 						$labelNF = 'Notification Format';$totalNF = count($value['0']['4']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				$totalN = $totalNI + $totalNL + $totalNG + $totalNC + $totalNF;
@@ -520,40 +571,40 @@ function uwwtd_insert_errors_tab($node){
 				{
 					foreach ($value['2']['0'] as $categories){
 						$labelEI = 'Error Input';$totalEI = count($value['2']['0']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['2']['1']))
 				{
 					foreach ($value['2']['1'] as $categories){
 						$labelEL = 'Error Linking';$totalEL = count($value['2']['1']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['2']['2']))
 				{
 					foreach ($value['2']['2'] as $categories){
 						$labelEG = 'Error Geometry';$totalEG = count($value['2']['2']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['2']['3']))
 				{
 					foreach ($value['2']['3'] as $categories){
 						$labelEC = 'Error Conformity';$totalEC = count($value['2']['3']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				if(isset($value['2']['4']))
 				{
 					foreach ($value['2']['4'] as $categories){
 						$labelEF = 'Error Format';$totalEF = count($value['2']['4']);
-						$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', strtotime($time));
+						//$time = $categories['timestamp'];
+						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
 				$totalE = $totalEI + $totalEL + $totalEG + $totalEC + $totalEF;
@@ -561,7 +612,7 @@ function uwwtd_insert_errors_tab($node){
 			$total = $totalW + $totalN + $totalE;
 			if($total === 0) $total = null;
 			$output .= '<div class="uwwtd_errors_tab_header">';
-				$output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Import le : '.$date.'</span></h4>';
+				$output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Imported at : '.$date.'</span></h4>';
 				
 				if(isset($value['0'])){
 					$output .= '<div class="uwwtd_errors_tab_type_header">';
@@ -576,7 +627,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -591,7 +642,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -606,7 +657,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -621,7 +672,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -636,7 +687,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -658,7 +709,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -673,7 +724,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -688,7 +739,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -703,7 +754,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -718,7 +769,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -738,7 +789,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -753,7 +804,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -768,7 +819,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -783,7 +834,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -798,7 +849,7 @@ function uwwtd_insert_errors_tab($node){
 								$output .= '<ul>';
 									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
 									$output .= '<li>'.$error['message'].'</li>';
-									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
 							$output .= '</div>';							
 						}$output .= '</div>';
@@ -1128,3 +1179,20 @@ function uwwtd_get_uww_graphic($node){
 
 	return $output;   
 }
+
+// function uwwtd_render_field_with_pe($field, $node)
+// {
+//     <div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
+//         <div class="field-label">Collective system:&nbsp;</div>
+//         <div class="field-items">
+//             <div class="field-item even">91.00 %</div>
+//         </div>
+//     </div>    
+// }
+
+// function uwwtd_preprocess_field(&$vars) {
+//     dpl($vars);
+//   if ($vars['element']['#field_name'] == 'field_my_custom_field') {
+//     $vars['items'][0]['#markup'] = "I changed the output of my field!";
+//   }
+// }

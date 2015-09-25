@@ -446,7 +446,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
    //mega_links
    $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
    //rca_extra
-   $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));       
+   $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
+   $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee))); 
 	batch_set($batch);
 	batch_process('data/import');
 }
@@ -3305,6 +3306,7 @@ function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
 			array('uwwtd_add_csa_criterions_batch_process', array($csas, $timestamp)),
 			array('uwwtd_station_conformity_batch_process', array($annee, $timestamp)),
 			array('uwwtd_agglo_conformity_batch_process', array($annee, $timestamp)),
+            array('uwwtd_update_cache_data', array(array($annee))),
             //replace by new algo in uwwtd_agglo_conformity_batch_process
 			//array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
 		),

@@ -1,0 +1,6 @@
+name = Views for UWWTD
+description = Add / Update existing views
+core = 7.x
+version = 7.x-1.0
+package = uwwtd
+dependencies[] = uwwtd

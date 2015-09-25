@@ -1,4 +1,4 @@
-﻿/*================Mettre ici toutes les mises en forme spécifique pour le site du CITET========================*/
+/*================Mettre ici toutes les mises en forme spécifique pour le site du CITET========================*/
 
 
 body{
@@ -97,11 +97,22 @@ footer{
 	min-width:50%;
 	margin:auto;
 }
-.view-content div#flot-auto-identifier-1{
+.view-content div#flot-auto-identifier-1,
+.view-content div#flot-auto-identifier-2
+{
 	margin:auto;
 }
 .view-content thead, .view-content tfoot{
 	background-color:#e5e5e5;
+}
+
+.flot-title {
+    margin:auto;
+    width:50%;
+    text-align:center;
+    font-weight:bold;
+    background-color:#e5e5e5;
+    margin-bottom:12px;
 }
 
 /*.view-uwwtp-map .attachment {
