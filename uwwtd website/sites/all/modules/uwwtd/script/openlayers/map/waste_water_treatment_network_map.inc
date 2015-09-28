@@ -1,10 +1,11 @@
-<?php
+<?php     
 $openlayers_maps = new stdClass();
 $openlayers_maps->disabled = FALSE; /* Edit this to true to make a default openlayers_maps disabled initially */
 $openlayers_maps->api_version = 1;
 $openlayers_maps->name = 'waste_water_treatment_network_map';
 $openlayers_maps->title = 'Waste water treatment network map';
-$openlayers_maps->description = '2015-09-22 14:57:05';
+$openlayers_maps->description = '2015/09/25 11:15:35
+2015-09-22 14:57:05';
 $openlayers_maps->data = array(
   'width' => 'auto',
   'height' => '700px',
@@ -14,7 +15,7 @@ $openlayers_maps->data = array(
   'hide_empty_map' => 0,
   'center' => array(
     'initial' => array(
-      'centerpoint' => '14.765624990168567, 46.07323062392817',
+      'centerpoint' => '14.797346, 46.136272',
       'zoom' => '8',
     ),
     'restrict' => array(
@@ -26,7 +27,6 @@ $openlayers_maps->data = array(
     'openlayers_behavior_fullscreen' => array(
       'activated' => 0,
     ),
-//     'openlayers_behavior_keyboarddefaults' => array(),   
     'openlayers_behavior_attribution' => array(
       'separator' => '',
     ),

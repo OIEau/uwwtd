@@ -3,8 +3,9 @@ $openlayers_layers = new stdClass();
 $openlayers_layers->disabled = FALSE; /* Edit this to true to make a default openlayers_layers disabled initially */
 $openlayers_layers->api_version = 1;
 $openlayers_layers->name = 'uwwtp';
-$openlayers_layers->title = 'UWWTPS';
-$openlayers_layers->description = '2015-09-22 14:57:05';
+$openlayers_layers->title = 'Treatment plants';
+$openlayers_layers->description = '2015/09/25 11:15:35
+2015-09-22 14:57:05';
 $openlayers_layers->data = array(
   'projection' => array(
     0 => 'EPSG:4326',
@@ -65,3 +66,4 @@ $openlayers_layers->data = array(
   'transitionEffect' => 'resize',
   'weight' => 0,
 );
+

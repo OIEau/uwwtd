@@ -75,22 +75,55 @@ function uwwtd_statistics_form($form, &$form_state) {
     );
   }
 
+//   if($form_state['build_info']['args'][1] == '') {
+//   
+//     $form['data_type'] = array(   
+//       '#title' => t('Data type'),
+//       '#type' => 'select',
+//       '#options' => array(
+//           'compliance' => 'Compliance',
+//           'treatment' => 'Treatment',
+//         ),
+//       '#default_value' => isset($form_state['values']['data_type']) ? $form_state['values']['data_type'] : 'compliance',
+//       '#states' => array(
+//         'visible' => array(
+//           ':input[name="content_type"]' => array(array('value' => 'agglomeration'), array('value' => 'uwwtp')),
+//         ),
+//       ),
+//     );
+//   }
+//   dsm($form_state);
   if($form_state['build_info']['args'][1] == '') {
-    $form['data_type'] = array(
+  
+    $form['data_type_agglo'] = array(   
+      '#title' => t('Data type'),
+      '#type' => 'select',
+      '#options' => array(
+          'compliance' => 'Compliance',
+          'treatment' => 'Connection',
+        ),
+      '#default_value' => isset($form_state['values']['data_type_agglo']) ? $form_state['values']['data_type_agglo'] : 'compliance',
+      '#states' => array(
+        'visible' => array(
+          ':input[name="content_type"]' => array(array('value' => 'agglomeration')),
+        ),
+      ),
+    );
+    $form['data_type_uwwtp'] = array(   
       '#title' => t('Data type'),
       '#type' => 'select',
       '#options' => array(
           'compliance' => 'Compliance',
           'treatment' => 'Treatment',
         ),
-      '#default_value' => isset($form_state['values']['data_type']) ? $form_state['values']['data_type'] : 'compliance',
+      '#default_value' => isset($form_state['values']['data_type_uwwtp']) ? $form_state['values']['data_type_uwwtp'] : 'compliance',
       '#states' => array(
         'visible' => array(
-          ':input[name="content_type"]' => array(array('value' => 'agglomeration'), array('value' => 'uwwtp')),
+          ':input[name="content_type"]' => array(array(array('value' => 'uwwtp'))),
         ),
       ),
-    );
-  } 
+    );    
+  }   
 
   // Get available years for data
   $query = db_select('field_data_field_anneedata', 'a');
@@ -151,7 +184,14 @@ function uwwtd_statistics_form_validate(&$form, &$form_state) {
  * Form submit.
  */
 function uwwtd_statistics_form_submit(&$form, &$form_state) {
-  $data = uwwtd_statistics_get($form_state['values']['content_type'], $form_state['values']['data_type'], $form_state['values']['year'], $form_state['values']['groupby']); 
+  $datatype = '';
+//   dsm($form_state);
+  if ($form_state['values']['content_type'] == 'agglomeration') {    
+    $datatype = $form_state['values']['data_type_agglo'];
+  } elseif ($form_state['values']['content_type'] == 'uwwtp') {
+    $datatype = $form_state['values']['data_type_uwwtp'];
+  } 
+  $data = uwwtd_statistics_get($form_state['values']['content_type'], $datatype, $form_state['values']['year'], $form_state['values']['groupby']); 
   $form_state['rebuild'] = TRUE;
 
   if(!is_array($data)) {
@@ -315,6 +355,7 @@ function uwwtd_statistics_get($content_type, $data_type, $year, $groupby) {
   if($content_type == "discharge_point" || $content_type == "sensitive_area") {
     $function = 'uwwtd_statistics_' . $content_type;
   }
+
   if(function_exists($function)) {
     $data = $function($year, $groupby);
     return $data;

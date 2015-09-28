@@ -752,7 +752,9 @@ function uwwtd_update_7107()
     if ($country_code != $country_code_to_save) {
         throw new DrupalUpdateException('An error occured when saving the country code from settings.php');    
     }
-        
+    
+    uwwtd_update_map_overlay($country_config, $country_code);
+    //////////////////////////////////////////////////////////////    
     // home            map     waste_water_treatment_network_map
     //                 layer     agglomerations        
     //                             uwwtp       
@@ -766,6 +768,243 @@ function uwwtd_update_7107()
     // uwwtp/treatement  map     uwwtp_treatment_map
     //                    layer   uwwtp_treatment
     //                        
+//     $list_map = array(
+//         'waste_water_treatment_network_map.inc',
+//         'agg_compliance_map.inc',
+//         'agglomeration.inc',
+//         'uwwtp_compliance_map.inc',
+//         'uwwtp_treatment_map.inc',
+//     );
+//     $list_overlay = array(
+//         'agglomerations.inc',
+//         'uwwtp.inc',
+//         'dcp.inc',
+//         'compliance_map.inc',
+//         'agglomeration_treatment.inc',
+//         'uwwtp_compliance_map.inc',
+//         'uwwtp_treatment.inc',
+//     ); 
+//     $list_style = array(
+//         'agglomerations_style.inc',
+//         'carr_bleu.inc',
+//         'triangle_violet.inc',
+//     );        
+//     $path = drupal_get_path('module', 'uwwtd') . '/script/openlayers/';
+//     $pathtomap     = $path . 'map/'; 
+//     $pathtooverlay = $path . 'overlay/';
+//     $pathtostyle = $path . 'style/';
+//     $msgexception = ''; 
+//     foreach($list_overlay as $filename) {
+//         include($pathtooverlay . $filename);
+//         if (isset($openlayers_layers)) {
+//             $row = array();
+//             $row['name'] = $openlayers_layers->name;
+//             $row['title'] = $openlayers_layers->title;
+//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_layers->description;
+//             $row['data'] = $openlayers_layers->data;
+//             $msgresult = 'ok';
+//             try {
+//                 uwwtd_insert_openlayers('openlayers_layers', $row);
+//             } catch (Exception $e) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
+//             }
+//             uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
+//         } else {
+//             uwwtd_install_trace('Error, $openlayers_layers not found');          
+//         }
+//     }
+//        
+//     foreach($list_map as $filename) {
+//         include($pathtomap . $filename);
+//         if (isset($openlayers_maps)) {
+// //             uwwtd_install_trace(var_export($openlayers_maps , true));
+//             $row = array();
+//             $row['name'] = $openlayers_maps->name;
+//             $row['title'] = $openlayers_maps->title;            
+//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_maps->description;
+//             $openlayers_maps->data['center'] = $country_config[$country_code]['openlayers_maps']['center'];
+//             $openlayers_maps->data['behaviors']['openlayers_behavior_gazetteer'] = $country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'];
+//             $row['data'] = $openlayers_maps->data;
+// //             uwwtd_install_trace(var_export($openlayers_maps , true));
+// //             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['center'] , true));
+// //             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'] , true));
+//                  
+//             $msgresult = 'ok';
+//             try {
+//                 uwwtd_insert_openlayers('openlayers_maps', $row);
+//             } catch (Exception $e) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+//             }
+// //             throw new DrupalUpdateException('test7108'); 
+//             uwwtd_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
+//         }  else {
+//             uwwtd_install_trace('Error, $openlayers_maps not found');          
+//         }
+//     }
+//     
+//     foreach($list_style as $filename) {
+//         include($pathtostyle . $filename);
+//         if (isset($openlayers_styles)) {
+//             $row = array();
+//             $row['name'] = $openlayers_styles->name;
+//             $row['title'] = $openlayers_styles->title;
+//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_styles->description;
+//             $row['data'] = $openlayers_styles->data;
+//             $msgresult = 'ok';
+//             try {
+//                 uwwtd_insert_openlayers('openlayers_styles', $row);
+//             } catch (Exception $e) {
+//                 $msgresult = 'error';
+//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
+//             }
+//                     
+//             uwwtd_install_trace('style ' . $filename . ' result : ' . $msgresult);                             
+//         }  else {
+//             uwwtd_install_trace('Error, $openlayers_styles not found');          
+//         }
+//     }    
+// 
+//     if ($msgexception != '') {
+//         throw new DrupalUpdateException($msgexception);
+//     } 
+    //////////////////////////   
+    
+    //set version
+    variable_set('siif_eru_version', '7107');
+
+    drupal_flush_all_caches();
+        
+//     throw new DrupalUpdateException('test7107');    
+}
+
+/**
+ * Rebuild all cache data for all year
+ */ 
+function uwwtd_update_7108()
+{
+    drupal_load('module', 'uwwtd');
+    uwwtd_update_cache_data();
+    variable_set('siif_eru_version', '7108');
+}
+
+/**
+ * Rebuild all cache data for all year
+ */ 
+function uwwtd_update_7109()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code);    
+    drupal_load('module', 'uwwtd');
+    variable_set('siif_eru_version', '7109');
+    drupal_flush_all_caches();    
+}
+
+
+
+/***************************************************************************/
+// Function utils
+/***************************************************************************/
+function uwwtd_install_trace($message) 
+{
+    $file = drupal_realpath('public://data_errors/install_trace.log');
+    $r = fopen($file, 'a');
+    fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+    fclose($r);
+}
+
+/**
+ * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
+ * in module/script/{$sViewName}.sql  
+ */ 
+function uwwtd_create_or_replace_view($sViewName)
+{
+    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
+    $path = drupal_get_path('module', 'uwwtd') . '/script/view/' . $sViewName . '.sql';
+    $select = file_get_contents($path);
+    db_query('CREATE OR REPLACE VIEW "' . $sViewName .  '" AS ' . $select);
+}
+
+/**
+ * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
+ * in module/script/{$sViewName}.sql  
+ */ 
+function uwwtd_delete_view($sViewName)
+{
+    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
+    db_query('DROP VIEW IF EXISTS "' . $sViewName .  '"');
+}
+
+/**
+ * create schema wfs
+ */ 
+function uwwtd_create_schema_wfs() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    db_query('CREATE SCHEMA IF NOT EXISTS "wfs"');    
+} 
+
+/**
+ * create schema wfs
+ */ 
+function uwwtd_update_node_title_size() 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //udpate node.title and node_revision.title from 255 to 1000 (for ro et pl long name)
+    db_query('ALTER TABLE drupal_node ALTER COLUMN title TYPE varchar(1000)');
+    db_query('ALTER TABLE drupal_node_revision ALTER COLUMN title TYPE varchar(1000)');
+}
+
+function uwwtd_delete_node_type_error()
+{
+	$ids = array();
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'uwwtd_error', '=');
+	$errors = $query->execute();
+	foreach($errors as $error){
+		$ids[] = array('nid'=>$error->nid);
+	}
+    foreach($ids as $nid) {
+        node_delete($nid);
+    }
+    unset($errors, $ids);        
+}
+
+function uwwtd_insert_openlayers($table, $row)
+{
+    if (db_select($table)
+                  ->fields($table, array('name'))
+                  ->condition('name', $row['name'])
+                  ->execute()
+                  ->fetchCol()) {
+          $resultupdate = db_update($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->condition('name', $row['name'], '=')       
+          ->execute();                    
+    } else {
+          db_insert($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->execute();    
+    }
+}
+
+function uwwtd_update_map_overlay($country_config, $country_code)
+{
     $list_map = array(
         'waste_water_treatment_network_map.inc',
         'agg_compliance_map.inc',
@@ -866,121 +1105,5 @@ function uwwtd_update_7107()
 
     if ($msgexception != '') {
         throw new DrupalUpdateException($msgexception);
-    }    
-    
-    //set version
-    variable_set('siif_eru_version', '7107');
-
-    drupal_flush_all_caches();
-        
-//     throw new DrupalUpdateException('test7107');    
-}
-
-/**
- * Rebuild all cache data for all year
- */ 
-function uwwtd_update_7108()
-{
-    drupal_load('module', 'uwwtd');
-    uwwtd_update_cache_data();
-    variable_set('siif_eru_version', '7108');
-}
-
-
-
-/***************************************************************************/
-// Function utils
-/***************************************************************************/
-function uwwtd_install_trace($message) 
-{
-    $file = drupal_realpath('public://data_errors/install_trace.log');
-    $r = fopen($file, 'a');
-    fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
-    fclose($r);
-}
-
-/**
- * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
- * in module/script/{$sViewName}.sql  
- */ 
-function uwwtd_create_or_replace_view($sViewName)
-{
-    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
-    $path = drupal_get_path('module', 'uwwtd') . '/script/view/' . $sViewName . '.sql';
-    $select = file_get_contents($path);
-    db_query('CREATE OR REPLACE VIEW "' . $sViewName .  '" AS ' . $select);
-}
-
-/**
- * create a view of name  $sViewName with the select statement in a file if the same name {$sViewName}.sql
- * in module/script/{$sViewName}.sql  
- */ 
-function uwwtd_delete_view($sViewName)
-{
-    uwwtd_install_trace(__FUNCTION__ . ':' . $sViewName);
-    db_query('DROP VIEW IF EXISTS "' . $sViewName .  '"');
-}
-
-/**
- * create schema wfs
- */ 
-function uwwtd_create_schema_wfs() 
-{
-    uwwtd_install_trace(__FUNCTION__);
-    db_query('CREATE SCHEMA IF NOT EXISTS "wfs"');    
-} 
-
-/**
- * create schema wfs
- */ 
-function uwwtd_update_node_title_size() 
-{
-    uwwtd_install_trace(__FUNCTION__);
-    //udpate node.title and node_revision.title from 255 to 1000 (for ro et pl long name)
-    db_query('ALTER TABLE drupal_node ALTER COLUMN title TYPE varchar(1000)');
-    db_query('ALTER TABLE drupal_node_revision ALTER COLUMN title TYPE varchar(1000)');
-}
-
-function uwwtd_delete_node_type_error()
-{
-	$ids = array();
-	$query = db_select('node', 'n');
-    $query->fields('n', array('nid'));
-    $query->condition('n.type', 'uwwtd_error', '=');
-	$errors = $query->execute();
-	foreach($errors as $error){
-		$ids[] = array('nid'=>$error->nid);
-	}
-    foreach($ids as $nid) {
-        node_delete($nid);
-    }
-    unset($errors, $ids);        
-}
-
-function uwwtd_insert_openlayers($table, $row)
-{
-    if (db_select($table)
-                  ->fields($table, array('name'))
-                  ->condition('name', $row['name'])
-                  ->execute()
-                  ->fetchCol()) {
-          $resultupdate = db_update($table)
-          ->fields(array(
-            'name' => $row['name'],
-            'title' =>  $row['title'],
-            'description' => $row['description'],
-            'data' => serialize($row['data'])
-          ))
-          ->condition('name', $row['name'], '=')       
-          ->execute();                    
-    } else {
-          db_insert($table)
-          ->fields(array(
-            'name' => $row['name'],
-            'title' =>  $row['title'],
-            'description' => $row['description'],
-            'data' => serialize($row['data'])
-          ))
-          ->execute();    
-    }
+    } 
 }

@@ -28,7 +28,7 @@
 //mettre en cache json : ok     
 //check log :ok
 
-define('UWWTD_CACHE_ACTIVE', true);
+define('UWWTD_CACHE_ACTIVE', true);  
 
 // $GLOBALS['uwwtd']['cache'] = array(
 //     
@@ -317,8 +317,8 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
-  $items['agglomerations/treatment'] = array(
-    'page callback' => 'uwwtd_page_agglomeration_treatment',
+  $items['agglomerations/connection'] = array(
+    'page callback' => 'uwwtd_page_agglomeration_connection',
     'page arguments' => array(),
     'access callback' => true,
     'access arguments' => true,
@@ -1254,6 +1254,12 @@ function uwwtd_get_cache_key_block_home()
     return 'data_block_map_home'; 
 }
 
+function uwwtd_is_user_anonymous()
+{
+    global $user;
+    return ($user->uid == 0);
+}
+
 function uwwtd_get_cache_key_page_agglo_compliance($option)
 {
     return 'page_agglomeration_compliance_' . $option['field_anneedata_value'];
@@ -1283,8 +1289,9 @@ function uwwtd_block_view($delta = '')
             //we always need to build the map because openlayer set some css and js
             $preset_name = 'waste_water_treatment_network_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
             $preset = openlayers_preset_load($preset_name);
-            $map    = openlayers_build_map($preset->data);             
-            if (UWWTD_CACHE_ACTIVE === true) {                                    
+            $map    = openlayers_build_map($preset->data);
+            $put_in_cache = uwwtd_is_user_anonymous();             
+            if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
                 $cache = cache_get($cache_name, 'cache_block');
             }
             if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -1325,7 +1332,9 @@ function uwwtd_block_view($delta = '')
                 unset($data);
                 
                 $block['content'] =  uwwtd_build_map($map, $features);
-                cache_set($cache_name, $block['content'], 'cache_block', CACHE_PERMANENT);                
+                if (true === $put_in_cache) {
+                    cache_set($cache_name, $block['content'], 'cache_block', CACHE_PERMANENT);
+                }                
             }      
             return $block;
             break;    
@@ -1778,7 +1787,9 @@ function uwwtd_build_feature($data, $option = array())
 
     $feature = array();
 //     dsm($option);
+    $i = 0;
     foreach($data as $row) {
+        $i++;
         $description = '';
         if (isset($option['popup'])) {
             foreach($option['popup'] as $field => $detail) {
@@ -1905,6 +1916,7 @@ function uwwtd_build_feature($data, $option = array())
                     'label' => $detail['label'],
                     'value' => $row[$field],
                     'color' => $detail['color'],
+                      
 //                     'svg' => $svgtest,
                 );
             }  
@@ -1944,7 +1956,8 @@ function uwwtd_build_feature($data, $option = array())
 //                 'count' => 0,
                 'weight' => $weight,
                 'color' => $color,//'#000000',
-                'data' => $chart,    
+                'data' => $chart, 
+//                 'piechartid' => 'pie_' .$i,       
 //                 'field_agggenerated' => $field_agggenerated,
 //                 'field_aggcompliance' => $field_aggcompliance,
 //                 'field_aggart3compliance' => $field_aggart3compliance,
@@ -2532,7 +2545,7 @@ function uwwtd_sort_data($filter, $order, &$data)
 }
 
 
-function uwwtd_page_agglomeration_treatment()
+function uwwtd_page_agglomeration_connection()
 {
     $title = 'Agglomeration connection map and list';
     drupal_set_title($title);
@@ -2552,7 +2565,7 @@ function uwwtd_page_agglomeration_treatment()
     $cache_name = uwwtd_get_cache_key_page_agglo_treatment($filter['filter']);    
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option);             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -2661,7 +2674,11 @@ function uwwtd_page_agglomeration_treatment()
                      
     //todo format data in table
     $graph = array();
+    $piechart = '';
+    $i=0;   
+//     dsm($map);
     foreach($data as $row) {
+
         if (false === isset($graph['field_aggc2_value'])) {
             $field_agggenerated_value = 0;
 //             $graph['field_aggc2_value']['nb'] = 0;
@@ -2696,6 +2713,25 @@ function uwwtd_page_agglomeration_treatment()
                                         $row['field_aggc1_value_format'],
                                         $row['field_aggpercwithouttreatment_value_format'],
                                     ));
+        $i++;                            
+        //build html for piechart 
+         
+//         $size = 2 * $map['behaviors']['openlayers_plus_behavior_piechart']['styles']['1']['pointRadius'];
+// //         dsm($map['behaviors']); 
+//         $piechart .=     '<svg id="pie_'.$i.'" cx="651.0175999995845" cy="389.9091049244453" r="1" viewBox="0 0 '.$size.' '.$size.'" width="'.$size.'" height="'.$size.'" x="644.2675999995845" y="383.1591049244453" fill="#888888" fill-opacity="0.8" stroke="#222222" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="visiblePainted">
+//             <g transform="translate(6.75,6.75)">
+//                 <g class="arc">
+//                 <path d="M4.133182947122317e-16,-6.75A6.75,6.75 0 1,1 -6.630438942418649,1.2648238734536408L0,0Z" style="fill: rgb(116, 255, 224); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
+//                 </g>
+//                 <g class="arc">
+//                 <path d="M-6.630438942418649,1.2648238734536408A6.75,6.75 0 0,1 -3.8986157481003065,-5.510289942340991L0,0Z" style="fill: rgb(189, 136, 66); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
+//                 </g>
+//                 <g class="arc">
+//                 <path d="M-3.8986157481003065,-5.510289942340991A6.75,6.75 0 0,1 -1.239954884136695e-15,-6.75L0,0Z" style="fill: rgb(192, 0, 0); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
+//                 </g>
+//             </g>                
+//             </svg>';     
+                                                      
     }
 //     dsm($rows);
     //calculate % of each field
@@ -2704,9 +2740,9 @@ function uwwtd_page_agglomeration_treatment()
     $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
     $graph['field_aggpercwithouttreatment_value']['percent'] = $graph['field_aggpercwithouttreatment_value']['value'] * 100 / $field_agggenerated_value;
 //     }
-
+            
     $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle);
-//     dsm($features);
+//     dsm($features['agglomeration_treatment']);
 //     unset($data); 
    
     $rendermap = uwwtd_build_map($map, $features);
@@ -2833,6 +2869,7 @@ function uwwtd_page_agglomeration_treatment()
     $render_graph = theme('flot_graph', $variables);    
     $page =  '<h1>'.$title.'</h1>'
             . $form 
+            . $piechart
             . $rendermap   
             . '<div class="view-content flot-title">Generated load (p.e.) distribution</div>'
             . '<div class="view-content">'.$render_graph.'</div>'
@@ -2868,7 +2905,7 @@ function uwwtd_page_uwwtps_compliance()
     $cache_name = uwwtd_get_cache_key_page_uwwtp_compliance($filter['filter']);    
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option);             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -3231,7 +3268,7 @@ function uwwtd_page_uwwtps_treatment()
     $cache_name = uwwtd_get_cache_key_page_uwwtp_treatment($filter['filter']);    
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option);             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -3611,7 +3648,7 @@ function uwwtd_page_agglomeration_compliance()
 //     dsm($filter);
     
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option);             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
