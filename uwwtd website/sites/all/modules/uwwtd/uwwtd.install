@@ -916,7 +916,20 @@ function uwwtd_update_7110()
     drupal_flush_all_caches();
     drupal_load('module', 'uwwtd');
     uwwtd_update_cache_data();
-    variable_set('siif_eru_version', '7109');      
+    variable_set('siif_eru_version', '7110');      
+}
+
+/**
+ * Delete unused sql view
+ */ 
+function uwwtd_update_7111()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_DischargePoint');
+    uwwtd_delete_view('UWWTD_ReceivingArea');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    variable_set('siif_eru_version', '7111');      
 }
 
 
