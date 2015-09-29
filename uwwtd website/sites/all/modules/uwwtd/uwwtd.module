@@ -1132,58 +1132,58 @@ function uwwtd_permission() {
 
 function uwwtd_cron(){
     $lastGen = variable_get('uwwtd_wfs_table', 0);
-	if((time() - $lastGen) > (60*60*24)){
+// 	if((time() - $lastGen) > (60*60*24)){
 	// Requires postgres for DROP TABLE IF
-// 	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
-// 	CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-//         AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
-// 	ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
-// 	CREATE TABLE wfs."UWWTD_Agglomeration"
-//         AS SELECT * from public."UWWTD_Agglomeration";
-// 	ALTER TABLE wfs."UWWTD_Agglomeration"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
-// 	CREATE TABLE wfs."UWWTD_ReceivingArea"
-//         AS SELECT * from public."UWWTD_ReceivingArea";
-// 	ALTER TABLE wfs."UWWTD_ReceivingArea"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_BigCity";
-// 	CREATE TABLE wfs."UWWTD_BigCity"
-//         AS SELECT * from public."UWWTD_BigCity";
-// 	ALTER TABLE wfs."UWWTD_BigCity"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_Agglo";
-// 	CREATE TABLE wfs."UWWTD_Compliance_Agglo"
-//         AS SELECT * from public."UWWTD_Compliance_Agglo";
-// 	ALTER TABLE wfs."UWWTD_Compliance_Agglo"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_UWWTP";
-// 	CREATE TABLE wfs."UWWTD_Compliance_UWWTP"
-//         AS SELECT * from public."UWWTD_Compliance_UWWTP";
-// 	ALTER TABLE wfs."UWWTD_Compliance_UWWTP"
-// 	ADD PRIMARY KEY ("siteId");
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
-// 	CREATE TABLE wfs."UWWTD_DischargePoint"
-//         AS SELECT * from public."UWWTD_DischargePoint";
-// 	ALTER TABLE wfs."UWWTD_DischargePoint"
-// 	ADD PRIMARY KEY ("siteId"); 
-// 
-// 	DROP TABLE IF EXISTS wfs."UWWTD_UWWTPs_Agglo";
-// 	CREATE TABLE wfs."UWWTD_UWWTPs_Agglo"
-//         AS SELECT * from public."UWWTD_UWWTPs_Agglo";
-// 	ALTER TABLE wfs."UWWTD_UWWTPs_Agglo"
-// 	ADD PRIMARY KEY ("uwwSiteId", "aggSiteId");');
+	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
+	CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+        AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
+	ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
+	CREATE TABLE wfs."UWWTD_Agglomeration"
+        AS SELECT * from public."UWWTD_Agglomeration";
+	ALTER TABLE wfs."UWWTD_Agglomeration"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
+	CREATE TABLE wfs."UWWTD_ReceivingArea"
+        AS SELECT * from public."UWWTD_ReceivingArea";
+	ALTER TABLE wfs."UWWTD_ReceivingArea"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_BigCity";
+	CREATE TABLE wfs."UWWTD_BigCity"
+        AS SELECT * from public."UWWTD_BigCity";
+	ALTER TABLE wfs."UWWTD_BigCity"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_Agglo";
+	CREATE TABLE wfs."UWWTD_Compliance_Agglo"
+        AS SELECT * from public."UWWTD_Compliance_Agglo";
+	ALTER TABLE wfs."UWWTD_Compliance_Agglo"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_Compliance_UWWTP";
+	CREATE TABLE wfs."UWWTD_Compliance_UWWTP"
+        AS SELECT * from public."UWWTD_Compliance_UWWTP";
+	ALTER TABLE wfs."UWWTD_Compliance_UWWTP"
+	ADD PRIMARY KEY ("siteId");
+
+	DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
+	CREATE TABLE wfs."UWWTD_DischargePoint"
+        AS SELECT * from public."UWWTD_DischargePoint";
+	ALTER TABLE wfs."UWWTD_DischargePoint"
+	ADD PRIMARY KEY ("siteId"); 
+
+	DROP TABLE IF EXISTS wfs."UWWTD_UWWTPs_Agglo";
+	CREATE TABLE wfs."UWWTD_UWWTPs_Agglo"
+        AS SELECT * from public."UWWTD_UWWTPs_Agglo";
+	ALTER TABLE wfs."UWWTD_UWWTPs_Agglo"
+	ADD PRIMARY KEY ("uwwSiteId", "aggSiteId");');
         
     	variable_set('uwwtd_wfs_table', time());
-	}
+// 	}
 }
 
 

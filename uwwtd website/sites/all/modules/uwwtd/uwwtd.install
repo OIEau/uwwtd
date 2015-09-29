@@ -901,7 +901,6 @@ function uwwtd_update_7109()
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
     uwwtd_update_map_overlay($country_config, $country_code);    
-    drupal_load('module', 'uwwtd');
     variable_set('siif_eru_version', '7109');
     drupal_flush_all_caches();    
 }
