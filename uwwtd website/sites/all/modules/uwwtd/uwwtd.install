@@ -2,6 +2,8 @@
 
 //todo desactivate cron
 //todo check mobule exist and enabled
+//todo change content block (link, ..) by country
+//todo cange menu
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
@@ -890,7 +892,7 @@ function uwwtd_update_7108()
 }
 
 /**
- * Rebuild all cache data for all year
+ * Rebuild map and layer 
  */ 
 function uwwtd_update_7109()
 {

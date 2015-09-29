@@ -469,3 +469,14 @@ body#impression  div.field .field-label-inline{
 	float : left;
 	padding-right:10px;
 }
+    
+.pie_slice {
+    font-size:10pt; 
+    text-align:center; 
+    padding:2px; 
+    color:white;
+}    
+  
+.pie_legend {
+    font-size:10pt; 
+}

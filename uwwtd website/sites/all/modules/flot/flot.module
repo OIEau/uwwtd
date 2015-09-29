@@ -126,6 +126,14 @@ function template_preprocess_flot_graph(&$variables) {
       Drupal.flot[\'' . str_replace('-', '_', $variables['element']['id']) . '\'][\'data\'] = ' . drupal_json_encode((array) $data) . ';
     });
   ';
+  //uwwtd custom modif//
+  if (isset($options->replace) && isset($options->replace->transform_on_callback)) {
+    foreach($options->replace->transform_on_callback as $key) {
+        $jsdata = str_replace('"'.$key.'"', $key, $jsdata);
+    }
+  } 
+  //uwwtd custom modif//
+  
   drupal_add_js($jsdata, array('type' => 'inline', 'scope' => 'footer'));
 
   $variables['element'] = array(

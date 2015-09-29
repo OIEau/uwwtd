@@ -2766,16 +2766,22 @@ function uwwtd_page_agglomeration_connection()
         $d1->label = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'][$field];//$detail['label'];        
         $d1->color = $optionstyle['piechart'][$field]['color'];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'][$field]);
+//         $xaxis[] = array($i++, $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'][$field]);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//       
     
     $variables = array(
         'data' => $data_pie,
@@ -2797,29 +2803,29 @@ function uwwtd_page_agglomeration_connection()
  
     $render_table_graph = '
 
-    <table id="views-aggregator-datatable" class="views-table cols-2">
+    <table id="views-aggregator-datatable" class="views-table cols-2" style="width: 500px; ">
     <thead>
     <tr>
-        <th class="views-field views-field-field_aggc1_value">
+        <th class="views-field views-field-field_aggc1_value" style="padding: 5px;">
         Collective system (% of p.e.)            
         </th>    
-        <th class="views-field views-field-field_aggc2_value">
+        <th class="views-field views-field-field_aggc2_value" style="padding: 5px;">
         IAS (% of p.e.)
         </th>
-        <th class="views-field views-field-field_aggpercwithouttreatment_value">
+        <th class="views-field views-field-field_aggpercwithouttreatment_value" style="padding: 5px;">
         Not addressed through IAS (% of p.e.)            
         </th>        
     </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="views-field">
+            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
             ' . uwwtd_format_number($graph['field_aggc2_value']['percent'], 2) . ' %          
             </td>
-            <td class="views-field">
+            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
             ' . uwwtd_format_number($graph['field_aggc1_value']['percent'], 2) . ' % 
             </td>
-            <td class="views-field">
+            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
             ' . uwwtd_format_number($graph['field_aggpercwithouttreatment_value']['percent'], 2) . ' % 
             </td>            
         </tr>    
@@ -3008,7 +3014,7 @@ function uwwtd_page_uwwtps_compliance()
         if (false === isset($graph[$row['field_uwwcompliance_value_format']])) {
             $graph[$row['field_uwwcompliance_value_format']]['nb'] = 0;
             $graph[$row['field_uwwcompliance_value_format']]['field_uwwloadenteringuwwtp_value'] = 0;
-            $graph[$row['field_uwwcompliance_value_format']]['label'] = 'TODO';           
+//             $graph[$row['field_uwwcompliance_value_format']]['label'] = 'TODO';           
         }
         $graph[$row['field_uwwcompliance_value_format']]['nb']++;
         $graph[$row['field_uwwcompliance_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
@@ -3068,16 +3074,22 @@ function uwwtd_page_uwwtps_compliance()
         $d1->label = $compliance_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $compliance_format);
+//         $xaxis[] = array($i++, $compliance_format);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;  
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//     
     
 //     todo legend color
 //     $optionstyle['color']  = array(  
@@ -3152,16 +3164,22 @@ function uwwtd_page_uwwtps_compliance()
         $d1->label = $compliance_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $compliance_format);
+//         $xaxis[] = array($i++, $compliance_format);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;  
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//     
     
     $variables = array(
         'data' => $data_pie,
@@ -3375,7 +3393,7 @@ function uwwtd_page_uwwtps_treatment()
         if (false === isset($graph[$row['field_uwwtreatmenttype_value_format']])) {
             $graph[$row['field_uwwtreatmenttype_value_format']]['nb'] = 0;
             $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] = 0;
-            $graph[$row['field_uwwtreatmenttype_value_format']]['label'] = 'TODO';           
+//             $graph[$row['field_uwwtreatmenttype_value_format']]['label'] = 'TODO';           
         }
         $graph[$row['field_uwwtreatmenttype_value_format']]['nb']++;
         $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
@@ -3433,16 +3451,22 @@ function uwwtd_page_uwwtps_treatment()
         $d1->label = $treatmenttype_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $treatmenttype_format);
+//         $xaxis[] = array($i++, $treatmenttype_format);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;  
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//     
     
 //     todo legend color
 //     $optionstyle['color']  = array(  
@@ -3517,16 +3541,22 @@ function uwwtd_page_uwwtps_treatment()
         $d1->label = $treatmenttype_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $treatmenttype_format);
+//         $xaxis[] = array($i++, $treatmenttype_format);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;  
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//     
     
     $variables = array(
         'data' => $data_pie,
@@ -3758,7 +3788,7 @@ function uwwtd_page_agglomeration_compliance()
         if (false === isset($graph[$row['field_aggcompliance_value_format']])) {
             $graph[$row['field_aggcompliance_value_format']]['nb'] = 0;
             $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] = 0;
-            $graph[$row['field_aggcompliance_value_format']]['label'] = 'TODO';           
+//             $graph[$row['field_aggcompliance_value_format']]['label'] = 'TODO';           
         }
         $graph[$row['field_aggcompliance_value_format']]['nb']++;
         $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
@@ -3810,16 +3840,35 @@ function uwwtd_page_agglomeration_compliance()
         $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
         $data_pie[] = $d1;
 //         $xaxis[] = array($i++, $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance]);
-        $xaxis[] = array($i++, $compliance_format);
+//         $xaxis[] = array($i++, $compliance_format.'__pppp');
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);    
+    $options->legend  = new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//
+      
+//     $options->series->pie->label->formatter = 'function testlabelformater(label, series) {
+// 		return \'po\';
+// 	}'; 
+//     dsm($options);
+//     dsm(drupal_json_encode($options));
+//     dsm(json_encode($options));  
+//     $this->series->pie->show = TRUE;
+//     $this->series->pie->radius = 1;
+//     $this->series->pie->label->show = TRUE;
+//     $this->series->pie->label->radius = 2/3;
+//     $this->series->pie->label->threshold = 0.1;
+//     $this->series->pie->label->background->opacity = 1;
     
 //     todo legend color
 //     $optionstyle['color']  = array(  
@@ -3894,16 +3943,22 @@ function uwwtd_page_agglomeration_compliance()
         $d1->label =$compliance_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
         $data_pie[] = $d1;
-        $xaxis[] = array($i++, $compliance_format);
+//         $xaxis[] = array($i++, $compliance_format);
     }
    
     $options = new flotStylePie();
-    $options->axis_range('yaxis', array(null,100), 4);
-    $options->axis_ticks('xaxis', $xaxis);
+//     $options->axis_range('yaxis', array(null,100), 4);
+//     $options->axis_ticks('xaxis', $xaxis);
     $options->legend  =new StdClass();
     $options->legend->show = true;
     $options->legend->position = "ne";
-    $options->resize = true;   
+    $options->resize = true;
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend'; 
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    //!!//custom for replace string by callback in module flot...//!!//
+    $options->replace = new StdClass(); 
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+    //!!//custom for replace string by callback in module flot...//!!//       
     
     $variables = array(
         'data' => $data_pie,
@@ -3973,7 +4028,17 @@ function uwwtd_page_agglomeration_compliance()
     $page =  '<h1>'.$title.'</h1>'
             . $form 
             . $rendermap
-            . '<div class="view-content flot-title">Compliance by Plants</div>'   
+            . '<div class="view-content flot-title">Compliance by Plants</div>'
+//             . '<script> 
+// function uwwtd_labelformaterpie(label, series) {
+//     console.log("uwwtd_labelformaterpie : " + label);
+//     return "<div class=\"pie_legend\">" + Math.round(series.percent) + "%</div>";
+// }     
+// function uwwtd_labelformaterpie_legend(label, series) {
+//     console.log("uwwtd_labelformaterpie_legend " + label);
+//     return "<div class=\"pie_slice\">label + " (" + Math.round(series.percent) + "%)</div>";  
+// }    
+//     </script>'     
             . '<div class="view-content">'.$render_graph_nb.'</div>'
             . '<div class="view-content">'.$render_table_graph_nb.'</div>'
             . '<div class="view-content flot-title">Compliance by Generated load (p.e.)</div>'            

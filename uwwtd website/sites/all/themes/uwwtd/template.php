@@ -127,6 +127,7 @@ function uwwtd_preprocess_field(&$variables){
 
 	// For percentage '%'
 	if (
+        
 		$variables['element']['#field_name'] == 'field_aggc1' ||
 		$variables['element']['#field_name'] == 'field_aggc2' ||
 		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
@@ -136,7 +137,9 @@ function uwwtd_preprocess_field(&$variables){
 		
 		
 	){
-		$variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
+        if ($variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>') {
+		  $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
+        }
 //         dsm($variables);
 	}
     
