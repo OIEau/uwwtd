@@ -905,6 +905,20 @@ function uwwtd_update_7109()
     drupal_flush_all_caches();    
 }
 
+/**
+ * Replace View UWWTD_DischargePoint (error in left join)
+ */ 
+function uwwtd_update_7110()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    uwwtd_delete_view('UWWTD_DischargePoint'); 
+    uwwtd_create_or_replace_view('UWWTD_DischargePoint');    
+    drupal_flush_all_caches();
+    drupal_load('module', 'uwwtd');
+    uwwtd_update_cache_data();
+    variable_set('siif_eru_version', '7109');      
+}
+
 
 
 /***************************************************************************/

@@ -43,7 +43,7 @@ SELECT siteid.field_siteid_value AS "siteId",
      LEFT JOIN drupal_field_data_field_dcpwfdrbd wfd ON n.nid = wfd.entity_id
      LEFT JOIN drupal_field_data_field_rcaid sensi ON n.nid = sensi.entity_id
      LEFT JOIN drupal_field_data_field_dcpnotaffect donot ON n.nid = donot.entity_id
-     LEFT JOIN drupal_field_data_field_dcpmsprovide provide ON n.nid = donot.entity_id
+     LEFT JOIN drupal_field_data_field_dcpmsprovide provide ON n.nid = provide.entity_id
      LEFT JOIN drupal_field_data_field_dcpcomaccept accept ON n.nid = accept.entity_id
      LEFT JOIN drupal_field_data_field_dcpremarks remarks ON n.nid = remarks.entity_id
      LEFT JOIN drupal_field_data_field_rcatype rcatype ON n.nid = rcatype.entity_id
