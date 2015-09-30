@@ -49,7 +49,7 @@ scripts[] = 'bootstrap/js/tab.js'
 scripts[] = 'bootstrap/js/transition.js'
 
 scripts[] = 'js/errors.js'
-scripts[] = 'js/uwwtd.js'
+
 
 ; Disable BootstrapCDN so the compiled LESS source files can be used.
 settings[bootstrap_cdn] = ''

@@ -58,82 +58,57 @@
             }	
 			//here we add a special case for piechart rendering
 			else if(style.graphicName=="piechart"){
-//                 console.log(node);
-//                 console.log(node.getAttribute("treated")); 
-                
-// 				console.log(style);
 				//Note : for each adding svg element, we need to set the "_featureId"  properties for allow events on feature and for eg fire a "popup"
 				var size = style.pointRadius * 2;
 				pos = this.getPosition(node);
-// 				console.log(node);
-if (node.getAttribute("treated") != 1) {
-                var data=style.piechartdata.data.data;
-// console.log(data);                  
-                        /////////////////////////////////////////////////////
-                 	 			
-        				var arc = d3.svg.arc()
-        					.outerRadius(style.pointRadius)
-        					.innerRadius(0);
-        				var pie = d3.layout.pie()
-        					.sort(null)
-        					.value(function(d) { return d.value; });
-        				var svg = d3.select(node)
-        					.append("g")
-        					.property('_featureId', node._featureId)
-        					.attr("transform", "translate(" + size / 2 + "," + size / 2 + ")");
-        				data.forEach(function(d) {
-        					d.value = +d.value;
-        				});
-        				var g = svg.selectAll(".arc")
-        					  .data(pie(data))
-        					.enter().append("g")
-        					  .property('_featureId', node._featureId)
-        					  .attr("class", "arc");
-        					  
-        				g.append("path")
-        				  .property('_featureId', node._featureId)
-        				  .attr("d", arc)
-        				  .style("fill", function(d) { return d.data.color; })
-        				  .style("stroke", function(d) { return style.strokeColor; })
-        				  .style("opacity", function(d) { return style.fillOpacity; })
-        				  .style("stroke-width", function(d) { return style.strokeWidth; });
-        				/////////////////////////////////////////////////////
-                
-				var parent = node.parentNode;
-                var nextSibling = node.nextSibling;
-                if (parent) { 
-                    parent.removeChild(node);
-                }
-//                 console.log(node);
-// node = $.parseHTML('<svg id="'+node.getAttribute("id")+'" cx="651.0175999995845" cy="389.9091049244453" r="1" viewBox="0 0 13.5 13.5" width="13.5" height="13.5" x="644.2675999995845" y="383.1591049244453" fill="#888888" fill-opacity="0.8" stroke="#222222" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="visiblePainted">  <g transform="translate(6.75,6.75)">                                                                                                                                                                                                                                                                                                                                               <g class="arc">                                                                                                                                                                                                                                                                                                                                                                 <path d="M4.133182947122317e-16,-6.75A6.75,6.75 0 1,1 -6.630438942418649,1.2648238734536408L0,0Z" style="fill: rgb(10, 10, 10); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>                                                                                                                                                                                   </g>                                                                                                                                                                                                                                                                                                                                                                            <g class="arc">                                                                                                                                                                                                                                                                                                                                                                 <path d="M-6.630438942418649,1.2648238734536408A6.75,6.75 0 0,1 -3.8986157481003065,-5.510289942340991L0,0Z" style="fill: rgb(189, 136, 66); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>                                                                                                                                                                         </g>                                                                                                                                                                                                                                                                                                                                                                            <g class="arc">                                                                                                                                                                                                                                                                                                                                                                 <path d="M-3.8986157481003065,-5.510289942340991A6.75,6.75 0 0,1 -1.239954884136695e-15,-6.75L0,0Z" style="fill: rgb(192, 0, 0); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>                                                                                                                                                                                     </g>                                                                                                                                                                                                                                                                                                                                                                      </g>                                                                                                                                                                                                                                                                                                                                                                                </svg>' )[0];
-// console.log(style.piechartdata.data.piechartid);
-// nodepie = document.getElementById(style.piechartdata.data.piechartid);
-// console.log(nodepie);
-
-// nodepie.childNodes[1].setAttribute('_featureId', node._featureId);
-// console.log(nodepie.childNodes[1]);
-// console.log(nodepie.childNodes[1].childNodes);
-// nodepie.childNodes[1].childNodes[1].setAttribute('_featureId', node._featureId);
-// nodepie.childNodes[1].childNodes[3].setAttribute('_featureId', node._featureId);
-// nodepie.childNodes[1].childNodes[5].setAttribute('_featureId', node._featureId);
-// console.log(nodepie.childNodes[1].childNodes[1]);
-// node.appendChild(nodepie.childNodes[1]);
-// nodepie.setAttributeNS(null, "cx", node.getAttribute("cx"));
-// nodepie.setAttributeNS(null, "cy", node.getAttribute("cy"));
-// node = nodepie;
-// console.log(node); 
-node.setAttributeNS(null, "viewBox", "0 0 "+size+" "+size);
-node.setAttributeNS(null, "width", size);
-node.setAttributeNS(null, "height", size);
-node.setAttributeNS(null, "treated", '1');  
-// console.log(node);                
-}    
-//             console.log(node); 
+                if (node.getAttribute("treated") != 1) {
+                    var data=style.piechartdata.data.data;
+                    /////////////////////////////////////////////////////
+    				var arc = d3.svg.arc()
+    					.outerRadius(style.pointRadius)
+    					.innerRadius(0);
+    				var pie = d3.layout.pie()
+    					.sort(null)
+    					.value(function(d) { return d.value; });
+    				var svg = d3.select(node)
+    					.append("g")
+    					.property('_featureId', node._featureId)
+    					.attr("transform", "translate(" + size / 2 + "," + size / 2 + ")");
+    				data.forEach(function(d) {
+    					d.value = +d.value;
+    				});
+    				var g = svg.selectAll(".arc")
+    					  .data(pie(data))
+    					.enter().append("g")
+    					  .property('_featureId', node._featureId)
+    					  .attr("class", "arc");
+    					  
+    				g.append("path")
+    				  .property('_featureId', node._featureId)
+    				  .attr("d", arc)
+    				  .style("fill", function(d) { return d.data.color; })
+    				  .style("stroke", function(d) { return style.strokeColor; })
+    				  .style("opacity", function(d) { return style.fillOpacity; })
+    				  .style("stroke-width", function(d) { return style.strokeWidth; });
+                    /////////////////////////////////////////////////////
+    				var parent = node.parentNode;
+                    var nextSibling = node.nextSibling;
+                    if (parent) { 
+                        parent.removeChild(node);
+                    }
+                    var piechartnode = document.getElementById(style.piechartdata.data.piechartid).cloneNode(true);
+                    piechartnode.setAttributeNS(null, "style", "display:block;");
+                    for (var i = 0; i <  piechartnode.childNodes.length;i++){
+                        piechartnode.childNodes[i]._featureId = node._featureId;
+                    }   
+                                 
+                    node.appendChild(piechartnode);
+                    node.setAttributeNS(null, "viewBox", "0 0 "+size+" "+size);
+                    node.setAttributeNS(null, "width", size);
+                    node.setAttributeNS(null, "height", size);
+                    node.setAttributeNS(null, "treated", '1');  
+                }    
                 /////////////////////////////////////////////////////
-//                 console.log(data.svg); 
-//                 node = $(data.svg);
-//                 console.log(node);
-                                    
 				node.setAttributeNS(null, "x", pos.x - style.pointRadius);
 				node.setAttributeNS(null, "y", pos.y - style.pointRadius);
                 
@@ -144,8 +119,6 @@ node.setAttributeNS(null, "treated", '1');
                 } else if(parent) {
                     parent.appendChild(node);
                 }
-                
-//                 console.log(node);
 			}
 			else if (this.isComplexSymbol(style.graphicName)) {
 				// the symbol viewBox is three times as large as the symbol

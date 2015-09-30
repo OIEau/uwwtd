@@ -1,69 +1,12 @@
 <?php
-//todo 
-//erreur home http://webnuxdev.rnde.tm.fr/ev_uwwtd_si/content/defs/EPSG3857.js
-
-//désactiver navigation clavier sur les cartes                      => ok tester avec nouvelle base
-//faire script pour exporter n agglo du xml pour pouvoir les réimporter et les tester  => ok
-//virer les menu des vue dans le main menu                      => ok
-
 
 //refaire menu listerror 
 //dans bulk datadeletion, supprimer error
 //get all label from database ?   $field = field_info_field('field_uwwtd_err_category');
 //get all color from database ?   $field = field_info_field('field_uwwtd_err_category'); 
-//desactivate cron 
-//build table for mapserver when ? 
-//delete view postgres ?
-//correct view request -> duplicate
-
-//display title on 4 pages : ok
-//format number  : ok
-//ajouter les erreur :ok
-//ajouter un titre au graphique : ok
-//ajouter les bon libellé dans les popup (NR, 1, F...) : ok
-//bien rpésenté les pages des vues : ok
-//todo format data block ok
-//check all warning in log : ok
-//ajouter nouvelle fonction de cache dans function clear cache : ok
-//mettre en cache json : ok     
-//check log :ok
 
 define('UWWTD_CACHE_ACTIVE', true);  
 
-// $GLOBALS['uwwtd']['cache'] = array(
-//     
-// );
-
-// $GLOBALS['uwwtd']['ui']['compliance'] = array(
-//     'All' => '- Any -',
-//     'NI' => 'No information',
-//     'NR' => 'Not relevant',
-//     'NC' => 'Not compliant',
-//     'C' => 'Compliant',
-//     '?' => '?',
-// );
-
-// $GLOBALS['uwwtd']['ui']['compliance_color']  = array(  
-//     'C' => "#4f91e1",
-//     'NR' => "#a2a2a2",
-//     'NC' => "#d93c3c",
-//     'NI' => "#6b6b6b",                          
-// );
-// $GLOBALS['uwwtd']['ui']['more_stringent_color']  = array(  
-//     'MS' => "#5ddfff",   //Morestringenttreatment|More stringent|#5ddfff
-//     'S' => "#3cc53c",  //Secondarytreatment|Secondary treatment|#3cc53c
-//     'P' => "#ea8b2e",  //Primarytreatment|Primary treatment|#ea8b2e
-//     'NI' => "#d92424",  //Noinformation|No treatment or no information|#d92424                        
-// );
-
-
-// $GLOBALS['uwwtd']['ui']['pe_weight'] = array(
-//       1 =>  2000,
-//       2 =>  10000,
-//       3 =>  150000,
-//       4 =>  0,    
-//     );
-    
 $GLOBALS['uwwtd']['ui']['operator'] = array(
     '<' => 'Is less than',
     '<=' => 'Is less than or equal to',
@@ -72,15 +15,6 @@ $GLOBALS['uwwtd']['ui']['operator'] = array(
     '>=' => 'Is greater than or equal to',
     '>' => 'Is greater than',
 );
-
-// $GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
-//     '<' => 'uwwtd_is_less_than',               
-//     '<=' => 'uwwtd_is_less_than_or_equal_to',  
-//     '=' => 'uwwtd_is_equal_to',                
-//     '!=' => 'uwwtd_is_not_equal_to',           
-//     '>=' => 'uwwtd_is greater_than_or_equal_to',
-//     '>' => 'uwwtd_is_greater_than',            
-// );
 
 $GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
     '<' => function ($a, $b) {return $a < $b;},      //'uwwtd_is_less_than',               
@@ -159,14 +93,6 @@ $GLOBALS['uwwtd']['ui']['compliance'] = array(
 //todo delete this one if all works
 $GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['ui']['compliance'];
 
-// $GLOBALS['uwwtd']['ui']['field']['compliance_label'] = array(
-//     'NR'   =>  'Not relevant',
-//     'NI'   =>  'No information',
-//     'C'    =>  'Compliant',
-//     'NC'   =>  'Not Compliant',
-//     '?'    =>  '?',
-// );
-
 $GLOBALS['uwwtd']['ui']['test_pass'] = array(
     'All' => '- Any -',
     'P' => 'Pass',
@@ -188,8 +114,6 @@ $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
     'S' => 'Secondary treatment',
     'MS' => 'More stringent treatment',
 );
-
-
 
 
 function uwwtd_menu(){
@@ -883,211 +807,211 @@ function debug_create_xml($type, $value)
 /**
  * Extract an xml for only one agglo from a xml source
  */ 
-function debug_create_xml_old($type, $value)
-{
-    //todo, get a list of agglo nid (to test mutliple agglo)
-    if ($type != 'nid-agglo') {
-        return '';
-    }
-    $agg = node_load($value);
-    $xml = uwwtd_xml_to_array($agg->field_sourcefile['und'][0]['uri']);
-    $currentCodeAgglo = $agg->field_inspireidlocalid['und'][0]['value'];
-//     codeagglo in $agg->field_inspireidlocalid['und'][0]['value']
-//     copier xml node /Reporter
-//                     /ReportPeriod
-//                     /Contacts
-//                     /BigCityDischargers     
-//     Agglomerations/Agglomeration/aggCode = codeagglo
-//         copier l'agglo
-//     UwwtpAgglos/UwwtpAgglo/aucAggCode =  codeagglo
-//         copier UwwtpAgglo de l'agglo
-//     UwwtpAgglos/UwwtpAgglo/aucUwwCode =  codeuwwtp
-//         copier les uwwtp de l'agglo avec contenu de UwwtpAgglos
-//     UWWTPs/UWWTP/uwwCode = codeuwwtp
-//         !! copier toutes les agglo de ce uwwtp (et agglo et agglo_uwwtp) 
-//     DischargePoints/DischargePoint/uwwID = codeuwwtp
-//         copier les dcp de chaque uwwtp
-//     DischargePoints/DischargePoint/rcaID = rcacode
-//         copier les rca de chaque dcp
-//     ReceivingAreas/ReceivingArea/rcaCode = rcacode
-    $xmlTest = array();
-    $xmlTest['UWWTD_Report']['Reporter'] = $xml['UWWTD_Report']['Reporter'];
-    $xmlTest['UWWTD_Report']['ReportPeriod'] = $xml['UWWTD_Report']['ReportPeriod'];
-    $xmlTest['UWWTD_Report']['Contacts'] = $xml['UWWTD_Report']['Contacts'];
-    $xmlTest['UWWTD_Report']['BigCityDischargers'] = $xml['UWWTD_Report']['BigCityDischargers'];
-    
-    //AGGLO ======================================================
-    if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
-        $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
-    }
-    else{
-        $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
-    }
-    $aggloFound = false;
-    foreach($imports as $agglo) {
-        if ($agglo['aggCode'] == $currentCodeAgglo) {
-            $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
-            $aggloFound = true;
-            break; //only one agglo
-        }
-    }
-    if ($aggloFound == false) {
-        return "error, can't find agglo in xml " . $currentCodeAgglo . "</br>";
-    }
-    //UwwtpAgglos for agglo ======================================================
-    if(isset($xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
-        $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
-    }
-    else{
-        $imports = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
-    } 
-    $uwwtd_aggloFound = false;
-    foreach($imports as $uwwtp_agglo) {
-        if ($uwwtp_agglo['aucAggCode'] == $currentCodeAgglo) {
-            $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
-            $uwwCode[] = $uwwtp_agglo['aucUwwCode'];  //list of uwwtp attach to the agglo
-            $uwwtd_aggloFound = true;
-        }
-    }
-    if ($uwwtd_aggloFound == false) {
-//         return "error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "</br>";
-        drupal_set_message("error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo);
-    }
-    //UwwtpAgglos for uwwtp======================================================
-    foreach($imports as $uwwtp_agglo) {
-        if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && $uwwtp_agglo['aucAggCode'] != $currentCodeAgglo) {
-            $listeAgglo[] = $uwwtp_agglo['aucAggCode']; //all other agglo attach to the uwwtp (need for calculation)
-            $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
-        }
-    }
-    
-    //Agglo for uwwtp======================================================
-    if (true === isset($listeAgglo)) {
-        if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
-            $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
-        }
-        else{
-            $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
-        }
-        $bAggloFound = false;
-        foreach($imports as $agglo) {
-            if (true === in_array($agglo['aggCode'], $listeAgglo)) {
-                $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
-                $bAggloFound = true;
-            }
-        }
-        if ($bAggloFound == false) {
-//             return "error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "</br>";
-            drupal_set_message("error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo));
-        } 
-    }    
-    
-    //uwwtp======================================================
-    if(isset($xml['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
-        $imports[0] = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
-    }
-    else{
-        $imports = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
-    } 
-    $buwwtpFound = false;
-    foreach($imports as $uwwtp) {
-        if (true === in_array($uwwtp['uwwCode'],$uwwCode)) {
-            $xmlTest['UWWTD_Report']['UWWTPs']['UWWTP'][] = $uwwtp;
-            $buwwtpFound = true;
-        }
-    }
-    if ($buwwtpFound == false) {
-//         return "error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "</br>";
-        drupal_set_message("error, can't find uwwtp in xml  " . implode(',', $uwwCode));
-    } 
-    
-    //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
-    if(isset($xml['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
-        $imports[0] = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
-    }
-    else{
-        $imports = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
-    } 
-    $bdcpFound = false;
-    foreach($imports as $dcp) {
-        if (true === in_array($dcp['uwwID'],$uwwCode)) {
-            $xmlTest['UWWTD_Report']['DischargePoints']['DischargePoint'][] = $dcp;
-            $rcaCode[] = $dcp['rcaID'];
-            $bdcpFound = true;
-        }
-    }
-    if ($bdcpFound == false) {
-//         return "error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "</br>";
-        drupal_set_message("error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode));
-    } 
-    //RCA====================================================== 
-    if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-        $imports[0] = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-    }
-    else{
-        $imports = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-    }   
-    
-    $brcaFound = false;
-    foreach($imports as $rca) {
-        if (true === in_array($rca['rcaCode'],$rcaCode)) {
-            $xmlTest['UWWTD_Report']['ReceivingAreas']['ReceivingArea'][] = $rca;
-            $brcaFound = true;
-        }
-    }
-    if ($brcaFound == false) {
-//         return "error, can't find rca in xml for rca " . implode(',', $rcaCode) . "</br>";
-        drupal_set_message("error, can't find rca in xml for rca " . implode(',', $rcaCode));
-    }
-    
-    //CREATE XML======================================================
-    $s = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>
-<UWWTD_Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="http://water.eionet.europa.eu/schemas/dir91271eec/UWWTD2011.xsd">
-
-';
-   
-    if ($uwwtd_aggloFound == false) {
-        $s .= "<!-- error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "-->
-        ";
-    }
-    if ($bAggloFound == false) {
-        $s .= "<!-- error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "-->
-        ";
-    } 
-    
-    if ($buwwtpFound == false) {
-        $s .= "<!-- error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "-->
-        ";
-    } 
-    if ($bdcpFound == false) {
-        $s .= "<!-- error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "-->
-        ";
-    }
-    if ($brcaFound == false) {
-        $s .= "<!-- error, can't find rca in xml for rca " . implode(',', $rcaCode) . "-->
-        ";
-    }
-       
-    $s .= uwwtd_debug_create_tag_from_array($xmlTest, '');
-    
-    $s .= '
-
-</UWWTD_Data>';
-    ini_set("auto_detect_line_endings", false); //for Mac user    
-    $aHeaders = array(
-          'Content-Type'        => 'text/xml',   
-          'Content-Disposition' => 'attachment; filename="agglo'.$value.'.xml' . '"',
-          'Expires'             => '0',
-          'Cache-Control'       => 'must-revalidate',
-          'Pragma'              =>'public',
-//           'Content-Length'      => mb_strlen($filename),
-      );            
-    foreach ($aHeaders as $sName => $sValue) {
-        drupal_add_http_header($sName, $sValue);
-    }
-    echo $s; 
-    exit();      
-}              
+// function debug_create_xml_old($type, $value)
+// {
+//     //todo, get a list of agglo nid (to test mutliple agglo)
+//     if ($type != 'nid-agglo') {
+//         return '';
+//     }
+//     $agg = node_load($value);
+//     $xml = uwwtd_xml_to_array($agg->field_sourcefile['und'][0]['uri']);
+//     $currentCodeAgglo = $agg->field_inspireidlocalid['und'][0]['value'];
+// //     codeagglo in $agg->field_inspireidlocalid['und'][0]['value']
+// //     copier xml node /Reporter
+// //                     /ReportPeriod
+// //                     /Contacts
+// //                     /BigCityDischargers     
+// //     Agglomerations/Agglomeration/aggCode = codeagglo
+// //         copier l'agglo
+// //     UwwtpAgglos/UwwtpAgglo/aucAggCode =  codeagglo
+// //         copier UwwtpAgglo de l'agglo
+// //     UwwtpAgglos/UwwtpAgglo/aucUwwCode =  codeuwwtp
+// //         copier les uwwtp de l'agglo avec contenu de UwwtpAgglos
+// //     UWWTPs/UWWTP/uwwCode = codeuwwtp
+// //         !! copier toutes les agglo de ce uwwtp (et agglo et agglo_uwwtp) 
+// //     DischargePoints/DischargePoint/uwwID = codeuwwtp
+// //         copier les dcp de chaque uwwtp
+// //     DischargePoints/DischargePoint/rcaID = rcacode
+// //         copier les rca de chaque dcp
+// //     ReceivingAreas/ReceivingArea/rcaCode = rcacode
+//     $xmlTest = array();
+//     $xmlTest['UWWTD_Report']['Reporter'] = $xml['UWWTD_Report']['Reporter'];
+//     $xmlTest['UWWTD_Report']['ReportPeriod'] = $xml['UWWTD_Report']['ReportPeriod'];
+//     $xmlTest['UWWTD_Report']['Contacts'] = $xml['UWWTD_Report']['Contacts'];
+//     $xmlTest['UWWTD_Report']['BigCityDischargers'] = $xml['UWWTD_Report']['BigCityDischargers'];
+//     
+//     //AGGLO ======================================================
+//     if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
+//         $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+//     }
+//     else{
+//         $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+//     }
+//     $aggloFound = false;
+//     foreach($imports as $agglo) {
+//         if ($agglo['aggCode'] == $currentCodeAgglo) {
+//             $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
+//             $aggloFound = true;
+//             break; //only one agglo
+//         }
+//     }
+//     if ($aggloFound == false) {
+//         return "error, can't find agglo in xml " . $currentCodeAgglo . "</br>";
+//     }
+//     //UwwtpAgglos for agglo ======================================================
+//     if(isset($xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
+//         $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
+//     }
+//     else{
+//         $imports = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
+//     } 
+//     $uwwtd_aggloFound = false;
+//     foreach($imports as $uwwtp_agglo) {
+//         if ($uwwtp_agglo['aucAggCode'] == $currentCodeAgglo) {
+//             $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
+//             $uwwCode[] = $uwwtp_agglo['aucUwwCode'];  //list of uwwtp attach to the agglo
+//             $uwwtd_aggloFound = true;
+//         }
+//     }
+//     if ($uwwtd_aggloFound == false) {
+// //         return "error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "</br>";
+//         drupal_set_message("error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo);
+//     }
+//     //UwwtpAgglos for uwwtp======================================================
+//     foreach($imports as $uwwtp_agglo) {
+//         if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && $uwwtp_agglo['aucAggCode'] != $currentCodeAgglo) {
+//             $listeAgglo[] = $uwwtp_agglo['aucAggCode']; //all other agglo attach to the uwwtp (need for calculation)
+//             $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
+//         }
+//     }
+//     
+//     //Agglo for uwwtp======================================================
+//     if (true === isset($listeAgglo)) {
+//         if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
+//             $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+//         }
+//         else{
+//             $imports = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
+//         }
+//         $bAggloFound = false;
+//         foreach($imports as $agglo) {
+//             if (true === in_array($agglo['aggCode'], $listeAgglo)) {
+//                 $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
+//                 $bAggloFound = true;
+//             }
+//         }
+//         if ($bAggloFound == false) {
+// //             return "error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "</br>";
+//             drupal_set_message("error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo));
+//         } 
+//     }    
+//     
+//     //uwwtp======================================================
+//     if(isset($xml['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
+//         $imports[0] = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
+//     }
+//     else{
+//         $imports = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
+//     } 
+//     $buwwtpFound = false;
+//     foreach($imports as $uwwtp) {
+//         if (true === in_array($uwwtp['uwwCode'],$uwwCode)) {
+//             $xmlTest['UWWTD_Report']['UWWTPs']['UWWTP'][] = $uwwtp;
+//             $buwwtpFound = true;
+//         }
+//     }
+//     if ($buwwtpFound == false) {
+// //         return "error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "</br>";
+//         drupal_set_message("error, can't find uwwtp in xml  " . implode(',', $uwwCode));
+//     } 
+//     
+//     //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
+//     if(isset($xml['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
+//         $imports[0] = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
+//     }
+//     else{
+//         $imports = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
+//     } 
+//     $bdcpFound = false;
+//     foreach($imports as $dcp) {
+//         if (true === in_array($dcp['uwwID'],$uwwCode)) {
+//             $xmlTest['UWWTD_Report']['DischargePoints']['DischargePoint'][] = $dcp;
+//             $rcaCode[] = $dcp['rcaID'];
+//             $bdcpFound = true;
+//         }
+//     }
+//     if ($bdcpFound == false) {
+// //         return "error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "</br>";
+//         drupal_set_message("error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode));
+//     } 
+//     //RCA====================================================== 
+//     if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
+//         $imports[0] = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+//     }
+//     else{
+//         $imports = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+//     }   
+//     
+//     $brcaFound = false;
+//     foreach($imports as $rca) {
+//         if (true === in_array($rca['rcaCode'],$rcaCode)) {
+//             $xmlTest['UWWTD_Report']['ReceivingAreas']['ReceivingArea'][] = $rca;
+//             $brcaFound = true;
+//         }
+//     }
+//     if ($brcaFound == false) {
+// //         return "error, can't find rca in xml for rca " . implode(',', $rcaCode) . "</br>";
+//         drupal_set_message("error, can't find rca in xml for rca " . implode(',', $rcaCode));
+//     }
+//     
+//     //CREATE XML======================================================
+//     $s = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>
+// <UWWTD_Data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="http://water.eionet.europa.eu/schemas/dir91271eec/UWWTD2011.xsd">
+// 
+// ';
+//    
+//     if ($uwwtd_aggloFound == false) {
+//         $s .= "<!-- error, can't find buwwtd_agglo in xml for agglo " . $currentCodeAgglo . "-->
+//         ";
+//     }
+//     if ($bAggloFound == false) {
+//         $s .= "<!-- error, can't find agglo attach to uwwtp in xml " . implode(',', $listeAgglo) . "-->
+//         ";
+//     } 
+//     
+//     if ($buwwtpFound == false) {
+//         $s .= "<!-- error, can't find uwwtp in xml  " . implode(',', $uwwCode) . "-->
+//         ";
+//     } 
+//     if ($bdcpFound == false) {
+//         $s .= "<!-- error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "-->
+//         ";
+//     }
+//     if ($brcaFound == false) {
+//         $s .= "<!-- error, can't find rca in xml for rca " . implode(',', $rcaCode) . "-->
+//         ";
+//     }
+//        
+//     $s .= uwwtd_debug_create_tag_from_array($xmlTest, '');
+//     
+//     $s .= '
+// 
+// </UWWTD_Data>';
+//     ini_set("auto_detect_line_endings", false); //for Mac user    
+//     $aHeaders = array(
+//           'Content-Type'        => 'text/xml',   
+//           'Content-Disposition' => 'attachment; filename="agglo'.$value.'.xml' . '"',
+//           'Expires'             => '0',
+//           'Cache-Control'       => 'must-revalidate',
+//           'Pragma'              =>'public',
+// //           'Content-Length'      => mb_strlen($filename),
+//       );            
+//     foreach ($aHeaders as $sName => $sValue) {
+//         drupal_add_http_header($sName, $sValue);
+//     }
+//     echo $s; 
+//     exit();      
+// }              
 
 //TODO better !! 
 function uwwtd_debug_create_tag_from_array($array, $parentkey)
@@ -1315,77 +1239,6 @@ function uwwtd_block_view($delta = '')
             }      
             return $block;
             break;    
-//         case 'map_home':
-//             
-//             $cache = '';
-//             $cache_name = uwwtd_get_cache_key_block_home(); 
-//             if (UWWTD_CACHE_ACTIVE === true) {                                    
-//                 $cache = cache_get($cache_name, 'cache_block');
-//             }
-//             if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//                 $features = $cache->data;
-//             }else {                      
-//                 $option['field_anneedata_value'] = uwwtd_get_max_annee();
-//                 
-//                 $preset_name = 'waste_water_treatment_network_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
-//                 $preset = openlayers_preset_load($preset_name);
-//                     
-//                 $data = uwwtd_get_data_agglomeration($option);
-//                 $optionstyle = array();
-//                 //size of the agglo
-// //                 $optionstyle['weight'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-// //                 $optionstyle['weight']['list'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-// //                 $optionstyle['weight']['field'] = 'field_agggenerated_value';  
-//                 
-//                 $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
-//                 $optionstyle['weight']['field'] = 'field_agggenerated_value';
-//                                                
-// //                 array(
-// //                   1 =>  2000,
-// //                   2 =>  10000,
-// //                   3 =>  0,    
-// //                 );   
-// //                 $optionstyle['popup_title_type'] = 'treatment-plant';
-// //                 $optionstyle['popup_title_type'] = 'discharge-pointt';
-//                 $optionstyle['popup_title_type'] = 'agglomeration';                          
-//                 $optionstyle['popup'] = array(
-//                     'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
-//                     'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-//                     'field_aggart3compliance_value_format' => array('label' => 'Article 3 compliance'),
-//                     'field_aggart4compliance_value_format' => array('label' => 'Article 4 compliance'),
-//                     'field_aggart5compliance_value_format' => array('label' => 'Article 5 compliance'),
-//                 );                   
-//                 $features['agglomerations'] = uwwtd_build_feature($data, $optionstyle);
-//                 unset($data);
-//                 
-//                 $data = uwwtd_get_data_uwwtp($option);
-//                 $optionstyle = array();
-//                 $optionstyle['popup_title_type'] = 'treatment-plant';
-//                 $optionstyle['popup'] = array(
-//                     'field_uwwcompliance_value_format' => array('label' => 'Compliance'),
-//                     'field_uwwprimarytreatment_value_format' => array('label' => 'Primary treatment'),
-//                     'field_uwwsecondarytreatment_value_format' => array('label' => 'Secondary treatment'),
-//                     'field_uwwnremoval_value_format' => array('label' => 'N-removal'),
-//                     'field_uwwpremoval_value_format' => array('label' => 'P-removal'),
-// //                     'field_physicalcapacityactivity_value' => array('label' => 'Capacity'),
-// //                     'field_uwwbod5perf_value' => array('label' => 'Performance: BOD5'),
-// //                     'field_uwwcodperf_value' => array('label' => 'Performance: COD'),
-// //                     'field_uwwntotperf_value' => array('label' => 'Performance: Total nitrogen'),
-// //                     'field_uwwptotperf_value' => array('label' => 'Performance: Total phosphorus'),
-//                 );                             
-//                 $features['uwwtp'] = uwwtd_build_feature($data, $optionstyle);
-//                 unset($data);
-//                 
-//                 $data = uwwtd_get_data_dcp($option);
-//                 $optionstyle = array();
-//                 $optionstyle['popup_title_type'] = 'discharge-point';                
-//                 $features['dcp'] = uwwtd_build_feature($data, $optionstyle);
-//                 unset($data);
-//                 cache_set($cache_name, $features, 'cache_block', CACHE_PERMANENT);                
-//             }      
-//             $block['content'] =  uwwtd_build_map($preset, $features);
-//             return $block;
-//             break;
         default:
             break;        
     }
@@ -1759,107 +1612,33 @@ function uwwtd_get_data_dcp($option)
     return $data;    
 }
 
-function uwwtd_build_feature($data, $option = array())
+function uwwtd_build_feature($data, $option, &$returnvalue)
 {
 
     $feature = array();
 //     dsm($option);
     $i = 0;
+    $returnvalue = '';
     foreach($data as $row) {
         $i++;
         $description = '';
         if (isset($option['popup'])) {
             foreach($option['popup'] as $field => $detail) {
-//                 if (isset($detail['format'])) {
-//                     switch($detail['format']['type']) {
-//                         case 'function':
-//                             $value = call_user_func_array($detail['format']['function'], $detail['format']['param']);
-//                             break;
-//                         case '':
-//                             $value = 
-//                             break;                            
-//                     } 
-//                 } else {
-//                     $value = $row[$field];
-//                 }
-                
                 $description .= "  \n  <span class=\"views-field views-field-".$field."\">    <span class=\"views-label views-label-".$field."\">".$detail['label'].": </span>    <span class=\"field-content\">"
                                 . $row[$field] .
                                 "</span>  </span>";    
             }
         }
-//         $field_agggenerated = "  \n  <span class=\"views-field views-field-field-agggenerated\">    <span class=\"views-label views-label-field-agggenerated\">Generated load (p.e.): </span>    <span class=\"field-content\">"
-//         .$row['field_agggenerated_value'].
-//         "</span>  </span>";  
-//         $field_aggcompliance = "\n  <span class=\"views-field views-field-field-aggcompliance\">    <span class=\"views-label views-label-field-aggcompliance\">Compliance: </span>    <span class=\"field-content\">"
-//         .$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']].
-//         "</span>  </span>";  
-//         $field_aggart3compliance = "\n  <span class=\"views-field views-field-field-aggart3compliance\">    <span class=\"views-label views-label-field-aggart3compliance\">Article 3 compliance: </span>    <span class=\"field-content\">
-//         ".$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart3compliance_value']].
-//         "</span>  </span>";  
-//         $field_aggart4compliance = "\n  <span class=\"views-field views-field-field-aggart4compliance\">    <span class=\"views-label views-label-field-aggart4compliance\">Article 4 compliance: </span>    <span class=\"field-content\">"
-//         .$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']].
-//         "</span>  </span>";  
-//         $field_aggart5compliance = "\n  <span class=\"views-field views-field-field-aggart5compliance\">    <span class=\"views-label views-label-field-aggart5compliance\">Article 5 compliance: </span>    <span class=\"field-content\">"
-//         .$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']].
-//         "</span>  </span>";  
-//         $field_aggart6compliance = "\n  <span class=\"views-field views-field-field-aggart6compliance\">    <span class=\"views-label views-label-field-aggart6compliance\">Article 6 compliance: </span>    <span class=\"field-content\">"
-//         .$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']].        
-//         "</span>  </span>";
-//         
-//         $field_aggc1 = "\n  <span class=\"views-field views-field-field_aggc1\">    <span class=\"views-label views-label-field_aggc1\">Collective system: </span>    <span class=\"field-content\">"
-//         .$row['field_aggc1_value'].        
-//         "</span>  </span>";
-//         
-//         $field_aggc2 = "\n  <span class=\"views-field views-field-field_aggc2\">    <span class=\"views-label views-label-field_aggc2\">Individual and Appropriate Systems (IAS): </span>    <span class=\"field-content\">"
-//         .$row['field_aggc2_value'].        
-//         "</span>  </span>";
-//         
-//         $field_aggpercwithouttreatment = "\n  <span class=\"views-field views-field-field_aggpercwithouttreatment\">    <span class=\"views-label views-label-field_aggpercwithouttreatment\">Discharge without treatment: </span>    <span class=\"field-content\">"
-//         .$row['field_aggpercwithouttreatment_value'].        
-//         "</span>  </span>";                        
-                                     
-                            //http://webnuxdev.rnde.tm.fr/ev_uwwtd_si/agglomeration/si03556/2012
-//         $title = l($row['title'], $option['popup_title_type'] . '/'.strtolower($row['field_inspireidlocalid_value']).'/'.$row['field_anneedata_value'], array('attributes'=>array('target'=>'_blank')));
+
         $title = l($row['title'], uwwtd_get_url_path($option['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])), array('attributes'=>array('target'=>'_blank')));
         
-//         $title = l($row['title'], $option['popup_title_type'], array('attributes'=>array('target'=>'_blank')));
-        
-        
-//         $description = $field_agggenerated . $field_aggcompliance . $field_aggart3compliance . $field_aggart4compliance . $field_aggart5compliance . $field_aggart6compliance
-//                         . $field_aggc1 . $field_aggc2 . $field_aggpercwithouttreatment;
-        
-        //here calculate the weight for scaling point
-        //try to get info from database configured on behaviour scale
-        //todo here   field_aggcompliance_value must be pass by parameter
-        //HERE, color may happen to not work because there is a \r adding in the map config
-        //when map import, \r will disppear, try with a \r to see if ok
-        //'C' => "#4f91e1\r",
-        //'NR' => "#a2a2a2\r",
-        //'NC' => "#d93c3c\r",
-        //'NI' => "#6b6b6b\r",         
         $color = '#000000';
-//         dsm($option);
-//         dsm($row);
-        if (isset($option['color'])) {
-//             $color = $option['color'][$row['field_aggcompliance_value']];            
+        if (isset($option['color'])) {            
             $color = $option['color']['list'][$row[ $option['color']['field'] ]];
         }
         
-//         dsm($color . ':' . $row['field_aggcompliance_value']);
-        
         $weight = 1;
         if (isset($option['weight'])) {
-//            foreach($option['weight'] as $key => $maxagggenerated) {
-//              if ($row['field_agggenerated_value'] < $maxagggenerated) {
-//                 $weight = $key;
-//                 break;
-//              }
-//              if ($maxagggenerated == 0) {
-//                 $weight = $key;
-//              }
-//            } 
-           
            foreach($option['weight']['list'] as $key => $value) {
              if ($row[ $option['weight']['field'] ] < $value) {
                 $weight = $key;
@@ -1869,245 +1648,42 @@ function uwwtd_build_feature($data, $option = array())
                 $weight = $key;
              }
            } 
-                      
-          
         }
         $chart = array();     
         if (isset($option['piechart'])) {   
-//             $svgtest = '<svg id="OpenLayers_Geometry_Point_24" cx="651.0175999995845" cy="389.9091049244453" r="1" viewBox="0 0 13.5 13.5" width="13.5" height="13.5" x="644.2675999995845" y="383.1591049244453" fill="#888888" fill-opacity="0.8" stroke="#222222" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="visiblePainted">
-//             <g transform="translate(6.75,6.75)">
-//                 <g class="arc">
-//                 <path d="M4.133182947122317e-16,-6.75A6.75,6.75 0 1,1 -6.630438942418649,1.2648238734536408L0,0Z" style="fill: rgb(116, 255, 224); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//                 <g class="arc">
-//                 <path d="M-6.630438942418649,1.2648238734536408A6.75,6.75 0 0,1 -3.8986157481003065,-5.510289942340991L0,0Z" style="fill: rgb(189, 136, 66); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//                 <g class="arc">
-//                 <path d="M-3.8986157481003065,-5.510289942340991A6.75,6.75 0 0,1 -1.239954884136695e-15,-6.75L0,0Z" style="fill: rgb(192, 0, 0); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//             </g>
-//                 
-//             </svg>';                      
             foreach($option['piechart'] as $field => $detail) {
                 $chart[] = array(
                     'label' => $detail['label'],
                     'value' => $row[$field],
                     'color' => $detail['color'],
                       
-//                     'svg' => $svgtest,
+                    
                 );
-            }  
-//             "data": [
-//             {
-//             "label": "Collective system",
-//             "value": 90.85,
-//             "color": "#74FFE0"
-//             },
-//             {
-//             "label": "Individual and Appropriate Systems (IAS)",
-//             "value": 8.54,
-//             "color": "#BD8842"
-//             },
-//             {
-//             "label": "Discharge without treatment",
-//             "value": 0.61,
-//             "color": "#C00000"
-//             }
-//             ]
+            } 
+            $returnvalue .= uwwtd_get_svg_piechart($i, $row, $option, $option['piechart_weight_style'][$weight]);
+                         
         }        
-//          else {
-//             //todo
-//             if ($row['field_agggenerated_value'] >= 2000 && $row['field_agggenerated_value'] < 10000) {
-//                 $weight = 2;
-//             } elseif ($row['field_agggenerated_value'] >= 10000) {
-//                 $weight = 3;
-//             }
-//         }
         
         $feature[] = array(
             'projection' => 'EPSG:4326',
             'attributes' => array(                            
                 'name'=> $title,
                 'description'=> $description,
-//                 'title' => $title,
-//                 'count' => 0,
                 'weight' => $weight,
                 'color' => $color,//'#000000',
-                'data' => $chart, 
-//                 'piechartid' => 'pie_' .$i,       
-//                 'field_agggenerated' => $field_agggenerated,
-//                 'field_aggcompliance' => $field_aggcompliance,
-//                 'field_aggart3compliance' => $field_aggart3compliance,
-//                 'field_aggart4compliance' => $field_aggart4compliance,
-//                 'field_aggart5compliance' => $field_aggart5compliance,
-//                 'field_aggart6compliance' => $field_aggart6compliance,            
+                'data' => $chart,
+                'piechartid' => 'pie_' .$i,       
             ),
             'style' => null, 
             'wkt' => $row['wkt'],  
         );
     }
-//     dsm($feature);
+  
     return $feature;    
 }
 
-// function uwwtd_build_feature_uwwtp($data)
-// {
-//     $feature = array();
-//     
-//     foreach($data as $row) {
-// //         $field_agggenerated = "  \n  <span class=\"views-field views-field-field-agggenerated\">    <span class=\"views-label views-label-field-agggenerated\">Generated load (p.e.): </span>    <span class=\"field-content\">"
-// //         .$row['agggenerated'].
-// //         "</span>  </span>";  
-// //         $field_aggcompliance = "\n  <span class=\"views-field views-field-field-aggcompliance\">    <span class=\"views-label views-label-field-aggcompliance\">Compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggcompliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart3compliance = "\n  <span class=\"views-field views-field-field-aggart3compliance\">    <span class=\"views-label views-label-field-aggart3compliance\">Article 3 compliance: </span>    <span class=\"field-content\">
-// //         ".$row['aggart3compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart4compliance = "\n  <span class=\"views-field views-field-field-aggart4compliance\">    <span class=\"views-label views-label-field-aggart4compliance\">Article 4 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart4compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart5compliance = "\n  <span class=\"views-field views-field-field-aggart5compliance\">    <span class=\"views-label views-label-field-aggart5compliance\">Article 5 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart5compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart6compliance = "\n  <span class=\"views-field views-field-field-aggart6compliance\">    <span class=\"views-label views-label-field-aggart6compliance\">Article 6 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart6compliance'].        
-// //         "</span>  </span>";
-//             
-//         $uwwcompliance = "<span class=\"views-field views-field-field-uwwcompliance\">    <span class=\"views-label views-label-field-uwwcompliance\">Compliance: </span>    <span class=\"field-content\">".$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']]."</span>  </span>";  
-//         $uwwprimarytreatment = "<span class=\"views-field views-field-field-uwwprimarytreatment\">    <span class=\"views-label views-label-field-uwwprimarytreatment\">Primary treatment: </span>    <span class=\"field-content\">".$row['field_uwwprimarytreatment_value']."</span>  </span>";  
-//         $uwwsecondarytreatment = "<span class=\"views-field views-field-field-uwwsecondarytreatment\">    <span class=\"views-label views-label-field-uwwsecondarytreatment\">Secondary treatment: </span>    <span class=\"field-content\">".$row['field_uwwsecondarytreatment_value']."</span>  </span>";  
-//         $uwwnremoval = "<span class=\"views-field views-field-field-uwwnremoval\">    <span class=\"views-label views-label-field-uwwnremoval\">N-removal: </span>    <span class=\"field-content\">".$row['field_uwwnremoval_value']."</span>  </span>";  
-//         $uwwpremoval = "<span class=\"views-field views-field-field-uwwpremoval\">    <span class=\"views-label views-label-field-uwwpremoval\">P-removal: </span>    <span class=\"field-content\">".$row['field_uwwpremoval_value']."</span>  </span>";
-//         
-//         $physicalcapacityactivity = "<span class=\"views-field views-field-field-physicalcapacityactivity\">    <span class=\"views-label views-label-field-uwwpremoval\">Capacity: </span>    <span class=\"field-content\">".$row['field_physicalcapacityactivity_value']."</span>  </span>";
-//         $uwwbod5perf = "<span class=\"views-field views-field-field-uwwbod5perf\">    <span class=\"views-label views-label-field-uwwpremoval\">Performance: BOD5: </span>    <span class=\"field-content\">".$row['field_uwwbod5perf_value']."</span>  </span>";
-//         $uwwcodperf = "<span class=\"views-field views-field-field-uwwcodperf\">    <span class=\"views-label views-label-field-uwwpremoval\">Performance: COD: </span>    <span class=\"field-content\">".$row['field_uwwcodperf_value']."</span>  </span>";
-//         $uwwntotperf = "<span class=\"views-field views-field-field-uwwntotperf\">    <span class=\"views-label views-label-field-uwwpremoval\">Performance: Total nitrogen: </span>    <span class=\"field-content\">".$row['field_uwwntotperf_value']."</span>  </span>";
-//         $uwwptotperf = "<span class=\"views-field views-field-field-uwwptotperf\">    <span class=\"views-label views-label-field-uwwpremoval\">Performance: Total phosphorus: </span>    <span class=\"field-content\">".$row['field_uwwptotperf_value']."</span>  </span>";
-//     
-//             
-//       
-//                             //http://webnuxdev.rnde.tm.fr/uwwtd_cy/treatment-plant/cy110_uwwtp/2011
-//         $title = l($row['title'], 'treatment-plant/'.strtolower($row['field_inspireidlocalid_value']).'/'.$row['field_anneedata_value'], array('attributes'=>array('target'=>'_blank')));
-//         $description = $uwwcompliance . $uwwprimarytreatment . $uwwsecondarytreatment . $uwwnremoval . $uwwpremoval
-//         . $physicalcapacityactivity . $uwwbod5perf . $uwwcodperf . $uwwntotperf . $uwwptotperf;
-//         ;
-//         
-//         //here calculate the weight for scaling point
-//         //try to get info from database configured on behaviour scale
-// //         $weight = 1;
-// //         if ($row['agggenerated'] >= 2000 && $row['agggenerated'] < 10000) {
-// //             $weight = 2;
-// //         } elseif ($row['agggenerated'] >= 10000) {
-// //             $weight = 3;
-// //         }
-//         
-//         $feature[] = array(
-//             'projection' => 'EPSG:4326',
-//             'attributes' => array(                            
-//                 'name'=> $title,
-//                 'description'=> $description,
-// //                 'title' => $title,
-// //                 'count' => 0,
-// //                 'weight' => $weight,
-// //                 'color' => '#000000',
-// //                 'field_agggenerated' => $field_agggenerated,
-// //                 'field_aggcompliance' => $field_aggcompliance,
-// //                 'field_aggart3compliance' => $field_aggart3compliance,
-// //                 'field_aggart4compliance' => $field_aggart4compliance,
-// //                 'field_aggart5compliance' => $field_aggart5compliance,
-// //                 'field_aggart6compliance' => $field_aggart6compliance,            
-//             ),
-//             'style' => null, 
-//             'wkt' => $row['wkt'],  
-//         );
-//     }
-//     return $feature;    
-// }
-
-// function uwwtd_build_feature_dcp($data)
-// {
-//     $feature = array();
-//     
-//     foreach($data as $row) {
-// //         $field_agggenerated = "  \n  <span class=\"views-field views-field-field-agggenerated\">    <span class=\"views-label views-label-field-agggenerated\">Generated load (p.e.): </span>    <span class=\"field-content\">"
-// //         .$row['agggenerated'].
-// //         "</span>  </span>";  
-// //         $field_aggcompliance = "\n  <span class=\"views-field views-field-field-aggcompliance\">    <span class=\"views-label views-label-field-aggcompliance\">Compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggcompliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart3compliance = "\n  <span class=\"views-field views-field-field-aggart3compliance\">    <span class=\"views-label views-label-field-aggart3compliance\">Article 3 compliance: </span>    <span class=\"field-content\">
-// //         ".$row['aggart3compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart4compliance = "\n  <span class=\"views-field views-field-field-aggart4compliance\">    <span class=\"views-label views-label-field-aggart4compliance\">Article 4 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart4compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart5compliance = "\n  <span class=\"views-field views-field-field-aggart5compliance\">    <span class=\"views-label views-label-field-aggart5compliance\">Article 5 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart5compliance'].
-// //         "</span>  </span>";  
-// //         $field_aggart6compliance = "\n  <span class=\"views-field views-field-field-aggart6compliance\">    <span class=\"views-label views-label-field-aggart6compliance\">Article 6 compliance: </span>    <span class=\"field-content\">"
-// //         .$row['aggart6compliance'].        
-// //         "</span>  </span>";
-//         
-//                             //http://webnuxdev.rnde.tm.fr/uwwtd_cy/discharge-point/cy11_1-dispoint/2011
-//         $title = l($row['title'], 'discharge-point/'.strtolower($row['field_inspireidlocalid_value']).'/'.$row['field_anneedata_value'], array('attributes'=>array('target'=>'_blank')));
-//         $description = '';//$field_agggenerated . $field_aggcompliance . $field_aggart3compliance . $field_aggart4compliance . $field_aggart5compliance . $field_aggart6compliance;
-//         
-//         //here calculate the weight for scaling point
-//         //try to get info from database configured on behaviour scale
-// //         $weight = 1;
-// //         if ($row['agggenerated'] >= 2000 && $row['agggenerated'] < 10000) {
-// //             $weight = 2;
-// //         } elseif ($row['agggenerated'] >= 10000) {
-// //             $weight = 3;
-// //         }
-//         
-//         $feature[] = array(
-//             'projection' => 'EPSG:4326',
-//             'attributes' => array(                            
-//                 'name'=> $title,
-//                 'description'=> $description,
-// //                 'title' => $title,
-// //                 'count' => 0,
-// //                 'weight' => $weight,
-// //                 'color' => '#000000',
-// //                 'field_agggenerated' => $field_agggenerated,
-// //                 'field_aggcompliance' => $field_aggcompliance,
-// //                 'field_aggart3compliance' => $field_aggart3compliance,
-// //                 'field_aggart4compliance' => $field_aggart4compliance,
-// //                 'field_aggart5compliance' => $field_aggart5compliance,
-// //                 'field_aggart6compliance' => $field_aggart6compliance,            
-//             ),
-//             'style' => null, 
-//             'wkt' => $row['wkt'],  
-//         );
-//     }
-//     return $feature;    
-// }
-
 function uwwtd_build_map($map, $features) {
-  // Get map preset
-//   $preset = openlayers_preset_load($preset_name);
-//   dsm($map);
-//   $map = openlayers_build_map($preset->data);
- //dsm($map);
-  //dsm($map_type);
-  //On active la couche "$map_type"
-//   if($map_type && isset($map['layer_activated'][$map_type])){
-//     $map['layer_activated'][$map_type] = $map_type;
-//   }
-  
-//   if (!isset($map['layers']['geofield_formatter'])) {
-//     drupal_set_message(t('Trying to render a geofield formatter on a map without the placeholder layer'), 'error');
-//   }
 
-  // Add the features to the placeholder layer
-//   $map['layers'][$overlay] = $map['layers']['waste_water_network_openlayers_3'];
-//   dsm($features);
-//   return '';
-// dsm($map);
-// return '';
   foreach($features as $overlay => $feature) {
       if (!isset($map['layers'][$overlay])) {
         drupal_set_message(t('Trying to render a overlay ' . $overlay . ' on a map without the placeholder layer'), 'error');
@@ -2118,8 +1694,6 @@ function uwwtd_build_map($map, $features) {
   // Return themed map if no errors found
   if (empty($map['errors'])) {
     $js = array('openlayers' => array('maps' => array($map['id'] => $map)));
-//     drupal_add_js($js, 'setting');
-//     drupal_add_js($js,'jQuery.extend(Drupal.settings,'.json_encode($js).')', 'inline');
     //put js in html output in order to put all block in cache
     $output = 
     '<script>jQuery.extend(Drupal.settings,'.json_encode($js).');</script>'.
@@ -2149,36 +1723,6 @@ function uwwtd_get_all_year()
 
 function uwwtd_filter_form($list_field, $filter)
 {
-// $GLOBALS['uwwtd']['ui']['compliance'] = array(
-//     'All' => '- Any -',
-//     'NI' => 'No information',
-//     'NR' => 'Not relevant',
-//     'NC' => 'Not compliant',
-//     'C' => 'Compliants',
-//     '?' => '?',
-// );
-// $GLOBALS['uwwtd']['ui']['operator'] = array(
-//     '<' => 'Is less than',
-//     '<=' => 'Is less than or equal to',
-//     '=' => 'Is equal to',
-//     '!=' => 'Is not equal to',
-//     '>=' => 'Is greater than or equal to',
-//     '>' => 'Is greater than',
-// );
-
-// $listyear = uwwtd_get_all_year();
-// // dsm($listyear);
-// //     return '';
-// $list_field = array(
-//     'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $listyear),        
-//     'field_agggenerated_value'      => array('title' => 'Generated load (p.e.)', 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-//     'field_aggcompliance_value'     => array('title' => 'Compliance', 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-//     'field_aggart3compliance_value' => array('title' => 'Article 3 compliance', 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-//     'field_aggart4compliance_value' => array('title' => 'Article 4 compliance', 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-//     'field_aggart5compliance_value' => array('title' => 'Article 5 compliance', 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-//     'field_aggart6compliance_value' => array('title' => 'Article 6 compliance', 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-// );   
-
 $render_field = '';
 foreach($list_field as $field_name => $data) {
     $render_field .= '<div class="views-exposed-widget views-widget-filter-'.$field_name.'" id="edit-field-'.$field_name.'-wrapper">
@@ -2198,17 +1742,6 @@ foreach($list_field as $field_name => $data) {
                             }                        
                             $render_field .= '<option value="'.htmlspecialchars($operator).'" '. $selected . '>'.$label.'</option>';
                         }
-//                         <option value="&lt;=">Is less than or equal to</option>
-//                         <option selected="selected" value="=">Is equal to</option>
-//                         <option value="!=">Is not equal to</option>
-//                         <option value="&gt;=">Is greater than or equal to</option>
-//                         <option value="&gt;">Is greater than</option>
-//                         <!--
-//                         <option value="between">Is between</option>
-//                         <option value="not between">Is not between</option>
-//                         <option value="empty">Is empty (NULL)</option>
-//                         <option value="not empty">Is not empty (NOT NULL)</option>
-//                         -->
                         $render_field .= '</select>
                     </div>
                 </div>
@@ -2446,7 +1979,6 @@ function uwwtd_get_form_filter($option)
 
 function uwwtd_filter_data($filter, &$data)
 {
-//     dsm($filter);
     //no need to treat annee, already filter by request
     unset($filter['filter']['field_anneedata_value']);
     //get field with operator
@@ -2462,16 +1994,9 @@ function uwwtd_filter_data($filter, &$data)
             unset($filter['filter'][$field_op], $filter['filter'][$field_name_value]);
         }
     }
-//     dsm($list_operator_field);
-//     if (isset($filter['filter']['field_agggenerated_value_op'])) {
-//         $field_agggenerated_value_op = $filter['filter']['field_agggenerated_value_op'];
-//         $field_agggenerated_value = $filter['filter']['field_agggenerated_value']['value'];
-//         unset($filter['filter']['field_agggenerated_value_op'], $filter['filter']['field_agggenerated_value']);
-//     }
-//     dsm($filter);
+
     $datafilter = array();
     foreach($data as $row) {
-//         dsm($row);
         $keepRow = true;
         foreach($filter['filter'] as $field => $value) {
             if ($row[$field] != $value) {
@@ -2481,15 +2006,7 @@ function uwwtd_filter_data($filter, &$data)
         }
         if ($keepRow == true) {
             foreach($list_operator_field as $one_operator) {
-    
-    //             if ($keepRow == true) {
-        //             dsm($field_agggenerated_value_op);
-        //             dsm($field_agggenerated_value);
-        //             dsm($row['field_agggenerated_value']);        
-        //             dsm($row);
                 $keepRow = $GLOBALS['uwwtd']['ui']['operatorfunction'][ $one_operator['op'] ]($row[ $one_operator['field'] ], $one_operator['value']);
-        //             dsm($keepRow);     
-    //             }
                 if ($keepRow == false) {
                     break;
                 }
@@ -2497,22 +2014,17 @@ function uwwtd_filter_data($filter, &$data)
         }
         
         if ($keepRow == true) {
-//             dsm('ici');
             $datafilter[] = $row;
         } 
     }
-//     unset($data);
     $data = $datafilter;
-//     dsm($data);
 }
                                                 
 function uwwtd_sort_data($filter, $order, &$data)
 {
-//     dsm(__FUNCTION__);
     //get field to sort
     if (isset($filter['order'])) {
         $fieldname =  array_search($filter['order'], $order);
-//         dsm($fieldname);
         if (false === $fieldname) {
             return;
         }
@@ -2526,7 +2038,7 @@ function uwwtd_page_agglomeration_connection()
 {
     $title = 'Agglomeration connection map and list';
     drupal_set_title($title);
-
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'];
@@ -2537,26 +2049,18 @@ function uwwtd_page_agglomeration_connection()
     $preset_name = 'agglomeration';   //layer agglomeration_treatment 'Agglomeration connection map and list'
     $preset = openlayers_preset_load($preset_name);
     $map    = openlayers_build_map($preset->data);
-    
+
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_agglo_treatment($filter['filter']);    
-//     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-//         $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
         $render_graph = theme('flot_graph', $cache->data['flot1']);        
         return $cache->data['page'];
     }
-//     dsm('not in cache');    
-    
-//     $listyear = ();
-    // dsm($listyear);
-    //     return '';
     $list_field = array(
         'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),        
         'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -2570,7 +2074,7 @@ function uwwtd_page_agglomeration_connection()
     $data = uwwtd_get_data_agglomeration($filter['filter']);
     
     uwwtd_filter_data($filter, $data);
-//     dsm($data);
+
     $header  =array();
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] as $field => $name) {
         $header[] = array(
@@ -2579,41 +2083,17 @@ function uwwtd_page_agglomeration_connection()
         );
         
         //set default sort if none exists
-//         if (false === isset($filter['sort']) && $field == 'field_agggenerated_value') {
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
         }        
     }
-//     dsm($header);
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'], $data);    
 
-//     $preset_name = 'agglomeration';   //layer agglomeration_treatment 'Agglomeration connection map and list'
-// //     $preset_name = 'agg_compliance_map';
-//     $preset = openlayers_preset_load($preset_name);
     $optionstyle = array();
-    //get the color for the point 
-//     $optionstyle['color']['list'] = uwwtd_get_point_color_from_preset($preset); 
-//     $optionstyle['color']['field'] = 'field_aggcompliance_value_format';
-    //get the size of the point
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_piechart');
-    $optionstyle['weight']['field'] = 'field_agggenerated_value';
-    
-        
-    //todo get tis value from database!
-//     $optionstyle = array();
-//     $optionstyle['weight'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-//     $optionstyle['weight']['list'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-//     $optionstyle['weight']['field'] = 'field_agggenerated_value';       
-//     array(
-//       1 =>  2000,
-//       2 =>  10000,
-//       3 =>  150000,
-//       4 =>  0,    
-//     );
-    //todo get tis value from database!
-    //todo : get field name for database NC => not compliant ...
-        //pie    
-    $optionstyle['piechart'] = wwtd_get_piechart_from_preset($preset, 'openlayers_plus_behavior_piechart');
+    $optionstyle['weight']['field'] = 'field_agggenerated_value';  
+    $optionstyle['piechart'] = uwwtd_get_piechart_from_preset($preset, 'openlayers_plus_behavior_piechart');
+    $optionstyle['piechart_weight_style'] = $map['behaviors']['openlayers_plus_behavior_piechart']['styles'];
 
 
     
@@ -2646,40 +2126,20 @@ function uwwtd_page_agglomeration_connection()
         'field_aggc2_value_format' => array('label' => 'Individual and Appropriate Systems (IAS)'),
         'field_aggpercwithouttreatment_value_format' => array('label' => 'Discharge without treatment'),
     );                                    
-//     dsm($optionstyle);            
-
-                     
-    //todo format data in table
     $graph = array();
-    $piechart = '';
-    $i=0;   
-//     dsm($map);
     foreach($data as $row) {
 
         if (false === isset($graph['field_aggc2_value'])) {
             $field_agggenerated_value = 0;
-//             $graph['field_aggc2_value']['nb'] = 0;
             $graph['field_aggc2_value']['value'] = 0;
-//             $graph['field_aggc2_value']['label'] = 'TODO';  
-//             $graph['field_aggc1_value']['nb'] = 0;
             $graph['field_aggc1_value']['value'] = 0;
-//             $graph['field_aggc1_value']['label'] = 'TODO';   
-//             $graph['field_aggpercwithouttreatment_value']['nb'] = 0;
             $graph['field_aggpercwithouttreatment_value']['value'] = 0;
-//             $graph['field_aggpercwithouttreatment_value']['label'] = 'TODO';                                    
         }
-//         $graph[$row['field_aggcompliance_value']]['nb']++;
-//         $graph[$row['field_aggcompliance_value']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
         $field_agggenerated_value   += $row['field_agggenerated_value'];
         $graph['field_aggc2_value']['value'] += $row['field_aggc2_value'] / 100  * $row['field_agggenerated_value'];
         $graph['field_aggc1_value']['value'] += $row['field_aggc1_value'] / 100  * $row['field_agggenerated_value'];
         $graph['field_aggpercwithouttreatment_value']['value'] += $row['field_aggpercwithouttreatment_value'] / 100  * $row['field_agggenerated_value'];
         
-        //format data
-//         $row['field_agggenerated_value'] = uwwtd_format_number($row['field_agggenerated_value']);
-//         $row['field_aggc2_value'] = uwwtd_format_number($row['field_aggc2_value'], 2);
-//         $row['field_aggc1_value'] = uwwtd_format_number($row['field_aggc1_value'], 2);              
-//         $row['field_aggpercwithouttreatment_value'] = uwwtd_format_number($row['field_aggpercwithouttreatment_value'], 2);
         $rows[] = array('data' => array(
                                         //$row['title'],
                                         l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
@@ -2689,51 +2149,17 @@ function uwwtd_page_agglomeration_connection()
                                         $row['field_aggc2_value_format'],
                                         $row['field_aggc1_value_format'],
                                         $row['field_aggpercwithouttreatment_value_format'],
-                                    ));
-        $i++;                            
-        //build html for piechart 
-         
-//         $size = 2 * $map['behaviors']['openlayers_plus_behavior_piechart']['styles']['1']['pointRadius'];
-// //         dsm($map['behaviors']); 
-//         $piechart .=     '<svg id="pie_'.$i.'" cx="651.0175999995845" cy="389.9091049244453" r="1" viewBox="0 0 '.$size.' '.$size.'" width="'.$size.'" height="'.$size.'" x="644.2675999995845" y="383.1591049244453" fill="#888888" fill-opacity="0.8" stroke="#222222" stroke-opacity="0.7" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="visiblePainted">
-//             <g transform="translate(6.75,6.75)">
-//                 <g class="arc">
-//                 <path d="M4.133182947122317e-16,-6.75A6.75,6.75 0 1,1 -6.630438942418649,1.2648238734536408L0,0Z" style="fill: rgb(116, 255, 224); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//                 <g class="arc">
-//                 <path d="M-6.630438942418649,1.2648238734536408A6.75,6.75 0 0,1 -3.8986157481003065,-5.510289942340991L0,0Z" style="fill: rgb(189, 136, 66); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//                 <g class="arc">
-//                 <path d="M-3.8986157481003065,-5.510289942340991A6.75,6.75 0 0,1 -1.239954884136695e-15,-6.75L0,0Z" style="fill: rgb(192, 0, 0); stroke: rgb(34, 34, 34); opacity: 0.8; stroke-width: 1;"/>
-//                 </g>
-//             </g>                
-//             </svg>';     
-                                                      
+                                    ));                            
     }
-//     dsm($rows);
-    //calculate % of each field
-//     if (isset($field_agggenerated_value)) {
     $graph['field_aggc2_value']['percent'] = $graph['field_aggc2_value']['value'] * 100 / $field_agggenerated_value;
     $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
     $graph['field_aggpercwithouttreatment_value']['percent'] = $graph['field_aggpercwithouttreatment_value']['value'] * 100 / $field_agggenerated_value;
-//     }
             
-    $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle);
-//     dsm($features['agglomeration_treatment']);
-//     unset($data); 
-   
+    $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle, $piechart);
+  
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
 
-//  f_annee.field_anneedata_value,              
-//  f_aggcode.field_inspireidlocalid_value,                        
-//  f_agggenerated.field_agggenerated_value,
-//  f_art3.field_aggart3compliance_value,       
-//  f_art4.field_aggart4compliance_value,       
-//  f_art5.field_aggart5compliance_value,       
-//  f_art6.field_aggart6compliance_value,       
-//  f_comp.field_aggcompliance_value,           
-//  f_nuts.field_regionnuts_value,     
     unset($data);
     $data_pie = array();
     $xaxis = array();   
@@ -2810,36 +2236,6 @@ function uwwtd_page_agglomeration_connection()
     </table>
  
       ';
-//       $i = 0;
-//       $total = 0;
-//     $render_table_graph .= '<tr class="odd views-row-first">';
-//       foreach($graph as $field => $detail) {
-//         
-//             $render_table_graph .= '<td class="views-field views-field-'.$field.'">
-//             ' . $detail['percent']. '          
-//             </td>';
-// //             <td class="views-field views-field-field-aggcompliance">
-// //             '. $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance] . '          
-// //             </td>
-// //             <td class="views-field views-field-field-aggcompliance">
-// //             '. $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance] . '          
-// //             </td> ';
-// //         $i++;
-// //         $total += $detail['field_agggenerated_value'];
-//       }
-//          
-//       $render_table_graph .= '</tr></tbody>
-//         <tfoot>
-//         <tr>
-//             <th class="views-field views-field-title">
-//             ' . $total . '          
-//             </th>
-//             <th class="views-field views-field-field-aggcompliance">
-//             </th>
-//         </tr>
-//         </tfoot>
-//         </table>
-//         </div>';    
       
     $build['tablesort_table'] = array(
             '#theme' => 'table',
@@ -2872,7 +2268,7 @@ function uwwtd_page_uwwtps_compliance()
 {
     $title = 'UWWTD Treatment Plants- Compliance map';
     drupal_set_title($title);  //todo
-    
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'];
@@ -3247,7 +2643,7 @@ function uwwtd_page_uwwtps_treatment()
 {
     $title = 'UWWTD Treatment Plants- Treatment map';
     drupal_set_title($title);  //todo
-
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     $option = array(); 
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value'];
@@ -3638,7 +3034,7 @@ function uwwtd_page_agglomeration_compliance()
 {
     $title = 'UWWTD Agglomerations- Compliance map';
     drupal_set_title($title); 
-         
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');     
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'];
@@ -4135,7 +3531,7 @@ function uwwtd_get_point_color_from_preset($preset)
 //             'color' => '#C00000',
 //         ),                
 //     ); 
-function wwtd_get_piechart_from_preset($preset, $behaviour)
+function uwwtd_get_piechart_from_preset($preset, $behaviour)
 {    
 // dsm($preset);
     $configuredPiechart = $preset->data['behaviors'][$behaviour]['fields_series'];
@@ -4153,3 +3549,68 @@ function wwtd_get_piechart_from_preset($preset, $behaviour)
     return $list;  
 }
 
+function uwwtd_get_svg_piechart($i, $values, $optionstyle, $weightstyle) 
+{
+	$chartelem = "";
+    
+    $radius = $weightstyle['pointRadius'];
+    $cx = $cy = $radius;
+    $opacity = $weightstyle['fillOpacity'];
+    $strokeWidth = $weightstyle['strokeWidth'];
+	
+	$sum = 0;
+	foreach ($optionstyle['piechart'] as $field=>$detail) {
+        if ($values[$field] == 0) {
+            $values[$field] = 1;
+        }
+		$sum += $values[$field];
+	}
+	$deg = $sum/360; // one degree
+	$jung = $sum/2; // necessary to test for arc type
+	
+	/* Data for grid, circle, and slices */ 
+	
+	$dx = $radius; // Starting point: 
+	$dy = 0; // first slice starts in the East
+	$oldangle = 0;
+	
+	/* Loop through the slices */
+    foreach ($optionstyle['piechart'] as $field=>$detail) {
+		$angle = $oldangle + $values[$field]/$deg; // cumulative angle
+		$x = cos(deg2rad($angle)) * $radius; // x of arc's end point
+		$y = sin(deg2rad($angle)) * $radius; // y of arc's end point
+	
+		$colour = $optionstyle['piechart'][$field]['color'];
+	
+		if ($values[$field] > $jung) {
+			// arc spans more than 180 degrees
+			$laf = 1;
+		}
+		else {
+			$laf = 0;
+		}
+	
+		$ax = $cx + $x; // absolute $x
+		$ay = $cy + $y; // absolute $y
+		$adx = $cx + $dx; // absolute $dx
+		$ady = $cy + $dy; // absolute $dy
+		$chartelem .= "\n";
+        $chartelem .= "\n";
+        $chartelem .= "<g class=\"arc\" >\n";
+		$chartelem .= "<path d=\"M$cx,$cy "; // move cursor to center
+		$chartelem .= " L$adx,$ady "; // draw line away away from cursor
+		$chartelem .= " A$radius,$radius 0 $laf,1 $ax,$ay "; // draw arc
+		$chartelem .= " z\" "; // z = close path
+        $chartelem .= ' style="fill: '.$colour.'; stroke: rgb(34, 34, 34); opacity: '.$opacity.'; stroke-width: '.$strokeWidth.';" stroke-linejoin="round"/>';
+        $chartelem .= "</g>\n";
+		$dx = $x; // old end points become new starting point
+		$dy = $y; // id.
+		$oldangle = $angle;
+	}
+             
+	return  '<svg style="display:none;" id="pie_'.$i.'">
+                '
+             . $chartelem
+             . '
+             </svg>';             
+}
