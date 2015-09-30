@@ -64,32 +64,32 @@
                 if (node.getAttribute("treated") != 1) {
                     var data=style.piechartdata.data.data;
                     /////////////////////////////////////////////////////
-    				var arc = d3.svg.arc()
-    					.outerRadius(style.pointRadius)
-    					.innerRadius(0);
-    				var pie = d3.layout.pie()
-    					.sort(null)
-    					.value(function(d) { return d.value; });
-    				var svg = d3.select(node)
-    					.append("g")
-    					.property('_featureId', node._featureId)
-    					.attr("transform", "translate(" + size / 2 + "," + size / 2 + ")");
-    				data.forEach(function(d) {
-    					d.value = +d.value;
-    				});
-    				var g = svg.selectAll(".arc")
-    					  .data(pie(data))
-    					.enter().append("g")
-    					  .property('_featureId', node._featureId)
-    					  .attr("class", "arc");
-    					  
-    				g.append("path")
-    				  .property('_featureId', node._featureId)
-    				  .attr("d", arc)
-    				  .style("fill", function(d) { return d.data.color; })
-    				  .style("stroke", function(d) { return style.strokeColor; })
-    				  .style("opacity", function(d) { return style.fillOpacity; })
-    				  .style("stroke-width", function(d) { return style.strokeWidth; });
+//     				var arc = d3.svg.arc()
+//     					.outerRadius(style.pointRadius)
+//     					.innerRadius(0);
+//     				var pie = d3.layout.pie()
+//     					.sort(null)
+//     					.value(function(d) { return d.value; });
+//     				var svg = d3.select(node)
+//     					.append("g")
+//     					.property('_featureId', node._featureId)
+//     					.attr("transform", "translate(" + size / 2 + "," + size / 2 + ")");
+//     				data.forEach(function(d) {
+//     					d.value = +d.value;
+//     				});
+//     				var g = svg.selectAll(".arc")
+//     					  .data(pie(data))
+//     					.enter().append("g")
+//     					  .property('_featureId', node._featureId)
+//     					  .attr("class", "arc");
+//     					  
+//     				g.append("path")
+//     				  .property('_featureId', node._featureId)
+//     				  .attr("d", arc)
+//     				  .style("fill", function(d) { return d.data.color; })
+//     				  .style("stroke", function(d) { return style.strokeColor; })
+//     				  .style("opacity", function(d) { return style.fillOpacity; })
+//     				  .style("stroke-width", function(d) { return style.strokeWidth; });
                     /////////////////////////////////////////////////////
     				var parent = node.parentNode;
                     var nextSibling = node.nextSibling;
