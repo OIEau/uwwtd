@@ -3856,6 +3856,8 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
  */ 
 function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUww)
 {   
+    uwwtd_trace(__FUNCTION__);
+    uwwtd_trace($agg->title);
     //collected in collectiove system = 0 or all uwwtp treatment required in (appropriate or NR)
     if ($agg->field_aggc1['und'][0]['value'] == 0       
         || true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'],
@@ -3874,13 +3876,14 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         //$agg->field_aggart3compliance['und'][0]['value']
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
     }
-    
+    uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
     //ALGO7
     $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
     //ALGO8
     $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance($agg, 'compArt6', $listStationArticleAndUwwtpCompliance);
     //ALGO9                                                          
     $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $aResult['compArt4']);
+    uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
     
     return $aResult;    
@@ -4053,6 +4056,7 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
  */ 
 function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
 {
+    uwwtd_trace(__LINE__);
     $aResult['required'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
     //treatement required = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['primary']) {
@@ -4068,6 +4072,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }                             
         }
+        uwwtd_trace(__LINE__);
         return $aResult;         
     }
     
@@ -4075,7 +4080,9 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     //treatement required = secondary && treatment in place = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
-        && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('primary'))) {
+//         && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('primary'))
+        && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array($GLOBALS['uwwtd_value']['inplace']['primary']))        
+        ) {
         
        if (true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant']; 
@@ -4084,7 +4091,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }
-       
+        uwwtd_trace(__LINE__);
        return $aResult;          
     }
     
@@ -4106,6 +4113,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }            
         } 
+        uwwtd_trace(__LINE__);
         return $aResult;            
     }
     
@@ -4125,7 +4133,8 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
        } else {
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-       }      
+       } 
+       uwwtd_trace(__LINE__);     
        return $aResult;          
     }
     
@@ -4149,7 +4158,8 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
        } else {
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-       }      
+       }
+       uwwtd_trace(__LINE__);      
        return $aResult;          
     }    
     
@@ -4168,7 +4178,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }              
         }
-        
+        uwwtd_trace(__LINE__);
         return $aResult;   
     }
     
@@ -4185,6 +4195,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } 
    } 
+   uwwtd_trace(__LINE__);
    return $aResult;   
 }
 
@@ -6997,6 +7008,7 @@ function uwwtd_get_countrycode_from_repcode($repcode)
 	$rep = $boom[0];
     return $rep; 
 }  
+
 
 function uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, $listtreatement) {
     $bResult = true;
