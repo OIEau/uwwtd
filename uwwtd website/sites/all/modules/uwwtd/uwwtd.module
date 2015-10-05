@@ -243,14 +243,14 @@ function uwwtd_menu(){
   );
   $items['agglomerations/compliance/csv'] = array(
     'page callback' => 'uwwtd_page_agglomeration_compliance',
-    'page arguments' => array(3),
+    'page arguments' => array('csv'),
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );  
   $items['agglomerations/compliance/xls'] = array(
     'page callback' => 'uwwtd_page_agglomeration_compliance',
-    'page arguments' => array(3),
+    'page arguments' => array('xls'),
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
@@ -271,14 +271,14 @@ function uwwtd_menu(){
   );
   $items['uwwtps/compliance/csv'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
-    'page arguments' => array(3),
+    'page arguments' => array('csv'),
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   ); 
   $items['uwwtps/compliance/xls'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
-    'page arguments' => array(3),
+    'page arguments' => array('xls'),
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
@@ -2651,7 +2651,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
             '#theme' => 'table',
             '#header' => $header,
             '#rows' => $rows,
-        );    
+        );            
     //build export data on ODT,XML,CSV,DOC...
     $render_graph_nb = theme('flot_graph', $variables_nb);
     $render_graph = theme('flot_graph', $variables);
@@ -3676,7 +3676,6 @@ function uwwtd_get_svg_piechart($i, $values, $optionstyle, $weightstyle)
 
 function uwwtd_export_data($type_export, $title, $header, $rows)
 {
-    dsm($headers);
     $filename = tempnam('public://tmp/', 'export'); 
     $r = fopen($filename, 'wb');
     switch($type_export) {
