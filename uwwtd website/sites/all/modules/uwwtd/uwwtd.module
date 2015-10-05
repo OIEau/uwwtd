@@ -241,6 +241,20 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['agglomerations/compliance/csv'] = array(
+    'page callback' => 'uwwtd_page_agglomeration_compliance',
+    'page arguments' => array(3),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );  
+  $items['agglomerations/compliance/xls'] = array(
+    'page callback' => 'uwwtd_page_agglomeration_compliance',
+    'page arguments' => array(3),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );  
   $items['agglomerations/connection'] = array(
     'page callback' => 'uwwtd_page_agglomeration_connection',
     'page arguments' => array(),
@@ -255,6 +269,20 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['uwwtps/compliance/csv'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_compliance',
+    'page arguments' => array(3),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  ); 
+  $items['uwwtps/compliance/xls'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_compliance',
+    'page arguments' => array(3),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );   
   $items['uwwtps/treatment'] = array(
     'page callback' => 'uwwtd_page_uwwtps_treatment',
     'page arguments' => array(),
@@ -2264,7 +2292,7 @@ function uwwtd_page_agglomeration_connection()
      return $page;          
 }
 
-function uwwtd_page_uwwtps_compliance()
+function uwwtd_page_uwwtps_compliance($type_export = '')
 {
     $title = 'UWWTD Treatment Plants- Compliance map';
     drupal_set_title($title);  //todo
@@ -2284,7 +2312,7 @@ function uwwtd_page_uwwtps_compliance()
     $cache_name = uwwtd_get_cache_key_page_uwwtp_compliance($filter['filter']);    
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';           
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -2315,6 +2343,7 @@ function uwwtd_page_uwwtps_compliance()
     uwwtd_filter_data($filter, $data);
 //     dsm($data);
     $header  =array();
+    $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp'] as $field => $name) {
         $header[] = array(
             'data' => $name,
@@ -2325,7 +2354,9 @@ function uwwtd_page_uwwtps_compliance()
 //         if (false === isset($filter['sort']) && $field == 'field_agggenerated_value') {
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
-        }        
+        }  
+        
+        $header_export[] = $name;             
     }
 //     dsm($header);
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp'], $data);
@@ -2407,7 +2438,7 @@ function uwwtd_page_uwwtps_compliance()
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);     
         $rows[] = array('data' => array(
                                         //$row['title'],
-                                        l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+                                        ($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
                                         $row['field_inspireidlocalid_value'],
                                         $row['field_uwwloadenteringuwwtp_value_format'],
                                         $row['field_regionnuts_value'],
@@ -2420,6 +2451,11 @@ function uwwtd_page_uwwtps_compliance()
                                     ));
     }
 
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'uwwtp_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+    
     $features['uwwtp_compliance_map'] = uwwtd_build_feature($data, $optionstyle);
 //     dsm($features);
 
@@ -2619,6 +2655,10 @@ function uwwtd_page_uwwtps_compliance()
     //build export data on ODT,XML,CSV,DOC...
     $render_graph_nb = theme('flot_graph', $variables_nb);
     $render_graph = theme('flot_graph', $variables);
+    
+    $link_export_csv = '<a href="'.url('uwwtps/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
+    $link_export_xls = '<a href="'.url('uwwtps/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
+    
     $page = '<h1>'.$title.'</h1>'
             . $form 
             . $rendermap   
@@ -2628,7 +2668,9 @@ function uwwtd_page_uwwtps_compliance()
             . '<div class="view-content flot-title">Compliance by Generated load (p.e.)</div>'          
             . '<div class="view-content">'.$render_graph.'</div>'
             . '<div class="view-content">'.$render_table_graph.'</div>'
-            . '<div class="view-content">'. drupal_render($build) . '</div>'      
+            . '<div class="view-content">'. drupal_render($build) . '</div>'
+            . '<div class="view-content">'. $link_export_csv . '</div>'
+            . '<div class="view-content">'. $link_export_xls . '</div>'
      ;
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page, 
@@ -3030,7 +3072,7 @@ function uwwtd_is_filter_default($filter, $option)
     return $result;
 }
 
-function uwwtd_page_agglomeration_compliance()
+function uwwtd_page_agglomeration_compliance($type_export = '')
 {
     $title = 'UWWTD Agglomerations- Compliance map';
     drupal_set_title($title); 
@@ -3051,7 +3093,7 @@ function uwwtd_page_agglomeration_compliance()
 //     dsm($filter);
     
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();             
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';             
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {                                    
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -3083,7 +3125,7 @@ function uwwtd_page_agglomeration_compliance()
         'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
         'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
     ); 
-
+                                  
     $form = uwwtd_filter_form($list_field, $filter);
     
     $data = uwwtd_get_data_agglomeration($filter['filter']);
@@ -3091,6 +3133,7 @@ function uwwtd_page_agglomeration_compliance()
     uwwtd_filter_data($filter, $data);
 //     dsm($data);
     $header = array();
+    $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $name) {
         $header[] = array(
             'data' => $name,
@@ -3101,7 +3144,9 @@ function uwwtd_page_agglomeration_compliance()
 //         if (false === isset($filter['sort']) && $field == 'field_agggenerated_value') {
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
-        }        
+        }
+        
+        $header_export[] = $name;        
     }
 //     dsm($header);
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration'], $data);
@@ -3174,7 +3219,7 @@ function uwwtd_page_agglomeration_compliance()
 //         $row['field_aggart6compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']];          
         $rows[] = array('data' => array(
                                         //$row['title'],
-                                        l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+                                        ($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
                                         $row['field_inspireidlocalid_value'],
                                         $row['field_agggenerated_value_format'],
                                         $row['field_regionnuts_value'],
@@ -3185,6 +3230,12 @@ function uwwtd_page_agglomeration_compliance()
                                         $row['field_aggart6compliance_value_format'],
                                     ));
     }
+    
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'agglomeration_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+    
     
     $features['compliance_map'] = uwwtd_build_feature($data, $optionstyle);
 //     dsm($features);
@@ -3397,7 +3448,13 @@ function uwwtd_page_agglomeration_compliance()
         );    
     //build export data on ODT,XML,CSV,DOC...
     $render_graph_nb = theme('flot_graph', $variables_nb);
-    $render_graph = theme('flot_graph', $variables);    
+    $render_graph = theme('flot_graph', $variables);
+    
+    
+    $link_export_csv = '<a href="'.url('agglomerations/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
+    $link_export_xls = '<a href="'.url('agglomerations/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
+    
+        
     $page =  '<h1>'.$title.'</h1>'
             . $form 
             . $rendermap
@@ -3418,6 +3475,8 @@ function uwwtd_page_agglomeration_compliance()
             . '<div class="view-content">'.$render_graph.'</div>'
             . '<div class="view-content">'.$render_table_graph.'</div>'
             . '<div class="view-content">'. drupal_render($build) . '</div>'
+            . '<div class="view-content">'. $link_export_csv . '</div>'
+            . '<div class="view-content">'. $link_export_xls . '</div>'
      ;
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page, 
@@ -3613,4 +3672,71 @@ function uwwtd_get_svg_piechart($i, $values, $optionstyle, $weightstyle)
              . $chartelem
              . '
              </svg>';             
+}
+
+function uwwtd_export_data($type_export, $title, $header, $rows)
+{
+    dsm($headers);
+    $filename = tempnam('public://tmp/', 'export'); 
+    $r = fopen($filename, 'wb');
+    switch($type_export) {
+        case 'csv':
+            fputcsv($r, $header, ';');
+            foreach($rows as $row) {
+                fputcsv($r, $row['data'], ';');
+            }            
+            break;   
+        case 'xls':
+            fputs($r, '<html>
+                        <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                        </head>
+                        <body>
+                        <table>
+                        <thead>
+                        ');
+//                 '<html>
+//                   <head>
+//                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+//                   </head>
+//                   <body>
+//                     <table>
+//                     <thead><tr><th>ID</th><th>Name</th><th>Age</th></tr></thead>    <tbody> <tr class="odd"><td>1</td><td>John</td><td>25</td> </tr>
+//                  <tr class="even"><td>2</td><td>George</td><td>27</td> </tr>
+//                  <tr class="odd"><td>3</td><td>Ringo</td><td>28</td> </tr>
+//                  <tr class="even"><td>4</td><td>Paul</td><td>26</td> </tr>
+//                  <tr class="odd"><td>5</td><td>Meredith</td><td>30</td> </tr>
+//                       </tbody>
+//                     </table>
+//                   </body>
+//                 </html>';        
+            fputs($r, '<tr><th>' . implode('</th><th>', $header) . '</th></tr>');
+            fputs($r, '</thead><tbody>');     
+            foreach($rows as $row) {
+                fputs($r, '<tr><td>' . implode('</td><td>', $row['data']) . '</td></tr>');
+            }   
+            fputs($r, '</tbody></table></body></html>');               
+            break;
+        default:
+            $type_export = '';
+            break;             
+    }  
+    fclose($r);
+//     dsm(file_get_contents($filename));
+//     return;  
+    ini_set("auto_detect_line_endings", false); //for Mac user    
+    $aHeaders = array(
+          'Content-Type'        => 'application/octet-stream',   
+          'Content-Disposition' => 'attachment; filename="'.$title.'.'.$type_export.'"',
+          'Expires'             => '0',
+          'Cache-Control'       => 'must-revalidate',
+          'Pragma'              =>'public',
+          'Content-Length'      => filesize($filename),
+      );            
+    foreach ($aHeaders as $sName => $sValue) {
+        drupal_add_http_header($sName, $sValue);
+    }
+    readfile($filename); 
+    unlink($filename);    
+    exit();      
 }
