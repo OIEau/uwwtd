@@ -932,6 +932,64 @@ function uwwtd_update_7111()
     variable_set('siif_eru_version', '7111');      
 }
 
+/**
+ * Delete menu main and import new one
+ * update openlayer overlay 
+ */ 
+function uwwtd_update_7112()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //check if module install
+    //http://ftp.drupal.org/files/projects/menu_import-7.x-1.7.tar.gz
+//     if(false === module_exists('menu_import')) {
+//         throw new DrupalUpdateException('please install and enable the module menu_import for drupal 7 and continue the update process. (http://ftp.drupal.org/files/projects/menu_import-7.x-1.7.tar.gz)');    
+//     }
+    
+    
+    if (false === module_enable(array('menu_import'))) {
+        throw new DrupalUpdateException("Error, the module menu_import can\'t be enabled, see in module page if a dependency is needed or if this module is installed");
+    }
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+        
+    menu_delete(array('menu_name' => $menu['menu_name']));
+    
+    menu_save($menu);
+    //SEE menu_link_save($item); to create menu link
+    
+    //create a page for new download menu
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Download";
+    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/download'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body[$node->language][0]['value'] = '';
+    $node->body[$node->language][0]['summary'] = '';
+    $node->body[$node->language][0]['format'] = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+    
+
+    //install new main menu    
+    uwwtd_install_menu($menu, 'main-menu7112.json');   //todo change
+    
+    //update on overlay waste water (add a s to agglomeration)    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code, array('waste_water_treatment_network_map.inc'), array('-'), array('-'));     
+    drupal_flush_all_caches();
+    
+    variable_set('siif_eru_version', __FUNCTION__);
+}
+
 
 
 /***************************************************************************/
@@ -989,6 +1047,7 @@ function uwwtd_update_node_title_size()
 
 function uwwtd_delete_node_type_error()
 {
+    uwwtd_install_trace(__FUNCTION__);
 	$ids = array();
 	$query = db_select('node', 'n');
     $query->fields('n', array('nid'));
@@ -1005,6 +1064,7 @@ function uwwtd_delete_node_type_error()
 
 function uwwtd_insert_openlayers($table, $row)
 {
+    uwwtd_install_trace(__FUNCTION__);
     if (db_select($table)
                   ->fields($table, array('name'))
                   ->condition('name', $row['name'])
@@ -1031,8 +1091,9 @@ function uwwtd_insert_openlayers($table, $row)
     }
 }
 
-function uwwtd_update_map_overlay($country_config, $country_code)
+function uwwtd_update_map_overlay($country_config, $country_code, $map = array(), $overlay = array(), $style = array())
 {
+    uwwtd_install_trace(__FUNCTION__);
     $list_map = array(
         'waste_water_treatment_network_map.inc',
         'agg_compliance_map.inc',
@@ -1060,6 +1121,9 @@ function uwwtd_update_map_overlay($country_config, $country_code)
     $pathtostyle = $path . 'style/';
     $msgexception = ''; 
     foreach($list_overlay as $filename) {
+        if (false === empty($overlay) && false === in_array($filename, $overlay)) {
+            continue;
+        }
         include($pathtooverlay . $filename);
         if (isset($openlayers_layers)) {
             $row = array();
@@ -1081,6 +1145,9 @@ function uwwtd_update_map_overlay($country_config, $country_code)
     }
        
     foreach($list_map as $filename) {
+        if (false === empty($map) && false === in_array($filename, $map)) {
+            continue;
+        }    
         include($pathtomap . $filename);
         if (isset($openlayers_maps)) {
 //             uwwtd_install_trace(var_export($openlayers_maps , true));
@@ -1110,6 +1177,9 @@ function uwwtd_update_map_overlay($country_config, $country_code)
     }
     
     foreach($list_style as $filename) {
+        if (false === empty($style) && false === in_array($filename, $style)) {
+            continue;
+        }     
         include($pathtostyle . $filename);
         if (isset($openlayers_styles)) {
             $row = array();
@@ -1134,4 +1204,43 @@ function uwwtd_update_map_overlay($country_config, $country_code)
     if ($msgexception != '') {
         throw new DrupalUpdateException($msgexception);
     } 
+}
+
+function uwwtd_install_menu($menu, $filename) 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    $path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'uwwtd') . '/script/menu/'.$filename;
+    uwwtd_install_trace($path);
+    $options = array(
+        'create_content'  => FALSE,
+        'link_to_content' => TRUE,
+        'remove_menu_items' => FALSE
+    ); 
+
+    drupal_load('module', 'menu_import');                                                   
+    menu_import_string(file_get_contents($path), $menu['menu_name'], $options);
+    
+    $message = '';    
+    if (!empty($result['errors'])) {
+        $message .= 'Import menu ' . $menu['menu_name'] . ' failed: ';
+        foreach ($result['errors'] as $error) {
+            $message .= ($message == '' ? '' : ',' ) . $error;
+        }
+    } 
+    
+    uwwtd_install_trace($message);
+    
+    $warning = '';
+    if (!empty($result['warnings'])) {
+        $warning .= 'Import menu ' . $menu['menu_name'] . ' warning : ';
+        foreach ($result['warnings'] as $error) {
+            $warning .= ($warning == '' ? '' : ',' ) . $error;
+        }
+    } 
+    
+    uwwtd_install_trace($warning);       
+    
+    if ($message != '') {
+        throw new DrupalUpdateException($message);
+    }
 }

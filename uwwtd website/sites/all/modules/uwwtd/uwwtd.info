@@ -6,4 +6,13 @@ project = uwwtd
 package = uwwtd
 stylesheets[all][] = css/styles.css
 
+;dependencies[] = openlayers
+;dependencies[] = menu_import
+;geoPHP 
+;Geofield
+;OpenLayers Gazetteer
+;OpenLayers Plus
+;Google Analytics
+
+
 
