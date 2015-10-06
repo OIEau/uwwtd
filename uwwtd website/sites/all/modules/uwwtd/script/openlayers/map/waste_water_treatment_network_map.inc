@@ -91,7 +91,7 @@ $openlayers_maps->data = array(
       'fields' => 'field_agggenerated',
       'min_label' => '',
       'fields_colors' => 'type',
-      'fields_colors_values' => 'agglomeration|Agglomeration|#F2EB0C',
+      'fields_colors_values' => 'agglomeration|Agglomerations|#F2EB0C',
     ),
     'openlayers_plus_behavior_tooltips' => array(
       'positioned' => 0,
