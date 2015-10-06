@@ -301,15 +301,16 @@ function uwwtd_menu(){
 		'file' => 'pdf.inc',
 		'file path' => drupal_get_path('module', 'uwwtd')
 	);
-  $items['debug-create-xml/nid-agglo/%'] = array(
-    'page callback' => 'debug_create_xml',
-    'page arguments' => array(1,2),
+  $items['debug-export-xml/nid/%/aggcode/%'] = array(
+    'page callback' => 'debug_export_xml',
+    'page arguments' => array(2,3,4),
 //     'access callback' => true,
     'access arguments' => array('Data-management access'),
     'type' => MENU_CALLBACK,
 	'file' => 'data_center.inc',
 	'file path' => drupal_get_path('module', 'uwwtd')    
-  );    
+  ); 
+     
     
 	return $items;
 }
@@ -598,24 +599,23 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 
 /**
  * Extract an xml for only one agglo from a xml source
- */ 
-function debug_create_xml($type, $value)
-{
-    //todo, get a list of agglo nid (to test mutliple agglo)
-    if ($type != 'nid-agglo') {
+ */  
+function debug_export_xml($nid, $type, $value)
+{    
+    if (false === in_array($type, array('aggcode'))) {
         return '';
     }
+    
+    $node = node_load($nid);
+    $xml = uwwtd_xml_to_array($node->field_sourcefile['und'][0]['uri']);
+    unset($node);      
+    
     $s = '';
-    $listNid = explode('-', $value);
+    $listAggCode = explode(',', $value);
     $currentCodeAgglo = array();
-    foreach($listNid as $nid) {
-        $agg = node_load($nid);        
-        $currentCodeAgglo[] = $agg->field_inspireidlocalid['und'][0]['value'];
+    foreach($listAggCode as $aggCode) { 
+        $currentCodeAgglo[] = strtolower($aggCode);
     }
-//     dsm($agg->field_sourcefile['und'][0]['uri']);
-//     echo '<pre>';var_export($agg->field_sourcefile['und'][0]['uri']);echo '</pre>';
-    $xml = uwwtd_xml_to_array($agg->field_sourcefile['und'][0]['uri']);
-    unset($agg);
 //     codeagglo in $agg->field_inspireidlocalid['und'][0]['value']
 //     copier xml node /Reporter
 //                     /ReportPeriod
@@ -649,7 +649,7 @@ function debug_create_xml($type, $value)
     }
     $aggloFound = 0;
     foreach($imports as $agglo) {
-        if (in_array($agglo['aggCode'],$currentCodeAgglo)) {
+        if (in_array(strtolower($agglo['aggCode']),$currentCodeAgglo)) {
             $xmlTest['UWWTD_Report']['Agglomerations']['Agglomeration'][] = $agglo;
             $aggloFound++;
 //             break; //only one agglo
@@ -667,7 +667,7 @@ function debug_create_xml($type, $value)
     } 
     $uwwtd_aggloFound = array();
     foreach($imports as $uwwtp_agglo) {
-        if (in_array($uwwtp_agglo['aucAggCode'],$currentCodeAgglo)) {
+        if (in_array(strtolower($uwwtp_agglo['aucAggCode']),$currentCodeAgglo)) {
             $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
             $uwwCode[] = $uwwtp_agglo['aucUwwCode'];  //list of uwwtp attach to the agglo
             $uwwtd_aggloFound[$uwwtp_agglo['aucAggCode']]++;;
@@ -681,7 +681,7 @@ function debug_create_xml($type, $value)
     }
     //UwwtpAgglos for uwwtp======================================================
     foreach($imports as $uwwtp_agglo) {
-        if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && ! in_array($uwwtp_agglo['aucAggCode'], $currentCodeAgglo)) {
+        if (true === in_array($uwwtp_agglo['aucUwwCode'],$uwwCode) && ! in_array(strtolower($uwwtp_agglo['aucAggCode']), $currentCodeAgglo)) {
             $listeAgglo[] = $uwwtp_agglo['aucAggCode']; //all other agglo attach to the uwwtp (need for calculation)
             $xmlTest['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'][] = $uwwtp_agglo;
         }
