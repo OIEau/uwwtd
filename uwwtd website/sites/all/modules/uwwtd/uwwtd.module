@@ -641,6 +641,7 @@ function debug_export_xml($nid, $type, $value)
     $xmlTest['UWWTD_Report']['BigCityDischargers'] = $xml['UWWTD_Report']['BigCityDischargers'];
     
     //AGGLO ======================================================
+    $imports  = array();
     if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
         $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
     }
@@ -659,6 +660,7 @@ function debug_export_xml($nid, $type, $value)
         return "error, can't find agglo in xml " . implode(',', $currentCodeAgglo) . "</br>";
     }
     //UwwtpAgglos for agglo ======================================================
+    $imports  = array();
     if(isset($xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
         $imports[0] = $xml['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
     }
@@ -688,6 +690,7 @@ function debug_export_xml($nid, $type, $value)
     }
     
     //Agglo for uwwtp======================================================
+    $imports  = array();
     if (true === isset($listeAgglo)) {
         if(isset($xml['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
             $imports[0] = $xml['UWWTD_Report']['Agglomerations']['Agglomeration'];
@@ -711,6 +714,7 @@ function debug_export_xml($nid, $type, $value)
     }    
     
     //uwwtp======================================================
+    $imports  = array();
     if(isset($xml['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
         $imports[0] = $xml['UWWTD_Report']['UWWTPs']['UWWTP'];
     }
@@ -732,6 +736,7 @@ function debug_export_xml($nid, $type, $value)
     } 
     
     //DischargePoints/DischargePoint/uwwID = codeuwwtp ======================================================
+    $imports  = array();
     if(isset($xml['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
         $imports[0] = $xml['UWWTD_Report']['DischargePoints']['DischargePoint'];
     }
@@ -758,7 +763,8 @@ function debug_export_xml($nid, $type, $value)
         $s .= "<!-- error, can't find dcp in xml for uwwtp " . implode(',', $uwwCode) . "-->
         ";        
     } 
-    //RCA====================================================== 
+    //RCA======================================================
+    $imports  = array(); 
     if(isset($xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
         $imports[0] = $xml['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
     }

@@ -205,8 +205,8 @@ function uwwtd_import_form($form, &$form_state){
 function uwwtd_import_submit_handler($form, &$form_state) {
 	
 	// Definition et recup des variables
-	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
 	$annee = $_SESSION['uwwtd_annee'];
 	$file = file_load($form_state['values']['uwwtd_file']);
 	$uri = $file->uri;
@@ -214,14 +214,22 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 	// reset session values
 	$_SESSION['newRca'] = 0;
 	$_SESSION['upRca'] = 0;
+    $_SESSION['totRca'] = 0;
 	$_SESSION['newAgg'] = 0;
 	$_SESSION['upAgg'] = 0;
+    $_SESSION['totAgg'] = 0;
 	$_SESSION['newUww'] = 0;
 	$_SESSION['upUww'] = 0;
+    $_SESSION['totUww'] = 0;
 	$_SESSION['newDcp'] = 0;
 	$_SESSION['upDcp'] = 0;
+    $_SESSION['totDcp'] = 0;
 	$_SESSION['newBc'] = 0;
 	$_SESSION['upBc'] = 0;
+    $_SESSION['totBc'] = 0;
+    $_SESSION['newAggloUww'] = 0;
+    $_SESSION['upAggloUww'] = 0;
+    $_SESSION['totAggloUww'] = 0;
 
 	switch($file->filemime){
 		case 'application/zip':
@@ -262,11 +270,13 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
 //         dsm($datas);
         // Variables
         $siteId = $annee.'_mslevel';
-
+        uwwtd_trace('import ms_level : ' . $siteId);
         // Check if id exists
         $exists = uwwtd_check_exist($siteId);
 
         // If the element exists
+        
+        uwwtd_trace('ms_level ' . $siteId . ' exists ? "' . $exists . '".');
         if(!$exists){
             $node = new stdclass();
             $node->type = 'ms_level';
@@ -278,11 +288,23 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
             $node->comment = 0;
             $node->language = $language->language;
             node_save($node);
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('ms_level ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('ms_level ' . $siteId . ' nid : ' . $node->nid);
+            }            
         }
         else{
             // load the node
             $node = node_load($exists);
             $node->type = 'ms_level';
+
+            if (empty($node->nid)) {
+                uwwtd_trace('ms_level ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('ms_level ' . $siteId . ' nid : ' . $node->nid);
+            }             
         }
         $node->title = 'Data on MS level - '.$annee;
 
@@ -337,17 +359,20 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         if(isset($datas['mslWWReuseExplain'])) $node->field_mslwwreuseexplain['und'][0]['value'] = uwwtd_check_text($datas['mslWWReuseExplain']);
         // save node
         node_save($node);
-        return $node;
-    }
-    else{
-        uwwtd_add_error(1, 0, 'No MsLevel found in the dataset ' . $annee, $timestamp, 0);
         
-    }
-
-    
+        if (empty($node->nid)) {
+            uwwtd_trace('ms_level ' . $siteId . ' node_save() error2');
+        }  
+                
+        return $node;
+    } else {
+        uwwtd_add_error(1, 0, 'No MsLevel found in the dataset ' . $annee, $timestamp, 0);
+    }   
 }
 
 function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
+    uwwtd_trace('uwwtd_setup_batch all file');
+    uwwtd_trace(var_export($datas, true));
 	$batch = array(
 		'title' => t('Data import'),
 		'operations' => array(),
@@ -356,6 +381,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
 	);
     //ReceivingAreas
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
             $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
@@ -363,10 +389,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
         }
+        uwwtd_trace('$imports ReceivingAreas');
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
 
     //BigCityDischargers
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
         if(isset($datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger']['bigCityID'])){
             $imports[0] = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
@@ -374,9 +403,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
         }
+        uwwtd_trace('$imports BigCityDischargers');
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     } 
+    
     //Agglomerations
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['Agglomerations'])){
         if(isset($datas['UWWTD_Report']['Agglomerations']['Agglomeration']['aggCode'])){
             $imports[0] = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
@@ -384,9 +417,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
         }
+        uwwtd_trace('$imports Agglomerations');
+        uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    
     //UWWTPs
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['UWWTPs'])){
         if(isset($datas['UWWTD_Report']['UWWTPs']['UWWTP']['uwwCode'])){
             $imports[0] = $datas['UWWTD_Report']['UWWTPs']['UWWTP'];
@@ -394,9 +431,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['UWWTPs']['UWWTP'];
         }
+        uwwtd_trace('$imports UWWTPs');
+        uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    
     //DischargePoints
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
         if(isset($datas['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
             $imports[0] = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
@@ -404,9 +445,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
         }
+        uwwtd_trace('$imports DischargePoints');
+        uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    
     //link_dcp_rca
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
         /*
         if(isset($datas['UWWTD_Report']['DischargePoints']['DischargePoint']['dcpCode'])){
@@ -416,10 +461,12 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
         }
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $imports, $timestamp));
-        */
+        */       
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
+    
     //UwwtpAgglos
+    $imports  = array();
     if(isset($datas['UWWTD_Report']['UwwtpAgglos'])){
         if(isset($datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo']['aucUwwCode'])){
             $imports[0] = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
@@ -427,9 +474,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
         }
+        uwwtd_trace('$imports UwwtpAgglos');
+        uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
+    
     //BigCityDischargers
+    $imports  = array();    
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
         if(isset($datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger']['bigCityID'])){
             $imports[0] = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
@@ -437,6 +488,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         else{
             $imports = $datas['UWWTD_Report']['BigCityDischargers']['BigCityDischarger'];
         }
+        uwwtd_trace('$imports BigCityDischargers');
+        uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
    
@@ -461,6 +514,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totRca'] = $context['sandbox']['max'];
 		}
         $i = $context['sandbox']['progress'];
         $j=0;
@@ -510,6 +564,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
     }
 
     // Check if no errors were found
+    uwwtd_trace('import receiving_area : ' . $annee.'_rca_'.uwwtd_check_text($data['rcaCode']));
     if($e == 0){
 
         // Variables
@@ -517,7 +572,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // Check if id exists
         $exists = uwwtd_check_exist($siteId);
-
+        uwwtd_trace('receiving_area ' . $siteId . ' exists ? "' . $exists . '".');
         // If the element exists
         if(!$exists){
             $node = new stdclass();
@@ -531,12 +586,24 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->language = $language->language;
             $_SESSION['newRca']++;
             node_save($node);
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('receiving_area ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('receiving_area ' . $siteId . ' nid : ' . $node->nid);
+            }
         }
         else{
             // load the node
             $node = node_load($exists);
             $node->type = 'receiving_area';
             $_SESSION['upRca']++;
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('receiving_area ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('receiving_area ' . $siteId . ' nid : ' . $node->nid);
+            }             
         }
         //text
         $node->title = uwwtd_check_text($data['rcaName']);
@@ -852,9 +919,16 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         // save node
         node_save($node);
+
+        if (empty($node->nid)) {
+            uwwtd_trace('receiving_area ' . $siteId . ' node_save() error2');
+        }        
+       
         return $node;
     }
-    else return false;
+    
+    uwwtd_trace('import receiving_area error ' . var_export($data, true));
+    return false;
 }
 
 function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
@@ -866,6 +940,7 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totBc'] = $context['sandbox']['max'];
 		}
 		$i = $context['sandbox']['progress'];
         $data = $context['sandbox']['ids'][$i];
@@ -888,7 +963,7 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 			$emes = t('The big city does not have \'code\' information');
 			uwwtd_add_error(2, 0, $emes, $timestamp, $i);
 		}
-
+        uwwtd_trace('import big_city : ' . $annee.'_big_'.uwwtd_check_text($data['bigCityID']));
 		// Check if no errors were found
 		if($e == 0){
 
@@ -897,7 +972,7 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 
 			// Check if id exists
 			$exists = uwwtd_check_exist($siteId);
-            
+            uwwtd_trace('big_city ' . $siteId . ' exists ? "' . $exists . '".');
             // If the element exists
 			if(!$exists){
                 $node = new stdclass();
@@ -911,12 +986,24 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
                 $node->language = $language->language;
                 $_SESSION['newBc']++;
                 node_save($node);
+                
+                if (empty($node->nid)) {
+                    uwwtd_trace('big_city ' . $siteId . ' node_save() error');
+                } else {
+                    uwwtd_trace('big_city ' . $siteId . ' nid : ' . $node->nid);
+                }                
             }
             else{
                 // load the node
 				$node = node_load($exists);
 				$node->type = 'big_city';
                 $_SESSION['upBc']++;
+                
+                if (empty($node->nid)) {
+                    uwwtd_trace('big_city ' . $siteId . ' node_save() error');
+                } else {
+                    uwwtd_trace('big_city ' . $siteId . ' nid : ' . $node->nid);
+                }                 
             }
             // site mapping
             $node->field_siteid['und'][0]['value'] = $siteId;
@@ -949,7 +1036,13 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 
             // save node
             node_save($node);
-		}
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('big_city ' . $siteId . ' node_save() error2');
+            }             
+		} else {
+            uwwtd_trace('import big_city error ' . var_export($data, true));
+        }
 
 		$context['sandbox']['progress']++;
         uwwtd_flush_errors();
@@ -965,9 +1058,9 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
 		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
-	}else{
-		uwwtd_add_error(1, 0, 'No big cities found in the dataset ' . $annee, $timestamp);
-	}
+	} else {
+	   uwwtd_add_error(1, 0, 'No big cities found in the dataset ' . $annee, $timestamp);
+    }
 }
 
 function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
@@ -976,6 +1069,7 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totAgg'] = $context['sandbox']['max'];
 		}
         
         $i = $context['sandbox']['progress'];
@@ -993,7 +1087,7 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
             $context['sandbox']['progress']++;
             $j++;
         }
-		$context['sandbox']['progress']++;
+// 		$context['sandbox']['progress']++;
         uwwtd_flush_errors();
 		if($node){
 			$context['message'] = t('Processing agglomeration').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid);
@@ -1050,11 +1144,13 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         uwwtd_add_error(2, 0, $emes, $timestamp, $i);
     }
     // Check if no errors were found
+    uwwtd_trace('import agglomeration : ' . $annee.'_agg_'.uwwtd_check_text($data['aggCode']));
     if($e == 0){
 
         $siteId = $annee.'_agg_'.uwwtd_check_text($data['aggCode']);
         // Check if id exists
         $exists = uwwtd_check_exist($siteId);
+        uwwtd_trace('agglomeration ' . $siteId . ' exists ? "' . $exists . '".');
         // If the element exists
         if(!$exists){
             $node = new stdclass();
@@ -1068,12 +1164,24 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->language = $language->language;
             $_SESSION['newAgg']++;
             node_save($node);
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('agglomeration ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('agglomeration ' . $siteId . ' nid : ' . $node->nid);
+            }            
         }
         else{
             // load the node
             $node = node_load($exists);
             $node->type = 'agglomeration';
             $_SESSION['upAgg']++;
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('agglomeration ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('agglomeration ' . $siteId . ' nid : ' . $node->nid);
+            }             
         }
 
         // site mapping
@@ -1391,9 +1499,16 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         // save node
         node_save($node);
+
+        if (empty($node->nid)) {
+            uwwtd_trace('agglomeration ' . $siteId . ' node_save() error2');
+        }   
+                
         return $node;
     }
-    else return false;
+    
+    uwwtd_trace('import agglomeration error ' . var_export($data, true));
+    return false;
 }
 
 function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
@@ -1402,6 +1517,7 @@ function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totUww'] = $context['sandbox']['max'];
 		}
 		$i = $context['sandbox']['progress'];
         $j=0;
@@ -1470,6 +1586,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
     }
     
     // Check if no errors were found
+    uwwtd_trace('import uwwtp : ' . $annee.'_uww_'.uwwtd_check_text($data['uwwCode']));
     if($e == 0){
 
         // Variables
@@ -1477,6 +1594,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // Check if id exists
         $exists = uwwtd_check_exist($siteId);
+        uwwtd_trace('uwwtp ' . $siteId . ' exists ? "' . $exists . '".');
         // If the element exists
         if(!$exists){
             $node = new stdclass();
@@ -1490,12 +1608,24 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->language = $language->language;
             $_SESSION['newUww']++;
             node_save($node);
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('uwwtp ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('uwwtp ' . $siteId . ' nid : ' . $node->nid);
+            }            
         }
         else{
             // load the node
             $node = node_load($exists);
             $node->type = 'uwwtp';
             $_SESSION['upUww']++;
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('uwwtp ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('uwwtp ' . $siteId . ' nid : ' . $node->nid);
+            }             
         }
 
 
@@ -1552,24 +1682,24 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 )
             )
         );
-        //TODO : Why is thse 2 lines commented ?
-        //unset($node->field_uwwaggliste['und']);
-        //unset($node->field_uwwdcpliste['und']);
+        //TODO : Why is thse 2 lines were commented ?
+        unset($node->field_uwwaggliste['und']);
+        unset($node->field_uwwdcpliste['und']);
         
         // data mapping
-            $node->field_repcode['und'][0]['value'] =  $repCode;
+        $node->field_repcode['und'][0]['value'] =  $repCode;
 //             $repcode_f = str_replace('_', '-',  $repCode);
 //             $boom = explode('-', $repcode_f);
 //             $boom = explode(' ', $boom[0]);
 //             $rep = $boom[0];
-            $rep = uwwtd_get_countrycode_from_repcode($repCode);
-            if($rep == 'LT'){
-                $node->field_regionnuts['und'][0]['value'] = 'LT00';
-            }
+        $rep = uwwtd_get_countrycode_from_repcode($repCode);
+        if($rep == 'LT'){
+            $node->field_regionnuts['und'][0]['value'] = 'LT00';
+        }
 
-            if((strpos($rep, 'PL') !== false) || (strpos($rep, 'pl') !== false)){
-                $node->field_regionnuts['und'][0]['value'] = 'PL112';
-            }
+        if((strpos($rep, 'PL') !== false) || (strpos($rep, 'pl') !== false)){
+            $node->field_regionnuts['und'][0]['value'] = 'PL112';
+        }
 
         //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['uwwCode']);
@@ -2007,9 +2137,16 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // save node
         node_save($node);
+        
+        if (empty($node->nid)) {
+            uwwtd_trace('uwwtp ' . $siteId . ' node_save() error2');
+        }  
+                
         return $node;
     }
-    else return false;
+    
+    uwwtd_trace('import uwwtp error ' . var_export($data, true));
+    return false;
     
 }
 function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
@@ -2019,6 +2156,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totDcp'] = $context['sandbox']['max'];
 		}
 		$i = $context['sandbox']['progress'];
 		$data = $context['sandbox']['ids'][$i];
@@ -2061,6 +2199,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 		}
 
 		// Check if no errors were found
+        uwwtd_trace('import discharge_point : ' . $annee.'_dcp_'.uwwtd_check_text($data['dcpCode']));
 		if($e == 0){
 
 			// Variables
@@ -2068,6 +2207,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 
 			// Check if id exists
 			$exists = uwwtd_check_exist($siteId);
+            uwwtd_trace('discharge_point ' . $siteId . ' exists ? "' . $exists . '".');
             // If the element exists
 			if(!$exists){
                 $node = new stdclass();
@@ -2081,12 +2221,24 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 $node->language = $language->language;
                 $_SESSION['newDcp']++;
                 node_save($node);
+                
+                if (empty($node->nid)) {
+                    uwwtd_trace('discharge_point ' . $siteId . ' node_save() error');
+                } else {
+                    uwwtd_trace('discharge_point ' . $siteId . ' nid : ' . $node->nid);
+                }                
             }
             else{
                 // load the node
 				$node = node_load($exists);
 				$node->type = 'discharge_point';
                 $_SESSION['upDcp']++;
+                
+                if (empty($node->nid)) {
+                    uwwtd_trace('discharge_point ' . $siteId . ' node_save() error');
+                } else {
+                    uwwtd_trace('discharge_point ' . $siteId . ' nid : ' . $node->nid);
+                }                   
             }
 
             // site mapping
@@ -2299,7 +2451,13 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 
             // save node
             node_save($node);
-		}
+            
+            if (empty($node->nid)) {
+                uwwtd_trace('discharge_point ' . $siteId . ' node_save() error2');
+            }             
+		} else {
+            uwwtd_trace('import discharge_point error ' . var_export($data, true));
+        }
         uwwtd_flush_errors();
 		$context['sandbox']['progress']++;
 		$context['message'] = t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid);
@@ -2308,9 +2466,9 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 		if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 		}
-	}else{
-		uwwtd_add_error(1, 0, 'No Discharge points found in the dataset ' . $annee, $timestamp);
-	}
+	} else {
+    	uwwtd_add_error(1, 0, 'No Discharge points found in the dataset ' . $annee, $timestamp);
+    }
 }
 
 
@@ -2348,8 +2506,7 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
                     $rca = node_load($rcaExists);
                     $rca->field_rcadcpliste['und'][]['nid'] = $node->nid;
                     node_save($rca);
-                }
-                else{
+                }else{
                     $emes = t('Cannot connect the discharge point').' \''.$node->field_inspireidlocalid['und'][0]['value'].'\' '.t('with drupal id').' \''.$node->nid.'\' '.t('to the receiving area').' \''.$node->field_rcaid['und'][0]['value'].'\' '.t('because the receiving area does not exist.');
                     uwwtd_add_error(2, 0, $emes, $timestamp, $k);
                 }
@@ -2394,9 +2551,8 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
 			$context['sandbox']['max'] = count($datas);
 			$context['sandbox']['progress'] = 0;
 			$context['sandbox']['ids'] = $datas;
+            $_SESSION['totAggloUww'] = $context['sandbox']['max'];
 		}
-        
-        
         
 		$i = $context['sandbox']['progress'];
         $j=0;
@@ -2410,50 +2566,132 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
 
             $siteUwwId = $annee.'_uww_'.$data['aucUwwCode'];
             $siteAggId = $annee.'_agg_'.$data['aucAggCode'];
+            $siteId = $siteAggId . '_' . $siteUwwId;
 
             // Check if both exist
             $uwwExists = uwwtd_check_exist($siteUwwId);
             $aggExists = uwwtd_check_exist($siteAggId);
+            $agguwwExists = uwwtd_check_exist($siteId);
+            
+            uwwtd_trace('import agglo_uww : ' . $siteId);
+            
+            uwwtd_trace('uwwtp ' . $siteUwwId . ' exists ? "' . $uwwExists . '".');
+            uwwtd_trace('agglo ' . $siteAggId . ' exists ? "' . $aggExists . '".');
+            uwwtd_trace('uwwtp ' . $siteId . ' exists ? "' . $agguwwExists . '".');
 
             //dsm($i.': '.$siteUwwId.'('.$uwwExists.')'.', '.$siteAggId.'('.$aggExists.')');
 
             // If both exist
-            if($uwwExists != false && $aggExists != false){
+            if($uwwExists != false && $aggExists != false) {
                 // add agg id to uww
                 $uww = node_load($uwwExists);
-                $uww->field_uwwaggliste['und'][]['nid'] = $aggExists;
-                node_save($uww);
+                $found = false;
+//                 dsm('uww '. $uwwExists . ' look for agglo ' . $aggExists);
+//                 dsm($uww->field_uwwaggliste);
+                            
+                foreach($uww->field_uwwaggliste['und'] as $nid) {
+                    if ($nid['nid'] == $aggExists) {
+                        $found = true;
+                        break;
+                    }
+                }
+//                 dsm($found);    
+                if (false === $found) {
+                    $uww->field_uwwaggliste['und'][]['nid'] = $aggExists;
+                    node_save($uww);
+                }
+//                 dsm($uww->field_uwwaggliste);
 
                 // add uww id to agg
                 $agg = node_load($aggExists);
-                $agg->field_agguwwliste['und'][]['nid'] = $uwwExists;
-                node_save($agg);
+//                 $agg->field_agguwwliste['und'][]['nid'] = $uwwExists;
+//                 node_save($agg);
+                
+                $found = false;
+//                 dsm('agglo '. $aggExists . ' look for uww ' . $uwwExists);
+//                 dsm($agg->field_agguwwliste);
+                                 
+                foreach($agg->field_agguwwliste['und'] as $nid) {
+                    if ($nid['nid'] == $uwwExists) {
+                        $found = true;
+                        break;
+                    }
+                }
+//                 dsm($found);
+                if (false === $found) {
+                    $agg->field_agguwwliste['und'][]['nid'] = $uwwExists;
+                    node_save($agg);
+                }
+//                 dsm($agg->field_agguwwliste);                
+                
+                //look for an existed agglo_uww
+                if(!$agguwwExists){
+                    $node = new stdclass();
+                    $node->type = 'agglo_uww';
+                    $node->uid = 1;
+                    $node->translate = 0;
+                    $node->tnid = 0;
+                    $node->sticky = 0;
+                    $node->promote = 0;
+                    $node->comment = 0;
+                    $node->language = $language->language;
+                    $_SESSION['newAggloUww']++;
+                    node_save($node);
+                    
+                    if (empty($node->nid)) {
+                        uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error');
+                    } else {
+                        uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $node->nid);
+                    }            
+                }
+                else{
+                    // load the node
+                    $node = node_load($agguwwExists);
+                    $node->type = 'agglo_uww';
+                    $_SESSION['upAggloUww']++;
+                    
+                    if (empty($node->nid)) {
+                        uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error');
+                    } else {
+                        uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $node->nid);
+                    } 
+                    unset($node->field_agglo_uww_agglo['und']);            
+                    unset($node->field_agglo_uww_uww['und']);
+                }                
 
                 // Create linking node with all the data needed for compliance calculation later
-                $agglouww = new StdClass();
-                $agglouww->type = 'agglo_uww';
-                $agglouww->uid = 1;
-                $agglouww->translate = 0;
-                $agglouww->tnid = 0;
-                $agglouww->sticky = 0;
-                $agglouww->promote = 0;
-                $agglouww->comment = 0;
-                $agglouww->language = $language->language;
-                $agglouww->title = $annee.' data '.$agg->title.' - '.$uww->title;
-                $agglouww->field_agglo_uww_agglo['und'][0]['nid'] = $agg->nid;
-                $agglouww->field_agglo_uww_uww['und'][0]['nid'] = $uww->nid;
+//                 $agglouww = new StdClass();
+//                 $agglouww->type = 'agglo_uww';
+//                 $agglouww->uid = 1;
+//                 $agglouww->translate = 0;
+//                 $agglouww->tnid = 0;
+//                 $agglouww->sticky = 0;
+//                 $agglouww->promote = 0;
+//                 $agglouww->comment = 0;
+//                 $agglouww->language = $language->language;
+                $node->title = $annee.' data '.$agg->title.' - '.$uww->title;
+                $node->field_siteid['und'][0]['value']        = $siteId;
+                $node->field_agglo_uww_agglo['und'][0]['nid'] = $agg->nid;
+                $node->field_agglo_uww_uww['und'][0]['nid'] = $uww->nid;
                 //decimal
-                $agglouww->field_agglo_uww_perc_ent_uw['und'][0]['value'] = (isset($data['aucPercEnteringUWWTP']) ? uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $timestamp, $k) : 0);
+                $node->field_agglo_uww_perc_ent_uw['und'][0]['value'] = (isset($data['aucPercEnteringUWWTP']) ? uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $timestamp, $k) : 0);
                 //text
-                $agglouww->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = (isset($data['aucMethodPercEnteringUWWTP']) ? uwwtd_check_text($data['aucMethodPercEnteringUWWTP']) : 0);
-                $agglouww->field_anneedata['und'][0]['value'] = $annee;
-                node_save($agglouww);
-                $context['results'][] = $agglouww->nid . ' : ' . check_plain($agglouww->title);
+                $node->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = (isset($data['aucMethodPercEnteringUWWTP']) ? uwwtd_check_text($data['aucMethodPercEnteringUWWTP']) : 0);
+                $node->field_anneedata['und'][0]['value'] = $annee;
+                node_save($node);
+                
+                if (empty($node->nid)) {
+                    uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error2');
+                } else {
+                    uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $node->nid);
+                } 
+                                
+                $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
             }
-            else{                                                               
+            else{
+                uwwtd_trace('agglo_uww error, agglo or uwwtp doesn\' exits $siteUwwId = ' . $siteUwwId . ' ("'.$uwwExists.'"), $siteAggId = ' . $siteAggId . '("'.$aggExists.'")');                                                               
                 uwwtd_add_error(1, 1, 'No link between agglomeration ' . $siteAggId . ' and waste water treatment plant ' . $siteUwwId . '', $timestamp, $k);
-            }
-
+            } 
             
             $context['sandbox']['progress']++;
             $j++;
@@ -2824,21 +3062,21 @@ function uwwtd_rca_extra_batch_process($newFile, $annee, $timestamp, &$context){
 function uwwtd_finished($success, $results, $operations){
 	
     if ($success) {
-		drupal_set_message(t('Receiving areas').': '.$_SESSION['newRca'].' '.t('new elements added').', '.$_SESSION['upRca'].' '.t('elements updated'));
-		drupal_set_message(t('Big cities').': '.$_SESSION['newBc'].' '.t('new elements added').', '.$_SESSION['upBc'].' '.t('elements updated'));
-		drupal_set_message(t('Agglomerations').': '.$_SESSION['newAgg'].' '.t('new elements added').', '.$_SESSION['upAgg'].' '.t('elements updated'));
-		drupal_set_message(t('Treatment plants').': '.$_SESSION['newUww'].' '.t('new elements added').', '.$_SESSION['upUww'].' '.t('elements updated'));
-		drupal_set_message(t('Discharge points').': '.$_SESSION['newDcp'].' '.t('new elements added').', '.$_SESSION['upDcp'].' '.t('elements updated'));
+		drupal_set_message(t('Receiving areas').': '.$_SESSION['newRca'].' '.t('new elements added').', '.$_SESSION['upRca'].' '.t('elements updated').' ( '.$_SESSION['totRca'].' '.t('total elements').')');
+		drupal_set_message(t('Big cities').': '.$_SESSION['newBc'].' '.t('new elements added').', '.$_SESSION['upBc'].' '.t('elements updated').' ( '.$_SESSION['totBc'].' '.t('total elements').')');
+		drupal_set_message(t('Agglomerations').': '.$_SESSION['newAgg'].' '.t('new elements added').', '.$_SESSION['upAgg'].' '.t('elements updated').' ( '.$_SESSION['totAgg'].' '.t('total elements').')');
+		drupal_set_message(t('Treatment plants').': '.$_SESSION['newUww'].' '.t('new elements added').', '.$_SESSION['upUww'].' '.t('elements updated').' ( '.$_SESSION['totUww'].' '.t('total elements').')');
+		drupal_set_message(t('Discharge points').': '.$_SESSION['newDcp'].' '.t('new elements added').', '.$_SESSION['upDcp'].' '.t('elements updated').' ( '.$_SESSION['totDcp'].' '.t('total elements').')');
 		drupal_set_message(t('Links created between \'discharge points\', \'waste water treatment plants\' and \'receiving areas\'.'));
-		drupal_set_message(t('Links created between \'agglomerations\' and \'waste water treatment plants\'.'));
+		drupal_set_message(t('Links created between \'agglomerations\' and \'waste water treatment plants\'') . ' : '.$_SESSION['newAggloUww'].' '.t('new elements added').', '.$_SESSION['upAggloUww'].' '.t('elements updated').' ( '.$_SESSION['totAggloUww'].' '.t('total elements').')');
 		drupal_set_message(t('Links created between \'big cities\' and \'agglomerations\'.'));
 		drupal_set_message(t('\'big cities\' and their coordinates have been set.'));
-		if(isset($_SESSION['uwwtd_errors'])){
-			//uwwtd_add_error($_SESSION['uwwtd_errors']);
-			foreach($_SESSION['uwwtd_errors'] as $error){
-				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'error');
-			}
-		}
+// 		if(isset($_SESSION['uwwtd_errors'])){
+// 			//uwwtd_add_error($_SESSION['uwwtd_errors']);
+// 			foreach($_SESSION['uwwtd_errors'] as $error){
+// 				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'error');
+// 			}
+// 		}
 		/*if(isset($_SESSION['uwwtd_warnings'])){
 			uwwtd_add_error($_SESSION['uwwtd_warnings']);
 			foreach($_SESSION['uwwtd_warnings'] as $warning){
@@ -2907,8 +3145,8 @@ function uwwtd_shapes_form($form, &$form_state){
 function uwwtd_shapes_submit_handler($form, &$form_state) {
 	
 	// Definition et recup des variables
-	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
 	$annee = $_SESSION['uwwtd_annee'];
 	$file = file_load($form_state['values']['uwwtd_file']);
 	
@@ -3282,8 +3520,8 @@ function uwwtd_conformity_form($form, &$form_state){
 function uwwtd_conformity_submit_handler($form, &$form_state){
 
 	// Definition et recup des variables
-	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
 	$annee = $_SESSION['uwwtd_annee'];
 
 	if(isset($form_state['values']['SA'])) $sas = $form_state['values']['SA'];
@@ -3856,8 +4094,8 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
  */ 
 function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUww)
 {   
-    uwwtd_trace(__FUNCTION__);
-    uwwtd_trace($agg->title);
+//     uwwtd_trace(__FUNCTION__);
+//     uwwtd_trace($agg->title);
     //collected in collectiove system = 0 or all uwwtp treatment required in (appropriate or NR)
     if ($agg->field_aggc1['und'][0]['value'] == 0       
         || true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'],
@@ -3876,14 +4114,14 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         //$agg->field_aggart3compliance['und'][0]['value']
         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
     }
-    uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
+//     uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
     //ALGO7
     $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
     //ALGO8
     $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance($agg, 'compArt6', $listStationArticleAndUwwtpCompliance);
     //ALGO9                                                          
     $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $aResult['compArt4']);
-    uwwtd_trace(var_export($aResult, true));
+//     uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
     
     return $aResult;    
@@ -4056,7 +4294,7 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
  */ 
 function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
 {
-    uwwtd_trace(__LINE__);
+//     uwwtd_trace(__LINE__);
     $aResult['required'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
     //treatement required = primary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['primary']) {
@@ -4072,7 +4310,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }                             
         }
-        uwwtd_trace(__LINE__);
+//         uwwtd_trace(__LINE__);
         return $aResult;         
     }
     
@@ -4091,7 +4329,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }
-        uwwtd_trace(__LINE__);
+//         uwwtd_trace(__LINE__);
        return $aResult;          
     }
     
@@ -4113,7 +4351,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }            
         } 
-        uwwtd_trace(__LINE__);
+//         uwwtd_trace(__LINE__);
         return $aResult;            
     }
     
@@ -4134,7 +4372,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } 
-       uwwtd_trace(__LINE__);     
+//        uwwtd_trace(__LINE__);     
        return $aResult;          
     }
     
@@ -4159,7 +4397,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        }
-       uwwtd_trace(__LINE__);      
+//        uwwtd_trace(__LINE__);      
        return $aResult;          
     }    
     
@@ -4178,7 +4416,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
            }              
         }
-        uwwtd_trace(__LINE__);
+//         uwwtd_trace(__LINE__);
         return $aResult;   
     }
     
@@ -4195,7 +4433,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
        } 
    } 
-   uwwtd_trace(__LINE__);
+//    uwwtd_trace(__LINE__);
    return $aResult;   
 }
 
@@ -4395,19 +4633,19 @@ function uwwtd_conformity_finished($success, $results, $operations) {
 		drupal_set_message(t('All the waste water treatment plants\' conformity was calculated.'));
 		drupal_set_message(t('All the agglomerations\' conformity was calculated.'));
 		drupal_set_message(t('Congratulations! Your data has been successfully imported to the site you can now view your data on the interactive maps accessible from the home page.'));
-		if(isset($_SESSION['uwwtd_errors'])){
-			uwwtd_add_error($_SESSION['uwwtd_errors']);
-			foreach($_SESSION['uwwtd_errors'] as $error){
-				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file . This element was not added, please check your input file.'), 'error');
-			}
-		}
-		if(isset($_SESSION['uwwtd_warnings'])){
-			uwwtd_add_error($_SESSION['uwwtd_warnings']);
-			foreach($_SESSION['uwwtd_warnings'] as $warning){
-				drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file . This element was added but please check your input file.'), 
-					'warning');
-			}
-		}
+// 		if(isset($_SESSION['uwwtd_errors'])){
+// 			uwwtd_add_error($_SESSION['uwwtd_errors']);
+// 			foreach($_SESSION['uwwtd_errors'] as $error){
+// 				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file . This element was not added, please check your input file.'), 'error');
+// 			}
+// 		}
+// 		if(isset($_SESSION['uwwtd_warnings'])){
+// 			uwwtd_add_error($_SESSION['uwwtd_warnings']);
+// 			foreach($_SESSION['uwwtd_warnings'] as $warning){
+// 				drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file . This element was added but please check your input file.'), 
+// 					'warning');
+// 			}
+// 		}
 	}
 	else {
 		// An error occurred.
@@ -4460,9 +4698,13 @@ function uwwtd_file_upload($file, $ext){
 	return $file_temp;
 }
 
-function uwwtd_set_warning($i, $emes){
-	$_SESSION['uwwtd_warnings'][] = array($i, $emes);
-}
+// function uwwtd_set_warning($i, $emes){
+// 	$_SESSION['uwwtd_warnings'][] = array($i, $emes);
+// }
+
+// function uwwtd_set_error($i, $emes){
+// 	$_SESSION['uwwtd_warnings'][] = array($i, $emes);
+// }
 
 function uwwtd_csv_to_array($filename='', $delimiter=','){
 	
@@ -4505,154 +4747,154 @@ function uwwtd_removeBOM($str=""){
     return $str;
 }
 
-function uwwtd_getCodeLov($code, $i){
-	$ref = array(
-		"1"=>'fail',
-		"2"=>'pass',
-		"3"=>'Production of alcohol and alcoholic beverages',
-		"4"=>'Breweries',
-		"5"=>'Manufacture and bottling of soft drinks',
-		"6"=>'Manufacture of aninmal feed from plant products',
-		"7"=>'Fish-processing industry',
-		"8"=>'Manufacture of fruit and vegetable products',
-		"9"=>'Manufacture of gelatine and glue from hides, skin and bones',
-		"10"=>'Malt-houses',
-		"11"=>'Meat industry',
-		"12"=>'Milk-processing',
-		"13"=>'Potato-processing',
-		"14"=>'calculated',
-		"15"=>'estimated',
-		"16"=>'Document (*.doc)',
-		"17"=>'GIS-data',
-		"18"=>'Document (*.pdf)',
-		"19"=>'Missing Culture Info',
-		"20"=>'Data type is not clear',
-		"21"=>'Please fill-in at least one value',
-		"22"=>'Set to deault value',
-		"23"=>'Different Report Period ID (between manual data input and data i',
-		"24"=>'Field has to have a value',
-		"25"=>'Error whilst inserting normal area',
-		"26"=>'Value > 100%',
-		"27"=>'Invalid code',
-		"28"=>'Invalid data format in the import file.',
-		"29"=>'ID  is not correct',
-		"30"=>'Invalid link',
-		"31"=>'Invalid status',
-		"32"=>'No valid value',
-		"33"=>'Value is master data',
-		"34"=>'No Sensitive Area is linked to this Catchment Area of Sensitive',
-		"35"=>'Value is not Y (yes) or N (no)',
-		"36"=>'No Catchment Area. Indication of Sensitive Area is not foreseen',
-		"37"=>'Field not numeric',
-		"38"=>'%-values do not add up to 100%',
-		"39"=>'Table does not contain data sets',
-		"40"=>'Value is not a valid date',
-		"41"=>'No discharge point is linked to this UWWTP',
-		"42"=>'Data set is not available',
-		"43"=>'The selected Sensitive Area does not exist in the inventory of',
-		"44"=>'No UWWTP is linked to this agglomeration',
-		"45"=>'ID is not distinct',
-		"46"=>'Not a valid date',
-		"47"=>'Reference is not valid',
-		"48"=>'%-value is out of range 0-100',
-		"49"=>'Report period does not correspond to the selected report period',
-		"50"=>'Value is required',
-		"51"=>'Please select one value',
-		"52"=>'Error message of the system',
-		"53"=>'Text too long',
-		"54"=>'File comprises too many data sets',
-		"55"=>'Text too short',
-		"56"=>'Infiltration',
-		"57"=>'Irrigation',
-		"58"=>'other',
-		"59"=>'No',
-		"60"=>'Yes',
-		"61"=>'National Regulation in place',
-		"62"=>'calculated',
-		"63"=>'estimated',
-		"64"=>'measured',
-		"65"=>'Austria',
-		"66"=>'Belgium',
-		"67"=>'Bulgaria',
-		"68"=>'Cyprus',
-		"69"=>'Czech Republic',
-		"70"=>'Germany',
-		"71"=>'Denmark',
-		"72"=>'Estonia',
-		"73"=>'Spain',
-		"74"=>'Finland',
-		"75"=>'France',
-		"76"=>'Greece',
-		"77"=>'Hungary',
-		"78"=>'Ireland',
-		"79"=>'Italy',
-		"80"=>'Lithuania',
-		"81"=>'Luxembourg',
-		"82"=>'Latvia',
-		"83"=>'Malta',
-		"84"=>'Netherlands',
-		"85"=>'Norway',
-		"86"=>'Poland',
-		"87"=>'Portugal',
-		"88"=>'Romania',
-		"89"=>'Sweden',
-		"90"=>'Slovenia',
-		"91"=>'Slovakia',
-		"92"=>'United Kingdom',
-		"93"=>'fail',
-		"94"=>'not relevant',
-		"95"=>'pass',
-		"96"=>'Art. 5(4) area',
-		"97"=>'Art. 5(8) area (entire Member State)',
-		"98"=>'Catchment in the sense of Art. 5(5)',
-		"99"=>'Less sensitive area',
-		"100"=>'Normal area',
-		"101"=>'Sensitive area',
-		"102"=>'c) both a&b',
-		"103"=>'a) combined',
-		"104"=>'b) separeted',
-		"105"=>'inactive',
-		"106"=>'active',
-		"107"=>'No',
-		"108"=>'Yes',
-		"109"=>'No combined system',
-		"110"=>'National Regulation in place',
-		"111"=>'Collecting system is connected to UWWTP',
-		"112"=>'Collecting system is not connected to UWWTP',
-		"113"=>'to coastal water',
-		"114"=>'to estuary',
-		"115"=>'to freshwater',
-		"116"=>'on land (catchment of coastal water)',
-		"117"=>'on land (catchment of freshwater and / or estuary)',
-		"118"=>'to coastal water',
-		"119"=>'to estuary',
-		"120"=>'on land (catchment of coastal water)',
-		"121"=>'on land (catchment of freshwater and / or estuary)',
-		"122"=>'No',
-		"123"=>'Yes',
-		"124"=>'No',
-		"125"=>'Yes',
-		"126"=>'Not relevant',
-		"127"=>'fully treated effluent- dry and wet weather, partially treated s',
-		"128"=>'fully treated effluent- dry and wet weather',
-		"129"=>'fully treated effluent- dry weather;',
-		"130"=>'tempinactive',
-		"131"=>''
-	);
-	if(array_key_exists($code, $ref)){
-		return $ref[$code];
-	}
-	else if($code == ''){
-		$wmes = t('WARNING : Lov code not found');
-		uwwtd_set_warning($i, $wmes);
-		return '';
-	}
-	else{
-		$wmes = t('WARNING : Lov code not found ').': '.$code;
-		uwwtd_set_warning($i, $wmes);
-		return '';
-	}	
-}
+// function uwwtd_getCodeLov($code, $i){
+// 	$ref = array(
+// 		"1"=>'fail',
+// 		"2"=>'pass',
+// 		"3"=>'Production of alcohol and alcoholic beverages',
+// 		"4"=>'Breweries',
+// 		"5"=>'Manufacture and bottling of soft drinks',
+// 		"6"=>'Manufacture of aninmal feed from plant products',
+// 		"7"=>'Fish-processing industry',
+// 		"8"=>'Manufacture of fruit and vegetable products',
+// 		"9"=>'Manufacture of gelatine and glue from hides, skin and bones',
+// 		"10"=>'Malt-houses',
+// 		"11"=>'Meat industry',
+// 		"12"=>'Milk-processing',
+// 		"13"=>'Potato-processing',
+// 		"14"=>'calculated',
+// 		"15"=>'estimated',
+// 		"16"=>'Document (*.doc)',
+// 		"17"=>'GIS-data',
+// 		"18"=>'Document (*.pdf)',
+// 		"19"=>'Missing Culture Info',
+// 		"20"=>'Data type is not clear',
+// 		"21"=>'Please fill-in at least one value',
+// 		"22"=>'Set to deault value',
+// 		"23"=>'Different Report Period ID (between manual data input and data i',
+// 		"24"=>'Field has to have a value',
+// 		"25"=>'Error whilst inserting normal area',
+// 		"26"=>'Value > 100%',
+// 		"27"=>'Invalid code',
+// 		"28"=>'Invalid data format in the import file.',
+// 		"29"=>'ID  is not correct',
+// 		"30"=>'Invalid link',
+// 		"31"=>'Invalid status',
+// 		"32"=>'No valid value',
+// 		"33"=>'Value is master data',
+// 		"34"=>'No Sensitive Area is linked to this Catchment Area of Sensitive',
+// 		"35"=>'Value is not Y (yes) or N (no)',
+// 		"36"=>'No Catchment Area. Indication of Sensitive Area is not foreseen',
+// 		"37"=>'Field not numeric',
+// 		"38"=>'%-values do not add up to 100%',
+// 		"39"=>'Table does not contain data sets',
+// 		"40"=>'Value is not a valid date',
+// 		"41"=>'No discharge point is linked to this UWWTP',
+// 		"42"=>'Data set is not available',
+// 		"43"=>'The selected Sensitive Area does not exist in the inventory of',
+// 		"44"=>'No UWWTP is linked to this agglomeration',
+// 		"45"=>'ID is not distinct',
+// 		"46"=>'Not a valid date',
+// 		"47"=>'Reference is not valid',
+// 		"48"=>'%-value is out of range 0-100',
+// 		"49"=>'Report period does not correspond to the selected report period',
+// 		"50"=>'Value is required',
+// 		"51"=>'Please select one value',
+// 		"52"=>'Error message of the system',
+// 		"53"=>'Text too long',
+// 		"54"=>'File comprises too many data sets',
+// 		"55"=>'Text too short',
+// 		"56"=>'Infiltration',
+// 		"57"=>'Irrigation',
+// 		"58"=>'other',
+// 		"59"=>'No',
+// 		"60"=>'Yes',
+// 		"61"=>'National Regulation in place',
+// 		"62"=>'calculated',
+// 		"63"=>'estimated',
+// 		"64"=>'measured',
+// 		"65"=>'Austria',
+// 		"66"=>'Belgium',
+// 		"67"=>'Bulgaria',
+// 		"68"=>'Cyprus',
+// 		"69"=>'Czech Republic',
+// 		"70"=>'Germany',
+// 		"71"=>'Denmark',
+// 		"72"=>'Estonia',
+// 		"73"=>'Spain',
+// 		"74"=>'Finland',
+// 		"75"=>'France',
+// 		"76"=>'Greece',
+// 		"77"=>'Hungary',
+// 		"78"=>'Ireland',
+// 		"79"=>'Italy',
+// 		"80"=>'Lithuania',
+// 		"81"=>'Luxembourg',
+// 		"82"=>'Latvia',
+// 		"83"=>'Malta',
+// 		"84"=>'Netherlands',
+// 		"85"=>'Norway',
+// 		"86"=>'Poland',
+// 		"87"=>'Portugal',
+// 		"88"=>'Romania',
+// 		"89"=>'Sweden',
+// 		"90"=>'Slovenia',
+// 		"91"=>'Slovakia',
+// 		"92"=>'United Kingdom',
+// 		"93"=>'fail',
+// 		"94"=>'not relevant',
+// 		"95"=>'pass',
+// 		"96"=>'Art. 5(4) area',
+// 		"97"=>'Art. 5(8) area (entire Member State)',
+// 		"98"=>'Catchment in the sense of Art. 5(5)',
+// 		"99"=>'Less sensitive area',
+// 		"100"=>'Normal area',
+// 		"101"=>'Sensitive area',
+// 		"102"=>'c) both a&b',
+// 		"103"=>'a) combined',
+// 		"104"=>'b) separeted',
+// 		"105"=>'inactive',
+// 		"106"=>'active',
+// 		"107"=>'No',
+// 		"108"=>'Yes',
+// 		"109"=>'No combined system',
+// 		"110"=>'National Regulation in place',
+// 		"111"=>'Collecting system is connected to UWWTP',
+// 		"112"=>'Collecting system is not connected to UWWTP',
+// 		"113"=>'to coastal water',
+// 		"114"=>'to estuary',
+// 		"115"=>'to freshwater',
+// 		"116"=>'on land (catchment of coastal water)',
+// 		"117"=>'on land (catchment of freshwater and / or estuary)',
+// 		"118"=>'to coastal water',
+// 		"119"=>'to estuary',
+// 		"120"=>'on land (catchment of coastal water)',
+// 		"121"=>'on land (catchment of freshwater and / or estuary)',
+// 		"122"=>'No',
+// 		"123"=>'Yes',
+// 		"124"=>'No',
+// 		"125"=>'Yes',
+// 		"126"=>'Not relevant',
+// 		"127"=>'fully treated effluent- dry and wet weather, partially treated s',
+// 		"128"=>'fully treated effluent- dry and wet weather',
+// 		"129"=>'fully treated effluent- dry weather;',
+// 		"130"=>'tempinactive',
+// 		"131"=>''
+// 	);
+// 	if(array_key_exists($code, $ref)){
+// 		return $ref[$code];
+// 	}
+// 	else if($code == ''){
+// 		$wmes = t('WARNING : Lov code not found');
+// 		uwwtd_set_warning($i, $wmes);
+// 		return '';
+// 	}
+// 	else{
+// 		$wmes = t('WARNING : Lov code not found ').': '.$code;
+// 		uwwtd_set_warning($i, $wmes);
+// 		return '';
+// 	}	
+// }
 
 function uwwtd_coord_transform($lat, $long){
 
