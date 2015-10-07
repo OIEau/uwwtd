@@ -204,6 +204,15 @@ function uwwtd_update_7103()
     uwwtd_install_trace(__FUNCTION__);
     $msg_error = '';
     // Clear the field cache so we've got a clean slate to start on
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_BigCity');
+    uwwtd_delete_view('UWWTD_Compliance_Agglo');
+    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+    uwwtd_delete_view('UWWTD_DischargePoint');
+    uwwtd_delete_view('UWWTD_ReceivingArea');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
+        
     field_cache_clear();
     
     $field = array (
@@ -450,6 +459,15 @@ function uwwtd_update_7103()
             $msg_error .= $msg . "\n";    
         }      
     }
+    
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_BigCity');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+    uwwtd_create_or_replace_view('UWWTD_DischargePoint');
+    uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');    
     
     if ('' !== $msg_error) {
         throw new DrupalUpdateException($msg_error);
