@@ -2,7 +2,7 @@
 //==========FIX ME : add repcode foreach import batch
 // TODO : check if all liste agguwwliste are unset on update => otherwise duplicate can appear on the list ()
 //          field_uwwaggliste and field_uwwdcpliste 
-define('DEBUG_ALGO', false);
+define('DEBUG_ALGO', true);
 function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
         $file = drupal_realpath('public://data_errors/trace.log');
