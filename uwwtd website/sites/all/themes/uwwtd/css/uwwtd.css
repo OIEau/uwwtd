@@ -480,3 +480,19 @@ body#impression  div.field .field-label-inline{
 .pie_legend {
     font-size:10pt; 
 }
+
+/* only for uwwtp page node */
+#uwwtp_stackedbar .axis path,
+#uwwtp_stackedbar .axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+#uwwtp_stackedbar .bar {
+fill: steelblue;
+}
+
+#uwwtp_stackedbar .x.axis path {
+display: none;
+}
