@@ -2,7 +2,7 @@
 //==========FIX ME : add repcode foreach import batch
 // TODO : check if all liste agguwwliste are unset on update => otherwise duplicate can appear on the list ()
 //          field_uwwaggliste and field_uwwdcpliste 
-define('DEBUG_ALGO', false);
+define('DEBUG_ALGO', true);
 function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
         $file = drupal_realpath('public://data_errors/trace.log');
@@ -2561,11 +2561,13 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
             $data = $context['sandbox']['ids'][$k];
 
             // Get data uww id and agg id
-            $uwwId = $data['aucUwwCode'];
-            $aggId = $data['aucAggCode'];
-
-            $siteUwwId = $annee.'_uww_'.$data['aucUwwCode'];
-            $siteAggId = $annee.'_agg_'.$data['aucAggCode'];
+            //Here we need to build the site id the same way as in agg or uwwtp creation node
+            //TODO : a function 
+            $uwwId = $data['aucUwwCode'];  //$annee.'_uww_'.uwwtd_check_text($data['uwwCode']);
+            $aggId = $data['aucAggCode'];  //$annee.'_agg_'.uwwtd_check_text($data['aggCode']));
+            //todo test (ro 1)
+            $siteUwwId = $annee.'_uww_'.uwwtd_check_text($data['aucUwwCode']);
+            $siteAggId = $annee.'_agg_'.uwwtd_check_text($data['aucAggCode']);
             $siteId = $siteAggId . '_' . $siteUwwId;
 
             // Check if both exist
