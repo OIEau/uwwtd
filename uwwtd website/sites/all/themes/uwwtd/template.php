@@ -1183,15 +1183,16 @@ function uwwtd_get_uww_graphic($node){
 	return $output;   
 }
 
-// function uwwtd_render_field_with_pe($field, $node)
-// {
-//     <div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
-//         <div class="field-label">Collective system:&nbsp;</div>
-//         <div class="field-items">
-//             <div class="field-item even">91.00 %</div>
-//         </div>
-//     </div>    
-// }
+function uwwtd_render_field_with_pe($field)
+{
+    $pe = uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value'], 2);
+    return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
+        <div class="field-label">'.$field['#title'].':&nbsp;</div>
+        <div class="field-items">
+            <div class="field-item even">'.$field[0]['#markup'].' % ('. $pe .' p.e.)</div>
+        </div>
+    </div>';    
+}
 
 // function uwwtd_preprocess_field(&$vars) {
 //     dpl($vars);
@@ -1199,3 +1200,102 @@ function uwwtd_get_uww_graphic($node){
 //     $vars['items'][0]['#markup'] = "I changed the output of my field!";
 //   }
 // }
+
+function uwwtd_piechart_agglonode($node, &$content)
+{    
+    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    
+// echo '<pre>';var_export($content);echo '</pre>';
+// echo '<pre>';var_export($content);echo '</pre>';
+// exit;
+    $aData = array();
+    $aData[] = array(
+        "value" => $node->field_aggc1['und'][0]['value'],
+        "label" => $content['field_agggenerated']['#title'],
+    );
+    $aData[] = array(
+        "value" => $node->field_aggc2['und'][0]['value'],
+        "label" => $content['field_aggc2']['#title'],
+    );  
+    $aData[] = array(
+        "value" => $node->field_aggpercwithouttreatment['und'][0]['value'],
+        "label" => $content['field_aggpercwithouttreatment']['#title'],
+    );     
+//     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
+//     return "
+//     <script>
+//     (function ($) {
+//     $(document).ready(function() {
+//         display_uwwtp_stackedbar(".json_encode($aData).");        
+//         });    
+//     })(jQuery);  
+//     </script>
+//     ";  
+    return "
+    <script>
+    jQuery(document).ready(function(){                     
+        display_agglo_piechart(".json_encode($aData).");        
+    });    
+    </script>
+    ";       
+}
+
+function uwwtd_stackedbar_uwwtpnode($node)
+{       
+    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');            
+    $aData = array();
+    $aData[] = array(
+        "type" => 'BOD',
+//         "label" => 'BOD load',
+        "incoming" => $node->field_uwwbodincoming['und'][0]['value'],
+        "discharged" => $node->field_uwwboddischarge['und'][0]['value'],
+    );                 
+    $aData[] = array(
+        "type" => 'COD',
+//         "label" => 'COD load',
+        "incoming" => $node->field_uwwcodincoming['und'][0]['value'],
+        "discharged" => $node->field_uwwcoddischarge['und'][0]['value'],
+    );
+    $aData[] = array(
+        "type" => 'N',
+//         "label" => 'N load',
+        "incoming" => $node->field_uwwnincoming['und'][0]['value'],
+        "discharged" => $node->field_uwwndischarge['und'][0]['value'],
+    );  
+    $aData[] = array(
+        "type" => 'P',
+//         "label" => 'P load',
+        "incoming" => $node->field_uwwpincoming['und'][0]['value'],
+        "discharged" => $node->field_uwwpdischarge['und'][0]['value'],
+    );              
+//     dsm($aData); 
+//     echo '<pre>';var_export($aData);echo '</pre>';          
+//     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
+//     <style>
+// .axis path,
+// .axis line {
+// fill: none;
+// stroke: #000;
+// shape-rendering: crispEdges;
+// }
+// 
+// .bar {
+// fill: steelblue;
+// }
+// 
+// .x.axis path {
+// display: none;
+// }
+//     </style>
+    return "
+    <script>
+    jQuery(document).ready(function(){                     
+        display_uwwtp_stackedbar(".json_encode($aData).");        
+    });    
+    </script>
+    ";
+}

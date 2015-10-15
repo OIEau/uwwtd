@@ -129,7 +129,7 @@ echo uwwtd_insert_errors_tab($node);
         echo uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
-    print '<div class="uwwcontainer">';
+    print '<div class="uwwcontainer" style="overflow:hidden;">';
       print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
@@ -147,61 +147,130 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_uwwotherperf']);
             print '</div>';
             print '<div class="uwwrealthird">';
-              print render($content['field_uwwbodincoming']);
-              print render($content['field_uwwboddischarge']);
-              if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
-                print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                  print '<div class="field-label">'.t('Rate for BOD:').'</div>';
-                  print '<div class="field-items">';
-                    print '<div class="field-item">';
-                      print '&nbsp;'.round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 2) . '%';
-                    print '</div>';  
-                  print '</div>';
-                print '</div>';
-              }
-              print render($content['field_uwwcodincoming']);
-              print render($content['field_uwwcoddischarge']);
-              if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
-                print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                  print '<div class="field-label">'.t('Rate for COD:').'</div>';
-                  print '<div class="field-items">';
-                    print '<div class="field-item">';
-                      print '&nbsp;'.round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%';
-                    print '</div>';  
-                  print '</div>';
-                print '</div>';
-              }
-              print render($content['field_uwwnincoming']);
-              print render($content['field_uwwndischarge']);
-              if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
-                print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                  print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
-                  print '<div class="field-items">';
-                    print '<div class="field-item">';
-                      print '&nbsp;'.round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%';
-                    print '</div>';  
-                  print '</div>';
-                print '</div>';
-              }
-              print render($content['field_uwwpincoming']);
-              print render($content['field_uwwpdischarge']);
-              if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
-                print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                  print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
-                  print '<div class="field-items">';
-                    print '<div class="field-item">';
-                      print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%';
-                    print '</div>';  
-                  print '</div>';
-                print '</div>';
-              }
-            print '</div>';
-            print '<div class="uwwrealthird">';
+            
+              print '<div class="flip" id="uwwtp_stackedbar">
+                       <div class="front">
+                          <i class="fa fa-plus-square plus">+</i>';
+                        print render($content['field_uwwbodincoming']);
+                          print render($content['field_uwwboddischarge']);
+                          if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
+                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              print '<div class="field-label">'.t('Rate for BOD:').'</div>';
+                              print '<div class="field-items">';
+                                print '<div class="field-item">';
+                                  print '&nbsp;'.round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 2) . '%';
+                                print '</div>';  
+                              print '</div>';
+                            print '</div>';
+                          }
+                          print render($content['field_uwwcodincoming']);
+                          print render($content['field_uwwcoddischarge']);
+                          if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
+                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              print '<div class="field-label">'.t('Rate for COD:').'</div>';
+                              print '<div class="field-items">';
+                                print '<div class="field-item">';
+                                  print '&nbsp;'.round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%';
+                                print '</div>';  
+                              print '</div>';
+                            print '</div>';
+                          }
+                          print render($content['field_uwwnincoming']);
+                          print render($content['field_uwwndischarge']);
+                          if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
+                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
+                              print '<div class="field-items">';
+                                print '<div class="field-item">';
+                                  print '&nbsp;'.round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%';
+                                print '</div>';  
+                              print '</div>';
+                            print '</div>';
+                          }
+                          print render($content['field_uwwpincoming']);
+                          print render($content['field_uwwpdischarge']);
+                          if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
+                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
+                              print '<div class="field-items">';
+                                print '<div class="field-item">';
+                                  print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%';
+                                print '</div>';  
+                              print '</div>';
+                            print '</div>';
+                          }                      
+              print'   </div>
+                       <div class="back">
+                          <i class="fa fa-plus-square minus">-</i>
+                            <svg id="uwwtp_stackedbar_back"></svg>';
+                            echo uwwtd_stackedbar_uwwtpnode($node);
+              print'   </div>       
+                    </div>';
+                                
+//             print '<div id="uwwtp_stackedbar">
+//                     <div class="front">';
+//               print render($content['field_uwwbodincoming']);
+//               print render($content['field_uwwboddischarge']);
+//               if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
+//                 print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+//                   print '<div class="field-label">'.t('Rate for BOD:').'</div>';
+//                   print '<div class="field-items">';
+//                     print '<div class="field-item">';
+//                       print '&nbsp;'.round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 2) . '%';
+//                     print '</div>';  
+//                   print '</div>';
+//                 print '</div>';
+//               }
+//               print render($content['field_uwwcodincoming']);
+//               print render($content['field_uwwcoddischarge']);
+//               if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
+//                 print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+//                   print '<div class="field-label">'.t('Rate for COD:').'</div>';
+//                   print '<div class="field-items">';
+//                     print '<div class="field-item">';
+//                       print '&nbsp;'.round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%';
+//                     print '</div>';  
+//                   print '</div>';
+//                 print '</div>';
+//               }
+//               print render($content['field_uwwnincoming']);
+//               print render($content['field_uwwndischarge']);
+//               if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
+//                 print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+//                   print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
+//                   print '<div class="field-items">';
+//                     print '<div class="field-item">';
+//                       print '&nbsp;'.round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%';
+//                     print '</div>';  
+//                   print '</div>';
+//                 print '</div>';
+//               }
+//               print render($content['field_uwwpincoming']);
+//               print render($content['field_uwwpdischarge']);
+//               if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
+//                 print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+//                   print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
+//                   print '<div class="field-items">';
+//                     print '<div class="field-item">';
+//                       print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%';
+//                     print '</div>';  
+//                   print '</div>';
+//                 print '</div>';
+//               }
+//               print '</div>
+//                     <div class="back">';
+//                     print '<svg id="uwwtp_stackedbar_back"></svg>';
+//                     echo uwwtd_stackedbar_uwwtpnode($node);
+//                     print '</div>
+//                 </div>';                                                   
+            print '</div>';  
+            print '<div class="uwwrealthird" style="float:right;">';
               print render($content['field_uwwcompliance']);
               print render($content['field_uwwtreatmenttype']);
               print render($content['field_uwwtreatmentrequired']);
               print render($content['field_uwwtreatment_met']);
               print render($content['field_uwwperformance_met']);
+              print '<br><br><br><br><br><br><br><br>';
             print '</div>';
         print '</div>';
       print '</fieldset>';

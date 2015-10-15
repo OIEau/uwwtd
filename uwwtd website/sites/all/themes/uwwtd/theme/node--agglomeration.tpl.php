@@ -121,28 +121,40 @@ echo uwwtd_insert_errors_tab($node);
     //print render($content);
     $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
 
-    print '<div class="uwwcontainer">';
+    print '<div class="uwwcontainer" >';
       echo render($printy);
       print '<div class="uwwhalf">';
         echo uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
-    print '<div class="uwwcontainer">';
+    print '<div class="uwwcontainer" style="overflow:hidden;">';
       print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
           print '<div class="panel-body">';
             print '<div class="uwwrealthird">';
-              print render($content['field_agggenerated']);
-              print render($content['field_aggc1']);
-              print render($content['field_aggc2']);                                                           
-              print render(field_view_field('node', $node, 'field_aggpercwithouttreatment', array('label' => 'inline')));
+            
+            
+              print '<div class="flip">
+                       <div class="front">
+                          <i class="fa fa-plus-square plus">+</i>';
+                          print render($content['field_agggenerated']);
+                          print uwwtd_render_field_with_pe($content['field_aggc1']);
+                          print uwwtd_render_field_with_pe($content['field_aggc2']);
+                          print uwwtd_render_field_with_pe($content['field_aggpercwithouttreatment']);                          
+              print'   </div>
+                       <div class="back">
+                          <i class="fa fa-plus-square minus">-</i>
+                          <div id="agglo_piechart_back"></div>';
+                          echo uwwtd_piechart_agglonode($node, $content);
+              print'   </div>       
+                    </div>';
             print '</div>';
             print '<div class="uwwrealthird">';
             print '&nbsp;';
             print '</div>';
-            print '<div class="uwwrealthird">';
+            print '<div class="uwwrealthird" style="float:right;">';
               print render($content['field_aggcompliance']);
               //print render($content['field_compliance_explication']);
               print render($content['field_aggart3compliance']);
@@ -152,7 +164,7 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_aggart5compliance']);
               //print render($content['field_article_5_compliance_expli']);
 			   print render($content['field_aggart6compliance']);
-            print '</div>';
+            print '<br><br><br></div>';
         print '</div>';
       print '</fieldset>';
     print '</div>';

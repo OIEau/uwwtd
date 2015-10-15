@@ -119,7 +119,8 @@ function display_uwwtp_stackedbar(data) {
          
 }
 
-function display_agglo_piechart(data) {    
+function display_agglo_piechart(data) {
+    
     var widthsvg = 400;
     var width = 120;  
     var height = 120;
