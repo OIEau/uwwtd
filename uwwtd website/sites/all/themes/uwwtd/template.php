@@ -1184,12 +1184,16 @@ function uwwtd_get_uww_graphic($node){
 }
 
 function uwwtd_render_field_with_pe($field)
-{
-    $pe = uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']);
+{               
+//     $field[0]['#markup'] = 'Not provided';
+    $pe = '';
+    if (true === is_numeric($field[0]['#markup'])) {
+        $pe = ' % ('. uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']) .' p.e.)';
+    }
     return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
         <div class="field-label">'.$field['#title'].':&nbsp;</div>
         <div class="field-items">
-            <div class="field-item even">'.$field[0]['#markup'].' % ('. $pe .' p.e.)</div>
+            <div class="field-item even">'.$field[0]['#markup']. $pe .'</div>
         </div>
     </div>';    
 }
@@ -1214,17 +1218,17 @@ function uwwtd_piechart_agglonode($node, &$content)
     $aData[] = array(
         "value" => $node->field_aggc1['und'][0]['value'],
         "label" => $content['field_agggenerated']['#title'],
-        "valueformat" => uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %',
+        "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => $node->field_aggc2['und'][0]['value'],
         "label" => $content['field_aggc2']['#title'],
-        "valueformat" =>  uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %',
+        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
     );  
     $aData[] = array(
         "value" => $node->field_aggpercwithouttreatment['und'][0]['value'],
         "label" => $content['field_aggpercwithouttreatment']['#title'],
-        "valueformat" =>  uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %',
+        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
     );     
 //     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
 //     return "
