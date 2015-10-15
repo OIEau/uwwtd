@@ -1,0 +1,15 @@
+Home {"url":"<front>","lang":"und","weight":"-50"}
+View/Discover {"url":"content\/agglomerations","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Agglomeration compliance map {"url":"agglomerations\/compliance","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+-Agglomeration Connection map {"url":"agglomerations\/connection","lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Treatment Plants compliance map {"url":"uwwtps\/compliance","lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+-Treatment Plants treatment map {"url":"uwwtps\/treatment","lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+-Treatment Plants pressure map {"url":"uwwtps\/pressure","lang":"und","options":{"attributes":{"title":""}},"weight":"-46"}
+-Sensitive areas {"url":"sensitive_areas","lang":"und","options":{"attributes":{"title":""}},"weight":"-45"}
+Download/Invoke {"url":"content\/download","lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+Statistics {"url":"uwwtd_statistics","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+-Create Stats {"url":"uwwtd_statistics","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+Regulations {"url":"content\/regulations","lang":"und","weight":"-46"}
+Useful links {"url":"content\/useful-links","lang":"und","weight":"-45"}
+Ressources {"url":"content\/ressources","lang":"und","weight":"-44"}
+Contact {"url":"content\/contact","lang":"und","weight":"-43"}
