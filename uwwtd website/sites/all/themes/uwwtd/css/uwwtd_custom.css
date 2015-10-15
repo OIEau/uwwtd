@@ -1,3 +1,51 @@
+body{
+    background-color:#dddddd;
+}
+div.main-container{
+    background-color:#ffffff;
+}
+.fa {
+    float: right;
+    font-size: 25px;
+    margin-right: 6px;
+    margin-top: 4px;
+    transition: color 0.4s ease 0s;
+}
+div.charts-row div.flot-title{
+    width:100%;
+    background-color:#dddddd;
+    height:35px;
+    border-radius: 5px 5px 0 0;
+    margin:0px;
+}
+div.charts-row div.view-content{
+    border:1px solid #dddddd;
+    border-radius: 0 0 5px 5px;
+    margin:0px;
+    padding-bottom: 20px;
+}
+div.flip-title{
+    float:left;
+    margin-top: 7px;
+    padding-left: 15px;
+}
+div.rows{
+    margin:10px 0;
+    clear:both;
+}
+
+div.charts-rows-cell{
+    width:49%;
+    float:left;
+}
+div.charts-row .back table{
+    width:100%;
+}
+div.charts-row div.container{
+    height:280px;
+    width:100%;
+}
+
 /* ac 09/09/14 */
 
 .view-agglomeration-conformity .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{

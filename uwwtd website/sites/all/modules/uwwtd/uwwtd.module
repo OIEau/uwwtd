@@ -2164,6 +2164,7 @@ function uwwtd_page_agglomeration_connection()
     $title = 'Agglomeration connection map and list';
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'];
@@ -2394,6 +2395,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     $title = 'UWWTD Treatment Plants- Compliance map';
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'];
@@ -2758,16 +2760,42 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     
     $page = '<h1>'.$title.'</h1>'
             . $form 
-            . $rendermap   
-            . '<div class="view-content flot-title">Compliance by Plants</div>'
-            . '<div class="view-content">'.$render_graph_nb.'</div>'
-            . '<div class="view-content">'.$render_table_graph_nb.'</div>'  
-            . '<div class="view-content flot-title">Compliance by Generated load (p.e.)</div>'          
-            . '<div class="view-content">'.$render_graph.'</div>'
-            . '<div class="view-content">'.$render_table_graph.'</div>'
-            . '<div class="view-content">'. drupal_render($build) . '</div>'
-            . '<div class="view-content">'. $link_export_csv . '</div>'
-            . '<div class="view-content">'. $link_export_xls . '</div>'
+            .'<div class="rows map-row">'.$rendermap.'</div>' 
+            .'<div class="rows charts-row">'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .'<div class="container flip">'
+                      .'<div class="front">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-plus-square plus">+</i></div>'
+                        . '<div class="view-content">'.$render_graph_nb.'</div>'
+                      .'</div>'
+                      .'<div class="back">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-minus-square minus">-</i></div>'
+                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
+                      .'</div>'
+                    .'</div>'
+                  .'</div>' 
+                .'</div>'  
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .'<div class="container flip">'
+                      .'<div class="front">'
+                            . '<div class="flot-title"><div class="flip-title">Compliance by load entering (p.e.)</div> <i class="fa fa-plus-square plus">+</i></div>'          
+                            . '<div class="view-content">'.$render_graph.'</div>'
+                      .'</div>'
+                      .'<div class="back">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by load entering (p.e.)</div> <i class="fa fa-minus-square minus">-</i></div>'
+                        . '<div class="view-content">'.$render_table_graph.'</div>'
+                      .'</div>'
+                    .'</div>' 
+                  .'</div>' 
+                .'</div>' 
+            .'</div>'
+            .'<div class="rows data-table-row">'
+                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content">'. $link_export_csv . '</div>'
+                . '<div class="view-content">'. $link_export_xls . '</div>'
+            .'</div>'
      ;
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page, 
@@ -2783,6 +2811,7 @@ function uwwtd_page_uwwtps_treatment()
     $title = 'UWWTD Treatment Plants- Treatment map';
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     $option = array(); 
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value'];
@@ -3140,12 +3169,14 @@ function uwwtd_page_uwwtps_treatment()
     $page = '<h1>'.$title.'</h1>'
             . $form 
             . $rendermap      
-            . '<div class="view-content flot-title">Treatment type in place by Plants</div>' 
+            . '<div class="flot-title">Treatment type in place by Plants</div>' 
             . '<div class="view-content">'.$render_graph_nb.'</div>'
-            . '<div class="view-content">'.$render_table_graph_nb.'</div>'     
-            . '<div class="view-content flot-title">Treatment type in place by Load entering (p.e.)</div>'       
+            . '<div class="view-content">'.$render_table_graph_nb.'</div>' 
+            
+            . '<div class="flot-title">Treatment type in place by Load entering (p.e.)</div>'       
             . '<div class="view-content">'.$render_graph.'</div>'
             . '<div class="view-content">'.$render_table_graph.'</div>'
+            
             . '<div class="view-content">'. drupal_render($build) . '</div>'   
      ;    
      
@@ -3561,6 +3592,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     $title = 'UWWTD Agglomerations- Compliance map';
     drupal_set_title($title); 
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');     
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     $option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration'];
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'];
@@ -3805,7 +3837,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     <thead>
     <tr>
         <th class="views-field views-field-title">
-        Number of plants         
+        Number of agglomeration         
         </th>
         <th class="views-field views-field-field-aggcompliance">
         Compliance            
@@ -3937,12 +3969,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     
     $link_export_csv = '<a href="'.url('agglomerations/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
     $link_export_xls = '<a href="'.url('agglomerations/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
-    
-        
-    $page =  '<h1>'.$title.'</h1>'
-            . $form 
-            . $rendermap
-            . '<div class="view-content flot-title">Compliance by Plants</div>'
+/*
 //             . '<script> 
 // function uwwtd_labelformaterpie(label, series) {
 //     console.log("uwwtd_labelformaterpie : " + label);
@@ -3952,15 +3979,65 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //     console.log("uwwtd_labelformaterpie_legend " + label);
 //     return "<div class=\"pie_slice\">label + " (" + Math.round(series.percent) + "%)</div>";  
 // }    
-//     </script>'     
-            . '<div class="view-content">'.$render_graph_nb.'</div>'
-            . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-            . '<div class="view-content flot-title">Compliance by Generated load (p.e.)</div>'            
-            . '<div class="view-content">'.$render_graph.'</div>'
-            . '<div class="view-content">'.$render_table_graph.'</div>'
-            . '<div class="view-content">'. drupal_render($build) . '</div>'
-            . '<div class="view-content">'. $link_export_csv . '</div>'
-            . '<div class="view-content">'. $link_export_xls . '</div>'
+//     </script>'
+    
+*/ 
+/*
+            .'<div class="rows charts-row">'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .'<div class="container flip">'
+                      .'<div class="front">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-plus-square plus">+</i></div>'
+                        . '<div class="view-content">'.$render_graph_nb.'</div>'
+                      .'</div>'
+                      .'<div class="back">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-minus-square minus">-</i></div>'
+                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
+                      .'</div>'
+                    .'</div>'
+                  .'</div>' 
+                .'</div>' 
+
+*/       
+    $page =  '<h1>'.$title.'</h1>'
+            . $form 
+            . '<div class="rows map-row">'.$rendermap.'</div>'
+            . '<div class="rows charts-row">'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .'<div class="container flip">'
+                      .'<div class="front">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div> <i class="fa fa-plus-square plus">+</i></div>'     
+                        . '<div class="view-content">'.$render_graph_nb.'</div>'
+                      .'</div>'
+                      .'<div class="back">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div> <i class="fa fa-minus-square minus">-</i></div>'     
+                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
+                      .'</div>'
+                    .'</div>'
+                  .'</div>'
+                .'</div>'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .'<div class="container flip">'
+                      .'<div class="front">'
+                        . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div> <i class="fa fa-plus-square plus">+</i></div>'            
+                        . '<div class="view-content">'.$render_graph.'</div>'
+                      .'</div>'
+                      .'<div class="back">' 
+                        . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div> <i class="fa fa-minus-square minus">-</i></div>'            
+                        . '<div class="view-content">'.$render_table_graph.'</div>'
+                      .'</div>'
+                    .'</div>'
+                  .'</div>'
+                .'</div>'
+            .'</div>'
+            . '<div class="rows data-table-row">'
+                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content">'. $link_export_csv . '</div>'
+                . '<div class="view-content">'. $link_export_xls . '</div>'
+            .'</div>'
      ;
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page, 

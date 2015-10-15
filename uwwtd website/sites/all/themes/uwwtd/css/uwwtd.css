@@ -297,12 +297,14 @@ article.node h1 small{
 	clear: both;
 	overflow: auto;
 	margin-bottom: 15px;
+    margin-left: 5px;
+	margin-right: 5px;
 }
 
 .uwwfull, .field-group-fieldset.uwwfull{
-	width: 1130px;
-	margin-left: 5px;
-	margin-right: 5px;
+	/*width: 1130px;*/
+    width:100%;
+
 }
 
 .uwwhalf{
