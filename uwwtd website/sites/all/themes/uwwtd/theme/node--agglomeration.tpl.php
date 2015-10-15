@@ -138,14 +138,15 @@ echo uwwtd_insert_errors_tab($node);
             
               print '<div class="flip">
                        <div class="front">
-                          <i class="fa fa-plus-square plus">+</i>';
+                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
+                          
                           print render($content['field_agggenerated']);
                           print uwwtd_render_field_with_pe($content['field_aggc1']);
                           print uwwtd_render_field_with_pe($content['field_aggc2']);
                           print uwwtd_render_field_with_pe($content['field_aggpercwithouttreatment']);                          
               print'   </div>
                        <div class="back">
-                          <i class="fa fa-plus-square minus">-</i>
+                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
                           <div id="agglo_piechart_back"></div>';
                           echo uwwtd_piechart_agglonode($node, $content);
               print'   </div>       

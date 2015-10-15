@@ -1013,26 +1013,41 @@ function uwwtd_update_7112()
  */ 
 function uwwtd_update_7113()
 {
-
+    uwwtd_install_trace(__FUNCTION__); 
     //install new main menu
     $menu = array(
         'menu_name' => 'main-menu', // Drupal menu machine name
         'title' => 'Main menu', // Drupal menu display name
         'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
     );
-        
+    drupal_flush_all_caches();     //needto clear cache, drupal must know the unew url uwwtps/pressure exist in hook_menu uwwtd_menu besfore creating new menu    
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
     uwwtd_install_menu($menu, 'main-menu7113.json');   //todo change
     
     
-    uwwtd_install_trace(__FUNCTION__);
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
-    $country_code = variable_get('siif_eru_country_code', '-1');
-    uwwtd_update_map_overlay($country_config, $country_code);    
+    $country_code = variable_get('siif_eru_country_code', '-1');                              
+    uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), 
+                                                                array('uwwtp_bod_pressure_.inc',
+                                                                        'uwwtp_cod_pressure_.inc',
+                                                                        'uwwtp_n_pressure_.inc',
+                                                                        'uwwtp_p_pressure_.inc',), 
+                                                                array('-'));    
     variable_set('siif_eru_version', __FUNCTION__);
-    drupal_flush_all_caches();    
+    drupal_flush_all_caches();     
+}
+
+/**
+ * Recall redo import main menu
+ */ 
+function uwwtd_update_7114()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //install new main menu
+    uwwtd_update_7113();
+    variable_set('siif_eru_version', __FUNCTION__);
 }
 
 /***************************************************************************/
@@ -1156,7 +1171,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_bod_pressure_.inc',
         'uwwtp_cod_pressure_.inc',
         'uwwtp_n_pressure_.inc',
-        'uwwtp_tot_pressure_.inc',
+        'uwwtp_p_pressure_.inc',
     ); 
     $list_style = array(
         'agglomerations_style.inc',

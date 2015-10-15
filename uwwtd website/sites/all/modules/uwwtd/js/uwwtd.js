@@ -3,12 +3,19 @@
         // Gestion des flipcards
         $(".flip").flip({trigger: 'manual'});
         
-        $(".flip .plus").click(function() {
+        $(".flip .to-table").click(function() {
           $(this).closest('.flip').flip(true);
         });
-        $(".flip .minus").click(function() {
+        $(".flip .to-chart").click(function() {
           $(this).closest('.flip').flip(false);
         });
+        
+        $(".flip .chart-to-table").click(function() {
+          $(this).closest('.flip').flip(false);
+        });
+        $(".flip .table-to-chart").click(function() {
+          $(this).closest('.flip').flip(true);
+        });        
     });    
 })(jQuery);
 
@@ -22,10 +29,10 @@ function uwwtd_labelformaterpie_legend(label, series) {
 }   
 
 function display_uwwtp_stackedbar(data) {
-    var margin = {top: 0, right: 20, bottom: 30, left: 60},
-        width = 200 - margin.left - margin.right,
+    var margin = {top: 10, right: 20, bottom: 30, left: 60},
+        width = 315 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
-        widthsvg = 220;
+        widthsvg = width;
     
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
@@ -92,7 +99,7 @@ function display_uwwtp_stackedbar(data) {
       .data(function(d) { return d.origin; })
     .enter().append("rect")
       //.attr("width", x.rangeBand())
-      .attr("width", 25)
+      .attr("width", 40)
       .attr("y", function(d) { return y(d.y1); })
       .attr("height", function(d) { return y(d.y0) - y(d.y1); })
       .style("fill", function(d) { return color(d.name); });
@@ -133,18 +140,40 @@ function display_agglo_piechart(data) {
       .append('g')
       .attr('transform', 'translate(' + (width / 2) +  ',' + (width / 2) + ')');
     var arc = d3.svg.arc()
-      .outerRadius(radius);
+      .outerRadius(radius)
+      .innerRadius(0);
+      
     var pie = d3.layout.pie()
       .value(function(d) { return d.value; })
       .sort(null);
-    var path = svg.selectAll('path')
+      
+//     var path = svg.selectAll('path')
+//       .data(pie(data))
+//       .enter()
+// //       .append('arc')
+// //       .attr("class", "arc")
+//       .append('path')
+//       .attr('d', arc)
+//       .attr('fill', function(d, i) { 
+//         return color(d.data.label);
+//       });
+      
+var g = svg.selectAll(".arc")
       .data(pie(data))
-      .enter()
-      .append('path')
-      .attr('d', arc)
-      .attr('fill', function(d, i) { 
-        return color(d.data.label);
-      });      
+    .enter().append("g")
+      .attr("class", "arc");  
+      
+ g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.label); });          
+      
+  g.append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d.data.valueformat });
+      
+            
     var legendRectSize = 12;
     var legendSpacing = 4;
     var legend = svg.selectAll('.legend')

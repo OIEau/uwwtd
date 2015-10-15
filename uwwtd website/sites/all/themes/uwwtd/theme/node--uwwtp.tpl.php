@@ -150,7 +150,7 @@ echo uwwtd_insert_errors_tab($node);
             
               print '<div class="flip" id="uwwtp_stackedbar">
                        <div class="front">
-                          <i class="fa fa-plus-square plus">+</i>';
+                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
                         print render($content['field_uwwbodincoming']);
                           print render($content['field_uwwboddischarge']);
                           if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
@@ -201,7 +201,7 @@ echo uwwtd_insert_errors_tab($node);
                           }                      
               print'   </div>
                        <div class="back">
-                          <i class="fa fa-plus-square minus">-</i>
+                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
                             <svg id="uwwtp_stackedbar_back"></svg>';
                             echo uwwtd_stackedbar_uwwtpnode($node);
               print'   </div>       

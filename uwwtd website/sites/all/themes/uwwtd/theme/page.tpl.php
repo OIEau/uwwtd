@@ -74,6 +74,10 @@
  */
 ?>
 <?php /* region--navigation.tpl.php */ ?>
+
+<div style="font-size:20px;font-weight:bold;width:100%;background-color:yellow;text-align:center;color:red;"> WEBSITE UNDER CONSTRUCTION </div>
+
+
 <?php if ($page['navigation']): ?>
   <?php print render($page['navigation']); ?>
 <?php endif; ?>

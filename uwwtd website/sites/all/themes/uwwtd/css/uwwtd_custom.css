@@ -46,6 +46,16 @@ div.charts-row div.container{
     width:100%;
 }
 
+.button-flipper {
+  float: right;
+  margin-top: -1px;
+  width:20px;
+  height:20px;
+}
+.button-flipper:hover{
+  cursor: pointer;
+} 
+
 /* ac 09/09/14 */
 
 .view-agglomeration-conformity .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
