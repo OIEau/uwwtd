@@ -3668,6 +3668,66 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
   -webkit-overflow-scrolling: touch;
 }
+
+.navbar-collapse .menu-item--depth-1 {
+  position: relative;
+
+}
+
+.navbar-collapse .menu-level--2 {
+  display: none;
+  position: absolute;
+}
+
+.navbar-collapse .menu-item--depth-1:hover {
+  background-color: #e7e7e7;
+}
+
+.navbar-collapse .menu-item--depth-1:hover > .menu-level--2 {
+  display: block;
+  background-color: #fff;
+  width: 260px;
+  border: 1px solid #B3B3B3;
+  z-index: 1000;
+}
+
+.navbar-collapse .menu-level--3 {
+  display: none;
+}
+
+.navbar-collapse .menu-item--depth-2:hover > .menu-level--3,
+.menu-level--3:hover {
+  display: block;
+  position: absolute;
+  left: 259px;
+  top: 0px;
+  width: 260px;
+  background-color: #fff;
+  z-index: 1001;
+  border: 1px solid #B3B3B3;
+}
+
+.menu-level--2 a,
+.menu-level--3 a {
+  color: #333333;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .navbar-collapse.in {
   overflow-y: auto;
 }

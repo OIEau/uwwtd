@@ -1306,3 +1306,33 @@ function uwwtd_stackedbar_uwwtpnode($node)
     </script>
     ";
 }
+
+
+// Ajoute un niveau de profondeur au menu principal
+
+function uwwtd_menu_link__main_menu(&$variables)
+{
+	$element = $variables['element'];
+
+  	$sub_menu = ($element['#below'] ? drupal_render($element['#below']) : '');
+  	$depth = $element['#original_link']['depth'] + 1;
+
+  	$unused = array('leaf', 'first', 'menu-mlid-' . $element['#original_link']['mlid']);
+  	$element['#attributes']['class'] = array_diff($element['#attributes']['class'], $unused);
+
+  	$element['#attributes']['class'][] = 'menu-item';
+  	$element['#attributes']['class'][] = 'menu-item--depth-' . $element['#original_link']['depth'];
+
+  	$element['#localized_options']['html'] = TRUE;
+  	$element['#localized_options']['attributes']['class'][] = 'menu-link';
+  	$element['#localized_options']['attributes']['class'][] = 'menu-link--depth-' . $element['#original_link']['depth'];
+
+  	if (!empty($sub_menu)) {
+    	// Wrap menu-level for each level.
+    	$sub_menu = '<div class="menu-level menu-level--' . $depth . '">' .  $sub_menu . '</div>';
+  	}
+  	
+  	$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
+  	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
+	
+}
