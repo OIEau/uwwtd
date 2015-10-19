@@ -1183,6 +1183,314 @@ function uwwtd_get_uww_graphic($node){
 	return $output;   
 }
 
+function uwwtd_get_agglo_graphic($node){
+	global $base_url;
+      $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+
+      $totalout = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']);
+      $totalWOT = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggpercwithouttreatment['und'][0]['value']);
+      $totalIAS = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc2['und'][0]['value']);
+
+      $nbPlants = 0;
+      $reseau = array();
+      foreach($node->field_linked_treatment_plants['und'] as $uwws){
+        $nbPlants++;
+        $uww = node_load($uwws['nid']);
+
+        //get station entering sums
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+        $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+        $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
+        $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
+        $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+        $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
+        $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
+        $result = $query->execute();
+        $result = $query->execute();
+        while($record = $result->fetchAssoc()){
+          $perce = $record['field_agglo_uww_perc_ent_uw_value'];
+          $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+        }
+
+        $totale = floor(($totalout / 100) * $perce);
+
+        $msType = false;
+        if($uww->field_uwwnremoval['und'][0]['value'] == '1'){
+          $msType = 'N';
+          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+            $msType = 'NP';
+            if(
+              $uww->field_uwwuv['und'][0]['value'] == '1' ||
+              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwothertreat['und'][0]['value'] == '1'
+            ){
+              $msType = 'NPB';
+            }
+          }
+          else{
+            if(
+              $uww->field_uwwuv['und'][0]['value'] == '1' ||
+              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwothertreat['und'][0]['value'] == '1'
+            ){
+              $msType = 'NB';
+            }
+          }
+        }
+        else{
+          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+            $msType = 'P';
+            if(
+              $uww->field_uwwuv['und'][0]['value'] == '1' ||
+              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwothertreat['und'][0]['value'] == '1'
+            ){
+              $msType = 'PB';
+            }
+          }
+          else{
+            if(
+              $uww->field_uwwuv['und'][0]['value'] == '1' ||
+              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+              $uww->field_uwwothertreat['und'][0]['value'] == '1'
+            ){
+              $msType = 'B';
+            }
+          }
+        }
+
+        $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
+        $reseau[$uwws['nid']]['loadEntering'] = $totale;
+        $reseau[$uwws['nid']]['percEntering'] = $perce;
+        $reseau[$uwws['nid']]['mstype'] = $msType;
+        $reseau[$uwws['nid']]['title'] = $uww->title;
+        $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
+        foreach($uww->field_linked_discharge_points['und'] as $dcps){
+          $loadedDcp = node_load($dcps['nid']);
+          $dcpNid = $loadedDcp->nid;
+          $dcpTitle = $loadedDcp->title;
+          $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
+          $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+          $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+        }
+      }
+      
+      $nbPlantsT = 0;
+      $nbPlantsB = 0;
+      for ($i=0; $i <= $nbPlants; $i++) { 
+
+        if($i > 1){    
+
+          if($i % 2 == 0){
+            $nbPlantsT ++;
+          }
+          else{
+            $nbPlantsB ++;
+          }
+        }
+      }
+      $topMarge = $nbPlantsB * 95;
+
+      $output = '';
+
+    $output .= '<div class="ias">
+      <div class="graphic-title">
+        '.t('Indivual Appropriate Systems:').' '.$totalIAS.' p.e ('.$node->field_aggc2['und'][0]['value'].'%)
+      </div>
+      <img width="1098px" src="'.$src.'/images/graphic/ias.png" alt="reseau">
+    </div>
+    <div class="graphic-container">
+
+      <div class="agglomeration-graphic">
+        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
+        <div class="graphic-title">
+          '.l($node->title, "node/".$node->nid).'<br>
+          '.$node->field_agggenerated['und'][0]['value'].' p.e
+        </div>
+        <div class="agglo-load">
+          '.floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']).' p.e <br>('.$node->field_aggc1['und'][0]['value'] .'%)
+        </div>
+      </div>
+
+      <div class="connectors" style="margin-top: -'.$topMarge.'px; top: '.$topMarge.'px;">';
+
+      for ($i=0; $i < $nbPlantsT; $i++) { 
+        $output .= '<img width="150px" src="'.$src.'/images/graphic/topcap.png" alt="reseau">';
+      }
+
+      if($nbPlants > 0){ 
+        $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
+      }
+
+      for ($i=0; $i < $nbPlantsB; $i++) { 
+        $output .= '<img width="150px" src="'.$src.'/images/graphic/botcap.png" alt="reseau">';
+      }
+
+      $output .= '</div>
+      <div class="stations">';
+
+      $offset = 0;
+      if($nbPlants % 2 == 0){
+        $offset = 50;
+      }
+
+      foreach($reseau as $station){
+
+        $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
+
+            if($station['compStation'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
+            elseif($station['compStation'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
+            else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
+          
+          $output .= '<div class="graphic-title">
+            '.l($station['title'], "node/".$station['nid']).'
+          </div>
+
+          <div class="station-load">'.$station['loadEntering'].' p.e <br>('.$station['percEntering'].'%)</div>
+        </div>';
+
+      }
+    
+    $output .= '</div>';
+
+    $topMarge = 60;
+    if($nbPlantsB == 0){
+      $topMarge = 13;
+    }
+
+    $output .= '<div class="ms-wrapper" style="top: -'.$topMarge.'px">'; 
+      foreach($reseau as $station){
+
+        if($station['mstype'] != false){
+              
+        $output .= '<div class="ms">
+          <img src="'.$src.'/images/graphic/ms.png" alt="reseau">
+          <div class="ms-type">
+            '.$station['mstype'].'
+          </div>
+        </div>';
+ 
+        }
+        else{
+          $output .= '<div class="ms"><img class="single" width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau"></div>';
+        }
+      }
+
+    $output .= '</div>';
+
+    $offset = $nbPlants * 16;
+    $totalDcps = 0;
+    $totalDcpsT = 0;
+    $totalDcpsB = 0;
+
+    $output .= '<div class="dcp-connections" style="top: -'.$offset.'px">';
+
+        foreach($reseau as $station){
+          $nbDcps = count($station['dcps']);
+          $totalDcps = $totalDcps + $nbDcps;
+          $nbDcpsT = 0;
+          $nbDcpsB = 0;
+          for ($i=0; $i <= $nbDcps; $i++) { 
+
+            if($i > 1){    
+    
+              if($i % 2 == 0){
+                $nbDcpsT ++;
+                $totalDcpsT++;
+              }
+              else{
+                $nbDcpsB ++;
+                $totalDcpsB++;
+              }
+            }
+          }
+          if($nbDcpsT == 1) $topMarge = 50;
+          else $topMarge = 0 + ($nbDcpsT * 48);
+          if($nbPlants > 1) $topMarge = $topMarge - 1;
+          if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
+          if($topMarge < 0) $topMarge = 0;
+          $topMarge = $topMarge - (2 * $topMarge);
+
+          $output .= '<div class="station-dcp-connections">';
+              $output .= '<div style="margin-top: '.$topMarge.'px">';
+
+            for ($i=0; $i < $nbDcpsT; $i++) { 
+              $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
+            }
+
+            if($nbDcps > 0){ 
+              $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
+            }
+
+            for ($i=0; $i < $nbDcpsB; $i++) { 
+              $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
+            }
+
+            $output .= '</div>
+          </div>';
+        }
+
+    $output .= '</div>
+
+    <div class="dcps-wrapper">';
+      
+    $cur = -1;
+    foreach($reseau as $station){
+      $nbDcps = count($station['dcps']);
+      
+      $offset = $totalDcps * (15.5 + (0.5 * $nbPlants));
+      $offset = $offset + $cur;
+      $offset = $offset - ($nbDcps * 0.25);
+      $cur++;
+      if($nbPlants == 4 && $nbDcps == 1) $offset = 141;
+
+      if($totalDcps <= 2 && $nbPlants == 1) $offset = -1;
+  
+      foreach($station['dcps'] as $dcp) {
+
+		$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+			<div>
+			  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
+			  <div class="graphic-title">
+			    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
+			    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
+			  </div>
+			</div>
+		</div>';
+
+      }
+    }
+
+    $output .= '</div>
+  </div>
+  <div class="dischage-wot">
+    <div class="graphic-title">
+      '.t('Discharge without treatment:').' '.$totalWOT.' p.e ('.$node->field_aggpercwithouttreatment['und'][0]['value'].'%)
+    </div>
+    <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
+  </div>';
+
+  return $output;
+}
+
 function uwwtd_render_field_with_pe($field)
 {               
 //     $field[0]['#markup'] = 'Not provided';

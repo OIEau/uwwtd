@@ -276,7 +276,7 @@ echo uwwtd_insert_errors_tab($node);
       print '</fieldset>';
     print '</div>';
 /* 2015/08/31 / e.vincent / add dev from alexander */
-/* 
+// /* 
     print '<div class="uwwcontainer">';
       print '<fieldset class="uwwfull group-agggraphic field-group-fieldset group-description panel panel-default form-wrapper">';
         print '<legend class="panel-heading">';
@@ -289,7 +289,7 @@ echo uwwtd_insert_errors_tab($node);
           print '</div>';
       print '</fieldset>';
     print '</div>';
-*/
+// */
     print '<div class="uwwcontainer">';
       print '<div class="uwwthird">';
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
