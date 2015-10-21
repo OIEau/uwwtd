@@ -1644,3 +1644,14 @@ function uwwtd_menu_link__main_menu(&$variables)
   	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
 	
 }
+
+function uwwtd_wkhtmltopdf_tag($options)
+{
+    switch (arg(0)) {
+        case 'agglomerations':
+        case 'uwwtps':
+            return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+            break;
+    }
+    return '';	
+}

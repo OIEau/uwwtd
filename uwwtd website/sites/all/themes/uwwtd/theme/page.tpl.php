@@ -106,7 +106,8 @@
 			//$options['subtitle'] ='Le glossaire librement réutilisable que chacun peut améliorer';
 			//Description de la page (en fait le titre)
 			//if($title!='') $options['comment'] = str_replace("'", "&#039;", $title);
-			//print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);			
+// 			print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);
+            print uwwtd_wkhtmltopdf_tag(array('.main-container'), $options);			
 		?>
 		</div>
     </div>
