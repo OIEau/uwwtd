@@ -19,7 +19,7 @@
 <body onload="subst();">
     <table>
           <tr>
-            <td style="text-align:justify;">FOOTER</td>
+            <td style="text-align:justify;"><!--FOOTER--></td>
             <td style="text-align:right;">
               <span class="date"></span> - page <span class="page"></span>/<span class="topage"></span>
             </td>

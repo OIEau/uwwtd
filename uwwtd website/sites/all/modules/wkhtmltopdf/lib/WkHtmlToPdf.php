@@ -184,7 +184,9 @@ class Wkhtmltopdf
 */
     protected function _exec($cmd, $input = "")
     {
-        echo $cmd;
+        uwwtd_wkhtml_trace(__FUNCTION__);
+        uwwtd_wkhtml_trace($cmd);
+//         echo $cmd;
         $result = array('stdout' => '', 'stderr' => '', 'return' => '');
 
         $proc = proc_open($cmd, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'a')), $pipes);
@@ -694,16 +696,19 @@ return $this->_windowStatus;
 */
     protected function _getCommand()
     {
+        uwwtd_wkhtml_trace(__FUNCTION__);
         $command = $this->_bin;
         
         //$command .= " --debug-javascript";
-        $command .= " --javascript-delay 20000";
+        $command .= " --javascript-delay 5000";
         //$command .= " --no-stop-slow-scripts";
         $command .= " --load-error-handling ignore";
         
         $command .= ($this->getCopies() > 1) ? " --copies " . $this->getCopies() : "";
         $command .= " --orientation " . $this->getOrientation();
         $command .= " --page-size " . $this->getPageSize();
+        
+        $command .= ($this->getTitle()) ? ' --title "' . $this->getTitle() . '"' : '';
 
         foreach($this->getMargins() as $position => $margin) {
             $command .= (!is_null($margin)) ? sprintf(' --margin-%s %s', $position, $margin) : '';
@@ -718,18 +723,22 @@ return $this->_windowStatus;
         $command .= (mb_strlen($this->getPassword()) > 0) ? " --password " . $this->getPassword() . "" : "";
         $command .= (mb_strlen($this->getUsername()) > 0) ? " --username " . $this->getUsername() . "" : "";
         
-        $command .= (mb_strlen($this->getCoverHtml()) > 0) ? " --cover \"".$this->getCoverHtml()."\"" : "";
-        $command .= (mb_strlen($this->getHeaderHtml()) > 0) ? " --header-html \"" . $this->getHeaderHtml() . "\"" : "";
-        $command .= (mb_strlen($this->getFooterHtml()) > 0) ? " --footer-html \"" . $this->getFooterHtml() . "\"" : "";
         
-        $command .= ($this->getTitle()) ? ' --title "' . $this->getTitle() . '"' : '';
+        
+        $command .= (mb_strlen($this->getCoverHtml()) > 0) ? " cover \"".$this->getCoverHtml()."\"" : "";
         //$command .= ($this->getPdfCompression()) ?'':' --disable-pdf-compression';
         
         $command .= ' "%input%"';
+        
+        $command .= (mb_strlen($this->getHeaderHtml()) > 0) ? " --header-html \"" . $this->getHeaderHtml() . "\"" : "";
+        $command .= (mb_strlen($this->getFooterHtml()) > 0) ? " --footer-html \"" . $this->getFooterHtml() . "\"" : "";
+                
         $command .= " -"; //laisse cette ligne sinon ca ne marche plus
 
         if ( $this->getRunInVirtualX() )
           $command = 'xvfb-run ' . $command;
+          
+        uwwtd_wkhtml_trace($command);      
         return $command;
     }
 
@@ -742,6 +751,7 @@ return $this->_windowStatus;
 */
     protected function _render()
     {
+        uwwtd_wkhtml_trace(__FUNCTION__);
         if (mb_strlen($this->_html, 'utf-8') === 0 && empty($this->_url))
             throw new Exception("HTML content or source URL not set");
 
@@ -774,6 +784,9 @@ return $this->_windowStatus;
 */
     public function output($mode, $filename)
     {
+        uwwtd_wkhtml_trace(__FUNCTION__);
+//         uwwtd_wkhtml_trace($mode);
+//         uwwtd_wkhtml_trace($filename);
         switch ($mode) {
             case self::MODE_DOWNLOAD:
                 if (!headers_sent()) {

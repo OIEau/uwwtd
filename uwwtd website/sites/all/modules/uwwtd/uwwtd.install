@@ -1048,8 +1048,123 @@ function uwwtd_update_7114()
     //install new main menu
     uwwtd_update_7113();
     variable_set('siif_eru_version', __FUNCTION__);
+    drupal_flush_all_caches();
 }
 
+/**
+ * Import main menu
+ */ 
+function uwwtd_update_7115()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //install new main menu
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7115.json');   //todo change
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+    drupal_flush_all_caches();
+}
+
+/**
+ * add new menu in management menu
+ */ 
+function uwwtd_update_7116()
+{
+    uwwtd_install_trace(__FUNCTION__);
+
+    $plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
+    $menu= array(
+        'link_path' => drupal_get_normal_path('admin/config/uwwtps') ,
+        'link_title' => 'uwwtd configuration',
+        'description' => 'Settings for the uwwtd application' ,
+        'menu_name' => 'management',
+        'weight' => 0,
+        'expanded' => true,
+        'mlid' => 0, 
+        'plid' => $plid,
+        'customized' => 1,
+    );
+
+    $mlid = menu_link_save($menu);
+//     dsm($mlid);
+    menu_cache_clear_all();
+    $plid = $mlid;
+    $menu= array(
+        'link_path' => 'admin/configuration/uwwtd/extlinks' ,
+        'link_title' => 'uwwtd external links',
+        'description' => 'Configure your external links' ,
+        'menu_name' => 'management',
+        'weight' => 0,
+//         'expanded' => false,
+        'mlid' => 0, 
+        'plid' => $plid,
+        'customized' => 1,
+    );    
+    $mlid = menu_link_save($menu);
+//     dsm($mlid);    
+    menu_cache_clear_all();
+
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+    //drupal_flush_all_caches();
+}
+
+/**
+ * Create new page disclaimer and update content block footer
+ */ 
+function uwwtd_update_7117()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    $pathpage = drupal_get_path('module', 'uwwtd') . '/script/page/disclaimer7117.inc';   
+    
+    //create a page for new download menu
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Disclaimer";
+    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/disclaimer'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+    
+    uwwtd_install_trace($pathpage);
+                               
+    $node->body[$node->language][0]['value'] = str_replace('[#COUNTRY#]', $country_config[$country_code]['name'], file_get_contents($pathpage));
+    $node->body[$node->language][0]['summary'] = '';
+    $node->body[$node->language][0]['format'] = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+    uwwtd_install_trace('page nid = ' . $node->nid);
+    $pathbock = drupal_get_path('module', 'uwwtd') . '/script/block/footer7117.inc';
+    uwwtd_install_trace($pathbock);
+    //update block
+    _block_rehash('uwwtd'); //theme name here
+    //Change block settings old view
+      db_update('block_custom')
+      ->fields(array(
+          'body' => file_get_contents($pathbock),
+      ))
+      ->condition('bid', '2') //2 is the id of block footer on all website
+      ->execute();
+
+    drupal_flush_all_caches();    
+    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
