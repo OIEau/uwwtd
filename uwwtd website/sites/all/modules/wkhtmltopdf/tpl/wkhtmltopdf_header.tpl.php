@@ -22,7 +22,7 @@
 <body>
     <table>
       <tr>
-        <td>LOGO</td>
+        <td><!--LOGO--></td>
         <td style="text-align:justify;"><?php print trim(variable_get('site_name', 'http://'.$_SERVER['SERVER_NAME'])); ?></td>
       </tr>
     </table>

@@ -93,7 +93,10 @@ function wkhtmltopdf_print($params=array()){
     if(empty($conf)){
         exit("wkhtmltopdf n'est pas configuré");
     }
+    $dir = file_default_scheme().'://wkhtmltopdf';
     //On traite les paramétres afin de ne recuperer que ceux destinés à wkhtmltopdf
+//     uwwtd_wkhtml_trace(var_export($conf, true));
+//     uwwtd_wkhtml_trace(var_export($params, true));
     $data =wkhtmltopdf_getData($params);
     //On recupere les valeurs par défaut
     $dd = wkhtmltopdf_getDefaultData($conf);
@@ -112,26 +115,30 @@ function wkhtmltopdf_print($params=array()){
     //krumo($data);
     //Generation des header, footer, cover et content
     $content=wkhtmltopdf_getContent($data);
-        cache_set($cid.'_content', $content);
+//         cache_set($cid.'_content', $content);
+        file_put_contents(drupal_realpath($dir).'/' . $cid.'_content.html', $content);
         //exit($content);
     if($conf['header_display']){
         $header=wkhtmltopdf_getHeader($data);
-        cache_set($cid.'_header', $header);
+//         cache_set($cid.'_header', $header);
+        file_put_contents(drupal_realpath($dir).'/' . $cid.'_header.html', $header);
     }
     if($conf['footer_display']){
         $footer=wkhtmltopdf_getFooter($data);
-        cache_set($cid.'_footer', $footer);
+//         cache_set($cid.'_footer', $footer);
+        file_put_contents(drupal_realpath($dir).'/' . $cid.'_footer.html', $footer);
     }
     if($conf['cover_display']){
         $cover=wkhtmltopdf_getCover($data);
         //exit($cover);
-        cache_set($cid.'_cover', $cover);
+//         cache_set($cid.'_cover', $cover);
+        file_put_contents(drupal_realpath($dir).'/' . $cid.'_cover.html', $cover);
     } 
     
     //exit($cid);
     try {
         //Check if  wkhtmltopdf directory exist
-        $dir = file_default_scheme().'://wkhtmltopdf'; 
+//         $dir = file_default_scheme().'://wkhtmltopdf'; 
         file_prepare_directory($dir, $mode = FILE_CREATE_DIRECTORY);
         
         //On fait le ménage sur le disk en supprimant tous les fichiers qui on plus de 24 heures
@@ -145,9 +152,16 @@ function wkhtmltopdf_print($params=array()){
         );
 		
         if($conf['disablePdfCompression']){$options['pdfCompression']=false;}
-        if($conf['footer_display']){$options['footer_html']=url('wkhtmltopdf/getCache/'.$cid.'_footer', array('absolute'=>true));}
-        if($conf['header_display']){$options['header_html']=url('wkhtmltopdf/getCache/'.$cid.'_header', array('absolute'=>true));}
-        if($conf['cover_display']){$options['cover_html']=url('wkhtmltopdf/getCache/'.$cid.'_cover', array('absolute'=>true));}
+        
+//         if($conf['footer_display']){$options['footer_html']=url('wkhtmltopdf/getCache/'.$cid.'_footer', array('absolute'=>true));}
+//         if($conf['header_display']){$options['header_html']=url('wkhtmltopdf/getCache/'.$cid.'_header', array('absolute'=>true));}
+//         if($conf['cover_display']){$options['cover_html']=url('wkhtmltopdf/getCache/'.$cid.'_cover', array('absolute'=>true));}
+        
+        if($conf['footer_display']){$options['footer_html']=drupal_realpath($dir).'/' . $cid.'_footer.html';}    
+        if($conf['header_display']){$options['header_html']=drupal_realpath($dir).'/' . $cid.'_header.html';}    
+        if($conf['cover_display']){$options['cover_html']=drupal_realpath($dir).'/' . $cid.'_cover.html';}        
+        
+        
         if($conf['margins']){$options['margins']=$conf['margins'];}
 		if($conf['toc_display']){
             $options['toc']=true;
@@ -156,14 +170,18 @@ function wkhtmltopdf_print($params=array()){
 		
         $wkhtmltopdf = new Wkhtmltopdf($options);
 		//exit($wkhtmltopdf);
+        $date = date("_Ymd_his");
         $wkhtmltopdf->setTitle(utf8_decode($data['title']['value'])); //pdf are encode in ISO-8859-1
-        
-        $wkhtmltopdf->output(Wkhtmltopdf::MODE_SAVE, ($data['filename']['value']!=''?$data['filename']['value'].'.pdf':"file.pdf"));
-        
+//         uwwtd_wkhtml_trace('start output');
+        $wkhtmltopdf->output(Wkhtmltopdf::MODE_SAVE, ($data['filename']['value']!=''?$data['filename']['value'].$date.'.pdf':"file.pdf"));
+//         uwwtd_wkhtml_trace('end output');    
         //On fait le ménage dans le cache
-        cache_clear_all($cid, 'cache', true);
+//         cache_clear_all($cid, 'cache', true);
+        if($conf['footer_display']){$options['footer_html']=unlink(drupal_realpath($dir).'/' . $cid.'_footer.html');}    
+        if($conf['header_display']){$options['header_html']=unlink(drupal_realpath($dir).'/' . $cid.'_header.html');}    
+        if($conf['cover_display']){$options['cover_html']=unlink(drupal_realpath($dir).'/' . $cid.'_cover.html');}
        
-	    $path = $dir.'/'.($data['filename']['value']!=''?$data['filename']['value'].'.pdf':"file.pdf");
+	    $path = $dir.'/'.($data['filename']['value']!=''?$data['filename']['value'].$date.'.pdf':"file.pdf");
         return file_create_url($path);
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -275,7 +293,26 @@ function wkhtmltopdf_getContent($data=array()){
     $variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'openlayers_plus' ) . '/theme/openlayers_plus.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
 	$variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'contextual' ) . '/contextual.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
 	$variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'openlayers_gazetteer' ) . '/css/openlayers_gazetteer.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE )); 
-	$variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'views' ) . '/js/views-contextual.js'); 
+	$variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'views' ) . '/js/views-contextual.js');
+    
+    //flot    
+    $variables['css'] = drupal_add_css ( drupal_get_path ( 'module' , 'flot' ) . '/flot.pie.css' , array( 'group' => CSS_DEFAULT , 'every_page' => TRUE ));
+    $variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'uwwtd' ) . '/js/uwwtd.js');
+    $variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'flot' ) . '/../../libraries/flot/jquery.flot.js');
+    $variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'flot' ) . '/flot.utils.js');
+    $variables['js'] = drupal_add_js ( drupal_get_path ( 'module' , 'flot' ) . '/../../libraries/flot/jquery.flot.pie.js');
+    $variables['js'] = drupal_add_js ( 'Drupal.flot = {};', 'inline');
+//     $variables['js'] = drupal_add_js ( 'function uwwtd_labelformaterpie(label, series) {
+//     return "<div class=\"pie_slice\">" + Math.round(series.percent) + "%</div>";
+// }     
+// 
+// function uwwtd_labelformaterpie_legend(label, series) {
+//     return "<div class=\"pie_legend\">" + label + " (" + Math.round(series.percent) + "%)</div>";  
+// } ', 'inline');
+    
+//     @import url("http://webnuxdev.rnde.tm.fr/ev_uwwtd_si/sites/all/modules/flot/flot.pie.css?nwgouq");
+// <script src="http://webnuxdev.rnde.tm.fr/ev_uwwtd_si/sites/all/libraries/flot/jquery.flot.js?nwgouq"></script>
+// <script>Drupal.flot = {};</script>     
 	
 	$variables['css'] = wkhtmltopdf_make_link_absolute(drupal_get_css());
     $variables['js'] = wkhtmltopdf_make_link_absolute(drupal_get_js());
@@ -285,10 +322,47 @@ function wkhtmltopdf_getContent($data=array()){
 
     //On remplace dans les fiedsets collapse pour voir tout le texte
     $html = str_replace('collapse', 'collapsible',$html); // base64_decode($_POST['contenu'])
+    $html = str_replace('class="table-responsive"', '',$html);
+    //delete flot code
+//     $html = str_replace('Drupal.flot', '//Drupal.flot',$html);
+    //desactivate flip             
+    $html = str_replace('class="container flip"', '',$html);
+    $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
+    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
+    $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
+    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
+    //page agglo/connexion only one graph
+//     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden; transform: rotateY(0deg);"', '"width:50%;margin:auto;"',$html);
+    //this line reduce the larger of the map!
+//     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width:50%;margin:auto;"',$html);
+    $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width: 1110px;margin:auto;"',$html);
+    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '""',$html);    
+    //desactivate flot graph canvas
+//     $html = str_replace('class="" id="flot-auto-identifier-"', 'class="marginauto" id="flot-auto-identifier-"',$html);
+    $html = str_replace('flot-auto-identifier-', 'flot-auto-identifier-old-', $html);
+    $html = str_replace('canvas', 'canvas__old', $html);
+    //ide flot backgroun color => cant because rebuild by js 
+    //$html = str_replace('opacity: 0.85;', 'opacity: 0',  $html);
+    //force larger of the page, the map will be full displayed, else the map will be truncated      
+    $html = str_replace('<!--markerprinttable-->', '<table border="1" style="width:1140px;visibility:hidden;"><tbody><tr><td></td></tr></tbody></table>',$html);
+     
+    
+    
+//     $html = str_replace('position: absolute; width: 250px; height: 60px; top: 5px; right: 5px; background-color: rgb(248, 248, 248); opacity: 0.85;', 'position: absolute; width: 250px; height: 60px; top: 5px; right: 5px; background-color: #FFFFFF; opacity: 0.85;', $html);
+//     $html = str_replace('position:absolute;top:5px;right:5px;;font-size:smaller;color:#545454', 'position:absolute;top:5px;right:-5px;;font-size:smaller;color:#545454', $html);
+       
+//     height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;
+//     transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;
+//     class="back" style
+    
+    //todo desactivate javascript
+
     $html = wkhtmltopdf_make_link_absolute($html);
     $variables['content'] = $html;
 	//exit($html);
-    return theme('wkhtmltopdf_content', $variables);
+    $s = theme('wkhtmltopdf_content', $variables);
+    file_put_contents('/var/www/html/ev_uwwtd_si/sites/default/files/wkhtmltopdf/courant.html', $s);
+    return $s;
 }
 
 function wkhtmltopdf_make_link_absolute($str){
@@ -429,4 +503,13 @@ function wkhtmltopdf_remove_old_file($file){
     if((time() - $crea_date) > (60*60*24)){
         @unlink($file);
     }
+}
+
+function uwwtd_wkhtml_trace($message)
+{
+    return '';
+    $file = drupal_realpath('public://data_errors/wkhtml_trace.log');
+    $r = fopen($file, 'a');
+    fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+    fclose($r);
 }

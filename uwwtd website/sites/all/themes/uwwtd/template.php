@@ -1628,6 +1628,18 @@ function uwwtd_menu_link__main_menu(&$variables)
 	
 }
 
+
+function uwwtd_wkhtmltopdf_tag($options)
+{
+    switch (arg(0)) {
+        case 'agglomerations':
+        case 'uwwtps':
+            return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+            break;
+    }
+    return '';	
+}
+
 function uwwtd_menu_link__user_menu(&$variables) {
 	$element = $variables['element'];
 	// krumo($element);
