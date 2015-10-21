@@ -115,27 +115,37 @@ function uwwtd_art17_example_agglomeration($annee) {
 		->execute();
     $filename = tempnam('/tmp', 'agg'); 
     $rFile = fopen($filename, 'wb');
+	
     fputcsv($rFile, array(    
-            'ID of the agglomeration',      //aggCode       field_inspireidlocalid
-            'Name of the agglomeration',    //aggName    -> title
-            'Status of the agglomeration',  
-            'Identified reason(s) for non compliance',
-            'Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)',
-            'Date or expected date for completion of preparatory measures for the  collecting system or IAS (planning, design, procurement, consents as required at MS level, etc)',
-            'Start date or expected start date for works on the collecting systems or IAS',
-            'Expected date of completion of the collecting system or IAS works',
-            'Forecast investment cost for the collecting system or IAS (as in the national plan)',
-            'Name of EU fund planned to be used to complete the collecting system or IAS  (if any)',
-            'Amount of (planned)  EU funds likely to be requested to complete the collecting system or IAS  (if any)',
-            'Any relevant comment on  collecting system or IAS',                                                       
+            'aggCode: ID of the agglomeration',      //aggCode       field_inspireidlocalid
+            'aggName: Name of the agglomeration related to this UWWTP',    //aggName    -> title
+            'flaggStatus: Status of the agglomeration at the reference reporting year (Not compliant/Pending deadlines)',  
+            'flaggreasons: Identified reason(s) for non compliance',
+            'flaggMeasures: Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)',
+            'flaggExpecDateStart: Date or expected date for completion of preparatory measures for the  collecting system or IAS (planning, design, procurement, consents as required at MS level, etc)',
+            'flaggExpecDateStartWork: Start date or expected start date for works on the collecting systems or IAS',
+            'flaggExpecDateCompletion: Expected date of completion of the collecting system or IAS works',
+            'flaggInv: Forecast investment cost for the collecting system or IAS (as in the national plan)',
+            'flaggEUfundname: Name of EU fund planned to be used to complete the collecting system or IAS  (if any)',
+            'FlaggEUfund: Amount of (planned)  EU funds likely to be requested to complete the collecting system or IAS  (if any)',
+            'FlaggComments: Any relevant comment on  collecting system or IAS',                                                       
+            'flaggExpload: Expected generated load of the agglomeration at the exepected date of compliance',                                                       
+            'flaggExploadcoll: Expected rate of the generated load of agglomeration  collected through collecting systems at the expected date of compliance',                                                       
+            'flaggExploadIAS: Expected rate of the generated load of the agglomeration addressed throug IAS at the expected date of compliance',                                                       
+            'Flaggotherfund: Amount of funds likely to be given  to complete the collecting system or IAS (if any)',                                                       
+            'flaggotherfundname: Name of the entity planned to give fund to complete the collecting system or IAS (if any)',                                                       
+            'Flaggloan: Amount of loan likely to be granted to complete the collecting system or IAS (if any)',                                                       
+            'Flaggloanname: Name of the entity planned to give loan to complete the collecting system or IAS (if any)',                                                       
+            'Compliance',                                                       
+            'Generated load (p.e.)',                                                       
             ), ';');
  
 	foreach($aggs as $agg){
         $node = node_load($agg->nid);
-
-        $aggData = array(
+        $aggData[] = array(
             $node->field_inspireidlocalid['und'][0]['value'],
             $node->title,
+            '',  
             '',
             '',
             '',
@@ -145,12 +155,44 @@ function uwwtd_art17_example_agglomeration($annee) {
             '',
             '',
             '',
-            '',    
+            '',
+            '',
+            '',
+            '',  
+            '',
+			'',  
+            '',
+            $node->field_aggcompliance[LANGUAGE_NONE][0]['value'],
+            $node->field_agggenerated[LANGUAGE_NONE][0]['value'],   
         );
-        fputcsv($rFile, $aggData, ';');
+        // fputcsv($rFile, $aggData, ';');
 
         unset($node);
 	}
+	
+	function trieAgg($aggData, $b){
+		$aggKey = array('NC'=> 0, 'NR'=>1, 'C'=>2, 'NI'=>3);
+
+		if($aggData[19] == $b[19]){
+			if($aggData[20] == $b[20]){
+				return 0;
+			}elseif($aggData[20] > $b[20]){
+				return -1;
+			}else{
+				return 1;
+			}
+		}elseif($aggKey[$aggData[19]] > $aggKey[$b[19]]){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+	usort($aggData, "trieAgg");
+
+	foreach($aggData as $key => $val){
+		fputcsv($rFile, $val, ';');
+	}
+	
     fclose($rFile);
     
     ini_set("auto_detect_line_endings", false); //for Mac user    
@@ -171,11 +213,10 @@ function uwwtd_art17_example_agglomeration($annee) {
 }
 
 function uwwtd_art17_example_uwwtp($annee) {
-	//Get all the agglomerations
-//     echo '<pre>';var_export($annee);echo '</pre>';
+	//Get all the treatment plan
 	$query = db_select('node', 'n');
 	$query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
-	$aggs = $query
+	$uwwtps = $query
 		->fields('n', array('nid', 'title'))
 		->condition('n.type', 'uwwtp', '=')
 		->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE')
@@ -184,83 +225,123 @@ function uwwtd_art17_example_uwwtp($annee) {
     $rFile = fopen($filename, 'wb');
     
     fputcsv($rFile, array(    
-                'ID of the UWWTP',
-                'Name of the UWWTP',	
-                'ID(s) of the agglomeration(s) served',
-                'Name(s) of the agglomeration(s) served',	
-                'Status of the UWWTP',	
-                'Identified reason(s) for non compliance',	
-                'Measure(s) to reach compliance needed for UWWTP', 	
-                'Load entering the UWWTP at the expected date of compliance (as planned)',	
-                'Organic design capacity UWWTP (as planned)',	
-                'Type of treatment UWWTP (as planned)',	
-                'Date or expected date of completion of preparatory measures (planning, design, etc)',	
-                'Date or expected start date for works',	
-                'Date or expected date of completion of works',	
-                'Expected date of compliance (12 months of samples)', 	
-                'Forecast cost investment needed for the UWWTP (as in the national plan)',	
-                'Name of EU fund planned to be used  (if any)',	
-                'Amount of (planned) EU funding needed',	
-                'Any relevant comment on UWWTP',                                                     
+                'uwwCode: ID of UWWTP/ collecting system without treatment',
+                'uwwName: Name of UWWTP/ collecting system without treatment',	
+                'aggCode: ID of the agglomeration related to this UWWTP',
+                'aggName: Name of the agglomeration related to this UWWTP',	
+                'flatpStatus: Status of the UWWTP at the reference reporting year (Not compliant/Pending deadlines)',	
+                'flatpreasons: Identified reason(s) for non compliance',	
+                'flatpMeasures: Measure(s) to reach the compliance needed for UWWTP', 	
+                'flatpExpload: Load entering the UWWTP at the expected date of compliance (as planned)',	
+                'flatpExpCapacity: Organic design capacity UWWTP (as planned)',	
+                'flatpExpecTreatment: Type of treatment UWWTP (as planned)',	
+                'flatpExpecDateStart: Date or expected date of completion of preparatory measures (planning, design, etc)',	
+                'flatpExpecDateStartWork: Date or expected start date for works',	
+                'flatpExpecDateCompletion: Date or expected date of completion of works',	
+                'flatpExpecDateperformance: Expected date of compliance (12 months of compliant samples)', 	
+                'flatpInv: Forecast cost investment needed for the UWWTP (as in the national plan)',	
+                'flatpEUfundname: Name of EU fund planned to be used  UWWTP (if any)',	
+                'flatpEUfund: Amount of (planned) EU funding needed',	
+                'flatpComments: Any relevant comment on UWWTP', 
+				'flatpExploadtruck: Expected rate of entering load transported to this UWWTP by truck at the expected date of compliance', 				
+				'Flatpotherfund: Amount of funds likely to be given  to complete the UWWTP (if any)', 
+				'flatpotherfundname: Name of the entity planned to give fund to complete UWWTP (if any)', 
+				'Flatploan: Amount of loan likely to be granted to complete the UWWTP (if any)', 
+				'Flatploanname: Name of the entity planned to give loan to complete the UWWTP (if any)', 
+				'Compliance', 
+				'Load entering UWWTP (p.e.)', 
             ), ';');
  
-	foreach($aggs as $agg){
-        $node = node_load($agg->nid);
+	foreach($uwwtps as $uwwtp){
+        $node = node_load($uwwtp->nid);
         $listAgglo = array();
-//         dsm($node->field_inspireidlocalid['und'][0]['value']);
-//         dsm($node);
-
+		// dsm($node);
+		if(isset($node->field_uwwbadperfdesign[LANGUAGE_NONE]) && $node->field_uwwbadperfdesign[LANGUAGE_NONE][0]['value'] == 0){
+			$uwwBadPerformance = "";
+		}else if(isset($node->field_uwwbadperfdesign[LANGUAGE_NONE]) && $node->field_uwwbadperfdesign[LANGUAGE_NONE][0]['value'] == 1){
+			$uwwBadPerformance = "of bad performance";
+		}
+		if(isset($node->field_uwwaccidents[LANGUAGE_NONE]) && $node->field_uwwaccidents[LANGUAGE_NONE][0]['value'] == 0){
+			$uwwAccidents = "";
+		}else if(isset($node->field_uwwaccidents[LANGUAGE_NONE]) && $node->field_uwwaccidents[LANGUAGE_NONE][0]['value'] == 1){
+			$uwwAccidents = "of major accident(s)";
+		}
+		if(isset($node->field_uwwbaddesign[LANGUAGE_NONE]) && $node->field_uwwbaddesign[LANGUAGE_NONE][0]['value'] == 0){
+			$uwwBadDesign = "";
+		}else if(isset($node->field_uwwbaddesign[LANGUAGE_NONE]) && $node->field_uwwbaddesign[LANGUAGE_NONE][0]['value'] == 1){
+			$uwwBadDesign = "of bad design.";
+		}
+		if(isset($node->field_uwwinformation[LANGUAGE_NONE]) && $node->field_uwwinformation[LANGUAGE_NONE][0]['value'] == ""){
+			$uwwInformation = "";
+		}else if(isset($node->field_uwwinformation[LANGUAGE_NONE]) && $node->field_uwwinformation[LANGUAGE_NONE][0]['value'] != ""){
+			$uwwInformation = "Further information on cause of failure: ".$node->field_uwwinformation[LANGUAGE_NONE][0]['value'];
+		}
+		if(($uwwBadPerformance == "")&&($uwwAccidents == "")&& ($uwwBadDesign == "") && ($uwwInformation == "")){
+			$reason = "";
+		}else{
+			$reason = 'Because'.$uwwBadPerformance.' '.$uwwAccidents. ' '.$uwwBadDesign.' '.$uwwInformation;
+		}
+		
         foreach($node->field_linked_agglomerations['und'] as $nidagg) {
-//             dsm($nidagg);
             $agg = node_load($nidagg['nid']);
             $listAgglo['id'][] = $agg->field_inspireidlocalid['und'][0]['value'];
             $listAgglo['name'][] = $agg->title;            
         }
-        
-//         $listAggloTmp = array();
-//         foreach($node->field_uwwaggliste['und'] as $nidagg) {
-// //             dsm($nidagg);
-//             $agg = node_load($nidagg['nid']);
-//             $listAggloTmp['id'][] = $agg->field_inspireidlocalid['und'][0]['value'];
-//             $listAggloTmp['name'][] = $agg->title;            
-//         }        
-//         return 'p';
-//         break;        
- 
-        $aggData = array(
+
+        $uwwtpData[] = array(
             $node->field_inspireidlocalid['und'][0]['value'],
             $node->title,
             implode(', ', $listAgglo['id']),
             implode(', ', $listAgglo['name']),
             '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',    
+            $reason,
+            '', 	
+			'',	
+			'',	
+			'',	
+			'',	
+			'',	
+			'',	
+			'', 	
+			'',	
+			'',	
+			'',	
+			'', 
+			'', 				
+			'', 
+			'', 
+			'', 
+			'', 
+			$node->field_uwwcompliance[LANGUAGE_NONE][0]['value'], 
+			$node->field_uwwloadenteringuwwtp[LANGUAGE_NONE][0]['value'],    
         );
-        fputcsv($rFile, $aggData, ';');
-        
-//         $aggData = array(
-//             $node->field_inspireidlocalid['und'][0]['value'],
-//             $node->title,
-//             implode(', ', $listAggloTmp['id']),
-//             implode(', ', $listAggloTmp['name']),
-//             '',
-//             '',
-//             '',
-//             '',
-//             '',
-//             '',
-//             '',
-//             '',    
-//         );
-//         fputcsv($rFile, $aggData, ';');        
-
+    
         unset($node);
+		
 	}
+
+	function trieUwwtp($uwwtpData, $b){
+		$aggKey = array('NC'=> 0, 'NR'=>1, 'C'=>2, 'NI'=>3);
+		if($uwwtpData[23] == $b[23]){
+			if($uwwtpData[24] == $b[24]){
+				return 0;
+			}elseif($uwwtpData[24] > $b[24]){
+				return -1;
+			}else{
+				return 1;
+			}
+		}elseif($aggKey[$uwwtpData[23]] > $aggKey[$b[23]]){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+	usort($uwwtpData, "trieUwwtp");
+
+	foreach($uwwtpData as $key => $val){
+		fputcsv($rFile, $val, ';');
+	}
+
     fclose($rFile);
     
     ini_set("auto_detect_line_endings", false); //for Mac user    
@@ -286,6 +367,61 @@ function uwwtd_art17_inport_form($form, &$form_state){
 		drupal_goto('data/article17');
 	}
 	else{
+		// le calcul consiste à vérifier la formule suivante pour toutes les agglos de >2000 pe:
+		// field_agggenerated_value> 2000
+
+		$totalAgg = 0;
+		$NbtotalAgg = 0;
+		$totalAggNC = 0;
+		$NbAggNC = 0;
+		
+		$queryAggGene = "SELECT entity_id, field_agggenerated_value
+		FROM drupal_field_data_field_agggenerated 
+		WHERE field_agggenerated_value> 2000";
+		
+		$resultAggGene = db_query($queryAggGene);
+		$recordAggGene = $resultAggGene->fetchAll();
+		
+		foreach($recordAggGene as $totalAggGene){
+			$totalAgg = ($totalAggGene->field_agggenerated_value) + $totalAgg;
+			$NbtotalAgg = $NbtotalAgg +1;
+			
+		}
+		// dsm($totalAgg);
+		// dsm($NbtotalAgg);
+		$queryAggComp = "SELECT aggGene.entity_id, aggGene.field_agggenerated_value, aggCompl.field_aggcompliance_value
+		FROM drupal_field_data_field_agggenerated aggGene
+		INNER JOIN drupal_field_data_field_aggcompliance aggCompl
+		ON aggGene.entity_id = aggCompl.entity_id
+		WHERE field_agggenerated_value> 2000
+		AND aggCompl.field_aggcompliance_value = 'NC'";
+		
+		$resultAggComp = db_query($queryAggComp);
+		$recordAggComp = $resultAggComp->fetchAll();
+		foreach($recordAggComp as $totalAggCom){
+			$totalAggNC = ($totalAggCom->field_agggenerated_value) + $totalAggNC;
+			$NbAggNC = $NbAggNC +1;
+		}
+		// dsm($totalAggNC);
+		// dsm($NbAggNC);
+		$peAggGene = 100 * $totalAggNC / $totalAgg;
+		$nbAgg = 100 * $NbAggNC / $NbtotalAgg;
+		// dsm($peAggGene);
+		// dsm($nbAgg);
+		// SI(((totalAgg -  totalAggNC)>=97% ou (NbtotalAgg - NbAggNC)>=97%)); "optional"; "mandatory")
+		// 2 017 458 - 132 618 = 1 884 840   OU 182 - 8 
+		// 100* 132 618/ 2 017 458 = 6.57%   OU  100* 8 /182 = 4.39%
+		
+		if($peAggGene >= 97 || $nbAgg >=97){
+			$article17 = "optional";
+		}else{
+			$article17 = "mandatory";
+		}
+		// dsm($article17);
+		
+		
+	   
+		
 		
 		global $base_url;
 		$site_url = $base_url.'/';
@@ -299,8 +435,8 @@ function uwwtd_art17_inport_form($form, &$form_state){
 			.'</p><ul><li><a target="_blank" href="'.$site_url.drupal_get_path('module', 'uwwtd_art17').'/examples/uwwtp_art17_example.csv">'.t('Treatment plants article 17 example csv').'</a></li>
 			<li><a target="_blank" href="'.$site_url.drupal_get_path('module', 'uwwtd_art17').'/examples/agglo_art17_example.csv">'.t('Agglomerations article 17 example csv').'</a></li>
             
-            <li><a  href="'.base_path().'data/article17/agglomeration/'.$_SESSION['uwwtd_annee'].'">'.t('Agglomerations article 17 pre-generate csv').'</a></li>
-            <li><a  href="'.base_path().'data/article17/uwwtp/'.$_SESSION['uwwtd_annee'].'">'.t('Uwwtps article 17 pre-generate csv').'</a></li>
+            <li><a  href="'.base_path().'data/article17/agglomeration/'.$_SESSION['uwwtd_annee'].'">'.t('Agglomerations article 17 pre-generate csv').' - '.$article17.'</a></li>
+            <li><a  href="'.base_path().'data/article17/uwwtp/'.$_SESSION['uwwtd_annee'].'">'.t('Uwwtps article 17 pre-generate csv').' - '.$article17.'</a></li>
             
             </ul><br>'
 		);
