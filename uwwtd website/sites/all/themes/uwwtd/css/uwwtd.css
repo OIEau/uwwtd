@@ -17,7 +17,7 @@ body{
 }
 
 div.navbar-header a.navbar-brand{
-	color:#ff8600;
+	color:#50457B !important;
 }
 
 h2.block-title{
@@ -71,20 +71,20 @@ footer{
 .region-footer{
 	padding-top: 15px;
 	padding-bottom:15px;
-	background-color: #F8F8F8;
-	border-width: 1px;
+	background-color: #487CBB;
+	/*border-width: 1px;
 	border-style: solid;
 	border-color: #e5e5e5;
 	border-bottom-width: 0px;
 	-webkit-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;*/
 	text-align:center;
 	margin-top: 25px;
 }
 
 .uwwtd_footer_div{
 	display: inline-block;
-	padding-right: 20px;
+	/*padding-right: 20px;*/
 }
 
 .view-content{
@@ -177,7 +177,7 @@ display:none;
 	position: auto;
 	display: inline-block;
 	float: right;
-	margin-bottom: 5px;
+	padding: 8px 10px;
 }
 
 .openlayers-views-map{
@@ -308,14 +308,14 @@ article.node h1 small{
 }
 
 .uwwhalf{
-	width: 560px;
+	width: 550px;
 	float: left;
 	margin-left: 5px;
-	margin-right: 5px;
+	/*margin-right: 5px;*/
 }
 
 .uwwthird{
-	width: 370px;
+	width: 360px;
 	float: left;
 	margin-left: 5px;
 	margin-right: 5px;

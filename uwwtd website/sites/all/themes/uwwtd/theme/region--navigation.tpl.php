@@ -27,37 +27,42 @@
 ?>
 <?php if ($page['logo'] || $page['site_name'] || $page['primary_nav'] || $page['secondary_nav'] || $content): ?>
   <header<?php print $attributes; ?>>
-    <?php if ($content_attributes): ?><div<?php print $content_attributes; ?>><?php endif; ?>
-    <div class="navbar-header">
-      <?php if ($page['logo']): ?>
-        <a class="logo navbar-btn pull-left" href="<?php print $page['front_page']; ?>" title="<?php print t('Home'); ?>">
-          <img src="<?php print $page['logo']; ?>" alt="<?php print t('Home'); ?>" />
-        </a>
-      <?php endif; ?>
-      <?php if ($page['site_name']): ?>
-        <a class="name navbar-brand" href="<?php print $page['front_page']; ?>" title="<?php print t('Home'); ?>"><?php print $page['site_name']; ?></a>
-      <?php endif; ?>
-      <?php if ($page['primary_nav'] || $page['secondary_nav'] || $content): ?>
+  <?php if ($content_attributes): ?>
+    <div<?php print $content_attributes; ?>>
+  <?php endif; ?>
+  <div class="navbar-header">
+    <?php if ($page['logo']): ?>
+      <a class="logo navbar-btn pull-left" href="<?php print $page['front_page']; ?>" title="<?php print t('Home'); ?>">
+        <img src="<?php print $page['logo']; ?>" alt="<?php print t('Home'); ?>" />
+      </a>
+    <?php endif; ?>
+    <?php if ($page['site_name']): ?>
+      <a class="name navbar-brand" href="<?php print $page['front_page']; ?>" title="<?php print t('Home'); ?>"><?php print $page['site_name']; ?></a>
+    <?php endif; ?>
+    <?php if ($page['primary_nav'] || $page['secondary_nav'] || $content): ?>
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only"><?php print t('Toggle navigation'); ?></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <?php endif; ?>
-	 <?php if ($page['secondary_nav'] || $content): 
-		  /// content of the navigation zone ?>
-			  <?php print $content; ?>
-	          <?php print render($page['secondary_nav']); ?>
-	  <?php endif; ?>
-    </div>
-    <?php if ($page['primary_nav']): ?>
+    <?php endif; ?>
+    <?php if ($page['secondary_nav'] || $content): ?>
+      <!-- Language dropdown -->
+      <?php print $content;?>
+      <!-- User menu -->
+      <?php print render($page['secondary_nav']); //krumo($page['secondary_nav']); ?>
+    <?php endif; ?>
+  </div>
+  <?php if ($page['primary_nav']): ?>
     <div class="navbar-collapse collapse">
       <nav role="navigation">
         <?php print render($page['primary_nav']); ?>
-
       </nav>
-    </div>	  <?php endif; ?>
-    <?php if ($content_attributes): ?></div><?php endif; ?>
+    </div>	  
+  <?php endif; ?>
+  <?php if ($content_attributes): ?>
+    </div>
+  <?php endif; ?>
   </header>
 <?php endif; ?>

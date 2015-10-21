@@ -1,16 +1,16 @@
 body{
-    background-color:#dddddd;
+    background-color:#F5F5F5;
 }
 div.main-container{
     background-color:#ffffff;
 }
-.fa {
+/*.fa {
     float: right;
     font-size: 25px;
     margin-right: 6px;
     margin-top: 4px;
     transition: color 0.4s ease 0s;
-}
+}*/
 div.charts-row div.flot-title{
     width:100%;
     background-color:#dddddd;

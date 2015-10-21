@@ -165,6 +165,7 @@ echo uwwtd_insert_errors_tab($node);
           print '</legend>';
           print '<div class="panel-body">';
             print render($content['field_anneedata']);
+            $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
             print render($content['field_sourcefile']);
           print '</div>';
         print '</fieldset>';

@@ -465,7 +465,7 @@ function uwwtd_insert_errors_tab($node){
 
 	// Start output
 	$output = '<div class="uwwtd_errors_tab">';
-		$output .= '<h3><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$overallTotal.'</span></span>Errors</h3>';
+		$output .= '<h3><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$overallTotal.'</span></span> Errors</h3>';
 		$count = 0 ;
 		foreach($values as $value){
 			$totalW = 0;$totalWI = 0;$totalWL = 0;$totalWG = 0;$totalWC = 0;$totalWF = 0;
@@ -1209,7 +1209,6 @@ function uwwtd_get_agglo_graphic($node){
         $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
         $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
         $result = $query->execute();
-        $result = $query->execute();
         while($record = $result->fetchAssoc()){
           $perce = $record['field_agglo_uww_perc_ent_uw_value'];
           $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
@@ -1639,11 +1638,18 @@ function uwwtd_menu_link__main_menu(&$variables)
     	// Wrap menu-level for each level.
     	$sub_menu = '<div class="menu-level menu-level--' . $depth . '">' .  $sub_menu . '</div>';
   	}
-  	
-  	$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
+  	// krumo($element);
+  	if ($depth == 2 && $element['#below']) {
+  		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-down"></i></span>', $element['#href'], $element['#localized_options']);
+  	} elseif ($depth == 3 && $element['#below']) {
+  		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-right"></i></span>', $element['#href'], $element['#localized_options']);
+  	} else {	
+  		$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
+  	}
   	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
 	
 }
+
 
 function uwwtd_wkhtmltopdf_tag($options)
 {
@@ -1654,4 +1660,29 @@ function uwwtd_wkhtmltopdf_tag($options)
             break;
     }
     return '';	
+}
+
+function uwwtd_menu_link__user_menu(&$variables) {
+	$element = $variables['element'];
+	// krumo($element);
+	$menu_link = $element['#href'];
+	switch ($menu_link) {
+	 	case 'user':
+	 		return '<li><a href="'. $menu_link .'"><i class="fa fa-user"></i></a></li>';
+	 		break;
+	 	case 'user/logout':
+	 		return '<li><a href="'. $menu_link .'"><i class="fa fa-power-off"></i></a></li>';
+	 		break;
+	 	
+	 	default:
+	 		return '<li><a href="'. $menu_link .'">'. $element['#title'] .'</a></li>';
+	 		break;
+	 } 
+}
+
+function uwwtd_preprocess_html(&$vars) {
+    // Add font awesome cdn.
+  	drupal_add_css('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css', array(
+    	'type' => 'external'
+    ));
 }
