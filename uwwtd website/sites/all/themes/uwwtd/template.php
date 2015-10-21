@@ -1102,7 +1102,7 @@ function uwwtd_get_uww_graphic($node){
 		}
 	$output .= '</div>';
 
-	$offset = 16;
+	$offset = 0;
     $totalDcps = 0;
     $totalDcpsT = 0;
     $totalDcpsB = 0;
@@ -1136,19 +1136,10 @@ function uwwtd_get_uww_graphic($node){
 
 
 	$output .= '<div class="station-dcp-connections">';
-	  $output .= '<div style="margin-top: '.$topMarge.'px">';
+	$output .= '<div>';
 
-	for ($i=0; $i < $nbDcpsT; $i++) { 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
-	}
-
-	if($nbDcps > 0){ 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
-	}
-
-	for ($i=0; $i < $nbDcpsB; $i++) { 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
-	}
+	
+	 $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
 
 	    $output .= '</div>
 	  </div>';
@@ -1157,26 +1148,25 @@ function uwwtd_get_uww_graphic($node){
 
     <div class="dcps-wrapper">';
 
-	if($nbDcps == 1) $offset = $totalDcps * 1.75;
-	if($nbDcps == 2) $offset = $totalDcps * -0.5;
-	if($nbDcps == 3) $offset = $totalDcps * 15.3;
-	if($nbDcps == 4) $offset = $totalDcps * 11.75;
-	if($nbDcps == 5) $offset = $totalDcps * 18.8;
-	if($nbDcps == 6) $offset = $totalDcps * 15.5;
 
-	foreach($reseau['dcps'] as $dcp) {
-
-	$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+	$output .= '<div class="station-dcp" style="top: 0px;">
 		<div>
-		  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
-		  <div class="graphic-title">
-		    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
-		    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
-		  </div>
+			<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
+		  	<div class="graphic-title">';
+				$output .= l(count($reseau['dcps'])." DCP(S)", "#");
+				$output .= '<div class="dcps-hidden-list">';
+					foreach($reseau['dcps'] as $dcp) {
+		    			$output .= l($dcp['title'], "node/".$dcp['nid']);
+		    			$output .= '<br>';
+		    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+		    			$output .=  '('.$dcp['rcaType'].')';
+		    			$output .= '<br><br>';
+					}
+		  		$output .= '</div>
+		  	</div>
 		</div>
 	</div>';
 
-	}
 
     $output .= '</div>';
 
@@ -1370,12 +1360,12 @@ function uwwtd_get_agglo_graphic($node){
     
     $output .= '</div>';
 
-    $topMarge = 60;
-    if($nbPlantsB == 0){
-      $topMarge = 13;
+    $topMarge = 0;
+    if($nbPlants % 2 == 0){
+      $topMarge = 48;
     }
 
-    $output .= '<div class="ms-wrapper" style="top: -'.$topMarge.'px">'; 
+    $output .= '<div class="ms-wrapper" style="top: -'. $topMarge .'px">'; 
       foreach($reseau as $station){
 
         if($station['mstype'] != false){
@@ -1400,7 +1390,7 @@ function uwwtd_get_agglo_graphic($node){
     $totalDcpsT = 0;
     $totalDcpsB = 0;
 
-    $output .= '<div class="dcp-connections" style="top: -'.$offset.'px">';
+    $output .= '<div class="dcp-connections" style="top: -'.$topMarge.'px">';
 
         foreach($reseau as $station){
           $nbDcps = count($station['dcps']);
@@ -1421,27 +1411,21 @@ function uwwtd_get_agglo_graphic($node){
               }
             }
           }
-          if($nbDcpsT == 1) $topMarge = 50;
-          else $topMarge = 0 + ($nbDcpsT * 48);
-          if($nbPlants > 1) $topMarge = $topMarge - 1;
-          if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
-          if($topMarge < 0) $topMarge = 0;
-          $topMarge = $topMarge - (2 * $topMarge);
 
           $output .= '<div class="station-dcp-connections">';
-              $output .= '<div style="margin-top: '.$topMarge.'px">';
+              $output .= '<div>';
 
-            for ($i=0; $i < $nbDcpsT; $i++) { 
-              $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
-            }
+            // for ($i=0; $i < $nbDcpsT; $i++) { 
+            //   $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
+            // }
 
-            if($nbDcps > 0){ 
+            // if($nbDcps > 0){ 
               $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
-            }
+            // }
 
-            for ($i=0; $i < $nbDcpsB; $i++) { 
-              $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
-            }
+            // for ($i=0; $i < $nbDcpsB; $i++) { 
+            //   $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
+            // }
 
             $output .= '</div>
           </div>';
@@ -1449,33 +1433,27 @@ function uwwtd_get_agglo_graphic($node){
 
     $output .= '</div>
 
-    <div class="dcps-wrapper">';
+    <div class="dcps-wrapper" style="top:-'. $topMarge .'px">';
       
-    $cur = -1;
-    foreach($reseau as $station){
-      $nbDcps = count($station['dcps']);
-      
-      $offset = $totalDcps * (15.5 + (0.5 * $nbPlants));
-      $offset = $offset + $cur;
-      $offset = $offset - ($nbDcps * 0.25);
-      $cur++;
-      if($nbPlants == 4 && $nbDcps == 1) $offset = 141;
-
-      if($totalDcps <= 2 && $nbPlants == 1) $offset = -1;
-  
-      foreach($station['dcps'] as $dcp) {
-
-		$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+    foreach($reseau as $station){  
+    	$output .= '<div class="station-dcp" style="top: 0px;">
 			<div>
-			  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
-			  <div class="graphic-title">
-			    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
-			    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
-			  </div>
+			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">';
+			  	$output .= '<div class="graphic-title">';
+			  		$output .= l(count($station['dcps'])." DCP(S)", "#");
+			  		$output .= '<div class="dcps-hidden-list">';
+    					foreach($station['dcps'] as $dcp) {
+			    			$output .= l($dcp['title'], "node/".$dcp['nid']);
+			    			$output .= '<br>';
+			    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+			    			$output .= ' ('.$dcp['rcaType'].')';
+			    			$output .= '<br>';
+			    			$output .= '<br>';
+			  			}
+			  		$output .= '</div>
+			  	</div>
 			</div>
 		</div>';
-
-      }
     }
 
     $output .= '</div>

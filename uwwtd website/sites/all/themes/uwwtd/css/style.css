@@ -6538,10 +6538,15 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   margin-top: 0;
 }
 
+.group-agggraphic .panel-body {
+  padding: 0;
+}
+
 .graphic-container{
   font-size: 0;
+  padding-top: 80px;
   display: inline-block;
-  overflow: hidden;
+  /*overflow: hidden;*/
   width: 100%;
 }
 
@@ -6576,19 +6581,19 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   position: relative;
   width: 150px;
   vertical-align: middle;
-  top: -60px;
 }
 
 .ms{
   width: 150px;
-  height: 60px;
-  margin-top: 35px;
+  height: 50px;
+  margin: 45px 0;
   position: relative;
+  line-height: 0;
 }
 
 .ms .single{
   position: relative;
-  top: 18px;
+  top: 24px;
 }
 
 .agglomeration-graphic{
@@ -6598,7 +6603,7 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .graphic-title{
   position: absolute;
-  top: -17px;
+  top: -35px;
   left: 0px;
   font-size: 12px;
   width: 190px;
@@ -6623,8 +6628,8 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .station-dcp-connections{
   width: 75px;
-  height: 60px;
-  margin-top: 35px;
+  height: 50px;
+  margin: 45px 0px;
   position: relative;
   white-space: nowrap;
   font: 0/0 a;
@@ -6642,7 +6647,7 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   display: inline-block;
   vertical-align: middle;
   position: absolute;
-  top: 50%;
+  top: 24px;
 }
 
 .station-dcp-connections img{
@@ -6651,17 +6656,34 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .dcps-wrapper{
   position: relative;
+  vertical-align: middle;
 }
 
 .station-dcp{
  position: relative;
  text-align: left;
+ margin: 45px 0px;
 }
 
 .station-dcp .graphic-title{
   left: auto;
   right: -172px;
+  top: 16px;
+}
+
+.station-dcp .graphic-title .dcps-hidden-list {
+  display: none;
+}
+
+.station-dcp .graphic-title a:hover + .dcps-hidden-list,
+.station-dcp .graphic-title .dcps-hidden-list:hover {
+  display: block;
+  position: absolute;
   top: 0px;
+  background-color: #fff;
+  border: 1px solid #e7e7e7;
+  padding: 10px;
+  z-index: 9000;
 }
 
 .agglomeration-graphic .graphic-title{
