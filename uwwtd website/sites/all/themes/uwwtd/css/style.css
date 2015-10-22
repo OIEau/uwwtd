@@ -6550,6 +6550,19 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   width: 100%;
 }
 
+.graphic-legend ul {
+  list-style: none;
+  float: left;
+}
+
+.graphic-legend li {
+  margin-bottom: 3px;
+}
+
+.graphic-legend img {
+  height: 30px;
+}
+
 .graphic-container div{
   display: block;
 }
@@ -6601,7 +6614,7 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   top: -1px;
 }
 
-.graphic-title{
+.graphic-title {
   position: absolute;
   top: -35px;
   left: 0px;
@@ -6610,9 +6623,23 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   text-align: left;
 }
 
+.graphic-title .aggs-list {
+  display: none;
+}
+
+.graphic-title a:hover + .aggs-list,
+.graphic-title .aggs-list:hover {
+  display: block;
+  position: absolute;
+  top: 0;
+  background-color: #fff;
+  border: 1px solid #e7e7e7;
+  padding: 15px;
+}
+
 .ms-type{
   position: absolute;
-  top: 16px;
+  top: 25px;
   left: 0;
   font-size: 14px;
   text-align: center;

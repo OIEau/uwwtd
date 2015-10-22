@@ -955,14 +955,15 @@ function uwwtd_get_uww_graphic($node){
 
 	$output .= '<div class="agglomeration-graphic">
 	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
-	        <div class="uww-graphic-title">';
+	        <div class="graphic-title">';
+	        	$output .= '<a href="#">Aggs : '.count($reseau['agglos']).'</a>	
+	        	<span class="aggs-list">';
+					foreach($reseau['agglos'] as $agglo){
+					          $output .= 'Agg : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
+					          (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
+					}
 
-	foreach($reseau['agglos'] as $agglo){
-	          $output .= ''.l($agglo['title'], "node/".$agglo['nid']).'
-	          ('.$agglo['generated'].' p.e)<br>';
-	}
-
-	$output .= '</div></div>';
+	$output .= '</span></div></div>';
 
 	$output .= '<div class="connectors">';
         $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
@@ -977,7 +978,7 @@ function uwwtd_get_uww_graphic($node){
 		$output .= '<div class="graphic-title">
 			'.l($reseau['title'], "node/".$reseau['nid']).'
 		</div>
-		<div class="station-load">'.$reseau['load'].' p.e</div>
+		<div class="station-load">Entering :<br>'.uwwtd_format_number($reseau['load'], 0).' p.e</div>
 	</div>';
 
 	$output .= '<div class="more-wrapper">';
@@ -1165,10 +1166,26 @@ function uwwtd_get_uww_graphic($node){
 		  		$output .= '</div>
 		  	</div>
 		</div>
-	</div>';
+	</div>
+</div>';
 
-
-    $output .= '</div>';
+    $output .= '</div><div class="graphic-legend">
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+    	</ul>
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
+    		<li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
+    		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
+    	</ul>
+    	<ul>
+			<li><span>N</span> : Nitrate removal</li>
+			<li><span>P</span> : Phosphorus removal</li>
+			<li><span>B</span> : More stringent</li>
+    	</ul>
+    </div>';
 
 	return $output;   
 }
@@ -1302,7 +1319,7 @@ function uwwtd_get_agglo_graphic($node){
 
     $output .= '<div class="ias">
       <div class="graphic-title">
-        '.t('Indivual Appropriate Systems:').' '.$totalIAS.' p.e ('.$node->field_aggc2['und'][0]['value'].'%)
+        '.t('Indivual Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
       </div>
       <img width="1098px" src="'.$src.'/images/graphic/ias.png" alt="reseau">
     </div>
@@ -1312,10 +1329,10 @@ function uwwtd_get_agglo_graphic($node){
         <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
         <div class="graphic-title">
           '.l($node->title, "node/".$node->nid).'<br>
-          '.$node->field_agggenerated['und'][0]['value'].' p.e
+          Generated load : '.uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0).' p.e
         </div>
         <div class="agglo-load">
-          '.floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']).' p.e <br>('.$node->field_aggc1['und'][0]['value'] .'%)
+          Collective system :<br>'.uwwtd_format_number(floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']), 0).' p.e <br>('.uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) .'%)
         </div>
       </div>
 
@@ -1353,7 +1370,7 @@ function uwwtd_get_agglo_graphic($node){
             '.l($station['title'], "node/".$station['nid']).'
           </div>
 
-          <div class="station-load">'.$station['loadEntering'].' p.e <br>('.$station['percEntering'].'%)</div>
+          <div class="station-load">Load entering :<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
         </div>';
 
       }
@@ -1460,9 +1477,21 @@ function uwwtd_get_agglo_graphic($node){
   </div>
   <div class="dischage-wot">
     <div class="graphic-title">
-      '.t('Discharge without treatment:').' '.$totalWOT.' p.e ('.$node->field_aggpercwithouttreatment['und'][0]['value'].'%)
+      '.t('Discharge without treatment:').' '.uwwtd_format_number($totalWOT, 0).' p.e ('.uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1).'%)
     </div>
     <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
+    <div class="graphic-legend">
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+    	</ul>
+    	<ul>
+			<li><span>N</span> : Nitrate removal</li>
+			<li><span>P</span> : Phosphorus removal</li>
+			<li><span>B</span> : More stringent</li>
+    	</ul>
+    </div>
   </div>';
 
   return $output;
