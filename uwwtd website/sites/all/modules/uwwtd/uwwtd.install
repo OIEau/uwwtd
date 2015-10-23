@@ -1182,7 +1182,7 @@ function uwwtd_update_7117()
 //     throw new DrupalUpdateException(__FUNCTION__); 
 }
 
-/*
+/**
  * Import main menu
  */ 
 function uwwtd_update_7118()
