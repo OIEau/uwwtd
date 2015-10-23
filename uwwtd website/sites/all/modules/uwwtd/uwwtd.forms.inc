@@ -2,6 +2,32 @@
 
 function construct_extlinks_form($form, $form_state){
 
+	dsm("
+			BLOCK CODE ( DISPLAY EXTERNAL LINKS ):
+		if (arg(0) == 'node' && is_numeric(arg(1))){
+		   \$nodeid = arg(1);
+		   \$node = node_load(\$nodeid);
+		   \$data = array('node' => \$node);
+
+			switch(\$node->type){
+			   case 'agglomeration':
+			      print_r('<a  href=\"' .  token_replace(variable_get('form_extlinks_agglomeration_url', ''),\$data) .'\">' . token_replace(variable_get('form_extlinks_agglomeration_url', ''),\$data) . '</a>');
+			      break;
+			   case 'uwwtp':
+			      print_r('<a  href=\"' .  token_replace(variable_get('form_extlinks_uwwtp_url', ''),\$data) .'\">' . token_replace(variable_get('form_extlinks_uwwtp_url', ''),\$data) . '</a>');
+			      break;
+			   case 'discharge_point':
+			      print_r('<a  href=\"' .  token_replace(variable_get('form_extlinks_discharge_point_url', ''),\$data) .'\">' . token_replace(variable_get('form_extlinks_discharge_point_url', ''),\$data) . '</a>');
+			      break;
+			   case 'receiving_area':
+			      print_r('<a  href=\"' .  token_replace(variable_get('form_extlinks_receiving_area_url', ''),\$data) .'\">' . token_replace(variable_get('form_extlinks_receiving_area_url', ''),\$data) . '</a>');
+			      break;
+			   default:
+			}
+		}
+
+	");
+
 	$form['form_extlinks']['form_extlinks_agglomeration_url'] = array(
 			'#type' => 'textfield',
 			'#title' => t('Agglomeration url'),
