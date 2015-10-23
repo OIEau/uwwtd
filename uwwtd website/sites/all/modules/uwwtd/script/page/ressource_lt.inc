@@ -1,0 +1,46 @@
+
+
+<p><strong><em>TO BE COMPLETED.</em> </strong></p>
+<h3>Get the datasets</h3>
+<p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p>
+<p>&nbsp;</p>
+<h3>Webservices - WFS</h3>
+<p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p>
+<ul>
+   <li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration</a></li>
+</ul>
+<ul>
+   <li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint</a></li>
+</ul>
+<ul>
+   <li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea</a></li>
+</ul>
+<ul>
+   <li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>GetFeature</strong>: access to data in GML format</p>
+<ul>
+   <li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration&amp;MaxFeature=5</a></li>
+</ul>
+<ul>
+   <li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint&amp;MaxFeature=5</a></li>
+</ul>
+<ul>
+   <li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea&amp;MaxFeature=5</a></li>
+</ul>
+<ul>
+   <li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>How to make references to this website ?</h3>
+<p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p>
+<p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Lithuania/[year]/[name of the element]/[ID of the element];<br />For instance:</p>
+<ul>
+   <li>http://uwwtd.oieau.fr/lithuania/agglomeration/lt-ag-005/2011</li>
+   <li>http://uwwtd.oieau.fr/lithuania/treatment-plant/lt-ag-005-wwtp-01/2011</li>
+   <li>http://uwwtd.oieau.fr/lithuania/discharge-point/lt-ag-005-wwtp-01-dp-01/2011</li>
+</ul>
+<p>&nbsp;</p>
+
