@@ -48,7 +48,11 @@ function uwwtd_statistics_agglomeration_compliance($year = 'all', $groupby = '')
 
   $resultats = $results->fetchAll();
   foreach ($resultats as $resultat) {
-    $stats[$resultat->name][$resultat->label] = $resultat->count;
+    //override PD and QC value, we don't want to display QC and PD (for now) 
+    if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $resultat->label ])) {
+        $resultat->label = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $resultat->label ];    
+    }      
+    $stats[$resultat->name][$resultat->label] += $resultat->count;
   }
 
   return $stats;
@@ -160,7 +164,11 @@ function uwwtd_statistics_uwwtp_compliance($year = 'all', $groupby = '') {
 
   $resultats = $results->fetchAll();
   foreach ($resultats as $resultat) {
-    $stats[$resultat->name][$resultat->label] = $resultat->count;
+    //override PD and QC value, we don't want to display QC and PD (for now) 
+    if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $resultat->label ])) {
+        $resultat->label = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $resultat->label ];    
+    }   
+    $stats[$resultat->name][$resultat->label] += $resultat->count;
   }
 
   return $stats;

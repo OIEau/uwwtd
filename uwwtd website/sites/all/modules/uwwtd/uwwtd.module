@@ -98,13 +98,20 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
     'field_uwwpdischarge_value'      =>  t('Discharged load Ptot (t per year)'),
 );
 
+$GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
+    'PD' => 'NR',
+    'QC' => 'C',
+);
+
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',
     'NI' => 'No information',
-    'NR' => 'Not relevant',
+    'NR' => 'Not relevant',     //comprend aussi PD
     'NC' => 'Not Compliant',
-    'C' => 'Compliant',
+    'C' => 'Compliant',        //comprend aussi QC
     '?' => '?',
+//     'PD' => 'Pending Deadline',
+//     'QC' => 'Questionable Compliance',
 );
 
 //todo delete this one if all works
@@ -1477,6 +1484,24 @@ function uwwtd_get_data_agglomeration($option)
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
+        
+            //override PD and QC value, we don't want to display QC and PD (for now)
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ])) {
+                $row['field_aggcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ];    
+            }
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart3compliance_value'] ])) {
+                $row['field_aggart3compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart3compliance_value'] ];    
+            }
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart4compliance_value'] ])) {
+                $row['field_aggart4compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart4compliance_value'] ];    
+            }
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart5compliance_value'] ])) {
+                $row['field_aggart5compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart5compliance_value'] ];    
+            }
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart6compliance_value'] ])) {
+                $row['field_aggart6compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart6compliance_value'] ];    
+            }                                                
+        
             $row['field_agggenerated_value_format'] = is_null($row['field_agggenerated_value']) ? '' : uwwtd_format_number($row['field_agggenerated_value']);
             $row['field_aggcompliance_value_format'] = is_null($row['field_aggcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
             $row['field_aggart3compliance_value_format'] = is_null($row['field_aggart3compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart3compliance_value']];
@@ -1640,6 +1665,12 @@ function uwwtd_get_data_uwwtp($option)
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
+        
+            //override PD and QC value, we don't want to display QC and PD (for now)
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ])) {
+                $row['field_uwwcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ];    
+            }  
+                    
             $row['field_uwwloadenteringuwwtp_value_format'] = is_null($row['field_uwwloadenteringuwwtp_value']) ? '' : uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 
             $row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
@@ -3974,7 +4005,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //                                         $row['field_aggart6compliance_value_format'],//todo delete
 //                                         $row['field_aggart6compliance_value_format'],//todo delete
                                     ));
-    }
+    }    
 
     //here export data and exit
     if ($type_export != '') {
