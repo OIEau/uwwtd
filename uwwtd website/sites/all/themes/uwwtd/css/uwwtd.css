@@ -498,3 +498,7 @@ fill: steelblue;
 #uwwtp_stackedbar .x.axis path {
 display: none;
 }
+
+.field-name-field-physicalcapacityactivity .field-label, .field-name-field-physicalcapacityactivity .field-items{
+	float: left;
+}
