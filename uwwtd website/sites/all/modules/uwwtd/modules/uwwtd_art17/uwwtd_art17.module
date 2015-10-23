@@ -171,7 +171,7 @@ function uwwtd_art17_example_agglomeration($annee) {
 	}
 	
 	function trieAgg($aggData, $b){
-		$aggKey = array('NC'=> 0, 'NR'=>1, 'C'=>2, 'NI'=>3, 'PD'=>4);
+		$aggKey = array('NC'=> 0, 'PD'=>1, 'NR'=>2, 'NI'=>3, 'C'=>4,  );
 
 		if($aggData[2] == $b[2]){
 			if($aggData[20] == $b[20]){
@@ -192,13 +192,13 @@ function uwwtd_art17_example_agglomeration($annee) {
 		unset($val[19]);
 		unset($val[20]);
 		if($val[2] == "NR"){
-			$val[2] = "Not relevant";
+			$val[2] = "Not Relevant";
 		}elseif($val[2] == "NC"){
-			$val[2] = "Not compliant";
+			$val[2] = "Not Compliant";
 		}elseif($val[2] == "C"){
-			$val[2] = "";
+			$val[2] = "Compliant";
 		}elseif($val[2] == "NI"){
-			$val[2] = "";
+			$val[2] = "No Information";
 		}elseif($val[2] == "PD"){
 			$val[2] = "Pending deadlines";
 		}
@@ -334,7 +334,7 @@ function uwwtd_art17_example_uwwtp($annee) {
 	}
 
 	function trieUwwtp($uwwtpData, $b){
-		$aggKey = array('NC'=> 0, 'NR'=>1, 'C'=>2, 'NI'=>3, 'PD'=>4);
+        $aggKey = array('NC'=> 0, 'PD'=>1, 'NR'=>2, 'NI'=>3, 'C'=>4,  );
 		if($uwwtpData[4] == $b[4]){
 			if($uwwtpData[24] == $b[24]){
 				return 0;
@@ -355,13 +355,13 @@ function uwwtd_art17_example_uwwtp($annee) {
 		unset($val[23]);
 		unset($val[24]);
 		if($val[4] == "NR"){
-			$val[4] = "Not relevant";
+			$val[4] = "Not Relevant";
 		}elseif($val[4] == "NC"){
-			$val[4] = "Not compliant";
+			$val[4] = "Not Compliant";
 		}elseif($val[4] == "C"){
 			$val[4] = "Compliant";
 		}elseif($val[4] == "NI"){
-			$val[4] = "Not information";
+			$val[4] = "No Information";
 		}elseif($val[4] == "PD"){
 			$val[4] = "Pending deadlines";
 		}
@@ -458,11 +458,10 @@ function uwwtd_art17_inport_form($form, &$form_state){
 		$form['uwwtd_text'] = array(
 			'#markup' => '<h4>'.t('Article 17 import for the year').' : '.$annee.'</h4><br><p>'.t('Your CSV file must be correctly formatted using \' ; \' as the cell separator and \' " \' as the text separator. The file must be encoded in UTF-8 to ensure character readability.').'</p>'
 			.'<p>'.t('To help help you having to make your own files we have created for you a file for both the agglomerations and the treatment plants:')
-			.'</p><ul><li><a target="_blank" href="'.$site_url.drupal_get_path('module', 'uwwtd_art17').'/examples/uwwtp_art17_example.csv">'.t('Treatment plants article 17 example csv').'</a></li>
-			<li><a target="_blank" href="'.$site_url.drupal_get_path('module', 'uwwtd_art17').'/examples/agglo_art17_example.csv">'.t('Agglomerations article 17 example csv').'</a></li>
-            
-            <li><a  href="'.base_path().'data/article17/agglomeration/'.$_SESSION['uwwtd_annee'].'">'.t('Agglomerations article 17 pre-generate csv').' - '.$article17.'</a></li>
-            <li><a  href="'.base_path().'data/article17/uwwtp/'.$_SESSION['uwwtd_annee'].'">'.t('Uwwtps article 17 pre-generate csv').' - '.$article17.'</a></li>
+			.'</p><ul>
+                        
+            <li><a  href="'.base_path().'data/article17/agglomeration/'.$_SESSION['uwwtd_annee'].'">'.t('Agglomerations article 17 pre-generate csv').' ('.$article17.')</a></li>
+            <li><a  href="'.base_path().'data/article17/uwwtp/'.$_SESSION['uwwtd_annee'].'">'.t('Uwwtps article 17 pre-generate csv').' ('.$article17.')</a></li>
             
             </ul><br>'
 		);
