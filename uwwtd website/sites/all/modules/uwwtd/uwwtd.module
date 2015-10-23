@@ -2326,19 +2326,19 @@ function uwwtd_page_agglomeration_connection()
         $graph['field_aggpercwithouttreatment_value']['value'] += $row['field_aggpercwithouttreatment_value'] / 100  * $row['field_agggenerated_value'];
 
         $rows[] = array('data' => array(
-                                        //$row['title'],
-                                        l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
-                                        $row['field_inspireidlocalid_value'],
-                                        $row['field_agggenerated_value_format'],
-                                        $row['field_regionnuts_value'],
-                                        $row['field_aggc2_value_format'],
-                                        $row['field_aggc1_value_format'],
-                                        $row['field_aggpercwithouttreatment_value_format'],
-                                    ));
+				//$row['title'],
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_agggenerated_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_aggc2_value_format'],
+				$row['field_aggc1_value_format'],
+				$row['field_aggpercwithouttreatment_value_format'],
+			));
     }
-    $graph['field_aggc2_value']['percent'] = $graph['field_aggc2_value']['value'] * 100 / $field_agggenerated_value;
-    $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
-    $graph['field_aggpercwithouttreatment_value']['percent'] = $graph['field_aggpercwithouttreatment_value']['value'] * 100 / $field_agggenerated_value;
+    // $graph['field_aggc2_value']['percent'] = $graph['field_aggc2_value']['value'] * 100 / $field_agggenerated_value;
+    // $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
+    // $graph['field_aggpercwithouttreatment_value']['percent'] = $graph['field_aggpercwithouttreatment_value']['value'] * 100 / $field_agggenerated_value;
 
     $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle, $piechart);
 
@@ -2392,7 +2392,7 @@ function uwwtd_page_agglomeration_connection()
 
     $render_table_graph = '
 
-    <table id="views-aggregator-datatable" class="views-table cols-2" style="width: 500px; ">
+    <table id="views-aggregator-datatable" class="views-table cols-2" style="width: 650px; ">
     <thead>
     <tr>
         <th class="views-field views-field-field_aggc1_value" style="padding: 5px;">
@@ -2409,13 +2409,13 @@ function uwwtd_page_agglomeration_connection()
     <tbody>
         <tr>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc2_value']['percent'], 2) . ' %
+            ' . uwwtd_format_number($graph['field_aggc2_value']['value'], 2) . ' p.e
             </td>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc1_value']['percent'], 2) . ' %
+            ' . uwwtd_format_number($graph['field_aggc1_value']['value'], 2) . ' p.e
             </td>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggpercwithouttreatment_value']['percent'], 2) . ' %
+            ' . uwwtd_format_number($graph['field_aggpercwithouttreatment_value']['value'], 2) . ' p.e
             </td>
         </tr>
     </tbody>
@@ -2450,7 +2450,7 @@ function uwwtd_page_agglomeration_connection()
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
 
-                      .'<div class="leftgraph front">'
+                      .'<div class="leftgraph front" style="-webkit-backface-visibility: hidden;">'
                         . '<div class="flot-title"><div class="flip-title">Generated load (p.e.) distribution</div> 
                         
 

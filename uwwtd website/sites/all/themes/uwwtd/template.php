@@ -955,14 +955,15 @@ function uwwtd_get_uww_graphic($node){
 
 	$output .= '<div class="agglomeration-graphic">
 	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
-	        <div class="uww-graphic-title">';
+	        <div class="graphic-title">';
+	        	$output .= '<a href="#">Aggs : '.count($reseau['agglos']).'</a>	
+	        	<span class="aggs-list">';
+					foreach($reseau['agglos'] as $agglo){
+					          $output .= 'Agg : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
+					          (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
+					}
 
-	foreach($reseau['agglos'] as $agglo){
-	          $output .= ''.l($agglo['title'], "node/".$agglo['nid']).'
-	          ('.$agglo['generated'].' p.e)<br>';
-	}
-
-	$output .= '</div></div>';
+	$output .= '</span></div></div>';
 
 	$output .= '<div class="connectors">';
         $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
@@ -977,7 +978,7 @@ function uwwtd_get_uww_graphic($node){
 		$output .= '<div class="graphic-title">
 			'.l($reseau['title'], "node/".$reseau['nid']).'
 		</div>
-		<div class="station-load">'.$reseau['load'].' p.e</div>
+		<div class="station-load">Entering :<br>'.uwwtd_format_number($reseau['load'], 0).' p.e</div>
 	</div>';
 
 	$output .= '<div class="more-wrapper">';
@@ -1102,7 +1103,7 @@ function uwwtd_get_uww_graphic($node){
 		}
 	$output .= '</div>';
 
-	$offset = 16;
+	$offset = 0;
     $totalDcps = 0;
     $totalDcpsT = 0;
     $totalDcpsB = 0;
@@ -1136,19 +1137,10 @@ function uwwtd_get_uww_graphic($node){
 
 
 	$output .= '<div class="station-dcp-connections">';
-	  $output .= '<div style="margin-top: '.$topMarge.'px">';
+	$output .= '<div>';
 
-	for ($i=0; $i < $nbDcpsT; $i++) { 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
-	}
-
-	if($nbDcps > 0){ 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
-	}
-
-	for ($i=0; $i < $nbDcpsB; $i++) { 
-	  $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
-	}
+	
+	 $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
 
 	    $output .= '</div>
 	  </div>';
@@ -1157,28 +1149,43 @@ function uwwtd_get_uww_graphic($node){
 
     <div class="dcps-wrapper">';
 
-	if($nbDcps == 1) $offset = $totalDcps * 1.75;
-	if($nbDcps == 2) $offset = $totalDcps * -0.5;
-	if($nbDcps == 3) $offset = $totalDcps * 15.3;
-	if($nbDcps == 4) $offset = $totalDcps * 11.75;
-	if($nbDcps == 5) $offset = $totalDcps * 18.8;
-	if($nbDcps == 6) $offset = $totalDcps * 15.5;
 
-	foreach($reseau['dcps'] as $dcp) {
-
-	$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+	$output .= '<div class="station-dcp" style="top: 0px;">
 		<div>
-		  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
-		  <div class="graphic-title">
-		    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
-		    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
-		  </div>
+			<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
+		  	<div class="graphic-title">';
+				$output .= l(count($reseau['dcps'])." DCP(S)", "#");
+				$output .= '<div class="dcps-hidden-list">';
+					foreach($reseau['dcps'] as $dcp) {
+		    			$output .= l($dcp['title'], "node/".$dcp['nid']);
+		    			$output .= '<br>';
+		    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+		    			$output .=  '('.$dcp['rcaType'].')';
+		    			$output .= '<br><br>';
+					}
+		  		$output .= '</div>
+		  	</div>
 		</div>
-	</div>';
+	</div>
+</div>';
 
-	}
-
-    $output .= '</div>';
+    $output .= '</div><div class="graphic-legend">
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+    	</ul>
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
+    		<li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
+    		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
+    	</ul>
+    	<ul>
+			<li><span>N</span> : Nitrate removal</li>
+			<li><span>P</span> : Phosphorus removal</li>
+			<li><span>B</span> : More stringent</li>
+    	</ul>
+    </div>';
 
 	return $output;   
 }
@@ -1312,7 +1319,7 @@ function uwwtd_get_agglo_graphic($node){
 
     $output .= '<div class="ias">
       <div class="graphic-title">
-        '.t('Indivual Appropriate Systems:').' '.$totalIAS.' p.e ('.$node->field_aggc2['und'][0]['value'].'%)
+        '.t('Indivual Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
       </div>
       <img width="1098px" src="'.$src.'/images/graphic/ias.png" alt="reseau">
     </div>
@@ -1322,10 +1329,10 @@ function uwwtd_get_agglo_graphic($node){
         <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
         <div class="graphic-title">
           '.l($node->title, "node/".$node->nid).'<br>
-          '.$node->field_agggenerated['und'][0]['value'].' p.e
+          Generated load : '.uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0).' p.e
         </div>
         <div class="agglo-load">
-          '.floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']).' p.e <br>('.$node->field_aggc1['und'][0]['value'] .'%)
+          Collective system :<br>'.uwwtd_format_number(floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']), 0).' p.e <br>('.uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) .'%)
         </div>
       </div>
 
@@ -1363,19 +1370,19 @@ function uwwtd_get_agglo_graphic($node){
             '.l($station['title'], "node/".$station['nid']).'
           </div>
 
-          <div class="station-load">'.$station['loadEntering'].' p.e <br>('.$station['percEntering'].'%)</div>
+          <div class="station-load">Load entering :<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
         </div>';
 
       }
     
     $output .= '</div>';
 
-    $topMarge = 60;
-    if($nbPlantsB == 0){
-      $topMarge = 13;
+    $topMarge = 0;
+    if($nbPlants % 2 == 0){
+      $topMarge = 48;
     }
 
-    $output .= '<div class="ms-wrapper" style="top: -'.$topMarge.'px">'; 
+    $output .= '<div class="ms-wrapper" style="top: -'. $topMarge .'px">'; 
       foreach($reseau as $station){
 
         if($station['mstype'] != false){
@@ -1400,7 +1407,7 @@ function uwwtd_get_agglo_graphic($node){
     $totalDcpsT = 0;
     $totalDcpsB = 0;
 
-    $output .= '<div class="dcp-connections" style="top: -'.$offset.'px">';
+    $output .= '<div class="dcp-connections" style="top: -'.$topMarge.'px">';
 
         foreach($reseau as $station){
           $nbDcps = count($station['dcps']);
@@ -1421,27 +1428,21 @@ function uwwtd_get_agglo_graphic($node){
               }
             }
           }
-          if($nbDcpsT == 1) $topMarge = 50;
-          else $topMarge = 0 + ($nbDcpsT * 48);
-          if($nbPlants > 1) $topMarge = $topMarge - 1;
-          if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
-          if($topMarge < 0) $topMarge = 0;
-          $topMarge = $topMarge - (2 * $topMarge);
 
           $output .= '<div class="station-dcp-connections">';
-              $output .= '<div style="margin-top: '.$topMarge.'px">';
+              $output .= '<div>';
 
-            for ($i=0; $i < $nbDcpsT; $i++) { 
-              $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
-            }
+            // for ($i=0; $i < $nbDcpsT; $i++) { 
+            //   $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
+            // }
 
-            if($nbDcps > 0){ 
+            // if($nbDcps > 0){ 
               $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
-            }
+            // }
 
-            for ($i=0; $i < $nbDcpsB; $i++) { 
-              $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
-            }
+            // for ($i=0; $i < $nbDcpsB; $i++) { 
+            //   $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
+            // }
 
             $output .= '</div>
           </div>';
@@ -1449,42 +1450,48 @@ function uwwtd_get_agglo_graphic($node){
 
     $output .= '</div>
 
-    <div class="dcps-wrapper">';
+    <div class="dcps-wrapper" style="top:-'. $topMarge .'px">';
       
-    $cur = -1;
-    foreach($reseau as $station){
-      $nbDcps = count($station['dcps']);
-      
-      $offset = $totalDcps * (15.5 + (0.5 * $nbPlants));
-      $offset = $offset + $cur;
-      $offset = $offset - ($nbDcps * 0.25);
-      $cur++;
-      if($nbPlants == 4 && $nbDcps == 1) $offset = 141;
-
-      if($totalDcps <= 2 && $nbPlants == 1) $offset = -1;
-  
-      foreach($station['dcps'] as $dcp) {
-
-		$output .= '<div class="station-dcp" style="top: '.$offset.'px;">
+    foreach($reseau as $station){  
+    	$output .= '<div class="station-dcp" style="top: 0px;">
 			<div>
-			  <img width="75px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
-			  <div class="graphic-title">
-			    '.l($dcp['title'], "node/".$dcp['nid']).'<br>
-			    '.l($dcp['rcaTitle'], "node/".$dcp['rcaNid']).' ('.$dcp['rcaType'].')
-			  </div>
+			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">';
+			  	$output .= '<div class="graphic-title">';
+			  		$output .= l(count($station['dcps'])." DCP(S)", "#");
+			  		$output .= '<div class="dcps-hidden-list">';
+    					foreach($station['dcps'] as $dcp) {
+			    			$output .= l($dcp['title'], "node/".$dcp['nid']);
+			    			$output .= '<br>';
+			    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+			    			$output .= ' ('.$dcp['rcaType'].')';
+			    			$output .= '<br>';
+			    			$output .= '<br>';
+			  			}
+			  		$output .= '</div>
+			  	</div>
 			</div>
 		</div>';
-
-      }
     }
 
     $output .= '</div>
   </div>
   <div class="dischage-wot">
     <div class="graphic-title">
-      '.t('Discharge without treatment:').' '.$totalWOT.' p.e ('.$node->field_aggpercwithouttreatment['und'][0]['value'].'%)
+      '.t('Discharge without treatment:').' '.uwwtd_format_number($totalWOT, 0).' p.e ('.uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1).'%)
     </div>
     <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
+    <div class="graphic-legend">
+    	<ul>
+    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+    	</ul>
+    	<ul>
+			<li><span>N</span> : Nitrate removal</li>
+			<li><span>P</span> : Phosphorus removal</li>
+			<li><span>B</span> : More stringent</li>
+    	</ul>
+    </div>
   </div>';
 
   return $output;

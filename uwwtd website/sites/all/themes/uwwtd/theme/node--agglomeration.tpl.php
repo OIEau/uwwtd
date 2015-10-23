@@ -171,7 +171,7 @@ echo uwwtd_insert_errors_tab($node);
     print '</div>';
 /* e.vincent / 2015/08/31 / add dev from alexander */
 // /*
-    print '<div class="uwwcontainer">';
+    print '<div class="uwwcontainer" style="overflow:visible">';
       print '<fieldset class="uwwfull group-agggraphic field-group-fieldset group-description panel panel-default form-wrapper">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Graphical network summary').'</div>';
