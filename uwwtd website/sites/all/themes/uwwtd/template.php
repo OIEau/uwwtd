@@ -1181,10 +1181,17 @@ function uwwtd_get_uww_graphic($node){
     		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
     	</ul>
     	<ul>
-			<li><span>N</span> : Nitrate removal</li>
+			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
-			<li><span>B</span> : More stringent</li>
+			<li><span>UV</span> : UV treatment</li>
+			<li><span>MICRO</span> : Micro Filtration</li>
     	</ul>
+    	<ul>
+			<li><span>CHLOR</span> : Chlorination</li>
+			<li><span>OZONE</span> : Ozonation</li>
+			<li><span>SAND</span> : Sand filtration</li>
+			<li><span>O</span> : Other more stringent</li>
+		</ul>
     </div>';
 
 	return $output;   
@@ -1236,7 +1243,7 @@ function uwwtd_get_agglo_graphic($node){
               $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
               $uww->field_uwwothertreat['und'][0]['value'] == '1'
             ){
-              $msType = 'NPB';
+              $msType = 'NPO';
             }
           }
           else{
@@ -1248,7 +1255,7 @@ function uwwtd_get_agglo_graphic($node){
               $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
               $uww->field_uwwothertreat['und'][0]['value'] == '1'
             ){
-              $msType = 'NB';
+              $msType = 'NO';
             }
           }
         }
@@ -1263,7 +1270,7 @@ function uwwtd_get_agglo_graphic($node){
               $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
               $uww->field_uwwothertreat['und'][0]['value'] == '1'
             ){
-              $msType = 'PB';
+              $msType = 'PO';
             }
           }
           else{
@@ -1275,7 +1282,7 @@ function uwwtd_get_agglo_graphic($node){
               $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
               $uww->field_uwwothertreat['und'][0]['value'] == '1'
             ){
-              $msType = 'B';
+              $msType = 'O';
             }
           }
         }
@@ -1487,9 +1494,9 @@ function uwwtd_get_agglo_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
     	</ul>
     	<ul>
-			<li><span>N</span> : Nitrate removal</li>
+			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
-			<li><span>B</span> : More stringent</li>
+			<li><span>O</span> : Other more stringent</li>
     	</ul>
     </div>
   </div>';
