@@ -952,7 +952,7 @@ function uwwtd_update_7111()
 
 /**
  * Delete menu main and import new one
- * update openlayer overlay 
+ * update openlayer overlay  and add new field field_siteid in content_type agglo_uww   
  */ 
 function uwwtd_update_7112()
 {
@@ -1002,14 +1002,26 @@ function uwwtd_update_7112()
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
-    uwwtd_update_map_overlay($country_config, $country_code, array('waste_water_treatment_network_map.inc'), array('-'), array('-'));     
+    uwwtd_update_map_overlay($country_config, $country_code, array('waste_water_treatment_network_map.inc'), array('-'), array('-'));
+    
+    //add new field field_siteid in content_type agglo_uww                                                            
+    field_cache_clear();    
+
+    $instance = array(
+        'field_name' => 'field_siteid',
+        'entity_type' => 'node',
+        'bundle' => 'agglo_uww',
+      );
+
+    $result = field_create_instance($instance);
+             
     drupal_flush_all_caches();
     
     variable_set('siif_eru_version', __FUNCTION__);
 }
 
 /**
- * Rebuild map and layer and main menu 
+ * Rebuild map and layer and main menu    
  */ 
 function uwwtd_update_7113()
 {
@@ -1035,6 +1047,10 @@ function uwwtd_update_7113()
                                                                         'uwwtp_n_pressure_.inc',
                                                                         'uwwtp_p_pressure_.inc',), 
                                                                 array('-'));    
+                                                                
+    
+
+                                                                    
     variable_set('siif_eru_version', __FUNCTION__);
     drupal_flush_all_caches();     
 }
@@ -1165,6 +1181,60 @@ function uwwtd_update_7117()
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
 }
+
+/**
+ * Add a new field in content type agglomeration :  field_aggart3addcompliance 'Additionnal Compliance article3'
+ */ 
+function uwwtd_update_7118() {
+   
+    uwwtd_install_trace(__FUNCTION__);
+    
+    field_cache_clear();    
+//     $field = array (
+//       'field_name' => 'field_aggart3addcompliance',
+//       'type' => 'list_text',
+//       'settings' => array (
+//         'allowed_values' => array (
+//           'AddQC' => 'Not compliant',
+//         ),
+//         'allowed_values_function' => '',
+//       ),
+//     );
+//     
+//     $instance = array(
+//         'field_name' => $field['field_name'],
+//         'entity_type' => 'node',
+//         'bundle' => 'agglomeration',
+//         'label' => 'Additionnal Compliance article3',
+//       );  
+//           
+//     field_delete_instance($instance);
+//     field_delete_field($field['field_name']);
+        
+    $field = array (
+      'field_name' => 'field_aggart3addcompliance',
+      'type' => 'list_text',
+      'settings' => array (
+        'allowed_values' => array (
+          'AddQC' => 'Not compliant',
+        ),
+        'allowed_values_function' => '',
+      ),
+    );    
+
+    $result = field_create_field($field);
+
+    $instance = array(
+        'field_name' => $field['field_name'],
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'label' => 'Additionnal Compliance article3',
+      );
+
+    $result = field_create_instance($instance);
+    
+    variable_set('siif_eru_version', __FUNCTION__);    
+} 
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
