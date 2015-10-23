@@ -341,7 +341,15 @@ function uwwtd_menu(){
 	'file' => 'data_center.inc',
 	'file path' => drupal_get_path('module', 'uwwtd')
   );
-
+  $items['stats/querys'] = array(
+  		'page callback' => 'uwwtd_page_stats_querys',
+  		'page arguments' => array(),
+  		'access callback' => true,
+  		'access arguments' => true,
+  		'type' => MENU_CALLBACK,
+  		'file' => 'uwwtd.stats.inc',
+  		'file path' => drupal_get_path('module', 'uwwtd')
+  );
 
 	//MENUS FOR CONFIGURATION
 
@@ -1484,24 +1492,24 @@ function uwwtd_get_data_agglomeration($option)
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
-        
+
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ])) {
-                $row['field_aggcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ];    
+                $row['field_aggcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ];
             }
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart3compliance_value'] ])) {
-                $row['field_aggart3compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart3compliance_value'] ];    
+                $row['field_aggart3compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart3compliance_value'] ];
             }
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart4compliance_value'] ])) {
-                $row['field_aggart4compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart4compliance_value'] ];    
+                $row['field_aggart4compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart4compliance_value'] ];
             }
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart5compliance_value'] ])) {
-                $row['field_aggart5compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart5compliance_value'] ];    
+                $row['field_aggart5compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart5compliance_value'] ];
             }
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart6compliance_value'] ])) {
-                $row['field_aggart6compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart6compliance_value'] ];    
-            }                                                
-        
+                $row['field_aggart6compliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggart6compliance_value'] ];
+            }
+
             $row['field_agggenerated_value_format'] = is_null($row['field_agggenerated_value']) ? '' : uwwtd_format_number($row['field_agggenerated_value']);
             $row['field_aggcompliance_value_format'] = is_null($row['field_aggcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
             $row['field_aggart3compliance_value_format'] = is_null($row['field_aggart3compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart3compliance_value']];
@@ -1665,12 +1673,12 @@ function uwwtd_get_data_uwwtp($option)
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
-        
+
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ])) {
-                $row['field_uwwcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ];    
-            }  
-                    
+                $row['field_uwwcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ];
+            }
+
             $row['field_uwwloadenteringuwwtp_value_format'] = is_null($row['field_uwwloadenteringuwwtp_value']) ? '' : uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 
             $row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
@@ -2408,7 +2416,7 @@ function uwwtd_page_agglomeration_connection()
             'id' => 'flot-auto-identifier-1',
             'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
             'class' => 'agglo_connexion_pie',
-        ),       
+        ),
 //         'legend' => TRUE,
 //         'zoom' => false,
         'options' => clone $options,
@@ -2473,7 +2481,7 @@ function uwwtd_page_agglomeration_connection()
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 //      ;
     $page =  '<h1>'.$title.'</h1>'
-            . $form 
+            . $form
             . $piechart                  //style="page-break-after:always;"
             . '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows charts-row">'
@@ -2482,8 +2490,9 @@ function uwwtd_page_agglomeration_connection()
                     .'<div class="container flip">'
 
                       .'<div class="leftgraph front" style="-webkit-backface-visibility: hidden;">'
-                        . '<div class="flot-title"><div class="flip-title">Generated load (p.e.) distribution</div> 
-                        
+                        . '<div class="flot-title"><div class="flip-title">Generated load (p.e.) distribution</div>
+
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
@@ -2491,8 +2500,8 @@ function uwwtd_page_agglomeration_connection()
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Generated load (p.e.) distribution</div> 
-                        
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Generated load (p.e.) distribution</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
 
@@ -2907,18 +2916,18 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     $link_export_csv = '<a href="'.url('uwwtps/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
     $link_export_xls = '<a href="'.url('uwwtps/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
 
-    
+
     $page = ''
             . '<h1>'.$title.'</h1>'
-            . $form 
-            .'<div class="rows map-row" >'.$rendermap.'</div>' 
+            . $form
+            .'<div class="rows map-row" >'.$rendermap.'</div>'
             .'<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> 
-                        
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
@@ -2926,8 +2935,8 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of plants</div> 
-                        
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of plants</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
                         </div>'
@@ -2941,8 +2950,8 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                     .'<div class="container flip">'
 
                       .'<div class="rightgraph front">'
-                            . '<div class="flot-title"><div class="flip-title">Compliance by load entering (p.e.)</div> 
-                            
+                            . '<div class="flot-title"><div class="flip-title">Compliance by load entering (p.e.)</div>
+
 
                             <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                             </div>'
@@ -2950,8 +2959,8 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by load entering (p.e.)</div> 
-                        
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by load entering (p.e.)</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
                         </div>'
@@ -3352,15 +3361,15 @@ function uwwtd_page_uwwtps_treatment()
 //      ;
     $page =  '<h1>'.$title.'</h1>'
 
-            . $form 
+            . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Plants</div> 
-                        
+                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Plants</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
@@ -3368,7 +3377,7 @@ function uwwtd_page_uwwtps_treatment()
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Plants</div> 
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Plants</div>
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
 
@@ -3383,16 +3392,16 @@ function uwwtd_page_uwwtps_treatment()
                     .'<div class="container flip">'
 
                       .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div> 
+                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
                         . '<div class="view-content">'.$render_graph.'</div>'
 
-                      .'</div>'   
-                      .'<div class="rightgraph back">' 
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div> 
+                      .'</div>'
+                      .'<div class="rightgraph back">'
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -3785,29 +3794,29 @@ function uwwtd_page_uwwtps_pressure()
     //todo save view and map and .install update map/style/overlay
 //     $render_graph_nb = theme('flot_graph', $variables_nb);
 
-//     $render_graph = theme('flot_graph', $variables); 
-//style="page-break-after:always;"   
+//     $render_graph = theme('flot_graph', $variables);
+//style="page-break-after:always;"
 //     $page = '<h1>'.$title.'</h1>'
-//             . $form 
-//             . $rendermap      
-// //             . '<div class="view-content flot-title">Treatment type in place by Plants</div>' 
+//             . $form
+//             . $rendermap
+// //             . '<div class="view-content flot-title">Treatment type in place by Plants</div>'
 // //             . '<div class="view-content">'.$render_graph_nb.'</div>'
-// //             . '<div class="view-content">'.$render_table_graph_nb.'</div>'     
-// //             . '<div class="view-content flot-title">Treatment type in place by Load entering (p.e.)</div>'       
+// //             . '<div class="view-content">'.$render_table_graph_nb.'</div>'
+// //             . '<div class="view-content flot-title">Treatment type in place by Load entering (p.e.)</div>'
 // //             . '<div class="view-content">'.$render_graph.'</div>'
 // //             . '<div class="view-content">'.$render_table_graph.'</div>'
-//             . '<div class="view-content">'. drupal_render($build) . '</div>'   
-//      ;   
-     
+//             . '<div class="view-content">'. drupal_render($build) . '</div>'
+//      ;
+
     $page =  '<h1>'.$title.'</h1>'
-            . $form 
-            . '<div class="rows map-row" >'.$rendermap.'</div>'            
+            . $form
+            . '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows data-table-row">'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
-            .'</div>'      
+            .'</div>'
      ;
-     
+
 
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page,
@@ -4005,7 +4014,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //                                         $row['field_aggart6compliance_value_format'],//todo delete
 //                                         $row['field_aggart6compliance_value_format'],//todo delete
                                     ));
-    }    
+    }
 
     //here export data and exit
     if ($type_export != '') {
@@ -4137,8 +4146,8 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     //second graph load generated
     $data_pie = array();
 
-    $xaxis = array();   
-    $i = 0; 
+    $xaxis = array();
+    $i = 0;
 //     $aData = array();
 
     foreach($graph as $compliance_format => $detail) {
@@ -4146,8 +4155,8 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
         $d1->label =$compliance_format;//$detail['label'];
         $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
         $data_pie[] = $d1;
-        
-        
+
+
 //         $aData[] = array(
 //             "value" => $detail['field_agggenerated_value'],
 //             "label" => $compliance_format,
@@ -4270,29 +4279,29 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                 .'</div>'
 
 
-*/     
-// dsm($render_graph);  
-    $page = '' 
+*/
+// dsm($render_graph);
+    $page = ''
             . '<h1>'.$title.'</h1>'
-            . $form 
+            . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div> 
-                        
+                        . '<div class="flot-title"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
                         . '<div class="view-content">'.$render_graph_nb.'</div>'
-//                         . '<div class="view-content"><div id="flot-auto-identifier-1"></div></div>'                        
+//                         . '<div class="view-content"><div id="flot-auto-identifier-1"></div></div>'
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div> 
-                        
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div>
+
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
 
@@ -4307,18 +4316,18 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                     .'<div class="container flip">'
 
                       .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div> 
+                        . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                         </div>'
                         . '<div class="view-content">'.$render_graph.'</div>'
 //                         . '<div class="view-content"><div id="flot-auto-identifier-2"></div></div>'
-                        
+
                       .'</div>'
 
-                      .'<div class="rightgraph back">' 
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by Generated load (p.e.)</div> 
+                      .'<div class="rightgraph back">'
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by Generated load (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -4327,7 +4336,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                       .'</div>'
                     .'</div>'
                   .'</div>'
-                .'</div>' 
+                .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
@@ -4335,11 +4344,11 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                 . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
                 . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>'
-//     .'<script>     
-//     jQuery(document).ready(function(){                      
+//     .'<script>
+//     jQuery(document).ready(function(){
 //         display_agglo_compliance_piechart('.json_encode($aData) . ', \'#flot-auto-identifier-1\');
-//         display_agglo_compliance_piechart('.json_encode($aData) . ', \'#flot-auto-identifier-2\');        
-//     });    
+//         display_agglo_compliance_piechart('.json_encode($aData) . ', \'#flot-auto-identifier-2\');
+//     });
 //     </script>            '
      ;
      if (true === $put_in_cache) {
@@ -4600,9 +4609,7 @@ function uwwtd_export_data($type_export, $title, $header, $rows)
         drupal_add_http_header($sName, $sValue);
     }
 
-    readfile($filename); 
-    unlink($filename);    
-    exit();      
+    readfile($filename);
+    unlink($filename);
+    exit();
 }
-
-
