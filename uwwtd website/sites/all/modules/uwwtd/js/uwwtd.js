@@ -32,7 +32,7 @@ function uwwtd_labelformaterpie_legend(label, series) {
     return "<div class=\"pie_legend\">" + label + " (" + Math.round(series.percent) + "%)</div>";  
 }   
 
-function display_uwwtp_stackedbar(data) {
+function display_uwwtp_stackedbar(data, color) {
     var margin = {top: 10, right: 20, bottom: 30, left: 60},
         width = 315 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
@@ -46,8 +46,16 @@ function display_uwwtp_stackedbar(data) {
                   
     // var color = d3.scale.ordinal()
     //     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+   
+   //         'colorincoming' => '#74FFE0',
+//         'colordischarge' => '#C00000',
+
     
-    var color = d3.scale.category10();
+    var color = d3.scale.ordinal()  
+    .domain(color.domain)
+    .range(color.range);          
+    
+//     var color = d3.scale.category10();
     
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -66,6 +74,17 @@ function display_uwwtp_stackedbar(data) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "type"; }));
+
+//     var domain = [];
+//     var range = [];
+//     for (var i = 0; i < data.length; i++) {
+//         domain.push(data[i].label);
+//         range.push(data[i].color); 
+//     }
+// 
+//     var color = d3.scale.ordinal()  
+//     .domain(domain)
+//     .range(range);   
 
   data.forEach(function(d) {
     var y0 = 0;  
@@ -136,7 +155,18 @@ function display_agglo_piechart(data) {
     var width = 120;  
     var height = 120;
     var radius = 60;   
-    var color = d3.scale.category10();
+
+    var domain = [];
+    var range = [];
+    for (var i = 0; i < data.length; i++) {
+        domain.push(data[i].label);
+        range.push(data[i].color); 
+    }
+
+    var color = d3.scale.ordinal()  
+    .domain(domain)
+    .range(range); 
+        
     var svg = d3.select('#agglo_piechart_back')   
       .append('svg')
       .attr('width', widthsvg)
@@ -151,25 +181,15 @@ function display_agglo_piechart(data) {
       .value(function(d) { return d.value; })
       .sort(null);
       
-//     var path = svg.selectAll('path')
-//       .data(pie(data))
-//       .enter()
-// //       .append('arc')
-// //       .attr("class", "arc")
-//       .append('path')
-//       .attr('d', arc)
-//       .attr('fill', function(d, i) { 
-//         return color(d.data.label);
-//       });
-      
 var g = svg.selectAll(".arc")
       .data(pie(data))
     .enter().append("g")
       .attr("class", "arc");  
       
+      
  g.append("path")
       .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.label); });          
+      .style("fill", function(d) { return color(d.data.label); });       
       
   g.append("text")
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
@@ -208,82 +228,4 @@ var g = svg.selectAll(".arc")
       .attr('style', ' color: #4f4f4f;font--weight: bold;font-size: 12px;font-family: "Open Sans",sans-serif;')
       .text(function(d) { return d; });      
 }
-// 
-// function display_agglo_compliance_piechart(data, divid) {
-//     
-//     var widthsvg = 400;
-//     var width = 120;  
-//     var height = 120;
-//     var radius = 60;   
-//     var color = d3.scale.category10();
-//     var svg = d3.select(divid)    
-//       .append('svg')
-//       .attr('width', widthsvg)
-//       .attr('height', height)
-//       .append('g')
-//       .attr('transform', 'translate(' + (width / 2) +  ',' + (width / 2) + ')');
-//     var arc = d3.svg.arc()
-//       .outerRadius(radius)
-//       .innerRadius(0);
-//       
-//     var pie = d3.layout.pie()
-//       .value(function(d) { return d.value; })
-//       .sort(null);
-//       
-// //     var path = svg.selectAll('path')
-// //       .data(pie(data))
-// //       .enter()
-// // //       .append('arc')
-// // //       .attr("class", "arc")
-// //       .append('path')
-// //       .attr('d', arc)
-// //       .attr('fill', function(d, i) { 
-// //         return color(d.data.label);
-// //       });
-//       
-// var g = svg.selectAll(".arc")
-//       .data(pie(data))
-//     .enter().append("g")
-//       .attr("class", "arc");  
-//       
-//  g.append("path")
-//       .attr("d", arc)
-//       .style("fill", function(d) { return color(d.data.label); });          
-//       
-//   g.append("text")
-//       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-//       .attr("dy", ".35em")
-//       .style("text-anchor", "end")
-//       .text(function(d) { return d.data.valueformat });
-//       
-//             
-//     var legendRectSize = 12;
-//     var legendSpacing = 4;
-//     var legend = svg.selectAll('.legend')
-//       .data(color.domain())
-//       .enter()
-//       .append('g')
-//       .attr('class', 'legend')
-//       .attr('transform', function(d, i) {
-//         var height = legendRectSize + legendSpacing;
-//     //     var offset =  0;
-//     //     var horz = -2 * legendRectSize;
-// //         var horz = -radius;
-//         var horz = radius + 5;        
-//     //     var vert = i * height - offset;
-//         //var vert = i * height + radius;
-// //         console.log(i);
-//         var vert = i * height - radius;
-//         return 'translate(' + horz + ',' + vert + ')';
-//       });
-//     legend.append('rect')
-//       .attr('width', legendRectSize)
-//       .attr('height', legendRectSize)
-//       .style('fill', color)
-//       .style('stroke', color);
-//     legend.append('text')              
-//       .attr('x', legendRectSize + legendSpacing )
-//       .attr('y', legendRectSize - legendSpacing + 3)
-//       .attr('style', ' color: #4f4f4f;font--weight: bold;font-size: 12px;font-family: "Open Sans",sans-serif;')
-//       .text(function(d) { return d; });      
-// }     
+   

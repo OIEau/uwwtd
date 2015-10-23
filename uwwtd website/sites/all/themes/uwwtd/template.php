@@ -159,6 +159,25 @@ function uwwtd_preprocess_field(&$variables){
 		$variables['element']['#field_name'] == 'field_aggcompliance' ||
 		$variables['element']['#field_name'] == 'field_uwwcompliance'
 	){
+//         dsm($variables['element']);
+        //override PD and QC value, we don't want to display QC and PD (for now)
+        if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ])) {
+            $variables['element']['#items']['0']['value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ];
+            $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][ $variables['element']['#items']['0']['value'] ];
+            $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
+        } 
+//         dsm($variables['element']); 
+    }
+
+	// For compliance colors
+	if (
+		$variables['element']['#field_name'] == 'field_aggart3compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart4compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart5compliance' ||
+		$variables['element']['#field_name'] == 'field_aggart6compliance' ||
+		$variables['element']['#field_name'] == 'field_aggcompliance' ||
+		$variables['element']['#field_name'] == 'field_uwwcompliance'
+	){
 		if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
 		if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
 		if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
@@ -192,6 +211,11 @@ function uwwtd_timeline_output($node){
 			$ting = $other['node'];
 			if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
 			if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
+
+            //override PD and QC value, we don't want to display QC and PD (for now)
+            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
+                $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
+            }
 
 			//default colors
 			$color = '#6b6b6b'; $borderc = '#6b5e66';
@@ -1535,20 +1559,26 @@ function uwwtd_piechart_agglonode($node, &$content)
 // echo '<pre>';var_export($content);echo '</pre>';
 // echo '<pre>';var_export($content);echo '</pre>';
 // exit;
-    $aData = array();
+// field_aggc1|Collective system|#74FFE0
+// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
+// field_aggpercwithouttreatment|Discharge without treatment|#C00000
+    $aData = array(); 
     $aData[] = array(
         "value" => $node->field_aggc1['und'][0]['value'],
         "label" => $content['field_agggenerated']['#title'],
+        "color" => '#74FFE0',
         "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => $node->field_aggc2['und'][0]['value'],
         "label" => $content['field_aggc2']['#title'],
+        "color" => '#BD8842',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
     );  
     $aData[] = array(
         "value" => $node->field_aggpercwithouttreatment['und'][0]['value'],
         "label" => $content['field_aggpercwithouttreatment']['#title'],
+        "color" => '#C00000',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
     );     
 //     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
@@ -1574,32 +1604,48 @@ function uwwtd_stackedbar_uwwtpnode($node)
 {       
     drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');            
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+// field_aggc1|Collective system|#74FFE0
+// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
+// field_aggpercwithouttreatment|Discharge without treatment|#C00000
+                
     $aData = array();
     $aData[] = array(
         "type" => 'BOD',
 //         "label" => 'BOD load',
         "incoming" => $node->field_uwwbodincoming['und'][0]['value'],
         "discharged" => $node->field_uwwboddischarge['und'][0]['value'],
+//         'colorincoming' => '#74FFE0',
+//         'colordischarge' => '#C00000',
     );                 
     $aData[] = array(
         "type" => 'COD',
 //         "label" => 'COD load',
         "incoming" => $node->field_uwwcodincoming['und'][0]['value'],
         "discharged" => $node->field_uwwcoddischarge['und'][0]['value'],
+//         'colorincoming' => '#74FFE0',
+//         'colordischarge' => '#C00000',        
     );
     $aData[] = array(
         "type" => 'N',
 //         "label" => 'N load',
         "incoming" => $node->field_uwwnincoming['und'][0]['value'],
         "discharged" => $node->field_uwwndischarge['und'][0]['value'],
+//         'colorincoming' => '#74FFE0',
+//         'colordischarge' => '#C00000',        
     );  
     $aData[] = array(
         "type" => 'P',
 //         "label" => 'P load',
         "incoming" => $node->field_uwwpincoming['und'][0]['value'],
         "discharged" => $node->field_uwwpdischarge['und'][0]['value'],
-    );              
+//         'colorincoming' => '#74FFE0',
+//         'colordischarge' => '#C00000',        
+    ); 
+    
+    $aColor['domain'] = array ('incoming', 'discharge');
+    $aColor['range'] = array ('#74FFE0', '#C00000');
+                     
 //     dsm($aData); 
 //     echo '<pre>';var_export($aData);echo '</pre>';          
 //     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
@@ -1622,7 +1668,7 @@ function uwwtd_stackedbar_uwwtpnode($node)
     return "
     <script>
     jQuery(document).ready(function(){                     
-        display_uwwtp_stackedbar(".json_encode($aData).");        
+        display_uwwtp_stackedbar(".json_encode($aData).','. json_encode($aColor).");        
     });    
     </script>
     ";
