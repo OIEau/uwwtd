@@ -96,7 +96,6 @@
 
     <?php /* region--content.tpl.php */ ?>
     <div class="region region-content col-sm-12">
-        <?php print render($page['content']); ?>
 		<div id="printer">
 		<?php
 			$options = array();
@@ -109,7 +108,9 @@
 // 			print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);
             print uwwtd_wkhtmltopdf_tag(array('.main-container'), $options);			
 		?>
-		</div>
+		</div>    
+        <?php print render($page['content']); ?>
+
     </div>
     <?php /* region--sidebar.tpl.php */ ?>
     <?php if ($page['sidebar_second']): ?>

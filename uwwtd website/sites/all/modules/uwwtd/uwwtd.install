@@ -1256,6 +1256,53 @@ function uwwtd_update_7119() {
     
     variable_set('siif_eru_version', __FUNCTION__);    
 }
+
+/**
+ * Update page content (useful links, ressources,)
+ */ 
+function uwwtd_update_7120() {
+   
+    uwwtd_install_trace(__FUNCTION__);
+    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    if ($country_code == '-1') {
+        throw new DrupalUpdateException('Can\'t detect country code.');    
+    }    
+    
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Useful links', '=');
+    $query->condition('n.language', 'en', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+        $path_usefullinks_country = drupal_get_path('module', 'uwwtd') . '/script/page/useful_links_'.$country_code.'.inc';
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = file_get_contents($path_usefullinks_country);
+        node_save($node);
+        break;
+	}
+    
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Ressources', '=');
+    $query->condition('n.language', 'en', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+        $path_usefullinks_country = drupal_get_path('module', 'uwwtd') . '/script/page/ressource_'.$country_code.'.inc';
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = file_get_contents($path_usefullinks_country);
+        node_save($node);
+        break;
+	}    
+    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+    variable_set('siif_eru_version', __FUNCTION__);    
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

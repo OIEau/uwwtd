@@ -171,7 +171,7 @@ var g = svg.selectAll(".arc")
       .attr("d", arc)
       .style("fill", function(d) { return color(d.data.label); });
 
-  g.append("text")
+      g.append("text")
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
       .attr("dy", ".35em")
       .style("text-anchor", "end")
@@ -393,7 +393,7 @@ function display_stackedbar_custom(data,divid) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "type"; }));
-
+s
   data.forEach(function(d) {
     var y0 = 0;
     d.origin = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
@@ -456,3 +456,4 @@ function display_stackedbar_custom(data,divid) {
 
 
 }
+   
