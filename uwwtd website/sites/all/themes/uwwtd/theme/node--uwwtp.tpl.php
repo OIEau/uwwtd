@@ -129,8 +129,8 @@ echo uwwtd_insert_errors_tab($node);
         echo uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
-    print '<div class="uwwcontainer" style="overflow:visible;float: left;">';
-      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height: 430px;">';
+    print '<div class="uwwcontainer" style="float:left;overflow:visible;">';
+      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:430px;">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
@@ -147,23 +147,29 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_uwwotherperf']);
             print '</div>';
             print '<div class="uwwrealthird">';
-              print '<div class="flip" id="uwwtp_stackedbar">
+              print '<div class="flip" id="uwwtp_stackedbar" style="position:relative;">
                        <div class="front">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
                         print render($content['field_uwwbodincoming']);
-						print t('Incoming concentration BOD (mg/l): ');
-						if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($incomingBod,2);
-						}							
-						print render($content['field_uwwboddischarge']);
-						print t('Discharged concentration BOD (mg/l): ');
-						if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($dischargeBod,2);
+						if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Incoming concentration BOD (mg/l): ')."</b>";
+							if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($incomingBod,2);
+							}
 						}
+													
+						print render($content['field_uwwboddischarge']);
+						if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Discharged concentration BOD (mg/l): ')."</b>";
+							if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($dischargeBod,2);
+							}
+						}
+						
 						if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
                             print '<div class="field field-type-number-decimal field-label-inline clearfix">';
                               print '<div class="field-label">'.t('Rate for BOD:').'</div>';
@@ -175,19 +181,25 @@ echo uwwtd_insert_errors_tab($node);
                             print '</div>';
                           }
 						print render($content['field_uwwcodincoming']);
-						print t('Incoming concentration COD (mg/l): ');
-						if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($incomingCod,2);
-						}	
-                          print render($content['field_uwwcoddischarge']);
-						  print t('Discharged concentration COD (mg/l): ');
-						if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($dischargeCod,2);
+						if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Incoming concentration COD (mg/l): ')."</b>";
+							if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($incomingCod,2);
+							}
 						}
+							
+                          print render($content['field_uwwcoddischarge']);
+						  if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Discharged concentration COD (mg/l): ')."</b>";
+							if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($dischargeCod,2);
+							}
+						  }
+						  
                           if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
                             print '<div class="field field-type-number-decimal field-label-inline clearfix">';
                               print '<div class="field-label">'.t('Rate for COD:').'</div>';
@@ -198,20 +210,27 @@ echo uwwtd_insert_errors_tab($node);
                               print '</div>';
                             print '</div>';
                           }
+						  
                           print render($content['field_uwwnincoming']);
-						print t('Incoming concentration N (mg/l): ');
-						if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($incomingN,2);
-						}
+						  if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Incoming concentration N (mg/l): ')."</b>";
+							if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($incomingN,2);
+							}
+						  }
+						
                           print render($content['field_uwwndischarge']);
-						print t('Discharged concentration N (mg/l): ');
-						if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($dischargeN,2);
-						}
+						   if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Discharged concentration N (mg/l): ')."</b>";
+							if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($dischargeN,2);
+							}
+						  }
+						
                           if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
                             print '<div class="field field-type-number-decimal field-label-inline clearfix">';
                               print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
@@ -222,20 +241,26 @@ echo uwwtd_insert_errors_tab($node);
                               print '</div>';
                             print '</div>';
                           }
-                          print render($content['field_uwwpincoming']);
-						  print t('Incoming concentration P (mg/l): ');
-						if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($incomingP,2);
-						}
+							print render($content['field_uwwpincoming']);
+							if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							print "<b>".t('Incoming concentration P (mg/l): ')."</b>";
+							if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($incomingP,2);
+							}
+						  }
+						  
                           print render($content['field_uwwpdischarge']);
-						  print t('Discharged concentration P (mg/l): ');
-						if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-						{
-							$dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-							print round($dischargeP,2);
-						}
+						  if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							 print "<b>".t('Discharged concentration P (mg/l): ')."</b>";
+							if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							{
+								$dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								print round($dischargeP,2);
+							}
+						  }
+						 
                           if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
                             print '<div class="field field-type-number-decimal field-label-inline clearfix">';
                               print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
@@ -247,7 +272,7 @@ echo uwwtd_insert_errors_tab($node);
                             print '</div>';
                           }                      
               print'   </div>
-                       <div class="back">
+                       <div class="back" style="position:absolute;">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
                             <svg id="uwwtp_stackedbar_back"></svg>';
                             echo uwwtd_stackedbar_uwwtpnode($node);
