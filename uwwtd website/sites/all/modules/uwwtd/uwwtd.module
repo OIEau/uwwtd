@@ -354,7 +354,15 @@ function uwwtd_menu(){
   		'file' => 'uwwtd.stats.inc',
   		'file path' => drupal_get_path('module', 'uwwtd')
   );
-
+  $items['stats/graphs'] = array(
+  		'page callback' => 'uwwtd_page_stats_graphs',
+  		'page arguments' => array(),
+  		'access callback' => true,
+  		'access arguments' => true,
+  		'type' => MENU_CALLBACK,
+  		'file' => 'uwwtd.graphs.inc',
+  		'file path' => drupal_get_path('module', 'uwwtd')
+  );
 	//MENUS FOR CONFIGURATION
 
   	$items['admin/config/uwwtd'] = array(

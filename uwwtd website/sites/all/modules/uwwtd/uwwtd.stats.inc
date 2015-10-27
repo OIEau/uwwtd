@@ -322,15 +322,15 @@ function uwwtd_stat_national_uwwtp($GroupBy)
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
 			switch ($group_by){
-				case 'field_uwwcompliance_value' :
+				case 'f_comp.field_uwwcompliance_value' :
 					$row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
 					break;
-				case 'field_uwwtreatmenttype_values' :
+				case 'f_uwwtreatmenttype.field_uwwtreatmenttype_value' :
 					$row['field_uwwtreatmenttype_value_format'] = is_null($row['field_uwwtreatmenttype_value']) ? '' : $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
 					break;
 			}
 			$row['total_count_format'] = is_null($row['total_count']) ? '0' : uwwtd_format_number($row['total_count'], 0);
-			$row['loadentering_sum_format'] = is_null($row['loadentering_sum']) ? '0' : uwwtd_format_number($row['loadentering_sum'], 2);
+			$row['loadentering_sum_format'] = is_null($row['loadentering_sum']) ? '0' : uwwtd_format_number($row['loadentering_sum'], 0);
 			$data[] = $row;
 		}
 	}catch(Exception $e) {
@@ -615,7 +615,12 @@ function uwwtd_stat_national_generated_by_agglomeration()
 			foreach ($conditions as $libelle => $condition){
 				$result = db_query($query . $condition,$param);
 				while($row = $result->fetchAssoc()) {
-					$data[0][$libelle] = $row['generated_sum'];
+
+					///$data[0][$libelle] = $row['generated_sum'];
+					$row['type'] = $libelle;
+					$row['generated_sum_format'] = is_null($row['generated_sum']) ? '0' : uwwtd_format_number($row['generated_sum'], 0);
+
+					$data[] = $row;
 				}
 		}
 	}catch(Exception $e) {
