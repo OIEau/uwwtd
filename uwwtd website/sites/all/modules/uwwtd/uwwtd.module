@@ -28,7 +28,7 @@ $GLOBALS['uwwtd']['ui']['sort'] = array(
     'asc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;},
     'desc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;},
 );
-
+// dsm($data);
 $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'title'                           =>  t('Name'),
     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
@@ -39,6 +39,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
     'field_aggart5compliance_value'    =>  t('Article 5 compliance'),
     'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
+	'field_article17_value'   =>  t('Article 17'),
 );
 
 $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
@@ -49,6 +50,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
     'field_aggc2_value'       =>  t('IAS (% of p.e.)'),
     'field_aggc1_value'   =>  t('Collective system (% of p.e.) '),
     'field_aggpercwithouttreatment_value'   =>  t('Not addressed through IAS (% of p.e.)'),
+	'field_article17_value'   =>  t('Article 17'),
 );
 
 // field_aggc1|Collective system|#74FFE0
@@ -66,6 +68,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
+	'field_article17_value'   =>  t('Article 17'),
 );
 
 $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
@@ -78,6 +81,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
     'field_uwwnremoval_value'           =>  t('N removal'),
     'field_uwwpremoval_value'           =>  t('P removal'),
     'field_uwwspecification_value'      =>  t('More stringent treatment'),
+	'field_article17_value'   =>  t('Article 17'),
 );
 
 
@@ -1385,7 +1389,8 @@ function uwwtd_get_data_agglomeration($option)
                      f_aggc2.field_aggc2_value,
                      f_aggc1.field_aggc1_value,
                      f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
-                     st_astext(st_transform(f_geo.the_geom, 4326)) wkt
+                     st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+					 f_article17.field_article17_nid
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -1426,6 +1431,9 @@ function uwwtd_get_data_agglomeration($option)
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
+		left join
+            {field_data_field_article17} f_article17
+                ON n.nid = f_article17.entity_id
     where n.type = :typenode
         and f_annee.field_anneedata_value = :annee
     ';
@@ -1519,14 +1527,20 @@ function uwwtd_get_data_agglomeration($option)
             $row['field_aggc1_value_format'] = is_null($row['field_aggc1_value']) ? '' : uwwtd_format_number($row['field_aggc1_value'], 2);
             $row['field_aggc2_value_format'] = is_null($row['field_aggc2_value']) ? '' : uwwtd_format_number($row['field_aggc2_value'], 2);
             $row['field_aggpercwithouttreatment_value_format'] = is_null($row['field_aggpercwithouttreatment_value']) ? '' : uwwtd_format_number($row['field_aggpercwithouttreatment_value'], 2);
+			
+			if($row['field_article17_nid'] == "" || is_null($row['field_article17_nid'])){
+				// dsm($row['field_article17_nid']);
+				$row['field_article17_value_format'] =  'No';
+			}
+			else{$row['field_article17_value_format'] = 'Yes';}
+			
             $data[] = $row;
         }
         cache_set($cache_name, $data, 'cache', CACHE_PERMANENT);
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
-
-//     dsm($data);
+// dsm($data);
     return $data;
 }
 
@@ -1566,27 +1580,28 @@ function uwwtd_get_data_uwwtp($option)
     */
 
     $query = 'select n.title,
-                     f_annee.field_anneedata_value,
-                     f_uwwcode.field_inspireidlocalid_value,
-                     f_comp.field_uwwcompliance_value,
-                     f_primarytreatment.field_uwwprimarytreatment_value,
-                     f_secondarytreatment.field_uwwsecondarytreatment_value,
-                     f_nremoval.field_uwwnremoval_value,
-                     f_premoval.field_uwwpremoval_value,
-                     f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
-                     f_regionnuts.field_regionnuts_value,
-                     f_uwwbod5perf.field_uwwbod5perf_value,
-                     f_uwwcodperf.field_uwwcodperf_value,
-                     f_uwwntotperf.field_uwwntotperf_value,
-                     f_uwwptotperf.field_uwwptotperf_value,
-                     f_uwwtreatmenttype.field_uwwtreatmenttype_value,
-                     f_physicalcapacityactivity.field_physicalcapacityactivity_value,
-                     f_uwwspecification.field_uwwspecification_value,
-                     f_uwwboddischarge.field_uwwboddischarge_value,
-                     f_uwwcoddischarge.field_uwwcoddischarge_value,
-                     f_uwwndischarge.field_uwwndischarge_value,
-                     f_uwwpdischarge.field_uwwpdischarge_value,
-                     st_astext(st_transform(f_geo.the_geom, 4326)) wkt
+				f_annee.field_anneedata_value,
+				f_uwwcode.field_inspireidlocalid_value,
+				f_comp.field_uwwcompliance_value,
+				f_primarytreatment.field_uwwprimarytreatment_value,
+				f_secondarytreatment.field_uwwsecondarytreatment_value,
+				f_nremoval.field_uwwnremoval_value,
+				f_premoval.field_uwwpremoval_value,
+				f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
+				f_regionnuts.field_regionnuts_value,
+				f_uwwbod5perf.field_uwwbod5perf_value,
+				f_uwwcodperf.field_uwwcodperf_value,
+				f_uwwntotperf.field_uwwntotperf_value,
+				f_uwwptotperf.field_uwwptotperf_value,
+				f_uwwtreatmenttype.field_uwwtreatmenttype_value,
+				f_physicalcapacityactivity.field_physicalcapacityactivity_value,
+				f_uwwspecification.field_uwwspecification_value,
+				f_uwwboddischarge.field_uwwboddischarge_value,
+				f_uwwcoddischarge.field_uwwcoddischarge_value,
+				f_uwwndischarge.field_uwwndischarge_value,
+				f_uwwpdischarge.field_uwwpdischarge_value,
+				st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+				f_article17.field_article17_nid
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -1653,18 +1668,13 @@ function uwwtd_get_data_uwwtp($option)
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
+		left join
+            {field_data_field_article17} f_article17
+                ON n.nid = f_article17.entity_id
     where n.type = :typenode
     and f_annee.field_anneedata_value = :annee
     ';
-
-
-
-//     dsm($query);
-
-//     $param = array(
-//         ':typenode' => 'uwwtp',
-// //         ':annee' => '(select max(field_anneedata_value) from drupal_field_data_field_anneedata)',
-//     );
+// dsm($query);
     $param = array(
         ':typenode' => 'uwwtp',
         ':annee' => $option['field_anneedata_value'],
@@ -1672,8 +1682,8 @@ function uwwtd_get_data_uwwtp($option)
 
     try {
         $result = db_query($query, $param);
+		
         while($row = $result->fetchAssoc()) {
-
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ])) {
                 $row['field_uwwcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ];
@@ -1701,15 +1711,21 @@ function uwwtd_get_data_uwwtp($option)
             $row['field_uwwcoddischarge_value_format'] = is_null($row['field_uwwcoddischarge_value']) ? '' : uwwtd_format_number($row['field_uwwcoddischarge_value'], 2);
             $row['field_uwwndischarge_value_format']   = is_null($row['field_uwwndischarge_value']) ? '' : uwwtd_format_number($row['field_uwwndischarge_value'], 2);
             $row['field_uwwpdischarge_value_format']   = is_null($row['field_uwwpdischarge_value']) ? '' : uwwtd_format_number($row['field_uwwpdischarge_value'], 2);
-
-            $data[] = $row;
+			
+			if($row['field_article17_nid'] == "" || is_null($row['field_article17_nid'])){
+				// dsm($row['field_article17_nid']);
+				$row['field_article17_value_format'] =  'No';
+			}
+			else{$row['field_article17_value_format'] = 'Yes';}
+			// dsm($row);
+			$data[] = $row;
         }
         cache_set($cache_name, $data, 'cache', CACHE_PERMANENT);
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
 
-//     dsm($data);
+     // dsm($data);
     return $data;
 }
 
@@ -1943,6 +1959,22 @@ foreach($list_field as $field_name => $data) {
                 $render_field .= '</select></div>
                 </div>';
                 break;
+			case 'selectarticle':
+                 $render_field .= '<div class="views-article">
+				 <div class="form-type-select form-item-'.$field_name.'-art form-item form-group">
+                        <select name="'.$field_name.'_art" id="edit-'.$field_name.'-art" class="form-control form-select">';
+						foreach($data['data'] as $operator => $label) {
+							$selected = "";
+                            if (isset($filter['filter'][$field_name.'_art']['value']) && $filter['filter'][$field_name.'_art']['value'] == $operator) {
+								
+                                $selected = 'selected="selected"';
+                            }
+                            $render_field .= '<option value="'.htmlspecialchars($operator).'" '. $selected . '>'.$label.'</option>';
+                        }
+                        $render_field .= '</select>
+                    </div>
+                </div>';
+                break;
 
         }
     $render_field .= '
@@ -2154,7 +2186,11 @@ function uwwtd_get_form_filter($option)
         $filter['filter']['field_uwwpdischarge_value_op'] = $_GET['field_uwwpdischarge_value_op'];
         $filter['filter']['field_uwwpdischarge_value']['value'] = (int)$_GET['field_uwwpdischarge_value']['value'];
     }
-
+	
+	if (isset($_GET['field_article17_value_art']) && in_array($_GET['field_article17_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['field_article17_value_art'] != 'All') {
+        $filter['filter']['field_article17_value_art']['value'] = $_GET['field_article17_value_art'];
+    }
 
     if (isset($_GET['order']) && in_array($_GET['order'], $option['order'])) {
         $filter['order'] = $_GET['order'];
@@ -2167,7 +2203,6 @@ function uwwtd_get_form_filter($option)
         $filter['order'] = $option['default']['order'];
         $filter['sort'] = $option['default']['sort'];
     }
-
     return $filter;
 }
 
@@ -2191,9 +2226,19 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
         }
     }
 
+	$list_operator_field_art = array();
+	 foreach($filter['filter'] as $field_art => $article) {
+		if (substr($field_art, -4) == '_art') {
+			$field_name_value_art = substr($field_art, 0, strlen($field_art) -4);
+			$list_operator_field_art[] = array(
+				'field' => $field_name_value_art,
+				'art' => $article,
+				'value' => $filter['filter'][$field_name_value_art]['value'],
+			);
+			unset($filter['filter'][$field_art], $filter['filter'][$field_name_value_art]);
+		}
+	}	
     //for now treat only forcefilter with _op
-//     dsm($list_operator_field);
-//     dsm($forcefilter);
     if (!empty($forcefilter)) {
         foreach($forcefilter['filter'] as $field_op => $operator) {
             if (substr($field_op, -3) == '_op') {
@@ -2207,8 +2252,6 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
             }
         }
     }
-//     dsm($list_operator_field);
-
     $datafilter = array();
     foreach($data as $row) {
         $keepRow = true;
@@ -2226,6 +2269,25 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
                 }
             }
         }
+		if ($keepRow == true) {
+		 foreach($list_operator_field_art as $one_operator_art) {
+			if($one_operator_art['art']['value'] == 0){
+				if(isset($row['field_article17_value_format']) && $row['field_article17_value_format'] =="Yes" ){
+					$keepRow = false;
+						break;
+				}
+			}
+			if($one_operator_art['art']['value'] == 1){
+				if(isset($row['field_article17_value_format']) && $row['field_article17_value_format'] =="No" ){
+					$keepRow = false;
+						break;
+				}
+			}
+		 }
+		}
+
+		
+
 
         if ($keepRow == true) {
             $datafilter[] = $row;
@@ -2276,28 +2338,41 @@ function uwwtd_page_agglomeration_connection()
         $render_graph = theme('flot_graph', $cache->data['flot1']);
         return $cache->data['page'];
     }
-    $list_field = array(
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
-        'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_aggc2_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc2_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_aggpercwithouttreatment_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggpercwithouttreatment_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-    );
 
+	$data = uwwtd_get_data_agglomeration($filter['filter']);
+	foreach($data as $art){
+		if(isset($art['field_article17_nid']) || ($art['field_article17_nid']!= '')){// dsm($art);
+		   $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggc2_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc2_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggpercwithouttreatment_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggpercwithouttreatment_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator'])
+			);
+	   }else{
+		   $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggc2_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc2_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggpercwithouttreatment_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggpercwithouttreatment_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_article17_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_article17_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no'])
+			);
+		}
+	}
+    
     $form = uwwtd_filter_form($list_field, $filter);
 
-    $data = uwwtd_get_data_agglomeration($filter['filter']);
+   
 
 //     uwwtd_filter_data($filter, $data);
-//     dsm($data);
-//     dsm($data);
+    // dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force2000 = array();
     $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
     $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
     uwwtd_filter_data($filter, $data, $filter_force2000);
 //     uwwtd_filter_data($filter, $data);
-//     dsm($data);
 
     $header  =array();
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] as $field => $name) {
@@ -2311,6 +2386,25 @@ function uwwtd_page_agglomeration_connection()
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
     }
+	foreach($data as $art17){
+		if(isset($art17['field_article17_value_format']) && ($art17['field_article17_value_format']== 'Yes')){
+			$exists[] = array('Yes' => $art17['field_article17_nid']);
+			break;
+		}else{
+			$exists[] = array('No' => "");
+		}
+	}
+	foreach($exists as $exist){
+		 if(array_key_exists('Yes', $exist)){
+			$art17 = "Yes";
+			break;
+		}elseif(!isset($filter['filter']['field_article17_value_art'])){
+			$art17 = "No";
+		}
+	 }
+	  if($art17 == "No"){
+		  unset($header[7]);
+	  }
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'], $data);
 
     $optionstyle = array();
@@ -2364,7 +2458,20 @@ function uwwtd_page_agglomeration_connection()
         $graph['field_aggc1_value']['value'] += $row['field_aggc1_value'] / 100  * $row['field_agggenerated_value'];
         $graph['field_aggpercwithouttreatment_value']['value'] += $row['field_aggpercwithouttreatment_value'] / 100  * $row['field_agggenerated_value'];
 
-        $rows[] = array('data' => array(
+		if($row['field_article17_nid'] != ''){
+			$rows[] = array('data' => array(
+				//$row['title'],
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_agggenerated_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_aggc2_value_format'],
+				$row['field_aggc1_value_format'],
+				$row['field_aggpercwithouttreatment_value_format'],
+				$row['field_article17_value_format'],
+			));
+		}else{
+			$rows[] = array('data' => array(
 				//$row['title'],
 				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
 				$row['field_inspireidlocalid_value'],
@@ -2374,6 +2481,7 @@ function uwwtd_page_agglomeration_connection()
 				$row['field_aggc1_value_format'],
 				$row['field_aggpercwithouttreatment_value_format'],
 			));
+		}
     }
     // $graph['field_aggc2_value']['percent'] = $graph['field_aggc2_value']['value'] * 100 / $field_agggenerated_value;
     // $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
@@ -2567,7 +2675,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_uwwtp_compliance($filter['filter']);
-//     dsm($filter);
+    // dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
@@ -2580,25 +2688,39 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         return $cache->data['page'];
     }
 //     dsm('not in cache');
-
-
-    $list_field = array(
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
-        'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-        'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-        'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-        'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-        'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-        'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
-    );
-
+	$data = uwwtd_get_data_uwwtp($filter['filter']);
+	
+	foreach($data as $art){
+		if(isset($art['field_article17_nid']) || ($art['field_article17_nid']!= '')){
+		     $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
+				'field_article17_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);
+	   }else{
+		    $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
+				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
+			);
+	   }
+   }
+   
     $form = uwwtd_filter_form($list_field, $filter);
-
-    $data = uwwtd_get_data_uwwtp($filter['filter']);
-//     dsm($data);
+	
     uwwtd_filter_data($filter, $data);
-//     dsm($data);
+     // dsm($data);
     $header  =array();
     $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp'] as $field => $name) {
@@ -2615,9 +2737,29 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 
         $header_export[] = $name;
     }
-//     dsm($header);
+
+	foreach($data as $art17){
+		if(isset($art17['field_article17_value_format']) && ($art17['field_article17_value_format']== 'Yes')){
+				$exists[] = array('Yes' => $art17['field_article17_nid']);
+				break;
+		}else{
+			$exists[] = array('No' => "");
+		}
+	}
+	 foreach($exists as $exist){
+		 if(array_key_exists('Yes', $exist)){
+			 $art17 = "Yes";
+			 break;
+		}elseif(!isset($filter['filter']['field_article17_value_art'])){
+			 $art17 = "No";
+		}
+	 }
+	  if($art17 == "No"){
+		  unset($header[10]);
+	  }
+
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp'], $data);
-//     dsm($data);
+    // dsm($data);
 
     $optionstyle = array();
     //get the color for the point
@@ -2680,33 +2822,39 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         $graph[$row['field_uwwcompliance_value_format']]['nb']++;
         $graph[$row['field_uwwcompliance_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
 
-//     'title'                           =>  t('Name'),
-//     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-//     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
-//     'field_regionnuts_value'          =>  t('Region (NUTS)'),
-//     'field_uwwcompliance_value'       =>  t('Compliance'),
-//     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-//     'field_uwwcodperf_value'   =>  t('Performance: COD '),
-//     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-//     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
-//     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
-
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
-        $rows[] = array('data' => array(
-                                        //$row['title'],
-                                        ($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-                                        $row['field_inspireidlocalid_value'],
-                                        $row['field_uwwloadenteringuwwtp_value_format'],
-                                        $row['field_regionnuts_value'],
-                                        $row['field_uwwcompliance_value_format'],
-                                        $row['field_uwwbod5perf_value_format'],
-                                        $row['field_uwwcodperf_value_format'],
-                                        $row['field_uwwntotperf_value_format'],
-                                        $row['field_uwwptotperf_value_format'],
-                                        $row['field_uwwtreatmenttype_value_format'],
-                                    ));
-    }
+		if(isset($header[10]) && ($header[10]['field'] == 'field_article17_value')){
+			$rows[] = array('data' => array(
+				//$row['title'],
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_uwwcompliance_value_format'],
+				$row['field_uwwbod5perf_value_format'],
+				$row['field_uwwcodperf_value_format'],
+				$row['field_uwwntotperf_value_format'],
+				$row['field_uwwptotperf_value_format'],
+				$row['field_uwwtreatmenttype_value_format'],
+				$row['field_article17_value_format'],
+			));
+		}else{
+			$rows[] = array('data' => array(
+				//$row['title'],
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_uwwcompliance_value_format'],
+				$row['field_uwwbod5perf_value_format'],
+				$row['field_uwwcodperf_value_format'],
+				$row['field_uwwntotperf_value_format'],
+				$row['field_uwwptotperf_value_format'],
+				$row['field_uwwtreatmenttype_value_format'],
+			));
+		}
+	}
 
     //here export data and exit
     if ($type_export != '') {
@@ -2714,7 +2862,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     }
 
     $features['uwwtp_compliance_map'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-//     dsm($features);
+     // dsm($features);
 
 
     $rendermap = uwwtd_build_map($map, $features);
@@ -3024,18 +3172,30 @@ function uwwtd_page_uwwtps_treatment()
 //     $listyear = ();
     // dsm($listyear);
     //     return '';
-    $list_field = array(
-        'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
-        'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwprimarytreatment_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwprimarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-        'field_uwwsecondarytreatment_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwsecondarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-        'field_uwwnremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwnremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-        'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-    );
-
+	$data = uwwtd_get_data_uwwtp($filter['filter']);
+	foreach($data as $art){
+		if(isset($art['field_article17_nid']) || ($art['field_article17_nid']!= '')){
+			$list_field = array(
+				'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwprimarytreatment_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwprimarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwsecondarytreatment_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwsecondarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwnremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwnremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_article17_value'  			=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);
+	   }else{
+		   $list_field = array(
+				'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwprimarytreatment_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwprimarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwsecondarytreatment_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwsecondarytreatment_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwnremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwnremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+				'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);
+	   }
+	}
     $form = uwwtd_filter_form($list_field, $filter);
-
-    $data = uwwtd_get_data_uwwtp($filter['filter']);
 
     uwwtd_filter_data($filter, $data);
 //     dsm($data);
@@ -3058,7 +3218,26 @@ function uwwtd_page_uwwtps_treatment()
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
     }
+	foreach($data as $art17){
+		if(isset($art17['field_article17_value_format']) && ($art17['field_article17_value_format']== 'Yes')){
+				$exists[] = array('Yes' => $art17['field_article17_nid']);
+				break;
+		}else{
+			$exists[] = array('No' => "");
+		}
+	}
 //     dsm($header);
+	foreach($exists as $exist){
+		 if(array_key_exists('Yes', $exist)){
+			 $art17 = "Yes";
+			 break;
+		}elseif(!isset($filter['filter']['field_article17_value_art'])){
+			 $art17 = "No";
+		}
+	 }
+	  if($art17 == "No"){
+		  unset($header[9]);
+	  }
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'], $data);
 
 
@@ -3131,19 +3310,36 @@ function uwwtd_page_uwwtps_treatment()
 //     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
-        $rows[] = array('data' => array(
-                                        //$row['title'],
-                                        l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
-                                        $row['field_inspireidlocalid_value'],
-                                        $row['field_uwwloadenteringuwwtp_value_format'],
-                                        $row['field_regionnuts_value'],
-                                        $row['field_uwwprimarytreatment_value_format'],
-                                        $row['field_uwwsecondarytreatment_value_format'],
-                                        $row['field_uwwnremoval_value_format'],
-                                        $row['field_uwwpremoval_value_format'],
-                                        $row['field_uwwspecification_value'],
-                                    ));
-    }
+// dsm($header[9]);
+		if(isset($header[9]) && ($header[9]['field'] == 'field_article17_value')){
+			$rows[] = array('data' => array(
+				//$row['title'],
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_uwwprimarytreatment_value_format'],
+				$row['field_uwwsecondarytreatment_value_format'],
+				$row['field_uwwnremoval_value_format'],
+				$row['field_uwwpremoval_value_format'],
+				$row['field_uwwspecification_value'],
+				$row['field_article17_value_format'],
+			));
+		}else{
+			$rows[] = array('data' => array(
+				//$row['title'],
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_uwwprimarytreatment_value_format'],
+				$row['field_uwwsecondarytreatment_value_format'],
+				$row['field_uwwnremoval_value_format'],
+				$row['field_uwwpremoval_value_format'],
+				$row['field_uwwspecification_value'],
+			));
+		}
+	}
 
     $features['uwwtp_treatment'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
 //     dsm($features);
@@ -3558,23 +3754,23 @@ function uwwtd_page_uwwtps_pressure()
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
         $rows[] = array('data' => array(
-                                        //$row['title'],
-                                        l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
-                                        $row['field_inspireidlocalid_value'],
-                                        $row['field_uwwloadenteringuwwtp_value_format'],
-//                                         $row['field_regionnuts_value'],
-//                                         $row['field_uwwprimarytreatment_value_format'],
-//                                         $row['field_uwwsecondarytreatment_value_format'],
-//                                         $row['field_uwwnremoval_value_format'],
-//                                         $row['field_uwwpremoval_value_format'],
-//                                         $row['field_uwwspecification_value'],
+			//$row['title'],
+			l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+			$row['field_inspireidlocalid_value'],
+			$row['field_uwwloadenteringuwwtp_value_format'],
+			// $row['field_regionnuts_value'],
+			// $row['field_uwwprimarytreatment_value_format'],
+			// $row['field_uwwsecondarytreatment_value_format'],
+			// $row['field_uwwnremoval_value_format'],
+			// $row['field_uwwpremoval_value_format'],
+			// $row['field_uwwspecification_value'],
 
-                                        $row['field_uwwboddischarge_value_format'],
-                                        $row['field_uwwcoddischarge_value_format'],
-                                        $row['field_uwwndischarge_value_format'],
-                                        $row['field_uwwpdischarge_value_format'],
+			$row['field_uwwboddischarge_value_format'],
+			$row['field_uwwcoddischarge_value_format'],
+			$row['field_uwwndischarge_value_format'],
+			$row['field_uwwpdischarge_value_format'],
 
-                                    ));
+		));
     }
 //     dsm($data);
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
@@ -3889,21 +4085,36 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //     dsm($filter);
 
     // dsm($listyear);
-    //     return '';
-    $list_field = array(
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
-        'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_aggcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-        'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-        'field_aggart4compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart4compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-        'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-        'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-    );
+	 //     return '';
+	$data = uwwtd_get_data_agglomeration($filter['filter']);
+   foreach($data as $art){
+	  if(isset($art['field_article17_nid']) || ($art['field_article17_nid']!= '')){
+		    $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart4compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart4compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_article17_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_article17_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);
+	   }else{
+		   $list_field = array(
+				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_aggcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart4compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart4compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				);
+	   }
+   }
 
     $form = uwwtd_filter_form($list_field, $filter);
 
-    $data = uwwtd_get_data_agglomeration($filter['filter']);
-//     dsm($data);
+    
 //     dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force2000 = array();
@@ -3911,8 +4122,6 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
     uwwtd_filter_data($filter, $data, $filter_force2000);
 //     uwwtd_filter_data($filter, $data);
-//     dsm($data);
-
     $header = array();
     $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $name) {
@@ -3929,9 +4138,27 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 
         $header_export[] = $name;
     }
+	foreach($data as $art17){
+		if(isset($art17['field_article17_value_format']) && ($art17['field_article17_value_format']== 'Yes')){
+			$exists[] = array('Yes' => $art17['field_article17_nid']);
+			break;
+		}else{
+			$exists[] = array('No' => "");
+		}
+	}
+	foreach($exists as $exist){
+		 if(array_key_exists('Yes', $exist)){
+			 $art17 = "Yes";
+			 break;
+		}elseif(!isset($filter['filter']['field_article17_value_art'])){
+			 $art17 = "No";
+		}
+	 }
+	  if($art17 == "No"){
+		  unset($header[9]);
+	  }
 //     $header[] = $header[0]; //todo delete
 //     $header[] = $header[0]; //todo delete
-//     dsm($header);
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration'], $data);
 //     dsm($data);
 
@@ -4000,20 +4227,41 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //         $row['field_aggart4compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']];
 //         $row['field_aggart5compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']];
 //         $row['field_aggart6compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']];
-        $rows[] = array('data' => array(
-                                        //$row['title'],
-                                        ($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-                                        $row['field_inspireidlocalid_value'],
-                                        $row['field_agggenerated_value_format'],
-                                        $row['field_regionnuts_value'],
-                                        $row['field_aggcompliance_value_format'],
-                                        $row['field_aggart3compliance_value_format'],
-                                        $row['field_aggart4compliance_value_format'],
-                                        $row['field_aggart5compliance_value_format'],
-                                        $row['field_aggart6compliance_value_format'],
-//                                         $row['field_aggart6compliance_value_format'],//todo delete
-//                                         $row['field_aggart6compliance_value_format'],//todo delete
-                                    ));
+
+		if(isset($header[9]) && ($header[9]['field'] == 'field_article17_value')){
+			$rows[] = array('data' => array(
+				//$row['title'],
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_agggenerated_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_aggcompliance_value_format'],
+				$row['field_aggart3compliance_value_format'],
+				$row['field_aggart4compliance_value_format'],
+				$row['field_aggart5compliance_value_format'],
+				$row['field_aggart6compliance_value_format'],
+				// $row['field_aggart6compliance_value_format'],//todo delete
+				// $row['field_aggart6compliance_value_format'],//todo delete
+				$row['field_article17_value_format'],
+			));
+		}else{
+			 $rows[] = array('data' => array(
+				//$row['title'],
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_agggenerated_value_format'],
+				$row['field_regionnuts_value'],
+				$row['field_aggcompliance_value_format'],
+				$row['field_aggart3compliance_value_format'],
+				$row['field_aggart4compliance_value_format'],
+				$row['field_aggart5compliance_value_format'],
+				$row['field_aggart6compliance_value_format'],
+				// $row['field_aggart6compliance_value_format'],//todo delete
+				// $row['field_aggart6compliance_value_format'],//todo delete
+				
+			));
+		}
+	  
     }
 
     //here export data and exit
