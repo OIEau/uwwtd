@@ -547,15 +547,13 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 		$filename .= ".csv";
 		$fid = $newFile->fid;
 		if(isset($data['ID of the agglomeration'])) {
-			$siteId = $annee.'_'.uwwtd_check_text($data['ID of the agglomeration']);
+			$siteId = $annee.'_agg_'.uwwtd_check_text($data['ID of the agglomeration']);
 		}
 		else{
-			$siteId = $annee.'_'.uwwtd_check_text($data['ID of the UWWTP']);
+			$siteId = $annee.'_uww_'.uwwtd_check_text($data['ID of the UWWTP']);
 		}
-
 		// Check if id exists
 		$exists = uwwtd_check_exist($siteId);
-
 		// If the element exists
 		if($exists != false){
 
