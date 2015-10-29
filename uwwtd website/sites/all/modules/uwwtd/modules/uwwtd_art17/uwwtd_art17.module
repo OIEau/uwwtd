@@ -560,12 +560,14 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			// load the exisiting element
 			$element = node_load($exists);
 			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
-
-			// Create new article 17 node
-			$art = new StdClass();
-			$art->type = 'article_17';
-			$art->title = $art17_title;
-
+			if(isset($element->field_article17['und'][0]['nid']) && $element->field_article17['und'][0]['nid']!= ""){
+				$art = node_load($element->field_article17['und'][0]['nid']);
+			}else{
+				// Create new article 17 node
+				$art = new StdClass();
+				$art->type = 'article_17';
+				$art->title = $art17_title;
+			}
 			// Article 17 mapping for UWWTP
 			if(isset($data['Identified reason(s) for non compliance']) && !empty($data['Identified reason(s) for non compliance'])) $art->field_art_17_reason['und'][0]['value'] = $data['Identified reason(s) for non compliance'];
 			if(isset($data['Measure(s) to reach compliance needed for UWWTP']) && !empty($data['Measure(s) to reach compliance needed for UWWTP'])) $art->field_art_17_reason_uwwtp['und'][0]['value'] = $data['Measure(s) to reach compliance needed for UWWTP'];
@@ -580,6 +582,7 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			if(isset($data['Name of EU fund planned to be used (if any)']) && !empty($data['Name of EU fund planned to be used (if any)'])) $art->field_art_17_eu_fund['und'][0]['value'] = $data['Name of EU fund planned to be used (if any)'];
 			if(isset($data['Amount of (planned) EU funding needed']) && !empty($data['Amount of (planned) EU funding needed'])) $art->field_art_17_eu_fund_amount['und'][0]['value'] = $data['Amount of (planned) EU funding needed'];
 			if(isset($data['Any relevant comment on UWWTP']) && !empty($data['Any relevant comment on UWWTP'])) $art->field_art_17_relative_comments['und'][0]['value'] = $data['Any relevant comment on UWWTP'];
+			$art->field_anneedata['und'][0]['value'] = $annee;
 
 			// Article 17 mapping for Agglomerations
 			if(isset($data['Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)']) && !empty($data['Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)'])) $art->field_art_17_mesures_forseen['und'][0]['value'] = $data['Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)'];
@@ -590,6 +593,7 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			if(isset($data['Name of EU fund planned to be used to complete the collecting system or IAS (if any)']) && !empty($data['Name of EU fund planned to be used to complete the collecting system or IAS (if any)'])) $art->field_art_17_eu_fund['und'][0]['value'] = $data['Name of EU fund planned to be used to complete the collecting system or IAS (if any)'];
 			if(isset($data['Amount of (planned) EU funds likely to be requested to complete the collecting system or IAS (if any)']) && !empty($data['Amount of (planned) EU funds likely to be requested to complete the collecting system or IAS (if any)'])) $art->field_art_17_eu_fund_amount['und'][0]['value'] = $data['Amount of (planned) EU funds likely to be requested to complete the collecting system or IAS (if any)'];
 			if(isset($data['Any relevant comment on collecting system or IAS']) && !empty($data['Any relevant comment on collecting system or IAS'])) $art->field_art_17_relative_comments['und'][0]['value'] = $data['Any relevant comment on collecting system or IAS'];
+			$art->field_anneedata['und'][0]['value'] = $annee;
 
 			// Article 17 link to element
 			if($element->type == 'agglomeration'){
@@ -598,13 +602,21 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			else{
 				$art->field_art_17_uwwtp['und'][0]['nid'] = $element->nid;
 			}
-
+			// dsm($art);
+			
 			// Save the article 17 element
 			node_save($art);
 
 			// Link element tot Article 17
 			$element->field_article17['und'][0]['nid'] = $art->nid;
 
+			// $query = "INSERT INTO {field_data_field_anneedata} VALUES ('node', $element->type, 0, $art->nid, $art->nid, $element->language, 0, $annee)";
+			// $result = db_query($query);
+			// dsm($result);
+			
+			// (entity_type, bundle, deleted, entity_id, revision_id, language, delta,	field_anneedata_value )
+			
+			// dsm($element);
 			// Save the element
 			node_save($element);
 
