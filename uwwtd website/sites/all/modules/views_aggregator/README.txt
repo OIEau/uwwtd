@@ -93,6 +93,29 @@ There are no permissions or global module configurations.
 Views Aggregator Plus does not combine well with Views' native aggregation.
 So in the Advanced section (upper right) set "Use aggregation: No".
 
+Keep in mind that the process of grouping and aggregation as performed by this
+module is different from the Grouping option in Views. With Grouping in Views
+the total number of rows remains the same, but the rows are grouped in separate
+tables. With this module, the number of rows is reduced as they are grouped and
+collapsed, but the end result is always a single table.
+
+FUNCTION PARAMETERS
+-------------------
+Functions marked with an asterisk take an optional parameter.
+
+"Group and Compress" takes an optional keyword 'case-insensitive' (in English or
+in the translated language on your site) to perform grouping in a
+case-insensitive manner. The default is case-sensitive.
+
+"Average" takes an optional precision: the number of decimals to round to after
+calculating the average.
+
+"Range", "Tally members" and the two "Enumerate" functions use their parameter
+to specify the separator. The default is an HTML line-break, <br/>, for "Tally"
+and "Enumerate" and ' - ' for "Range".
+
+"Filter rows" and "Count" take a regular expression. This is explained below.
+
 REGEXPS
 -------
 Some aggregation functions, like "Filter rows" and "Count" take a regular
@@ -112,6 +135,8 @@ Ref: http://work.lauralemay.com/samples/perl.html (for PERL, but quite good)
 
 LIMITATIONS
 -----------
+o If an aggregation function result does not display correctly, try changing the
+  field formatter. For example use "Plain text", rather than "Default".
 o Views-style table grouping, whereby the original table is split into smaller
   ones, interferes with this plugin, so is not available.
 o When you have an aggregated View AND a normal View attachment on the same
