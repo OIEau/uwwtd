@@ -19,8 +19,19 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    */
   public function option_definition() {
     $options = parent::option_definition();
-    $options['totals_per_page'] = array('default' => TRUE);
-    $options['totals_row_position'] = array('default' => array(1 => 0, 2 => 2));
+    $options['group_aggregation'] = array(
+      'contains' => array(
+        'grouping_field_class' => array('default' => ''),
+      )
+    );
+    $options['column_aggregation'] = array(
+      'contains' => array(
+        'totals_per_page' => array('default' => TRUE),
+        'totals_row_position' => array('default' => array(1 => 0, 2 => 2)),
+        'totals_row_class' => array('default' => ''),
+        'precision' => array('default' => 2),
+      )
+    );
     return $options;
   }
 
@@ -136,26 +147,58 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
         ),
       );
     }
-    $form['totals_per_page'] = array(
-      '#title' => t('Column aggregation row applies to:'),
-      '#type' => 'radios',
-      '#options' => array(
-        1 => t('the page shown, if a pager is enabled'),
-        0 => t('the entire result set, regardless of the page shown'),
-      ),
-      '#description' => t('If your View does not have a pager, then the two options are equivalent.'),
-      '#default_value' => $this->options['totals_per_page'],
+
+    $form['group_aggregation'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Group aggregation options'),
+      '#weight' => -2,
+    );
+    $form['group_aggregation']['grouping_field_class'] = array(
+      '#title' => t('Grouping field cell class'),
+      '#type' => 'textfield',
+      '#description' => t('The CSS class to provide on each cell of the column belonging to the field that is being <em>Grouped and compressed</em>.'),
+      '#default_value' => $this->options['group_aggregation']['grouping_field_class'],
+    );
+
+    $form['column_aggregation'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Column aggregation options'),
       '#weight' => -1,
     );
-    $form['totals_row_position'] = array(
+    $form['column_aggregation']['totals_row_position'] = array(
       '#title' => t('Column aggregation row position'),
       '#type' => 'checkboxes',
       '#options' => array(
         1 => t('in the table header'),
         2 => t('in the table footer'),
       ),
-      '#default_value' => $this->options['totals_row_position'],
-      '#weight' => -1,
+      '#default_value' => $this->options['column_aggregation']['totals_row_position'],
+    );
+    $form['column_aggregation']['totals_per_page'] = array(
+      '#title' => t('Column aggregation row applies to'),
+      '#type' => 'radios',
+      '#options' => array(
+        1 => t('the page shown, if a pager is enabled'),
+        0 => t('the entire result set'),
+      ),
+      '#description' => t('If your view does not have a pager, then the two options are equivalent.'),
+      '#default_value' => $this->options['column_aggregation']['totals_per_page'],
+      '#weight' => 1,
+    );
+    $form['column_aggregation']['precision'] = array(
+      '#title' => t('Column aggregation row default numeric precision'),
+      '#type' => 'textfield',
+      '#size' => 3,
+      '#description' => t('The number of decimals to use for column aggregations whose precisions are not defined elsewhere -- for example aggregations on Views PHP numbers.'),
+      '#default_value' => $this->options['column_aggregation']['precision'],
+      '#weight' => 2,
+    );
+    $form['column_aggregation']['totals_row_class'] = array(
+      '#title' => t('Column aggregation row class'),
+      '#type' => 'textfield',
+      '#description' => t('The CSS class to provide on the row containing the column aggregations.'),
+      '#default_value' => $this->options['column_aggregation']['totals_row_class'],
+      '#weight' => 3,
     );
   }
 
@@ -226,7 +269,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     }
     $functions = $this->collect_aggregation_functions();
 
-    $show_global_totals_with_pager = empty($this->options['totals_per_page']) && !empty($this->view->total_rows);
+    $show_global_totals_with_pager = empty($this->options['column_aggregation']['totals_per_page']) && !empty($this->view->total_rows);
 
     if ($show_global_totals_with_pager) {
       $view_without_pager = $this->execute_view_without_pager($this->view, $this->view->current_display);
@@ -301,8 +344,8 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     $field_handlers = $this->view->field;
     // Find the one column to group by and execute the grouping.
     foreach ($this->options['info'] as $field_name => $options) {
-      if (!empty($options['has_aggr']) && in_array('views_aggregator_group_and_compress', $options['aggr'])) {
-        $groups = views_aggregator_group_and_compress($this->view->result, $field_handlers[$field_name]);
+      if (!empty($options['has_aggr']) && in_array('views_aggregator_group_and_compress', $options['aggr'], FALSE)) {
+        $groups = views_aggregator_group_and_compress($this->view->result, $field_handlers[$field_name], $options['aggr_par']);
         break;
       }
     }
@@ -419,7 +462,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
       // Bit of a hack for "Webform submission data: Value(...)" and
       // "Global: Math expression" fields... Always pick up the rendered fields,
       // as it seems that's all we can get!
-      if ($render || is_a($field_handler, 'webform_handler_field_submission_data')) {
+      if ($render || is_a($field_handler, 'webform_handler_field_submission_data') || is_a($field_handler, 'views_php_handler_field')) {
         return $this->rendered_fields[$row_num][$field_name];
       }
       if (is_a($field_handler, 'views_handler_field_math')) {
@@ -437,7 +480,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
   /**
    * Returns the raw, unrendered result at the intersection of column and row.
    *
-   * Should normally not be called, especially not for Math Expr. fields.
+   * Should normally not be called, especially not for Math Expr. or PHP fields.
    *
    * @param object $field_handler
    *   The handler associated with the result column being requested.
@@ -450,17 +493,20 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    *   the raw contents of the cell
    */
   private function get_cell_raw($field_handler, $result_row, $compressed = TRUE) {
-    // If the field_handler is views_handler_field_field, get_value() may start
-    // with cloning the entity pointed to by _field_data, most commonly:
-    // $result_row->_field_data['nid']['entity']
-    $value = $field_handler->get_value($result_row);
-    if (!isset($value)) {
-      // This may happen with a $field_handler like views_php_handler_field that
-      // doesn't have its value available until after rendering. Render it here.
-      $value = $field_handler->render($result_row);
+    
+    $field_name = 'field_' . $field_handler->options['id'];
+    if (isset($result_row->$field_name)) {
+      $value = reset($result_row->$field_name);
+      $value = isset($value['raw']) ? $value['raw'] : $value;
     }
-    // get_value($result_row) may produce values like $value[0]['tid'] == 37
-    // or may have multiple subvalues like AddressFields:
+    elseif (isset($result_row->{$field_handler->field_alias})) {
+      // nid, node_title etc.
+      $value = $result_row->{$field_handler->field_alias};
+    }
+    else {
+      return '';
+    }
+    // Deal with multiple subvalues like AddressFields:
     // $value[0]['country'] == 'AU'
     // $value[0]['postal_code'] = '3040' etc.
     //
@@ -517,10 +563,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
       $rendered_value = $new_values;
     }
     if ($rendered_value === FALSE && !$is_webform_value) {
-      // Get here for Views PHP fields and failed other fields, e.g. Geofield.
-      // Force setting of the result row cell, even if it doesn't exist.
       $rendered_value = is_array($new_values) ? implode($separator, $new_values) : $new_values;
-      $field_handler->view->result[$row_num]->{$field_handler->field_alias} = $rendered_value;
     }
     return $this->rendered_fields[$row_num][$field_name] = $rendered_value;
   }
@@ -551,8 +594,11 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     // require a different approach using format_numeric().
     $rendered_values = array();
     foreach ($new_values as $new_value) {
-      if (is_a($field_handler, 'views_handler_field_field')) {
+      if ($this->is_standard_field($field_handler)) {
         $rendered_values[] = $this->render_from_raw($field_handler, $row_num, $new_value);
+      }
+      elseif ($this->is_commerce_currency_amount($field_handler)) {
+        $rendered_values[] = $this->render_from_raw_scalar($field_handler, $row_num, $new_value);
       }
       else {
         // If $new_value is not a number, this tends to return it verbatim.
@@ -561,6 +607,53 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     }
     $rendered_value = implode(empty($separator) ? ' - ' : $separator, $rendered_values);
     return is_array($rendered_value) ? drupal_render($rendered_value) : $rendered_value;
+  }
+
+  /**
+   * Returns whether the supplied field is a standard Views field.
+   *
+   * @param object $field_handler
+   *   The views_handler_field_field object belonging to the View result field
+   *
+   * @return bool
+   */
+  protected function is_standard_field($field_handler) {
+    return is_a($field_handler, 'views_handler_field_field');
+  }
+  
+  protected function is_commerce_currency_amount($field_handler) {
+    return !empty($field_handler->aliases['currency_code']);
+  }
+
+  /**
+   * Render a Commerce amount passed in cents, formatted with currency.
+   *
+   * The field will be rendered with appropriate CSS classes, without label.
+   *
+   * @param object $field_handler
+   *   The views_handler_field_field object belonging to the View result field
+   * @param int $row_num
+   *   The view result row number to change; use NULL if you do not wish to
+   *   affect the view but just render the raw_value.
+   * @param int $raw_value
+   *   Amount in cents
+   *   If NULL the row value of the field is re-rendered using its current
+   *   (raw) value.
+   */
+  protected function render_from_raw_scalar($field_handler, $row_num, $raw_value) {
+    $affect_view = isset($row_num);
+    $row_num = (int) $row_num;
+    $row = &$field_handler->view->result[$row_num];
+    if (isset($raw_value)) {
+      $field_alias = $field_handler->field_alias;
+      $orig_value = $row->$field_alias;
+      $row->$field_alias = $raw_value;
+    }
+    $rendered_value = $field_handler->render($row);
+    if (!$affect_view && isset($orig_value)) {
+      $row->$field_alias = $orig_value;
+    }
+    return $rendered_value;
   }
 
   /**
@@ -589,7 +682,8 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     $new_values = is_array($new_values) ? $new_values : array($new_values);
     foreach ($new_values as $new_value) {
       $submission->data[$cid][$row_num] = $new_value;
-      $rendered_values[] = $field_handler->advanced_render($result_row);
+      $rendered = trim($field_handler->advanced_render($result_row));
+      $rendered_values[] = empty($rendered) ? $new_value : $rendered;
     }
     $rendered_value = implode(empty($separator) ? ' - ' : $separator, $rendered_values);
     return is_array($rendered_value) ? drupal_render($rendered_value) : $rendered_value;
@@ -618,6 +712,14 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
         $value .= $field_handler->options['decimal'] . substr($remainder, 2);
       }
     }
+    elseif (is_float($raw_value)) {
+      $precision = isset($this->options['column_aggregation']['precision'])
+        ? (int) $this->options['column_aggregation']['precision']
+        : (int) variable_get('views_aggregator_def_precision', 2);
+      $decimal = variable_get('views_aggregator_def_decimal'); // '.'
+      $separator = variable_get('views_aggregator_def_separator'); // ','
+      $value = number_format($raw_value, $precision, $decimal, $separator);
+    }
     else {
       $value = $raw_value;
     }
@@ -642,9 +744,6 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    *
    * The field will be rendered with appropriate CSS classes, without label.
    *
-   * NB: This is messy code. The lengths we have to go through for this are
-   * ridiculous. Patches welcome!
-   *
    * @param object $field_handler
    *   The views_handler_field_field object belonging to the View result field
    * @param int $row_num
@@ -652,14 +751,23 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    *   $raw_value outside the context of a View, without affecting any rows.
    * @param mixed $raw_value
    *   Compound or simple value. 
-   *   If NULL the row value of the field field is re-rendered using its
-   *   current (raw) value.
+   *   If NULL the row value of the field is re-rendered using its current
+   *   (raw) value.
    *
    * @return string
    *   The rendered value or FALSE, if the type of field is not supported.
+   *
+   * NB: This is messy code. The lengths we have to go through for this are
+   * ridiculous. Patches welcome!
+   *
+   * The way it currently works is to set the desired $raw_value on the
+   * associated entity and then render it via
+   *   set_items(), when a row_num is provided to write the value to
+   *   field_view_field(), otherwise
+   * set_items() internally also calls field_view_field()
    */
   protected function render_from_raw($field_handler, $row_num = NULL, $raw_value = NULL) {
-    $field_name = $field_handler->options['id'];
+    $field_name = $real_field_name = $field_handler->options['id'];
     $field_alias = $field_handler->field_alias;
     $row = isset($row_num) ? $field_handler->view->result[$row_num] : reset($field_handler->view->result);
     $affect_view = isset($row_num);
@@ -668,8 +776,14 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
       // This happens for ViewsPHP fields and for Math Expressions.
       return !$row || $affect_view ? FALSE : (isset($raw_value) ? $raw_value : '?');
     }
+    // Note that when a 2nd copy of a field is used in the View, e.g.
+    // field_price_1, we refer back to the base field name, i.e. field_price
+    $last_underscore = strrpos($real_field_name, '_');
+    if ((int)drupal_substr($real_field_name, $last_underscore + 1)) {
+      $field_name = drupal_substr($real_field_name, 0, $last_underscore);
+    }
     $_field_data = $row->_field_data[$field_alias];
-    if (isset($_field_data['entity']->{$field_name}) && is_scalar($_field_data['entity']->{$field_name})) {
+    if ($this->has_no_suitable_renderer($_field_data, $field_name)) {
       // E.g. when the $field_handler refers to a node property (rather than
       // a field) that does not have a renderer.
       return $affect_view ? ($_field_data['entity']->{$field_name} = $raw_value) : $raw_value;
@@ -695,25 +809,28 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
           $key = key($entity->{$field_name}[$lang][0]);
           // Cannot override 'tid' with non-numeric value. But like 'value',
           // 'tid' may be set in case of min, max, most frequent etc.
-          if ($affect_view && $key != 'value' && !($key == 'tid' && is_numeric($raw_value))) {
+          // 'amount' is to allow the setting of Drupal Commerce prices.
+          if ($affect_view && $key != 'value' && $key != 'amount' && !($key == 'tid' && is_numeric($raw_value))) {
             return FALSE;
           }
         }
         $entity->{$field_name}[$lang][0][$key] = $raw_value;
       }
       if ($affect_view) {
-        // Next employ set_items() to re-render the $entity updated above,
-        // placing both the 'raw' and 'rendered' versions in field_...[].
-        // set_items() calls field_views_field().
-        $row->{'field_' . $field_name} = $field_handler->set_items($row, $row_num);
-        // Now set the current value back in case we have multiple displays, all
-        // drawing from the same entity.
+        // Next employ set_items() to re-render the $entity updated above.
+        // set_items() calls field_view_field() to render the value, applying
+        // rounding etc.
+        // It returns an array with raw and rendered components.
+        $raw_plus_rendered = $field_handler->set_items($row, $row_num);
+        // Now set the current value back on the entity in case we have multiple
+        // displays, all drawing from the same entity.
         if (isset($key)) {
           $entity->{$field_name}[$lang][0][$key] = $current_value;
         }
-        // The final step is to theme the rendered values.
-        // An alternative for the line below is:
-        // return $field_handler->advanced_render($row);
+        // The final step is to theme the rendered values. This includes
+        // token replacement and template theming.
+        // theme() calls $field_handler->advanced_render($row);
+        $row->{'field_' . $real_field_name} = $raw_plus_rendered;
         return $field_handler->theme($row);
       }
     }
@@ -726,6 +843,13 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     );
     $render_array = field_view_field($entity_type, $entity, $field_name, $display, $lang);
     return drupal_render($render_array);
+  }
+
+  protected function has_no_suitable_renderer($field_data, $field_name) {
+    if (!isset($field_data['entity']->{$field_name})) {
+      return TRUE;
+    }
+    return is_scalar($field_data['entity']->{$field_name});
   }
 
   /**
@@ -795,9 +919,10 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     }
     $aggr_functions = $this->options['info'][$field_name][$is_column ? 'aggr_column' : 'aggr'];
     $aggr_function = is_array($aggr_functions) ? end($aggr_functions) : $aggr_functions;
-    $dont_render_functions = array('views_aggregator_count', 'views_aggregator_enumerate', 'views_aggregator_replace', 'views_aggregator_tally');
-
-    return !in_array($aggr_function, $dont_render_functions);
+    $aggr_function_info = views_aggregator_get_aggregation_functions_info($aggr_function);
+    
+    // Aggregation functions are considered renderable unless set to FALSE.
+    return !isset($aggr_function_info['is_renderable']) || !empty($aggr_function_info['is_renderable']);
   }
 
   /**
@@ -843,9 +968,10 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     // $this->pre_render().
     // This is here predominantly to avoid notices from ViewsPHP, but also
     // makes normal column sorting more efficient by not adding any unnecessary
-    // WHERE-clauses.
-    if (!is_a($this->view->field[$sort], 'views_handler_field_math') &&
-      empty($this->options['info'][$sort]['has_aggr'])) {
+    // WHERE-clauses, if paging is OFF.
+    // @todo Refine this logic
+    if (!is_a($this->view->field[$sort], 'views_handler_field_math')
+      /* && empty($this->options['info'][$sort]['has_aggr'])*/) {
       $this->view->field[$sort]->click_sort($this->order);
     }
   }
@@ -859,7 +985,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    *   The second aggregated group of result rows.
    *
    * @return int
-   *   The compare code indicating whether $row2 is smaller than (-1), equal
+   *   The compare code indicating whether $row1 is smaller than (-1), equal
    *   to (0) or greater than (1) $row2.
    */
   protected function compare_result_rows($row1, $row2) {
@@ -883,6 +1009,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
       ($field_type == 'taxonomy_term_reference') ||
       is_a($field_handler, 'views_php_handler_field');
 
+    // Get the cells from the raw or rendered fields.
     // Note that raw data may contain HTML tags too, so always strip.
     $cell1 = strip_tags($this->get_cell($field_handler, $row1->num, $compare_rendered));
     $cell2 = strip_tags($this->get_cell($field_handler, $row2->num, $compare_rendered));
@@ -893,7 +1020,7 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
     }
     else {
       // Compare numerically, i.e. "20 km" comes after "9.5 km".
-      // The double cast causes a readu up to the first non-number related char.
+      // The double cast causes a read up to the first non-number related char.
       $compare = (double)$cell1 < (double)$cell2 ? -1 : 1;
     }
     return ($this->order == 'asc') ? $compare : -$compare;
@@ -916,16 +1043,22 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
    *   $view->style_plugin->rendered_fields
    */
   protected function execute_view_without_pager($view_with_pager, $display_id = NULL) {
-    // This call exports the Views configuration, without any results attached.
-    // We're doing it this way, because none of the below work after clone_view().
-    // $view_without_pager->display['default']->handler->options['pager']['type'] = 'none';
-    // $view_without_pager->display[$display_id]->handler->options['pager']['type'] = 'none';
-    // $view_without_pager->display_handler->default_display->options['pager']['type'] = 'none';
-    // The code below is based on view::copy()
+    // Apply the filters so the results reflect accurately.
+    $this->apply_exposed_filters($view_with_pager);
+
+    $clone = $view_with_pager->clone_view();
+    $id = empty($clone->display[$display_id]->display_options['pager']) ? 'default' : $display_id;
+    $clone->display[$id]->display_options['pager']['type'] = 'none';
+    
+    $clone->is_temp_views_aggregator = TRUE;
+    $clone->execute($display_id);
+    return $clone;
+/*
+    //  Alternative code below is based on view::copy()
     $code = $view_with_pager->export();
     $code_without_pagers = str_replace(
       "display_options['pager']['type'] = ",
-      "display_options['pager']['type'] = 'none'; //", $code/*, $num_pagers*/);
+      "display_options['pager']['type'] = 'none'; //", $code);
 
     // This statement creates a View object by the name of $view.
     eval($code_without_pagers);
@@ -938,10 +1071,24 @@ class views_aggregator_plugin_style_table extends views_plugin_style_table {
 
     // As this is a copy, let's keep caching behaviour the same as the original.
 
-    // Execute the display and render it.
-    $view->render($display_id);
-
+    // Execute the display.
+    $view->execute($display_id); // may have to be: $view->render($display_id);
     return $view;
+*/
+  }
+
+  /**
+   * Apply the exposed filters to the view so we get the correct result set.
+   *
+   * @param object $view
+   *   A view object.
+   */
+  protected function apply_exposed_filters(&$view) {
+    $filters = $view->display_handler->display->handler->handlers['filter'];
+    // Loop through the filters and UNexpose them.
+    foreach ($filters as $filter_handler) {
+      $filter_handler->options['exposed'] = FALSE;
+    }
   }
 
 }

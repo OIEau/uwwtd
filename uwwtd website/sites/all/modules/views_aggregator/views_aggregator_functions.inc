@@ -27,24 +27,32 @@ function views_aggregator_views_aggregation_functions_info() {
     /* Regular aggregation functions start here, in alphabetical order */
 
     'views_aggregator_average' => array(
-      'group' => t('Average'),
-      'column' => t('Average'),
+      'group' => t('Average *'),
+      'column' => t('Average *'),
     ),
     'views_aggregator_count' => array(
       'group' => t('Count (having regexp) *'),
       'column' => t('Count (having regexp) *'),
+      'is_renderable' => FALSE,
     ),
     'views_aggregator_first' => array(
       'group' => t('Display first member'),
       'column' => NULL,
     ),
-    'views_aggregator_enumerate' => array(
+    'views_aggregator_enumerate_raw' => array(
       'group' => t('Enumerate *'),
       'column' => t('Enumerate *'),
+      'is_renderable' => FALSE,
+    ),
+    'views_aggregator_enumerate' => array(
+      'group' => t('Enumerate (sort, no dupl.) *'),
+      'column' => t('Enumerate (sort, no dupl.) *'),
+      'is_renderable' => FALSE,
     ),
     'views_aggregator_replace' => array(
       'group' => t('Label (enter below) *'),
       'column' => t('Label (enter below) *'),
+      'is_renderable' => FALSE,
     ),
     'views_aggregator_maximum' => array(
       'group' => t('Maximum'),
@@ -69,6 +77,7 @@ function views_aggregator_views_aggregation_functions_info() {
     'views_aggregator_tally' => array(
       'group' => t('Tally members *'),
       'column' => NULL, // @todo t('Tally members *'),
+      'is_renderable' => FALSE,
     ),
     // This one is probably best last, because of token replacement.
     'views_aggregator_expression' => array(
@@ -99,7 +108,7 @@ function views_aggregator_row_filter($views_plugin_style, $field_handler, $regex
     return;
   }
   if (preg_match('/[a-zA-Z0-9_]+/', $regexp)) {
-    // Interprt omitted brace chars in the regexp as a verbatim text match.
+    // Interpret omitted brace chars in the regexp as a verbatim text match.
     $regexp = "/$regexp/";
   }
   foreach ($views_plugin_style->view->result as $num => $row) {
@@ -122,17 +131,52 @@ function views_aggregator_row_filter($views_plugin_style, $field_handler, $regex
  *   the result rows as they appear on the view object
  * @param object $field_handler
  *   the handler for the view column to group rows on
+ * @param string $case
+ *   whether group-inclusion is case-sensitive (the default)
  *
  * @return array
  *   an array of groups, keyed by group value first and row number second.
  */
-function views_aggregator_group_and_compress($view_results, $field_handler) {
+function views_aggregator_group_and_compress($view_results, $field_handler, $case = 'case-sensitive') {
   $groups = array();
+  $is_ci = (strcasecmp($case, 'case-insensitive') === 0) || ($case == t('case-insensitive'));
   foreach ($view_results as $num => $row) {
     // Compression takes place on the rendered values. Two hyperlinks with the
     // same display texts but different hrefs will end up in different groups.
     $group_value = views_aggregator_get_cell($field_handler, $num, TRUE);
-    $groups[$group_value][$num] = $row;
+    if ($is_ci) {
+      $is_set = FALSE;
+      foreach (array_keys($groups) as $existing_group) {
+        if (strcasecmp($group_value, $existing_group) === 0) {
+          $groups[$existing_group][$num] = $row;
+          $is_set = TRUE;
+          break;
+        }
+      }
+    }
+    if (empty($is_set)) {
+      $groups[$group_value][$num] = $row;
+    }
+  }
+  // Caution: experiment!
+  if (FALSE) {
+    // For each group remove cells that are identical to the the ones above
+    // them in the same group.
+    foreach ($groups as $group_value => &$rows) {
+      $first_row = NULL;
+      foreach ($rows as $num => &$row) {
+        if (!isset($first_row)) {
+          $first_row = $row;
+        }
+        else {
+          foreach ((array)$row as $field_name => $cell) {
+            if ($field_name != '_field_data' && $cell == $first_row->{$field_name}) {
+              unset($row->{$field_name});
+            }
+          }
+        }
+      }
+    }
   }
   return $groups;
 }
@@ -144,11 +188,15 @@ function views_aggregator_group_and_compress($view_results, $field_handler) {
  *   an array of groups of rows, each group indexed by group value
  * @param object $field_handler
  *   the handler for the view column to find the minimum in
+ * @param int $precision_group
+ *   the number of decimals, if specified
+ * @param int $precision_column
+ *   the number of decimals, if specified
  *
  * @return array
  *   an array of values, one for each group and one for the column.
  */
-function views_aggregator_average($groups, $field_handler) {
+function views_aggregator_average($groups, $field_handler, $precision_group, $precision_column) {
   $values = array();
   $sum_column = 0.0;
   $count_column = 0;
@@ -163,11 +211,13 @@ function views_aggregator_average($groups, $field_handler) {
         $count++;
       }
     }
-    $values[$group] = ($count == 0) ? 0.0 : $sum / $count;
+    $average = ($count == 0) ? 0.0 : $sum / $count;
+    $values[$group] = empty($precision_group) ? $average : number_format($average, $precision_group, '.', '');
     $sum_column += $sum;
     $count_column += $count;
   }
-  $values['column'] = ($count_column == 0) ? 0.0 : $sum_column / $count_column;
+  $average_column = ($count_column == 0) ? 0.0 : $sum_column / $count_column;
+  $values['column'] = empty($precision_column) ? $average_column : number_format($average_column, $precision_column, '.', '');
   return $values;
 }
 
@@ -212,6 +262,8 @@ function views_aggregator_count($groups, $field_handler, $group_regexp = NULL, $
 /**
  * Aggregates a field group as the enumeration of its members.
  *
+ * The enumeration is sorted "naturally" and duplicates are removed.
+ *
  * @param array $groups
  *   an array of groups of rows, each group indexed by group value
  * @param object $field_handler
@@ -225,6 +277,50 @@ function views_aggregator_count($groups, $field_handler, $group_regexp = NULL, $
  *   an array of values, one for each group.
  */
 function views_aggregator_enumerate($groups, $field_handler, $separator_group, $separator_column) {
+  return _views_aggregator_enumerate($groups, $field_handler, $separator_group, $separator_column, TRUE, FALSE);
+}
+
+/**
+ * Aggregates a field group as the enumeration of its members.
+ *
+ * The enumeration retains the orignal order and does not remove duplicates.
+ *
+ * @param array $groups
+ *   an array of groups of rows, each group indexed by group value
+ * @param object $field_handler
+ *   the handler for the view column to find members of the group
+ * @param string $separator_group
+ *   the separator to use in group enumerations, defaults to '<br/>'
+ * @param string $separator_column
+ *   the separator to use for the column enumeration, defaults to '<br/>'
+ *
+ * @return array
+ *   an array of values, one for each group.
+ */
+function views_aggregator_enumerate_raw($groups, $field_handler, $separator_group, $separator_column) {
+  return _views_aggregator_enumerate($groups, $field_handler, $separator_group, $separator_column, FALSE, TRUE);
+}
+
+/**
+ * Aggregates a field group as the enumeration of its members.
+ *
+ * @param array $groups
+ *   an array of groups of rows, each group indexed by group value
+ * @param object $field_handler
+ *   the handler for the view column to find members of the group
+ * @param string $separator_group
+ *   the separator to use in group enumerations, defaults to '<br/>'
+ * @param string $separator_column
+ *   the separator to use for the column enumeration, defaults to '<br/>'
+ * @param bool $sort
+ *   whether or not to sort the enumeration
+ * @param bool $allow_duplicates
+ *   whether or not to remoe duplicates from the enumeration
+ *
+ * @return array
+ *   an array of values, one for each group.
+ */
+function _views_aggregator_enumerate($groups, $field_handler, $separator_group, $separator_column, $sort = TRUE, $allow_duplicates = FALSE) {
   $separator_group = empty($separator_group) ? '<br/>' : $separator_group;
   $separator_column = empty($separator_column) ? '<br/>' : $separator_column;
   $values = array('column' => array());
@@ -233,10 +329,10 @@ function views_aggregator_enumerate($groups, $field_handler, $separator_group, $
     foreach ($rows as $num => $row) {
       $cell = trim(views_aggregator_get_cell($field_handler, $num, TRUE));
       if (!empty($cell)) {
-        if (!in_array($cell, $cell_values)) {
+        if ($allow_duplicates || !in_array($cell, $cell_values)) {
           $cell_values[] = $cell;
         }
-        if (!in_array($cell, $values['column'])) {
+        if ($allow_duplicates || !in_array($cell, $values['column'])) {
           $values['column'][] = $cell;
         }
       }
@@ -245,15 +341,20 @@ function views_aggregator_enumerate($groups, $field_handler, $separator_group, $
       // After grouping the fields in the group no longer belong to one
       // entity. Cannot easily support hyper-linking, so switch it off.
       unset($field_handler->options['link_to_node']);
-      @sort($cell_values, SORT_NATURAL | SORT_FLAG_CASE);
+      if ($sort) {
+        @sort($cell_values, SORT_NATURAL | SORT_FLAG_CASE);
+      }
     }
-    $values[$group] = implode($separator_group, $cell_values);
+    if ($group != 'column') {
+      $values[$group] = implode($separator_group, $cell_values);
+    }
   }
-  @sort($values['column'], SORT_NATURAL | SORT_FLAG_CASE);
+  if ($sort) {
+    @sort($values['column'], SORT_NATURAL | SORT_FLAG_CASE);
+  }
   $values['column'] = implode($separator_column, $values['column']);
   return $values;
 }
-
 /**
  * Aggregates a field in the column aggregation row as a math. expression.
  *
@@ -305,8 +406,15 @@ function views_aggregator_expression($groups, $field_handler, $group_exp = NULL,
  *   an empty array
  */
 function views_aggregator_first($groups, $field_handler) {
-  // This is the default operation anyway, so nothing to do.
-  return array();
+  // This is the default operation, so nothing to do, except for Webforms.
+  $values = array();
+  if (is_a($field_handler, 'webform_handler_field_submission_data')) {
+    foreach ($groups as $group => $rows) {
+      $values[$group] = views_aggregator_get_cell($field_handler, key($rows));
+    }
+    //$values['column'] = $values[key($groups)];
+  }
+  return $values;
 }
 
 /**
