@@ -1,4 +1,8 @@
 <?php
+
+require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
+require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+
 //==========FIX ME : add repcode foreach import batch
 // TODO : check if all liste agguwwliste are unset on update => otherwise duplicate can appear on the list ()
 //          field_uwwaggliste and field_uwwdcpliste 
@@ -66,10 +70,10 @@ $GLOBALS['uwwtd_value']['compliance'] = array(
 );
 //TODO add label for each value
 $GLOBALS['uwwtd_value']['rcatype'] = array(
-    '?' => 'CSA',
-    '?' => 'LSA', //Less Sensitive Area
-    '?' => 'NA',
-    '?' => 'SA',
+    'catchment_of_sensitive_area' => 'CSA',
+    'less_sensitive_area' => 'LSA', //Less Sensitive Area
+    'normal_area' => 'NA',
+    'sensitive_area' => 'SA',
     '?' => 'A58',
 );
 //$GLOBALS['uwwtd_value']['required']['appropriate']
@@ -111,36 +115,36 @@ function uwwtd_data_form($form, &$form_state){
 	if(isset($_SESSION['uwwtd_annee']))unset($_SESSION['uwwtd_annee']);
 
 	$uwwtd_year = date("Y");
-	$uwwtd_years = array(
-		'2000' => '2000',
-		'2001' => '2001', 
-		'2002' => '2002', 
-		'2003' => '2003', 
-		'2004' => '2004',
-		'2005' => '2005', 
-		'2006' => '2006', 
-		'2007' => '2007', 
-		'2008' => '2008', 
-		'2009' => '2009', 
-		'2010' => '2010', 
-		'2011' => '2011', 
-		'2012' => '2012', 
-		'2013' => '2013', 
-		'2014' => '2014', 
-		'2015' => '2015', 
-		'2016' => '2016', 
-		'2017' => '2017', 
-		'2018' => '2018', 
-		'2019' => '2019', 
-		'2020' => '2020'
-	);
+// 	$uwwtd_years = array(
+// 		'2000' => '2000',
+// 		'2001' => '2001', 
+// 		'2002' => '2002', 
+// 		'2003' => '2003', 
+// 		'2004' => '2004',
+// 		'2005' => '2005', 
+// 		'2006' => '2006', 
+// 		'2007' => '2007', 
+// 		'2008' => '2008', 
+// 		'2009' => '2009', 
+// 		'2010' => '2010', 
+// 		'2011' => '2011', 
+// 		'2012' => '2012', 
+// 		'2013' => '2013', 
+// 		'2014' => '2014', 
+// 		'2015' => '2015', 
+// 		'2016' => '2016', 
+// 		'2017' => '2017', 
+// 		'2018' => '2018', 
+// 		'2019' => '2019', 
+// 		'2020' => '2020'
+// 	);
 	
 	// definition du champ input de type select pour l'annee
 	$form['uwwtd_year'] = array(     
 		'#type' => 'select',
 		'#title' => t('Year'),
 		'#default_value' => $uwwtd_year,        
-		'#options' => $uwwtd_years,
+		'#options' => $GLOBALS['uwwtd']['uwwtd_years'],
 		'#weight' => 0,
 		'#required' => TRUE,
 	);
@@ -382,7 +386,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 		'operations' => array(),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_finished',
-		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
+		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
     //ReceivingAreas
     $imports  = array();
@@ -504,7 +508,9 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
    $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
    //rca_extra
    $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
-   $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee))); 
+   $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
+   $batch['operations'][]= array('uwwtd_import_data_var', array(array($annee)));
+    
 	batch_set($batch);
 	batch_process('data/import');
 }
@@ -664,7 +670,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if(uwwtd_check_bool($data['rcaParameterN'], $timestamp, $i, $node) !== false){
                 $node->field_rca_parameter_n['und'][0]['value'] = uwwtd_check_bool($data['rcaParameterN'], $timestamp, $i, $node);
             }
-        }
+        }                                
         else uwwtd_add_error(1, 0, 'No receiving area nitrogen parameter found.', $timestamp, $i, $node);
 
         //bool
@@ -3171,7 +3177,7 @@ function uwwtd_shapes_setup_batch($files, $annee){
 		),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_shapes_finished',
-		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
+		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
 
 	batch_set($batch);
@@ -3554,11 +3560,14 @@ function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
             array('uwwtd_update_cache_data', array(array($annee))),
             //replace by new algo in uwwtd_agglo_conformity_batch_process
 			//array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
+            array('uwwtd_conformity_var', array(array($annee))),
 		),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_conformity_finished',
-		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
+		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
+    
+    uwwtd_setup_register_batch($batch);
 
 	batch_set($batch);
 	batch_process('data/conformity');
@@ -4792,7 +4801,17 @@ function uwwtd_conformity_finished($success, $results, $operations) {
 			)
 		);
 	}
+    
 }
+
+function uwwtd_conformity_var($annee) {
+    variable_set('conformity_'.$annee, time());
+}
+
+function uwwtd_import_data_var($annee) {
+    variable_set('import_data_'.$annee, time());
+}
+
 
 
 ################################ FUNCTIONS ################################
@@ -4807,17 +4826,17 @@ function uwwtd_XYToDrupalPoint($x, $y, $epsg_orig, $epsg_dest = 4326){
 	return $wkt_wgs84;
 }
 
-function uwwtd_check_exist($siteId){
-
-	$id = '';
-
-	$results = db_query('SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value = :id', array(':id' => $siteId));
-
-	foreach($results as $result){
-		$id = $result->entity_id;
-	}
-	return $id;
-}
+// function uwwtd_check_exist($siteId){
+// 
+// 	$id = '';
+// 
+// 	$results = db_query('SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value = :id', array(':id' => $siteId));
+// 
+// 	foreach($results as $result){
+// 		$id = $result->entity_id;
+// 	}
+// 	return $id;
+// }
 
 function uwwtd_file_upload($file, $ext){
 	$path = $file->uri;
