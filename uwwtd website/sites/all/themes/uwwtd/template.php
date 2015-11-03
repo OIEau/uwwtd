@@ -980,10 +980,10 @@ function uwwtd_get_uww_graphic($node){
 	$output .= '<div class="agglomeration-graphic">
 	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
 	        <div class="graphic-title">';
-	        	$output .= '<a href="#">Aggs : '.count($reseau['agglos']).'</a>
+	        	$output .= '<a href="#">Agglomerations : '.count($reseau['agglos']).'</a>
 	        	<span class="aggs-list">';
 					foreach($reseau['agglos'] as $agglo){
-					          $output .= 'Agg : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
+					          $output .= 'Agglomeration : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
 					          (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
 					}
 
@@ -1198,6 +1198,7 @@ function uwwtd_get_uww_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
     	<ul>
     		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
@@ -1215,6 +1216,7 @@ function uwwtd_get_uww_graphic($node){
 			<li><span>OZONE</span> : Ozonation</li>
 			<li><span>SAND</span> : Sand filtration</li>
 			<li><span>O</span> : Other more stringent</li>
+			<li><span>DCP(S)</span> : Discharge point(s)</li>
 		</ul>
     </div>';
 
@@ -1516,11 +1518,13 @@ function uwwtd_get_agglo_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
     	<ul>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>O</span> : Other more stringent</li>
+			<li><span>DCP(S)</span> : Discharge point(s)</li>
     	</ul>
     </div>
   </div>';
@@ -1538,7 +1542,7 @@ function uwwtd_render_field_with_pe($field)
     return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
         <div class="field-label">'.$field['#title'].':&nbsp;</div>
         <div class="field-items">
-            <div class="field-item even">'.$field[0]['#markup']. $pe .'</div>
+            <div class="field-item even">'.uwwtd_format_decimal($field[0]['#markup']). $pe .'</div>
         </div>
     </div>';
 }
@@ -1642,7 +1646,7 @@ function uwwtd_stackedbar_uwwtpnode($node)
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
     );
-    dsm($aData);
+    // dsm($aData);
     $aColor['domain'] = array ('incoming', 'discharged');
     $aColor['range'] = array ('#74FFE0', '#C00000');
 
