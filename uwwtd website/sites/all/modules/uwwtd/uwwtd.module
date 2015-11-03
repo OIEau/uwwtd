@@ -87,6 +87,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
     'title'                           =>  t('Name'),
     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
+	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
     'field_regionnuts_value'          =>  t('Region (NUTS)'),
     'field_uwwcompliance_value'       =>  t('Compliance'),
     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
@@ -101,6 +102,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
     'title'                             =>  t('Name'),
     'field_inspireidlocalid_value'      =>  t('Identifier Code'),
     'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
+	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
     'field_regionnuts_value'            =>  t('Region (NUTS)'),
     'field_uwwprimarytreatment_value'   =>  t('Primary treatment'),
     'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
@@ -2246,7 +2248,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 		}
 	 }
 	  if($art17 == "No"){
-		  unset($header[10]);
+		  unset($header[11]);
 	  }
 
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp'], $data);
@@ -2286,13 +2288,14 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
-		if(isset($header[10]) && ($header[10]['field'] == 'field_article17_uwwtp_value')){
+		if(isset($header[11]) && ($header[11]['field'] == 'field_article17_uwwtp_value')){
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				//$row['title'],
 				($type_export != '' ? $titleV : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
@@ -2308,6 +2311,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
@@ -2699,7 +2703,7 @@ function uwwtd_page_uwwtps_treatment()
 		}
 	 }
 	  if($art17 == "No"){
-		  unset($header[9]);
+		  unset($header[10]);
 	  }
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'], $data);
 
@@ -2774,13 +2778,14 @@ function uwwtd_page_uwwtps_treatment()
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 // dsm($header[9]);
-		if(isset($header[9]) && ($header[9]['field'] == 'field_article17_uwwtp_value')){
+		if(isset($header[10]) && ($header[10]['field'] == 'field_article17_uwwtp_value')){
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				//$row['title'],
 				l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
 				$row['field_uwwprimarytreatment_value_format'],
 				$row['field_uwwsecondarytreatment_value_format'],
@@ -2795,6 +2800,7 @@ function uwwtd_page_uwwtps_treatment()
 				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
 				$row['field_uwwprimarytreatment_value_format'],
 				$row['field_uwwsecondarytreatment_value_format'],
