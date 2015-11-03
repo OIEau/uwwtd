@@ -44,7 +44,7 @@ function node_schema() {
       'title' => array(
         'description' => 'The title of this node, always treated as non-markup plain text.',
         'type' => 'varchar',
-        'length' => 1000,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -215,7 +215,7 @@ function node_schema() {
       'title' => array(
         'description' => 'The title of this version.',
         'type' => 'varchar',
-        'length' => 1000,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -931,6 +931,16 @@ function node_update_7013() {
  */
 function node_update_7014() {
   db_add_index('node', 'language', array('language'));
+}
+
+/**
+ * Enable node types that may have been erroneously disabled in Drupal 7.36.
+ */
+function node_update_7015() {
+  db_update('node_type')
+    ->fields(array('disabled' => 0))
+    ->condition('base', 'node_content')
+    ->execute();
 }
 
 /**

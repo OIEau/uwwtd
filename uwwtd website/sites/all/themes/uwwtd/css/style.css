@@ -280,7 +280,7 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #428bca;
+  color: #281c45;
   text-decoration: none;
 }
 a:hover,
@@ -2165,8 +2165,8 @@ fieldset[disabled] .btn-success.active {
 }
 .btn-info {
   color: #ffffff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
+  background-color: #281c45;
+  border-color: #281c45;
 }
 .btn-info:hover,
 .btn-info:focus,
@@ -3792,13 +3792,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 0;
   border-width: 1px 0 0;
 }
-.navbar-brand {
-  float: left;
-  padding: 15px 15px;
-  font-size: 18px;
-  line-height: 20px;
-  height: 50px;
-}
+
+
 .navbar-brand:hover,
 .navbar-brand:focus {
   text-decoration: none;
@@ -5999,12 +5994,9 @@ body #admin-menu .dropdown li {
   padding-left: 15px;
   padding-right: 15px;
 }
-@media screen and (min-width: 768px) {
   .navbar .logo {
-    margin-right: 0;
-    padding-left: 0;
+    display:none;
   }
-}
 ul.secondary {
   float: left;
 }
@@ -6823,13 +6815,15 @@ header.container {
 }
 
 .navbar-header {
-	background-color: #B6D68D;
+	/*background-color: #B6D68D;*/
+    background:transparent url("../images/banniere-ancienbleu.jpg") no-repeat;
+    height:80px;
 }
 
 .navbar-collapse .navbar-nav .menu-item--depth-1,
 .navbar-collapse .navbar-nav .menu-level--2,
 .navbar-collapse .navbar-nav .menu-level--3 {
-	background-color: #9AB678;
+	background-color: #281c60;
 }
 
 .navbar-header a,
@@ -6840,7 +6834,7 @@ header.container {
 .navbar-collapse .navbar-nav .menu-item--depth-1:hover,
 .navbar-collapse .navbar-nav .menu-item--depth-2:hover,
 .navbar-collapse .navbar-nav .menu-item--depth-3:hover {
-	background-color: #B6D68D !important;
+	background-color: #281c45 !important;
 }
 
 footer.container {

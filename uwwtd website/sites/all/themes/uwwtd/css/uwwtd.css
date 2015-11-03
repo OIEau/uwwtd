@@ -10,16 +10,26 @@ body{
 
 .navbar-header{
 	float: none;
+    padding-top:20px;
 }
 
 .navbar-collapse{
 	padding: 0;
 }
-
-div.navbar-header a.navbar-brand{
-	color:#50457B !important;
+.navbar-brand {
+  /*color:#281c60 !important;*/
+  font-size:32px;
+  height: 50px;
+  padding: 15px 15px;
+  margin-left:40px!important;
+  text-shadow:2px 2px #343d43;
 }
 
+div.olPopup .openlayers-tooltip-name a{
+    color:#2a6496;
+    font-size:1.5em;
+    font-weight:bold;
+}
 h2.block-title{
     font-size:14px;
     font-weight:bold;
@@ -71,7 +81,7 @@ footer{
 .region-footer{
 	padding-top: 15px;
 	padding-bottom:15px;
-	background-color: #487CBB;
+	background-color: #281c60;
 	/*border-width: 1px;
 	border-style: solid;
 	border-color: #e5e5e5;
