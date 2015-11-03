@@ -56,20 +56,54 @@ function uwwtd_page_stats_graphs(){
         		"generated" => $result['generated_sum'],
 		);
 
-}
+	}
 
+	$aData_uwwtd_load_ent_and_dis = array();
+
+	$results = uwwtd_stat_national_treatmentplant();
+	foreach ($results as $result){
+
+		$aData_uwwtd_load_ent_and_dis[] = array(
+				"type" => "BOD",
+				"entering" => $result['bodin_sum'],
+				"discharged" => $result['bodout_sum']
+		);
+		$aData_uwwtd_load_ent_and_dis[] = array(
+				"type" => "COD",
+				"entering" => $result['codin_sum'],
+				"discharged" => $result['codout_sum']
+		);
+		$aData_uwwtd_load_ent_and_dis[] = array(
+				"type" => "N",
+				"entering" => $result['nin_sum'],
+				"discharged" => $result['nout_sum']
+		);
+		$aData_uwwtd_load_ent_and_dis[] = array(
+				"type" => "P",
+				"entering" => $result['pin_sum'],
+				"discharged" => $result['pout_sum']
+		);
+
+
+	}
+	dsm($aData_uwwtd_load_ent_and_dis);
+	$aColor_uwwtd_load_ent_and_dis['domain'] = array ('entering', 'discharged');
+	$aColor_uwwtd_load_ent_and_dis['range'] = array ('#74FFE0', '#C00000');
 
 	$page .= '<fieldset><legend>Total generated load by compliance</legend><div id="graph_generatedByCompliance"/></fieldset>';
 	$page .= '<fieldset><legend>Total load entering by compliance</legend><div id="graph_loadenteringByCompliance"/></fieldset>';
 	$page .= '<fieldset><legend>Total load entering by treatment type</legend><div id="graph_loadenteringByTreatmenttype"/></fieldset>';
-	$page .= '<fieldset><legend>Total generated load by agglomeration</legend><div id="graph_generatedByAgglomeration"/></fieldset>';
+	$page .= '<fieldset><legend>Total generated load by agglomeration</legend><svg id="graph_generatedByAgglomeration"/></fieldset>';
+	$page .= '<fieldset><legend>Total load entering and discharged</legend><svg id="graph_load_ent_and_dis"/></fieldset>';
 	$page .= "
     <script>
     jQuery(document).ready(function(){
         display_piechart_custom(".json_encode($Data_uwwtd_stat_national_compliance).",'graph_generatedByCompliance','end');
         display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpC).",'graph_loadenteringByCompliance','middle');
         display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpT).",'graph_loadenteringByTreatmenttype','middle');
-        display_stackedbar_custom(".json_encode($aData_uwwtd_stat_national_generated_by_agglomeration).",'graph_generatedByAgglomeration');
+        stackedbar_nat_gen_load(".json_encode($aData_uwwtd_stat_national_generated_by_agglomeration).");
+        stackedbar_load_ent_and_dis(".json_encode($aData_uwwtd_load_ent_and_dis).','. json_encode($aColor_uwwtd_load_ent_and_dis).");
+
     });
     </script>
     ";
