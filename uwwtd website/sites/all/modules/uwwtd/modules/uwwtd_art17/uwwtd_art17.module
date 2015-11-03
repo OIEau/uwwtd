@@ -46,6 +46,12 @@ function uwwtd_art17_menu(){
 	return $items;
 }
 
+function uwwtd_art17_node_delete($node) {
+// dsm($node);
+  db_delete('mytable')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
 ################################ ART 17 PAGE ################################
 function uwwtd_art17_form($form, &$form_state){
 
