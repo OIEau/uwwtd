@@ -10,7 +10,7 @@ function uwwtd_art17_menu(){
 		//'access callback' => TRUE,
 		'access arguments' => array('Data-management access'),
 		'file' => 'data_center.inc',
-		'file path' => drupal_get_path('module', 'uwwtd')
+		'file path' => drupal_get_path('module', 'uwwtd').'/inc/'
 	);
 	$items['data/article17/import'] = array(
 		'title' => t('Article 17 import'),
@@ -20,7 +20,7 @@ function uwwtd_art17_menu(){
 		//'access callback' => TRUE,
 		'access arguments' => array('Data-management access'),
 		'file' => 'data_center.inc',
-		'file path' => drupal_get_path('module', 'uwwtd')
+		'file path' => drupal_get_path('module', 'uwwtd').'/inc/'
 	);
 	$items['data/article17/agglomeration/%'] = array(
 		'title' => t('Article 17 Agglomeration example'),
@@ -30,7 +30,7 @@ function uwwtd_art17_menu(){
 		//'access callback' => TRUE,
 		'access arguments' => array('Data-management access'),
 		'file' => 'data_center.inc',
-		'file path' => drupal_get_path('module', 'uwwtd')
+		'file path' => drupal_get_path('module', 'uwwtd').'/inc/'
 	); 
 	$items['data/article17/uwwtp/%'] = array(
 		'title' => t('Article 17 UWWTP example'),
@@ -40,7 +40,7 @@ function uwwtd_art17_menu(){
 		//'access callback' => TRUE,
 		'access arguments' => array('Data-management access'),
 		'file' => 'data_center.inc',
-		'file path' => drupal_get_path('module', 'uwwtd')
+		'file path' => drupal_get_path('module', 'uwwtd').'/inc/'
 	);       
 	
 	return $items;
@@ -511,7 +511,7 @@ function uwwtd_art17_setup_batch($newFile, $annee, $datas){
 		),
 		'error_message' => t('Error!'),
 		'finished' => 'uwwtd_art17_finished',
-		'file' => drupal_get_path('module','uwwtd').'/data_center.inc'
+		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
 
 	batch_set($batch);
@@ -822,7 +822,6 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 		$exists = uwwtd_check_exist($siteId);
 		// If the element exists
 		if($exists != false){
-
 			// load the exisiting element
 			$element = node_load($exists);
 			// dsm($element);
@@ -863,6 +862,7 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			}else{
 				if(isset($element->field_article17_uwwtp['und'][0]['nid']) && $element->field_article17_uwwtp['und'][0]['nid']!= ""){
 					$art = node_load($element->field_article17_uwwtp['und'][0]['nid']);
+					
 				}else{
 					// Create new article 17 node
 					$art = new StdClass();
