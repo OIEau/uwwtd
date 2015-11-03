@@ -54,7 +54,7 @@ function views_aggregator_views_api() {
  *   The name of the desired function or NULL to retrieve an array of functions.
  *
  * @return array
- *   An array of aggregation function parameters.
+ *   An array of aggregation function info.
  */
 function views_aggregator_get_aggregation_functions_info($name = NULL) {
 
@@ -65,8 +65,11 @@ function views_aggregator_get_aggregation_functions_info($name = NULL) {
     // hook_views_aggregation_functions_info() implementations.
     $aggregation_functions = module_invoke_all('views_aggregation_functions_info');
 
+    // @todo sort by display name, rather than function name
+    ksort($aggregation_functions);
+
     // Let other modules alter the aggregation functions by implementing
-    // hook_views_aggregation_functions_alter().
+    // hook_views_aggregation_functions_info_alter().
     drupal_alter('views_aggregation_functions_info', $aggregation_functions);
   }
   // $aggregation_functions = (array)$aggregation_functions;
@@ -104,12 +107,23 @@ function views_aggregator_get_cell($field_handler, $row_num, $rendered = FALSE) 
 function template_preprocess_views_aggregator_results_table(&$vars) {
   $view = $vars['view'];
 
+  $vars['grouping_field'] = '';
+  foreach ($view->style_plugin->options['info'] as $field_name => $info) {
+    if (!empty($info['has_aggr']) && !empty($info['aggr']['views_aggregator_group_and_compress'])) {
+      $vars['grouping_field'] = $field_name;
+      break;
+    }
+  }
+  $vars['grouping_field_class'] = $view->style_plugin->options['group_aggregation']['grouping_field_class'];
+
   if (!empty($view->totals) && array_filter($view->totals) != array()) {
     $vars['totals'] = $view->totals;
   }
   $vars['totals_row_position'] =
-    $view->style_plugin->options['totals_row_position'][1] +
-    $view->style_plugin->options['totals_row_position'][2];
+    $view->style_plugin->options['column_aggregation']['totals_row_position'][1] +
+    $view->style_plugin->options['column_aggregation']['totals_row_position'][2];
+
+  $vars['totals_row_class'] = $view->style_plugin->options['column_aggregation']['totals_row_class'];
 
   if (!isset($view->row_index)) {
     // Have seen trouble when this is not set...

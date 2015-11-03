@@ -438,8 +438,7 @@ function uwwtd_update_7103()
         'field_uwwnincomingestimated'     => 'Incoming load N-tot Estimated',
         'field_uwwpincomingestimated'     => 'Incoming load P-tot Estimated',
         'field_uwwndischargecalculated'   => 'Discharged load N-tot Calculated',
-    );
-    
+    );     
     
     foreach($list_field as $field_name => $new_label) {
         $field_instance = field_info_instance('node', $field_name, 'uwwtp');
@@ -1303,6 +1302,57 @@ function uwwtd_update_7120() {
 //     throw new DrupalUpdateException(__FUNCTION__); 
     variable_set('siif_eru_version', __FUNCTION__);    
 }
+
+// /**
+//  * Import main menu, change mail website contact and mail contact page per country 
+//  */ 
+// function uwwtd_update_7121()
+// {
+//     uwwtd_install_trace(__FUNCTION__);
+//     //install new main menu
+//     $menu = array(
+//         'menu_name' => 'main-menu', // Drupal menu machine name
+//         'title' => 'Main menu', // Drupal menu display name
+//         'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+//     );
+//     menu_delete(array('menu_name' => $menu['menu_name']));    
+//     menu_save($menu);        
+//     uwwtd_install_menu($menu, 'main-menu7121.json');   //todo change
+//     
+//     //change mail
+//     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+//     include($path);
+//     $country_code = variable_get('siif_eru_country_code', '-1');
+//     
+//     if ($country_code == '-1') {
+//         throw new DrupalUpdateException('Can\'t detect country code.');    
+//     } 
+//     
+//     variable_set('site_mail', $country_config[$country_code]['website_mail']);
+// 
+//     db_update('contact')
+//     ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
+//     ->condition('category', 'Website feedback', '=')
+//     ->execute();
+//     
+//     
+//     //add new field annee for article17 content type for bulk data deletion works
+//     field_cache_clear(); 
+//     $instance = array(
+//         'field_name' => 'field_anneedata',
+//         'entity_type' => 'node',
+//         'bundle' => 'article_17',
+//         'label' => 'Year of data',
+//       );
+// 
+//     $result = field_create_instance($instance);     
+// 
+//     variable_set('siif_eru_version', __FUNCTION__);
+//     drupal_flush_all_caches();
+//     
+//     throw new DrupalUpdateException(__FUNCTION__); 
+//     
+// }
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

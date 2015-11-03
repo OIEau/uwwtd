@@ -2,6 +2,8 @@
 
 $country_config = array(
     'cy' => array(      //nicosie
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Cyprus',
         'openlayers_maps' => array(
               'center' => array(
@@ -36,6 +38,8 @@ It was further elaborated in 2013 for the specific case of Urban Waste Water Dir
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
     ),
     'hr' => array(      //zagreb
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Croatia',
         'openlayers_maps' => array(
               'center' => array(
@@ -70,6 +74,8 @@ It was further elaborated in 2013 for the specific case of Urban Waste Water Dir
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
     ),
     'ie' => array(    //Dublin
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Ireland',
         'openlayers_maps' => array(
               'center' => array(
@@ -104,6 +110,8 @@ It was further elaborated in 2013 for the specific case of Urban Waste Water Dir
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
     ),    
     'lt' => array(    //Vilnius
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Lithuania',
         'openlayers_maps' => array(
               'center' => array(
@@ -137,7 +145,9 @@ The SIIF concept was initially introduced in 2012 through the Commission Communi
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
     ),
-    'pl' => array(    // 	Varsovie
+    'pl' => array(    // 	Varsovie 
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Poland',
         'openlayers_maps' => array(
               'center' => array(
@@ -171,7 +181,9 @@ The SIIF concept was initially introduced in 2012 through the Commission Communi
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
     ),
-    'ro' => array(     //Bucarest 
+    'ro' => array(     //Bucarest
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr', 
         'name' => 'Romania',
         'openlayers_maps' => array(
               'center' => array(
@@ -206,6 +218,8 @@ It was further elaborated in 2013 for the specific case of Urban Waste Water Dir
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
     ),
     'si' => array(   //Ljubljana
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
         'name' => 'Slovenia',
         'openlayers_maps' => array(
               'center' => array(                        
