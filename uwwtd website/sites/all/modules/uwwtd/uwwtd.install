@@ -1303,56 +1303,608 @@ function uwwtd_update_7120() {
     variable_set('siif_eru_version', __FUNCTION__);    
 }
 
-// /**
-//  * Import main menu, change mail website contact and mail contact page per country 
-//  */ 
-// function uwwtd_update_7121()
-// {
-//     uwwtd_install_trace(__FUNCTION__);
-//     //install new main menu
+/**
+ * Import main menu, change mail website contact and mail contact page per country, add
+ * new content type article 17, delete old article 17content type  
+ */ 
+function uwwtd_update_7121()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    //install new main menu
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7121.json');  
+    
+//     //install new menu 
 //     $menu = array(
-//         'menu_name' => 'main-menu', // Drupal menu machine name
-//         'title' => 'Main menu', // Drupal menu display name
-//         'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+//         'menu_name' => 'menu-editorial-menu', // Drupal menu machine name
+//         'title' => 'Editorial menu', // Drupal menu display name
+//         'description' => '', // Optional menu description
 //     );
 //     menu_delete(array('menu_name' => $menu['menu_name']));    
 //     menu_save($menu);        
-//     uwwtd_install_menu($menu, 'main-menu7121.json');   //todo change
-//     
-//     //change mail
-//     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
-//     include($path);
-//     $country_code = variable_get('siif_eru_country_code', '-1');
-//     
-//     if ($country_code == '-1') {
-//         throw new DrupalUpdateException('Can\'t detect country code.');    
-//     } 
-//     
-//     variable_set('site_mail', $country_config[$country_code]['website_mail']);
-// 
-//     db_update('contact')
-//     ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
-//     ->condition('category', 'Website feedback', '=')
-//     ->execute();
-//     
-//     
-//     //add new field annee for article17 content type for bulk data deletion works
-//     field_cache_clear(); 
-//     $instance = array(
-//         'field_name' => 'field_anneedata',
-//         'entity_type' => 'node',
-//         'bundle' => 'article_17',
-//         'label' => 'Year of data',
-//       );
-// 
-//     $result = field_create_instance($instance);     
-// 
-//     variable_set('siif_eru_version', __FUNCTION__);
-//     drupal_flush_all_caches();
-//     
+//     uwwtd_install_menu($menu, 'menu-editorial-menu7121.json');   
+
+    //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
+    $menu= array(
+        'link_path' => drupal_get_normal_path('register') ,
+        'link_title' => 'Register',
+        'description' => '' ,
+        'menu_name' => 'menu-editorial-menu',
+        'weight' => -45,
+        //'expanded' => true,
+        'mlid' => 0, 
+        'plid' => 0,
+        'customized' => 1,
+    );
+
+    $mlid = menu_link_save($menu);
+//     dsm($mlid);
+    menu_cache_clear_all();
+    
 //     throw new DrupalUpdateException(__FUNCTION__); 
-//     
-// }
+    
+    //change mail
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    if ($country_code == '-1') {
+        throw new DrupalUpdateException('Can\'t detect country code.');    
+    } 
+    
+    variable_set('site_mail', $country_config[$country_code]['website_mail']);
+
+    db_update('contact')
+    ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
+    ->condition('category', 'Website feedback', '=')
+    ->execute();
+
+    field_cache_clear(); 
+    
+    //-------------------------------------------------------
+    //delete field article 17 (and delete field field_articl17 of bundle uwwtp and agglomeration)
+    //delete all instance of the field on each bundle and delete the field
+    field_delete_field('field_article17');
+//     throw new DrupalUpdateException(__FUNCTION__);     
+    //check if table    	drupal_field_data_field_article17 and drupal_field_revision_field_article17 still exists
+    //check table drupal_field_config_instance et drupal_field_config dans fieldname like 17
+    
+    //delete contenttype article17
+    
+    $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+    $result = db_query($sql, array(':type' => 'article_17'));
+    $nids = array();
+    foreach ($result as $row) {
+        $nids[] = $row->nid;
+    }
+    // Delete all the nodes at once
+    // http://api.drupal.org/api/function/node_delete_multiple/7
+    node_delete_multiple($nids);
+    // Delete our content type
+    // http://api.drupal.org/api/function/node_type_delete/7
+    node_type_delete('article_17');
+    
+    
+    db_delete('field_config_instance')
+    ->condition('field_name', 'field_article17', '=')
+    ->condition('entity_type', 'node', '=')
+    ->condition('bundle', 'uwwtp', '=')
+    ->condition('deleted', '1', '=')
+    ->execute();
+    
+    db_delete('field_config_instance')
+    ->condition('field_name', 'field_article17', '=')
+    ->condition('entity_type', 'node', '=')
+    ->condition('bundle', 'agglomeration', '=')
+    ->condition('deleted', '1', '=')
+    ->execute();    
+    
+    db_delete('field_config')
+    ->condition('field_name', 'field_article17', '=')
+    ->condition('deleted', '1', '=')
+    ->execute();   
+    
+//     throw new DrupalUpdateException(__FUNCTION__);       
+    //-------------------------------------------------------          
+    //add content type article_17 agglo et article 17 uwwtp
+    //article_17_uwwtp            Article 17 uwwtp
+    if (! node_type_load('article_17_uwwtp')) {
+        $t = get_t();
+        $node_example = array(
+            'type' => 'article_17_uwwtp',
+            'name' => $t('Article 17 uwwtp'),
+            'base' => 'node_content',
+            'description' => $t(''),
+            'body_label' => $t(''),
+            'custom' => false,
+            'modified' => true,
+            'locked' => false,            
+            'disabled' => false,
+        );
+        $content_type = node_type_set_defaults($node_example);
+//         node_add_body_field($content_type);
+        // Check if we create content type or update.
+        $status = node_type_save($content_type);
+        // Replacement rule for the messages.
+        $t_args = array('%name' => $content_type->name);
+        if ($status == SAVED_UPDATED) { // update case
+            drupal_set_message($t('The content type %name has been updated.', $t_args));
+        } elseif ($status == SAVED_NEW) { // create case
+            drupal_set_message($t('The content type %name has been added.', $t_args));
+            watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types')); 
+        }
+//         throw new DrupalUpdateException(__FUNCTION__); 
+    }
+    //article_17_agglomeration    Article 17 agglomeration
+    if (! node_type_load('article_17_agglomeration')) {
+        $t = get_t();
+        $node_example = array(
+            'type' => 'article_17_agglomeration',
+            'name' => $t('Article 17 agglomeration'),
+            'base' => 'node_content',
+            'description' => $t(''),
+            'body_label' => $t(''),
+            'custom' => false,
+            'modified' => true,
+            'locked' => false,            
+            'disabled' => false,
+        );
+        $content_type = node_type_set_defaults($node_example);
+//         node_add_body_field($content_type);
+        // Check if we create content type or update.
+        $status = node_type_save($content_type);
+        // Replacement rule for the messages.
+        $t_args = array('%name' => $content_type->name);
+        if ($status == SAVED_UPDATED) { // update case
+            drupal_set_message($t('The content type %name has been updated.', $t_args));
+        } elseif ($status == SAVED_NEW) { // create case
+            drupal_set_message($t('The content type %name has been added.', $t_args));
+            watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types')); 
+        }    
+//         throw new DrupalUpdateException(__FUNCTION__); 
+    }
+    //-------------------------------------------------------
+    //add new field
+    $agglo_field = array(
+        'field_anneedata' => array(
+            'field_name' => 'field_anneedata',
+            'type' => 'list_text',            	//List (text)        		Select list
+            'widget' => array(
+                'type' => 'options_select',
+            ), 
+            'label' => 'Year of data',       
+        ),
+        'field_art17agg_link_agglo' => array(            // Node reference        	Autocomplete text field
+            'field_name' => 'field_art17agg_link_agglo',
+            'type' => 'node_reference',            
+            'widget' => array(
+            'type' => 'node_reference_autocomplete',
+            ), 
+            'label' => 'Linked Agglomeration',           
+        ),
+        'field_art17agg_aggcode' => array(                //Text                 	Text field
+            'field_name' => 'field_art17agg_aggcode',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'ID of the agglomeration',          
+        ),                                                 
+        'field_art17agg_aggname' => array(                 // Text              	Text field
+            'field_name' => 'field_art17agg_aggname',
+            'type' => 'text',            	
+            'widget' => array(
+             'type' => 'text_textfield',
+            ), 
+            'label' => 'Name of the agglomeration related to this UWWTP',        
+        ),
+        'field_art17_flaggstatus' => array(               //Text                	Text field
+            'field_name' => 'field_art17_flaggstatus',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'Status of the agglomeration at the reference reporting year (Not compliant/Pending deadlines)',        
+        ),
+        'field_art17_flaggreasons' => array(                  	//Long text                 	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggreasons',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Identified reason(s) for non compliance',        
+        ),
+        'field_art17_flaggmeasures' => array(                 //	Long text                	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggmeasures',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)',        
+        ),
+        'field_art17_flaggexpecdatestart' => array(              //	Date                    	Text field
+            'field_name' => 'field_art17_flaggexpecdatestart',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Date or expected date for completion of preparatory measures for the collecting system or IAS (planning, design, procurement, c',
+        ),
+        'field_art17_flaggexpecdatestartw' => array(              //	Date                    	Text field
+            'field_name' => 'field_art17_flaggexpecdatestartw',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Start date or expected start date for works on the collecting systems or IAS',
+        ),
+        'field_art17_flaggexpecdatecomple' => array(             	//Date                     	Text field
+            'field_name' => 'field_art17_flaggexpecdatecomple',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Expected date of completion of the collecting system or IAS works',        
+        ),                                                        
+        'field_art17_flagginv' => array(                          //	Decimal                  	Text field
+            'field_name' => 'field_art17_flagginv',
+            'type' => 'number_decimal',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Forecast investment cost for the collecting system or IAS (as in the national plan)',        
+        ),
+        'field_art17_flaggeufundname' => array(                 //	Long text      	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggeufundname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of EU fund planned to be used to complete the collecting system or IAS (if any)',        
+        ),
+        'field_art17_flaggeufund' => array(                      //Integer                    	Text field
+            'field_name' => 'field_art17_flaggeufund',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of (planned) EU funds likely to be requested to complete the collecting system or IAS (if any)',        
+        ),                                                       
+        'field_art17_flaggcomments' => array(                 //	Long text            	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggcomments',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Any relevant comment on collecting system or IAS',        
+        ),
+        'field_art17_flaggexpload' => array(                   // Integer                     	Text field
+            'field_name' => 'field_art17_flaggexpload',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Expected generated load of the agglomeration at the exepected date of compliance',        
+        ),
+        'field_art17_flaggexploadcoll' => array(                 //	Decimal                 	Text field
+            'field_name' => 'field_art17_flaggexploadcoll',
+            'type' => 'number_decimal',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Expected rate of the generated load of agglomeration collected through collecting systems at the expected date of compliance',        
+        ),                                                                                  
+        'field_art17_flaggexploadias' => array(                 //	Decimal                  	Text field
+            'field_name' => 'field_art17_flaggexploadias',
+            'type' => 'number_decimal',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Expected rate of the generated load of the agglomeration addressed throug IAS at the expected date of compliance',        
+        ),
+        'field_art17_flaggotherfund' => array(                // 	Integer                    	Text field
+            'field_name' => 'field_art17_flaggotherfund',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of funds likely to be given to complete the collecting system or IAS (if any)',        
+        ),
+        'field_art17_flaggotherfundname' => array(          	//Long text        	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggotherfundname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of the entity planned to give fund to complete the collecting system or IAS (if any)',        
+        ),
+        'field_art17_flaggloan' => array(                    //	Integer               Text field
+            'field_name' => 'field_art17_flaggloan',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of loan likely to be granted to complete the collecting system or IAS (if any)',        
+        ),                                                                               	
+        'field_art17_flaggloanname' => array(              	//Long text      	Text area (multiple rows)
+            'field_name' => 'field_art17_flaggloanname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of the entity planned to give loan to complete the collecting system or IAS (if any)',        
+        ),                                                                                                                                                                
+    );
+    
+    $uwwtp_field = array(
+        'field_anneedata' => array(       
+            'field_name' => 'field_anneedata',
+            'type' => 'list_text',            	
+            'widget' => array(
+            'type' => 'options_select',
+            ), 
+            'label' => 'Year of data',        
+        ),  
+        'field_art17uwwtp_link_uwwtp' => array(       
+            'field_name' => 'field_art17uwwtp_link_uwwtp',
+            'type' => 'node_reference',            	
+            'widget' => array(
+            'type' => 'node_reference_autocomplete',
+            ), 
+            'label' => 'Linked Treatment Plant',        
+        ),  
+        'field_art17uwwtp_uwwcode' => array(       
+            'field_name' => 'field_art17uwwtp_uwwcode',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'ID of UWWTP/ collecting system without treatment',        
+        ),  
+        'field_art17uwwtp_uwwname' => array(       
+            'field_name' => 'field_art17uwwtp_uwwname',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'Name of UWWTP/ collecting system without treatment',        
+        ),  
+        'field_art17uwwtp_aggcode' => array(       
+            'field_name' => 'field_art17uwwtp_aggcode',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'ID of the agglomeration related to this UWWTP',        
+        ),  
+        'field_art17uwwtp_aggname' => array(       
+            'field_name' => 'field_art17uwwtp_aggname',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'Name of the agglomeration related to this UWWTP',        
+        ),  
+        'field_art17_flatpstatus' => array(       
+            'field_name' => 'field_art17_flatpstatus',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'Status of the UWWTP at the reference reporting year (Not compliant/Pending deadlines)',        
+        ),  
+        'field_art17_flatpreasons' => array(       
+            'field_name' => 'field_art17_flatpreasons',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Identified reason(s) for non compliance',        
+        ),  
+        'field_art17_flatpmeasures' => array(       
+            'field_name' => 'field_art17_flatpmeasures',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Measure(s) to reach the compliance needed for UWWTP',        
+        ),  
+        'field_art17_flatpexpload' => array(       
+            'field_name' => 'field_art17_flatpexpload',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Load entering the UWWTP at the expected date of compliance (as planned)',        
+        ),  
+        'field_art17_flatpexpcapacity' => array(       
+            'field_name' => 'field_art17_flatpexpcapacity',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Organic design capacity UWWTP (as planned)',        
+        ),  
+        'field_art17_flatptexpectreatment' => array(       
+            'field_name' => 'field_art17_flatptexpectreatment',
+            'type' => 'text',            	
+            'widget' => array(
+            'type' => 'text_textfield',
+            ), 
+            'label' => 'Type of treatment UWWTP (as planned)',        
+        ),  
+        'field_art17_flatpexpecdatestart' => array(       
+            'field_name' => 'field_art17_flatpexpecdatestart',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Date or expected date of completion of preparatory measures (planning, design, etc)',        
+        ),  
+        'field_art17_flatpexpecdatestartw' => array(       
+            'field_name' => 'field_art17_flatpexpecdatestartw',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Date or expected start date for works',        
+        ),  
+        'field_art17_flatpexpecdatecomple' => array(       
+            'field_name' => 'field_art17_flatpexpecdatecomple',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Date or expected date of completion of works',        
+        ),  
+        'field_art17_flatpexpecdateperfor' => array(       
+            'field_name' => 'field_art17_flatpexpecdateperfor',
+            'type' => 'datetime',            	
+            'widget' => array(
+            'type' => 'date_text',
+            ), 
+            'label' => 'Expected date of compliance (12 months of compliant samples) ',        
+        ),  
+        'field_art17_flatpinv' => array(       
+            'field_name' => 'field_art17_flatpinv',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Forecast cost investment needed for the UWWTP (as in the national plan)',        
+        ),  
+        'field_art17_flatpeufundname' => array(       
+            'field_name' => 'field_art17_flatpeufundname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of EU fund planned to be used UWWTP (if any)',        
+        ),  
+        'field_art17_flatpeufund' => array(       
+            'field_name' => 'field_art17_flatpeufund',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of (planned) EU funding needed',        
+        ),  
+        'field_art17_flatpcomments' => array(       
+            'field_name' => 'field_art17_flatpcomments',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Any relevant comment on UWWTP',        
+        ),  
+        'field_art17_flatpexploadtruck' => array(       
+            'field_name' => 'field_art17_flatpexploadtruck',
+            'type' => 'number_decimal',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Expected rate of entering load transported to this UWWTP by truck at the expected date of compliance',        
+        ),  
+        'field_art17_flatpotherfund' => array(       
+            'field_name' => 'field_art17_flatpotherfund',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of funds likely to be given to complete the UWWTP (if any)',        
+        ),  
+        'field_art17_flatpotherfundname' => array(       
+            'field_name' => 'field_art17_flatpotherfundname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of the entity planned to give fund to complete UWWTP (if any)',        
+        ),  
+        'field_art17_flatploan' => array(       
+            'field_name' => 'field_art17_flatploan',
+            'type' => 'number_integer',            	
+            'widget' => array(
+            'type' => 'number',
+            ), 
+            'label' => 'Amount of loan likely to be granted to complete the UWWTP (if any)',        
+        ),  
+        'field_art17_flatploanname' => array(       
+            'field_name' => 'field_art17_flatploanname',
+            'type' => 'text_long',            	
+            'widget' => array(
+            'type' => 'text_textarea',
+            ), 
+            'label' => 'Name of the entity planned to give loan to complete the UWWTP (if any)',        
+        ),                                                                                                                                                                                                     
+    );
+//     throw new DrupalUpdateException(__FUNCTION__); 
+    foreach ($agglo_field as $newfield) {
+        if (! field_info_field($newfield['field_name']) ) {
+            unset($newfield['label']);
+            unset($newfield['widget']);
+            $result = field_create_field($newfield);
+        }
+    }
+    
+    foreach ($uwwtp_field as $newfield) {
+        if (! field_info_field($newfield['field_name']) ) {
+            unset($newfield['label']);
+            unset($newfield['widget']);
+            $result = field_create_field($newfield);
+        }
+    }    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+    //-------------------------------------------------------        
+    //attach new field to new bundle
+    foreach ($agglo_field as $newfield) {
+//         dsm($newfield);
+        $instance_exist = field_info_instance('node', $newfield['field_name'], 'article_17_agglomeration');
+//         dsm($instance_exist);        
+        if (! $instance_exist ) {
+            $instance = array(
+                'field_name' => $newfield['field_name'],
+                'entity_type' => 'node',
+                'bundle' => 'article_17_agglomeration',
+                'label' => $newfield['label'],
+                'widget' => $newfield['widget'],
+              );
+        
+            $result = field_create_instance($instance);
+//             dsm($result);
+        }       
+    }
+    
+    foreach ($uwwtp_field as $newfield) {
+//         dsm($newfield);
+        $instance_exist = field_info_instance('node', $newfield['field_name'], 'article_17_uwwtp');
+//         dsm($instance_exist);        
+        if (! $instance_exist ) {
+            $instance = array(
+                'field_name' => $newfield['field_name'],
+                'entity_type' => 'node',
+                'bundle' => 'article_17_uwwtp',
+                'label' => $newfield['label'],
+                'widget' => $newfield['widget'],
+              );
+        
+            $result = field_create_instance($instance);
+//             dsm($result);
+        }       
+    }    
+//     throw new DrupalUpdateException(__FUNCTION__); 
+     
+    variable_set('siif_eru_version', __FUNCTION__);
+    drupal_flush_all_caches();
+    
+//     throw new DrupalUpdateException(__FUNCTION__);     
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
