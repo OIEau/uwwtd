@@ -142,7 +142,7 @@ footer{
 .view-uwwtp-map .view-content {
   clear:both;
 }
-/*.view-uwwtp-map .view-filters {  
+/*.view-uwwtp-map .view-filters {
   float:left;
   width:40%;
   border: 1px dotted #aaaaaa;
@@ -481,20 +481,20 @@ body#impression  div.field .field-label-inline{
 	float : left;
 	padding-right:10px;
 }
-    
+
 .pie_slice {
-    font-size:10pt; 
-    text-align:center; 
-    padding:2px; 
+    font-size:10pt;
+    text-align:center;
+    padding:2px;
     color:white;
-}    
-  
+}
+
 .pie_legend {
-    font-size:10pt; 
+    font-size:10pt;
 }
 
 /* only for uwwtp page node */
-#uwwtp_stackedbar .axis path,
+#uwwtp_stackedbar.axis path,
 #uwwtp_stackedbar .axis line {
 fill: none;
 stroke: #000;
@@ -511,4 +511,37 @@ display: none;
 
 .field-name-field-physicalcapacityactivity .field-label, .field-name-field-physicalcapacityactivity .field-items{
 	float: left;
+}
+
+/*
+#graph_generatedByAgglomeration
+#graph_load_ent_and_dis
+*/
+#graph_generatedByAgglomeration .axis path,
+#graph_generatedByAgglomeration .axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+#graph_generatedByAgglomeration .bar {
+fill: steelblue;
+}
+
+#graph_generatedByAgglomeration .x.axis path {
+display: none;
+}
+#graph_load_ent_and_dis .axis path,
+#graph_load_ent_and_dis .axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+#graph_load_ent_and_dis .bar {
+fill: steelblue;
+}
+
+#graph_load_ent_and_dis .x.axis path {
+display: none;
 }

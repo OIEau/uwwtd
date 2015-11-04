@@ -21,7 +21,7 @@ function uwwtd_adjustBrightness($hex, $steps){
 
     // Adjust number of steps and keep it inside 0 to 255
     $r = max(0,min(255,$r + $steps));
-    $g = max(0,min(255,$g + $steps));  
+    $g = max(0,min(255,$g + $steps));
     $b = max(0,min(255,$b + $steps));
 
     $r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
@@ -39,7 +39,7 @@ function uwwtd_check_history($id, $annee){
 	$ids = array();
 	$results = $query->execute();
 	foreach($results as $result){
-		$node = node_load($result->entity_id);		
+		$node = node_load($result->entity_id);
 		$ids[] = $node->nid;
 	}
 
@@ -107,7 +107,7 @@ function uwwtd_preprocess_field(&$variables){
 		$variables['element']['#field_name'] == 'field_rca_parameter_other' ||
 		$variables['element']['#field_name'] == 'field_rca52applied' ||
 		$variables['element']['#field_name'] == 'field_rca58applied'
-		
+
 
 	){
 		//check for custom tooltips
@@ -116,7 +116,7 @@ function uwwtd_preprocess_field(&$variables){
 		if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
 			$tt = $variables['items'][0]['#markup'];
 		}
-		
+
 		if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
 			$variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
 		}
@@ -127,22 +127,22 @@ function uwwtd_preprocess_field(&$variables){
 
 	// For percentage '%'
 	if (
-        
+
 		$variables['element']['#field_name'] == 'field_aggc1' ||
 		$variables['element']['#field_name'] == 'field_aggc2' ||
 		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
 		$variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
 		$variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
 		$variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
-		
-		
+
+
 	){
         if ($variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>') {
 		  $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
         }
 //         dsm($variables);
 	}
-    
+
 //     if ($variables['element']['#field_name'] == 'field_aggc1' ||
 // 		$variables['element']['#field_name'] == 'field_aggc2' ||
 // 		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment') {
@@ -165,8 +165,8 @@ function uwwtd_preprocess_field(&$variables){
             $variables['element']['#items']['0']['value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ];
             $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][ $variables['element']['#items']['0']['value'] ];
             $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
-        } 
-//         dsm($variables['element']); 
+        }
+//         dsm($variables['element']);
     }
 
 	// For compliance colors
@@ -259,7 +259,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
 	// Load all instances of the fields for the node.
 	$instances = _field_invoke_get_instances('node', $node->type, array('default' => TRUE, 'deleted' => FALSE));
 	//dsm($instances);
- 
+
 	foreach($instances as $field_name => $instance){
 		// Set content for fields they are empty.
 		if(empty($node->{$field_name})){
@@ -316,7 +316,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
 function uwwtd_preprocess_node(&$vars){
     if($vars["is_front"]){
        $vars["theme_hook_suggestions"][] = "node__front";
-    }  
+    }
 }
 
 function uwwtd_render_article17($nid){
@@ -412,8 +412,8 @@ function uwwtd_insert_errors_tab($node){
     foreach($roles as $role){
         if($role == $admin || $role == $editor){
             $bFound = true;
-            break; 
-        }    
+            break;
+        }
     }
     if ($bFound === false) {
         return '';
@@ -427,7 +427,7 @@ function uwwtd_insert_errors_tab($node){
 // 	foreach($raws as $raw){
 // 		$all[] = $raw['nid'];
 // 	}
-// 
+//
 // 	// group by import
 // 	foreach($all as $single){
 // 		$error = node_load($single);
@@ -435,7 +435,7 @@ function uwwtd_insert_errors_tab($node){
 // 			$id = $error->field_uwwtd_err_identifier['und'][0]['value'];
 // 			$type = $error->field_uwwtd_err_type['und'][0]['value'];
 // 			$cat = $error->field_uwwtd_err_category['und'][0]['value'];
-// 
+//
 // 			// Set values
 // 			$values[$id][$type][$cat][] = array(
 // 				'id' => $id,
@@ -448,22 +448,22 @@ function uwwtd_insert_errors_tab($node){
 // 			);
 // 		}
 // 	}
-                      
-    $query = 'select errid as id, 
-                    type, category, 
-                    error as message, 
-                    date as timestamp, 
-                    errid as nid  
-        from {uwwtd_import_errors} 
-        where year = :year 
-        and entity_type = :entity_type 
+
+    $query = 'select errid as id,
+                    type, category,
+                    error as message,
+                    date as timestamp,
+                    errid as nid
+        from {uwwtd_import_errors}
+        where year = :year
+        and entity_type = :entity_type
         and entity_id = :entity_id';
-    
+
     $param = array(
         ':year' => $node->field_anneedata['und'][0]['value'],
         ':entity_type' => 'node',
-        ':entity_id' => $node->nid,        
-    );                        
+        ':entity_id' => $node->nid,
+    );
     $result = db_query($query, $param);
     while($row = $result->fetchAssoc()) {
         $values[ $row['id'] ][ $row['type'] ][ $row['category'] ][] = array(
@@ -474,7 +474,7 @@ function uwwtd_insert_errors_tab($node){
         	'category' => $row['category'],
         	'nid' => $row['nid'],
         );
-    }    
+    }
 
 	if(empty($values)) return false;
 
@@ -499,11 +499,11 @@ function uwwtd_insert_errors_tab($node){
 			// get Category
 // 			$field = field_info_field('field_uwwtd_err_category');
 // 			$label = $field['settings']['allowed_values'];
-				
+
 			// get date
 			//type erreur warning
 			if(isset($value['1']))
-			{	
+			{
 				if(isset($value['1']['0']))
 				{
 					foreach ($value['1']['0'] as $categories){
@@ -544,7 +544,7 @@ function uwwtd_insert_errors_tab($node){
 						$date =date('d-m-Y H:i:s', $categories['timestamp']);
 					}
 				}
-				$totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;	
+				$totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;
 			}
 			//type erreur notification
 			if(isset($value['0']))
@@ -640,14 +640,14 @@ function uwwtd_insert_errors_tab($node){
 			if($total === 0) $total = null;
 			$output .= '<div class="uwwtd_errors_tab_header">';
 				$output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Imported at : '.$date.'</span></h4>';
-				
+
 				if(isset($value['0'])){
 					$output .= '<div class="uwwtd_errors_tab_type_header">';
-					
+
 					//catégorie notification input
 					if(isset($value['0']['0'])){
 						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNI">'.$totalNI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNI.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNI">'.$totalNI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNI.':</span></h5>';
 						foreach($value['0']['0'] as $error){
 							//dsm($error);
 							$output .= '<div class="uwwtd_error">';
@@ -656,14 +656,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						//$totalI = 0;
 					}
 					if(isset($value['0']['1']))
 					{//catégorie notification Linking
 						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNL">'.$totalNL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNL.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNL">'.$totalNL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNL.':</span></h5>';
 						foreach($value['0']['1'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -671,14 +671,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalL = 0;
 					}
 					if(isset($value['0']['2']))
 					{//catégorie notification Geometry
 						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNG">'.$totalNG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNG.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNG">'.$totalNG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNG.':</span></h5>';
 						foreach($value['0']['2'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -686,14 +686,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalG = 0;
 					}
 					if(isset($value['0']['3']))
 					{//catégorie notification Conformity
 						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNC">'.$totalNC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNC.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNC">'.$totalNC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNC.':</span></h5>';
 						foreach($value['0']['3'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -701,14 +701,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalC = 0;
 					}
 					if(isset($value['0']['4']))
 					{//catégorie notification Format
 						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNF">'.$totalNF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNF.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNF">'.$totalNF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNF.':</span></h5>';
 						foreach($value['0']['4'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -716,20 +716,20 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalF = 0;
 					}
 					$output .= '</div>';
-					
+
 				}
 				if(isset($value['1'])){
 					$output .= '<div class="uwwtd_errors_tab_type_header">';
-					
+
 					//catégorie warning input
 					if(isset($value['1']['0'])){
 						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWI">'.$totalWI.'</span></span><span class="uwwtd_errors_tab_header_titleWI">'.$labelWI.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWI">'.$totalWI.'</span></span><span class="uwwtd_errors_tab_header_titleWI">'.$labelWI.':</span></h5>';
 						foreach($value['1']['0'] as $error){
 							//dsm($error);
 							$output .= '<div class="uwwtd_error errorWI">';
@@ -738,14 +738,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalI = 0;
 					}
 					if(isset($value['1']['1']))
 					{//catégorie warning Linking
 						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWL">'.$totalWL.'</span></span><span class="uwwtd_errors_tab_header_titleWL">'.$labelWL.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWL">'.$totalWL.'</span></span><span class="uwwtd_errors_tab_header_titleWL">'.$labelWL.':</span></h5>';
 						foreach($value['1']['1'] as $error){
 							$output .= '<div class="uwwtd_error errorWL">';
 								$output .= '<ul>';
@@ -753,14 +753,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalL = 0;
 					}
 					if(isset($value['1']['2']))
 					{//catégorie warning Geometry
 						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWG">'.$totalWG.'</span></span><span class="uwwtd_errors_tab_header_titleWG">'.$labelWG.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWG">'.$totalWG.'</span></span><span class="uwwtd_errors_tab_header_titleWG">'.$labelWG.':</span></h5>';
 						foreach($value['1']['2'] as $error){
 							$output .= '<div class="uwwtd_error errorWG">';
 								$output .= '<ul>';
@@ -768,14 +768,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalG = 0;
 					}
 					if(isset($value['1']['3']))
 					{//catégorie warning Conformity
 						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWC">'.$totalWC.'</span></span><span class="uwwtd_errors_tab_header_titleWC">'.$labelWC.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWC">'.$totalWC.'</span></span><span class="uwwtd_errors_tab_header_titleWC">'.$labelWC.':</span></h5>';
 						foreach($value['1']['3'] as $error){
 							$output .= '<div class="uwwtd_error errorWC">';
 								$output .= '<ul>';
@@ -783,14 +783,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalC = 0;
 					}
 					if(isset($value['1']['4']))
 					{//catégorie warning Format
 						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWF">'.$totalWF.'</span></span><span class="uwwtd_errors_tab_header_titleWF">'.$labelWF.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWF">'.$totalWF.'</span></span><span class="uwwtd_errors_tab_header_titleWF">'.$labelWF.':</span></h5>';
 						foreach($value['1']['4'] as $error){
 							$output .= '<div class="uwwtd_error errorWF">';
 								$output .= '<ul>';
@@ -798,7 +798,7 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalF = 0;
 					}
@@ -809,7 +809,7 @@ function uwwtd_insert_errors_tab($node){
 					//catégorie error input
 					if(isset($value['2']['0'])){
 						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEI">'.$totalEI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEI.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEI">'.$totalEI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEI.':</span></h5>';
 						foreach($value['2']['0'] as $error){
 							//dsm($error);
 							$output .= '<div class="uwwtd_error">';
@@ -818,14 +818,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalI = 0;
 					}
 					if(isset($value['2']['1']))
 					{//catégorie error Linking
 						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEL">'.$totalEL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEL.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEL">'.$totalEL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEL.':</span></h5>';
 						foreach($value['2']['1'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -833,14 +833,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalL = 0;
 					}
 					if(isset($value['2']['2']))
 					{//catégorie error Geometry
 						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEG">'.$totalEG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEG.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEG">'.$totalEG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEG.':</span></h5>';
 						foreach($value['2']['2'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -848,14 +848,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalG = 0;
 					}
 					if(isset($value['2']['3']))
 					{//catégorie error Conformity
 						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEC">'.$totalEC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEC.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEC">'.$totalEC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEC.':</span></h5>';
 						foreach($value['2']['3'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -863,14 +863,14 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalC = 0;
 					}
 					if(isset($value['2']['4']))
 					{//catégorie error Format
 						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEF">'.$totalEF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEF.':</span></h5>';	
+							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEF">'.$totalEF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEF.':</span></h5>';
 						foreach($value['2']['4'] as $error){
 							$output .= '<div class="uwwtd_error">';
 								$output .= '<ul>';
@@ -878,7 +878,7 @@ function uwwtd_insert_errors_tab($node){
 									$output .= '<li>'.$error['message'].'</li>';
 // 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
 								$output .= '</ul>';
-							$output .= '</div>';							
+							$output .= '</div>';
 						}$output .= '</div>';
 						$totalF = 0;
 					}
@@ -980,10 +980,10 @@ function uwwtd_get_uww_graphic($node){
 	$output .= '<div class="agglomeration-graphic">
 	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
 	        <div class="graphic-title">';
-	        	$output .= '<a href="#">Aggs : '.count($reseau['agglos']).'</a>	
+	        	$output .= '<a href="#">Agglomerations : '.count($reseau['agglos']).'</a>
 	        	<span class="aggs-list">';
 					foreach($reseau['agglos'] as $agglo){
-					          $output .= 'Agg : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
+					          $output .= 'Agglomeration : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
 					          (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
 					}
 
@@ -998,7 +998,7 @@ function uwwtd_get_uww_graphic($node){
 	    if($reseau['compliance'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
 	    elseif($reseau['compliance'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
 	    else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
-	  
+
 		$output .= '<div class="graphic-title">
 			'.l($reseau['title'], "node/".$reseau['nid']).'
 		</div>
@@ -1138,9 +1138,9 @@ function uwwtd_get_uww_graphic($node){
 	$totalDcps = $totalDcps + $nbDcps;
 	$nbDcpsT = 0;
 	$nbDcpsB = 0;
-	for ($i=0; $i <= $nbDcps; $i++) { 
+	for ($i=0; $i <= $nbDcps; $i++) {
 
-		if($i > 1){    
+		if($i > 1){
 
 		  if($i % 2 == 0){
 		    $nbDcpsT ++;
@@ -1163,7 +1163,7 @@ function uwwtd_get_uww_graphic($node){
 	$output .= '<div class="station-dcp-connections">';
 	$output .= '<div>';
 
-	
+
 	 $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
 
 	    $output .= '</div>
@@ -1198,6 +1198,7 @@ function uwwtd_get_uww_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
     	<ul>
     		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
@@ -1215,10 +1216,11 @@ function uwwtd_get_uww_graphic($node){
 			<li><span>OZONE</span> : Ozonation</li>
 			<li><span>SAND</span> : Sand filtration</li>
 			<li><span>O</span> : Other more stringent</li>
+			<li><span>DCP(S)</span> : Discharge point(s)</li>
 		</ul>
     </div>';
 
-	return $output;   
+	return $output;
 }
 
 function uwwtd_get_agglo_graphic($node){
@@ -1329,12 +1331,12 @@ function uwwtd_get_agglo_graphic($node){
           $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
       }
-      
+
       $nbPlantsT = 0;
       $nbPlantsB = 0;
-      for ($i=0; $i <= $nbPlants; $i++) { 
+      for ($i=0; $i <= $nbPlants; $i++) {
 
-        if($i > 1){    
+        if($i > 1){
 
           if($i % 2 == 0){
             $nbPlantsT ++;
@@ -1369,15 +1371,15 @@ function uwwtd_get_agglo_graphic($node){
 
       <div class="connectors" style="margin-top: -'.$topMarge.'px; top: '.$topMarge.'px;">';
 
-      for ($i=0; $i < $nbPlantsT; $i++) { 
+      for ($i=0; $i < $nbPlantsT; $i++) {
         $output .= '<img width="150px" src="'.$src.'/images/graphic/topcap.png" alt="reseau">';
       }
 
-      if($nbPlants > 0){ 
+      if($nbPlants > 0){
         $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
       }
 
-      for ($i=0; $i < $nbPlantsB; $i++) { 
+      for ($i=0; $i < $nbPlantsB; $i++) {
         $output .= '<img width="150px" src="'.$src.'/images/graphic/botcap.png" alt="reseau">';
       }
 
@@ -1396,7 +1398,7 @@ function uwwtd_get_agglo_graphic($node){
             if($station['compStation'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
             elseif($station['compStation'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
             else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
-          
+
           $output .= '<div class="graphic-title">
             '.l($station['title'], "node/".$station['nid']).'
           </div>
@@ -1405,7 +1407,7 @@ function uwwtd_get_agglo_graphic($node){
         </div>';
 
       }
-    
+
     $output .= '</div>';
 
     $topMarge = 0;
@@ -1413,18 +1415,18 @@ function uwwtd_get_agglo_graphic($node){
       $topMarge = 48;
     }
 
-    $output .= '<div class="ms-wrapper" style="top: -'. $topMarge .'px">'; 
+    $output .= '<div class="ms-wrapper" style="top: -'. $topMarge .'px">';
       foreach($reseau as $station){
 
         if($station['mstype'] != false){
-              
+
         $output .= '<div class="ms">
           <img src="'.$src.'/images/graphic/ms.png" alt="reseau">
           <div class="ms-type">
             '.$station['mstype'].'
           </div>
         </div>';
- 
+
         }
         else{
           $output .= '<div class="ms"><img class="single" width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau"></div>';
@@ -1445,10 +1447,10 @@ function uwwtd_get_agglo_graphic($node){
           $totalDcps = $totalDcps + $nbDcps;
           $nbDcpsT = 0;
           $nbDcpsB = 0;
-          for ($i=0; $i <= $nbDcps; $i++) { 
+          for ($i=0; $i <= $nbDcps; $i++) {
 
-            if($i > 1){    
-    
+            if($i > 1){
+
               if($i % 2 == 0){
                 $nbDcpsT ++;
                 $totalDcpsT++;
@@ -1463,15 +1465,15 @@ function uwwtd_get_agglo_graphic($node){
           $output .= '<div class="station-dcp-connections">';
               $output .= '<div>';
 
-            // for ($i=0; $i < $nbDcpsT; $i++) { 
+            // for ($i=0; $i < $nbDcpsT; $i++) {
             //   $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
             // }
 
-            // if($nbDcps > 0){ 
+            // if($nbDcps > 0){
               $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
             // }
 
-            // for ($i=0; $i < $nbDcpsB; $i++) { 
+            // for ($i=0; $i < $nbDcpsB; $i++) {
             //   $output .= '<img width="75px" src="'.$src.'/images/graphic/botcapsmall.png" alt="reseau">';
             // }
 
@@ -1482,8 +1484,8 @@ function uwwtd_get_agglo_graphic($node){
     $output .= '</div>
 
     <div class="dcps-wrapper" style="top:-'. $topMarge .'px">';
-      
-    foreach($reseau as $station){  
+
+    foreach($reseau as $station){
     	$output .= '<div class="station-dcp" style="top: 0px;">
 			<div>
 			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">';
@@ -1516,11 +1518,13 @@ function uwwtd_get_agglo_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
     	<ul>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>O</span> : Other more stringent</li>
+			<li><span>DCP(S)</span> : Discharge point(s)</li>
     	</ul>
     </div>
   </div>';
@@ -1529,7 +1533,7 @@ function uwwtd_get_agglo_graphic($node){
 }
 
 function uwwtd_render_field_with_pe($field)
-{               
+{
 //     $field[0]['#markup'] = 'Not provided';
     $pe = '';
     if (true === is_numeric($field[0]['#markup'])) {
@@ -1538,9 +1542,9 @@ function uwwtd_render_field_with_pe($field)
     return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
         <div class="field-label">'.$field['#title'].':&nbsp;</div>
         <div class="field-items">
-            <div class="field-item even">'.$field[0]['#markup']. $pe .'</div>
+            <div class="field-item even">'.uwwtd_format_decimal($field[0]['#markup']). $pe .'</div>
         </div>
-    </div>';    
+    </div>';
 }
 
 // function uwwtd_preprocess_field(&$vars) {
@@ -1551,18 +1555,18 @@ function uwwtd_render_field_with_pe($field)
 // }
 
 function uwwtd_piechart_agglonode($node, &$content)
-{    
+{
     drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-    
+
 // echo '<pre>';var_export($content);echo '</pre>';
 // echo '<pre>';var_export($content);echo '</pre>';
 // exit;
 // field_aggc1|Collective system|#74FFE0
 // field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
 // field_aggpercwithouttreatment|Discharge without treatment|#C00000
-    $aData = array(); 
+    $aData = array();
     $aData[] = array(
         "value" => $node->field_aggc1['und'][0]['value'],
         "label" => $content['field_agggenerated']['#title'],
@@ -1574,41 +1578,41 @@ function uwwtd_piechart_agglonode($node, &$content)
         "label" => $content['field_aggc2']['#title'],
         "color" => '#BD8842',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
-    );  
+    );
     $aData[] = array(
         "value" => $node->field_aggpercwithouttreatment['und'][0]['value'],
         "label" => $content['field_aggpercwithouttreatment']['#title'],
         "color" => '#C00000',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
-    );     
+    );
 //     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
 //     return "
 //     <script>
 //     (function ($) {
 //     $(document).ready(function() {
-//         display_uwwtp_stackedbar(".json_encode($aData).");        
-//         });    
-//     })(jQuery);  
+//         display_uwwtp_stackedbar(".json_encode($aData).");
+//         });
+//     })(jQuery);
 //     </script>
-//     ";  
+//     ";
     return "
     <script>
-    jQuery(document).ready(function(){                     
-        display_agglo_piechart(".json_encode($aData).");        
-    });    
+    jQuery(document).ready(function(){
+        display_agglo_piechart(".json_encode($aData).");
+    });
     </script>
-    ";       
+    ";
 }
 
 function uwwtd_stackedbar_uwwtpnode($node)
-{       
+{
     drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
 // field_aggc1|Collective system|#74FFE0
 // field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
 // field_aggpercwithouttreatment|Discharge without treatment|#C00000
-                
+
     $aData = array();
     $aData[] = array(
         "type" => 'BOD',
@@ -1617,14 +1621,14 @@ function uwwtd_stackedbar_uwwtpnode($node)
         "discharged" => $node->field_uwwboddischarge['und'][0]['value'],
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
-    );                 
+    );
     $aData[] = array(
         "type" => 'COD',
 //         "label" => 'COD load',
         "incoming" => $node->field_uwwcodincoming['und'][0]['value'],
         "discharged" => $node->field_uwwcoddischarge['und'][0]['value'],
 //         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',        
+//         'colordischarge' => '#C00000',
     );
     $aData[] = array(
         "type" => 'N',
@@ -1632,22 +1636,22 @@ function uwwtd_stackedbar_uwwtpnode($node)
         "incoming" => $node->field_uwwnincoming['und'][0]['value'],
         "discharged" => $node->field_uwwndischarge['und'][0]['value'],
 //         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',        
-    );  
+//         'colordischarge' => '#C00000',
+    );
     $aData[] = array(
         "type" => 'P',
 //         "label" => 'P load',
         "incoming" => $node->field_uwwpincoming['und'][0]['value'],
         "discharged" => $node->field_uwwpdischarge['und'][0]['value'],
 //         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',        
-    ); 
-    
-    $aColor['domain'] = array ('incoming', 'discharge');
+//         'colordischarge' => '#C00000',
+    );
+    // dsm($aData);
+    $aColor['domain'] = array ('incoming', 'discharged');
     $aColor['range'] = array ('#74FFE0', '#C00000');
-                     
-//     dsm($aData); 
-//     echo '<pre>';var_export($aData);echo '</pre>';          
+
+//     dsm($aData);
+//     echo '<pre>';var_export($aData);echo '</pre>';
 //     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
 //     <style>
 // .axis path,
@@ -1656,20 +1660,20 @@ function uwwtd_stackedbar_uwwtpnode($node)
 // stroke: #000;
 // shape-rendering: crispEdges;
 // }
-// 
+//
 // .bar {
 // fill: steelblue;
 // }
-// 
+//
 // .x.axis path {
 // display: none;
 // }
 //     </style>
     return "
     <script>
-    jQuery(document).ready(function(){                     
-        display_uwwtp_stackedbar(".json_encode($aData).','. json_encode($aColor).");        
-    });    
+    jQuery(document).ready(function(){
+        display_uwwtp_stackedbar(".json_encode($aData).','. json_encode($aColor).");
+    });
     </script>
     ";
 }
@@ -1703,11 +1707,11 @@ function uwwtd_menu_link__main_menu(&$variables)
   		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-down"></i></span>', $element['#href'], $element['#localized_options']);
   	} elseif ($depth == 3 && $element['#below']) {
   		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-right"></i></span>', $element['#href'], $element['#localized_options']);
-  	} else {	
+  	} else {
   		$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
   	}
   	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
-	
+
 }
 
 
@@ -1719,7 +1723,7 @@ function uwwtd_wkhtmltopdf_tag($options)
             return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
             break;
     }
-    return '';	
+    return '';
 }
 
 function uwwtd_menu_link__user_menu(&$variables) {
@@ -1733,11 +1737,11 @@ function uwwtd_menu_link__user_menu(&$variables) {
 	 	case 'user/logout':
 	 		return '<li><a href="'. $menu_link .'"><i class="fa fa-power-off"></i></a></li>';
 	 		break;
-	 	
+
 	 	default:
 	 		return '<li><a href="'. $menu_link .'">'. $element['#title'] .'</a></li>';
 	 		break;
-	 } 
+	 }
 }
 
 function uwwtd_preprocess_html(&$vars) {
