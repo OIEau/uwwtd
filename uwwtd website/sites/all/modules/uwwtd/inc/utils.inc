@@ -14,10 +14,25 @@ function uwwtd_get_max_annee()
 /**
  *
  */
+function  uwwtd_get_previous_year($year)
+{
+    $allyear = uwwtd_get_all_year();
+    rsort($allyear);
+    foreach($allyear as $one_year) {
+        if ($one_year < $year) {
+            return $one_year;
+        }
+    } 
+    return false;   
+}
+
+/**
+ *
+ */
 function uwwtd_get_all_year()
 {
     $year = array();
-	$query = "SELECT field_anneedata_value FROM {field_data_field_anneedata} group by field_anneedata_value";
+	$query = "SELECT field_anneedata_value FROM {field_data_field_anneedata} group by field_anneedata_value order by field_anneedata_value desc";
     $result = db_query($query);
 	while($record = $result->fetchAssoc()) {
 		$year[$record['field_anneedata_value']] = $record['field_anneedata_value'];

@@ -3567,7 +3567,7 @@ function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
     
-    uwwtd_setup_register_batch($batch);
+    uwwtd_register_set_operation($batch, $annee);
 
 	batch_set($batch);
 	batch_process('data/conformity');

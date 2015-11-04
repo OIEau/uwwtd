@@ -134,8 +134,6 @@ echo uwwtd_insert_errors_tab($node);
             print '</legend>';
           print '<div class="panel-body">';
             print '<div class="uwwrealthird">';
-            
-            
               print '<div class="flip">
                        <div class="front">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
@@ -227,14 +225,14 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_sourcefile']);
           print '</div>';
         print '</fieldset>';
-        if(isset($node->field_article17['und'][0]['nid'])){
+        if(isset($node->field_article_17_agglomeration['und'][0]['nid'])){
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
           print '<legend class="panel-heading">';
             print '<div class="panel-title fieldset-legend">'.t('Forward looking aspect').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-            //print render($content['field_article17']);
-            print uwwtd_render_article17($node->field_article17['und'][0]['nid']);
+            //print render($content['article_17_agglomeration']);
+            print uwwtd_render_article_17_agglomeration($node->article_17_agglomeration['und'][0]['nid']);
           print '</div>';
         print '</fieldset>';
         }
