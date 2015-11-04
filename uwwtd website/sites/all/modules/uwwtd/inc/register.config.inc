@@ -1,12 +1,15 @@
 <?php
 
 //todo move in conf file
+// $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
     'model' => '2015_register_model_20151102_2.xlsx',
     'final_register' => '2015_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
+    'path_model_file' => drupal_get_path('module', 'uwwtd') . '/model/',
+    'path_created_file' => drupal_get_path('module', 'uwwtd') . '/model/test/',
     'rca' => array(
         'csv_name' => '_receiving_area_sheet1',
         'xlsx_name' => 'sheet1',
