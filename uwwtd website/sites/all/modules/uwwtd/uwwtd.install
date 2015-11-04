@@ -1897,7 +1897,82 @@ function uwwtd_update_7121()
             $result = field_create_instance($instance);
 //             dsm($result);
         }       
-    }    
+    } 
+    
+    //------------------------------------------
+    //add new field to bundle agglomeration and uwwtp
+    $agglo_field = array(     
+        'field_article17_agglo' => array(       
+            'field_name' => 'field_article17_agglo',
+            'type' => 'node_reference',            	
+            'widget' => array(
+                'type' => 'node_reference_autocomplete',
+            ), 
+            'label' => 'Article 17 Agglo',        
+        ),  
+    ); 
+    $uwwtp_field = array(
+        'field_article17_uwwtp' => array(       
+            'field_name' => 'field_article17_uwwtp',
+            'type' => 'node_reference',            	
+            'widget' => array(
+                'type' => 'node_reference_autocomplete',
+            ), 
+            'label' => 'Article 17 Uwwtp',        
+        ),  
+    );
+
+    foreach ($agglo_field as $newfield) {
+        if (! field_info_field($newfield['field_name']) ) {
+            unset($newfield['label']);
+            unset($newfield['widget']);
+            $result = field_create_field($newfield);
+        }
+    }
+    
+    foreach ($uwwtp_field as $newfield) {
+        if (! field_info_field($newfield['field_name']) ) {
+            unset($newfield['label']);
+            unset($newfield['widget']);
+            $result = field_create_field($newfield);
+        }
+    }  
+    
+    foreach ($agglo_field as $newfield) {
+//         dsm($newfield);
+        $instance_exist = field_info_instance('node', $newfield['field_name'], 'agglomeration');
+//         dsm($instance_exist);        
+        if (! $instance_exist ) {
+            $instance = array(
+                'field_name' => $newfield['field_name'],
+                'entity_type' => 'node',
+                'bundle' => 'agglomeration',
+                'label' => $newfield['label'],
+                'widget' => $newfield['widget'],
+              );
+        
+            $result = field_create_instance($instance);
+//             dsm($result);
+        }       
+    }
+    
+    foreach ($uwwtp_field as $newfield) {
+//         dsm($newfield);
+        $instance_exist = field_info_instance('node', $newfield['field_name'], 'uwwtp');
+//         dsm($instance_exist);        
+        if (! $instance_exist ) {
+            $instance = array(
+                'field_name' => $newfield['field_name'],
+                'entity_type' => 'node',
+                'bundle' => 'uwwtp',
+                'label' => $newfield['label'],
+                'widget' => $newfield['widget'],
+              );
+        
+            $result = field_create_instance($instance);
+//             dsm($result);
+        }       
+    }        
 //     throw new DrupalUpdateException(__FUNCTION__); 
      
     variable_set('siif_eru_version', __FUNCTION__);
