@@ -240,7 +240,6 @@ function display_piechart_custom(data,divid,TAnchor) {
 	var color = d3.scale.category10();
 
 	var svg = d3.select('#' + divid)
-	.append('svg')
 	.attr('width', widthsvg)
 	.attr('height', height)
 	.append('g')
