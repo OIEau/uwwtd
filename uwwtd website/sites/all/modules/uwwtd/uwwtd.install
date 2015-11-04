@@ -1980,6 +1980,40 @@ function uwwtd_update_7121()
     
 //     throw new DrupalUpdateException(__FUNCTION__);     
 }
+
+/**
+ * desactivate cron, change settings of field, change permission on contact form ( Use the site-wide contact form ) 
+ */ 
+function uwwtd_update_7122()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    //desactivate cron (run = never)
+    variable_set('cron_safe_threshold', 0);
+    
+    //grant acces to menu contact for all role   
+    foreach (array('anonymous user', 'authenticated user', 'administrator', 'editor') as $rolename) {
+        $role = user_role_load_by_name($rolename);
+        if (!$role) {
+            continue;
+        }
+        
+        user_role_grant_permissions($role->rid, array('access site-wide contact form'));
+    }
+    
+    //change setting of field  display field_uwwwastewatertreated, change scale to 0
+    $instance_info = field_info_instance('node', 'field_uwwwastewatertreated', 'uwwtp');
+    if ($instance_info) {
+        $instance_info['display']['default']['settings']['scale'] = 0;
+        field_update_instance($instance_info);
+    } 
+    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    
+//     throw new DrupalUpdateException(__FUNCTION__);     
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

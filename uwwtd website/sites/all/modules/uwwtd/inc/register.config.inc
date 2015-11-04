@@ -59,18 +59,22 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'xlsx_model_sheet_name' => 'Graphs',
     ), 
     'new_agglo' => array(
+        'csv_name' => '_new_agglo_sheet12',
         'xlsx_name' => 'sheet12',
         'xlsx_model_sheet_name' => 'New agglomerations',
     ),  
     'agglo_out' => array(
+        'csv_name' => '_agglo_out_sheet13',
         'xlsx_name' => 'sheet13',
         'xlsx_model_sheet_name' => 'Agglomerationout',
     ),  
     'new_uwwtp' => array(
+        'csv_name' => '_new_uwwtp_sheet14',
         'xlsx_name' => 'sheet14',
         'xlsx_model_sheet_name' => 'New treatment plants',
     ),  
     'uwwtp_out' => array(
+        'csv_name' => '_uwwtp_out_sheet15',
         'xlsx_name' => 'sheet15',
         'xlsx_model_sheet_name' => 'UWWTPsout',
     ),                                                         
@@ -410,9 +414,42 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
     'type_of_receiving_area' => $i++, 
 ); 
 
+$i = 0;
+$GLOBALS['uwwtd']['sheet12_newagglo'] = array(
+    'id_of_agglomeration' => $i++,
+    'name_of_agglomeration' => $i++, 
+    'size_of_agglomeration' => $i++, 
+    'reason' => $i++,  
+); 
+
+$i = 0;
+$GLOBALS['uwwtd']['sheet13_aggloout'] = array(
+    'id_of_agglomeration' => $i++,
+    'name_of_agglomeration' => $i++, 
+    'size_of_agglomeration' => $i++, 
+    'remarks' => $i++,  
+); 
 
 
+$i = 0;
+$GLOBALS['uwwtd']['sheet14_newuwwtp'] = array(
+    'id_of_uwwtp' => $i++,
+    'name_of_uwwtp' => $i++, 
+    'id_of_agglomeration' => $i++,
+    'name_of_agglomeration' => $i++,     
+    'size_of_uwwtp' => $i++, 
+    'reason' => $i++,  
+);
 
+$i = 0;
+$GLOBALS['uwwtd']['sheet15_uwwtpout'] = array(
+    'id_of_uwwtp' => $i++,
+    'name_of_uwwtp' => $i++, 
+    'id_of_agglomeration' => $i++,
+    'name_of_agglomeration' => $i++,     
+    'size_of_uwwtp' => $i++, 
+    'remarks' => $i++,  
+);  
 
 
 
