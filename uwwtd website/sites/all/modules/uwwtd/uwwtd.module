@@ -355,6 +355,13 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['download'] = array(
+    'page callback' => 'uwwtd_page_download',
+    'page arguments' => array(),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );  
   ///////////////////////////////////////////////////////////////////
 //     $items['report/pdf'] = array(
 // 		'title' => t('PDF report'),
@@ -4348,3 +4355,18 @@ function uwwtd_form($form, &$form_state) {
 	return $form;
 }
 */
+
+/**
+ *
+ */ 
+function uwwtd_page_download()
+{
+    $title = 'Download';
+    drupal_set_title($title);
+    
+    $page = ''
+            . '<h1>'.$title.'</h1>'
+    ;
+    return $page;
+}
+ 

@@ -2014,6 +2014,48 @@ function uwwtd_update_7122()
     
 //     throw new DrupalUpdateException(__FUNCTION__);     
 }
+
+/**
+ * add an entry for menu stat, create new dir for register
+ */ 
+function uwwtd_update_7123()
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    //install new menu
+    menu_cache_clear_all();
+    
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7123.json');   //todo change     
+
+    //create new dir for register
+	$rgister_dir = 'public://register';
+	file_prepare_directory($rgister_dir, FILE_CREATE_DIRECTORY);     
+    
+    //delete content basic page download
+	$ids = array();
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Download', '=');
+	$listnid = $query->execute();
+	foreach($listnid as $nid){
+        node_delete($nid->nid);
+	}
+    unset($listnid);  
+    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    throw new DrupalUpdateException(__FUNCTION__);     
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

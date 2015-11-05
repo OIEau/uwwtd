@@ -36,11 +36,13 @@ function uwwtd_register_form($form, &$form_state){
 function uwwtd_register_form_submit($form, &$form_state){
      $annee = $form['uwwtd_year']['#value'];
      $filepath = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
-    //if registre already calculated and no new conformity or new import_data processed since, we send the file                                                             
+    //if registre already calculated and no new conformity or new import_data processed since, we send the file
+//     dsm($filepath);
+//     dsm(file_create_url($filepath));                                                             
     if (file_exists($filepath) 
         && variable_get('registre_'.$annee, -2) > variable_get('conformity_'.$annee, -1)
         && variable_get('registre_'.$annee, -2) > variable_get('import_data_'.$annee, -1)) {
-        drupal_set_message('<a href="'.$filepath.'">get the register for year '.$annee.'</a>');
+        drupal_set_message('<a href="'.file_create_url($filepath).'">get the register for year '.$annee.'</a>');
     } else {
         uwwtd_setup_register_batch($annee);
     }
@@ -267,7 +269,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -433,7 +435,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -458,6 +460,7 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     $model_path = $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
     //change to public://
     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name'],
@@ -533,7 +536,7 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));   
     unset($objWriter);
     unset($objReader);
     
@@ -899,7 +902,7 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -940,7 +943,7 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1039,7 +1042,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1082,7 +1085,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1535,7 +1538,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1597,7 +1600,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1659,7 +1662,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1721,7 +1724,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -1930,7 +1933,7 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -2136,7 +2139,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -2197,7 +2200,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
     
@@ -2653,7 +2656,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);    
     
@@ -4852,7 +4855,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));                                        
-        $objPHPExcel = $objReader->load($sheet_path);     
+        $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));     
 //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
 //         dsm(1);
         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
@@ -4866,7 +4869,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     //$objWriter->setOffice2003Compatibility(true);
     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
 //     dsm($target_path);    
-    $objWriter->save($target_path);
+    $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);  
     $context['sandbox']['progress']++;
@@ -4879,5 +4882,5 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 
 
     variable_set('registre_'.$annee, time());
-    drupal_set_message('<a href="'.$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'].'">get the register for year '.$annee.'</a>');          
+    drupal_set_message('<a href="'.file_create_url($GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register']).'">get the register for year '.$annee.'</a>');          
 }
