@@ -1353,7 +1353,7 @@ function uwwtd_get_agglo_graphic($node){
 
     $output .= '<div class="ias">
       <div class="graphic-title">
-        '.t('Indivual Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
+        '.t('Individual And Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
       </div>
       <img width="1098px" src="'.$src.'/images/graphic/ias.png" alt="reseau">
     </div>
