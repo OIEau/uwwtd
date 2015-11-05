@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * template.php
@@ -1542,7 +1543,7 @@ function uwwtd_render_field_with_pe($field)
     return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
         <div class="field-label">'.$field['#title'].':&nbsp;</div>
         <div class="field-items">
-            <div class="field-item even">'.uwwtd_format_decimal($field[0]['#markup']). $pe .'</div>
+            <div class="field-item even">'.uwwtd_format_number($field[0]['#markup'], 1). $pe .'</div>
         </div>
     </div>';
 }
@@ -1702,14 +1703,14 @@ function uwwtd_menu_link__main_menu(&$variables)
     	// Wrap menu-level for each level.
     	$sub_menu = '<div class="menu-level menu-level--' . $depth . '">' .  $sub_menu . '</div>';
   	}
-  	// krumo($element);
+  	// krumo($element); 
   	if ($depth == 2 && $element['#below']) {
   		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-down"></i></span>', $element['#href'], $element['#localized_options']);
   	} elseif ($depth == 3 && $element['#below']) {
   		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-right"></i></span>', $element['#href'], $element['#localized_options']);
   	} else {
   		$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
-  	}
+  	}  
   	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
 
 }

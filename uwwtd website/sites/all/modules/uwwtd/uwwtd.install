@@ -2038,6 +2038,17 @@ function uwwtd_update_7123()
 	$rgister_dir = 'public://register';
 	file_prepare_directory($rgister_dir, FILE_CREATE_DIRECTORY);     
     
+    //delete content basic page download
+	$ids = array();
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Download', '=');
+	$listnid = $query->execute();
+	foreach($listnid as $nid){
+        node_delete($nid->nid);
+	}
+    unset($listnid);  
     
     variable_set('siif_eru_version', __FUNCTION__);
     
