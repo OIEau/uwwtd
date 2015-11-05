@@ -394,7 +394,7 @@ function uwwtd_menu(){
   		'file path' => drupal_get_path('module', 'uwwtd')
   );
   $items['stats/graphs'] = array(
-  		'page callback' => 'uwwtd_page_stats_graphs_result',
+  		'page callback' => 'uwwtd_stats_graphs_page',
   		'page arguments' => array(),
   		'access callback' => true,
   		'access arguments' => true,
@@ -4078,7 +4078,7 @@ function uwwtd_get_url_path($type, $param = array())
 
 function uwwtd_update_cache_data($list_year = array())
 {
-//     dsm(__FUNCTION__); 
+//     dsm(__FUNCTION__);
     if (empty($list_year)) {
         $list_year = uwwtd_get_all_year();
     }
