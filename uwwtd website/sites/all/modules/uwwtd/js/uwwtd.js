@@ -421,7 +421,7 @@ function stackedbar_nat_gen_load(data) {
 
 
 
-function stackedbar_load_ent_and_dis(data,color) {
+function stackedbar_load_ent_and_dis(data,color,divid) {
 
 	var margin = {top: 10, right: 20, bottom: 30, left: 60},
 	width = 315 - margin.left - margin.right,
@@ -447,7 +447,7 @@ function stackedbar_load_ent_and_dis(data,color) {
 	.orient("left")
 	.tickFormat(d3.format(".2s"));
 
-	var svg = d3.select("#graph_load_ent_and_dis")
+	var svg = d3.select("#" + divid)
 //	.attr("width", width + margin.left + margin.right)
 	.attr("width", widthsvg + margin.left + margin.right)
 	.attr("height", height + margin.top + margin.bottom)

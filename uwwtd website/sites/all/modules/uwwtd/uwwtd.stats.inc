@@ -118,7 +118,8 @@ function uwwtd_stat_national_treatmentplant()
 					SUM(f_uwwnincoming.field_uwwnincoming_value)AS nin_sum,
 					SUM(f_uwwndischarge.field_uwwndischarge_value)AS nout_sum,
 					SUM(f_uwwpincoming.field_uwwpincoming_value)AS pin_sum,
-					SUM(f_uwwpdischarge.field_uwwpdischarge_value)AS pout_sum
+					SUM(f_uwwpdischarge.field_uwwpdischarge_value)AS pout_sum,
+					SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value)AS uwwt_sum
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -141,7 +142,6 @@ function uwwtd_stat_national_treatmentplant()
         left join
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
-
         left join
             {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
                 ON n.nid = f_uwwloadenteringuwwtp.entity_id
@@ -181,7 +181,6 @@ function uwwtd_stat_national_treatmentplant()
         left join
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
-
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
@@ -197,6 +196,9 @@ function uwwtd_stat_national_treatmentplant()
 		 left join
             {field_data_field_uwwpincoming} f_uwwpincoming
                 ON n.nid = f_uwwpincoming.entity_id
+		left join
+            {field_data_field_uwwwastewatertreated} f_uwwwastewatertreated
+                ON n.nid = f_uwwwastewatertreated.entity_id
     where n.type = :typenode';
 
 
@@ -216,6 +218,7 @@ function uwwtd_stat_national_treatmentplant()
 			$row['nout_sum_format'] = is_null($row['nout_sum']) ? '0' : uwwtd_format_number($row['nout_sum'], 2);
 			$row['pin_sum_format'] = is_null($row['pin_sum']) ? '0' : uwwtd_format_number($row['pin_sum'], 2);
 			$row['pout_sum_format'] = is_null($row['pout_sum']) ? '0' : uwwtd_format_number($row['pout_sum'], 2);
+			$row['uwwt_sum_format'] = is_null($row['uwwt_sum']) ? '0' : uwwtd_format_number($row['uwwt_sum'], 2);
 			$data[] = $row;
 		}
 	}catch(Exception $e) {

@@ -1,6 +1,47 @@
 <?php
 
 function uwwtd_page_stats_graphs(){
+	$form = drupal_get_form('uwwtd_page_stats_graphs_form');
+
+	return render($form);
+}
+
+function uwwtd_page_stats_graphs_form($form, &$form_state){
+
+	$form['#prefix'] = '<h1 align="center">' . t('Graphs for national stats') . '</h1>';
+	$form['description'] = array('#markup' => t('<p>Select the type of content, type of data (if needed) and geographical extent to generate the statistics.</p>'));
+
+	// Get available years for data
+		$query = db_select('field_data_field_anneedata', 'a');
+		$query->fields('a', array('field_anneedata_value'));
+		$query->orderBy('field_anneedata_value', 'DESC');
+		$results = $query->execute();
+		$years = array('all' => 'Show all');
+		while($record = $results->fetchAssoc()) {
+			$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+		}
+		$form['year'] = array(
+				'#title' => t('Year'),
+				'#type' => 'select',
+				'#options' => $years,
+				'#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : 'all',
+		);
+
+
+
+
+
+
+
+		dpm($form);
+
+
+	return $form;
+
+}
+
+
+function uwwtd_page_stats_graphs_result(){
 
 	require_once 'uwwtd.stats.inc';
 	drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
@@ -12,6 +53,24 @@ function uwwtd_page_stats_graphs(){
 	$title = 'Graphs for national stats';
 	drupal_set_title($title);  //todo
 	//$page =  '<h1 align="center">'.$title.'</h1><br/>';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	/*
@@ -177,36 +236,39 @@ function uwwtd_page_stats_graphs(){
 
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "BOD",
-				"entering" => $result['bodin_sum'],
-				"discharged" => $result['bodout_sum']
+				"incoming" => ($result['bodin_sum']/$result['uwwt_sum'])*1000,
+				"discharged" => ($result['bodout_sum']/$result['uwwt_sum'])*1000
 		);
 		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration BOD (mg/l): ') . $result['bodin_sum_format'] . '<br/>';
 		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration BOD (mg/l): ') . $result['bodout_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Rate for BOD: ') . $result['bodout_sum_format'] . '<br/>';
+		$aString_uwwtd_per_ent_and_dis .= t('Rate for BOD : ') . round(((1- ($result['bodout_sum']/ $result['bodin_sum']))*100), 1) . ' %' . '<br/>';
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "COD",
-				"entering" => $result['codin_sum'],
-				"discharged" => $result['codout_sum']
+				"incoming" => ($result['codin_sum']/$result['uwwt_sum'])*1000,
+				"discharged" => ($result['codout_sum']/$result['uwwt_sum'])*1000
 		);
 		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration COD (mg/l): ') . $result['codin_sum_format'] . '<br/>';
 		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration COD (mg/l): ') . $result['codout_sum_format'] . '<br/>';
+		$aString_uwwtd_per_ent_and_dis .= t('Rate for COD : ')  . round(((1- ($result['codout_sum']/ $result['codin_sum']))*100), 1) . ' %' . '<br/>';
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "N",
-				"entering" => $result['nin_sum'],
-				"discharged" => $result['nout_sum']
+				"incoming" => ($result['nin_sum']/$result['uwwt_sum'])*1000,
+				"discharged" => ($result['nout_sum']/$result['uwwt_sum'])*1000
 		);
 		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration N (mg/l): ') . $result['nin_sum_format'] . '<br/>';
 		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration N (mg/l): ') . $result['nout_sum_format'] . '<br/>';
+		$aString_uwwtd_per_ent_and_dis .= t('Rate for N : ') . round(((1- ($result['nout_sum']/ $result['nin_sum']))*100), 1) . ' %' . '<br/>';
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "P",
-				"entering" => $result['pin_sum'],
-				"discharged" => $result['pout_sum']
+				"incoming" => ($result['pin_sum']/$result['uwwt_sum'])*1000,
+				"discharged" => ($result['pout_sum']/$result['uwwt_sum'])*1000
 		);
 		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration P (mg/l): ') . $result['pin_sum_format'] . '<br/>';
 		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration P (mg/l): ') . $result['pout_sum_format'] . '<br/>';
+		$aString_uwwtd_per_ent_and_dis .= t('Rate for P : ') . round(((1- ($result['pout_sum']/ $result['pin_sum']))*100), 1) . ' %' . '<br/>';
 	}
 	$aColor_uwwtd_per_ent_and_dis ['domain'] = array (
-			'entering',
+			'incoming',
 			'discharged'
 	);
 	$aColor_uwwtd_per_ent_and_dis ['range'] = array (
@@ -473,7 +535,7 @@ function uwwtd_page_stats_graphs(){
 
                             <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
                             </div>'
-                            . '<div class="view-content"><svg id="123456" style="margin:10px;"/></div>'
+                            . '<div class="view-content"><svg id="graph_per_ent_and_dis" style="margin:10px;"/></div>'
                       .'</div>'
 
                       .'<div class="rightgraph back">'
@@ -568,7 +630,8 @@ function uwwtd_page_stats_graphs(){
 		display_piechart_custom(".json_encode($aData_uwwtd_stat_agglomeration_uwwtpT).",'graph_loadenteringByTreatmenttypeAgglomeration','middle');
 
         stackedbar_nat_gen_load(".json_encode($aData_uwwtd_stat_national_generated_by_agglomeration).");
-        stackedbar_load_ent_and_dis(".json_encode($aData_uwwtd_load_ent_and_dis).','. json_encode($aColor_uwwtd_load_ent_and_dis).");
+        stackedbar_load_ent_and_dis(".json_encode($aData_uwwtd_load_ent_and_dis).','. json_encode($aColor_uwwtd_load_ent_and_dis).",'graph_load_ent_and_dis');
+		stackedbar_load_ent_and_dis(".json_encode($aData_uwwtd_per_ent_and_dis).','. json_encode($aColor_uwwtd_per_ent_and_dis).",'graph_per_ent_and_dis');
 
     });
     </script>

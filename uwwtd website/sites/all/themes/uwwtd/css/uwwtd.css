@@ -545,3 +545,17 @@ fill: steelblue;
 #graph_load_ent_and_dis .x.axis path {
 display: none;
 }
+#graph_per_ent_and_dis .axis path,
+#graph_per_ent_and_dis .axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+#graph_per_ent_and_dis .bar {
+fill: steelblue;
+}
+
+#graph_per_ent_and_dis .x.axis path {
+display: none;
+}

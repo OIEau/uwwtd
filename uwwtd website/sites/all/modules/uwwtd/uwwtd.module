@@ -394,7 +394,7 @@ function uwwtd_menu(){
   		'file path' => drupal_get_path('module', 'uwwtd')
   );
   $items['stats/graphs'] = array(
-  		'page callback' => 'uwwtd_page_stats_graphs',
+  		'page callback' => 'uwwtd_page_stats_graphs_result',
   		'page arguments' => array(),
   		'access callback' => true,
   		'access arguments' => true,
@@ -4313,5 +4313,37 @@ function uwwtd_export_data($type_export, $title, $header, $rows)
     unlink($filename);
     exit();
 }
+/*
+function uwwtd_form($form, &$form_state) {
+	if($form['element']['#action'] == '/ap_uwwtd_si/stats/graphs'){
 
 
+
+		// Get available years for data
+		$query = db_select('field_data_field_anneedata', 'a');
+		$query->fields('a', array('field_anneedata_value'));
+		$query->orderBy('field_anneedata_value', 'DESC');
+		$results = $query->execute();
+		$years = array('all' => 'Show all');
+		while($record = $results->fetchAssoc()) {
+			$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+		}
+		$form['year'] = array(
+				'#title' => t('Year'),
+				'#type' => 'select',
+				'#options' => $years,
+				'#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : 'all',
+		);
+
+
+
+
+
+
+
+		dpm($form);
+	}
+
+	return $form;
+}
+*/
