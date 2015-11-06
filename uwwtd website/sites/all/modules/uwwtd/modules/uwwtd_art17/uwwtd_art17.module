@@ -47,10 +47,21 @@ function uwwtd_art17_menu(){
 }
 
 function uwwtd_art17_node_delete($node) {
-// dsm($node);
-  db_delete('mytable')
-    ->condition('nid', $node->nid)
-    ->execute();
+	if($node->type=="article_17_uwwtp"){
+		if($uwwtp = node_load($node->field_art17uwwtp_link_uwwtp['und'][0]['nid'])){
+			//modification de mon champ 
+			$uwwtp->field_article17_uwwtp['und'][0]['nid'] = null;
+			node_save($uwwtp);
+		}
+	}elseif($node->type=="article_17_agglomeration"){
+		if($aggl = node_load($node->field_art17agg_link_agglo['und'][0]['nid'])){
+			//modification de mon champ 
+			$aggl->field_article17_agglo['und'][0]['nid'] = null;
+			node_save($aggl);
+		}
+
+	}
+
 }
 ################################ ART 17 PAGE ################################
 function uwwtd_art17_form($form, &$form_state){
@@ -449,11 +460,7 @@ function uwwtd_art17_inport_form($form, &$form_state){
 		}else{
 			$article17 = "mandatory";
 		}
-		
-		
-	   
-		
-		
+
 		global $base_url;
 		$site_url = $base_url.'/';
 
@@ -525,290 +532,200 @@ function uwwtd_art17_setup_batch($newFile, $annee, $datas){
 }
 
 function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$context){
+	$GLOBALS['uwwtd_errors'] = array();
+	$timestamp= time;
+	unset($_SESSION['uwwtd_error']);
+	unset($_SESSION['uwwtd_warnings']);
+	 $e = 0;
 	if (!isset($context['sandbox']['progress'])) {
-
 		$context['sandbox']['max'] = count($datas);
 		$context['sandbox']['progress'] = 0;
 		$context['sandbox']['ids'] = $datas;
 	}
 	$i = $context['sandbox']['progress'];
 	$data = $context['sandbox']['ids'][$i];
-	$keyData = array_keys($data);
-	//Data UWWTP
-	$uwwCode = "uwwCode";
-	$uwwName = "uwwName";
-	$aggCode = "aggCode";
-	$aggName = "aggName";
-	$flatpStatus = "flatpStatus";
-	$flatpreasons = "flatpreasons";	
-	$flatpMeasures = "flatpMeasures";
-	$flatpExpload = "flatpExpload";
-	$flatpExpCapacity = "flatpExpCapacity";
-	$flatpExpecTreatment = "flatpExpecTreatment";	
-	$flatpExpecDateStart = "flatpExpecDateStart";
-	$flatpExpecDateStartWork = "flatpExpecDateStartWork";
-	$flatpExpecDateCompletion = "flatpExpecDateCompletion";	
-	$flatpExpecDateperformance = "flatpExpecDateperformance";
-	$flatpInv = "flatpInv";
-	$flatpEUfundname = "flatpEUfundname";
-	$flatpEUfund = "flatpEUfund";
-	$flatpComments = "flatpComments";
-	$flatpExploadtruck = "flatpExploadtruck";
-	$flatpotherfund = "Flatpotherfund";
-	$flatpotherfundname = "flatpotherfundname";
-	$flatploan = "Flatploan";
-	$flatploanname = "Flatploanname";
+	// $keyData = array_keys($data);
+
+	//station
+	// $context['sandbox']['existsUwwtp'] = 1;
+	///agglo
+	$context['sandbox']['existsUwwtp'] = 0;
 	
-	//Data Agglomération	
-	$aggloCode = "aggCode";
-	$aggName = "aggName";
-	$flaggStatus = "flaggStatus";
-	$flaggreasons = "flaggreasons";	
-	$flaggMeasures = "flaggMeasures";
-	$flaggExpecDateStart = "flaggExpecDateStart";
-	$flaggExpecDateStartWork = "flaggExpecDateStartWork";
-	$flaggExpecDateCompletion = "flaggExpecDateCompletion";	
-	$flaggInv = "flaggInv";
-	$flaggEUfundname = "flaggEUfundname";
-	$flaggEUfund = "FlaggEUfund";	
-	$flaggComments = "FlaggComments";
-	$flaggExpload = "flaggExpload";
-	$flaggExploadcoll = "flaggExploadcoll";
-	$flaggExploadIAS = "flaggExploadIAS";
-	$flaggotherfund = "Flaggotherfund";
-	$flaggotherfundname = "flaggotherfundname";
-	$flaggloan = "Flaggloan";
-	$flaggloanname = "Flaggloanname";
-	
-	foreach($keyData as $key){
-		//Data UWWTP
-		$posCodeUwwtp = strpos($key, $uwwCode);
-		$posNameUwwtp = strpos($key, $uwwName);
-		$posCodeAgg = strpos($key, $aggCode);
-		$posNameAgg = strpos($key, $aggName);
-		$posFlatpStatus = strpos($key, $flatpStatus);
-		$posFlatpreasons = strpos($key, $flatpreasons);
-		$posFlatpMeasures = strpos($key, $flatpMeasures);
-		$posFlatpExpload = strpos($key, $flatpExpload);
-		$posFlatpExpCapacity = strpos($key, $flatpExpCapacity);
-		$posFlatpExpecTreatment = strpos($key, $flatpExpecTreatment);
-		$posFlatpExpecDateStart = strpos($key, $flatpExpecDateStart);
-		$posFlatpExpecDateStartWork = strpos($key, $flatpExpecDateStartWork);
-		$posFlatpExpecDateCompletion = strpos($key, $flatpExpecDateCompletion);
-		$posFlatpExpecDateperformance = strpos($key, $flatpExpecDateperformance);
-		$posFlatpInv = strpos($key, $flatpInv);
-		$posFlatpEUfundname = strpos($key, $flatpEUfundname);
-		$posFlatpEUfund = strpos($key, $flatpEUfund);
-		$posFlatpComments = strpos($key, $flatpComments);
-		$posFlatpExploadtruck = strpos($key, $flatpExploadtruck);
-		$posFlatpotherfund= strpos($key, $flatpotherfund);
-		$posFlatpotherfundname = strpos($key, $flatpotherfundname);
-		$posFlatploan = strpos($key, $flatploan);
-		$posFlatploanname = strpos($key, $flatploanname);
-		
-		//Data Agglomération
-		$posAggCode = strpos($key, $aggloCode);
-		$posAggName = strpos($key, $aggName);
-		$posFlaggStatus = strpos($key, $flaggStatus);
-		$posFlaggreasons = strpos($key, $flaggreasons);
-		$posFlaggMeasures = strpos($key, $flaggMeasures);
-		$posFlaggExpecDateStart = strpos($key, $flaggExpecDateStart);
-		$posFlaggExpecDateStartWork = strpos($key, $flaggExpecDateStartWork);
-		$posFlaggExpecDateCompletion = strpos($key, $flaggExpecDateCompletion);
-		$posFlaggInv = strpos($key, $flaggInv);
-		$posFlaggEUfundname = strpos($key, $flaggEUfundname);
-		$posFlaggEUfund = strpos($key, $flaggEUfund);
-		$posFlaggComments = strpos($key, $flaggComments);
-		$posFlaggExpload = strpos($key, $flaggExpload);
-		$posFlaggExploadcoll = strpos($key, $flaggExploadcoll);
-		$posFlaggExploadIAS = strpos($key, $flaggExploadIAS);
-		$posFlaggotherfund = strpos($key, $flaggotherfund);
-		$posFlaggotherfundname= strpos($key, $flaggotherfundname);
-		$posFlaggloan = strpos($key, $flaggloan);
-		$posFlaggloanname = strpos($key, $flaggloanname);
-		
-		//Data UWWTP
-		if($posCodeUwwtp !== false){
-			// echo "La chaine '$uwwCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posCodeUwwtp";
-			$posCodeUwwtp = true;
-			$DataUwwtpCode = $key;
+	if($context['sandbox']['existsUwwtp'] == 1){
+		// article 17 Station
+		if(isset($data[0]) &&($data[0] == '' || empty($data[0]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "uwwCode" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posNameUwwtp !== false){
-			// echo "La chaine '$uwwCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posCodeUwwtp";
-			$posNameUwwtp = true;
-			$DataUwwtpName = $key;
+		if(isset($data[1]) &&($data[1] == '' || empty($data[1]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "uwwName" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posCodeAgg !== false){
-			// echo "La chaine '$aggCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posCodeAgg";
-			$posCodeAgg = true;
-			$DataUwwtpAggCode = $key;
+		if(isset($data[2]) && ($data[2] == '' || empty($data[2]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "aggCode" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posNameAgg !== false){
-			// echo "La chaine '$aggCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posCodeAgg";
-			$posNameAgg = true;
-			$DataUwwtpAggName = $key;
+		if(isset($data[3]) &&($data[3] == '' || empty($data[3]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "aggName" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpStatus !== false){
-			$posFlatpStatus = true;
-			$DataFlatpStatus = $key;
+		if(isset($data[4]) && ($data[4] == '' || empty($data[4]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpStatus" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $fata);
 		}
-		if($posFlatpreasons !== false){
-			$DataFlatpreasons = $key;
+		if(isset($data[5]) && ($data[5] == '' || empty($data[5]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpreasons" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpMeasures !== false){
-			$DataFlatpMeasures = $key;
+		if(isset($data[6]) && ($data[6] == '' || empty($data[6]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpMeasures" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpload !== false){
-			$DataFlatpExpload = $key;
+		if(isset($data[7]) && ($data[7] == '' || empty($data[7]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpload" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpCapacity !== false){
-			$DataFlatpExpCapacity = $key;
+		if(isset($data[8]) && ($data[8] == '' || empty($data[8]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpCapacity" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpecTreatment !== false){
-			$DataFlatpExpecTreatment = $key;
+		if(isset($data[9]) && ($data[9] == '' || empty($data[9]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpecTreatment" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpecDateStart !== false){
-			$DataFlatpExpecDateStart = $key;
+		if(isset($data[10]) && ($data[10] == '' || empty($data[10]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpecDateStart" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpecDateStartWork !== false){
-			$DataFlatpExpecDateStartWork = $key;
+		if(isset($data[11]) && ($data[11] == '' || empty($data[11]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpecDateStartWork" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpecDateCompletion !== false){
-			$DataFlatpExpecDateCompletion = $key;
+		if(isset($data[12]) && ($data[12] == '' || empty($data[12]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpecDateCompletion" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExpecDateperformance !== false){
-			$DataFlatpExpecDateperformance = $key;
+		if(isset($data[13]) && ($data[13] == '' || empty($data[13]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpExpecDateperformance" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpInv !== false){
-			$DataFlatpInv = $key;
+		if(isset($data[14]) && ($data[14] == '' || empty($data[14]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpInv" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpEUfundname !== false){
-			$DataFlatpEUfundname = $key;
+		if(isset($data[15]) && ($data[15] == '' || empty($data[15]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpEUfundname" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpEUfund !== false){
-			$DataFlatpEUfund = $key;
+		if(isset($data[16]) && ($data[16] == '' || empty($data[16]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpEUfund" column in the Uwwtps article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpComments !== false){
-			$DataFlatpComments = $key;
+
+	}
+	//Agglo
+	if($context['sandbox']['existsUwwtp'] == 0){
+		if(isset($data[0]) && ($data[0] == '' || empty($data[0]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpExploadtruck !== false){
-			$DataFlatpExploadtruck = $key;
+		if(isset($data[1]) && ($data[1] == '' || empty($data[1]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "aggName" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpotherfund !== false){
-			$DataFlatpotherfund = $key;
+		if(isset($data[2]) && ($data[2] == '' || empty($data[2]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatpotherfundname !== false){
-			$DataFlatpotherfundname = $key;
+		if(isset($data[3]) && ($data[3] == '' || empty($data[3]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggreasons" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatploan !== false){
-			$DataFlatploan = $key;
+		if(isset($data[4]) && ($data[4] == '' || empty($data[4]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggMeasures" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlatploanname !== false){
-			$DataFlatploanname = $key;
+		if(isset($data[5]) && ($data[5] == '' || empty($data[5]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggExpecDateStart" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		
-		//Data Agglomération
-		if($posAggCode !== false){
-			// echo "La chaine '$aggloCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posAggCode";
-			$posAggCode = true;
-			$DataAggCode = $key;
-			// dsm($keys);
+		if(isset($data[6]) && ($data[6] == '' || empty($data[6]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggExpecDateStartWork" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posAggName !== false){
-			// echo "La chaine '$aggloCode' a été trouvée dans la chaîne '$key'";
-			// echo " et débute à la position $posAggName";
-			$posAggName = true;
-			$DataAggName = $key;
+		if(isset($data[7]) && ($data[7] == '' || empty($data[7]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggExpecDateCompletion" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlaggStatus !== false){
-			$posFlaggStatus = true;
-			$DataFlaggStatus = $key;
+		if(isset($data[8]) && ($data[8] == '' || empty($data[8]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggInv" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlaggreasons !== false){
-			$DataFlaggreasons = $key;
+		if(isset($data[9]) && ($data[9] == '' || empty($data[9]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggEUfundname" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
-		if($posFlaggMeasures !== false){
-			$DataFlaggMeasures = $key;
-		}
-		if($posFlaggExpecDateStart !== false){
-			$DataFlaggExpecDateStart = $key;
-		}
-		if($posFlaggExpecDateStartWork !== false){
-			$DataFlaggExpecDateStartWork = $key;
-		}
-		if($posFlaggExpecDateCompletion !== false){
-			$DataFlaggExpecDateCompletion = $key;
-		}
-		if($posFlaggInv !== false){
-			$DataFlaggInv = $key;
-		}
-		if($posFlaggEUfundname !== false){
-			$DataFlaggEUfundname = $key;
-		}
-		if($posFlaggEUfund !== false){
-			$DataFlaggEUfund = $key;
-		}
-		if($posFlaggComments !== false){
-			$DataFlaggComments = $key;
-		}
-		if($posFlaggExpload  !== false){
-			$DataFlaggExpload = $key;
-		}
-		if($posFlaggExploadcoll  !== false){
-			$DataFlaggExploadcoll = $key;
-		}
-		if($posFlaggExploadIAS !== false){
-			$DataFlaggExploadIAS = $key;
-		}
-		if($posFlaggotherfund !== false){
-			$DataFlaggotherfund = $key;
-		}
-		if($posFlaggotherfundname  !== false){
-			$DataFlaggotherfundname = $key;
-		}
-		if($posFlaggloan !== false){
-			$DataFlaggloan = $key;
-		}
-		if($posFlaggloanname !== false){
-			$DataFlaggloanname = $key;
+		if(isset($data[10]) && ($data[10] == '' || empty($data[10]))){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "FlaggEUfund" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_set_error($i, $emes);
+			uwwtd_add_error(2, 4, $emes, $timestamp, null, $data);
 		}
 	}
-	// Check basic elements exist
-	// errors
-	$e = 0;
-	if(($posCodeUwwtp === 0 && $posCodeAgg === 0) || $posAggCode ===0){
-		if($posCodeUwwtp === 0 && $posCodeAgg === 0){
-			$e = 1;
-			$emes = t('The name of column you are trying to add for Uwwtps article 17 is incorrect.');
-			uwwtd_set_error($i, $emes);
-		}else{
-			$e = 1;
-			$emes = t('The name of column you are trying to add for Agglomerations article 17 is incorrect.');
-			uwwtd_set_error($i, $emes);
-		}
-	}else{
-		if((($data[$DataUwwtpCode] == '' || empty($data[$DataUwwtpCode])) && ($data[$DataUwwtpAggCode] == '' || empty($data[$DataUwwtpAggCode]))) || ($data[$DataAggCode] == '' || empty($data[$DataAggCode]))){
-			if(($data[$DataUwwtpCode] == '' || empty($data[$DataUwwtpCode])) && ($data[$DataUwwtpAggCode] == '' || empty($data[$DataUwwtpAggCode]))){
-				$e = 1;
-				$emes = t('The data you are trying to add for Uwwtps article 17 doesn\'t contain an identifier');
-				uwwtd_set_error($i, $emes);
-			}else{
-				$e = 1;
-				$emes = t('The data you are trying to add for Agglomeration article 17 doesn\'t contain an identifier');
-				uwwtd_set_error($i, $emes);
-			}
-		}
-	}
-	// if(($data['ID of the agglomeration'] == '' || !isset($data['ID of the agglomeration'])) && ($data['ID of the UWWTP'] == '' || !isset($data['ID of the UWWTP']))){
-		// $e = 1;
-		// $emes = t('The data you are trying to add for article 17 doesn\'t contain an identifier');
-		// uwwtd_set_error($i, $emes);
-	// }
 
 	// Check if no errors were found
 	if($e == 0){
@@ -819,10 +736,10 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 		$filename .= ".csv";
 		$fid = $newFile->fid;
 		
-		if(isset($data[$DataUwwtpCode])) {
-			$siteId = $annee.'_uww_'.uwwtd_check_text($data[$DataUwwtpCode]);
+		if($context['sandbox']['existsUwwtp'] == 1) {
+			$siteId = $annee.'_uww_'.uwwtd_check_text($data[0]);
 		}else{
-			$siteId = $annee.'_agg_'.uwwtd_check_text($data[$DataAggCode]);
+			$siteId = $annee.'_agg_'.uwwtd_check_text($data[0]);
 		}
 		// Check if id exists
 		$exists = uwwtd_check_exist($siteId);
@@ -830,8 +747,8 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 		if($exists != false){
 			// load the exisiting element
 			$element = node_load($exists);
-			// dsm($element);
 			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
+			// dsm($element);
 			if($element->type == 'agglomeration'){
 				if(isset($element->field_article17_agglo['und'][0]['nid']) && $element->field_article17_agglo['und'][0]['nid']!= ""){
 					$art = node_load($element->field_article17_agglo['und'][0]['nid']);
@@ -842,71 +759,74 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 					$art->title = $art17_title;
 				}
 				// Article 17 mapping for Agglomerations
-				if(isset($data[$DataAggCode]) && !empty($data[$DataAggCode])) $art->field_art17agg_aggcode['und'][0]['value'] = $data[$DataAggCode];
-				if(isset($data[$DataAggName]) && !empty($data[$DataAggName])) $art->field_art17agg_aggname['und'][0]['value'] = $data[$DataAggName];
-				if(isset($data[$DataFlaggStatus]) && !empty($data[$DataFlaggStatus])) $art->field_art17_flaggstatus['und'][0]['value'] = $data[$DataFlaggStatus];
-				if(isset($data[$DataFlaggreasons]) && !empty($data[$DataFlaggreasons])) $art->field_art17_flaggreasons['und'][0]['value'] = $data[$DataFlaggreasons];
-				if(isset($data[$DataFlaggMeasures]) && !empty($data[$DataFlaggMeasures])) $art->field_art17_flaggmeasures['und'][0]['value'] = $data[$DataFlaggMeasures];
-				if(isset($data[$field_art17_flaggexpecdatestart]) && !empty($data[$field_art17_flaggexpecdatestart])) $art->field_art17_flaggexpecdatestart['und'][0]['value'] = uwwtd_art17_date($data[$field_art17_flaggexpecdatestart]);
-				if(isset($data[$DataFlaggExpecDateStartWork]) && !empty($data[$DataFlaggExpecDateStartWork])) $art->field_art17_flaggexpecdatestartw['und'][0]['value'] = uwwtd_art17_date($data[$DataFlaggExpecDateStartWork]);
-				if(isset($data[$DataFlaggExpecDateCompletion]) && !empty($data[$DataFlaggExpecDateCompletion])) $art->field_art17_flaggexpecdatecomple['und'][0]['value'] = uwwtd_art17_date($data[$DataFlaggExpecDateCompletion]);
-				if(isset($data[$DataFlaggInv]) && !empty($data[$DataFlaggInv])) $art->field_art17_flagginv['und'][0]['value'] = $data[$DataFlaggInv];
-				if(isset($data[$DataFlaggEUfundname]) && !empty($data[$DataFlaggEUfundname])) $art->field_art17_flaggeufundname['und'][0]['value'] = $data[$DataFlaggEUfundname];
-				if(isset($data[$DataFlaggEUfund]) && !empty($data[$DataFlaggEUfund])) $art->field_art17_flaggeufund['und'][0]['value'] = $data[$DataFlaggEUfund];
-				if(isset($data[$DataFlaggComments]) && !empty($data[$DataFlaggComments])) $art->field_art17_flaggcomments['und'][0]['value'] = $data[$DataFlaggComments];
-				if(isset($data[$DataFlaggExpload]) && !empty($data[$DataFlaggExpload])) $art->field_art17_flaggexpload['und'][0]['value'] = $data[$DataFlaggExpload];
-				if(isset($data[$DataFlaggExploadcoll]) && !empty($data[$DataFlaggExploadcoll])) $art->field_art17_flaggexploadcoll['und'][0]['value'] = $data[$DataFlaggExploadcoll];
-				if(isset($data[$DataFlaggExploadIAS]) && !empty($data[$DataFlaggExploadIAS])) $art->field_art17_flaggexploadias['und'][0]['value'] = $data[$DataFlaggExploadIAS];
-				if(isset($data[$DataFlaggotherfund]) && !empty($data[$DataFlaggotherfund])) $art->field_art17_flaggotherfund['und'][0]['value'] = $data[$DataFlaggotherfund];
-				if(isset($data[$DataFlaggotherfundname]) && !empty($data[$DataFlaggotherfundname])) $art->field_art17_flaggotherfundname['und'][0]['value'] = $data[$DataFlaggotherfundname];
-				if(isset($data[$DataFlaggloan]) && !empty($data[$DataFlaggloan])) $art->field_art17_flaggloan['und'][0]['value'] = $data[$DataFlaggloan];
-				if(isset($data[$DataFlaggloanname]) && !empty($data[$DataFlaggloanname])) $art->field_art17_flaggloanname['und'][0]['value'] = $data[$DataFlaggloanname];
+				if(isset($data[0]) && !empty($data[0])) $art->field_art17agg_aggcode['und'][0]['value'] = $data[0];
+				if(isset($data[1]) && !empty($data[1])) $art->field_art17agg_aggname['und'][0]['value'] = $data[1];
+				if(isset($data[2]) && !empty($data[2])) $art->field_art17_flaggstatus['und'][0]['value'] = $data[2];
+				if(isset($data[3]) && !empty($data[3])) $art->field_art17_flaggreasons['und'][0]['value'] = $data[3];
+				if(isset($data[4]) && !empty($data[4])) $art->field_art17_flaggmeasures['und'][0]['value'] = $data[4];
+				if(isset($data[5]) && !empty($data[5])) $art->field_art17_flaggexpecdatestart['und'][0]['value'] = uwwtd_check_date($data[5], $timestamp);
+				if(isset($data[6]) && !empty($data[6])) $art->field_art17_flaggexpecdatestartw['und'][0]['value'] = uwwtd_check_date($data[6], $timestamp);
+				if(isset($data[7]) && !empty($data[7])) $art->field_art17_flaggexpecdatecomple['und'][0]['value'] = uwwtd_check_date($data[7], $timestamp);
+				if(isset($data[8]) && !empty($data[8])) $art->field_art17_flagginv['und'][0]['value'] = uwwtd_check_decimal($data[8], $timestamp);
+				if(isset($data[9]) && !empty($data[9])) $art->field_art17_flaggeufundname['und'][0]['value'] = $data[9];
+				if(isset($data[10]) && !empty($data[10])) $art->field_art17_flaggeufund['und'][0]['value'] = uwwtd_check_numeric($data[10], $timestamp);
+				if(isset($data[11]) && !empty($data[11])) $art->field_art17_flaggcomments['und'][0]['value'] = $data[11];
+				if(isset($data[12]) && !empty($data[12])) $art->field_art17_flaggexpload['und'][0]['value'] = uwwtd_check_numeric($data[12], $timestamp);
+				if(isset($data[13]) && !empty($data[13])) $art->field_art17_flaggexploadcoll['und'][0]['value'] = uwwtd_check_decimal($data[13], $timestamp);
+				if(isset($data[14]) && !empty($data[14])) $art->field_art17_flaggexploadias['und'][0]['value'] = uwwtd_check_decimal($data[14], $timestamp);
+				if(isset($data[15]) && !empty($data[15])) $art->field_art17_flaggotherfund['und'][0]['value'] = uwwtd_check_numeric($data[15], $timestamp);
+				if(isset($data[16]) && !empty($data[16])) $art->field_art17_flaggotherfundname['und'][0]['value'] = $data[16];
+				if(isset($data[17]) && !empty($data[17])) $art->field_art17_flaggloan['und'][0]['value'] = uwwtd_check_numeric($data[17], $timestamp);
+				if(isset($data[18]) && !empty($data[18])) $art->field_art17_flaggloanname['und'][0]['value'] = $data[18];
 				
 				$art->field_anneedata['und'][0]['value'] = $annee;
+				$art->uid = 1;
+				$art->language = $element->language;
 				// Article 17 link to element
 				$art->field_art17agg_link_agglo['und'][0]['nid'] = $element->nid;
 			}else{
-				if(isset($element->field_article17_uwwtp['und'][0]['nid']) && $element->field_article17_uwwtp['und'][0]['nid']!= ""){
+				if(isset($element->field_article17_uwwtp['und'][0]['nid']) && ($element->field_article17_uwwtp['und'][0]['nid']!= "" || $element->field_article17_uwwtp['und'][0]['nid']!= NULL)){
 					$art = node_load($element->field_article17_uwwtp['und'][0]['nid']);
-					
 				}else{
 					// Create new article 17 node
 					$art = new StdClass();
 					$art->type = 'article_17_uwwtp';
 					$art->title = $art17_title;
 				}
+			
 				// Article 17 mapping for UWWTP
-				if(isset($data[$DataUwwtpCode]) && !empty($data[$DataUwwtpCode])) $art->field_art17uwwtp_uwwcode['und'][0]['value'] = $data[$DataUwwtpCode];
-				if(isset($data[$DataUwwtpName]) && !empty($data[$DataUwwtpName])) $art->field_art17uwwtp_uwwname['und'][0]['value'] = $data[$DataUwwtpName];
-				if(isset($data[$DataUwwtpAggCode]) && !empty($data[$DataUwwtpAggCode])) $art->field_art17uwwtp_aggcode['und'][0]['value'] = $data[$DataUwwtpAggCode];
-				if(isset($data[$DataUwwtpAggName]) && !empty($data[$DataUwwtpAggName])) $art->field_art17uwwtp_aggname['und'][0]['value'] = $data[$DataUwwtpAggName];
-				if(isset($data[$DataFlatpStatus]) && !empty($data[$DataFlatpStatus])) $art->field_art17_flatpstatus['und'][0]['value'] = $data[$DataFlatpStatus];
-				if(isset($data[$DataFlatpreasons]) && !empty($data[$DataFlatpreasons])) $art->field_art17_flatpreasons['und'][0]['value'] = $data[$DataFlatpreasons];
-				if(isset($data[$DataFlatpMeasures]) && !empty($data[$DataFlatpMeasures])) $art->field_art17_flatpmeasures['und'][0]['value'] = $data[$DataFlatpMeasures];
-				if(isset($data[$DataFlatpExpload]) && !empty($data[$DataFlatpExpload])) $art->field_art17_flatpexpload['und'][0]['value'] = $data[$DataFlatpExpload];
-				if(isset($data[$DataFlatpExpCapacity]) && !empty($data[$DataFlatpExpCapacity])) $art->field_art17_flatpexpcapacity['und'][0]['value'] = $data[$DataFlatpExpCapacity];
-				if(isset($data[$DataFlatpExpecTreatment]) && !empty($data[$DataFlatpExpecTreatment])) $art->field_art17_flatptexpectreatment['und'][0]['value'] = $data[$DataFlatpExpecTreatment];
-				if(isset($data[$DataFlatpExpecDateStart]) && !empty($data[$DataFlatpExpecDateStart])) $art->field_art17_flatpexpecdatestart['und'][0]['value'] = uwwtd_art17_date($data[$DataFlatpExpecDateStart]);
-				if(isset($data[$DataFlatpExpecDateStartWork]) && !empty($data[$DataFlatpExpecDateStartWork])) $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = uwwtd_art17_date($data[$DataFlatpExpecDateStartWork]);
-				if(isset($data[$DataFlatpExpecDateCompletion]) && !empty($data[$DataFlatpExpecDateCompletion])) $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = uwwtd_art17_date($data[$DataFlatpExpecDateCompletion]);
-				if(isset($data[$DataFlatpExpecDateperformance]) && !empty($data[$DataFlatpExpecDateperformance])) $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = uwwtd_art17_date($data[$DataFlatpExpecDateperformance]);
-				if(isset($data[$DataFlatpInv]) && !empty($data[$DataFlatpInv])) $art->field_art17_flatpinv['und'][0]['value'] = $data[$DataFlatpInv];
-				if(isset($data[$flatpEUfundname]) && !empty($data[$flatpEUfundname])) $art->field_art17_flatpeufundname['und'][0]['value'] = $data[$flatpEUfundname];
-				if(isset($data[$DataFlatpEUfundname]) && !empty($data[$DataFlatpEUfundname])) $art->field_art17_flatpeufund['und'][0]['value'] = $data[$DataFlatpEUfundname];
-				if(isset($data[$DataFlatpEUfund]) && !empty($data[$DataFlatpEUfund])) $art->field_art17_flatpeufund['und'][0]['value'] = $data[$DataFlatpEUfund];
-				if(isset($data[$DataFlatpComments]) && !empty($data[$DataFlatpComments])) $art->field_art17_flatpcomments['und'][0]['value'] = $data[$DataFlatpComments];
-				if(isset($data[$DataFlatpExploadtruck]) && !empty($data[$DataFlatpExploadtruck])) $art->field_art17_flatpexploadtruck['und'][0]['value'] = $data[$DataFlatpExploadtruck];
-				if(isset($data[$DataFlatpotherfund]) && !empty($data[$DataFlatpotherfund])) $art->field_art17_flatpotherfund['und'][0]['value'] = $data[$DataFlatpotherfund];
-				if(isset($data[$DataFlatpotherfundname]) && !empty($data[$DataFlatpotherfundname])) $art->field_art17_flatpotherfundname['und'][0]['value'] = $data[$DataFlatpotherfundname];
-				if(isset($data[$DataFlatploan]) && !empty($data[$DataFlatploan])) $art->field_art17_flatploan['und'][0]['value'] = $data[$DataFlatploan];
-				if(isset($data[$DataFlatploanname]) && !empty($data[$DataFlatploanname])) $art->field_art17_flatploanname['und'][0]['value'] = $data[$DataFlatploanname];
+				if(isset($data[0]) && !empty($data[0])) $art->field_art17uwwtp_uwwcode['und'][0]['value'] = $data[0];
+				if(isset($data[1]) && !empty($data[1])) $art->field_art17uwwtp_uwwname['und'][0]['value'] = $data[1];
+				if(isset($data[2]) && !empty($data[2])) $art->field_art17uwwtp_aggcode['und'][0]['value'] = $data[2];
+				if(isset($data[3]) && !empty($data[3])) $art->field_art17uwwtp_aggname['und'][0]['value'] = $data[3];
+				if(isset($data[4]) && !empty($data[4])) $art->field_art17_flatpstatus['und'][0]['value'] = $data[4];
+				if(isset($data[5]) && !empty($data[5])) $art->field_art17_flatpreasons['und'][0]['value'] = $data[5];
+				if(isset($data[6]) && !empty($data[6])) $art->field_art17_flatpmeasures['und'][0]['value'] = $data[6];
+				if(isset($data[7]) && !empty($data[7])) $art->field_art17_flatpexpload['und'][0]['value'] = uwwtd_check_numeric($data[7], $timestamp);
+				if(isset($data[8]) && !empty($data[8])) $art->field_art17_flatpexpcapacity['und'][0]['value'] = uwwtd_check_numeric($data[8],$timestamp);
+				if(isset($data[9]) && !empty($data[9])) $art->field_art17_flatptexpectreatment['und'][0]['value'] = $data[9];
+				if(isset($data[10]) && !empty($data[10])) $art->field_art17_flatpexpecdatestart['und'][0]['value'] = uwwtd_check_date($data[10], $timestamp);
+				if(isset($data[11]) && !empty($data[11])) $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = uwwtd_check_date($data[11], $timestamp);
+				if(isset($data[12]) && !empty($data[12])) $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = uwwtd_check_date($data[12], $timestamp);
+				if(isset($data[13]) && !empty($data[13])) $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = uwwtd_check_date($data[13], $timestamp);
+				if(isset($data[14]) && !empty($data[14])) $art->field_art17_flatpinv['und'][0]['value'] = uwwtd_check_numeric($data[14], $timestamp);
+				if(isset($data[15]) && !empty($data[15])) $art->field_art17_flatpeufundname['und'][0]['value'] = $data[15];
+				if(isset($data[16]) && !empty($data[16])) $art->field_art17_flatpeufund['und'][0]['value'] = uwwtd_check_numeric($data[16], $timestamp);
+				if(isset($data[17]) && !empty($data[17])) $art->field_art17_flatpcomments['und'][0]['value'] = $data[17];
+				if(isset($data[18]) && !empty($data[18])) $art->field_art17_flatpexploadtruck['und'][0]['value'] = uwwtd_check_decimal($data[18], $timestamp);
+				if(isset($data[19]) && !empty($data[19])) $art->field_art17_flatpotherfund['und'][0]['value'] = uwwtd_check_numeric($data[19], $timestamp);
+				if(isset($data[20]) && !empty($data[20])) $art->field_art17_flatpotherfundname['und'][0]['value'] = $data[20];
+				if(isset($data[22]) && !empty($data[21])) $art->field_art17_flatploan['und'][0]['value'] = uwwtd_check_numeric($data[21], $timestamp);
+				if(isset($data[22]) && !empty($data[22])) $art->field_art17_flatploanname['und'][0]['value'] = $data[22];
 				$art->field_anneedata['und'][0]['value'] = $annee;
+				$art->uid = 1;
+				$art->language = $element->language;
 				// Article 17 link to element
 				$art->field_art17uwwtp_link_uwwtp['und'][0]['nid'] = $element->nid;
 			}
 			// Save the article 17 element
 			node_save($art);
-
+			
 			// Link element tot Article 17
 			if($element->type == 'agglomeration'){
 				$element->field_article17_agglo['und'][0]['nid'] = $art->nid;
@@ -922,7 +842,7 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 
 		}
 	}
-
+	uwwtd_flush_errors();
 	$context['sandbox']['progress']++;
 	$context['message'] = t('Processing Article 17...');
 	
@@ -931,26 +851,27 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 	}
 }
 
-function uwwtd_art17_date($string){
-	$exploded = explode('/', $string);
-	if(count($exploded) > 1){
-		$date = $exploded[1].'-'.$exploded[0].'-01 00:00:00';
-		//dsm($date);
-		return $date;
-	}
-}
+// function uwwtd_art17_date($string){
+	// $exploded = explode('/', $string);
+	// if(count($exploded) > 1){
+		// $date = $exploded[1].'-'.$exploded[0].'-01 00:00:00';
+		// dsm($date);
+		// return $date;
+	// }
+// }
 
 function uwwtd_art17_finished($success, $results, $operations){
 	if ($success) {
 		drupal_set_message(t('All the Article 17 data has been added to the site.'));
-		if(isset($_SESSION['uwwtd_errors'])){
-			uwwtd_add_errors($_SESSION['uwwtd_errors']);
-			foreach($_SESSION['uwwtd_errors'] as $error){
+		if(isset($_SESSION['uwwtd_error'])){
+			uwwtd_add_error(2, 4, $_SESSION['uwwtd_error'], $timestamp, null, $data);
+			
+			foreach($_SESSION['uwwtd_error'] as $error){
 				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'error');
 			}
 		}
 		if(isset($_SESSION['uwwtd_warnings'])){
-			uwwtd_add_errors($_SESSION['uwwtd_warnings']);
+			uwwtd_add_error(2, 4, $_SESSION['uwwtd_warnings'], $timestamp, null, $data);
 			foreach($_SESSION['uwwtd_warnings'] as $warning){
 				drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'warning');
 			}
