@@ -1,0 +1,18 @@
+Home {"url":"<front>","lang":"und","weight":"-50"}
+View/Discover {"url":"content\/agglomerations","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Sensitive areas {"url":"sensitive_areas","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+-Agglomeration {"url":"agglomerations\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Compliance map {"url":"agglomerations\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Connection map {"url":"agglomerations\/connection","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Treatment Plants {"url":"uwwtps\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+--Compliance map {"url":"uwwtps\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Treatment map {"url":"uwwtps\/treatment","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+--Pressure map {"url":"uwwtps\/pressure","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+Download/Invoke {"url":"download","lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+Statistics {"url":"uwwtd_statistics","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+-View Stats {"url":"stats/graphs","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+-Create Stats {"url":"uwwtd_statistics","lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+Regulations {"url":"content\/regulations","lang":"und","weight":"-46"}
+Useful links {"url":"content\/useful-links","lang":"und","weight":"-45"}
+Ressources {"url":"content\/ressources","lang":"und","weight":"-44"}
+Contact {"url":"contact","lang":"und","weight":"-43"}

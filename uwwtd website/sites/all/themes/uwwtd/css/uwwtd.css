@@ -546,6 +546,7 @@ fill: steelblue;
 display: none;
 }
 
+
 #edit-field-field_agggenerated_value-wrapper{width: 150px;}
 #edit-field-field_aggc2_value-wrapper{width: 150px;}
 #edit-field-field_aggc1_value-wrapper{width: 190px;}
@@ -556,3 +557,19 @@ display: none;
 #edit-field-field_uwwcoddischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwndischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwpdischarge_value-wrapper{width: 150px;}
+
+#graph_per_ent_and_dis .axis path,
+#graph_per_ent_and_dis .axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+#graph_per_ent_and_dis .bar {
+fill: steelblue;
+}
+
+#graph_per_ent_and_dis .x.axis path {
+display: none;
+}
+

@@ -509,7 +509,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
    //rca_extra
    $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
    $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
-   $batch['operations'][]= array('uwwtd_import_data_var', array(array($annee)));
+   $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
     
 	batch_set($batch);
 	batch_process('data/import');
@@ -3567,7 +3567,7 @@ function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
     
-    uwwtd_setup_register_batch($batch);
+    uwwtd_register_set_operation($batch, $annee);
 
 	batch_set($batch);
 	batch_process('data/conformity');
@@ -4773,6 +4773,7 @@ function uwwtd_conformity_finished($success, $results, $operations) {
 		drupal_set_message(t('All the criterions were added to the agglomerations concerned.'));
 		drupal_set_message(t('All the waste water treatment plants\' conformity was calculated.'));
 		drupal_set_message(t('All the agglomerations\' conformity was calculated.'));
+        drupal_set_message(t('Register calculated.'));
 		drupal_set_message(t('Congratulations! Your data has been successfully imported to the site you can now view your data on the interactive maps accessible from the home page.'));
 // 		if(isset($_SESSION['uwwtd_errors'])){
 // 			uwwtd_add_error($_SESSION['uwwtd_errors']);
@@ -4805,10 +4806,12 @@ function uwwtd_conformity_finished($success, $results, $operations) {
 }
 
 function uwwtd_conformity_var($annee) {
+//     dsm(__FUNCTION__);
     variable_set('conformity_'.$annee, time());
 }
 
 function uwwtd_import_data_var($annee) {
+//     dsm(__FUNCTION__);
     variable_set('import_data_'.$annee, time());
 }
 

@@ -25,26 +25,24 @@ function uwwtd_page_stats_querys()
 	return $page;
 }
 
-function uwwtd_stat_national_ms_level()
+function uwwtd_stat_national_ms_level($options)
 {
+
+	$conditions = '';
+
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
 
 	$data = array();
 	$param = array();
-/*
- *
- 	field_msldischargepipelines
- 	field_msldischargeships
- 	field_msldischargeothers
- 	field_mslreusesoilagriculture
- 	field_mslreuseothers
- 	field_msldisposallandfill
- 	field_msldisposalincineration
- 	field_msldisposalothers
- 			 left join
-            {field_data_field_uwwpincoming} f_uwwpincoming
-                ON n.nid = f_uwwpincoming.entity_id
- *
- */
+
 	$query = 'select
 				SUM(f_msldischargepipelines.field_msldischargepipelines_value) AS disc_pipelines_SUM,
 				SUM(f_msldischargeships.field_msldischargeships_value) AS disc_ships_SUM,
@@ -82,7 +80,7 @@ function uwwtd_stat_national_ms_level()
 		left join
             {field_data_field_msldisposalothers} f_msldisposalothers
                 ON n.nid = f_msldisposalothers.entity_id
-    where n.type = :typenode';
+    where n.type = :typenode' . $conditions;
 
 
 	$param = array(
@@ -104,8 +102,19 @@ function uwwtd_stat_national_ms_level()
 	return $data;
 }
 
-function uwwtd_stat_national_treatmentplant()
+function uwwtd_stat_national_treatmentplant($options)
 {
+	$conditions = '';
+
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
 
 	$data = array();
 	$param = array();
@@ -118,7 +127,8 @@ function uwwtd_stat_national_treatmentplant()
 					SUM(f_uwwnincoming.field_uwwnincoming_value)AS nin_sum,
 					SUM(f_uwwndischarge.field_uwwndischarge_value)AS nout_sum,
 					SUM(f_uwwpincoming.field_uwwpincoming_value)AS pin_sum,
-					SUM(f_uwwpdischarge.field_uwwpdischarge_value)AS pout_sum
+					SUM(f_uwwpdischarge.field_uwwpdischarge_value)AS pout_sum,
+					SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value)AS uwwt_sum
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -141,7 +151,6 @@ function uwwtd_stat_national_treatmentplant()
         left join
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
-
         left join
             {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
                 ON n.nid = f_uwwloadenteringuwwtp.entity_id
@@ -181,7 +190,6 @@ function uwwtd_stat_national_treatmentplant()
         left join
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
-
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
@@ -197,7 +205,10 @@ function uwwtd_stat_national_treatmentplant()
 		 left join
             {field_data_field_uwwpincoming} f_uwwpincoming
                 ON n.nid = f_uwwpincoming.entity_id
-    where n.type = :typenode';
+		left join
+            {field_data_field_uwwwastewatertreated} f_uwwwastewatertreated
+                ON n.nid = f_uwwwastewatertreated.entity_id
+    where n.type = :typenode' . $conditions;
 
 
 	$param = array(
@@ -216,18 +227,29 @@ function uwwtd_stat_national_treatmentplant()
 			$row['nout_sum_format'] = is_null($row['nout_sum']) ? '0' : uwwtd_format_number($row['nout_sum'], 2);
 			$row['pin_sum_format'] = is_null($row['pin_sum']) ? '0' : uwwtd_format_number($row['pin_sum'], 2);
 			$row['pout_sum_format'] = is_null($row['pout_sum']) ? '0' : uwwtd_format_number($row['pout_sum'], 2);
+			$row['uwwt_sum_format'] = is_null($row['uwwt_sum']) ? '0' : uwwtd_format_number($row['uwwt_sum'], 2);
 			$data[] = $row;
 		}
 	}catch(Exception $e) {
 		dsm($e->getMessage());
 	}
 
-	//     dsm($data);
 	return $data;
 }
 
-function uwwtd_stat_national_uwwtp($GroupBy)
+function uwwtd_stat_national_uwwtp($options, $GroupBy)
 {
+	$conditions = '';
+
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
 
 	switch ($GroupBy){
 		case 'compliance' :
@@ -311,7 +333,8 @@ function uwwtd_stat_national_uwwtp($GroupBy)
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		where n.type = :typenode
+		where n.type = :typenode ' .
+		$conditions . '
 		group by ' . $group_by;
 
 	$param = array(
@@ -337,18 +360,30 @@ function uwwtd_stat_national_uwwtp($GroupBy)
 		dsm($e->getMessage());
 	}
 
-	//     dsm($data);
 	return $data;
 }
 
 
 
 
-function uwwtd_stat_national_compliance()
+function uwwtd_stat_national_compliance($options)
 {
 
 	$data = array();
 	$param = array();
+	$conditions = '';
+
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
+
+
 
 	$query = 'select f_comp.field_aggcompliance_value,
 					 COUNT(n.title) AS  TOTAL_COUNT,
@@ -396,7 +431,8 @@ function uwwtd_stat_national_compliance()
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		where n.type = :typenode
+		where n.type = :typenode ' .
+		$conditions . '
 	group by f_comp.field_aggcompliance_value
     ';
 
@@ -424,10 +460,20 @@ function uwwtd_stat_national_compliance()
 	return $data;
 }
 
-function uwwtd_stat_national_uwwtp_agglo()
+function uwwtd_stat_national_uwwtp_agglo($options)
 {
 
+	$conditions = '';
 
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
 
 
 	$data = array();
@@ -502,7 +548,7 @@ function uwwtd_stat_national_uwwtp_agglo()
 		left join
             {field_data_field_physicalcapacityinput} f_physicalcapacityinput
                 ON n.nid = f_physicalcapacityinput.entity_id
-		where n.type = :typenode';
+		where n.type = :typenode' . $conditions;
 
 	$param = array(
 			':typenode' => 'uwwtp',
@@ -576,16 +622,27 @@ function uwwtd_stat_national_uwwtp_agglo()
 		dsm($e->getMessage());
 	}
 	$data[0] = array_merge($data1[0],$data2[0]);
-	//     dsm($data);
+
 	return $data;
 }
 
-function uwwtd_stat_national_generated_by_agglomeration()
+function uwwtd_stat_national_generated_by_agglomeration($options)
 {
+	$conditions = '';
+
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
 
 	$data = array();
 	$param = array();
-	$conditions = array(
+	$aConditions = array(
 		'>2000<=10000' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
 		'>10000<=100000' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
 		'>100000' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
@@ -604,19 +661,18 @@ function uwwtd_stat_national_generated_by_agglomeration()
             {field_data_field_agggenerated} f_agggenerated
                 ON n.nid = f_agggenerated.entity_id
 
-		where n.type = :typenode
-    ';
+		where n.type = :typenode ' . $conditions;
 
 	$param = array(
 			':typenode' => 'agglomeration',
 	);
 
 	try {
-			foreach ($conditions as $libelle => $condition){
+			foreach ($aConditions as $libelle => $condition){
 				$result = db_query($query . $condition,$param);
 				while($row = $result->fetchAssoc()) {
 
-					///$data[0][$libelle] = $row['generated_sum'];
+
 					$row['type'] = $libelle;
 					$row['generated_sum_format'] = is_null($row['generated_sum']) ? '0' : uwwtd_format_number($row['generated_sum'], 0);
 
@@ -627,7 +683,7 @@ function uwwtd_stat_national_generated_by_agglomeration()
 		dsm($e->getMessage());
 	}
 
-	//     dsm($data);
+
 	return $data;
 }
 

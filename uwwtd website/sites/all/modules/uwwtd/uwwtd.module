@@ -11,28 +11,28 @@ define('UWWTD_CACHE_ACTIVE', false);
 
 $GLOBALS['uwwtd']['uwwtd_years'] = array(
 	'2000' => '2000',
-	'2001' => '2001', 
-	'2002' => '2002', 
-	'2003' => '2003', 
+	'2001' => '2001',
+	'2002' => '2002',
+	'2003' => '2003',
 	'2004' => '2004',
-	'2005' => '2005', 
-	'2006' => '2006', 
-	'2007' => '2007', 
-	'2008' => '2008', 
-	'2009' => '2009', 
-	'2010' => '2010', 
-	'2011' => '2011', 
-	'2012' => '2012', 
-	'2013' => '2013', 
-	'2014' => '2014', 
-	'2015' => '2015', 
-	'2016' => '2016', 
-	'2017' => '2017', 
-	'2018' => '2018', 
-	'2019' => '2019', 
+	'2005' => '2005',
+	'2006' => '2006',
+	'2007' => '2007',
+	'2008' => '2008',
+	'2009' => '2009',
+	'2010' => '2010',
+	'2011' => '2011',
+	'2012' => '2012',
+	'2013' => '2013',
+	'2014' => '2014',
+	'2015' => '2015',
+	'2016' => '2016',
+	'2017' => '2017',
+	'2018' => '2018',
+	'2019' => '2019',
 	'2020' => '2020'
 );
-    
+
 $GLOBALS['uwwtd']['ui']['operator'] = array(
     '<' => 'Is less than',
     '=' => 'Is equal to',
@@ -220,7 +220,7 @@ function uwwtd_menu(){
 		'file path' => drupal_get_path('module', 'uwwtd') . '/inc/',
 		);
 
-    
+
 	$items['register']=array(
 		'title' => t('Data debug'),
 		'page callback' => 'drupal_get_form',
@@ -229,7 +229,7 @@ function uwwtd_menu(){
 		'access arguments' => array('Data-management access'),
 		'file' => 'inc/register.inc',
 		'file path' => drupal_get_path('module', 'uwwtd')
-	);    
+	);
 
 	$items['id/%/%'] = array(
         'page callback' => 'uwwtd_node_redirect',
@@ -350,6 +350,13 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['download'] = array(
+    'page callback' => 'uwwtd_page_download',
+    'page arguments' => array(),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );  
   ///////////////////////////////////////////////////////////////////
 //     $items['report/pdf'] = array(
 // 		'title' => t('PDF report'),
@@ -378,7 +385,7 @@ function uwwtd_menu(){
     	'access arguments' => array('Data-management access'),
 //     	'file' => 'utils.inc',
 //     	'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
-    );  
+    );
   $items['stats/querys'] = array(
   		'page callback' => 'uwwtd_page_stats_querys',
   		'page arguments' => array(),
@@ -389,7 +396,7 @@ function uwwtd_menu(){
   		'file path' => drupal_get_path('module', 'uwwtd')
   );
   $items['stats/graphs'] = array(
-  		'page callback' => 'uwwtd_page_stats_graphs',
+  		'page callback' => 'uwwtd_stats_graphs_page',
   		'page arguments' => array(),
   		'access callback' => true,
   		'access arguments' => true,
@@ -426,7 +433,7 @@ function uwwtd_menu(){
     'type' => MENU_CALLBACK,
     'file' => 'correction.inc',
     'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
-    );  
+    );
 
   return $items;
 }
@@ -1171,7 +1178,7 @@ function uwwtd_get_data_uwwtp($option)
 
     try {
         $result = db_query($query, $param);
-		
+
         while($row = $result->fetchAssoc()) {
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ])) {
@@ -1200,7 +1207,7 @@ function uwwtd_get_data_uwwtp($option)
             $row['field_uwwcoddischarge_value_format'] = is_null($row['field_uwwcoddischarge_value']) ? '' : uwwtd_format_number($row['field_uwwcoddischarge_value'], 2);
             $row['field_uwwndischarge_value_format']   = is_null($row['field_uwwndischarge_value']) ? '' : uwwtd_format_number($row['field_uwwndischarge_value'], 2);
             $row['field_uwwpdischarge_value_format']   = is_null($row['field_uwwpdischarge_value']) ? '' : uwwtd_format_number($row['field_uwwpdischarge_value'], 2);
-			// dsm($row['field_article17_uwwtp_nid']);
+
 			if($row['field_article17_uwwtp_nid'] == "" || is_null($row['field_article17_uwwtp_nid'])){
 				$row['field_article17_uwwtp_value_format'] =  'No';
 			}
@@ -1444,7 +1451,7 @@ foreach($list_field as $field_name => $data) {
 						foreach($data['data'] as $operator => $label) {
 							$selected = "";
                             if (isset($filter['filter'][$field_name.'_art']['value']) && $filter['filter'][$field_name.'_art']['value'] == $operator) {
-								
+
                                 $selected = 'selected="selected"';
                             }
                             $render_field .= '<option value="'.htmlspecialchars($operator).'" '. $selected . '>'.$label.'</option>';
@@ -1664,12 +1671,12 @@ function uwwtd_get_form_filter($option)
         $filter['filter']['field_uwwpdischarge_value_op'] = $_GET['field_uwwpdischarge_value_op'];
         $filter['filter']['field_uwwpdischarge_value']['value'] = (int)$_GET['field_uwwpdischarge_value']['value'];
     }
-	
+
 	if (isset($_GET['field_article17_uwwtp_value_art']) && in_array($_GET['field_article17_uwwtp_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
         && $_GET['field_article17_uwwtp_value_art'] != 'All') {
         $filter['filter']['field_article17_uwwtp_value_art']['value'] = $_GET['field_article17_uwwtp_value_art'];
     }
-	
+
 	if (isset($_GET['field_article17_agglo_value_art']) && in_array($_GET['field_article17_agglo_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
         && $_GET['field_article17_agglo_value_art'] != 'All') {
         $filter['filter']['field_article17_agglo_value_art']['value'] = $_GET['field_article17_agglo_value_art'];
@@ -1720,7 +1727,7 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 			);
 			unset($filter['filter'][$field_art], $filter['filter'][$field_name_value_art]);
 		}
-	}	
+	}
     //for now treat only forcefilter with _op
     if (!empty($forcefilter)) {
         foreach($forcefilter['filter'] as $field_op => $operator) {
@@ -1769,7 +1776,7 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 		 }
 		}
 
-		
+
 
 
         if ($keepRow == true) {
@@ -1843,10 +1850,10 @@ function uwwtd_page_agglomeration_connection()
 			);
 		}
 	}
-    
+
     $form = uwwtd_filter_form($list_field, $filter);
 
-   
+
 
 //     uwwtd_filter_data($filter, $data);
     // dsm($data);
@@ -2153,7 +2160,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     }
 //     dsm('not in cache');
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
-	
+
 	foreach($data as $art){
 		
 		if(isset($art['field_article17_uwwtp_nid']) || ($art['field_article17_uwwtp_nid']!= '')){
@@ -2181,8 +2188,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 			);
 	   }
    }
-   // dsm($list_field);
-   // dsm($filter);
+
     $form = uwwtd_filter_form($list_field, $filter);
 
     uwwtd_filter_data($filter, $data);
@@ -2280,7 +2286,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 			));
 		}else{
 			$rows[] = array('data' => array(
-				
+
 				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
@@ -3546,7 +3552,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 // dsm($list_field);
     $form = uwwtd_filter_form($list_field, $filter);
 
-    
+
 //     dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force2000 = array();
@@ -3691,10 +3697,10 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				$row['field_aggart6compliance_value_format'],
 				// $row['field_aggart6compliance_value_format'],//todo delete
 				// $row['field_aggart6compliance_value_format'],//todo delete
-				
+
 			));
 		}
-	  
+
     }
 
     //here export data and exit
@@ -4060,6 +4066,7 @@ function uwwtd_get_url_path($type, $param = array())
 
 function uwwtd_update_cache_data($list_year = array())
 {
+//     dsm(__FUNCTION__);
     if (empty($list_year)) {
         $list_year = uwwtd_get_all_year();
     }
@@ -4293,5 +4300,52 @@ function uwwtd_export_data($type_export, $title, $header, $rows)
     unlink($filename);
     exit();
 }
+/*
+function uwwtd_form($form, &$form_state) {
+	if($form['element']['#action'] == '/ap_uwwtd_si/stats/graphs'){
 
 
+
+		// Get available years for data
+		$query = db_select('field_data_field_anneedata', 'a');
+		$query->fields('a', array('field_anneedata_value'));
+		$query->orderBy('field_anneedata_value', 'DESC');
+		$results = $query->execute();
+		$years = array('all' => 'Show all');
+		while($record = $results->fetchAssoc()) {
+			$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+		}
+		$form['year'] = array(
+				'#title' => t('Year'),
+				'#type' => 'select',
+				'#options' => $years,
+				'#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : 'all',
+		);
+
+
+
+
+
+
+
+		dpm($form);
+	}
+
+	return $form;
+}
+*/
+
+/**
+ *
+ */ 
+function uwwtd_page_download()
+{
+    $title = 'Download';
+    drupal_set_title($title);
+    
+    $page = ''
+            . '<h1>'.$title.'</h1>'
+    ;
+    return $page;
+}
+ 
