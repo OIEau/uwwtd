@@ -50,7 +50,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 
 function uwwtd_register_set_operation(&$batch, $annee)
 {
-//     //CSV 
+    //CSV 
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
@@ -59,12 +59,12 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));           
     $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
 
-        $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-        $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-        $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-        $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));           
-// 
-//     //excel        
+    $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));           
+
+    //excel        
     $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));                      
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));                    
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
@@ -1078,8 +1078,36 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);    
     
+    //size of agglo/pe per class
+    $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
+    $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
+    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];           
+    $ragglofile = fopen($filename, 'rb');
     
+    $agglo = fgetcsv($ragglofile, 5000, ';');
     
+    $graph_slice_size = array();
+    $graph_slice_size['0_10000']['pe']  = 0;
+    $graph_slice_size['0_10000']['number'] = 0;
+    $graph_slice_size['10000_100000']['pe']  = 0;
+    $graph_slice_size['10000_100000']['number'] = 0;
+    $graph_slice_size['100000_n']['pe']  = 0;
+    $graph_slice_size['100000_n']['number'] = 0;
+            
+    while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
+        if ($agglo[$ind['generated_load_p.e.']] < 10001) {
+            $graph_slice_size['0_10000']['pe']  += $agglo[$ind['generated_load_p.e.']];
+            $graph_slice_size['0_10000']['number']++;        
+        } elseif ($agglo[$ind['generated_load_p.e.']]  < 100000) {
+            $graph_slice_size['10000_100000']['pe']  += $agglo[$ind['generated_load_p.e.']];
+            $graph_slice_size['10000_100000']['number']++;             
+        } else {   //>=100000
+            $graph_slice_size['100000_n']['pe']  += $agglo[$ind['generated_load_p.e.']];
+            $graph_slice_size['100000_n']['number']++;             
+        }      
+    }
+    
+    dsm($graph_slice_size);
     
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);

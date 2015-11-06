@@ -2050,6 +2050,35 @@ function uwwtd_update_7123()
 	}
     unset($listnid);  
     
+    
+    //change link to error page
+    //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
+    $list = menu_load_links('menu-editorial-menu');
+//     dsm($list);
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == 'errors') {
+            dsm($one_menu);
+            menu_link_delete($one_menu['mlid']);    
+        }
+    }
+    $menu= array(
+        'link_path' => drupal_get_normal_path('error-list') ,
+        'link_title' => 'List Error',
+        'description' => '' ,
+        'menu_name' => 'menu-editorial-menu',
+        'weight' => 0,
+        //'expanded' => true,
+        'mlid' => 0, 
+        'plid' => 0,
+        'customized' => 1,
+    );
+//     dsm($menu);
+
+    $mlid = menu_link_save($menu);
+//     dsm($mlid);
+    menu_cache_clear_all();    
+    
+    
     variable_set('siif_eru_version', __FUNCTION__);
     
     drupal_flush_all_caches();
