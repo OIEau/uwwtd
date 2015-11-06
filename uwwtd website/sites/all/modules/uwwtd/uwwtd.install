@@ -2050,6 +2050,77 @@ function uwwtd_update_7123()
 	}
     unset($listnid);  
     
+    
+    //change link to error page
+    //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
+    $list = menu_load_links('menu-editorial-menu');
+//     dsm($list);
+    $bexist = false;
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == 'errors') {
+//             dsm($one_menu);
+            menu_link_delete($one_menu['mlid']);    
+        }
+        if ($one_menu['link_path'] == 'error-list') {
+            $bexist = true;
+        }
+    }
+    if (false === $bexist) {
+        $menu= array(
+            'link_path' => drupal_get_normal_path('error-list') ,
+            'link_title' => 'List Error',
+            'description' => '' ,
+            'menu_name' => 'menu-editorial-menu',
+            'weight' => 0,
+            //'expanded' => true,
+            'mlid' => 0, 
+            'plid' => 0,
+            'customized' => 1,
+        );
+    //     dsm($menu);
+    
+        $mlid = menu_link_save($menu);
+    //     dsm($mlid);
+    }
+    menu_cache_clear_all(); 
+    
+    //update path to wkhtml config       
+    $config_wkhtml = array (
+          'bin_path' => '/usr/local/bin/wkhtmltopdf',
+          'footer_display' => 1,
+          'header_display' => 1,
+          'cover_display' => 1,
+          'toc_display' => 0,
+          'toc_depth' => '3',
+          'disablePdfCompression' => 1,
+          'margins' => 
+          array (
+            'top' => '10',
+            'bottom' => '10',
+            'right' => '10',
+            'left' => '10',
+          ),
+          'default_metadata' => 'creator|Auteur|UWWTD SIIF Slovenia National (Slovenia)
+subject|Sujet|Système d\'Information sur l\'Eau (SIE), Sandre
+description|Description|Le Service d\'Administration Nationale des Données et Référentiels sur l\'Eau (Sandre) établit et met à disposition le référentiel des données sur l’eau du système d’information sur l’eau (SIE).
+editor|Editeur|Sandre, Office National de l\'Eau et des Milieux Aquatiques (ONEMA)
+contributor|Contributeur|Office International de l\'Eau (OIEau)
+language|Langue|Fr
+type|Type|Texte
+format|Format|PDF
+spatial|Couverture géographique|France entière
+rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
+        
+        );
+    variable_set('wkhtmltopdf_configurations', $config_wkhtml);
+    
+    //change user admin mail
+    $user = user_load_by_name('admin');
+//     dsm($user);
+    $user->mail = variable_get('site_mail');
+    user_save($user);
+    
+    //
     variable_set('siif_eru_version', __FUNCTION__);
     
     drupal_flush_all_caches();

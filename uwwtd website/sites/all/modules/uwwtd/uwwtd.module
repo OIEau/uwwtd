@@ -562,11 +562,53 @@ function uwwtd_views_pre_build(&$view){
         $year = uwwtd_get_max_annee();
 		if(!empty($year)) $view->filter['field_anneedata_value']->value = $year;
 	}
+    
+//     if ($view->name == 'error_list') {
+//         dsm($view);
+//     }
 }
 
 function uwwtd_views_pre_render(&$view){
-	//dsm($view);
+// 	dsm($view);
 
+//todo use config 
+$GLOBALS['uwwtd_errors_type']['category'] = array(
+    'input' => 0,
+    'linking' => 1,
+    'geometry' => 2,
+    'conformity' => 3,
+    'format' => 4,
+);
+// 0|Notification
+// 1|Warning
+// 2|Error
+//$GLOBALS['uwwtd_errors_type']['type']['error']
+$GLOBALS['uwwtd_errors_type']['type'] = array(
+    'notification' => 0,
+    'warning' => 1,
+    'error' => 2,
+);
+
+    if ($view->name == 'error_list' && is_array($view->result)) {
+        $type_error = array_flip($GLOBALS['uwwtd_errors_type']['type']);
+        $category_error = array_flip($GLOBALS['uwwtd_errors_type']['category']);
+//         dsm($type_error);
+//         dsm($category_error);
+//         
+        foreach($view->result as $r => $result){
+            if(isset($view->result[$r]->uwwtd_import_errors_type)){
+//                 dsm($view->result[$r]);
+                if ($type_error[$view->result[$r]->uwwtd_import_errors_type]) {
+                    $view->result[$r]->uwwtd_import_errors_type = t($type_error[$view->result[$r]->uwwtd_import_errors_type]);
+                }
+                if ($category_error[$view->result[$r]->uwwtd_import_errors_category]) {
+                    $view->result[$r]->uwwtd_import_errors_category = t($category_error[$view->result[$r]->uwwtd_import_errors_category]);
+                }
+//                 break;
+            }    
+        }
+    }
+    
 	// if uwwtd treatment view
 	if($view->name == 'uwwtp_treatment' && $view->result !== TRUE){
 		foreach($view->result as $r => $result){

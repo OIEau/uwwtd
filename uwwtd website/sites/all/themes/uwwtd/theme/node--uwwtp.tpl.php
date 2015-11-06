@@ -155,7 +155,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Incoming concentration BOD (mg/l): ')."</b>";
 							if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($incomingBod,2);
 							}
 						}
@@ -165,7 +165,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Discharged concentration BOD (mg/l): ')."</b>";
 							if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($dischargeBod,2);
 							}
 						}
@@ -185,7 +185,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Incoming concentration COD (mg/l): ')."</b>";
 							if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($incomingCod,2);
 							}
 						}
@@ -195,7 +195,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Discharged concentration COD (mg/l): ')."</b>";
 							if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($dischargeCod,2);
 							}
 						  }
@@ -216,7 +216,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Incoming concentration N (mg/l): ')."</b>";
 							if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($incomingN,2);
 							}
 						  }
@@ -226,7 +226,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Discharged concentration N (mg/l): ')."</b>";
 							if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($dischargeN,2);
 							}
 						  }
@@ -246,7 +246,7 @@ echo uwwtd_insert_errors_tab($node);
 							print "<b>".t('Incoming concentration P (mg/l): ')."</b>";
 							if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($incomingP,2);
 							}
 						  }
@@ -256,7 +256,7 @@ echo uwwtd_insert_errors_tab($node);
 							 print "<b>".t('Discharged concentration P (mg/l): ')."</b>";
 							if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
-								$dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+								$dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
 								print round($dischargeP,2);
 							}
 						  }
