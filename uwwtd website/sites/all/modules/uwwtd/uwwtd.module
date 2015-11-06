@@ -117,17 +117,12 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
     'title'                             =>  t('Name'),
     'field_inspireidlocalid_value'      =>  t('Identifier Code'),
     'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
-//     'field_regionnuts_value'            =>  t('Region (NUTS)'),
-//     'field_uwwprimarytreatment_value'   =>  t('Primary treatment'),
-//     'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
-//     'field_uwwnremoval_value'           =>  t('N removal'),
-//     'field_uwwpremoval_value'           =>  t('P removal'),
-//     'field_uwwspecification_value'      =>  t('More stringent treatment'),
-
+	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
     'field_uwwboddischarge_value'      =>  t('Discharged load BOD (t per year)'),
     'field_uwwcoddischarge_value'      =>  t('Discharged load COD (t per year)'),
     'field_uwwndischarge_value'      =>  t('Discharged load Ntot (t per year)'),
     'field_uwwpdischarge_value'      =>  t('Discharged load Ptot (t per year)'),
+	'field_article17_uwwtp_value'   =>  t('Article 17'),
 );
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
@@ -401,7 +396,7 @@ function uwwtd_menu(){
   		'file path' => drupal_get_path('module', 'uwwtd')
   );
   $items['stats/graphs'] = array(
-  		'page callback' => 'uwwtd_page_stats_graphs_result',
+  		'page callback' => 'uwwtd_stats_graphs_page',
   		'page arguments' => array(),
   		'access callback' => true,
   		'access arguments' => true,
@@ -1122,52 +1117,29 @@ function uwwtd_get_data_uwwtp($option)
     }
 
     $data = array();
-
-//     $agglouww->field_agglo_uww_perc_ent_uw['und'][0]['value']
-    /*  todo use if we must display the calcul of the load entering from agglo_uww node
-    WITH total_entering_uwwtp as (
-    select sub_uww.field_agglo_uww_uww_nid uwwtp_nid, sum(sub_percent.field_agglo_uww_perc_ent_uw_value::real * sub_agggenerated.field_agggenerated_value::integer / 100)
-    from drupal_node   agglo_uww
-      inner join
-         drupal_field_data_field_agglo_uww_perc_ent_uw  sub_percent
-            ON agglo_uww.nid = sub_percent.entity_id
-      inner join
-         drupal_field_data_field_agglo_uww_uww     sub_uww
-            ON agglo_uww.nid = sub_uww.entity_id
-      inner join
-        drupal_field_data_field_agglo_uww_agglo    sub_agglo
-            ON agglo_uww.nid = sub_agglo.entity_id
-      inner join
-        drupal_field_data_field_agggenerated  sub_agggenerated
-            on  sub_agglo.field_agglo_uww_agglo_nid  = sub_agggenerated.entity_id
-    where agglo_uww.type = 'agglo_uww'
-    group by sub_uww.field_agglo_uww_uww_nid
-    )
-    */
-
     $query = 'select n.title,
-				f_annee.field_anneedata_value,
-				f_uwwcode.field_inspireidlocalid_value,
-				f_comp.field_uwwcompliance_value,
-				f_primarytreatment.field_uwwprimarytreatment_value,
-				f_secondarytreatment.field_uwwsecondarytreatment_value,
-				f_nremoval.field_uwwnremoval_value,
-				f_premoval.field_uwwpremoval_value,
-				f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
-				f_regionnuts.field_regionnuts_value,
-				f_uwwbod5perf.field_uwwbod5perf_value,
-				f_uwwcodperf.field_uwwcodperf_value,
-				f_uwwntotperf.field_uwwntotperf_value,
-				f_uwwptotperf.field_uwwptotperf_value,
-				f_uwwtreatmenttype.field_uwwtreatmenttype_value,
-				f_physicalcapacityactivity.field_physicalcapacityactivity_value,
-				f_uwwspecification.field_uwwspecification_value,
-				f_uwwboddischarge.field_uwwboddischarge_value,
-				f_uwwcoddischarge.field_uwwcoddischarge_value,
-				f_uwwndischarge.field_uwwndischarge_value,
-				f_uwwpdischarge.field_uwwpdischarge_value,
-				st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
-				f_article17_uwwtp.field_article17_uwwtp_nid
+		f_annee.field_anneedata_value,
+		f_uwwcode.field_inspireidlocalid_value,
+		f_comp.field_uwwcompliance_value,
+		f_primarytreatment.field_uwwprimarytreatment_value,
+		f_secondarytreatment.field_uwwsecondarytreatment_value,
+		f_nremoval.field_uwwnremoval_value,
+		f_premoval.field_uwwpremoval_value,
+		f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
+		f_regionnuts.field_regionnuts_value,
+		f_uwwbod5perf.field_uwwbod5perf_value,
+		f_uwwcodperf.field_uwwcodperf_value,
+		f_uwwntotperf.field_uwwntotperf_value,
+		f_uwwptotperf.field_uwwptotperf_value,
+		f_uwwtreatmenttype.field_uwwtreatmenttype_value,
+		f_physicalcapacityactivity.field_physicalcapacityactivity_value,
+		f_uwwspecification.field_uwwspecification_value,
+		f_uwwboddischarge.field_uwwboddischarge_value,
+		f_uwwcoddischarge.field_uwwcoddischarge_value,
+		f_uwwndischarge.field_uwwndischarge_value,
+		f_uwwpdischarge.field_uwwpdischarge_value,
+		st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+		f_article17_uwwtp.field_article17_uwwtp_nid
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -1279,11 +1251,9 @@ function uwwtd_get_data_uwwtp($option)
             $row['field_uwwpdischarge_value_format']   = is_null($row['field_uwwpdischarge_value']) ? '' : uwwtd_format_number($row['field_uwwpdischarge_value'], 2);
 
 			if($row['field_article17_uwwtp_nid'] == "" || is_null($row['field_article17_uwwtp_nid'])){
-				// dsm($row['field_article17_uwwtp_nid']);
 				$row['field_article17_uwwtp_value_format'] =  'No';
 			}
 			else{$row['field_article17_uwwtp_value_format'] = 'Yes';}
-			// dsm($row);
 			$data[] = $row;
         }
         cache_set($cache_name, $data, 'cache', CACHE_PERMANENT);
@@ -2184,6 +2154,7 @@ function uwwtd_page_agglomeration_connection()
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
+                . '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->' //use for print wjhtmltopdf
 //                 . '<div class="view-content">'. $link_export_csv . '</div>'
@@ -2233,6 +2204,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
 
 	foreach($data as $art){
+		
 		if(isset($art['field_article17_uwwtp_nid']) || ($art['field_article17_uwwtp_nid']!= '')){
 		     $list_field = array(
 				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -2243,8 +2215,8 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
-				'field_article17_uwwtp_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-			);
+				'field_article17_uwwtp_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);break;
 	   }else{
 		    $list_field = array(
 				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -2262,7 +2234,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     $form = uwwtd_filter_form($list_field, $filter);
 
     uwwtd_filter_data($filter, $data);
-     // dsm($data);
+
     $header  =array();
     $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp'] as $field => $name) {
@@ -2338,7 +2310,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 		if(isset($header[11]) && ($header[11]['field'] == 'field_article17_uwwtp_value')){
-			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
+			$titleV = truncate_utf8($row['title'], 17, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 7);
 			$rows[] = array('data' => array(
 				//$row['title'],
 				($type_export != '' ? $titleV : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
@@ -2635,6 +2607,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                 .'</div>'
             .'</div>'
             .'<div class="rows data-table-row">'
+			. '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
                 . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
@@ -2699,7 +2672,7 @@ function uwwtd_page_uwwtps_treatment()
 				'field_uwwnremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwnremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_article17_uwwtp_value'  			=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-			);
+			);break;
 	   }else{
 		   $list_field = array(
 				'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -3128,6 +3101,7 @@ function uwwtd_page_uwwtps_treatment()
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
+			. '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'   //use for print wjhtmltopdf
 //                 . '<div class="view-content">'. $link_export_csv . '</div>'
@@ -3180,38 +3154,40 @@ function uwwtd_page_uwwtps_pressure()
 //     dsm('not in cache');
 
 
-//     dsm($filter);
-//     $listyear = ();
-    // dsm($listyear);
-    //     return '';
-    $list_field = array(
-        'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
-        'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwboddischarge_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwboddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwcoddischarge_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwcoddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwndischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwndischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-    );
-
+	$data = uwwtd_get_data_uwwtp($filter['filter']);
+	foreach($data as $art){
+		if(isset($art['field_article17_uwwtp_nid']) || ($art['field_article17_uwwtp_nid']!= '')){
+		     $list_field = array(
+				'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+				'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwboddischarge_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwboddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwcoddischarge_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwcoddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwndischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwndischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_article17_uwwtp_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+			);break;
+	   }else{
+		   $list_field = array(
+			'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+			'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+			'field_uwwboddischarge_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwboddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+			'field_uwwcoddischarge_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwcoddischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+			'field_uwwndischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwndischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+			'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+		);
+	   }
+   }
 
     $form = uwwtd_filter_form($list_field, $filter);
-
-    $data = uwwtd_get_data_uwwtp($filter['filter']);
 
     uwwtd_filter_data($filter, $data);
 //     dsm($data);
     $header  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] as $field => $name) {
-//         if ($field == 'field_uwwspecification_value') {
-//             $header[] = array(
-//                 'data' => $name,
-//             );
-//         } else {
-            $header[] = array(
-                'data' => $name,
-                'field' => $field,
-            );
-//         }
+		$header[] = array(
+			'data' => $name,
+			'field' => $field,
+		);
 
         //set default sort if none exists
 //         if (false === isset($filter['sort']) && $field == 'field_agggenerated_value') {
@@ -3219,7 +3195,26 @@ function uwwtd_page_uwwtps_pressure()
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
     }
-//     dsm($header);
+    // dsm($header);
+	foreach($data as $art17){
+		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
+			$exists[] = array('Yes' => $art17['field_article17_uwwtp_nid']);
+			break;
+		}else{
+			$exists[] = array('No' => "");
+		}
+	}
+	foreach($exists as $exist){
+		 if(array_key_exists('Yes', $exist)){
+			 $art17 = "Yes";
+			 break;
+		}elseif(!isset($filter['filter']['field_article17_uwwtp_value_art'])){
+			 $art17 = "No";
+		}
+	}
+	if($art17 == "No"){
+		unset($header[8]);
+	}
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'], $data);
 
 
@@ -3246,50 +3241,34 @@ function uwwtd_page_uwwtps_pressure()
 //     dsm($optionstyle);
 //     dsm($data);
 
-
-
-
     //todo format data in table
 //     $graph = array();
     foreach($data as $row) {
-//         if (false === isset($graph[$row['field_uwwtreatmenttype_value_format']])) {
-//             $graph[$row['field_uwwtreatmenttype_value_format']]['nb'] = 0;
-//             $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] = 0;
-// //             $graph[$row['field_uwwtreatmenttype_value_format']]['label'] = 'TODO';
-//         }
-//         $graph[$row['field_uwwtreatmenttype_value_format']]['nb']++;
-//         $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
-
-//     'title'                           =>  t('Name'),
-//     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-//     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
-//     'field_regionnuts_value'          =>  t('Region (NUTS)'),
-//     'field_uwwcompliance_value'       =>  t('Compliance'),
-//     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-//     'field_uwwcodperf_value'   =>  t('Performance: COD '),
-//     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-//     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
-//     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
-        //format data
-//         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
-        $rows[] = array('data' => array(
-			//$row['title'],
-			l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
-			$row['field_inspireidlocalid_value'],
-			$row['field_uwwloadenteringuwwtp_value_format'],
-			// $row['field_regionnuts_value'],
-			// $row['field_uwwprimarytreatment_value_format'],
-			// $row['field_uwwsecondarytreatment_value_format'],
-			// $row['field_uwwnremoval_value_format'],
-			// $row['field_uwwpremoval_value_format'],
-			// $row['field_uwwspecification_value'],
-
-			$row['field_uwwboddischarge_value_format'],
-			$row['field_uwwcoddischarge_value_format'],
-			$row['field_uwwndischarge_value_format'],
-			$row['field_uwwpdischarge_value_format'],
-
-		));
+		if(isset($header[8]) && ($header[8]['field'] == 'field_article17_uwwtp_value')){
+		   $rows[] = array('data' => array(
+				//$row['title'],
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
+				$row['field_uwwboddischarge_value_format'],
+				$row['field_uwwcoddischarge_value_format'],
+				$row['field_uwwndischarge_value_format'],
+				$row['field_uwwpdischarge_value_format'],
+				$row['field_article17_uwwtp_value_format'],
+			));
+		}else{
+			$rows[] = array('data' => array(
+				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				$row['field_inspireidlocalid_value'],
+				$row['field_uwwloadenteringuwwtp_value_format'],
+				$row['field_physicalcapacityactivity_value_format'],
+				$row['field_uwwboddischarge_value_format'],
+				$row['field_uwwcoddischarge_value_format'],
+				$row['field_uwwndischarge_value_format'],
+				$row['field_uwwpdischarge_value_format'],
+			));
+		}
     }
 //     dsm($data);
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
@@ -3526,6 +3505,7 @@ function uwwtd_page_uwwtps_pressure()
     $page =  '<h1>'.$title.'</h1>'
             . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
+			. '<b>'.count($rows) ." results</b>"
             . '<div class="rows data-table-row">'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
@@ -4088,6 +4068,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
+			. '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
                 . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
@@ -4127,7 +4108,7 @@ function uwwtd_get_url_path($type, $param = array())
 
 function uwwtd_update_cache_data($list_year = array())
 {
-//     dsm(__FUNCTION__); 
+//     dsm(__FUNCTION__);
     if (empty($list_year)) {
         $list_year = uwwtd_get_all_year();
     }
@@ -4157,13 +4138,11 @@ function uwwtd_format_number($number, $precision = 0)
 {
     return number_format($number, $precision, '.', ' ');
 }
+function uwwtd_format_decimal($number, $precision = 1)
+{
+    return number_format($number, $precision, '.', ' ');
+}
 
-//     array(
-//       1 =>  2000,
-//       2 =>  10000,
-//       3 =>  150000,
-//       4 =>  0,
-//     );
 function uwwtd_get_point_size_from_preset($preset, $behaviour)
 {
 // dsm($preset);

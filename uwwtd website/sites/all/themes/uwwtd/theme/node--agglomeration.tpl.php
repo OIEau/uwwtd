@@ -225,14 +225,14 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_sourcefile']);
           print '</div>';
         print '</fieldset>';
-        if(isset($node->field_article_17_agglomeration['und'][0]['nid'])){
+        if(isset($node->field_article17_agglo['und'][0]['nid'])){
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
           print '<legend class="panel-heading">';
             print '<div class="panel-title fieldset-legend">'.t('Forward looking aspect').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
             //print render($content['article_17_agglomeration']);
-            print uwwtd_render_article_17_agglomeration($node->article_17_agglomeration['und'][0]['nid']);
+            print uwwtd_render_article17_aglo($node->field_article17_agglo['und'][0]['nid']);
           print '</div>';
         print '</fieldset>';
         }

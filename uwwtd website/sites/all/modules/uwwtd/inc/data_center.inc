@@ -4852,13 +4852,7 @@ function uwwtd_file_upload($file, $ext){
 	return $file_temp;
 }
 
-// function uwwtd_set_warning($i, $emes){
-// 	$_SESSION['uwwtd_warnings'][] = array($i, $emes);
-// }
 
-// function uwwtd_set_error($i, $emes){
-// 	$_SESSION['uwwtd_warnings'][] = array($i, $emes);
-// }
 
 function uwwtd_csv_to_array($filename='', $delimiter=','){
 	
@@ -5242,30 +5236,7 @@ function uwwtd_check_bool($bool, $timestamp, $index = null, $node = null){
  * Check if the value is an integer
  * return int value if ok, else false 
  */ 
-function uwwtd_check_numeric($value, $timestamp, $index = null, $node = null) 
-{
-    $value = str_replace(",",".",trim($value));
-	if(true === ctype_digit($value)) {
-		return (int)$value;
-	}else{
-		uwwtd_add_error(2, 4, 'The input data is not in numeric format.', $timestamp, $index, $node);
-		return false;
-	}
-}
 
-//<uwwPIncomingCalculated>0.352225</uwwPIncomingCalculated>
-/**
- * check if a value is a decimal (or numeric) value and return a float
- */ 
-function uwwtd_check_decimal($value, $timestamp, $index = null, $node = null){
-    $value = str_replace(",",".",trim($value));
-	if(is_numeric($value)) {
-		return (float)$value;	
-	}else{
-		uwwtd_add_error(2, 4, 'The input data is not in numeric or decimal format.', $timestamp, $index, $node);
-		return false;
-	}
-}
 
 // function uwwtd_check_int($int, $timestamp, $index = null, $node = null){
 // 	
@@ -5300,55 +5271,6 @@ function uwwtd_check_pourc($pourc, $timestamp, $index = null, $node = null){
 	}
 }
 
-function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
-	$indate = trim($indate);
-
-	// if the date is empty return false
-	if($indate == ''){
-		uwwtd_add_error(1, 4, 'Date found to be empty.', $timestamp, $index, $node);
-		return false;
-	}
-
-	// remove alternate date spacing
-	$indate = str_replace("/", "-", $indate);
-	$indate = str_replace(".", "-", $indate);
-	if(strpos($indate,'+') !== false){
-		$indate = substr($indate, 0, strpos($indate, "+"));
-	}
-
-	// check date format correct
-	$dateTypeEU = DateTime::createFromFormat('Y-m-d', $indate);
-	$dateTypeUS = DateTime::createFromFormat('d-m-Y', $indate);
-	if($dateTypeEU == FALSE && $dateTypeUS == FALSE){
-		uwwtd_add_error(1, 4, 'Unknown date format: '.$indate, $timestamp, $index, $node);
-		return false;
-	}
-
-	$fullDate = explode('-', $indate);
-
-	// here we change from eu to us format
-	if(strlen($fullDate[0]) != 4){
-		if(strlen($fullDate[2]) == 4){
-			$temp = $fullDate;
-			$fullDate[0] = $temp[2];
-			$fullDate[2] = $temp[0];
-		}
-	}
-
-	// here we check format length and add zeros if needed
-	if(strlen($fullDate[0]) == 1) $fullDate[0] = '0'.$fullDate[0];
-	if(strlen($fullDate[1]) == 1) $fullDate[1] = '0'.$fullDate[1];
-
-	// here we check the date exists
-	if(checkdate($fullDate[1], $fullDate[2], $fullDate[0]) == false){
-		uwwtd_add_error(1, 4, 'Entered date doesn\'t exist: '.$fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2], $timestamp, $index, $node);
-	}
-
-	// we change to drupal friendly format
-	$correctDate = $fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2].'T00:00:00';
-
-	return (string)$correctDate;
-}
 
 function uwwtd_check_coordinate($coord, $type, $timestamp, $index = null, $node = null){
 	$coord = trim($coord);
@@ -6666,192 +6588,7 @@ function uwwtd_unzip_files($file, $target){
 //pas besoin de créer le noeud d'erreur, de le sauver puis de le modifier => on fait tout d'un coup
 //encore moins besoin d'aller chercher le contenu complet du fichier de log pour ajouter une erreur => au niveau charge serveur c'est ce qu'il y a de pir.
 //Il faudrait encore améliorer en envoyant un lot de message au lieu d'un à la fois
-function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $node = null){
-    if($node){
-        $key = $node->nid;
-    }
-    else{
-        $key = 'all';
-    }
-	$GLOBALS['uwwtd_errors'][$key][]=array(
-        'type'=>$type,
-        'category'=>$category,
-        'error'=>$error,
-        'timestamp'=>$timestamp,
-        'index'=>$index,
-    );
-    
-    /*
-    $error = trim($error);
 
-	// get label for type
-	$field = field_info_field('field_uwwtd_err_type');
-	$typeText = $field['settings']['allowed_values'][$type];
-
-	// get label for category
-	$field = field_info_field('field_uwwtd_err_category');
-	$categoryText = $field['settings']['allowed_values'][$category];
-
-	// get errors file
-	$file = drupal_realpath('public://data_errors/uwwtd_errors.txt');
-	//$content = file_get_contents($file);
-
-	// get date
-	$dateError = date('m/d/Y h:i:s a');
-
-	//$content = $content.$categoryText.' '.$typeText.' '.$dateError.': '.$error;
-    $log_msg =$categoryText.' '.$typeText.' '.$dateError.': '.$error;
-	// clean sentences
-	if(substr($error, -1) != '.') $log_msg .= '. ';
-	else $log_msg .=  ' ';
-	
-	if($node !== null && !empty($node) && $node != ''){
-		$log_msg .= $type.' concerns data with a site id of '.$node->field_siteid['und'][0]['value'].' and a drupal id of '.$node->nid.'. ';
-	}
-	if($index !== null && !empty($index) && $index != ''){
-		$log_msg .= 'The corresponding row in the dataset used is at index '.$index.'.';
-	}
-	$log_msg .= "\r\n";
-
-	$fh = fopen($file, "a");
-	fwrite($fh, $log_msg);
-	fclose($fh);
-
-	// create error node
-	$errorNode = new StdClass();
-	$errorNode->type = 'uwwtd_error';
-    $errorNode->uid = 1;
-    $errorNode->translate = 0;
-    $errorNode->tnid = 0;
-    $errorNode->sticky = 0;
-    $errorNode->promote = 0;
-    $errorNode->comment = 0;
-	//node_save($errorNode); ===> pas de double insertion en base
-
-	$dateFormat = format_date($timestamp, 'custom', 'Y-m-d H:i:s', 'UTC');
-	$dateErrorFormat = format_date(strtotime('now'), 'custom', 'Y-m-d H:i:s', 'UTC');
-	$errorNode->title = $category.' '.$type.' '.$dateError;
-	$errorNode->field_uwwtd_err_identifier['und'][0]['value'] = $timestamp;
-	$errorNode->field_uwwtd_err_type['und'][0]['value'] = $type;
-	$errorNode->field_uwwtd_err_category['und'][0]['value'] = $category;
-
-	$errorNode->field_uwwtd_err_timestamp['und'][0]['value'] = $dateFormat;
-	$errorNode->field_uwwtd_err_timestamp['und'][0]['timezone'] = 'Europe/Paris';
-
-	$errorNode->field_uwwtd_err_time['und'][0]['value'] = $dateErrorFormat;
-	$errorNode->field_uwwtd_err_time['und'][0]['timezone'] = 'Europe/Paris';
-
-	$errorNode->field_uwwtd_err_message['und'][0]['value'] = $error;
-	if($node != NULL){
-		$errorNode->field_uwwtd_err_concern['und'][0]['nid'] = $node->nid;
-	}
-	if($index != NULL) $errorNode->field_uwwtd_err_index['und'][0]['value'] = $index;
-
-	node_save($errorNode);
-    if($node != NULL){
-        $node->field_uwwtd_error_link['und'][] = array('nid'=>$errorNode->nid);
-		node_save($node);
-    }
-    */
-}
-function uwwtd_flush_errors(){
-    if(!empty($GLOBALS['uwwtd_errors'])){
-        // get label for type
-        $field = field_info_field('field_uwwtd_err_type');
-        $err_type = $field['settings']['allowed_values'];
-        //$field['settings']['allowed_values'][$type];
-
-        // get label for category
-        $field = field_info_field('field_uwwtd_err_category');
-        $err_category = $field['settings']['allowed_values'];
-        //[$category];
-
-        // get errors file
-        $file = drupal_realpath('public://data_errors/uwwtd_errors.txt');
-        $fh = fopen($file, "a");
-        foreach($GLOBALS['uwwtd_errors'] as $nid=>$errors){
-            if(!empty($errors)){
-                $year = null;
-                if($nid!='all'){
-                    $node=node_load($nid);
-                    if(isset($node->field_anneedata)) $year = $node->field_anneedata['und'][0]['value'];
-                }
-                else $node =null;
-                foreach($errors as $error){
-                    $log_msg = '';
-                    $log_msg =$err_category[$error['category']].' '.$err_type[$error['type']].' '.$error['timestamp'].': '.$error['error'];
-                    // clean sentences
-                    if(substr($error['error'], -1) != '.') $log_msg .= '. ';
-                    else $log_msg .=  ' ';
-                    
-                    if($node !== null && !empty($node) && $node != ''){
-                        $log_msg .= $error['type'].' concerns data with a site id of '.$node->field_siteid['und'][0]['value'].' and a drupal id of '.$node->nid.'. ';
-                    }
-                    if($error['index'] !== null && !empty($error['index']) && $error['index'] != ''){
-                        $log_msg .= 'The corresponding row in the dataset used is at index '.$error['index'].'.';
-                    }
-                    $log_msg .= "\r\n";
-                    
-                    fwrite($fh, $log_msg);
-                    
-                    /*
-                    // create error node
-                    $errorNode = new StdClass();
-                    $errorNode->type = 'uwwtd_error';
-                    $errorNode->uid = 1;
-                    $errorNode->translate = 0;
-                    $errorNode->tnid = 0;
-                    $errorNode->sticky = 0;
-                    $errorNode->promote = 0;
-                    $errorNode->comment = 0;
-
-                    $dateFormat = format_date($error['timestamp'], 'custom', 'Y-m-d H:i:s', 'UTC');
-                    $dateErrorFormat = format_date(strtotime('now'), 'custom', 'Y-m-d H:i:s', 'UTC');
-                    $errorNode->title = $error['category'].' '.$error['type'].' '.$error['dateError'];
-                    $errorNode->field_uwwtd_err_identifier['und'][0]['value'] = $error['timestamp'];
-                    $errorNode->field_uwwtd_err_type['und'][0]['value'] = $error['type'];
-                    $errorNode->field_uwwtd_err_category['und'][0]['value'] = $error['category'];
-
-                    $errorNode->field_uwwtd_err_timestamp['und'][0]['value'] = $dateFormat;
-                    $errorNode->field_uwwtd_err_timestamp['und'][0]['timezone'] = 'Europe/Paris';
-
-                    $errorNode->field_uwwtd_err_time['und'][0]['value'] = $dateErrorFormat;
-                    $errorNode->field_uwwtd_err_time['und'][0]['timezone'] = 'Europe/Paris';
-
-                    $errorNode->field_uwwtd_err_message['und'][0]['value'] = $error['error'];
-                    if($node != NULL){
-                        $errorNode->field_uwwtd_err_concern['und'][0]['nid'] = $node->nid;
-                    }
-                    if($index != NULL) $errorNode->field_uwwtd_err_index['und'][0]['value'] = $index;
-
-                    node_save($errorNode);
-                    if($node != NULL){
-                        $node->field_uwwtd_error_link['und'][] = array('nid'=>$errorNode->nid);
-                    }
-                    */
-                    $record = array(
-                        'type'=>$error['type'],
-                        'category'=>$error['category'],
-                        'year'=>(int)$year,
-                        'error'=>$error['error'],
-                        'date'=>$error['timestamp'],
-                        'entity_type'=>($node?'node':null),
-                        'entity_id'=>($node?$node->nid:null), //todo if
-                        'bundle'=>($node?$node->type:null), //todo if
-                    );
-                    drupal_write_record("uwwtd_import_errors", $record);
-                }
-                /*if($node != NULL){
-                    node_save($node);
-                }*/
-            }
-            
-        }
-        fclose($fh);
-        
-        $GLOBALS['uwwtd_errors'] = array();
-    }
-}
 function uwwtd_check_sensitive($nid){
 	$result = false;
 
