@@ -545,3 +545,14 @@ fill: steelblue;
 #graph_load_ent_and_dis .x.axis path {
 display: none;
 }
+
+#edit-field-field_agggenerated_value-wrapper{width: 150px;}
+#edit-field-field_aggc2_value-wrapper{width: 150px;}
+#edit-field-field_aggc1_value-wrapper{width: 190px;}
+#edit-field-field_aggpercwithouttreatment_value-wrapper{width: 240px;}
+#edit-field-field_uwwloadenteringuwwtp_value-wrapper{width: 150px;}
+#edit-field-field_uwwcompliance_value-wrapper{width: 140px;}
+#edit-field-field_uwwboddischarge_value-wrapper{width: 150px;}
+#edit-field-field_uwwcoddischarge_value-wrapper{width: 150px;}
+#edit-field-field_uwwndischarge_value-wrapper{width: 150px;}
+#edit-field-field_uwwpdischarge_value-wrapper{width: 150px;}
