@@ -89,15 +89,18 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
 	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
     'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_uwwcompliance_value'       =>  t('Compliance'),
-    'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-    'field_uwwcodperf_value'   =>  t('Performance: COD '),
-    'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-    'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
+    'field_uwwcompliance_value'       =>  t('Compliance'),
+    'field_uwwbod5perf_value'   =>  t('BOD5'),
+    'field_uwwcodperf_value'   =>  t('COD '),
+    'field_uwwntotperf_value'   =>  t('Total nitrogen'),
+    'field_uwwptotperf_value'   =>  t('Total phosphorus'),
 	'field_article17_uwwtp_value'   =>  t('Article 17'),
 );
-
+// $GLOBALS['uwwtd']['ui']['group']['uwwtp'] = array(
+	// 'title'=> t('Description'),
+	// 'performance' => t('Performance'),
+// );
 $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
     'title'                             =>  t('Name'),
     'field_inspireidlocalid_value'      =>  t('Identifier Code'),
@@ -2167,24 +2170,26 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 		     $list_field = array(
 				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
 				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
+				
 				'field_article17_uwwtp_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 			);break;
 	   }else{
 		    $list_field = array(
 				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
 				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
+				
 			);
 	   }
    }
@@ -2210,6 +2215,13 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         $header_export[] = $name;
     }
 
+	// foreach($GLOBALS['uwwtd']['ui']['group']['uwwtp'] as $fieldGroup => $nameGroup) {
+        // $topheader[] = array(
+            // 'name' => $nameGroup,
+            // 'field' => $fieldGroup,
+        // );
+
+	// }
 	foreach($data as $art17){
 		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
 				$exists[] = array('Yes' => $art17['field_article17_uwwtp_nid']);
@@ -2276,28 +2288,27 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
+				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
 				$row['field_uwwcodperf_value_format'],
 				$row['field_uwwntotperf_value_format'],
 				$row['field_uwwptotperf_value_format'],
-				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_article17_uwwtp_value_format'],
 			));
 		}else{
 			$rows[] = array('data' => array(
-
 				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				$row['field_regionnuts_value'],
+				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
 				$row['field_uwwcodperf_value_format'],
 				$row['field_uwwntotperf_value_format'],
 				$row['field_uwwptotperf_value_format'],
-				$row['field_uwwtreatmenttype_value_format'],
 			));
 		}
 	}
@@ -2497,12 +2508,22 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         </table>
         ';
 
-
-    $build['tablesort_table'] = array(
-            '#theme' => 'table',
-            '#header' => $header,
-            '#rows' => $rows,
-        );
+	$headers = array();
+	$headers[] = array(
+		'',
+		array('data' => 'Description ', 'colspan' => 5),
+		'',
+		array('data' => 'Performance', 'colspan' => 4),
+		''
+		
+	);
+	$headers[] = $header;
+	
+    $table = theme('table', array(
+            'header' => $headers,
+            'rows' => $rows,
+			'rows_multiple'=>true
+        ));
     //build export data on ODT,XML,CSV,DOC...
     $render_graph_nb = theme('flot_graph', $variables_nb);
     $render_graph = theme('flot_graph', $variables);
@@ -2566,7 +2587,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
             .'</div>'
             .'<div class="rows data-table-row">'
 			. '<b>'.count($rows) ." results</b>"
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content">'. $table . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
                 . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
                 . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
