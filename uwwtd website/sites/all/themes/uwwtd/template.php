@@ -214,7 +214,7 @@ function uwwtd_timeline_output($node){
 			if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
 
             //override PD and QC value, we don't want to display QC and PD (for now)
-            if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
+            if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
                 $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
             }
 
@@ -525,7 +525,12 @@ function uwwtd_insert_errors_tab($node){
 	$overallTotal = 0;
 	foreach($values as $value){
 		foreach($value as $type){
-			$overallTotal = count($type['0'])+ count($type['1']) + count($type['2'])+ count($type['3']) + count($type['4']) +$overallTotal;
+			$overallTotal = (isset($type['0']) ? count($type['0']) : 0) 
+                            + (isset($type['1']) ? count($type['1']) : 0) 
+                            + (isset($type['2']) ? count($type['2']) : 0) 
+                            + (isset($type['3']) ? count($type['3']) : 0) 
+                            + (isset($type['4']) ? count($type['4']) : 0) 
+                            + $overallTotal;
 		}
 	}
 	if($overallTotal === 0) $overallTotal = null;
@@ -947,51 +952,51 @@ function uwwtd_get_uww_graphic($node){
 	$reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
 
 	$reseau['primary'] = array(
-		'treatment' => $node->field_uwwprimarytreatment['und'][0]['value']
+		'treatment' => (isset($node->field_uwwprimarytreatment['und'][0]['value']) ? $node->field_uwwprimarytreatment['und'][0]['value'] : '')
 	);
 
 	$reseau['secondary'] = array(
-		'treatment' => $node->field_uwwsecondarytreatment['und'][0]['value']
+		'treatment' => (isset($node->field_uwwsecondarytreatment['und'][0]['value']) ? $node->field_uwwsecondarytreatment['und'][0]['value'] : '')
 	);
 
 	$reseau['n-removal'] = array(
-		'treatment' => $node->field_uwwnremoval['und'][0]['value'],
-		'performance' => $node->field_uwwntotperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwnremoval['und'][0]['value']) ? $node->field_uwwnremoval['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwntotperf['und'][0]['value']) ? $node->field_uwwntotperf['und'][0]['value'] : '')
 	);
 
 	$reseau['p-removal'] = array(
-		'treatment' => $node->field_uwwpremoval['und'][0]['value'],
-		'performance' => $node->field_uwwptotperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwpremoval['und'][0]['value']) ? $node->field_uwwpremoval['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwptotperf['und'][0]['value']) ? $node->field_uwwptotperf['und'][0]['value'] : '')
 	);
 
 	$reseau['uv'] = array(
-		'treatment' => $node->field_uwwuv['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwuv['und'][0]['value']) ? $node->field_uwwuv['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
 	);
 
 	$reseau['micro'] = array(
-		'treatment' => $node->uwwmicrofiltration['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->uwwmicrofiltration['und'][0]['value']) ? $node->uwwmicrofiltration['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
 	);
 
 	$reseau['chlorination'] = array(
-		'treatment' => $node->field_uwwchlorination['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwchlorination['und'][0]['value']) ? $node->field_uwwchlorination['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value']  : '')
 	);
 
 	$reseau['ozonation'] = array(
-		'treatment' => $node->field_uwwozonation['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwozonation['und'][0]['value']) ? $node->field_uwwozonation['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
 	);
 
 	$reseau['other'] = array(
-		'treatment' => $node->field_uwwothertreat['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwothertreat['und'][0]['value']) ? $node->field_uwwothertreat['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
 	);
 
 	$reseau['sand'] = array(
-		'treatment' => $node->field_uwwsandfiltration['und'][0]['value'],
-		'performance' => $node->field_uwwotherperf['und'][0]['value']
+		'treatment' => (isset($node->field_uwwsandfiltration['und'][0]['value']) ? $node->field_uwwsandfiltration['und'][0]['value'] : ''),
+		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
 	);
 
 	$reseau['agglos'] = array();
@@ -1035,7 +1040,7 @@ function uwwtd_get_uww_graphic($node){
 	$output .= '<div class="connectors">';
         $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
     $output .= '</div>';
-
+    $offset = 0;
     $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
 
 	    if($reseau['compliance'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
@@ -1181,6 +1186,7 @@ function uwwtd_get_uww_graphic($node){
 	$totalDcps = $totalDcps + $nbDcps;
 	$nbDcpsT = 0;
 	$nbDcpsB = 0;
+//     $nbPlants = 0;
 	for ($i=0; $i <= $nbDcps; $i++) {
 
 		if($i > 1){
@@ -1197,8 +1203,8 @@ function uwwtd_get_uww_graphic($node){
 	}
 	if($nbDcpsT == 1) $topMarge = 50;
 	else $topMarge = 0 + ($nbDcpsT * 48);
-	if($nbPlants > 1) $topMarge = $topMarge - 1;
-	if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
+// 	if($nbPlants > 1) $topMarge = $topMarge - 1;
+// 	if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
 	if($topMarge < 0) $topMarge = 0;
 	$topMarge = $topMarge - (2 * $topMarge);
 
@@ -1660,32 +1666,32 @@ function uwwtd_stackedbar_uwwtpnode($node)
     $aData[] = array(
         "type" => 'BOD',
 //         "label" => 'BOD load',
-        "incoming" => $node->field_uwwbodincoming['und'][0]['value'],
-        "discharged" => $node->field_uwwboddischarge['und'][0]['value'],
+        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
+        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
     );
     $aData[] = array(
         "type" => 'COD',
 //         "label" => 'COD load',
-        "incoming" => $node->field_uwwcodincoming['und'][0]['value'],
-        "discharged" => $node->field_uwwcoddischarge['und'][0]['value'],
+        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
+        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
     );
     $aData[] = array(
         "type" => 'N',
 //         "label" => 'N load',
-        "incoming" => $node->field_uwwnincoming['und'][0]['value'],
-        "discharged" => $node->field_uwwndischarge['und'][0]['value'],
+        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
+        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
     );
     $aData[] = array(
         "type" => 'P',
 //         "label" => 'P load',
-        "incoming" => $node->field_uwwpincoming['und'][0]['value'],
-        "discharged" => $node->field_uwwpdischarge['und'][0]['value'],
+        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
+        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
 //         'colorincoming' => '#74FFE0',
 //         'colordischarge' => '#C00000',
     );
