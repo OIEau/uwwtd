@@ -60,7 +60,8 @@
     -webkit-box-shadow: 1px 1px 1px 1px rgba(200,200,200,200);
 	box-shadow: 1px 1px 1px 1px rgba(200,200,200,200);
 	font-size: 11px;
-	background-color: #F5F5F5
+	background-color: #F5F5F5;
+	color: #4f4f4f;
 }
 
 .custom_tooltip img{

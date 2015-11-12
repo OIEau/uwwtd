@@ -4905,7 +4905,9 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
     
-    return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+    //change 2015/11/06 from benoit
+    return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+    //return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         
     //!!
 //     $listStationArticleAndUwwtpCompliance = array();
