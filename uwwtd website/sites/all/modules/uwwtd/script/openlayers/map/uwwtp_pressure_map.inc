@@ -5,7 +5,8 @@ $openlayers_maps->disabled = FALSE; /* Edit this to true to make a default openl
 $openlayers_maps->api_version = 1;
 $openlayers_maps->name = 'uwwtp_pressure_map';
 $openlayers_maps->title = 'UWWTP pressure map';
-$openlayers_maps->description = '2015/10/07 11:53:12
+$openlayers_maps->description = '2015/11/04 17:02:38
+2015/10/07 11:53:12
 2015/09/24 10:47:39
 ';
 $openlayers_maps->data = array(
@@ -17,7 +18,7 @@ $openlayers_maps->data = array(
   'hide_empty_map' => 0,
   'center' => array(
     'initial' => array(
-      'centerpoint' => '14.765624990168567, 46.07323062392817',
+      'centerpoint' => '33.39843748683094, 35.17380831836602',
       'zoom' => '8',
     ),
     'restrict' => array(
@@ -41,7 +42,7 @@ $openlayers_maps->data = array(
       'div' => '',
     ),
     'openlayers_behavior_gazetteer' => array(
-      'restriction_query' => 'country=SI',
+      'restriction_query' => 'country=CY',
     ),
     'openlayers_behavior_navigation' => array(
       'zoomWheelEnabled' => 1,
@@ -73,7 +74,7 @@ $openlayers_maps->data = array(
       'arbitrary_classes' => '0|50
 50|100
 100|1000
-1000',
+1000|',
       'method' => 'area',
       'layers' => array(
         'uwwtp_p_pressure_' => 'uwwtp_p_pressure_',
@@ -84,7 +85,10 @@ $openlayers_maps->data = array(
       'fields' => 'Discharged load (t per year)',
       'min_label' => '',
       'fields_colors' => '',
-      'fields_colors_values' => '',
+      'fields_colors_values' => 'Compliant|Compliant|#4f91e1
+Notrelevant|Not relevant|#a2a2a2
+Notcompliant|Not Compliant|#d93c3c
+Noinformation|No information|#6b6b6b',
     ),
     'openlayers_behavior_panzoombar' => array(
       'zoomWorldIcon' => 0,
@@ -140,14 +144,14 @@ $openlayers_maps->data = array(
     'uwwtp_bod_pressure_' => '0',
     'openlayers_kml_example' => '0',
     'geofield_formatter' => '0',
-    'dcp' => '0',
     'uwwtp' => '0',
+    'compliance_map' => '0',
     'waste_water_network_openlayers_3' => '0',
     'waste_water_network_openlayers_2' => '0',
+    'dcp' => '0',
     'agglomerations' => '0',
-    'compliance_map' => '0',
-    'uwwtp_treatment' => '0',
     'uwwtp_compliance_map' => '0',
+    'uwwtp_treatment' => '0',
     'agglomeration_treatment' => '0',
     'waste_water_network_openlayers_1' => '0',
     'uwwtp_treatment_openlayers_2' => '9',
@@ -156,13 +160,13 @@ $openlayers_maps->data = array(
     'waste_water_network_openlayers_1' => '0',
     'waste_water_network_openlayers_2' => '0',
     'waste_water_network_openlayers_3' => '0',
+    'compliance_map' => '0',
     'uwwtp' => '0',
     'dcp' => '0',
     'agglomerations' => '0',
-    'compliance_map' => '0',
     'agglomeration_treatment' => '0',
-    'uwwtp_compliance_map' => '0',
     'uwwtp_treatment' => '0',
+    'uwwtp_compliance_map' => '0',
     'geofield_formatter' => '0',
     'openlayers_kml_example' => '0',
     'openlayers_geojson_picture_this' => '0',
@@ -180,13 +184,13 @@ $openlayers_maps->data = array(
     'waste_water_network_openlayers_1' => '0',
     'waste_water_network_openlayers_2' => '0',
     'waste_water_network_openlayers_3' => '0',
+    'compliance_map' => '0',
     'uwwtp' => '0',
     'dcp' => '0',
     'agglomerations' => '0',
-    'compliance_map' => '0',
     'agglomeration_treatment' => '0',
-    'uwwtp_compliance_map' => '0',
     'uwwtp_treatment' => '0',
+    'uwwtp_compliance_map' => '0',
     'geofield_formatter' => '0',
     'openlayers_kml_example' => '0',
     'openlayers_geojson_picture_this' => '0',
@@ -204,13 +208,13 @@ $openlayers_maps->data = array(
     'waste_water_network_openlayers_1' => '0',
     'waste_water_network_openlayers_2' => '0',
     'waste_water_network_openlayers_3' => '0',
+    'compliance_map' => '0',
     'uwwtp' => '0',
     'dcp' => '0',
     'agglomerations' => '0',
-    'compliance_map' => '0',
     'agglomeration_treatment' => '0',
-    'uwwtp_compliance_map' => '0',
     'uwwtp_treatment' => '0',
+    'uwwtp_compliance_map' => '0',
     'geofield_formatter' => '0',
     'openlayers_kml_example' => '0',
     'openlayers_geojson_picture_this' => '0',
@@ -229,16 +233,16 @@ $openlayers_maps->data = array(
     'waste_water_network_openlayers_1' => 0,
     'waste_water_network_openlayers_2' => 0,
     'waste_water_network_openlayers_3' => 0,
+    'compliance_map' => 0,
     'uwwtp' => 0,
     'dcp' => 0,
     'agglomerations' => 0,
-    'compliance_map' => 0,
     'agglomeration_treatment' => 0,
-    'uwwtp_compliance_map' => 0,
     'uwwtp_treatment' => 0,
-    'uwwtp_cod_pressure_' => 0,
+    'uwwtp_compliance_map' => 0,
     'uwwtp_n_pressure_' => 0,
     'uwwtp_p_pressure_' => 0,
+    'uwwtp_cod_pressure_' => 0,
     'geofield_formatter' => 0,
     'openlayers_kml_example' => 0,
     'openlayers_geojson_picture_this' => 0,
@@ -256,13 +260,13 @@ $openlayers_maps->data = array(
     'waste_water_network_openlayers_1' => 0,
     'waste_water_network_openlayers_2' => 0,
     'waste_water_network_openlayers_3' => 0,
+    'compliance_map' => 0,
     'uwwtp' => 0,
     'dcp' => 0,
     'agglomerations' => 0,
-    'compliance_map' => 0,
     'agglomeration_treatment' => 0,
-    'uwwtp_compliance_map' => 0,
     'uwwtp_treatment' => 0,
+    'uwwtp_compliance_map' => 0,
     'geofield_formatter' => 0,
     'openlayers_kml_example' => 0,
     'openlayers_geojson_picture_this' => 0,
@@ -280,4 +284,3 @@ $openlayers_maps->data = array(
     'temporary' => 'default',
   ),
 );
-
