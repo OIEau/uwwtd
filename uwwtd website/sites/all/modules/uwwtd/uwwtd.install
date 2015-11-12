@@ -2125,13 +2125,8 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     $user->mail = variable_get('site_mail');
     user_save($user);
     
-    //add new colum to
-//   $spec = array(
-//     'type' => 'int',
-//     'unsigned' => TRUE,
-//     'not null' => TRUE,  
-//   );
-//   db_add_field('my_table', 'my_column', $spec);    
+    //reload map pressure
+    uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));    
     
     //
     variable_set('siif_eru_version', __FUNCTION__);
