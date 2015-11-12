@@ -1,10 +1,10 @@
 <?php
 
 if ( !defined('UWWTD_CACHE_ACTIVE')) {
-    define('UWWTD_CACHE_ACTIVE', false);
+    define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
-    define('DEBUG_ALGO', true);
+    define('DEBUG_ALGO', false);
 }
 
 // $GLOBALS['uwwtd']['message']['boolean_error']
@@ -219,12 +219,17 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
 	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
     'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_uwwcompliance_value'       =>  t('Compliance'),
-    'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-    'field_uwwcodperf_value'   =>  t('Performance: COD '),
-    'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-    'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
+//     'field_uwwcompliance_value'       =>  t('Compliance'),
+//     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
+//     'field_uwwcodperf_value'   =>  t('Performance: COD '),
+//     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
+//     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
+    'field_uwwcompliance_value'       =>  t('Compliance'),
+    'field_uwwbod5perf_value'   =>  t('BOD5'),
+    'field_uwwcodperf_value'   =>  t('COD '),
+    'field_uwwntotperf_value'   =>  t('Total nitrogen'),
+    'field_uwwptotperf_value'   =>  t('Total phosphorus'),    
 	'field_article17_uwwtp_value'   =>  t('Article 17'),
 );
 
