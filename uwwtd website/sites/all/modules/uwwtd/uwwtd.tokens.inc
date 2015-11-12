@@ -72,6 +72,9 @@ function uwwtd_token_info(){
 function uwwtd_tokens($type, $tokens, array $data = array(), array $options = array()){
 
   $replacements = array();
+  if (false === isset($data['node'])) {
+    return $replacements;
+  }
 	$type = $data['node']->type;
 
   // Text format tokens.
