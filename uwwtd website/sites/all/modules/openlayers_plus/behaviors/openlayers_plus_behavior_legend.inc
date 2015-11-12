@@ -82,6 +82,7 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
 			$additional_legend.= $this->get_scale_point_legend($map['behaviors']['openlayers_plus_behavior_scalepoints']);
 			//Si on a des couleurs 
 			// dsm($map['behaviors']['openlayers_plus_behavior_scalepoints']);
+            $colors_legend = '';
 			if($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors'] !='' && $map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values'] !=''){
 				
 				$colors = $this->get_textarea_field_values($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values']);
