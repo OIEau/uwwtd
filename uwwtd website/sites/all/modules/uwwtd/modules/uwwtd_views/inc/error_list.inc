@@ -32,6 +32,7 @@ $handler->display->display_options['relationships']['entity_id']['field'] = 'ent
 $handler->display->display_options['fields']['errid']['id'] = 'errid';
 $handler->display->display_options['fields']['errid']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['fields']['errid']['field'] = 'errid';
+$handler->display->display_options['fields']['errid']['separator'] = '';
 /* Field: uwwtd_import_errors: year */
 $handler->display->display_options['fields']['year']['id'] = 'year';
 $handler->display->display_options['fields']['year']['table'] = 'uwwtd_import_errors';
@@ -41,7 +42,8 @@ $handler->display->display_options['fields']['year']['separator'] = '';
 $handler->display->display_options['fields']['date']['id'] = 'date';
 $handler->display->display_options['fields']['date']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['fields']['date']['field'] = 'date';
-$handler->display->display_options['fields']['date']['date_format'] = 'short';
+$handler->display->display_options['fields']['date']['date_format'] = 'custom';
+$handler->display->display_options['fields']['date']['custom_date_format'] = 'Y-m-d H:i:s';
 $handler->display->display_options['fields']['date']['second_date_format'] = 'long';
 /* Field: uwwtd_import_errors: category */
 $handler->display->display_options['fields']['category']['id'] = 'category';
@@ -56,20 +58,11 @@ $handler->display->display_options['fields']['type']['field'] = 'type';
 $handler->display->display_options['fields']['error']['id'] = 'error';
 $handler->display->display_options['fields']['error']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['fields']['error']['field'] = 'error';
-/* Field: uwwtd_import_errors: bundle */
-$handler->display->display_options['fields']['bundle']['id'] = 'bundle';
-$handler->display->display_options['fields']['bundle']['table'] = 'uwwtd_import_errors';
-$handler->display->display_options['fields']['bundle']['field'] = 'bundle';
 /* Field: Content: Title */
 $handler->display->display_options['fields']['title']['id'] = 'title';
 $handler->display->display_options['fields']['title']['table'] = 'node';
 $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['title']['relationship'] = 'entity_id';
-/* Field: Content: Site unique ID */
-$handler->display->display_options['fields']['field_siteid']['id'] = 'field_siteid';
-$handler->display->display_options['fields']['field_siteid']['table'] = 'field_data_field_siteid';
-$handler->display->display_options['fields']['field_siteid']['field'] = 'field_siteid';
-$handler->display->display_options['fields']['field_siteid']['relationship'] = 'entity_id';
 /* Field: Bulk operations: uwwtd_import_errors */
 $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
 $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'uwwtd_import_errors';
@@ -88,16 +81,20 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
     'label' => '',
   ),
 );
-/* Sort criterion: uwwtd_import_errors: year */
-$handler->display->display_options['sorts']['year']['id'] = 'year';
-$handler->display->display_options['sorts']['year']['table'] = 'uwwtd_import_errors';
-$handler->display->display_options['sorts']['year']['field'] = 'year';
-$handler->display->display_options['sorts']['year']['order'] = 'DESC';
 /* Sort criterion: uwwtd_import_errors: date */
 $handler->display->display_options['sorts']['date']['id'] = 'date';
 $handler->display->display_options['sorts']['date']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['sorts']['date']['field'] = 'date';
 $handler->display->display_options['sorts']['date']['order'] = 'DESC';
+$handler->display->display_options['sorts']['date']['exposed'] = TRUE;
+$handler->display->display_options['sorts']['date']['expose']['label'] = 'date';
+/* Sort criterion: uwwtd_import_errors: year */
+$handler->display->display_options['sorts']['year']['id'] = 'year';
+$handler->display->display_options['sorts']['year']['table'] = 'uwwtd_import_errors';
+$handler->display->display_options['sorts']['year']['field'] = 'year';
+$handler->display->display_options['sorts']['year']['order'] = 'DESC';
+$handler->display->display_options['sorts']['year']['exposed'] = TRUE;
+$handler->display->display_options['sorts']['year']['expose']['label'] = 'year';
 /* Filter criterion: uwwtd_import_errors: year */
 $handler->display->display_options['filters']['year']['id'] = 'year';
 $handler->display->display_options['filters']['year']['table'] = 'uwwtd_import_errors';
@@ -227,6 +224,7 @@ $handler->display->display_options['filters']['date']['group'] = 1;
 $handler->display->display_options['filters']['date']['exposed'] = TRUE;
 $handler->display->display_options['filters']['date']['expose']['operator_id'] = 'date_op';
 $handler->display->display_options['filters']['date']['expose']['label'] = 'date';
+$handler->display->display_options['filters']['date']['expose']['use_operator'] = TRUE;
 $handler->display->display_options['filters']['date']['expose']['operator'] = 'date_op';
 $handler->display->display_options['filters']['date']['expose']['identifier'] = 'date';
 $handler->display->display_options['filters']['date']['expose']['remember_roles'] = array(
@@ -298,7 +296,7 @@ $handler->display->display_options['filters']['category']['group_info']['label']
 $handler->display->display_options['filters']['category']['group_info']['identifier'] = 'category';
 $handler->display->display_options['filters']['category']['group_info']['group_items'] = array(
   1 => array(
-    'title' => 'input',
+    'title' => 'import data input',
     'operator' => '=',
     'value' => array(
       'value' => '0',
@@ -307,7 +305,7 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
     ),
   ),
   2 => array(
-    'title' => 'linking',
+    'title' => 'import data linking',
     'operator' => '=',
     'value' => array(
       'value' => '1',
@@ -316,7 +314,7 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
     ),
   ),
   3 => array(
-    'title' => 'geometry',
+    'title' => 'import data geometry',
     'operator' => '=',
     'value' => array(
       'value' => '2',
@@ -325,7 +323,7 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
     ),
   ),
   4 => array(
-    'title' => 'conformity',
+    'title' => 'conformity data',
     'operator' => '=',
     'value' => array(
       'value' => '3',
@@ -334,10 +332,37 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
     ),
   ),
   5 => array(
-    'title' => 'format',
+    'title' => 'import data format',
     'operator' => '=',
     'value' => array(
       'value' => '4',
+      'min' => '',
+      'max' => '',
+    ),
+  ),
+  6 => array(
+    'title' => 'shape format',
+    'operator' => '=',
+    'value' => array(
+      'value' => '5',
+      'min' => '',
+      'max' => '',
+    ),
+  ),
+  7 => array(
+    'title' => 'article17 format',
+    'operator' => '=',
+    'value' => array(
+      'value' => '6',
+      'min' => '',
+      'max' => '',
+    ),
+  ),
+  8 => array(
+    'title' => 'article17 input',
+    'operator' => '=',
+    'value' => array(
+      'value' => '7',
       'min' => '',
       'max' => '',
     ),
@@ -366,17 +391,13 @@ $translatables['error_list'] = array(
   t('relationship to node table'),
   t('errid'),
   t('.'),
-  t(','),
   t('year'),
   t('date'),
   t('category'),
   t('type'),
   t('error'),
-  t('bundle'),
   t('Title'),
-  t('Site unique ID'),
   t('uwwtd_import_errors'),
   t('- Choose an operation -'),
   t('Page'),
 );
-
