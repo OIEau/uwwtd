@@ -2035,9 +2035,14 @@ function uwwtd_update_7123()
     uwwtd_install_menu($menu, 'main-menu7123.json');   //todo change     
 
     //create new dir for register
-	$rgister_dir = 'public://register';
-	file_prepare_directory($rgister_dir, FILE_CREATE_DIRECTORY);     
-    
+	$register_dir = 'public://register';
+	file_prepare_directory($register_dir, FILE_CREATE_DIRECTORY);     
+
+
+    //create new dir for article17
+	$article17_dir = 'public://article17';
+	file_prepare_directory($article17_dir, FILE_CREATE_DIRECTORY);
+        
     //delete content basic page download
 	$ids = array();
 	$query = db_select('node', 'n');
@@ -2119,6 +2124,14 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
 //     dsm($user);
     $user->mail = variable_get('site_mail');
     user_save($user);
+    
+    //add new colum to
+//   $spec = array(
+//     'type' => 'int',
+//     'unsigned' => TRUE,
+//     'not null' => TRUE,  
+//   );
+//   db_add_field('my_table', 'my_column', $spec);    
     
     //
     variable_set('siif_eru_version', __FUNCTION__);

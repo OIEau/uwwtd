@@ -572,7 +572,7 @@ function uwwtd_debug(){
     return 'debug';
 }
 
-function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $node = null){
+function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null){
     if($node){
         $key = $node->nid;
     }
@@ -580,6 +580,7 @@ function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $n
         $key = 'all';
     }
 	$GLOBALS['uwwtd_errors'][$key][]=array(
+        'year'=>$year,
         'type'=>$type,
         'category'=>$category,
         'error'=>$error,
@@ -664,29 +665,33 @@ function uwwtd_add_error($type, $category, $error, $timestamp, $index = null, $n
 function uwwtd_flush_errors(){
     if(!empty($GLOBALS['uwwtd_errors'])){
         // get label for type
-        $field = field_info_field('field_uwwtd_err_type');
-        $err_type = $field['settings']['allowed_values'];
+//         $field = field_info_field('field_uwwtd_err_type');
+//         $err_type = $field['settings']['allowed_values'];
         //$field['settings']['allowed_values'][$type];
 
         // get label for category
-        $field = field_info_field('field_uwwtd_err_category');
-        $err_category = $field['settings']['allowed_values'];
+//         $field = field_info_field('field_uwwtd_err_category');
+//         $err_category = $field['settings']['allowed_values'];
         //[$category];
+        $err_type = array_flip($GLOBALS['uwwtd_errors_type']['type']);
+        $err_category = array_flip($GLOBALS['uwwtd_errors_type']['category']);
 
         // get errors file
         $file = drupal_realpath('public://data_errors/uwwtd_errors.txt');
         $fh = fopen($file, "a");
         foreach($GLOBALS['uwwtd_errors'] as $nid=>$errors){
             if(!empty($errors)){
-                $year = null;
+                
                 if($nid!='all'){
                     $node=node_load($nid);
-                    if(isset($node->field_anneedata)) $year = $node->field_anneedata['und'][0]['value'];
+//                     if(isset($node->field_anneedata)) $year = $node->field_anneedata['und'][0]['value'];
                 }
                 else $node =null;
                 foreach($errors as $error){
+                    $year = $error['year'];
                     $log_msg = '';
                     $log_msg =$err_category[$error['category']].' '.$err_type[$error['type']].' '.$error['timestamp'].': '.$error['error'];
+//                     dsm($log_msg);
                     // clean sentences
                     if(substr($error['error'], -1) != '.') $log_msg .= '. ';
                     else $log_msg .=  ' ';
@@ -768,33 +773,67 @@ function uwwtd_set_error($i, $emes){
 	$_SESSION['uwwtd_error'][] = array($i, $emes);
 }
 
-function uwwtd_check_numeric($value, $timestamp, $index = null, $node = null) 
+function uwwtd_check_text($text){
+
+	// check format
+    $text = trim($text);
+    $text = check_plain($text);
+    
+    //return finished value
+    return $text;
+}
+
+function uwwtd_check_bool($bool){
+	// check format
+    $bool = trim($bool);
+	$bool = check_plain($bool);
+	
+	if(($bool == "False")|| ($bool == "false")|| ($bool == "0"))
+	{
+		$bool = 0;
+		return $bool;
+	}elseif(($bool == "True")|| ($bool == "true")|| ($bool == "1"))
+	{
+		$bool = 1;
+		return $bool;
+	}
+//     else{
+// 		uwwtd_add_error(2, 4, 'The input data is not in boolean format (true or false).', $timestamp, $index, $node);
+		return false;
+// 	}
+}    
+
+function uwwtd_check_numeric($value) 
 {
     $value = str_replace(",",".",trim($value));
 	if(true === ctype_digit($value)) {
 		return (int)$value;
-	}else{
-		uwwtd_add_error(2, 4, 'The input data is not in numeric format.', $timestamp, $index, $node);
-		return false;
 	}
+//     else{
+// 		uwwtd_add_error(2, 4, 'The input data is not in numeric format.', $timestamp, $index, $node);
+		return false;
+// 	}
 }
 
-function uwwtd_check_decimal($value, $timestamp, $index = null, $node = null){
+function uwwtd_check_decimal($value){
     $value = str_replace(",",".",trim($value));
 	if(is_numeric($value)) {
 		return (float)$value;	
-	}else{
-		uwwtd_add_error(2, 4, 'The input data is not in numeric or decimal format.', $timestamp, $index, $node);
-		return false;
 	}
+//     else{
+// 		uwwtd_add_error(2, 4, 'The input data is not in numeric or decimal format.', $timestamp, $index, $node);
+		return false;
+// 	}
 }
 
-function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
+function uwwtd_check_date($indate, &$message){
 	$indate = trim($indate);
-
+    $message = '';
 	// if the date is empty return false
 	if($indate == ''){
-		uwwtd_add_error(1, 4, 'Date found to be empty.', $timestamp, $index, $node);
+// 		uwwtd_add_error(1, 4, 'Date found to be empty.', $timestamp, $index, $node);
+//         $message .= 'Date found to be empty.';
+        $message .= $GLOBALS['uwwtd']['message']['date_empty_error'];
 		return false;
 	}
 
@@ -809,7 +848,9 @@ function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
 	$dateTypeEU = DateTime::createFromFormat('Y-m-d', $indate);
 	$dateTypeUS = DateTime::createFromFormat('d-m-Y', $indate);
 	if($dateTypeEU == FALSE && $dateTypeUS == FALSE){
-		uwwtd_add_error(1, 4, 'Unknown date format: '.$indate, $timestamp, $index, $node);
+// 		uwwtd_add_error(1, 4, 'Unknown date format: '.$indate, $timestamp, $index, $node);
+//         $message .= 'Unknown date format: '.$indate;
+        $message .= str_replace('%', $indate, $GLOBALS['uwwtd']['message']['date_format_error']);
 		return false;
 	}
 
@@ -830,7 +871,9 @@ function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
 
 	// here we check the date exists
 	if(checkdate($fullDate[1], $fullDate[2], $fullDate[0]) == false){
-		uwwtd_add_error(1, 4, 'Entered date doesn\'t exist: '.$fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2], $timestamp, $index, $node);
+// 		uwwtd_add_error(1, 4, 'Entered date doesn\'t exist: '.$fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2], $timestamp, $index, $node);
+//         $message .= 'Entered date doesn\'t exist: '.$fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2] . '.';
+        $message .= str_replace('%', ($fullDate[0].'-'.$fullDate[1].'-'.$fullDate[2]), $GLOBALS['uwwtd']['message']['date_exist_error']);
 	}
 
 	// we change to drupal friendly format
@@ -838,3 +881,104 @@ function uwwtd_check_date($indate, $timestamp, $index = null, $node = null){
 
 	return (string)$correctDate;
 }
+
+function uwwtd_check_coordinate($coord, $type, &$message){
+	$coord = trim($coord);
+    $message = '';
+    //exemple in PL 2010 csv file, ',' instead of '.'
+	$coord = str_replace(",",".",$coord);
+
+	// In europe a coordinate will never have more than 2 numbers before the decimal. This corrects coordinates that have misplaced decimals
+	$first = mb_substr($coord, 0, 1, 'utf-8');
+	if($first != '-') $first = '';
+	$coord = str_replace("-", "", $coord);
+	$exploded = explode('.', $coord);
+	if(strlen($exploded[0]) > 2){
+		$after = substr($exploded[0], 2);
+// 		$coord = mb_substr($coord, $exploded[0], 2, 'utf-8').'.'.$after.$exploded[1];
+// 		uwwtd_add_error(1, 4, 'Decimal point for this coordinate was inproperly placed', $timestamp, $index, $node);
+        $message .= $GLOBALS['uwwtd']['message']['coord_decimal_error'];
+        $coord = mb_substr($coord, 0, 2, 'utf-8') . '.' . $after . $exploded[1];
+	}
+
+	// In europe the bounding box for latitude is defined between 24 - 80 
+	if($type == 'latitude'){
+		if((float)$coord < 24 || (float)$coord > 80){
+// 			uwwtd_add_error(1, 4, 'Latitude not found to be in Europe', $timestamp, $index, $node);
+            $message .= $GLOBALS['uwwtd']['message']['coord_latitude_europe_error'];
+		}
+	}
+
+	// In europe the bounding box for longitude is defined between -11 - 34 
+	if($type == 'longitude'){
+		if((float)$coord < -11 || (float)$coord > 34){
+// 			uwwtd_add_error(1, 4, 'Longitude not found to be in Europe', $timestamp, $index, $node);
+            $message .= $GLOBALS['uwwtd']['message']['coord_longitude_europe_error'];
+		}
+	}
+
+	return $first.$coord;
+}
+
+function uwwtd_check_pourc($pourc, &$message){
+    $pourc = str_replace(",",".",trim($pourc));
+    $message = '';
+	if(is_numeric($pourc))
+	{
+		if(($pourc >= "0") && ($pourc <="100")){
+            $check = uwwtd_check_decimal($pourc);
+            if (false === $check) {
+                $message .= $GLOBALS['uwwtd']['message']['decimal_error'];
+            }
+            return $check;
+		}else{
+            $message .= $GLOBALS['uwwtd']['message']['percent_interval_error'];
+// 			uwwtd_add_error($GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], 'The number must be between 0 and 100.', $timestamp, $index, $node);
+			return false;
+		}
+	}else{
+        $message .= $GLOBALS['uwwtd']['message']['percent_not_digit_error'];
+// 		uwwtd_add_error($GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], 'The input data is not in digital format.', $timestamp, $index, $node);
+		return false;
+	}
+}
+
+function uwwtd_trace($message) {
+    if (DEBUG_ALGO === true) {
+        $file = drupal_realpath('public://data_errors/trace.log');
+        $r = fopen($file, 'a');
+        fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+        fclose($r);
+    }
+}
+  
+  
+function uwwtd_file_upload($file, $ext){
+	$path = $file->uri;
+	$name = explode('.', $file->filename);
+	$filename = $name[0];
+	$filename = preg_replace("/[^a-zA-Z0-9]/", "", $filename);
+	$filename = strtolower($filename.'_'.$file->timestamp).''.$ext;
+	$file_temp = file_get_contents($path);
+	$file_temp = file_save_data($file_temp, 'public://data_sources/' . $filename, FILE_EXISTS_RENAME);
+	return $file_temp;
+}
+
+function uwwtd_sendfile($path)
+{
+    $basename = basename($path);
+    ini_set("auto_detect_line_endings", false); //for Mac user    
+    $aHeaders = array(
+          'Content-Type'        => 'application/octet-stream',   
+          'Content-Disposition' => 'attachment; filename="' . $basename . '"',
+          'Expires'             => '0',
+          'Cache-Control'       => 'must-revalidate',
+          'Pragma'              =>'public',
+          'Content-Length'      => filesize($path),
+      );            
+    foreach ($aHeaders as $sName => $sValue) {
+        drupal_add_http_header($sName, $sValue);
+    }
+    readfile($path); 
+    exit();     
+}  

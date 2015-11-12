@@ -1,5 +1,6 @@
 <?php
 
+require_once(drupal_get_path('module', 'uwwtd') . '/inc/uwwtd.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 
 //refaire menu listerror
@@ -7,164 +8,164 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 //get all label from database ?   $field = field_info_field('field_uwwtd_err_category');
 //get all color from database ?   $field = field_info_field('field_uwwtd_err_category');
 
-define('UWWTD_CACHE_ACTIVE', false);
-
-$GLOBALS['uwwtd']['uwwtd_years'] = array(
-	'2000' => '2000',
-	'2001' => '2001',
-	'2002' => '2002',
-	'2003' => '2003',
-	'2004' => '2004',
-	'2005' => '2005',
-	'2006' => '2006',
-	'2007' => '2007',
-	'2008' => '2008',
-	'2009' => '2009',
-	'2010' => '2010',
-	'2011' => '2011',
-	'2012' => '2012',
-	'2013' => '2013',
-	'2014' => '2014',
-	'2015' => '2015',
-	'2016' => '2016',
-	'2017' => '2017',
-	'2018' => '2018',
-	'2019' => '2019',
-	'2020' => '2020'
-);
-
-$GLOBALS['uwwtd']['ui']['operator'] = array(
-    '<' => 'Is less than',
-    '=' => 'Is equal to',
-    '!=' => 'Is not equal to',
-    '>=' => 'Is greater than or equal to',
-    '>' => 'Is greater than',
-);
-
-$GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
-    '<' => function ($a, $b) {return $a < $b;},      //'uwwtd_is_less_than',
-    '<=' => function ($a, $b) {return $a <= $b;},     //'uwwtd_is_less_than_or_equal_to',
-    '=' => function ($a, $b) {return $a == $b;},    // 'uwwtd_is_equal_to',
-    '!=' => function ($a, $b) {return $a != $b;},     //'uwwtd_is_not_equal_to',
-    '>=' => function ($a, $b) {return $a >= $b;},     //'uwwtd_is greater_than_or_equal_to',
-    '>' => function ($a, $b) {return $a > $b;},     //'uwwtd_is_greater_than',
-);
-
-$GLOBALS['uwwtd']['ui']['sort'] = array(
-    'asc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;},
-    'desc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;},
-);
-// dsm($data);
-$GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_aggcompliance_value'       =>  t('Compliance'),
-    'field_aggart3compliance_value'   =>  t('Article 3 compliance'),
-    'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
-    'field_aggart5compliance_value'    =>  t('Article 5 compliance'),
-    'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
-	'field_article17_agglo_value'   =>  t('Article 17'),
-);
-
-$GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_aggc2_value'       =>  t('IAS (% of p.e.)'),
-    'field_aggc1_value'   =>  t('Collective system (% of p.e.) '),
-    'field_aggpercwithouttreatment_value'   =>  t('Not addressed through IAS (% of p.e.)'),
-	'field_article17_agglo_value'   =>  t('Article 17'),
-);
-
-// field_aggc1|Collective system|#74FFE0
-// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
-// field_aggpercwithouttreatment|Discharge without treatment|#C00000
-
-$GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_uwwcompliance_value'       =>  t('Compliance'),
-    'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-    'field_uwwcodperf_value'   =>  t('Performance: COD '),
-    'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-    'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
-    'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
-);
-
-$GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
-    'title'                             =>  t('Name'),
-    'field_inspireidlocalid_value'      =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_regionnuts_value'            =>  t('Region (NUTS)'),
-    'field_uwwprimarytreatment_value'   =>  t('Primary treatment'),
-    'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
-    'field_uwwnremoval_value'           =>  t('N removal'),
-    'field_uwwpremoval_value'           =>  t('P removal'),
-    'field_uwwspecification_value'      =>  t('More stringent treatment'),
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
-);
-
-
-$GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
-    'title'                             =>  t('Name'),
-    'field_inspireidlocalid_value'      =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_uwwboddischarge_value'      =>  t('Discharged load BOD (t per year)'),
-    'field_uwwcoddischarge_value'      =>  t('Discharged load COD (t per year)'),
-    'field_uwwndischarge_value'      =>  t('Discharged load Ntot (t per year)'),
-    'field_uwwpdischarge_value'      =>  t('Discharged load Ptot (t per year)'),
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
-);
-
-$GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
-    'PD' => 'NR',
-    'QC' => 'C',
-);
-
-$GLOBALS['uwwtd']['ui']['compliance'] = array(
-    'All' => '- Any -',
-    'NI' => 'No information',
-    'NR' => 'Not relevant',     //comprend aussi PD
-    'NC' => 'Not Compliant',
-    'C' => 'Compliant',        //comprend aussi QC
-    '?' => '?',
-//     'PD' => 'Pending Deadline',
-//     'QC' => 'Questionable Compliance',
-);
-
-//todo delete this one if all works
-$GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['ui']['compliance'];
-
-$GLOBALS['uwwtd']['ui']['test_pass'] = array(
-    'All' => '- Any -',
-    'P' => 'Pass',
-    'F' => 'Fail',
-    'NR' => 'Not relevant',
-);
-
-$GLOBALS['uwwtd']['ui']['yes_no'] = array(
-    'All' => '- Any -',
-    '1' => 'Yes',
-    '0' => 'No',
-);
-
-
-$GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
-    'All' => '- Any -',
-    'NI' => 'No information',
-    'P' => 'Primary treatment',
-    'S' => 'Secondary treatment',
-    'MS' => 'More stringent treatment',
-);
+// define('UWWTD_CACHE_ACTIVE', false);
+// 
+// $GLOBALS['uwwtd']['uwwtd_years'] = array(
+// 	'2000' => '2000',
+// 	'2001' => '2001',
+// 	'2002' => '2002',
+// 	'2003' => '2003',
+// 	'2004' => '2004',
+// 	'2005' => '2005',
+// 	'2006' => '2006',
+// 	'2007' => '2007',
+// 	'2008' => '2008',
+// 	'2009' => '2009',
+// 	'2010' => '2010',
+// 	'2011' => '2011',
+// 	'2012' => '2012',
+// 	'2013' => '2013',
+// 	'2014' => '2014',
+// 	'2015' => '2015',
+// 	'2016' => '2016',
+// 	'2017' => '2017',
+// 	'2018' => '2018',
+// 	'2019' => '2019',
+// 	'2020' => '2020'
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['operator'] = array(
+//     '<' => 'Is less than',
+//     '=' => 'Is equal to',
+//     '!=' => 'Is not equal to',
+//     '>=' => 'Is greater than or equal to',
+//     '>' => 'Is greater than',
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
+//     '<' => function ($a, $b) {return $a < $b;},      //'uwwtd_is_less_than',
+//     '<=' => function ($a, $b) {return $a <= $b;},     //'uwwtd_is_less_than_or_equal_to',
+//     '=' => function ($a, $b) {return $a == $b;},    // 'uwwtd_is_equal_to',
+//     '!=' => function ($a, $b) {return $a != $b;},     //'uwwtd_is_not_equal_to',
+//     '>=' => function ($a, $b) {return $a >= $b;},     //'uwwtd_is greater_than_or_equal_to',
+//     '>' => function ($a, $b) {return $a > $b;},     //'uwwtd_is_greater_than',
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['sort'] = array(
+//     'asc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;},
+//     'desc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;},
+// );
+// // dsm($data);
+// $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
+//     'title'                           =>  t('Name'),
+//     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
+//     'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
+//     'field_regionnuts_value'          =>  t('Region (NUTS)'),
+//     'field_aggcompliance_value'       =>  t('Compliance'),
+//     'field_aggart3compliance_value'   =>  t('Article 3 compliance'),
+//     'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
+//     'field_aggart5compliance_value'    =>  t('Article 5 compliance'),
+//     'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
+// 	'field_article17_agglo_value'   =>  t('Article 17'),
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
+//     'title'                           =>  t('Name'),
+//     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
+//     'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
+//     'field_regionnuts_value'          =>  t('Region (NUTS)'),
+//     'field_aggc2_value'       =>  t('IAS (% of p.e.)'),
+//     'field_aggc1_value'   =>  t('Collective system (% of p.e.) '),
+//     'field_aggpercwithouttreatment_value'   =>  t('Not addressed through IAS (% of p.e.)'),
+// 	'field_article17_agglo_value'   =>  t('Article 17'),
+// );
+// 
+// // field_aggc1|Collective system|#74FFE0
+// // field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
+// // field_aggpercwithouttreatment|Discharge without treatment|#C00000
+// 
+// $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
+//     'title'                           =>  t('Name'),
+//     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
+//     'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
+// 	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
+//     'field_regionnuts_value'          =>  t('Region (NUTS)'),
+//     'field_uwwcompliance_value'       =>  t('Compliance'),
+//     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
+//     'field_uwwcodperf_value'   =>  t('Performance: COD '),
+//     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
+//     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
+//     'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
+// 	'field_article17_uwwtp_value'   =>  t('Article 17'),
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
+//     'title'                             =>  t('Name'),
+//     'field_inspireidlocalid_value'      =>  t('Identifier Code'),
+//     'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
+// 	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
+//     'field_regionnuts_value'            =>  t('Region (NUTS)'),
+//     'field_uwwprimarytreatment_value'   =>  t('Primary treatment'),
+//     'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
+//     'field_uwwnremoval_value'           =>  t('N removal'),
+//     'field_uwwpremoval_value'           =>  t('P removal'),
+//     'field_uwwspecification_value'      =>  t('More stringent treatment'),
+// 	'field_article17_uwwtp_value'   =>  t('Article 17'),
+// );
+// 
+// 
+// $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
+//     'title'                             =>  t('Name'),
+//     'field_inspireidlocalid_value'      =>  t('Identifier Code'),
+//     'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
+// 	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
+//     'field_uwwboddischarge_value'      =>  t('Discharged load BOD (t per year)'),
+//     'field_uwwcoddischarge_value'      =>  t('Discharged load COD (t per year)'),
+//     'field_uwwndischarge_value'      =>  t('Discharged load Ntot (t per year)'),
+//     'field_uwwpdischarge_value'      =>  t('Discharged load Ptot (t per year)'),
+// 	'field_article17_uwwtp_value'   =>  t('Article 17'),
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
+//     'PD' => 'NR',
+//     'QC' => 'C',
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['compliance'] = array(
+//     'All' => '- Any -',
+//     'NI' => 'No information',
+//     'NR' => 'Not relevant',     //comprend aussi PD
+//     'NC' => 'Not Compliant',
+//     'C' => 'Compliant',        //comprend aussi QC
+//     '?' => '?',
+// //     'PD' => 'Pending Deadline',
+// //     'QC' => 'Questionable Compliance',
+// );
+// 
+// //todo delete this one if all works
+// $GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['ui']['compliance'];
+// 
+// $GLOBALS['uwwtd']['ui']['test_pass'] = array(
+//     'All' => '- Any -',
+//     'P' => 'Pass',
+//     'F' => 'Fail',
+//     'NR' => 'Not relevant',
+// );
+// 
+// $GLOBALS['uwwtd']['ui']['yes_no'] = array(
+//     'All' => '- Any -',
+//     '1' => 'Yes',
+//     '0' => 'No',
+// );
+// 
+// 
+// $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
+//     'All' => '- Any -',
+//     'NI' => 'No information',
+//     'P' => 'Primary treatment',
+//     'S' => 'Secondary treatment',
+//     'MS' => 'More stringent treatment',
+// );
 
 
 function uwwtd_menu(){
@@ -569,36 +570,38 @@ function uwwtd_views_pre_render(&$view){
 // 	dsm($view);
 
 //todo use config 
-$GLOBALS['uwwtd_errors_type']['category'] = array(
-    'input' => 0,
-    'linking' => 1,
-    'geometry' => 2,
-    'conformity' => 3,
-    'format' => 4,
-);
-// 0|Notification
-// 1|Warning
-// 2|Error
-//$GLOBALS['uwwtd_errors_type']['type']['error']
-$GLOBALS['uwwtd_errors_type']['type'] = array(
-    'notification' => 0,
-    'warning' => 1,
-    'error' => 2,
-);
+// $GLOBALS['uwwtd_errors_type']['category'] = array(
+//     'input' => 0,
+//     'linking' => 1,
+//     'geometry' => 2,
+//     'conformity' => 3,
+//     'format' => 4,
+// );
+// // 0|Notification
+// // 1|Warning
+// // 2|Error
+// //$GLOBALS['uwwtd_errors_type']['type']['error']
+// $GLOBALS['uwwtd_errors_type']['type'] = array(
+//     'notification' => 0,
+//     'warning' => 1,
+//     'error' => 2,
+// );
 
     if ($view->name == 'error_list' && is_array($view->result)) {
         $type_error = array_flip($GLOBALS['uwwtd_errors_type']['type']);
         $category_error = array_flip($GLOBALS['uwwtd_errors_type']['category']);
-//         dsm($type_error);
-//         dsm($category_error);
+// dsm($type_error);
+// dsm($category_error);
 //         
         foreach($view->result as $r => $result){
             if(isset($view->result[$r]->uwwtd_import_errors_type)){
 //                 dsm($view->result[$r]);
-                if ($type_error[$view->result[$r]->uwwtd_import_errors_type]) {
+// dsm($view->result[$r]->uwwtd_import_errors_type);
+// dsm($type_error[$view->result[$r]->uwwtd_import_errors_type]);
+                if (isset($type_error[$view->result[$r]->uwwtd_import_errors_type])) {
                     $view->result[$r]->uwwtd_import_errors_type = t($type_error[$view->result[$r]->uwwtd_import_errors_type]);
                 }
-                if ($category_error[$view->result[$r]->uwwtd_import_errors_category]) {
+                if (isset($category_error[$view->result[$r]->uwwtd_import_errors_category])) {
                     $view->result[$r]->uwwtd_import_errors_category = t($category_error[$view->result[$r]->uwwtd_import_errors_category]);
                 }
 //                 break;
@@ -922,6 +925,7 @@ function uwwtd_block_view($delta = '')
                 //     dsm($data);
                 //e.vincent / bruno want to show only agglo > 2000
                 $filter = array();
+                $filter['filter'] = array();
                 $filter_force2000 = array();
                 $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
                 $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
@@ -4145,7 +4149,9 @@ function uwwtd_format_decimal($number, $precision = 1)
 
 function uwwtd_get_point_size_from_preset($preset, $behaviour)
 {
-// dsm($preset);
+// dsm($behaviour);
+// dsm($preset);   
+
     $weightClass = $preset->data['behaviors'][$behaviour]['arbitrary_classes'];
     $configuredWeight = explode("\n", $weightClass);
 // dsm($configuredWeight);
@@ -4153,7 +4159,7 @@ function uwwtd_get_point_size_from_preset($preset, $behaviour)
     $numWeight = 1;
     foreach($configuredWeight as $oneweight) {
         $tmp = explode('|', $oneweight);
-        $list[ $numWeight ] = (int)$tmp[1];
+        $list[ $numWeight ] = isset($tmp[1]) ? (int)$tmp[1] : 0;
         $numWeight++;
     }
 // dsm($list);
@@ -4391,3 +4397,24 @@ function uwwtd_page_download()
     return $page;
 }
  
+/**
+ * hook_node_delete
+ * delete all error whose reference this node 
+ */ 
+function uwwtd_node_delete($node) {
+//     dsm($node);
+	if (true === in_array($node->type, array(
+       'agglomeration',
+       'agglo_uww',
+       'big_city',
+       'discharge_point',
+       'ms_level',
+       'receiving_area',
+       'uwwtp',        
+        ))) {
+//         dsm('entity_id ' . $node->nid);
+		db_delete('uwwtd_import_errors')
+        ->condition('entity_id', $node->nid, '=')
+        ->execute();
+	}
+}
