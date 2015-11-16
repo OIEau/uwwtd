@@ -573,8 +573,8 @@ fill: steelblue;
 display: none;
 }
 
-.customTable tr:nth-child(1) th:nth-child(2),
-.customTable tr:nth-child(1) th:nth-child(4){
+.customTable tr:nth-child(1) th:nth-child(1),
+.customTable tr:nth-child(1) th:nth-child(3){
 	border-bottom: 1px solid #281c45;
 	border-left: 1px solid #281c45;
 	border-right: 1px solid #281c45;
