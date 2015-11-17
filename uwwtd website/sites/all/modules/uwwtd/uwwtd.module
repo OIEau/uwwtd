@@ -2424,8 +2424,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 
 	$headers = array();
 	$headers[] = array(
-		'',
-		array('data' => 'Description ', 'colspan' => 5),
+		array('data' => 'Description ', 'colspan' => 6),
 		'',
 		array('data' => 'Performance', 'colspan' => 4),
 		''
