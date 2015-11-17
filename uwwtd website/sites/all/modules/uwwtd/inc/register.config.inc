@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20151102_2.xlsx',
+    'model' => '2015_register_model_20151102_4.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
@@ -19,11 +19,13 @@ $GLOBALS['uwwtd']['sheet'] = array(
     ),
     'uwwtp' => array(
         'csv_name' => '_uwwtp.csv',
+        'csv_total_name' => '_uwwtp.total.csv',   
         'xlsx_name' => '_uwwtp.xlsx',
         'xlsx_model_sheet_name' => 'UWWTP Level',
     ),
     'agglo' => array(
         'csv_name' => '_agglo.csv',
+        'csv_total_name' => '_agglo.total.csv',   
         'xlsx_name' => '_agglo.xlsx',
         'xlsx_model_sheet_name' => 'agglomeration level',
     ),
@@ -49,6 +51,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'xlsx_model_sheet_name' => 'Summary_big_cities',
     ),
     'nuts_level2' => array(
+        'csv_name' => '_nuts_level2.csv',
         'xlsx_name' => '_nuts_level2.xlsx',
         'xlsx_model_sheet_name' => 'Nuts2_level analyse',
     ),
@@ -377,6 +380,9 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'more_str._treatment_installed_(p._e.)' => $i++,
     'monitoring_results_f._more_string._ok_(%_of_gen._load)' => $i++,
     'monitoring_results_f._more_string._ok_(p._e.)' => $i++,
+        
+    //debug data
+    'compliance agglo from algo' => $i++,
 );
 
 $i = 0;
@@ -414,6 +420,42 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
 //     'treatment_3np' => $i++, 
     'treatment_3_other_(e.g._uv,_filtration)' => $i++, 
     'type_of_receiving_area' => $i++, 
+); 
+
+$i = 0;
+$GLOBALS['uwwtd']['sheet9_nuts2_analyse'] = array(
+    'nuts2_code' => $i++,
+    'number_agglo' => $i++,
+    'generated_load_pe' => $i++,
+    'collected_pe' => $i++, 
+    'collected_percent' => $i++,
+    
+    'art3_target_load' => $i++,
+    'art3_compliant_number_agglo' => $i++,
+    'art3_compliant_pe' => $i++,
+    'art3_notcompliant_number_agglo' => $i++,
+    'art3_notcompliant_pe' => $i++,
+    'art3_notrelevant_number_agglo' => $i++,
+    'art3_notrelevant_pe' => $i++,    
+    'art3_rate' => $i++,
+    
+    'art4_target_load' => $i++,
+    'art4_compliant_number_agglo' => $i++,
+    'art4_compliant_pe' => $i++,
+    'art4_notcompliant_number_agglo' => $i++,
+    'art4_notcompliant_pe' => $i++,
+    'art4_notrelevant_number_agglo' => $i++,
+    'art4_notrelevant_pe' => $i++,    
+    'art4_rate' => $i++,  
+    
+    'art5_target_load' => $i++,
+    'art5_compliant_number_agglo' => $i++,
+    'art5_compliant_pe' => $i++,
+    'art5_notcompliant_number_agglo' => $i++,
+    'art5_notcompliant_pe' => $i++,
+    'art5_notrelevant_number_agglo' => $i++,
+    'art5_notrelevant_pe' => $i++,    
+    'art5_rate' => $i++,      
 ); 
 
 $i = 0;

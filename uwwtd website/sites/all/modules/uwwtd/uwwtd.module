@@ -769,6 +769,7 @@ function uwwtd_block_view($delta = '')
                 $filter_force2000 = array();
                 $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
                 $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
+                $filter_force2000['filter']['field_status_value'] = '1';
                 uwwtd_filter_data($filter, $data, $filter_force2000);
                 //     uwwtd_filter_data($filter, $data);
                 //     dsm($data);
@@ -786,6 +787,11 @@ function uwwtd_block_view($delta = '')
                 $features['agglomerations'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
                 unset($data);
                 $data = uwwtd_get_data_uwwtp($option);
+                $filter = array();
+                $filter['filter'] = array();                
+                $filter_force2000 = array();
+                $filter_force2000['filter']['field_status_value'] = '1';
+                uwwtd_filter_data($filter, $data, $filter_force2000);                
                 $optionstyle = array();
                 $optionstyle['popup_title_type'] = 'treatment-plant';
                 $optionstyle['popup'] = array(
@@ -847,6 +853,7 @@ function uwwtd_get_data_agglomeration($option)
 			 f_aggc2.field_aggc2_value,
 			 f_aggc1.field_aggc1_value,
 			 f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
+             f_status.field_status_value,
 			 st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
 			 f_article17_agglo.field_article17_agglo_nid
     from {node} n
@@ -886,6 +893,9 @@ function uwwtd_get_data_agglomeration($option)
         left join
             {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
                 ON n.nid = f_aggpercwithouttreatment.entity_id
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
@@ -982,6 +992,7 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwcoddischarge.field_uwwcoddischarge_value,
 		f_uwwndischarge.field_uwwndischarge_value,
 		f_uwwpdischarge.field_uwwpdischarge_value,
+        f_status.field_status_value,
 		st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
 		f_article17_uwwtp.field_article17_uwwtp_nid
     from {node} n
@@ -1046,7 +1057,9 @@ function uwwtd_get_data_uwwtp($option)
         left join
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
-
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
         left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
@@ -1634,6 +1647,7 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
         foreach($filter['filter'] as $field => $value) {
             if ($row[$field] != $value) {
                 $keepRow = false;
+//                 dsm(__LINE__);
                 break;
             }
         }
@@ -1641,6 +1655,7 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
             foreach($list_operator_field as $one_operator) {
                 $keepRow = $GLOBALS['uwwtd']['ui']['operatorfunction'][ $one_operator['op'] ]($row[ $one_operator['field'] ], $one_operator['value']);
                 if ($keepRow == false) {
+//                     dsm(__LINE__);
                     break;
                 }
             }
@@ -1650,20 +1665,32 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 			if($one_operator_art['art']['value'] == 0){
 				if((isset($row['field_article17_agglo_value_format']) && $row['field_article17_agglo_value_format'] =="Yes" ) ||(isset($row['field_article17_uwwtp_value_format']) && $row['field_article17_uwwtp_value_format'] =="Yes")){
 					$keepRow = false;
+//                     dsm(__LINE__);
 						break;
 				}
 			}
 			if($one_operator_art['art']['value'] == 1){
 				if((isset($row['field_article17_agglo_value_format']) && $row['field_article17_agglo_value_format'] =="No" ) ||(isset($row['field_article17_uwwtp_value_format']) && $row['field_article17_uwwtp_value_format'] =="No")){
 					$keepRow = false;
+//                     dsm(__LINE__);
 						break;
 				}
 			}
 		 }
 		}
-
-
-
+        //treat force filter
+        if ($keepRow == true) {
+            if (!empty($forcefilter)) {
+                foreach($forcefilter['filter'] as $field => $value) {
+                    if ($row[$field] != $value) {
+                        $keepRow = false; 
+//                         dsm(__LINE__);
+//                         dsm($row);                        
+                        break;
+                    }
+                } 
+            }
+        } 
 
         if ($keepRow == true) {
             $datafilter[] = $row;
@@ -1747,6 +1774,7 @@ function uwwtd_page_agglomeration_connection()
     $filter_force2000 = array();
     $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
     $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
+    $filter_force2000['filter']['field_status_value'] = '1';    
     uwwtd_filter_data($filter, $data, $filter_force2000);
 //     uwwtd_filter_data($filter, $data);
 
@@ -2044,7 +2072,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
-//     dsm('not in cache');
+//     dsm('not in cache');    
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
 
 	foreach($data as $art){
@@ -2078,8 +2106,11 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
    }
 
     $form = uwwtd_filter_form($list_field, $filter);
-
-    uwwtd_filter_data($filter, $data);
+//     dsm($data);    
+    $filter_force2000 = array();
+    $filter_force2000['filter']['field_status_value'] = '1';
+    uwwtd_filter_data($filter, $data, $filter_force2000); 
+//     dsm($data);
 
     $header  =array();
     $header_export = array();
@@ -2547,8 +2578,10 @@ function uwwtd_page_uwwtps_treatment()
 	   }
 	}
     $form = uwwtd_filter_form($list_field, $filter);
-
-    uwwtd_filter_data($filter, $data);
+              
+    $filter_force2000 = array();
+    $filter_force2000['filter']['field_status_value'] = '1';
+    uwwtd_filter_data($filter, $data, $filter_force2000); 
 //     dsm($data);
     $header  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] as $field => $name) {
@@ -3042,7 +3075,11 @@ function uwwtd_page_uwwtps_pressure()
 
     $form = uwwtd_filter_form($list_field, $filter);
 
-    uwwtd_filter_data($filter, $data);
+//     dsm($data);        
+    $filter_force2000 = array();
+    $filter_force2000['filter']['field_status_value'] = '1';
+    uwwtd_filter_data($filter, $data, $filter_force2000);
+//     dsm($data);
 //     dsm($data);
     $header  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] as $field => $name) {
@@ -3462,7 +3499,9 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     $filter_force2000 = array();
     $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
     $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
+    $filter_force2000['filter']['field_status_value'] = '1';
     uwwtd_filter_data($filter, $data, $filter_force2000);
+//     dsm($data);        
 //     uwwtd_filter_data($filter, $data);
     $header = array();
     $header_export = array();

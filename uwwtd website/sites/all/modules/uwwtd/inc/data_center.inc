@@ -2,8 +2,8 @@
 
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/uwwtd.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
-require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
-require_once(drupal_get_path('module', 'uwwtd_art17') . '/uwwtd_art17.module');
+// require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+// require_once(drupal_get_path('module', 'uwwtd_art17') . '/uwwtd_art17.module');
 
 //==========FIX ME : add repcode foreach import batch
 // TODO : check if all liste agguwwliste are unset on update => otherwise duplicate can appear on the list ()
@@ -4300,8 +4300,8 @@ function uwwtd_conformity_setup_batch($annee, $timestamp){
 		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
 	);
     //calculate the register file
-    uwwtd_register_set_operation($batch, $annee);
-    uwwtd_art17_set_export_operation($batch, $annee);
+//     uwwtd_register_set_operation($batch, $annee);
+//     uwwtd_art17_set_export_operation($batch, $annee);
 
 	batch_set($batch);
 	batch_process('data/conformity');
@@ -5585,8 +5585,8 @@ function uwwtd_conformity_finished($success, $results, $operations) {
 // 		drupal_set_message(t('All the criterions were added to the agglomerations concerned.'));
 		drupal_set_message(t('All the waste water treatment plants\' conformity was calculated.'));
 		drupal_set_message(t('All the agglomerations\' conformity was calculated.'));
-        drupal_set_message(t('Register calculated.'));
-        drupal_set_message(t('Article17 calculated.'));
+//         drupal_set_message(t('Register calculated.'));
+//         drupal_set_message(t('Article17 calculated.'));
 		drupal_set_message(t('Congratulations! Your data has been successfully imported to the site you can now view your data on the interactive maps accessible from the home page.'));
 // 		if(isset($_SESSION['uwwtd_errors'])){
 // 			uwwtd_add_error($annee, $_SESSION['uwwtd_errors']);

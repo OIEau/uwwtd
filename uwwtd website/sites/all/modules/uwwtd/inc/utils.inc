@@ -945,7 +945,7 @@ function uwwtd_check_pourc($pourc, &$message){
 
 function uwwtd_trace($message) {
     if (DEBUG_ALGO === true) {
-        $file = drupal_realpath('public://data_errors/trace.log');
+        $file = drupal_realpath('public://data_errors/'.date("Ymd").'_trace.log');
         $r = fopen($file, 'a');
         fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
         fclose($r);
