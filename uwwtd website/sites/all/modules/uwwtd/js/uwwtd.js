@@ -29,10 +29,7 @@
 			$('.views-submit-button').css('margin-top', '19px');
 			$('.views-reset-button').css('margin-top', '19px');
 		}
-		
-		if($('#block-system-main h1').text()== 'UWWTD Treatment Plants- Compliance map'){
-			$('.Array.sticky-enabled.tableheader-processed').addClass('customTable');
-		}
+    
     });
 })(jQuery);
 

@@ -19,7 +19,12 @@ function uwwtd_statistics_agglomeration_compliance($year = 'all', $groupby = '')
   $query .= " COUNT(fdfa.field_aggcompliance_value), fdfa.field_aggcompliance_value as label
   FROM {node} n
   JOIN {field_data_field_aggcompliance} fdfa ON fdfa.entity_id = n.nid
-  JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid";
+  JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid
+  JOIN {field_data_field_agggenerated} f_agggenerated ON f_agggenerated.entity_id = n.nid ";
+  
+  if (variable_get('display_only_active', '1') == 1) {
+    $query .= " JOIN {field_data_field_status} fdfs ON fdfs.entity_id = n.nid ";
+  }
 
   if($groupby == 'basin') {
     $query .= " JOIN river_basin rb ON ST_Intersects(rb.the_geom4326, ST_GeomFromWKB(fdfpg.field_position_geo_geom, 4326))";
@@ -31,7 +36,12 @@ function uwwtd_statistics_agglomeration_compliance($year = 'all', $groupby = '')
     $query .= " JOIN {field_data_field_anneedata} fdfan ON fdfan.entity_id = n.nid";
   }
 
-  $query .= " WHERE n.type = 'agglomeration'";
+  $query .= " WHERE n.type = 'agglomeration' 
+                and f_agggenerated.field_agggenerated_value > :agggenerated ";
+
+  if (variable_get('display_only_active', '1') == 1) {
+      $query .= "  AND fdfs.field_status_value = '1' ";
+  }
 
   if($year != 'all') {
     $query .= " AND fdfan.field_anneedata_value = :year";
@@ -39,11 +49,14 @@ function uwwtd_statistics_agglomeration_compliance($year = 'all', $groupby = '')
 
   $query .= " GROUP BY name, fdfa.field_aggcompliance_value";
   $query .= " ORDER BY name";
-
+  
+  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '2000'));
+  
   if($year != 'all') {
-    $results = db_query($query, array(':year' => $year));
+    $param[':year'] = $year;
+    $results = db_query($query, $param);
   } else {
-    $results = db_query($query);
+    $results = db_query($query, $param);
   }
 
   $resultats = $results->fetchAll();
@@ -78,8 +91,13 @@ function uwwtd_statistics_agglomeration_treatment($year = 'all', $groupby = '') 
   JOIN {field_data_field_aggc1} fdfa1 ON fdfa1.entity_id = n.nid
   JOIN {field_data_field_aggc2} fdfa2 ON fdfa2.entity_id = n.nid
   JOIN {field_data_field_aggpercwithouttreatment} fdfanot ON fdfanot.entity_id = n.nid
-  JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid";
+  JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid
+  JOIN {field_data_field_agggenerated} f_agggenerated ON f_agggenerated.entity_id = n.nid ";
 
+  if (variable_get('display_only_active', '1') == 1) {
+    $query .= " JOIN {field_data_field_status} fdfs ON fdfs.entity_id = n.nid ";
+  }
+  
   if($groupby == 'basin') {
     $query .= " JOIN river_basin rb ON ST_Intersects(rb.the_geom4326, ST_GeomFromWKB(fdfpg.field_position_geo_geom, 4326))";
   } elseif($groupby == 'regions') {
@@ -90,7 +108,12 @@ function uwwtd_statistics_agglomeration_treatment($year = 'all', $groupby = '') 
     $query .= " JOIN {field_data_field_anneedata} fdfan ON fdfan.entity_id = n.nid";
   }
 
-  $query .= " WHERE n.type = 'agglomeration'";
+  $query .= " WHERE n.type = 'agglomeration'  
+                and f_agggenerated.field_agggenerated_value > :agggenerated ";
+   
+  if (variable_get('display_only_active', '1') == 1) {
+      $query .= "  AND fdfs.field_status_value = '1' ";
+  }   
 
   if($year != 'all') {
     $query .= " AND fdfan.field_anneedata_value = :year";
@@ -99,10 +122,13 @@ function uwwtd_statistics_agglomeration_treatment($year = 'all', $groupby = '') 
   $query .= " GROUP BY name";
   $query .= " ORDER BY name";
 
+  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '2000'));
+  
   if($year != 'all') {
-    $results = db_query($query, array(':year' => $year));
+    $param[':year'] = $year;
+    $results = db_query($query, $param);
   } else {
-    $results = db_query($query);
+    $results = db_query($query, $param);
   }
 
   $resultats = $results->fetchAll();
@@ -136,6 +162,10 @@ function uwwtd_statistics_uwwtp_compliance($year = 'all', $groupby = '') {
   FROM {node} n
   JOIN {field_data_field_uwwcompliance} fdfa ON fdfa.entity_id = n.nid
   JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid";
+  
+  if (variable_get('display_only_active', '1') == 1) {
+    $query .= " JOIN {field_data_field_status} fdfs ON fdfs.entity_id = n.nid ";
+  } 
 
   if($groupby == 'basin') {
     $query .= " JOIN river_basin rb ON ST_Intersects(rb.the_geom4326, ST_GeomFromWKB(fdfpg.field_position_geo_geom, 4326))";
@@ -147,7 +177,11 @@ function uwwtd_statistics_uwwtp_compliance($year = 'all', $groupby = '') {
     $query .= " JOIN {field_data_field_anneedata} fdfan ON fdfan.entity_id = n.nid";
   }
 
-  $query .= " WHERE n.type = 'uwwtp'";
+  $query .= " WHERE n.type = 'uwwtp' ";
+    
+  if (variable_get('display_only_active', '1') == 1) {
+      $query .= "  AND fdfs.field_status_value = '1' ";
+  }    
 
   if($year != 'all') {
     $query .= " AND fdfan.field_anneedata_value = :year";
@@ -191,6 +225,10 @@ function uwwtd_statistics_uwwtp_treatment($year = 'all', $groupby = '') {
     FROM {node} n
     JOIN {field_data_field_uwwtreatmenttype} fdfu ON fdfu.entity_id = n.nid
     JOIN {field_data_field_position_geo} fdfpg ON fdfpg.entity_id = n.nid";
+    
+  if (variable_get('display_only_active', '1') == 1) {
+    $query .= " JOIN {field_data_field_status} fdfs ON fdfs.entity_id = n.nid ";
+  }   
 
   if($groupby == 'basin') {
     $query .= " JOIN river_basin rb ON ST_Intersects(rb.the_geom4326, ST_GeomFromWKB(fdfpg.field_position_geo_geom, 4326))";
@@ -202,7 +240,11 @@ function uwwtd_statistics_uwwtp_treatment($year = 'all', $groupby = '') {
     $query .= " JOIN {field_data_field_anneedata} fdfan ON fdfan.entity_id = n.nid";
   }
 
-  $query .= " WHERE n.type = 'uwwtp'";
+  $query .= " WHERE n.type = 'uwwtp' ";
+                
+  if (variable_get('display_only_active', '1') == 1) {
+      $query .= "  AND fdfs.field_status_value = '1' ";
+  }     
 
   if($year != 'all') {
     $query .= " AND fdfan.field_anneedata_value = :year";

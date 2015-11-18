@@ -264,7 +264,17 @@ function uwwtd_menu(){
     'access arguments' => array('Data-management access'),
     'type' => MENU_CALLBACK,
     'file' => 'uwwtd.forms.inc'
-  );
+    );
+    
+    $items['admin/configuration/uwwtd/general'] = array(
+    //'page callback' => 'uwwtd_page_config_ext_links',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('uwwtd_general_config'),
+    'access callback' => true,
+    'access arguments' => array('Data-management access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'inc/uwwtd.admin.config.inc'
+    );    
 
   //rebuild slovenia deadline
     $items['correction_slovenia_date'] = array(
@@ -766,11 +776,13 @@ function uwwtd_block_view($delta = '')
                 //e.vincent / bruno want to show only agglo > 2000
                 $filter = array();
                 $filter['filter'] = array();
-                $filter_force2000 = array();
-                $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
-                $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
-                $filter_force2000['filter']['field_status_value'] = '1';
-                uwwtd_filter_data($filter, $data, $filter_force2000);
+                $filter_force = array();
+                $filter_force['filter']['field_agggenerated_value_op'] = '>';
+                $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+                if (variable_get('display_only_active', '1') == 1) {
+                    $filter_force['filter']['field_status_value'] = '1';
+                }
+                uwwtd_filter_data($filter, $data, $filter_force);
                 //     uwwtd_filter_data($filter, $data);
                 //     dsm($data);
                 $optionstyle = array();
@@ -789,9 +801,11 @@ function uwwtd_block_view($delta = '')
                 $data = uwwtd_get_data_uwwtp($option);
                 $filter = array();
                 $filter['filter'] = array();                
-                $filter_force2000 = array();
-                $filter_force2000['filter']['field_status_value'] = '1';
-                uwwtd_filter_data($filter, $data, $filter_force2000);                
+                $filter_force = array();
+                if (variable_get('display_only_active', '1') == 1) {
+                    $filter_force['filter']['field_status_value'] = '1';
+                }
+                uwwtd_filter_data($filter, $data, $filter_force);                
                 $optionstyle = array();
                 $optionstyle['popup_title_type'] = 'treatment-plant';
                 $optionstyle['popup'] = array(
@@ -939,9 +953,9 @@ function uwwtd_get_data_agglomeration($option)
             $row['field_aggart4compliance_value_format'] = is_null($row['field_aggart4compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']];
             $row['field_aggart5compliance_value_format'] = is_null($row['field_aggart5compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']];
             $row['field_aggart6compliance_value_format'] = is_null($row['field_aggart6compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']];
-            $row['field_aggc1_value_format'] = is_null($row['field_aggc1_value']) ? '' : uwwtd_format_number($row['field_aggc1_value'], 2);
-            $row['field_aggc2_value_format'] = is_null($row['field_aggc2_value']) ? '' : uwwtd_format_number($row['field_aggc2_value'], 2);
-            $row['field_aggpercwithouttreatment_value_format'] = is_null($row['field_aggpercwithouttreatment_value']) ? '' : uwwtd_format_number($row['field_aggpercwithouttreatment_value'], 2);
+            $row['field_aggc1_value_format'] = is_null($row['field_aggc1_value']) ? '' : uwwtd_format_number($row['field_aggc1_value'], 1);
+            $row['field_aggc2_value_format'] = is_null($row['field_aggc2_value']) ? '' : uwwtd_format_number($row['field_aggc2_value'], 1);
+            $row['field_aggpercwithouttreatment_value_format'] = is_null($row['field_aggpercwithouttreatment_value']) ? '' : uwwtd_format_number($row['field_aggpercwithouttreatment_value'], 1);
 
 			if($row['field_article17_agglo_nid'] == "" || is_null($row['field_article17_agglo_nid'])){
 				$row['field_article17_agglo_value_format'] =  'No';
@@ -1597,6 +1611,7 @@ function uwwtd_get_form_filter($option)
 
 function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 {
+//     dsm($forcefilter);
     //no need to treat annee, already filter by request
     if (isset($filter['filter']['field_anneedata_value'])) {
         unset($filter['filter']['field_anneedata_value']);
@@ -1771,11 +1786,13 @@ function uwwtd_page_agglomeration_connection()
 //     uwwtd_filter_data($filter, $data);
     // dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
-    $filter_force2000 = array();
-    $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
-    $filter_force2000['filter']['field_status_value'] = '1';    
-    uwwtd_filter_data($filter, $data, $filter_force2000);
+    $filter_force = array();
+    $filter_force['filter']['field_agggenerated_value_op'] = '>';
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }    
+    uwwtd_filter_data($filter, $data, $filter_force);
 //     uwwtd_filter_data($filter, $data);
 
     $header  =array();
@@ -2107,9 +2124,11 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 
     $form = uwwtd_filter_form($list_field, $filter);
 //     dsm($data);    
-    $filter_force2000 = array();
-    $filter_force2000['filter']['field_status_value'] = '1';
-    uwwtd_filter_data($filter, $data, $filter_force2000); 
+    $filter_force['filter'] = array();
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }
+    uwwtd_filter_data($filter, $data, $filter_force); 
 //     dsm($data);
 
     $header  =array();
@@ -2118,6 +2137,8 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         $header[] = array(
             'data' => $name,
             'field' => $field,
+//             'attributes' => array('class' => 'width_header_' . $field),
+            'class' => array('width_header_' . $field),   
         );
 
         //set default sort if none exists
@@ -2423,20 +2444,32 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
         ';
 
 	$headers = array();
+    
+    
 	$headers[] = array(
-		array('data' => 'Description ', 'colspan' => 6),
+		array('data' => 'Description ', 'colspan' => 6, 'class' => 'customTableHeader'),
 		'',
-		array('data' => 'Performance', 'colspan' => 4),
-		''
-		
+		array('data' => 'Performance', 'colspan' => 4, 'class' => 'customTableHeader'),   
+// 		''   		
 	);
+    //if article 17, add a column
+    if (count($header) > 11) {
+        $headers[0][] = '';
+    }
+    
+//     foreach ($header as $key => $one_header) {
+//         $header[$key]['class'] = 'width_header_' . $header[$key]['field'];
+//     }
+//     dsm($header);
+//     $header = array();
 	$headers[] = $header;
 	
     $table = theme('table', array(
             'header' => $headers,
             'rows' => $rows,
-			'rows_multiple'=>true
-        ));
+			'rows_multiple'=>true,
+            'attributes' => array('class' => 'customTable'),     
+        ));   
     //build export data on ODT,XML,CSV,DOC...
     $render_graph_nb = theme('flot_graph', $variables_nb);
     $render_graph = theme('flot_graph', $variables);
@@ -2578,9 +2611,11 @@ function uwwtd_page_uwwtps_treatment()
 	}
     $form = uwwtd_filter_form($list_field, $filter);
               
-    $filter_force2000 = array();
-    $filter_force2000['filter']['field_status_value'] = '1';
-    uwwtd_filter_data($filter, $data, $filter_force2000); 
+    $filter_force['filter'] = array();
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }
+    uwwtd_filter_data($filter, $data, $filter_force); 
 //     dsm($data);
     $header  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] as $field => $name) {
@@ -3075,9 +3110,11 @@ function uwwtd_page_uwwtps_pressure()
     $form = uwwtd_filter_form($list_field, $filter);
 
 //     dsm($data);        
-    $filter_force2000 = array();
-    $filter_force2000['filter']['field_status_value'] = '1';
-    uwwtd_filter_data($filter, $data, $filter_force2000);
+    $filter_force['filter'] = array();
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }
+    uwwtd_filter_data($filter, $data, $filter_force);
 //     dsm($data);
 //     dsm($data);
     $header  = array();
@@ -3495,11 +3532,13 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 
 //     dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
-    $filter_force2000 = array();
-    $filter_force2000['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force2000['filter']['field_agggenerated_value']['value'] = 2000;
-    $filter_force2000['filter']['field_status_value'] = '1';
-    uwwtd_filter_data($filter, $data, $filter_force2000);
+    $filter_force = array();
+    $filter_force['filter']['field_agggenerated_value_op'] = '>';
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }
+    uwwtd_filter_data($filter, $data, $filter_force);
 //     dsm($data);        
 //     uwwtd_filter_data($filter, $data);
     $header = array();

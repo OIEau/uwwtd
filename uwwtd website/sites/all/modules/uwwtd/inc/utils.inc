@@ -982,3 +982,42 @@ function uwwtd_sendfile($path)
     readfile($path); 
     exit();     
 }  
+
+/**
+ *
+ */ 
+function uwwtd_get_keyarray_from_conf($value){
+//     dsm(__FUNCTION__);
+//     dsm($value);
+    $result = array();
+
+    $lines = explode("\n", $value);
+//     dsm($lines);
+    foreach($lines as $line){
+//         dsm($line);
+        $l = explode('|', trim($line));
+        $result[trim($l[0])] = trim($l[1]);
+    }
+
+//     dsm($result);
+    return $result;
+}
+
+/**
+ *
+ */ 
+function uwwtd_get_array_from_conf($value){
+//     dsm(__FUNCTION__);
+//     dsm($value);
+    $result = array();
+
+    $lines = explode("\n", $value);
+//     dsm($lines);
+    foreach($lines as $line){
+        dsm($line);
+        $result[] = trim($line);
+    }
+
+//     dsm($result);
+    return $result;
+}

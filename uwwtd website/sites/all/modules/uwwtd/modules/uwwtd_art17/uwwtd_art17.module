@@ -1086,11 +1086,13 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
         $context['sandbox']['max'] = $sheet->getHighestRow();         
 	} else {
         $objReader->setLoadSheetsOnly(array($context['sandbox']['sheetname']));
+        //TODO load only the 10 row we need for this loop (check doc phpexcel)
         $objPHPExcel = $objReader->load($filename);
         $sheet = $objPHPExcel->getSheetByName($context['sandbox']['sheetname']);          
     }
 //     dsm($context);
 //     $i = $context['sandbox']['progress'];
+
     $line = 3 + $context['sandbox']['progress'];
     $j = 0;
     while ($j < 10 && $context['sandbox']['progress'] < $context['sandbox']['max'])

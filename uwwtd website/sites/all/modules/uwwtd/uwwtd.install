@@ -1096,7 +1096,7 @@ function uwwtd_update_7116()
 
     $plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
     $menu= array(
-        'link_path' => drupal_get_normal_path('admin/config/uwwtps') ,
+        'link_path' => drupal_get_normal_path('admin/config/uwwtd') ,
         'link_title' => 'uwwtd configuration',
         'description' => 'Settings for the uwwtd application' ,
         'menu_name' => 'management',
@@ -2126,7 +2126,74 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     user_save($user);
     
     //reload map pressure
-    uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));    
+    uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));
+    
+    //set new config variable
+    variable_set('display_only_active', '1');
+    variable_set('min_aggenerated_display', '2000');
+    
+    //add new entry for admin general config uwwtd page
+    menu_cache_clear_all();
+    //find the parent mlid and check if menu not already exists
+    $list = menu_load_links('management');//look for management > Configuration > uwwtd configuration
+    
+    //delete bad link (duplicate)
+        
+    
+//     $bexistgeneral = false;
+    $mlid = -1;
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == 'admin/config/uwwtd') {
+            $mlid = $one_menu['mlid'];
+//             break;     
+        }
+        if ($one_menu['link_path'] == 'admin/configuration/uwwtd/general') {
+//             $bexist = true;
+            menu_link_delete($one_menu['mlid']);  
+//             break;     
+        }  
+        //delete menu admin/config/uwwtps (doublon with another url admin/config/uwwtd)
+        if ($one_menu['link_path'] == 'admin/config/uwwtps') {
+            menu_link_delete($one_menu['mlid']);  
+        }  
+        if ($one_menu['link_path'] == 'admin/configuration/uwwtd/extlinks') {
+            menu_link_delete($one_menu['mlid']);  
+        }                      
+    } 
+    
+    if ($mlid == -1){
+        throw new DrupalUpdateException('Can\'t find the menu link "uwwtd configuration" in management menu.');     
+    }
+          
+//     if (false === $bexist) {    
+    $plid = $mlid;
+    $menu= array(
+        'link_path' => 'admin/configuration/uwwtd/general' ,
+        'link_title' => 'UWWTD general configuration',
+        'description' => 'Configure UWWTD application' ,
+        'menu_name' => 'management',
+        'weight' => 0,
+//         'expanded' => false,
+        'mlid' => 0, 
+        'plid' => $plid,
+        'customized' => 1,
+    );    
+    $mlid = menu_link_save($menu);        
+
+    $menu= array(
+        'link_path' => 'admin/configuration/uwwtd/extlinks' ,
+        'link_title' => 'uwwtd external links',
+        'description' => 'Configure your external links' ,
+        'menu_name' => 'management',
+        'weight' => 0,
+    //         'expanded' => false,
+        'mlid' => 0, 
+        'plid' => $plid,
+        'customized' => 1,
+    );    
+    $mlid = menu_link_save($menu);        
+    menu_cache_clear_all();
+//     }          
     
     //
     variable_set('siif_eru_version', __FUNCTION__);

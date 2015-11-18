@@ -1808,14 +1808,16 @@ function uwwtd_table($vars) {
 	$caption= $vars['caption'];
 	$rows_multiple= $vars['rows_multiple'];
  
- 
+  
   // Add sticky headers, if applicable.
   if (count($header)) {
     drupal_add_js('misc/tableheader.js');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
-    $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : ($attributes['class'] .' sticky-enabled');
-  }
+//     dsm($attributes['class']);
+//     $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : ($attributes['class'] .' sticky-enabled');
+    $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : (implode(' ', $attributes['class']) .' sticky-enabled');
+  }    
 
   $output = '<table'. drupal_attributes($attributes) .">\n";
 

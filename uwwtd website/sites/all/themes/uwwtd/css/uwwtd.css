@@ -573,35 +573,45 @@ fill: steelblue;
 display: none;
 }
 
-.customTable tr:nth-child(1) th:nth-child(1),
-.customTable tr:nth-child(1) th:nth-child(3){
-	border-bottom: 1px solid #281c45;
+/*.customTable tr:nth-child(1) th:nth-child(1),
+.customTable tr:nth-child(1) th:nth-child(3)
+*/
+.customTableHeader {
+	border-bottom: 1px solid #281c45 !important;
 	border-left: 1px solid #281c45;
 	border-right: 1px solid #281c45;
 	color: #281c45;
 	text-align:center;
-}
-.customTable tr:nth-child(2) th:nth-child(2){
+}   
+
+.customTable .width_header_field_inspireidlocalid_value{
 width: 115px;
 }
-.customTable tr:nth-child(2) th:nth-child(3){
+
+.customTable .width_header_field_uwwloadenteringuwwtp_value{
 width: 105px;
 }
-.customTable tr:nth-child(2) th:nth-child(4){
+
+.customTable .width_header_field_physicalcapacityactivity_value{
 width: 110px;
 }
-.customTable tr:nth-child(2) th:nth-child(5){
+
+.customTable .width_header_field_regionnuts_value{
 width: 70px;
 }
-.customTable tr:nth-child(2) th:nth-child(6){
+
+.customTable .width_header_field_uwwtreatmenttype_value{
 width: 120px;
 }
-.customTable tr:nth-child(2) th:nth-child(7){
+
+.customTable .width_header_field_uwwcompliance_value{
 width: 95px;
 }
-.customTable tr:nth-child(2) th:nth-child(8){
+
+.customTable .width_header_field_uwwbod5perf_value{
 width: 60px;
 }
-.customTable tr:nth-child(2) th:nth-child(9){
+
+.customTable .width_header_field_uwwcodperf_value{
 width: 60px;
 }

@@ -79,7 +79,7 @@ function uwwtd_stat_national_ms_level($options)
                 ON n.nid = f_msldisposalincineration.entity_id
 		left join
             {field_data_field_msldisposalothers} f_msldisposalothers
-                ON n.nid = f_msldisposalothers.entity_id
+                ON n.nid = f_msldisposalothers.entity_id 
     where n.type = :typenode' . $conditions;
 
 
@@ -115,6 +115,11 @@ function uwwtd_stat_national_treatmentplant($options)
 			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
 			break;
 	}
+    
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      }  
+      
 
 	$data = array();
 	$param = array();
@@ -208,13 +213,20 @@ function uwwtd_stat_national_treatmentplant($options)
 		left join
             {field_data_field_uwwwastewatertreated} f_uwwwastewatertreated
                 ON n.nid = f_uwwwastewatertreated.entity_id
-    where n.type = :typenode' . $conditions;
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                
+    where n.type = :typenode
+    
+    ' . $conditions;
 
 
 	$param = array(
 			':typenode' => 'uwwtp',
+            
 				);
-
+//     dsm($query);
+//     dsm($param);
 
 	try {
 		$result = db_query($query,$param);
@@ -250,6 +262,10 @@ function uwwtd_stat_national_uwwtp($options, $GroupBy)
 			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
 			break;
 	}
+    
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      }     
 
 	switch ($GroupBy){
 		case 'compliance' :
@@ -331,16 +347,22 @@ function uwwtd_stat_national_uwwtp($options, $GroupBy)
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
         left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                       
+        left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		where n.type = :typenode ' .
+		where n.type = :typenode 
+    
+    ' .
 		$conditions . '
 		group by ' . $group_by;
 
 	$param = array(
 			':typenode' => 'uwwtp',
 	);
-
+//     dsm($query);
+//     dsm($param);
 	try {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
@@ -383,7 +405,10 @@ function uwwtd_stat_national_compliance($options)
 			break;
 	}
 
-
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      } 
+      
 
 	$query = 'select f_comp.field_aggcompliance_value,
 					 COUNT(n.title) AS  TOTAL_COUNT,
@@ -429,17 +454,24 @@ function uwwtd_stat_national_compliance($options)
             {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
                 ON n.nid = f_aggpercwithouttreatment.entity_id
         left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                       
+        left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		where n.type = :typenode ' .
+		where n.type = :typenode 
+        and f_agggenerated.field_agggenerated_value > :agggenerated
+    ' .
 		$conditions . '
 	group by f_comp.field_aggcompliance_value
     ';
 
 	$param = array(
 			':typenode' => 'agglomeration',
+            ':agggenerated' => variable_get('min_aggenerated_display', '2000'),
 	);
-
+//     dsm($query);
+//     dsm($param);
 	try {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
@@ -474,6 +506,10 @@ function uwwtd_stat_national_uwwtp_agglo($options)
 			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
 			break;
 	}
+    
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      }     
 
 
 	$data = array();
@@ -543,17 +579,24 @@ function uwwtd_stat_national_uwwtp_agglo($options)
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
         left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                       
+        left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
 		left join
             {field_data_field_physicalcapacityinput} f_physicalcapacityinput
-                ON n.nid = f_physicalcapacityinput.entity_id
-		where n.type = :typenode' . $conditions;
+                ON n.nid = f_physicalcapacityinput.entity_id    
+		where n.type = :typenode
+            
+    ' . $conditions;
 
 	$param = array(
 			':typenode' => 'uwwtp',
+            
 	);
-
+//      dsm($query);
+//      dsm($param);
 	try {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
@@ -563,6 +606,12 @@ function uwwtd_stat_national_uwwtp_agglo($options)
 	}catch(Exception $e) {
 		dsm($e->getMessage());
 	}
+    
+    
+    $conditions = '';
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      }     
 
 	$query = 'select SUM(f_agggenerated.field_agggenerated_value) AS GENERATED_SUM
     from {node} n
@@ -603,13 +652,21 @@ function uwwtd_stat_national_uwwtp_agglo($options)
             {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
                 ON n.nid = f_aggpercwithouttreatment.entity_id
         left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                       
+        left join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		where n.type = :typenode
-    ';
-
+		where n.type = :typenode    
+              and f_agggenerated.field_agggenerated_value > :agggenerated
+    '
+    . $conditions;
+//     dsm($query);
+//     dsm($param);
 	$param = array(
 			':typenode' => 'agglomeration',
+            ':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+            
 	);
 
 	try {
@@ -639,6 +696,10 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
 			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
 			break;
 	}
+    
+      if (variable_get('display_only_active', '1') == 1) {
+          $conditions .= "  AND f_status.field_status_value = '1' ";
+      }     
 
 	$data = array();
 	$param = array();
@@ -660,13 +721,20 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
         left join
             {field_data_field_agggenerated} f_agggenerated
                 ON n.nid = f_agggenerated.entity_id
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id                       
 
-		where n.type = :typenode ' . $conditions;
+		where n.type = :typenode 
+        and f_agggenerated.field_agggenerated_value > :agggenerated
+    ' . $conditions;
 
 	$param = array(
 			':typenode' => 'agglomeration',
+            ':agggenerated' => variable_get('min_aggenerated_display', '2000'),
 	);
-
+//     dsm($query);
+//     dsm($param);
 	try {
 			foreach ($aConditions as $libelle => $condition){
 				$result = db_query($query . $condition,$param);

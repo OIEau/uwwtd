@@ -184,7 +184,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {      
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {      
 //         dsm($agglo);
 //         break;        
 //     foreach($listagglo as $agglo) {
@@ -456,7 +456,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 //     while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {    
     $j = 0;
     uwwtd_trace('start loop');
-    while ($j < 10 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
+    while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
             uwwtd_trace($j);    
 //         if ($uwwtp[0] == 'TOTAL' || $uwwtp[0] == 'expired_deadline' || $uwwtp[0] == 'pending_deadline' ) {
 //             $line_to_fill = 0;
@@ -853,7 +853,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
     }
     
     $j = 0;
-    while ($j < 10 && $context['sandbox']['progressbc'] < $context['sandbox']['maxbc']) {              
+    while ($j < 20 && $context['sandbox']['progressbc'] < $context['sandbox']['maxbc']) {              
 //     foreach($id as $nid_bc) {
 //         dsm($j + $context['sandbox']['progressbc']);
 //         dsm($context['sandbox']['idbc'][$context['sandbox']['progressbc']]);
@@ -926,7 +926,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 
     if ($context['sandbox']['progressbc'] >= $context['sandbox']['maxbc']) {
         $j = 0;
-        while ($j < 10 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {      
+        while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {      
     //     foreach($id as $nidagglo) {
             $line = array();
             $generated_load = 0;
@@ -1048,7 +1048,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
     fseek($ragglofile, $context['sandbox']['file_position']);
     
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
         //build context value       
 
         $j++;        
@@ -1379,7 +1379,7 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name']);
     
     $j = 0;
-    while ($j < 10 && $nuts = fgetcsv($rnuts, 5000, ';')) { 
+    while ($j < 20 && $nuts = fgetcsv($rnuts, 5000, ';')) { 
         $sheet->setCellValueByColumnAndRow($ind['nuts2_code'], $context['sandbox']['line'], $nuts[$ind['nuts2_code'] ]);
         $sheet->setCellValueByColumnAndRow($ind['number_agglo'], $context['sandbox']['line'], $nuts[$ind['number_agglo'] ]);
         $sheet->setCellValueByColumnAndRow($ind['generated_load_pe'], $context['sandbox']['line'], $nuts[$ind['generated_load_pe'] ]);
@@ -1859,7 +1859,7 @@ function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context
     $indagglo = $GLOBALS['uwwtd']['sheet3_agglo'];
 
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //     get all agglo from csv file
 //         check if agglo > 2000 and exist in previous year
 //             if no add a line 
@@ -1963,7 +1963,7 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
     }
         
     $j = 0;
-    while ($j < 10 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
     
         $previousagglo = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
         
@@ -2054,7 +2054,7 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
     $induwwtp = $GLOBALS['uwwtd']['sheet2_uwwtp'];
 
     $j = 0;
-    while ($j < 10 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
+    while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
 //     get all uwwtp from csv file
 //         check if exist in previous year
 //             if no add a line 
@@ -2157,7 +2157,7 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
     }
         
     $j = 0;
-    while ($j < 10 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
     
         $previousuwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
         
@@ -2254,7 +2254,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'] . '.csv';
 
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
         $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
         $sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
@@ -2357,7 +2357,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 //     $ragglofile = fopen($filename, 'rb');
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
         $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
         $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
         $sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
@@ -2458,7 +2458,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 10 && $line = fgetcsv($rfile, 5000, ';')) {    
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {    
         $sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
         $sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
         $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
@@ -2562,7 +2562,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 10 && $line = fgetcsv($rfile, 5000, ';')) {        
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {        
         $sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
         $sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
         $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
@@ -2891,7 +2891,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
 //     $agglo = fgetcsv($ragglofile, 5000, ';');
     
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {   
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {   
         
 //     foreach ($listagglo as $agglo) {
     
@@ -3114,7 +3114,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
     
 //     $data = array();
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         foreach($listtypestat as $typedeadline) {
 //test        
 // if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {        
@@ -3513,7 +3513,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //     dsm($compliance);
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 10 && $agglo = fgetcsv($ragglofile, 5000, ';')) {         
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {         
 //     foreach ($listagglo as $agglo) {
 //         dsm($agglo);  
         foreach($list_type as $type) {
@@ -4194,7 +4194,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //     $allline = array();
 //     foreach($listagg as $nidagg) {
     $j = 0;
-    while ($j < 10 && $context['sandbox']['progress'] < $context['sandbox']['max']) {    
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {    
         $line = array();
 //         $agg = node_load($nidagg);
 //         dsm($context['sandbox']['id'][$context['sandbox']['progress'] + $j]);
@@ -5143,7 +5143,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
     
 
     $j = 0;
-    while ($j < 10 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         
 //         $uwwtp = node_load($niduwwtp);
         $uwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
@@ -5204,7 +5204,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //'entering this UWWTP % of gen. load',
                 $line[$ind['uww_entering this UWWTP % of gen. load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];              
                 //'entering load  p. e.',
-                $line[$ind['uww_entering load  p. e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+                $line[$ind['uww_entering load  p. e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value']/ 100 * $agg->field_agggenerated['und'][0]['value']);
                 unset($agglo_uwwtp, $siteid);
             } else {
                 $line[$ind['uww_entering this UWWTP % of gen. load']] = '';              
@@ -5239,7 +5239,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 dsm($previousagglo_uwwtp);
 //                 dsm($previousagglo);
                 $previous_reference_year = $context['sandbox']['previous_year']; 
-                $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
+//                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
+                $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
                 $previous_capacity_pe = $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'];
                 if (isset($line[$ind['uww_entering load  p. e.']])) {
                     $previous_percentage_of_change_of_entering_load = $previous_entering_load_pe * 100 / $line[$ind['uww_entering load  p. e.']];
