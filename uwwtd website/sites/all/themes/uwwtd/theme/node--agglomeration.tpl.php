@@ -110,20 +110,22 @@ echo uwwtd_insert_errors_tab($node);
     hide($content['comments']);
     hide($content['links']);
     hide($content['field_tags']);
-    if ($view_mode == 'full' && !empty($title)){
-        $fieldstat = field_view_field('node', $node, 'field_status');
-        $fieldnuts = field_view_field('node', $node, 'field_regionnuts');
-        //print '<h1>'.$node->title.' <small><i>- '.$nodetype.', '.t('reporting year: ').$node->field_anneedata['und'][0]['value'].'</i></small>';
-        print '<h1><span class="black-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="black-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="black-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="black-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
-        print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].' - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small></h1><br>';
-    }
+	
+	$printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+	print '<div class="uwwcontainer" style="margin-top:-70px">';
+		if ($view_mode == 'full' && !empty($title)){
+			$fieldstat = field_view_field('node', $node, 'field_status');
+			$fieldnuts = field_view_field('node', $node, 'field_regionnuts');
+			//print '<h1>'.$node->title.' <small><i>- '.$nodetype.', '.t('reporting year: ').$node->field_anneedata['und'][0]['value'].'</i></small>';
+			print '<h1 style="top:220px;color:white;z-index:4;"><span class="white-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="white-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="white-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="white-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
+			print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].' - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small></h1><br>';
+		}
 
     //print render($content);
-    $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-
-    print '<div class="uwwcontainer" >';
+    
+    
       echo render($printy);
-      print '<div class="uwwhalf">';
+      print '<div class="uwwhalf" style="clear:left;">';
         echo uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
