@@ -202,12 +202,16 @@ function uwwtd_timeline_output($node){
 		<legend class="panel-heading">
 		<div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
 		</legend>';
-		foreach($histories as $history){
+		foreach($histories as $history){	
 			$other = node_load($history);
 			$otherY = $other->field_anneedata['und'][0]['value'];
 			$otherList[$otherY] = array('node'=>$other);
 		}
 		ksort($otherList);
+		$output .='<table class = "dispo-annee">
+							<tbody>
+								<tr>
+									<td class="dispo-before"><div></div></td>';
 		foreach($otherList as $other){
 			$ting = $other['node'];
 			if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
@@ -222,29 +226,65 @@ function uwwtd_timeline_output($node){
 			$color = '#6b6b6b'; $borderc = '#6b5e66';
 
 			if(isset($val)){
-				if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant');}
-				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');}
-				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');}
-				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information');}
-       			if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');}
-                if($val == '?') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('?');}
+				if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
+				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
+				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
+				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
+       			if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+                if($val == '?') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
 			}
+			// $color = uwwtd_adjustBrightness($color, 50);
+			$nbAnnee = count($otherY); 
+			$j=0;
+            $cell = 0;
+			for($a=1;$a<=$nbAnnee;$a++){
+                if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+			        $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
+						$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+						// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+					$output .= '</td>';
+				}else{
+					$output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element">';
+						$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+						// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+					$output .= '</td>';
+				}
+                //Si on arrive a 16 cellules, un retour à la ligne s'impose
+                if($cell==16){
+                    $output.='<td class="dispo-next">...</td></tr><tr><td class="dispo-next">...</td>';
+                    $cell=0;
+                }
+                else{
+                    $cell++;
+                }
+                $j++;
+            }
 
-			$color = uwwtd_adjustBrightness($color, 50);
-
-			if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-				$output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
-				$output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-				if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
-				$output .= '</div>';
-			}
-			else{
-				$output .= '<div class="uwwtd-history-element">';
-				$output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
-				if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
-				$output .= '</div>';
-			}
+			// if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+				// $output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
+				// $output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+				// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+				// $output .= '</div>';
+			// }
+			// else{
+				// $output .= '<div class="uwwtd-history-element">';
+				// $output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+				// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+				// $output .= '</div>';
+			// }
 		}
+			$output.='<td class="dispo-after"><div></div></td>';
+          $output.='</tr>';
+        $output.='</table>';
+		$output.='<div class="dispo-legend">';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-1">&nbsp;</div><div class="dispo-legend-label"> '.t('Compliant').'</div></div>';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-2">&nbsp;</div><div class="dispo-legend-label"> '.t('Not compliant').'</div></div>';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-3">&nbsp;</div><div class="dispo-legend-label"> '.t('Not relevant').'</div></div>';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-4">&nbsp;</div><div class="dispo-legend-label"> '.t('No information').'</div></div>';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-5">&nbsp;</div><div class="dispo-legend-label"> '.t('Compliant on equipment').'</div></div>';
+          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-0">&nbsp;</div><div class="dispo-legend-label"> '.t('?').'</div></div>';
+          $output.='<br class="spacer"/>';
+        $output.='</div>';
 		$output .= '</fieldset></div><br>';
 	}
 
