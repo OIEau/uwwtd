@@ -213,7 +213,7 @@ article.node h1 small i{
 .field-type-geofield{
 	position: relative;
 	top: 0;
-	width: 49%;
+	width: 100%;
 	display: inline-block;
 	margin-right: 10px;
 }
