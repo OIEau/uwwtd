@@ -1,3 +1,29 @@
+<script>
+(function($){
+	$(document).ready(function(){
+		$('.field-name-field-physicalcapacityactivity').addClass('clearfix');
+		
+		var bod = $('.field-name-field-uwwbod5perf .field-label').text();
+		var bod5 = bod.split(':');
+		$('.field-name-field-uwwbod5perf .field-label').text(bod5[1] +': ');
+		var cod = $('.field-name-field-uwwcodperf .field-label').text();
+		var cod = cod.split(':');
+		$('.field-name-field-uwwcodperf .field-label').text(cod[1] +': ');
+		var tss = $('.field-name-field-uwwtssperf .field-label').text();
+		var tss = tss.split(':');
+		$('.field-name-field-uwwtssperf .field-label').text(tss[1] +': ');
+		var ntot = $('.field-name-field-uwwntotperf .field-label').text();
+		var ntot = ntot.split(':');
+		$('.field-name-field-uwwntotperf .field-label').text(ntot[1] +': ');
+		var ptot = $('.field-name-field-uwwptotperf .field-label').text();
+		var ptot = ptot.split(':');
+		$('.field-name-field-uwwptotperf .field-label').text(ptot[1] +': ');
+		var other = $('.field-name-field-uwwotherperf .field-label').text();
+		var other = other.split(':');
+		$('.field-name-field-uwwotherperf .field-label').text(other[1] +': ');
+	});
+})(jQuery);
+</script>
 <?php
 /**
  * @file
@@ -108,29 +134,30 @@ echo uwwtd_insert_errors_tab($node);
     hide($content['comments']);
     hide($content['links']);
     hide($content['field_tags']);
-    if ($view_mode == 'full' && !empty($title)){
-        $fieldstat = field_view_field('node', $node, 'field_status');
-        $fieldnuts = field_view_field('node', $node, 'field_regionnuts');
-        print '<h1><span class="black-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="black-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="black-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="black-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
-        if(isset($node->field_regionnuts['und'][0]['value'])) print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].'</small>';
-        if(isset($fieldnuts[0]['#markup'])) print '<small> - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small>';
-        print '<br>';
-        if((!isset($node->field_uwwcollectingsystem['und'][0]['value']) || $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON') || (!isset($node->field_physicalcapacityactivity['und'][0]['value']) || $node->field_physicalcapacityactivity['und'][0]['value'] == '0')){
-          print t('COLLECTING SYSTEM WITHOUT TREATMENT PLANT');
-        }
-        print '</h1><br>';
-    }
-
+   
     $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
 
-    print '<div class="uwwcontainer">';
-      echo render($printy);
-      print '<div class="uwwhalf">';
+    print '<div class="uwwcontainer" style="margin-top:-70px">';
+		if ($view_mode == 'full' && !empty($title)){
+			$fieldstat = field_view_field('node', $node, 'field_status');
+			$fieldnuts = field_view_field('node', $node, 'field_regionnuts');
+			print '<h1 style="z-index: 4;top:200px;color:white;"><span class="white-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="white-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="white-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="white-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
+			if(isset($node->field_regionnuts['und'][0]['value'])) print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].'</small>';
+			if(isset($fieldnuts[0]['#markup'])) print '<small> - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small>';
+			print '<br>';
+			if((!isset($node->field_uwwcollectingsystem['und'][0]['value']) || $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON') || (!isset($node->field_physicalcapacityactivity['und'][0]['value']) || $node->field_physicalcapacityactivity['und'][0]['value'] == '0')){
+				print t('COLLECTING SYSTEM WITHOUT TREATMENT PLANT');
+			}
+			print '</h1>';
+		}
+		echo render($printy);
+
+      print '<div class="uwwhalf" style="clear:left;">';
         echo uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer" style="float:left;overflow:visible;">';
-      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:430px;">';
+      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:335px;">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
@@ -139,138 +166,274 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_uwwloadenteringuwwtp']);
               print render($content['field_physicalcapacityactivity']);
               print render($content['field_uwwwastewatertreated']);
-              print render($content['field_uwwbod5perf']);
-              print render($content['field_uwwcodperf']);
-              print render($content['field_uwwtssperf']);
-              print render($content['field_uwwntotperf']);
-              print render($content['field_uwwptotperf']);
-              print render($content['field_uwwotherperf']);
+			 
+			  print '<div class="treatmentPerformance" style="clear:both;">';
+			  
+			   print '<div style="font-weight:bold";>'.t('Treatment performance :').'</div>';
+			  $list = array(
+				render($content['field_uwwbod5perf']),
+				render($content['field_uwwcodperf']),
+				render($content['field_uwwtssperf']),
+				render($content['field_uwwntotperf']),
+				render($content['field_uwwptotperf']),
+				render($content['field_uwwotherperf'])
+			  );
+			  print theme('item_list', array('items'=>$list));
+			  print '</div>';
             print '</div>';
             print '<div class="uwwrealthird">';
               print '<div class="flip" id="uwwtp_stackedbar" style="position:relative;">
                        <div class="front">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
-                        print render($content['field_uwwbodincoming']);
-						if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Incoming concentration BOD (mg/l): ')."</b>";
+						  if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$incomingLoadBod= round($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'],2);
 								$incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($incomingBod,2);
+								$resultIncomingBod = round($incomingBod,2);
 							}
-						}
-													
-						print render($content['field_uwwboddischarge']);
+						  }
 						if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Discharged concentration BOD (mg/l): ')."</b>";
 							if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$dischargeLoadBod = round($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'],2);
 								$dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($dischargeBod,2);
+								$resultDischargedBod = round($dischargeBod,2);
 							}
 						}
-						
 						if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
-                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                              print '<div class="field-label">'.t('Rate for BOD:').'</div>';
-                              print '<div class="field-items">';
-                                print '<div class="field-item">';
-                                  print '&nbsp;'.round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 1) . '%';
-                                print '</div>';  
-                              print '</div>';
-                            print '</div>';
-                          }
-						print render($content['field_uwwcodincoming']);
+                             $rateBod = round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 1) . '%';
+						}
+						//COD
 						if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Incoming concentration COD (mg/l): ')."</b>";
 							if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$incomingLoadCod= round($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'],2);
 								$incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($incomingCod,2);
+								$resultIncomingCod = round($incomingCod,2);
 							}
 						}
-							
-                          print render($content['field_uwwcoddischarge']);
-						  if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Discharged concentration COD (mg/l): ')."</b>";
+						if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$dischargeLoadCod = round($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'],2);
 								$dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($dischargeCod,2);
+								$resultDischargedCod = round($dischargeCod,2);
 							}
-						  }
-						  
-                          if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
-                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                              print '<div class="field-label">'.t('Rate for COD:').'</div>';
-                              print '<div class="field-items">';
-                                print '<div class="field-item">';
-                                  print '&nbsp;'.round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 1) . '%';
-                                print '</div>';  
-                              print '</div>';
-                            print '</div>';
-                          }
-						  
-                          print render($content['field_uwwnincoming']);
-						  if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Incoming concentration N (mg/l): ')."</b>";
+						}
+						if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
+                            $rateCod = round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 1) . '%';
+                        }
+						//Nitrogen
+						if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$incomingLoadN= round($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'],2);
 								$incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($incomingN,2);
+								$resultIncomingN = round($incomingN,2);
 							}
-						  }
-						
-                          print render($content['field_uwwndischarge']);
-						   if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Discharged concentration N (mg/l): ')."</b>";
+						}
+						if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$dischargeLoadN = round($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'],2);
 								$dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($dischargeN,2);
+								$resultDischargedN = round($dischargeN,2);
 							}
-						  }
-						
-                          if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
-                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                              print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
-                              print '<div class="field-items">';
-                                print '<div class="field-item">';
-                                  print '&nbsp;'.round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 1) . '%';
-                                print '</div>';  
-                              print '</div>';
-                            print '</div>';
-                          }
-							print render($content['field_uwwpincoming']);
-							if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							print "<b>".t('Incoming concentration P (mg/l): ')."</b>";
+						}
+						if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
+                            $rateN =round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 1) . '%';
+                        }
+						//Phosphorus
+						if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$incomingLoadP= round($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'],2);
 								$incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($incomingP,2);
+								$resultIncomingP = round($incomingP,2);
 							}
-						  }
-						  
-                          print render($content['field_uwwpdischarge']);
-						  if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-							 print "<b>".t('Discharged concentration P (mg/l): ')."</b>";
+						}
+						if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
+								$dischargeLoadP = round($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'],2);
 								$dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-								print round($dischargeP,2);
+								$resultDischargedP =  round($dischargeP,2);
 							}
-						  }
+						}
+						if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
+                            $rateP = round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 1) . '%';
+                        } 
+						$output ='<table id="UwwtpDescription">
+								 <tr>
+									<td></td>
+									<td style="font-weight: bold;">Incoming</td>
+									<td style="font-weight: bold;">Discharged</td>
+									<td style="font-weight: bold;">Rate</td>
+								</tr>';
+						$output .='<tr>
+									<td rowspan=2 style="font-weight: bold;">BOD</td>
+									<td>'.(isset($incomingLoadBod)?$incomingLoadBod.' t/year':'').'</td>
+									<td>'.(isset($dischargeLoadBod)?$dischargeLoadBod.' t/year':'').'</td>
+									<td rowspan=2 >'.(isset($rateBod)?$rateBod:'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td>'.(isset($resultIncomingBod)?$resultIncomingBod.' mg/l':'').'</td>
+									<td>'.(isset($resultDischargedBod)?$resultDischargedBod.' mg/l':'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td rowspan=2 style="font-weight: bold;">COD</td>
+									<td>'.(isset($incomingLoadCod)?$incomingLoadCod.' t/year':'').'</td>
+									<td>'.(isset($dischargeLoadCod)?$dischargeLoadCod.' t/year':'').'</td>
+									<td rowspan=2 >'.(isset($rateCod)?$rateCod:'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td>'.(isset($resultIncomingCod)?$resultIncomingCod.' mg/l':'').'</td>
+									<td>'.(isset($resultDischargedCod)?$resultDischargedCod.' mg/l':'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td rowspan=2 style="font-weight: bold;">Nitrogen</td>
+									<td>'.(isset($incomingLoadN)?$incomingLoadN.' t/year':'').'</td>
+									<td>'.(isset($dischargeLoadN)?$dischargeLoadN.' t/year':'').'</td>
+									<td rowspan=2 >'.(isset($rateN)?$rateN:'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td>'.(isset($resultIncomingN)?$resultIncomingN.' mg/l':'').'</td>
+									<td>'.(isset($resultDischargedN)?$resultDischargedN.' mg/l':'').'</td>
+								</tr>';
+						$output .='<tr>
+									<td rowspan=2 style="font-weight: bold;">Phosphorus</td>
+									<td>'.(isset($incomingLoadP)?$incomingLoadP.' t/year':'').'</td>
+									<td>'.(isset($dischargeLoadP)?$dischargeLoadP.' t/year':'').'</td>
+									<td rowspan=2 >'.(isset($rateP)?$rateP:'').'</td>
+								</tr>';	
+						$output .='<tr>
+									<td>'.(isset($resultIncomingP)?$resultIncomingP.' mg/l':'').'</td>
+									<td>'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
+								</tr>';		
+						$output .= '</table>';
+						print $output;
+						// print render($content['field_uwwbodincoming']);
+						// if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Incoming concentration BOD (mg/l): ')."</b>";
+							// if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($incomingBod,2);
+							// }
+						// }
+													
+						// print render($content['field_uwwboddischarge']);
+						// if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Discharged concentration BOD (mg/l): ')."</b>";
+							// if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($dischargeBod,2);
+							// }
+						// }
+						
+						// if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
+                            // print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              // print '<div class="field-label">'.t('Rate for BOD:').'</div>';
+                              // print '<div class="field-items">';
+                                // print '<div class="field-item">';
+                                  // print '&nbsp;'.round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 1) . '%';
+                                // print '</div>';  
+                              // print '</div>';
+                            // print '</div>';
+                          // }
+						// print render($content['field_uwwcodincoming']);
+						// if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Incoming concentration COD (mg/l): ')."</b>";
+							// if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($incomingCod,2);
+							// }
+						// }
+							
+                          // print render($content['field_uwwcoddischarge']);
+						  // if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Discharged concentration COD (mg/l): ')."</b>";
+							// if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($dischargeCod,2);
+							// }
+						  // }
+						  
+                          // if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
+                            // print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              // print '<div class="field-label">'.t('Rate for COD:').'</div>';
+                              // print '<div class="field-items">';
+                                // print '<div class="field-item">';
+                                  // print '&nbsp;'.round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 1) . '%';
+                                // print '</div>';  
+                              // print '</div>';
+                            // print '</div>';
+                          // }
+						  
+                          // print render($content['field_uwwnincoming']);
+						  // if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Incoming concentration N (mg/l): ')."</b>";
+							// if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($incomingN,2);
+							// }
+						  // }
+						
+                          // print render($content['field_uwwndischarge']);
+						   // if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Discharged concentration N (mg/l): ')."</b>";
+							// if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($dischargeN,2);
+							// }
+						  // }
+						
+                          // if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
+                            // print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              // print '<div class="field-label">'.t('Rate for Nitrogen:').'</div>';
+                              // print '<div class="field-items">';
+                                // print '<div class="field-item">';
+                                  // print '&nbsp;'.round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 1) . '%';
+                                // print '</div>';  
+                              // print '</div>';
+                            // print '</div>';
+                          // }
+							// print render($content['field_uwwpincoming']);
+							// if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							// print "<b>".t('Incoming concentration P (mg/l): ')."</b>";
+							// if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($incomingP,2);
+							// }
+						  // }
+						  
+                          // print render($content['field_uwwpdischarge']);
+						  // if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
+							 // print "<b>".t('Discharged concentration P (mg/l): ')."</b>";
+							// if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
+							// {
+								// $dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+								// print round($dischargeP,2);
+							// }
+						  // }
 						 
-                          if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
-                            print '<div class="field field-type-number-decimal field-label-inline clearfix">';
-                              print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
-                              print '<div class="field-items">';
-                                print '<div class="field-item">';
-                                  print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 1) . '%';
-                                print '</div>';  
-                              print '</div>';
-                            print '</div>';
-                          }                      
+                          // if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
+                            // print '<div class="field field-type-number-decimal field-label-inline clearfix">';
+                              // print '<div class="field-label">'.t('Rate for Phosphorus:').'</div>';
+                              // print '<div class="field-items">';
+                                // print '<div class="field-item">';
+                                  // print '&nbsp;'.round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 1) . '%';
+                                // print '</div>';  
+                              // print '</div>';
+                            // print '</div>';
+                          // }                      
               print'   </div>
                        <div class="back" style="position:absolute;">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
