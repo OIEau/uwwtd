@@ -2016,16 +2016,16 @@ function uwwtd_update_7122()
 }
 
 /**
- * install new main menu
- * create new dir for register and article17
- * delete content basic page download
- * change link to error page
- * update path to wkhtml config       
- * change user admin mail
- * reload map pressure
- * set new config variable
- * add new entry for admin general config uwwtd page
- * add help description on some field         
+ * install new main menu,
+ * create new dir for register and article17,
+ * delete content basic page download,
+ * change link to error page,
+ * update path to wkhtml config,       
+ * change user admin mail,
+ * reload map pressure,
+ * set new config variable,
+ * add new entry for admin general config uwwtd page,
+ * add help description on some field,         
  */ 
 function uwwtd_update_7123()
 {
@@ -2141,6 +2141,9 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     
     ////////////////////////////////////////////////////////////////
     //reload map pressure
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');    
     uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));
     
     ////////////////////////////////////////////////////////////////
@@ -2214,6 +2217,16 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     
     ////////////////////////////////////////////////////////////////
     //add help description on some field
+    //delete view else error on update field
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_BigCity');
+    uwwtd_delete_view('UWWTD_Compliance_Agglo');
+    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+    uwwtd_delete_view('UWWTD_DischargePoint');
+    uwwtd_delete_view('UWWTD_ReceivingArea');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
+       
     $list_field_to_update = array(
         'field_uwwwastewatertreated' => 'Volume of waste water treated and partially treated in the UWWTP',
         'field_uwwbod5perf' => 'Biological Oxygen Demand',
@@ -2237,7 +2250,16 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
             uwwtd_install_trace($msg);
             $msg_error .= $msg . "\n";          
         } 
-    } 
+    }
+    //recreate the view
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_BigCity');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+    uwwtd_create_or_replace_view('UWWTD_DischargePoint');
+    uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');     
     
     if ('' != $msg_error) {
         throw new DrupalUpdateException($msg_error);     
