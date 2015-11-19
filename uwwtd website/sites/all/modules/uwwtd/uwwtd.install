@@ -2016,12 +2016,22 @@ function uwwtd_update_7122()
 }
 
 /**
- * add an entry for menu stat, create new dir for register
+ * install new main menu
+ * create new dir for register and article17
+ * delete content basic page download
+ * change link to error page
+ * update path to wkhtml config       
+ * change user admin mail
+ * reload map pressure
+ * set new config variable
+ * add new entry for admin general config uwwtd page
+ * add help description on some field         
  */ 
 function uwwtd_update_7123()
 {
     uwwtd_install_trace(__FUNCTION__);
     
+    ////////////////////////////////////////////////////////////////
     //install new menu
     menu_cache_clear_all();
     
@@ -2034,15 +2044,17 @@ function uwwtd_update_7123()
     menu_save($menu);        
     uwwtd_install_menu($menu, 'main-menu7123.json');   //todo change     
 
+    ////////////////////////////////////////////////////////////////
     //create new dir for register
 	$register_dir = 'public://register';
 	file_prepare_directory($register_dir, FILE_CREATE_DIRECTORY);     
 
-
+    ////////////////////////////////////////////////////////////////
     //create new dir for article17
 	$article17_dir = 'public://article17';
 	file_prepare_directory($article17_dir, FILE_CREATE_DIRECTORY);
-        
+    
+    ////////////////////////////////////////////////////////////////    
     //delete content basic page download
 	$ids = array();
 	$query = db_select('node', 'n');
@@ -2055,7 +2067,7 @@ function uwwtd_update_7123()
 	}
     unset($listnid);  
     
-    
+    ////////////////////////////////////////////////////////////////
     //change link to error page
     //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
     $list = menu_load_links('menu-editorial-menu');
@@ -2089,6 +2101,7 @@ function uwwtd_update_7123()
     }
     menu_cache_clear_all(); 
     
+    ////////////////////////////////////////////////////////////////
     //update path to wkhtml config       
     $config_wkhtml = array (
           'bin_path' => '/usr/local/bin/wkhtmltopdf',
@@ -2119,19 +2132,23 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
         );
     variable_set('wkhtmltopdf_configurations', $config_wkhtml);
     
+    ////////////////////////////////////////////////////////////////
     //change user admin mail
     $user = user_load_by_name('admin');
 //     dsm($user);
     $user->mail = variable_get('site_mail');
     user_save($user);
     
+    ////////////////////////////////////////////////////////////////
     //reload map pressure
     uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));
     
+    ////////////////////////////////////////////////////////////////
     //set new config variable
     variable_set('display_only_active', '1');
     variable_set('min_aggenerated_display', '2000');
     
+    ////////////////////////////////////////////////////////////////
     //add new entry for admin general config uwwtd page
     menu_cache_clear_all();
     //find the parent mlid and check if menu not already exists
@@ -2195,7 +2212,40 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     menu_cache_clear_all();
 //     }          
     
-    //
+    ////////////////////////////////////////////////////////////////
+    //add help description on some field
+    $list_field_to_update = array(
+        'field_uwwwastewatertreated' => 'Volume of waste water treated and partially treated in the UWWTP',
+        'field_uwwbod5perf' => 'Biological Oxygen Demand',
+        'field_uwwcodperf' => 'Chemical Oxygen Demand',
+//         'field_uwwtssperf' => '',
+        'field_aggart3compliance' => 'Collection',
+        'field_aggart4compliance' => 'Secondary treatment',
+        'field_aggart5compliance' => 'More stringent treatment',
+        'field_aggart6compliance' => 'Primary treatment',
+    );
+    $msg_error = '';
+    foreach($list_field_to_update as $fieldname => $tooltip) {
+        $infofield = field_info_field($fieldname);
+        $infofield['custom_tooltip'] = $tooltip;
+        try {
+            field_update_field($infofield);
+        }
+        catch (Exception $e) {
+            $msg = "Error update field : ".$infofield['field_name']."\n";
+            $msg .= $e->getMessage() . "\n"; 
+            uwwtd_install_trace($msg);
+            $msg_error .= $msg . "\n";          
+        } 
+    } 
+    
+    if ('' != $msg_error) {
+        throw new DrupalUpdateException($msg_error);     
+    }   
+    
+    
+    ////////////////////////////////////////////////////////////////
+    //end update
     variable_set('siif_eru_version', __FUNCTION__);
     
     drupal_flush_all_caches();
