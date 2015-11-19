@@ -1576,14 +1576,19 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration generated load information found.', $timestamp, $i, $node);
         
-        //text    
+        //text
+        //add check for benoit 2015/11/17    
         if(isset($data['bigID']) || isset($data['aggBigID'])){
             if(isset($data['bigID'])){
             $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigID']);}
             if(isset($data['aggBigID'])){
             $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['aggBigID']);}
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration big id information found.', $timestamp, $i, $node);
+        else {
+            if (isset($data['aggGenerated']) && $data['aggGenerated'] > 150000) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration big id information found.', $timestamp, $i, $node);
+            }
+        }
 
         //memo
         if(isset($data['aggCalculation'])){
