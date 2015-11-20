@@ -274,50 +274,50 @@ echo uwwtd_insert_errors_tab($node);
 						  
 						$output ='<table id="UwwtpDescription">
 								 <tr>
-									<td></td>
-									<td style="font-weight: bold;">Incoming</td>
-									<td style="font-weight: bold;">Discharged</td>
-									<td style="font-weight: bold;">Rate</td>
+									<td style="border: 1px solid #000;" class="black" ></td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">Incoming</td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">Discharged</td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">Rate</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;">BOD</td>
-									<td>'.(isset($incomingLoadBod)?$incomingLoadBod.' t/year':'').'</td>
-									<td>'.(isset($dischargeLoadBod)?$dischargeLoadBod.' t/year':'').'</td>
-									<td rowspan=2 >'.(isset($rateBod)?$rateBod:'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">BOD</td>
+									<td class="light">'.(isset($incomingLoadBod)?$incomingLoadBod.' t/year':'').'</td>
+									<td class="light">'.(isset($dischargeLoadBod)?$dischargeLoadBod.' t/year':'').'</td>
+									<td rowspan=2  class="black">'.(isset($rateBod)?$rateBod:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td>'.(isset($resultIncomingBod)?$resultIncomingBod.' mg/l':'').'</td>
-									<td>'.(isset($resultDischargedBod)?$resultDischargedBod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingBod)?$resultIncomingBod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultDischargedBod)?$resultDischargedBod.' mg/l':'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;">COD</td>
-									<td>'.(isset($incomingLoadCod)?$incomingLoadCod.' t/year':'').'</td>
-									<td>'.(isset($dischargeLoadCod)?$dischargeLoadCod.' t/year':'').'</td>
-									<td rowspan=2 >'.(isset($rateCod)?$rateCod:'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">COD</td>
+									<td class="light">'.(isset($incomingLoadCod)?$incomingLoadCod.' t/year':'').'</td>
+									<td class="light">'.(isset($dischargeLoadCod)?$dischargeLoadCod.' t/year':'').'</td>
+									<td rowspan=2  class="black">'.(isset($rateCod)?$rateCod:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td>'.(isset($resultIncomingCod)?$resultIncomingCod.' mg/l':'').'</td>
-									<td>'.(isset($resultDischargedCod)?$resultDischargedCod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingCod)?$resultIncomingCod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultDischargedCod)?$resultDischargedCod.' mg/l':'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;">Nitrogen</td>
-									<td>'.(isset($incomingLoadN)?$incomingLoadN.' t/year':'').'</td>
-									<td>'.(isset($dischargeLoadN)?$dischargeLoadN.' t/year':'').'</td>
-									<td rowspan=2 >'.(isset($rateN)?$rateN:'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">Nitrogen</td>
+									<td class="light">'.(isset($incomingLoadN)?$incomingLoadN.' t/year':'').'</td>
+									<td class="light">'.(isset($dischargeLoadN)?$dischargeLoadN.' t/year':'').'</td>
+									<td rowspan=2  class="black">'.(isset($rateN)?$rateN:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td>'.(isset($resultIncomingN)?$resultIncomingN.' mg/l':'').'</td>
-									<td>'.(isset($resultDischargedN)?$resultDischargedN.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingN)?$resultIncomingN.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultDischargedN)?$resultDischargedN.' mg/l':'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;">Phosphorus</td>
-									<td>'.(isset($incomingLoadP)?$incomingLoadP.' t/year':'').'</td>
-									<td>'.(isset($dischargeLoadP)?$dischargeLoadP.' t/year':'').'</td>
-									<td rowspan=2 >'.(isset($rateP)?$rateP:'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">Phosphorus</td>
+									<td class="light">'.(isset($incomingLoadP)?$incomingLoadP.' t/year':'').'</td>
+									<td class="light">'.(isset($dischargeLoadP)?$dischargeLoadP.' t/year':'').'</td>
+									<td rowspan=2  class="black">'.(isset($rateP)?$rateP:'').'</td>
 								</tr>';	
 						$output .='<tr>
-									<td>'.(isset($resultIncomingP)?$resultIncomingP.' mg/l':'').'</td>
-									<td>'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingP)?$resultIncomingP.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
 								</tr>';		
 						$output .= '</table>';
 						print $output;
@@ -542,7 +542,7 @@ echo uwwtd_insert_errors_tab($node);
           print '</div>';
       print '</fieldset>';
     print '</div>';
-// */
+
     print '<div class="uwwcontainer">';
       print '<div class="uwwthird">';
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
@@ -550,8 +550,20 @@ echo uwwtd_insert_errors_tab($node);
             print '<div class="panel-title fieldset-legend">'.t('Characteristics').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-            print render($content['field_uwwlatitude']);
-            print render($content['field_uwwlongitude']);
+			print '<div class ="field field-name-field-uwwlatitude field-type-number-decimal field-label-inline clearfix">';
+				print '<div class = "field-label"> Latitude : </div>';
+					print '<div class="field-items">';
+						print '<div class="field-item even"> &nbsp;'.$content['field_uwwlatitude']['#items'][0]['value'].'</div>';
+					print '</div>';
+			print '</div>';
+			print '<div class ="field field-name-field-uwwlongitude field-type-number-decimal field-label-inline clearfix">';
+				print '<div class = "field-label"> Longitude : </div>';
+					print '<div class="field-items">';
+						print '<div class="field-item even"> &nbsp;'.$content['field_uwwlongitude']['#items'][0]['value'].'</div>';
+					print '</div>';
+			print '</div>';
+            // print render($content['field_uwwlatitude']);
+            // print render($content['field_uwwlongitude']);
             //print render($content['field_uwwtreatmentrequired']);
             print '<h4>'.t('Treatment in place :').'</h4>';
             print '<span class="bump"></span>'.render($content['field_uwwprimarytreatment']);
