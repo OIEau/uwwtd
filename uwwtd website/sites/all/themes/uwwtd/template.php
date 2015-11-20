@@ -1083,9 +1083,9 @@ function uwwtd_get_uww_graphic($node){
     $offset = 0;
     $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
 
-	    if($reseau['compliance'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
-	    elseif($reseau['compliance'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
-	    else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
+	    if($reseau['compliance'] == 'C'){ $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';}
+	    elseif($reseau['compliance'] == 'NC'){ $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"  title="Main treatment">';}
+else {$output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';}
 
 		$output .= '<div class="graphic-title">
 			'.l($reseau['title'], "node/".$reseau['nid']).'
@@ -1097,13 +1097,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['n-removal']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['n-removal']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['n-removal']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('N').'</div>';
 			$output .= '</div>';
@@ -1112,13 +1112,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['p-removal']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['p-removal']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['p-removal']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('P').'</div>';
 			$output .= '</div>';
@@ -1127,13 +1127,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['uv']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['uv']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['uv']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('UV').'</div>';
 			$output .= '</div>';
@@ -1142,13 +1142,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['micro']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['micro']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['micro']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('MICRO').'</div>';
 			$output .= '</div>';
@@ -1157,13 +1157,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['chlorination']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['chlorination']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['chlorination']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('CHLOR').'</div>';
 			$output .= '</div>';
@@ -1172,13 +1172,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['ozonation']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['ozonation']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['ozonation']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('OZONE').'</div>';
 			$output .= '</div>';
@@ -1187,13 +1187,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['sand']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['sand']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['sand']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('SAND').'</div>';
 			$output .= '</div>';
@@ -1202,13 +1202,13 @@ function uwwtd_get_uww_graphic($node){
 		if($reseau['other']['treatment'] == '1'){
 			$output .= '<div class="more">';
 			if($reseau['other']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			elseif($reseau['other']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau">';
+				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
 			}
 			$output .= '<div class="more-text">'.t('O').'</div>';
 			$output .= '</div>';
@@ -1265,10 +1265,11 @@ function uwwtd_get_uww_graphic($node){
 
 	$output .= '<div class="station-dcp" style="top: 0px;">
 		<div>
-			<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">
+			<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau"  title="Discharge point">
 		  	<div class="graphic-title">';
 				$output .= l(count($reseau['dcps'])." DCP(S)", "#");
 				$output .= '<div class="dcps-hidden-list">';
+					$output .= 'Discharge point: ';
 					foreach($reseau['dcps'] as $dcp) {
 		    			$output .= l($dcp['title'], "node/".$dcp['nid']);
 		    			$output .= '<br>';
@@ -1288,24 +1289,24 @@ function uwwtd_get_uww_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
     	</ul>
-    	<ul><b>Treatment performance : </b>
+    	<ul><b>More stringent treatment : <br> Performance : </b>
     		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
     		<li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
     		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
     	</ul>
-    	<ul><b>More stringent treatment : </b>
+    	<ul><br><b>Type :</b>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>UV</span> : UV treatment</li>
 			<li><span>MICRO</span> : Micro Filtration</li>
     	</ul>
-    	<ul><b>More stringent treatment : </b>
+    	<ul><br><b>Type : </b>
 			<li><span>CHLOR</span> : Chlorination</li>
 			<li><span>OZONE</span> : Ozonation</li>
 			<li><span>SAND</span> : Sand filtration</li>
 			<li><span>O</span> : Other more stringent</li>
 		</ul>
-		<ul><b>Other treatment : </b>
+		<ul><b>Discharge  point : </b>
 			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
 			<li><span>DCP(S)</span> : Discharge point(s)</li>
 		</ul>
@@ -1486,9 +1487,9 @@ function uwwtd_get_agglo_graphic($node){
 
         $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
 
-            if($station['compStation'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau">';
-            elseif($station['compStation'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau">';
-            else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau">';
+            if($station['compStation'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
+            elseif($station['compStation'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau" title="Main treatment">';
+            else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
 
           $output .= '<div class="graphic-title">
             '.l($station['title'], "node/".$station['nid']).'
@@ -1512,7 +1513,7 @@ function uwwtd_get_agglo_graphic($node){
         if($station['mstype'] != false){
 
         $output .= '<div class="ms">
-          <img src="'.$src.'/images/graphic/ms.png" alt="reseau">
+          <img src="'.$src.'/images/graphic/ms.png" alt="reseau" title="More stringent treatment: Type">
           <div class="ms-type">
             '.$station['mstype'].'
           </div>
@@ -1579,7 +1580,7 @@ function uwwtd_get_agglo_graphic($node){
     foreach($reseau as $station){
     	$output .= '<div class="station-dcp" style="top: 0px;">
 			<div>
-			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau">';
+			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau" title="Discharge point">';
 			  	$output .= '<div class="graphic-title">';
 			  		$output .= l(count($station['dcps'])." DCP(S)", "#");
 			  		$output .= '<div class="dcps-hidden-list">';
@@ -1610,12 +1611,12 @@ function uwwtd_get_agglo_graphic($node){
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
     	</ul>
-    	<ul><b>More stringent treatment :</b>
+    	<ul><b>More stringent treatment : <br>Type : </b>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>O</span> : Other more stringent</li>
     	</ul>
-		<ul><b>Other treatment :</b>
+		<ul><b>Discharge point :</b>
 			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
 			<li><span>DCP(S)</span> : Discharge point(s)</li>
 		</ul>
