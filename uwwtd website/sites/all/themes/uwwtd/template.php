@@ -1283,28 +1283,30 @@ function uwwtd_get_uww_graphic($node){
 </div>';
 
     $output .= '</div><div class="graphic-legend">
-    	<ul>
+    	<ul><b>Main treatment : </b>
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
-			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
-    	<ul>
+    	<ul><b>Treatment performance : </b>
     		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
     		<li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
     		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
     	</ul>
-    	<ul>
+    	<ul><b>More stringent treatment : </b>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>UV</span> : UV treatment</li>
 			<li><span>MICRO</span> : Micro Filtration</li>
     	</ul>
-    	<ul>
+    	<ul><b>More stringent treatment : </b>
 			<li><span>CHLOR</span> : Chlorination</li>
 			<li><span>OZONE</span> : Ozonation</li>
 			<li><span>SAND</span> : Sand filtration</li>
 			<li><span>O</span> : Other more stringent</li>
+		</ul>
+		<ul><b>Other treatment : </b>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
 			<li><span>DCP(S)</span> : Discharge point(s)</li>
 		</ul>
     </div>';
@@ -1603,18 +1605,20 @@ function uwwtd_get_agglo_graphic($node){
     </div>
     <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
     <div class="graphic-legend">
-    	<ul>
+    	<ul><b>Main treatment :</b>
     		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
     		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
     		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
-			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
     	</ul>
-    	<ul>
+    	<ul><b>More stringent treatment :</b>
 			<li><span>N</span> : Nitrogen removal</li>
 			<li><span>P</span> : Phosphorus removal</li>
 			<li><span>O</span> : Other more stringent</li>
-			<li><span>DCP(S)</span> : Discharge point(s)</li>
     	</ul>
+		<ul><b>Other treatment :</b>
+			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
+			<li><span>DCP(S)</span> : Discharge point(s)</li>
+		</ul>
     </div>
   </div>';
 
