@@ -183,9 +183,8 @@ echo uwwtd_insert_errors_tab($node);
             print '</div>';
             print '<div class="uwwrealthird">';
               print '<div class="flip" id="uwwtp_stackedbar" style="position:relative;">
-                       <div class="front">
-                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
-						  //BOD
+                       <div class="front">';
+                         //BOD
 						  if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
@@ -271,6 +270,8 @@ echo uwwtd_insert_errors_tab($node);
 						   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
 						)
 						{
+							  print ' <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
+						  
 						$output ='<table id="UwwtpDescription">
 								 <tr>
 									<td></td>
@@ -443,12 +444,21 @@ echo uwwtd_insert_errors_tab($node);
                             // print '</div>';
                           // }                      
               print'   </div>
-                       <div class="back" style="position:absolute;">
-                          <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
-                            <svg id="uwwtp_stackedbar_back"></svg>';
-                            echo uwwtd_stackedbar_uwwtpnode($node);
-              print'   </div>       
-                    </div>';
+			  
+			    <div class="back" style="position:absolute;">';
+			  if(isset($incomingLoadBod)|| isset($resultIncomingBod) || isset($dischargeLoadBod)|| isset($resultDischargedBod)|| 
+			   isset($incomingLoadCod)|| isset($resultIncomingCod)|| isset($dischargeLoadCod)|| isset($resultDischargedCod)||
+			   isset($incomingLoadN)|| isset($resultIncomingN)|| isset($dischargeLoadN)|| isset($resultDischargedN)||
+			   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
+			)
+			{
+				  print' <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
+					<svg id="uwwtp_stackedbar_back"></svg>';
+					echo uwwtd_stackedbar_uwwtpnode($node);
+             } 
+			 print'   </div> ';
+					
+			 print'  </div>';
                                 
 //             print '<div id="uwwtp_stackedbar">
 //                     <div class="front">';
