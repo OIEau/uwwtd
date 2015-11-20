@@ -185,6 +185,7 @@ echo uwwtd_insert_errors_tab($node);
               print '<div class="flip" id="uwwtp_stackedbar" style="position:relative;">
                        <div class="front">
                           <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
+						  //BOD
 						  if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
 							{
@@ -264,6 +265,12 @@ echo uwwtd_insert_errors_tab($node);
 						if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
                             $rateP = round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 1) . '%';
                         } 
+						if(isset($incomingLoadBod)|| isset($resultIncomingBod) || isset($dischargeLoadBod)|| isset($resultDischargedBod)|| 
+						   isset($incomingLoadCod)|| isset($resultIncomingCod)|| isset($dischargeLoadCod)|| isset($resultDischargedCod)||
+						   isset($incomingLoadN)|| isset($resultIncomingN)|| isset($dischargeLoadN)|| isset($resultDischargedN)||
+						   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
+						)
+						{
 						$output ='<table id="UwwtpDescription">
 								 <tr>
 									<td></td>
@@ -313,6 +320,7 @@ echo uwwtd_insert_errors_tab($node);
 								</tr>';		
 						$output .= '</table>';
 						print $output;
+						}
 						// print render($content['field_uwwbodincoming']);
 						// if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
 							// print "<b>".t('Incoming concentration BOD (mg/l): ')."</b>";
