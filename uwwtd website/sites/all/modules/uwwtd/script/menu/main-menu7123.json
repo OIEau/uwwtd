@@ -13,6 +13,5 @@ Statistics {"url":"uwwtd_statistics","expanded":true,"lang":"und","options":{"at
 -View Stats {"url":"stats/graphs","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
 -Create Stats {"url":"uwwtd_statistics","lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
 Regulations {"url":"content\/regulations","lang":"und","weight":"-46"}
-Useful links {"url":"content\/useful-links","lang":"und","weight":"-45"}
-Ressources {"url":"content\/ressources","lang":"und","weight":"-44"}
-Contact {"url":"contact","lang":"und","weight":"-43"}
+Ressources {"url":"content\/ressources","lang":"und","weight":"-45"}
+Contact {"url":"contact","lang":"und","weight":"-44"}
