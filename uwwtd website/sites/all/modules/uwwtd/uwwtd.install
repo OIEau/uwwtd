@@ -3132,9 +3132,9 @@ function uwwtd_install_configure(&$context)
     $path = drupal_get_path('module', 'uwwtd') . '/script/img/logo_0.png';
     copy($path, 'public://logo_0.png');
     
-    path = drupal_get_path('module', 'uwwtd') . '/script/img/carre.png';
+    $path = drupal_get_path('module', 'uwwtd') . '/script/img/carre.png';
     copy($path, 'public://pictures/carre.png');
-    path = drupal_get_path('module', 'uwwtd') . '/script/img/triangle.png'; 
+    $path = drupal_get_path('module', 'uwwtd') . '/script/img/triangle.png'; 
     copy($path, 'public://pictures/triangle.png');     
     
     //////////////////////////////////////////////////
@@ -3771,7 +3771,7 @@ function uwwtd_install_execute_sql(&$context)
     uwwtd_install_trace(__FUNCTION__);
     
     //create extension postgis
-    db_query('create extension postgis');    
+    db_query('create extension IF NOT EXISTS postgis');    
     //create function for trigger on position_geo table
     db_query(' 
         create or replace function insert_geom_to_geo() returns trigger as $$
