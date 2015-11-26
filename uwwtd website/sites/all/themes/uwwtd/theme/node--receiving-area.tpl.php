@@ -148,10 +148,10 @@ echo uwwtd_insert_errors_tab($node);
     // characteristics
     if($rcaType != 'LSA' && $rcaType != 'NA'){
     print '<div class="uwwcontainer">';
-      echo render($printy);
-      print '<div class="uwwhalf">';
-        echo uwwtd_timeline_output($node);
-      print '</div>';
+      echo render($printy);  
+//       print '<div class="uwwhalf">';
+//         echo uwwtd_timeline_output($node);
+//       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer">';
       print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';

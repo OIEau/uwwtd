@@ -7,10 +7,10 @@
 <h3>Webservices - WFS</h3>
 <p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p>
 <ul>
-   <li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration</a></li>
+   <li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_Agglomeration</a></li>
 </ul>
 <ul>
-   <li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint</a></li>
+   <li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_DischargePoint</a></li>
 </ul>
 <ul>
    <li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_France_ReceivingArea</a></li>
@@ -38,9 +38,9 @@
 <p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p>
 <p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/france/[year]/[name of the element]/[ID of the element];<br />For instance:</p>
 <ul>
-   <li>http://uwwtd.oieau.fr/france/agglomeration/___/2012</li>
-   <li>http://uwwtd.oieau.fr/france/treatment-plant/___/2012</li>
-   <li>http://uwwtd.oieau.fr/france/discharge-point/____/2012</li>
+   <li>http://uwwtd.oieau.fr/france/agglomeration/fr030000175056/2012</li>
+   <li>http://uwwtd.oieau.fr/france/treatment-plant/fr039407401000/2012</li>
+   <li>http://uwwtd.oieau.fr/france/discharge-point/fr039407401000r1/2012</li>
 </ul>
 <p>&nbsp;</p>
 

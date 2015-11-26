@@ -123,9 +123,9 @@ echo uwwtd_insert_errors_tab($node);
 
     print '<div class="uwwcontainer">';
       echo render($printy);
-      print '<div class="uwwhalf">';
-        echo uwwtd_timeline_output($node);
-      print '</div>';
+//       print '<div class="uwwhalf">';
+//         echo uwwtd_timeline_output($node);
+//       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer">';
       print '<div class="uwwthird">';

@@ -18,6 +18,22 @@ function uwwtd_general_config($form, $form_state){
 			'#default_value' => variable_get('display_only_active', '1')
 	); 
     
+	$form['UI']['rptFormRA'] = array(
+			'#type' => 'select',
+			'#title' => t('Indication of type of receiving area'),
+			'#description' => t('Please fill-in the relevant number depending on the designation of sensitive areas : 1 = There are no designated Sensitive or Less Sensitive Areas (all Territory is Normal Area), 2 = Application of Art. 5(8) and Art.5(2) + Art.5(3), 3 = Application of Art. 5(8) and Art.5(4), 4 = There are designated Sensitive Areas - Application of Art. 5(1), 5 = There are designated Less Sensitive Areas - Application of Art. 6(1), 6 = There are designated Sensitive Areas - Application of Art. 5(1) and
+                                 There are designated Less Sensitive Areas - Application of Art. 6(1)'),
+			'#default_value' => variable_get('rptFormRA', '1'),
+            '#options' => array(
+                                    1 => '1 : There are no designated Sensitive or Less Sensitive Areas (all Territory is Normal Area)',
+                                    2 => '2 : Application of Art. 5(8) and Art.5(2) + Art.5(3)',
+                                    3 => '3 : Application of Art. 5(8) and Art.5(4)',
+                                    4 => '4 : There are designated Sensitive Areas - Application of Art. 5(1)',
+                                    5 => '5 : There are designated Less Sensitive Areas - Application of Art. 6(1)',
+                                    6 => '6 : There are designated Sensitive Areas - Application of Art. 5(1) and There are designated Less Sensitive Areas - Application of Art. 6(1)', 
+                                ),
+	);
+    
 // 	$form['UI']['test'] = array(
 // 			'#type' => 'textarea',
 // 			'#title' => t('Display only active agglomeration and uwwtp'),
