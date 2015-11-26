@@ -21,7 +21,7 @@
    <li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li>
    <li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li>
 </ul>
-<h3><br />Poland</h3>
+<h3><br />France</h3>
 <ul>
    <li>to be completed</li>
 </ul>
@@ -32,8 +32,8 @@
    <li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li>
    <li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li>
    <li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li>
+   <li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li>
    <li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li>
-   <li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li>
 </ul>
 <p style="padding-left: 30px;">&nbsp;</p>
 

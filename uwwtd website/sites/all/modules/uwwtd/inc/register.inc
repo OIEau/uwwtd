@@ -37,15 +37,14 @@ function uwwtd_register_form_submit($form, &$form_state){
      $annee = $form['uwwtd_year']['#value'];
      $filepath = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
     //if registre already calculated and no new conformity or new import_data processed since, we send the file
-//     dsm($filepath);
-//     dsm(file_create_url($filepath));                                                             
-//     if (file_exists($filepath) 
-//         && variable_get('registre_'.$annee, -2) > variable_get('conformity_'.$annee, -1)
-//         && variable_get('registre_'.$annee, -2) > variable_get('import_data_'.$annee, -1)) {
-//         drupal_set_message('<a href="'.file_create_url($filepath).'">get the register for year '.$annee.'</a>');
-//     } else {
+                                                          
+    if (file_exists($filepath) 
+        && variable_get('registre_'.$annee, -2) > variable_get('conformity_'.$annee, -1)
+        && variable_get('registre_'.$annee, -2) > variable_get('import_data_'.$annee, -1)) {
+        drupal_set_message('<a href="'.file_create_url($filepath).'">get the register for year '.$annee.'</a>');
+    } else {
         uwwtd_setup_register_batch($annee);
-//     }
+    }
 }
 
 function uwwtd_register_set_operation(&$batch, $annee)
@@ -291,7 +290,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
         
         //debug data info
-        $sheet->setCellValueByColumnAndRow($ind['compliance agglo from algo'], $context['sandbox']['line'], $agglo[$ind['compliance agglo from algo']]);
+        $sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
 //         }
 //         $i++;
 //         break;
@@ -4181,8 +4180,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'] => 'monitoring results f. more string. OK (% of gen. load)',
             $ind['monitoring_results_f._more_string._ok_(p._e.)'] => 'monitoring results f. more string. OK (p. e.)',
             
-            
-            $ind['compliance agglo from algo'] => 'compliance agglo from algo',  
+            //debug value
+            $ind['debug_compliance_agglo_from_algo'] => 'debug_compliance_agglo_from_algo',  
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
@@ -4729,7 +4728,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         } 
         
         //debug data info
-        $line[$ind['compliance agglo from algo']] = $agg->field_aggcompliance['und'][0]['value'];
+        $line[$ind['debug_compliance_agglo_from_algo']] = $agg->field_aggcompliance['und'][0]['value'];
                    
         fputcsv($r, $line, ';');
         
@@ -5249,8 +5248,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
                 }
 //                 unset($previousuwwtp);
-                unset($previousagglo_uwwtp);
-                unset($previousagglo);
+//                 unset($previousagglo_uwwtp);
+//                 unset($previousagglo);
             }
             
             //'reference year',
@@ -5278,6 +5277,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $rcaDateArt54 = '';
             $rcaDateArt58 = '';
             $rcatreated = array();
+            $startingDateOfApplication_an = '';
+            $startingDateOfApplication_ap = '';
+            $startingDateOfApplication_b = '';
+            $startingDateOfApplication_c = '';
             foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
                 $dcp = node_load($dcpnid['nid']);
                 
@@ -5299,6 +5302,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
                     $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
                     $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+                    
+                    $startingDateOfApplication_an = ($startingDateOfApplication_an == '' ? '' : ';') . (isset($rca->field_rcaapdatedesignation_value['und'][0]['value']) ? substr($rca->field_rcaapdatedesignation_value['und'][0]['value'], 0, 10)  : '-');
+                    $startingDateOfApplication_ap = $startingDateOfApplication_an;
+                    $startingDateOfApplication_b = $startingDateOfApplication_an;
+                    $startingDateOfApplication_c = ($startingDateOfApplication_an == '' ? '' : ';') . (isset($rca->field_rcacdateotherdirective['und'][0]['value']) ? substr($rca->field_rcacdateotherdirective['und'][0]['value'], 0, 10)  : '-');                 
                                         
                     unset($rca);
                 }     
@@ -5327,17 +5335,56 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'Starting date of application 5.4.',
             $line[$ind['Starting date of application 5.4.']] = $rcaDateArt54;
             //'Starting date of application a N',
-            $line[$ind['Starting date of application a N']] = 'TODO';
+            $line[$ind['Starting date of application a N']] = $startingDateOfApplication_an; //'TODO';  field_rcaapdatedesignation_value + 7
             //'Starting date of application a P',
-            $line[$ind['Starting date of application a P']] = 'TODO';
+            $line[$ind['Starting date of application a P']] = $startingDateOfApplication_ap; //'TODO';  field_rcaapdatedesignation_value + 7
             //'Starting date of application b',     
-            $line[$ind['Starting date of application b']] = 'TODO';
+            $line[$ind['Starting date of application b']] = $startingDateOfApplication_b; //'TODO';    field_rcaapdatedesignation_value + 7
             //'Starting date of application c',
-            $line[$ind['Starting date of application c']] = 'TODO';
+            $line[$ind['Starting date of application c']] = $startingDateOfApplication_c; //'TODO';    field_rcacdateotherdirective_value + 7
             
             //UWWTP treatment and performance
             //'treatment required',
-            $line[$ind['treatment required']] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
+            $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
+            
+            
+            $line[$ind['treatment required']] = $treatment_required;//$uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
+            
+            $previous_treatment_required = '';
+            if (isset($previousuwwtp)) {
+                $previous_treatment_required = uwwtd_get_register_treatment_required($previousuwwtp->field_uwwtreatmentrequired['und'][0]['value']);
+            }
+            $previous_treatment_required = '';
+// if (isset($previousuwwtp)) {
+//     switch($previousuwwtp->field_uwwtreatmentrequired['und'][0]['value']) {
+//         case 'P':
+//             $previous_treatment_required = '1';
+//             break;
+//         case 'S':
+//             $previous_treatment_required = '2';
+//             break;
+//         case 'N':
+//             $previous_treatment_required = '3N';
+//             break;
+//         case 'NP':
+//             $previous_treatment_required = '3NP';
+//             break;
+//         case 'P':
+//             $previous_treatment_required = '3P';
+//             break;
+//         case 'O':
+//             $previous_treatment_required = '3other';
+//             break;
+//         case 'Appropriate':
+//             $previous_treatment_required = 'Appropriate';
+//             break;  
+//         case 'NI':
+//             $previous_treatment_required = '0';
+//             break; 
+//         default:  
+//             $previous_treatment_required = '';                                                                                                                                         
+//     }            
+// }
             //'treatment type in place (4)',
             /*            
             IIf([uwwPRemoval]=True And [uwwNRemoval]=True,
@@ -5356,7 +5403,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                         0,
                                         "error"))))))) 
             */
-            $treatmenttypeinplace = '';                 
+//             $treatmenttypeinplace = '';
+//                  
 //             if ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '1') {
 //                 $treatmenttypeinplace = '3NP';
 //             } elseif ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
@@ -5374,25 +5422,38 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             } else {
 //                 $treatmenttypeinplace = 'error';
 //             }
-            if ($uwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'1';
+             
+            
+            $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
+            
+            $previous_treatmenttypeinplace = '';
+            if (isset($previousuwwtp)) {
+                $previous_treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($previousuwwtp);
             }
-            if ($uwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'2';
-            }
-            if ($uwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3NP';
-            } elseif ($uwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '0') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3P';
-            } elseif ($uwwtp->field_uwwpremoval['und'][0]['value'] == '0' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3N';
-            }
-            if ($uwwtp->field_uwwothertreat['und'][0]['value'] == '1') {
-                $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3other';
-            }
-            if ($treatmenttypeinplace == '') {
-                $treatmenttypeinplace .= '0';
-            }                                                
+            
+//             if (isset($previousuwwtp)) {
+//                 if ($previousuwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'1';
+//                 }
+//                 if ($previousuwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'2';
+//                 }
+//                 if ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3NP';
+//                 } elseif ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '0') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3P';
+//                 } elseif ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '0' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3N';
+//                 }
+//                 if ($previousuwwtp->field_uwwothertreat['und'][0]['value'] == '1') {
+//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3other';
+//                 }
+//                 if ($previous_treatmenttypeinplace == '') {
+//                     $previous_treatmenttypeinplace .= '0';
+//                 }
+//             }             
+            
+                                                                      
             $line[$ind['treatment type in place (4)']] = $treatmenttypeinplace;        
             //$line[$ind['replace_____']] = $uwwtp->field_uwwtreatmenttype['und'][0]['value'];
             //'Monitoring results - BOD5',
@@ -5405,6 +5466,17 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Monitoring results -Ptot']] = ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
             //'Monitoring results -other',
             $line[$ind['Monitoring results -other']] = ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            
+            if (isset($previousuwwtp)) {    
+                $bod5monitoring = ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                //'Monitoring results -COD',
+                $codmonitoring = ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                //'Monitoring results -Ntot',
+                $monitoring_Ntot = ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                //'Monitoring results -Ptot',
+                $monitoring_Ptot = ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));            
+            }
+            
             //'In cause of failure (3)',            
             $causefailure = '';
             if ($uwwtp->field_uwwbaddesign['und'][0]['value'] == '1') {
@@ -5422,121 +5494,364 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['In cause of failure (3)']] = $causefailure;
             unset($causefailure);
             //'difference between monitoring result N and P and treatment in place',
-            $line[$ind['difference between monitoring result N and P and treatment in place']] = 'TODO';
+            $difference_monitoring = '';
+            if (false !== strpos($treatmenttypeinplace, '3NP')) {
+                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' && $line[$ind['Monitoring results -Ptot']] == 'Pass') {
+                    $difference_monitoring = 'no';
+                } else {
+                    $difference_monitoring = 'yes';
+                }  
+            } elseif (false !== strpos($treatmenttypeinplace, '3N')) {
+                if ($line[$ind['Monitoring results -Ntot']] == 'Pass') {
+                    $difference_monitoring = 'no';
+                } else {
+                    $difference_monitoring = 'yes';
+                }            
+            } elseif (false !== strpos($treatmenttypeinplace, '3P')) {
+                if ($line[$ind['Monitoring results -Ptot']] == 'Pass') {
+                    $difference_monitoring = 'no';
+                } else {
+                    $difference_monitoring = 'yes';
+                }                                                      
+            }
+            $line[$ind['difference between monitoring result N and P and treatment in place']] = $difference_monitoring;
             
-            
-            $line[$ind['Number of discharge points for this UWWTP']] = 'TODO';
-            $line[$ind['DCP ID']] = 'TODO';
+            ////////////////////////////////////////
+            //todo check : to delete ?? 
+            $line[$ind['Number of discharge points for this UWWTP']] = 'TODO delete ?';
+            $line[$ind['DCP ID']] = 'TODO delete ?';
             //current RCA info (Q 2013)
-            $line[$ind['ID of receiving water body 2']] = 'TODO';
-            $line[$ind['water body type 2']] = 'TODO';
-            $line[$ind['ID of the SA or LSA 2']] = 'TODO';
-            $line[$ind['rcaname 2']] = 'TODO';
-            $line[$ind['designation date 2']] = 'TODO';       
+            $line[$ind['ID of receiving water body 2']] = 'TODO delete ?';
+            $line[$ind['water body type 2']] = 'TODO delete ?';
+            $line[$ind['ID of the SA or LSA 2']] = 'TODO delete ?';
+            $line[$ind['rcaname 2']] = 'TODO delete ?';
+            $line[$ind['designation date 2']] = 'TODO delete ?';       
+            //todo check : to delete ??
+            ////////////////////////////////////////
             
+            //check if uwwtp under expired or pending deadline
+            $pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
+                                                                              substr($line[$ind['deadline for Art. 3 compliance']], 0, 4),
+                                                                              substr($line[$ind['deadline for Art. 4 compliance']], 0, 4),
+                                                                              substr($line[$ind['deadline for Art. 5 compliance']], 0, 4),
+                                                                              $uwwtp);
+                                  
+           
+            $previous_pending_or_expired = '';
+            if (isset($previousuwwtp)) {                 
+                $previous_pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
+                                                                                  substr($line[$ind['deadline for Art. 3 compliance']], 0, 4),
+                                                                                  substr($line[$ind['deadline for Art. 4 compliance']], 0, 4),
+                                                                                  substr($line[$ind['deadline for Art. 5 compliance']], 0, 4),
+                                                                                  $previousuwwtp);
+            }
+                                                                                          
+// $previous_pending_or_expired = '';
+// if (isset($previousuwwtp)) {        
+//     if (
+//         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
+//          || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
+//          || substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) < $annee
+//         )
+//          && ($previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+//         ) {
+//         $previous_pending_or_expired = 'EXP';
+//     }
+//     
+//     //pending deadline    PD + les C avec date pas dépassée
+//     if (
+//         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
+//          && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
+//          && substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) >= $annee
+//         )
+//         && ($previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
+//         ) {
+//         $previous_pending_or_expired = 'PD';
+//     } 
+// }               
+         
+            
+
             
             //Compliance of treatment plant under expired and pending deadline
             
             //calculate compliance of art 4 and 5 for this station and this agglo
-             $uwwtp_compliance = uwwtd_article4_5_6_station_compliance($agg, $uwwtp);
+            $uwwtp_compliance = uwwtd_article4_5_6_station_compliance($agg, $uwwtp);
+            
+            $previous_uwwtp_compliance = array();
+            if (isset($previousagglo) && isset($previousuwwtp)) {
+                $previous_uwwtp_compliance = uwwtd_article4_5_6_station_compliance($previousagglo, $previousuwwtp);
+            }
                  
             //compliance Art. 4    //secondary treatment in place
             //'treatment type', //Treatment met
-            if ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['false']) {
-                $line[$ind['art4_treatment type']] = 'TODO';
-            } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['true']) {
-                $line[$ind['art4_treatment type']] = 'TODO';
-            } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['not_calculable']) {
-                $line[$ind['art4_treatment type']] = 'TODO';
-            } else {
-                $line[$ind['art4_treatment type']] = 'TODO';
+            
+            // =IF(
+            //     OR(‘generated load ‘<2000; 
+            //         ‘neither collecting system nor IAS’ =100; 
+            //         ‘entering this UWWTP’=0; 
+            //         ‘deadline for Art. 4 compliance’ >’reference date’; 
+            //         ‘UWWTP status’=”inactive”; 
+            //         AND(
+            //             OR(‘water body type’="to coastal water"; 
+            //                ‘water body type’="on land (catchment of coastal water)"
+            //                ); 
+            //             ‘generated load’ <=10000
+            //             )
+            //         );
+            //         "NR";
+            //         IFERROR(IF(SEARCH("1";’treatment type’)>0;
+            //                     "NC"
+            //                   );
+            //                     IFERROR(IF(SEARCH("0";’treatment type’)>0;
+            //                                 "NC"
+            //                                );
+            //                                 "C"
+            //                             )
+            //                 )
+            //     )            
+
+            $art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+            
+            $previous_art4_treatment_type = '';
+            if (isset($previousuwwtp)) {
+                $previous_art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
             }
+            
+//             if ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['false']) {
+//                 $line[$ind['art4_treatment type']] = 'TODO';
+//             } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['true']) {
+//                 $line[$ind['art4_treatment type']] = 'TODO';
+//             } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['not_calculable']) {
+//                 $line[$ind['art4_treatment type']] = 'TODO';
+//             } else {
+//                 $line[$ind['art4_treatment type']] = 'TODO';
+//             }
+
             //'monitoring',     //Performance met
-            if ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['false']) {
-                $line[$ind['art4_monitoring']] = 'TODO';
-            } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['true']) {
-                $line[$ind['art4_monitoring']] = 'TODO';
-            } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['not_calculable']) {
-                $line[$ind['art4_monitoring']] = 'TODO';
-            } else {
-                $line[$ind['art4_monitoring']] = 'TODO';
-            }            
+            
+            // =IF(OR(‘generated load’ <2000; 
+            //        ‘neither collecting system nor IAS’ =100; 
+            //        ‘entering this UWWTP’=0;
+            //        ’deadline for Art. 4 compliance’ >”reference date”;
+            //        ’ Monitoring results - BOD5’="reported as NR"; 
+            //        ‘Monitoring results –COD’="reported as NR"; 
+            //        ‘Compliance Art. 4 – treatment type’="NR");
+            //        "NR";
+            //        IF(OR(; ’Monitoring results - BOD5’="fail”; 
+            //                ‘Monitoring results - BOD5’=” not reported"; 
+            //                ‘Monitoring results –COD’="fail"; 
+            //                ‘Monitoring results –COD’="not reported"; 
+            //                ‘Monitoring results - BOD5’="--"; 
+            //                ‘Monitoring results –COD’="--");
+            //                "NC";
+            //                IF(AND(‘Monitoring results - BOD5’="pass"; 
+            //                       ‘Monitoring results –COD’="pass");
+            //                       "C";
+            //                       "NC")
+            //          )
+            //    )
+   
+            
+            $art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($treatment_required, $line[$ind['Monitoring results - BOD5']], $line[$ind['Monitoring results -COD']]);
+            
+            $previous_art4_monitoring = '';
+            if (isset($previousuwwtp)) {
+                $previous_art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($previous_treatment_required, $bod5monitoring, $codmonitoring);
+            } 
+            
+//             if ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['false']) {
+//                 $line[$ind['art4_monitoring']] = 'TODO';
+//             } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['true']) {
+//                 $line[$ind['art4_monitoring']] = 'TODO';
+//             } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['not_calculable']) {
+//                 $line[$ind['art4_monitoring']] = 'TODO';
+//             } else {
+//                 $line[$ind['art4_monitoring']] = 'TODO';
+//             }   
+         
             //'final',
-            $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
+            // =IF(OR(‘Compliance Art. 4 – treatment type’="NC";
+            //        ’Compliance Art. 4 – monitoring results’="NC");
+            //        "NC";
+            //        IF(OR(‘Compliance Art. 4 – treatment type’="NR";
+            //              ’Compliance Art. 4 – monitoring results’="NR");
+            //              "NR";
+            //              IF(AND(‘Compliance Art. 4 – treatment type’="C";
+            //                     ’Compliance Art. 4 – monitoring results’="C");
+            //                     "C";
+            //                     "EXIT")))
+            $art4_final = '';
+            if ($line[$ind['art4_treatment type']] == 'NC' || $line[$ind['art4_monitoring']] == 'NC') {
+                $art4_final = 'NC';
+            } elseif ($line[$ind['art4_treatment type']] == 'NR' || $line[$ind['art4_monitoring']] == 'NR') {
+                $art4_final = 'NR';
+            } elseif ($line[$ind['art4_treatment type']] == 'C' && $line[$ind['art4_monitoring']] == 'C') {
+                $art4_final = 'C';
+            }
+
              
             //compliance Art. 5   //more stringent treatment in place
             //'treatment type',
-            $line[$ind['art5_treatment type']] = 'TODO';
+            $art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+          
+            $previous_art5_treatment = '';
+            if (isset($previousuwwtp)) {
+                $previous_art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
+            }
+            
             //'monitoring',
-            $line[$ind['art5_monitoring']] = 'TODO';
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']]);
+            
+            $previous_art5_monitoring = '';
+            if (isset($previousuwwtp)) {
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot);
+            }
+            
             //'final',
-            $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
+            $art5_final =  $uwwtp_compliance['compArt5'];
+            
+            //save date in array
+            if ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP') {
+                $line[$ind['art4_treatment type']] = $art4_treatment_type;
+                $line[$ind['art4_monitoring']] = $art4_monitoring;
+                $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];            
+                $line[$ind['art5_treatment type']] = $art5_treatment;
+                $line[$ind['art5_monitoring']] = $art5_monitoring;
+                $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];                
+            } else {
+                $line[$ind['art4_treatment type']] = '';
+                $line[$ind['art4_monitoring']] = '';            
+                $line[$ind['art4_final']] = '';            
+                $line[$ind['art5_treatment type']] = '';
+                $line[$ind['art5_monitoring']] = '';
+                $line[$ind['art5_final']] = '';                     
+            } 
+            
+            
+            //Compliance of treatment plant under expired deadlines
+            if ($pending_or_expired == 'EXP') {
+                $line[$ind['art4_expired_treatment type']] = $art4_treatment_type;
+                $line[$ind['art4_expired_monitoring']] = $art4_monitoring;
+                $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];            
+                $line[$ind['art5_expired_treatment type']] = $art5_treatment;
+                $line[$ind['art5_expired_monitoring']] = $art5_monitoring;
+                $line[$ind['art5_expired_final']] = $uwwtp_compliance['compArt5'];                
+            } else {
+                $line[$ind['art4_expired_treatment type']] = '';
+                $line[$ind['art4_expired_monitoring']] = '';            
+                $line[$ind['art4_expired_final']] = '';            
+                $line[$ind['art5_expired_treatment type']] = '';
+                $line[$ind['art5_expired_monitoring']] = '';
+                $line[$ind['art5_expired_final']] = '';                     
+            }             
+
              
             //Compliance of treatment plant under expired deadlines
-            $art4_expired_treatment = '';
-            $art4_expired_monitoring = '';
-            $art4_expired_final = '';
-            $art5_expired_treatment = '';
-            $art5_expired_monitoring = '';
-            $art5_expired_final = '';
-            if ($uwwtp->field_uwwcompliance['und'][0]['value'] != 'PD') {
-                $art4_expired_treatment = $line[$ind['art4_treatment type']];
-                $art4_expired_monitoring = $line[$ind['art4_monitoring']];
-                $art4_expired_final = $line[$ind['art4_final']];
-                $art5_expired_treatment = $line[$ind['art5_treatment type']];
-                $art5_expired_monitoring = $line[$ind['art5_monitoring']];
-                $art5_expired_final = $line[$ind['art5_final']];
-            }     
+//             $art4_expired_treatment = '';
+//             $art4_expired_monitoring = '';
+//             $art4_expired_final = '';
+//             $art5_expired_treatment = '';
+//             $art5_expired_monitoring = '';
+//             $art5_expired_final = '';
+//             if ($uwwtp->field_uwwcompliance['und'][0]['value'] != 'PD') {
+//                 $art4_expired_treatment = $line[$ind['art4_treatment type']];
+//                 $art4_expired_monitoring = $line[$ind['art4_monitoring']];
+//                 $art4_expired_final = $line[$ind['art4_final']];
+//                 $art5_expired_treatment = $line[$ind['art5_treatment type']];
+//                 $art5_expired_monitoring = $line[$ind['art5_monitoring']];
+//                 $art5_expired_final = $line[$ind['art5_final']];
+//             }     
             //compliance Art. 4 
             //'treatment type',
-            $line[$ind['art4_expired_treatment type']] = $art4_expired_treatment;
-            //'monitoring',
-            $line[$ind['art4_expired_monitoring']] = $art4_expired_monitoring;
-            //'final',
-            $line[$ind['art4_expired_final']] = $art4_expired_final;              
-            //compliance Art. 5 
-            //'treatment type',
-            $line[$ind['art5_expired_treatment type']] = $art5_expired_treatment;
-            //'monitoring',
-            $line[$ind['art5_expired_monitoring']] = $art5_expired_monitoring;
-            //'final',
-            $line[$ind['art5_expired_final']] = $art5_expired_final;
+//             $line[$ind['art4_expired_treatment type']] = $art4_expired_treatment;
+//             //'monitoring',
+//             $line[$ind['art4_expired_monitoring']] = $art4_expired_monitoring;
+//             //'final',
+//             $line[$ind['art4_expired_final']] = $art4_expired_final;              
+//             //compliance Art. 5 
+//             //'treatment type',
+//             $line[$ind['art5_expired_treatment type']] = $art5_expired_treatment;
+//             //'monitoring',
+//             $line[$ind['art5_expired_monitoring']] = $art5_expired_monitoring;
+//             //'final',
+//             $line[$ind['art5_expired_final']] = $art5_expired_final;
             
             unset($uwwtp_compliance);
              
             //Previous compliance of the treatment under expired deadlines
-            $previous_art4_expired_treatment = 'TODO';
-            $previous_art4_expired_monitoring = 'TODO';
-            $previous_art4_expired_final = 'TODO';
-            $previous_art5_expired_treatment = 'TODO';
-            $previous_art5_expired_monitoring = 'TODO';
-            $previous_art5_expired_final = 'TODO';
-            $previous_art5_expired_difference = 'TODO';
-            if (false !== $previousagglo_uwwtpnid && isset($previousuwwtp)) {
-                $previous_art4_expired_treatment = 'TODO';
-                $previous_art4_expired_monitoring = 'TODO';
-                $previous_art4_expired_final = 'TODO';
-                $previous_art5_expired_treatment = 'TODO';
-                $previous_art5_expired_monitoring = 'TODO';
-                $previous_art5_expired_final = 'TODO';  
-                $previous_art5_expired_difference = 'TODO';          
-            }
-            //'treatment type', 
-            $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment; 
-            //'monitoring',
-            $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_expired_monitoring;
-            //'final', 
-            $line[$ind['previous_art4_expired_final']] = $previous_art4_expired_final;
-            //'treatment type', 
-            $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_expired_treatment;
-            //'monitoring', 
-            $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_expired_monitoring;
-            //'final', 
-            $line[$ind['previous_art5_expired_final']] = $previous_art5_expired_final; 
-            //'difference between the previous situation and now',
-            $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;
+//             $previous_art4_expired_treatment = 'TODO';
+//             $previous_art4_expired_monitoring = 'TODO';
+//             $previous_art4_expired_final = 'TODO';
+//             $previous_art5_expired_treatment = 'TODO';
+//             $previous_art5_expired_monitoring = 'TODO';
+//             $previous_art5_expired_final = 'TODO';
+//             $previous_art5_expired_difference = 'TODO';
+//             if (false !== $previousagglo_uwwtpnid && isset($previousuwwtp)) {
+//                 $previous_art4_expired_treatment = 'TODO';
+//                 $previous_art4_expired_monitoring = 'TODO';
+//                 $previous_art4_expired_final = 'TODO';
+//                 $previous_art5_expired_treatment = 'TODO';
+//                 $previous_art5_expired_monitoring = 'TODO';
+//                 $previous_art5_expired_final = 'TODO';  
+//                 $previous_art5_expired_difference = 'TODO';          
+//             }
+//             //'treatment type', 
+//             $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment; 
+//             //'monitoring',
+//             $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_expired_monitoring;
+//             //'final', 
+//             $line[$ind['previous_art4_expired_final']] = $previous_art4_expired_final;
+//             //'treatment type', 
+//             $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_expired_treatment;
+//             //'monitoring', 
+//             $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_expired_monitoring;
+//             //'final', 
+//             $line[$ind['previous_art5_expired_final']] = $previous_art5_expired_final;
+//              
+//             //'difference between the previous situation and now',
+//             $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;
             
-            unset($previousuwwtp);
+            $line[$ind['previous_art4_expired_treatment']] = '';
+            $line[$ind['previous_art4_expired_monitoring']] = '';            
+            $line[$ind['previous_art4_expired_final']] = '';            
+            $line[$ind['previous_art5_expired_treatment type']] = '';
+            $line[$ind['previous_art5_expired_monitoring']] = '';
+            $line[$ind['previous_art5_expired_final']] = '';      
+            $line[$ind['previous_art5_expired_difference between the previous situation and now']] = '';            
+            if (isset($previousuwwtp)) {
+//                 $previous_art4_treatment_type = '';
+//                 $previous_art4_monitoring = '';
+//                 $previous_art5_treatment = '';
+//                 $previous_art5_monitoring = '';
+//                 $previous_art5_expired_difference = '';
+                
+                if ($previous_pending_or_expired == 'EXP') {
+                    $line[$ind['previous_art4_expired_treatment']] = $previous_art4_treatment_type;
+                    $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_monitoring;
+                    $line[$ind['previous_art4_expired_final']] = $previous_uwwtp_compliance['compArt4'];            
+                    $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_treatment;
+                    $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_monitoring;
+                    $line[$ind['previous_art5_expired_final']] = $previous_uwwtp_compliance['compArt5'];
+                    
+                    $previous_art5_expired_difference = 'TODO, difference entre previous and current expired deadline ?? it can change ??';
+                    $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;                
+                }
+            }            
+            
+            if (isset($previous_uwwtp_compliance)) {
+                unset($previous_uwwtp_compliance);
+            }
+            if (isset($previousuwwtp)) {
+                unset($previousuwwtp);
+            }
+            if (isset($previousagglo_uwwtp)) {
+                unset($previousagglo_uwwtp);
+            }
+            if (isset($previousagglo)) {
+                unset($previousagglo);
+            }                        
+
              
             //Installations for wastewater treatment in place
             //'Secondary: installed?',
@@ -5753,7 +6068,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Incoming concentration P mg/l',  ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             $line[$ind['average Incoming concentration P mg/l']] = ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000; 
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000; 
-            $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000; 
+            $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            
+            //debug value
+            $line[$ind['debug_pending_or_expired']] = $pending_or_expired;
+            $line[$ind['debug_art4_final']] = $art4_final;             
         }
         fputcsv($r, $line, ';');
         
@@ -5769,29 +6088,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             
             //expired deadline   (toutes les NC +  les C qui ont date dépassée)
-            if ($typestat == 'expired') {        
-                if (false === (
-                    (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
-                     || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
-                     || substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) < $annee
-                    )
-                     && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
-                    )) {
+            if ($typestat == 'expired' && $pending_or_expired != 'EXP') {        
+//                 if (false === (
+//                     (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
+//                      || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
+//                      || substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) < $annee
+//                     )
+//                      && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+//                     )) {
                     continue;
-                }
+//                 }
             }
             
             //pending deadline    PD + les C avec date pas dépassée
-            if ($typestat == 'pending') {     
-                if (false === (
-                    ((substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
-                     && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
-                     && substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) >= $annee
-                    )
-                    && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
-                    )) {
+            if ($typestat == 'pending' && $pending_or_expired != 'PD') {     
+//                 if (false === (
+//                     ((substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
+//                      && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
+//                      && substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) >= $annee
+//                     )
+//                     && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
+//                     )) {
                     continue;
-                }
+//                 } 
             }
             
 //             $context['sandbox'][$typestat]['entering_percent'] += $line[$ind['____']];
@@ -5960,7 +6279,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Parameters subject to More Stringent Treatment: other', //;   rcaParameterOther
             $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]['field_rca_parameter_other_value'],
             //'Date of designation of Art. 5(8)', //;                  ?
-            $ind['date_of_designation_of_art._5(8)'] => 'TODO',
+//             $ind['date_of_designation_of_art._5(8)'] => 'TODO', 
+            $ind['date_of_designation_of_art._5(8)'] => ('' != $rca[$i]['field_rcadateart5854_value'] ?  substr($rca[$i]['field_rcadateart5854_value'], 0, 10) - 7 : ''), 
             //'Starting date of application of Art. 5(8)', //;         rcaDateArt58
             $ind['starting_date_of_application_of_art._5(8)'] => $rca[$i]['field_rcadateart5854_value'],
             //'Starting date of application of Art. 5(4)', //;         rcaDateArt54
@@ -5968,33 +6288,44 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Designation criteria  a N', //;                         rcaANitro
             $ind['designation_criteria_a_n'] => $rca[$i]['field_rcaanitro_value'],
             //'Starting date of designation a N', //;                  ?
-            $ind['starting_date_of_designation_a_n'] => 'TODO',
+//             $ind['starting_date_of_designation_a_n'] => 'TODO',  rcaDateDesignation  $node->field_rcaapdatedesignation['und'][0]['value']
+            $ind['starting_date_of_designation_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application a N', //;                  ?
-            $ind['starting_date_of_application_a_n'] => 'TODO',
+//             $ind['starting_date_of_application_a_n'] => 'TODO',  =rcaDateDesignation + 7 years
+            $ind['starting_date_of_application_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
             //'Designation criteria  a P', //;                         rcaAPhos
             $ind['designation_criteria_a_p'] => $rca[$i]['field_rcaaphos_value'],
             //'Starting date of designation a P', //;                  ?
-            $ind['starting_date_of_designation_a_p'] => 'TODO',
+//             $ind['starting_date_of_designation_a_p'] => 'TODO',   rcaDateDesignation
+            $ind['starting_date_of_designation_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application a P', //;                  ?
-            $ind['starting_date_of_application_a_p'] => 'TODO',
+//             $ind['starting_date_of_application_a_p'] => 'TODO',  =rcaDateDesignation + 7 years
+            $ind['starting_date_of_application_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
             //'Designation criteria  b', //;                           rcaB
             $ind['designation_criteria_b'] => $rca[$i]['field_rcab_value'],
             //'Starting date of designation', //;                      ?
-            $ind['starting_date_of_designation_b'] => 'TODO',
+//             $ind['starting_date_of_designation_b'] => 'TODO',       rcaDateDesignation
+            $ind['starting_date_of_designation_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application', //;                      ?
-            $ind['starting_date_of_application_b'] => 'TODO',
+//             $ind['starting_date_of_application_b'] => 'TODO',      =rcaDateDesignation + 7 years
+            $ind['starting_date_of_application_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
             //'Designation criteria  c', //;                           rcaC
             $ind['designation_criteria_c'] => $rca[$i]['field_rcac_value'],
             //'Starting date of designation', //;                      ?
-            $ind['starting_date_of_designation_c'] => 'TODO',
+//             $ind['starting_date_of_designation_c'] => 'TODO',    rcaCDateOtherDirective       field_rcacdateotherdirective
+            $ind['starting_date_of_designation_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
             //'Starting date of application', //;                      ?
-            $ind['starting_date_of_application_c'] => 'TODO',
+//             $ind['starting_date_of_application_c'] => 'TODO',    =rcaCDateOtherDirective + 7 years
+            $ind['starting_date_of_application_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) + 7 : ''), 
             //'Designation criteria c - relevant EU-Directives and related parameters', //;            ?
-            $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => 'TODO',
+//             $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => 'TODO',    rcaCRelevantDirective        field_rcacrelevantdirective
+            $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => $rca[$i]['field_rcacrelevantdirective_value'] ,
             //'Designation criteria c - ID applied to the area according to this Directive', //;       ?
-            $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => 'TODO',
+//             $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => 'TODO',  rcaCIDOtherDirective    field_rcacidotherdirective
+            $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => $rca[$i]['field_rcacidotherdirective_value'],
             //'Designation criteria c - reference date of the area according to this Directive', //;   ?
-            $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => 'TODO',
+//             $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => 'TODO',  rcaCDateOtherDirective   field_rcacdateotherdirective
+            $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
             //'Number of UWWTPs of the article 5.4 area (1)', //;                                      ?rcaPlants
             $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplants_value'],            
             //'Total organic design capacity of the UWWTPs (p.e.) of the article 5.4 area (1)', //;    ?rcaPlantsCapacity
@@ -6003,14 +6334,20 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Incoming loads (t/y) N-tot (1)', //;    rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
             $ind['incoming_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']),
             //'Rate of Removal N-tot', //;              ?
-            $ind['rate_of_removal_n-tot'] => 'TODO',
+            //$ind['rate_of_removal_n-tot'] => 'TODO',         =discharged loads Ntot/incoming loads Ntot
+            $ind['rate_of_removal_n-tot'] =>  ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value'])
+                                                /
+                                               ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']) ,
             //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated    
-            $ind['discharged_loads_(t/y)_n-tot_(1)'] =>($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']),
+            $ind['discharged_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']),
             
             //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated    
             $ind['incoming_loads_(t/y)_p-tot_(1)'] => ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
             //'Rate of Removal P-tot', //;              ?
-            $ind['rate_of_removal_p-tot'] => 'TODO',
+//             $ind['rate_of_removal_p-tot'] => 'TODO',  =discharged loads Ptot/incoming loads Ptot
+            $ind['rate_of_removal_p-tot'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value'])
+                                             /
+                                             ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
             $ind['discharged_loads_(t/y)_p-tot:_'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value']),
             
@@ -6018,17 +6355,18 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['general_remark'] => $rca[$i]['field_rcaremarks_value'],
             
             //'rcaBeginLife', //;                        ?
-            $ind['rcabeginlife'] => 'TODO',
+            $ind['rcabeginlife'] => 'TODO',     //new reporting format?
             //'rcaEndLife', //;                          ?
-            $ind['rcaendlife'] => 'TODO',
+            $ind['rcaendlife'] => 'TODO',     //new reporting format?
             //'ID code of successor (2)', //;            ?
-            $ind['id_code_of_successor_(2)'] => 'TODO',
+            $ind['id_code_of_successor_(2)'] => 'TODO',       //new reporting format?
             //'ID code of predecessor (2)', //;          ?
-            $ind['id_code_of_predecessor_(2)'] => 'TODO',
+            $ind['id_code_of_predecessor_(2)'] => 'TODO',   //new reporting format?
             //'remark Successor/Predecessor SA', //;     ?
-            $ind['remark_successor/predecessor_sa'] => 'TODO',
+            $ind['remark_successor/predecessor_sa'] => 'TODO',   //new reporting format?
             //'Related sensitive area (2)', //;          ?
-            $ind['related_sensitive_area_(2)'] => 'TODO',
+//             $ind['related_sensitive_area_(2)'] => 'TODO',       si CSA, voir rcaSensitiveArea field_rca_sensitive_area
+            $ind['related_sensitive_area_(2)'] => ($rca[$i]['field_specialisedzonetype_value'] != 'CSA' ? '' : $rca[$i]['field_rca_sensitive_area_value']),
             //'Remark Related sensitive area (2)', //;   ?
             $ind['remark_related_sensitive_area_(2)'] => 'TODO',        
         );
@@ -6052,7 +6390,14 @@ function uwwtd_get_all_rca($annee)
                      f_rca_param_p.field_rca_parameter_p_value,
                      f_rca_param_o.field_rca_parameter_other_value,
                      f_art58.field_rcadateart5854_value,
-                     f_art54.field_rcadateart54_value,                     
+                     f_art54.field_rcadateart54_value,  
+                     f_datedesign.field_rcaapdatedesignation_value,
+                     f_dateotherdir.field_rcacdateotherdirective_value,
+                     
+                     f_relevantdir.field_rcacrelevantdirective_value,
+                     f_idotherdir.field_rcacidotherdirective_value,
+                     f_rca_sensitivearea.field_rca_sensitive_area_value,
+                                          
                      f_rcaan.field_rcaanitro_value,
                      f_rcaap.field_rcaaphos_value,
                      f_rcab.field_rcab_value,
@@ -6102,6 +6447,22 @@ function uwwtd_get_all_rca($annee)
         left join
             {field_data_field_rcadateart54} f_art54
                 ON n.nid = f_art54.entity_id
+        left join
+            {field_data_field_rcaapdatedesignation} f_datedesign
+                ON n.nid = f_datedesign.entity_id                
+        left join
+            {field_data_field_rcacdateotherdirective} f_dateotherdir
+                ON n.nid = f_dateotherdir.entity_id                   
+        left join
+            {field_data_field_rcacrelevantdirective} f_relevantdir
+                ON n.nid = f_relevantdir.entity_id 
+        left join
+            {field_data_field_rcacidotherdirective} f_idotherdir
+                ON n.nid = f_idotherdir.entity_id
+        left join
+            {field_data_field_rca_sensitive_area} f_rca_sensitivearea
+                ON n.nid = f_rca_sensitivearea.entity_id                
+                                                             
         left join
             {field_data_field_rcaanitro} f_rcaan
                 ON n.nid = f_rcaan.entity_id
@@ -6278,4 +6639,268 @@ function uwwtd_getregister_modelfile_path()
 function uwwtd_getregister_finalfile_path($annee)
 {
     return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $GLOBALS['uwwtd']['sheet']['final_register'];    
+}
+
+
+function uwwtd_get_register_treatment_required($required_calculated) {            
+    $treatment_required = '';
+    switch($required_calculated) {
+        case 'P':
+            $treatment_required = '1';
+            break;
+        case 'S':
+            $treatment_required = '2';
+            break;
+        case 'N':
+            $treatment_required = '3N';
+            break;
+        case 'NP':
+            $treatment_required = '3NP';
+            break;
+        case 'P':
+            $treatment_required = '3P';
+            break;
+        case 'O':
+            $treatment_required = '3other';
+            break;
+        case 'Appropriate':
+            $treatment_required = 'Appropriate';
+            break;  
+        case 'NI':
+            $treatment_required = '0';
+            break; 
+        default:  
+            $treatment_required = '';                                                                                                                                         
+    }
+    return $treatment_required;
+}
+
+function uwwtd_get_register_treatmenttype_inplace($uwwtp) 
+{
+    $treatmenttypeinplace = '';
+    if ($uwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'1';
+    }
+    if ($uwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'2';
+    }
+    if ($uwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3NP';
+    } elseif ($uwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '0') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3P';
+    } elseif ($uwwtp->field_uwwpremoval['und'][0]['value'] == '0' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3N';
+    }
+    if ($uwwtp->field_uwwothertreat['und'][0]['value'] == '1') {
+        $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3other';
+    }
+    if ($treatmenttypeinplace == '') {
+        $treatmenttypeinplace .= '0';
+    } 
+    return $treatmenttypeinplace;
+}
+
+function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $deadlineart4, $deadlineart5, $uwwtp)
+{                                                                             
+    $pending_or_expired = '';        
+    if (
+        ($deadlineart3 < $annee
+         || $deadlineart4 < $annee
+         || $deadlineart5 < $annee
+        )
+         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+        ) {
+        $pending_or_expired = 'EXP';
+    }
+    
+    //pending deadline    PD + les C avec date pas dépassée
+    if (
+        ($deadlineart3 >= $annee
+         && $deadlineart4 >= $annee
+         && $deadlineart5 >= $annee
+        )
+        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+        ) {
+        $pending_or_expired = 'PD';
+    } 
+    
+    return $pending_or_expired;
+} 
+
+function uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace)
+{  
+                      //if treatment required is 2 or 3 (if not NR), check if treatment in place is 2 or 3 if yes=C if no NC
+    $art4_treatment_type = '';
+//             if ($line[$ind['generated load  p. e.']] < 2000
+//                 || $line[$ind['neither collecting system nor IAS % of gen. load']] == 100
+//                 || $line[$ind['uww_entering this UWWTP % of gen. load']] = 0
+//                 || $line[$ind['deadline for Art. 4 compliance']] > $annee
+//                 || $line[$ind['uww_status']] == 'inactive'
+//                 || (
+//                         (false !== strpos($line[$ind['water body type']], 'CW')
+//                          || false !== strpos($line[$ind['water body type']], 'LC')
+//                         )
+//                         && $line[$ind['generated load  p. e.']] <= 10000
+//                    ) 
+//                ) {
+//                 $art4_treatment_type = 'NR';   
+//             } else {
+    switch($treatment_required) {
+        case '2':
+            if (false !== strpos($treatmenttypeinplace, '2')) {
+                $art4_treatment_type = 'C';
+            } else {
+                $art4_treatment_type = 'NC';
+            }
+            break;
+        case '3N':
+            if (false !== strpos($treatmenttypeinplace, '3N')) {
+                $art4_treatment_type = 'C';
+            } else {
+                $art4_treatment_type = 'NC';
+            }                
+            break; 
+        case '3P':
+            if (false !== strpos($treatmenttypeinplace, '3P')) {
+                $art4_treatment_type = 'C';
+            } else {
+                $art4_treatment_type = 'NC';
+            }                
+            break;
+        case '3NP':
+            if (false !== strpos($treatmenttypeinplace, '3NP')) {
+                $art4_treatment_type = 'C';
+            } else {
+                $art4_treatment_type = 'NC';
+            }                
+            break;  
+        case '3other':
+            if (false !== strpos($treatmenttypeinplace, '3other')) {
+                $art4_treatment_type = 'C';
+            } else {
+                $art4_treatment_type = 'NC';
+            }                
+            break;
+        case 'Appropriate':  
+        case 'NR':
+            $art4_treatment_type = 'NR';
+            break;
+        case '0':
+        case '1':
+            $art4_treatment_type = 'NC';                                                                                          
+    }
+//             }
+    return $art4_treatment_type;
+}
+
+function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod5monitoring, $codmonitoring) 
+{   
+            //if treatment required is 2 or 3 (if not NR) then if 'uwwBOD5Perf=pass+uwwCODPerf=pass = C if not = NC
+    $art4_monitoring = '';
+//             if ($line[$ind['generated load  p. e.']] < 2000
+//                 || $line[$ind['neither collecting system nor IAS % of gen. load']] == 100
+//                 || $line[$ind['uww_entering this UWWTP % of gen. load']] = 0
+//                 || $line[$ind['deadline for Art. 4 compliance']] > $annee
+//                 || $line[$ind['Monitoring results - BOD5']] == ''
+//                 || $line[$ind['Monitoring results -COD']] == ''
+//                 || $line[$ind['art4_treatment type']] == 'NR'
+//                ) {
+//                 $art4_monitoring = 'NR';
+//             } else {
+    switch($treatment_required) {
+        case '2':
+        case '3N':
+        case '3P':
+        case '3NP':
+        case '3other':
+            if ($bod5monitoring ==  'Pass' && $codmonitoring == 'Pass') {
+                $art4_monitoring = 'C';
+            } else {
+                $art4_monitoring = 'NC';
+            }                
+            break;
+        case 'Appropriate':  
+        case 'NR':
+            $art4_monitoring = 'NR';
+            break;                                                                                          
+    }                
+//             }
+    return $art4_monitoring;
+}
+
+function uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace)
+{            
+    //if treatment required is 3N, NP P Other (if not NR), check if treatment in place is the same 3N, NP, P Other if yes=C if no NC
+    $art5_treatment = '';
+    switch($treatment_required) {
+        case '3N':
+            if (false !== strpos($treatmenttypeinplace, '3N')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;                
+        case '3P':
+            if (false !== strpos($treatmenttypeinplace, '3P')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;                
+        case '3NP':
+            if (false !== strpos($treatmenttypeinplace, '3NP')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;                
+        case '3other':
+            if (false !== strpos($treatmenttypeinplace, '3other')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;
+        case 'Appropriate':  
+        case 'NR':
+            $art5_treatment = 'NR';
+            break;                                                                                          
+    }                
+//             }  
+    return $art5_treatment;          
+}  
+
+function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot)
+{            
+    //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
+    $art5_monitoring = '';            
+    switch($treatment_required) {
+        case '3N':   
+            if ($monitoring_Ntot == 'Pass') {
+                $art5_monitoring = 'C';
+            } else {
+                $art5_monitoring = 'NC';
+            }                
+            break;                
+        case '3P':
+            if ($monitoring_Ptot == 'Pass') {
+                $art5_monitoring = 'C';
+            } else {
+                $art5_monitoring = 'NC';
+            }                 
+            break;                
+        case '3NP':
+            if ($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass') {
+                $art5_monitoring = 'C';
+            } else {
+                $art5_monitoring = 'NC';
+            }                 
+            break;                
+        case 'Appropriate':  
+        case 'NR':
+            $art5_monitoring = 'NR';
+            break;                                                                                          
+    }
+    
+    return $art5_monitoring;            
 }

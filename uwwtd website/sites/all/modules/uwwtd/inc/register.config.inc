@@ -256,6 +256,12 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'P rate of removal %' => $i++,
     'average Incoming concentration P mg/l' => $i++,
     'average Discharge concentration P mg/l' => $i++,
+    
+    
+    
+    //debug info
+    'debug_pending_or_expired' => $i++,
+    'debug_art4_final' => $i++,
 );
 
 $i = 0;
@@ -382,7 +388,7 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'monitoring_results_f._more_string._ok_(p._e.)' => $i++,
         
     //debug data
-    'compliance agglo from algo' => $i++,
+    'debug_compliance_agglo_from_algo' => $i++,
 );
 
 $i = 0;

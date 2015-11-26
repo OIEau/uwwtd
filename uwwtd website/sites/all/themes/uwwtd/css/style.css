@@ -6810,7 +6810,8 @@ header.container {
 }
 
 .navbar-collapse .navbar-nav .menu-item--depth-1 {
-	width: 12.5%;
+	/*width: 12.5%;*/
+	width: 14.28%;
 	text-align: center;
 }
 

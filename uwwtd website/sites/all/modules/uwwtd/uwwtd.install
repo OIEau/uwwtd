@@ -2288,7 +2288,9 @@ function uwwtd_update_7122(&$context = null)
  * reload map pressure,
  * set new config variable,
  * add new entry for admin general config uwwtd page,
- * add help description on some field,         
+ * add help description on some field,
+ * update page ressources,  
+ * delete page  Useful links         
  */ 
 function uwwtd_update_7123(&$context = null)
 {
@@ -2505,7 +2507,35 @@ function uwwtd_update_7123(&$context = null)
         throw new DrupalUpdateException($msg_error);     
     }   
     
+    ////////////////////////////////////////////////////////////////
+    //update page ressources
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Ressources', '=');
+    $query->condition('n.language', 'en', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+        $path_usefullinks_country = drupal_get_path('module', 'uwwtd') . '/script/page/ressource_'.$country_code.'.inc';
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = file_get_contents($path_usefullinks_country);
+        node_save($node);
+        break;
+	}     
     
+    ////////////////////////////////////////////////////////////////
+    //delete page  Useful links
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Useful links', '=');
+    $query->condition('n.language', 'en', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+        node_delete($row->nid);
+	}   
+    
+        
     ////////////////////////////////////////////////////////////////
     //end update
     variable_set('siif_eru_version', __FUNCTION__);

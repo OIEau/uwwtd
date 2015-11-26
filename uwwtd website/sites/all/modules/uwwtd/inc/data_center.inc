@@ -3919,7 +3919,7 @@ function uwwtd_shapes_setup_batch($files, $annee){
 }
 
 function uwwtd_shapes_batch_process($files, $annee, &$context){
-
+//     uwwtd_debug_trace(__FUNCTION__);
 	if (!isset($context['sandbox']['progress'])) {
 		$shpsFiles = array();
 		foreach($files['extracted'] as $file){
@@ -3928,9 +3928,16 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		}
 		$context['sandbox']['max'] = count($shpsFiles);
 		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $shpsFiles;
+		$context['sandbox']['ids'] = $shpsFiles;        
+        
+        $context['results']['nbrecord'] = 0;
+        $context['results']['nbrecorderror'] = 0;
+        $context['results']['nbrecordok'] = 0;        
+//         uwwtd_debug_trace('max = ' . $context['sandbox']['max']);
+//         uwwtd_debug_trace('$shpsFiles = ' . var_export($shpsFiles, true));
 	}
 	$i = $context['sandbox']['progress'];
+//     uwwtd_debug_trace('progress = ' . $context['sandbox']['progress']);
 	$chosen = $context['sandbox']['ids'][$i];
 
 	//dsm($context['sandbox']['ids']);
@@ -3938,16 +3945,20 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
 	// including the shapefile reader class
 	//require_once 'ShapeFile.inc.php';
+    
     require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
-	 
+// 	uwwtd_debug_trace('new ShapeFile'); 
 	// importing the downloaded shapefile
 	$shp = new ShapeFile(drupal_realpath($chosen));
+//     uwwtd_debug_trace('end new ShapeFile');
+// 	dsm($shp);
 
-	//dsm($shp);
 
 	foreach($shp->records as $record){
+        $context['results']['nbrecord']++;
 		// id of shape
 		//dsm($record);
+//         uwwtd_debug_trace('$record->dbf_data = ' .var_export($record->dbf_data, true));
 		$id = '';
 		$shptype = '1';
 
@@ -3956,32 +3967,69 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$shptype = '1';
 			$geoType = 'CSA';
 		}
+		if(isset($record->dbf_data['eucd_sa_cm'])){
+			$id = uwwtd_check_text($record->dbf_data['eucd_sa_cm']);
+			$shptype = '1';
+			$geoType = 'CSA';
+		}        
 		if(isset($record->dbf_data['EUCD_SA_RV'])){
 			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_RV']);
 			$shptype = '1';
 			$geoType = 'RW';
 		}
+		if(isset($record->dbf_data['eucd_sa_rv'])){
+			$id = uwwtd_check_text($record->dbf_data['eucd_sa_rv']);
+			$shptype = '1';
+			$geoType = 'RW';
+		}        
 		if(isset($record->dbf_data['EUCD_SA_LK'])){
 			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_LK']);
 			$shptype = '1';
 			$geoType = 'LW';
 		}
+		if(isset($record->dbf_data['eucd_sa_lk'])){
+			$id = uwwtd_check_text($record->dbf_data['eucd_sa_lk']);
+			$shptype = '1';
+			$geoType = 'LW';
+		}        
 		if(isset($record->dbf_data['EUCD_SA_TW'])){
 			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_TW']);
 			$shptype = '1';
 			$geoType = 'ES';
 		}
+		if(isset($record->dbf_data['eucd_sa_tw'])){
+			$id = uwwtd_check_text($record->dbf_data['eucd_sa_tw']);
+			$shptype = '1';
+			$geoType = 'ES';
+		}        
 		if(isset($record->dbf_data['EUCD_LSACL'])){
 			$id = uwwtd_check_text($record->dbf_data['EUCD_LSACL']);
 			$shptype = '1';
 			$geoType = 'LSA';
 		}
+		if(isset($record->dbf_data['eucd_lsacl'])){
+			$id = uwwtd_check_text($record->dbf_data['eucd_lsacl']);
+			$shptype = '1';
+			$geoType = 'LSA';
+		}        
         //for IE missing  type EUCD_SA_CA here
 
 		if(isset($record->dbf_data['ISO2'])){
 			$shptype = '2';
 			$id = uwwtd_check_text($record->dbf_data['ISO2']);
 		}
+		if(isset($record->dbf_data['iso2'])){
+			$shptype = '2';
+			$id = uwwtd_check_text($record->dbf_data['iso2']);
+		}
+        
+        if ($id == '') {
+            $context['results']['nbrecorderror']++;
+            $sErrorMessage = t('Can\t find the rca code on the shape record from file "@filename"', array('@filename' => basename($chosen))) . ' : ' . var_export($record->dbf_data, true); 
+            uwwtd_trace($sErrorMessage);
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'));
+            continue;
+        }        
 
 		 // check multipolygon
 		$type = 'polygon';
@@ -4002,6 +4050,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		// Other possible type
 
 		// find receiving area
+//         uwwtd_debug_trace('field_siteid_value = ' . $annee.'_rca_'.$id);
 		$ids = array();
 		$query = db_select('node', 'n');
 		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
@@ -4014,7 +4063,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
 		}
 
-		//dsm($ids);
+		dsm($ids);
 //         $ids[]['nid'] = 173356;
 
 		if(count($ids) > 0){
@@ -4026,14 +4075,18 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
             try {
     			if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
     			if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
+                
+//                 dsm($type);
+//                 dsm($geodata);
             } catch (Exception $e) {
                 //shape file malformed    uwwtd_errors
-                $sErrorMessage = 'An error was found in the shape file for the receiving area "'.$node->title.'" : ' . $e->getMessage();
+                $sErrorMessage = t('An error was found in the shape file for the receiving area "@title"', array('@title' => $node->title)) . ' : ' . $e->getMessage();
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'), 0 , $node);
                 drupal_set_message($sErrorMessage, 'error');
                 continue;
             }
 
+            
 			$node->field_rca_geotype['und'][0]['value'] = $geoType;
 
 			$node->field_position_geo['und'][0] = array(
@@ -4044,7 +4097,10 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
 			node_save($node);
 			//dsm($node);
-		}
+            $context['results']['nbrecordok']++;
+		} else {
+            $context['results']['nbrecorderror']++;
+        }
 
 	}
     
@@ -4054,7 +4110,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
 	$context['sandbox']['progress']++;
 	$context['message'] = '(' .$annee . ') ' . t('Processing shape files') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
-	$context['results'][] = '';	
+// 	$context['results'][] = '';	
 
 	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
 		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
@@ -4062,8 +4118,15 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {
+//     dsm($success);
+//     dsm($results);
+//     dsm($operations);
 	if ($success) {
-		drupal_set_message(t('All the shapes were successfully added to their receiving areas.'));
+        if ($results['nbrecordok'] != $results['nbrecorderror']) {
+            drupal_set_message(t('Some shapes record were not imported. Check on "List Error" page, the error of category "shape format".') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
+        } else {
+		  drupal_set_message(t('All the shapes were successfully added to their receiving areas.') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
+        }
 	}
 	else {
 		// An error occurred.
@@ -4376,7 +4439,7 @@ function uwwtd_delete_error($annee, $type, &$context)
     
 	$context['sandbox']['progress']++;
 	$context['message'] = '(' .$annee . ') ' . t('previous error deleted.');
-	$context['results'][] = 'previous error deleted';	
+	$context['results']['delete_error'] = 'previous error deleted';	
 
 	$context['finished'] = 1;
 }
