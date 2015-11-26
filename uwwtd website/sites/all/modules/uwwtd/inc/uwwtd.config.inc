@@ -1,10 +1,10 @@
 <?php
 
 if ( !defined('UWWTD_CACHE_ACTIVE')) {
-    define('UWWTD_CACHE_ACTIVE', false);
+    define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
-    define('DEBUG_ALGO', true);
+    define('DEBUG_ALGO', false);
 }
 
 // $GLOBALS['uwwtd']['message']['boolean_error']
