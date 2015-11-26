@@ -822,4 +822,11 @@ img.btn_close {
 	z-index: 9999;
 }
 
-.uwwcontainer h1{text-shadow: 2px 2px #000;}
+.uwwcontainer h1{
+	background: url("../images/background-title-station.png") repeat-x scroll center center;
+	margin: 0;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	
+}
