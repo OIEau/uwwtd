@@ -3919,7 +3919,6 @@ function uwwtd_shapes_setup_batch($files, $annee){
 }
 
 function uwwtd_shapes_batch_process($files, $annee, &$context){
-
 //     uwwtd_debug_trace(__FUNCTION__);
 	if (!isset($context['sandbox']['progress'])) {
 		$shpsFiles = array();
@@ -3929,7 +3928,11 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		}
 		$context['sandbox']['max'] = count($shpsFiles);
 		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $shpsFiles;
+		$context['sandbox']['ids'] = $shpsFiles;        
+        
+        $context['results']['nbrecord'] = 0;
+        $context['results']['nbrecorderror'] = 0;
+        $context['results']['nbrecordok'] = 0;        
 //         uwwtd_debug_trace('max = ' . $context['sandbox']['max']);
 //         uwwtd_debug_trace('$shpsFiles = ' . var_export($shpsFiles, true));
 	}
@@ -3950,7 +3953,9 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 //     uwwtd_debug_trace('end new ShapeFile');
 // 	dsm($shp);
 
+
 	foreach($shp->records as $record){
+        $context['results']['nbrecord']++;
 		// id of shape
 		//dsm($record);
 //         uwwtd_debug_trace('$record->dbf_data = ' .var_export($record->dbf_data, true));
@@ -4019,7 +4024,8 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 		}
         
         if ($id == '') {
-            $sErrorMessage = 'Can\t find the rca id on the shape record from file "'.$chosen.'" : ' . var_export($record->dbf_data, true); 
+            $context['results']['nbrecorderror']++;
+            $sErrorMessage = t('Can\t find the rca code on the shape record from file "@filename"', array('@filename' => basename($chosen))) . ' : ' . var_export($record->dbf_data, true); 
             uwwtd_trace($sErrorMessage);
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'));
             continue;
@@ -4074,7 +4080,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 //                 dsm($geodata);
             } catch (Exception $e) {
                 //shape file malformed    uwwtd_errors
-                $sErrorMessage = 'An error was found in the shape file for the receiving area "'.$node->title.'" : ' . $e->getMessage();
+                $sErrorMessage = t('An error was found in the shape file for the receiving area "@title"', array('@title' => $node->title)) . ' : ' . $e->getMessage();
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'), 0 , $node);
                 drupal_set_message($sErrorMessage, 'error');
                 continue;
@@ -4091,7 +4097,10 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
 			node_save($node);
 			//dsm($node);
-		}
+            $context['results']['nbrecordok']++;
+		} else {
+            $context['results']['nbrecorderror']++;
+        }
 
 	}
     
@@ -4101,7 +4110,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
 	$context['sandbox']['progress']++;
 	$context['message'] = '(' .$annee . ') ' . t('Processing shape files') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
-	$context['results'][] = '';	
+// 	$context['results'][] = '';	
 
 	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
 		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
@@ -4109,8 +4118,15 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {
+//     dsm($success);
+//     dsm($results);
+//     dsm($operations);
 	if ($success) {
-		drupal_set_message(t('All the shapes were successfully added to their receiving areas.'));
+        if ($results['nbrecordok'] != $results['nbrecorderror']) {
+            drupal_set_message(t('Some shapes record were not imported. Check on "List Error" page, the error of category "shape format".') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
+        } else {
+		  drupal_set_message(t('All the shapes were successfully added to their receiving areas.') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
+        }
 	}
 	else {
 		// An error occurred.
@@ -4423,7 +4439,7 @@ function uwwtd_delete_error($annee, $type, &$context)
     
 	$context['sandbox']['progress']++;
 	$context['message'] = '(' .$annee . ') ' . t('previous error deleted.');
-	$context['results'][] = 'previous error deleted';	
+	$context['results']['delete_error'] = 'previous error deleted';	
 
 	$context['finished'] = 1;
 }
