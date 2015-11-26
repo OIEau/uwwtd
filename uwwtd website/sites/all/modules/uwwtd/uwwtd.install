@@ -1,45 +1,55 @@
 <?php 
 
-//todo desactivate cron
-//todo check mobule exist and enabled
-//todo change content block (link, ..) by country
-//todo cange menu
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
+/**
+ * Installmodule UWWTD 
+ *  - create directory
+ *  - disabled/enable module
+ *  - create all fields and bundle
+ *  - configure drupal    
+ */ 
 function uwwtd_install() 
 {
+    uwwtd_install_create_dir();
     uwwtd_install_trace(__FUNCTION__);
+
+    //set this value to 1 to know later in update if the application was installing from a dump or  from install from scratch
+    variable_set('uwwtd_install_from_scratch', 1);
+
+    $batch = array(
+        'title' => t('Installing UWWTD'),
+        'operations' => array(
+          array('uwwtd_install_execute_sql', array()),
+          array('uwwtd_install_disable_module', array()),
+          array('uwwtd_install_enable_module', array()),
+          array('uwwtd_install_content_type', array()),
+          array('uwwtd_install_configure', array()),
+          array('uwwtd_install_create_page', array()),
+          array('uwwtd_install_create_block', array()),    
+        ),
+        'finished' => 'uwwtd_install_batch_finished',
+        'init_message' => t('Start to install uwwtd...'),
+        'progress_message' => t('installing...'),
+        'error_message' => t('An error occured while installing.'),
+        'file' => drupal_get_path('module', 'uwwtd') . '/uwwtd.install',
+    );
+      
+     
     
+    //and execute all update! because all current update will not be visible on update.php    
     //on install,,execute all update function defined
     for ($i = 7100; $i < 7199; $i++) {
+//     for ($i = 7100; $i < 7101; $i++) {
         $candidate = 'uwwtd_update_' . $i;
         if (function_exists($candidate)) {
-          $candidate();
+//           $candidate();
+          $batch['operations'][] = array($candidate, array());
         }
     }
-  
-//     uwwtd_delete_view('UWWTD_Agglomeration');
-//     uwwtd_delete_view('UWWTD_BigCity');
-//     uwwtd_delete_view('UWWTD_Compliance_Agglo');
-//     uwwtd_delete_view('UWWTD_Compliance_UWWTP');
-//     uwwtd_delete_view('UWWTD_DischargePoint');
-//     uwwtd_delete_view('UWWTD_ReceivingArea');
-//     uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
-//     uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
-//         
-//     uwwtd_update_node_title_size();
-//     
-//     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
-//     uwwtd_create_or_replace_view('UWWTD_BigCity');
-//     uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
-//     uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
-//     uwwtd_create_or_replace_view('UWWTD_DischargePoint');
-//     uwwtd_create_or_replace_view('UWWTD_ReceivingArea');
-//     uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
-//     uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
-//     
-//     uwwtd_create_schema_wfs(); 
+    
+     batch_set($batch);    
 }
 
 function uwwtd_enable() 
@@ -59,7 +69,7 @@ function uwwtd_uninstall()
 
 function uwwtd_schema() 
 {
-    uwwtd_install_trace(__FUNCTION__);
+//     uwwtd_install_trace(__FUNCTION__);
     
     $schema['uwwtd_import_errors'] = array(
     'description' => 'Table for storing all import errors',
@@ -137,7 +147,7 @@ function uwwtd_schema()
  * create table uwwtd_import_errors (if table already exist, table will be truncate and update will be displayed as failed, but it is not important,
  * we run this update only to tell drupal this table exist and it can use it now) 
  */ 
-function uwwtd_update_7100() 
+function uwwtd_update_7100(&$context = null) 
 {
     uwwtd_install_trace(__FUNCTION__);
     $schema = module_invoke('uwwtd', 'schema');
@@ -146,13 +156,19 @@ function uwwtd_update_7100()
         db_drop_table($sTableName);
     }
     db_create_table($sTableName, $schema['uwwtd_import_errors']);
+    
+    if (isset($context)) {
+        uwwtd_install_trace(var_export($context, true));
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
 }
 
 /**
  * Create or replace views for geoserver
  * Create if not exists schema wfs use by hook_cron to create tables for geoserver based on the views of the same name 
  */ 
-function uwwtd_update_7101() 
+function uwwtd_update_7101(&$context = null) 
 {
     uwwtd_install_trace(__FUNCTION__);
     //delete views for updating drupal node field title size
@@ -178,15 +194,26 @@ function uwwtd_update_7101()
     uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
     
     uwwtd_create_schema_wfs();
+    
+    if (isset($context)) {
+        uwwtd_install_trace(var_export($context, true));
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }    
 }
 
 /**
  * Delete node type error if still in database
  */ 
-function uwwtd_update_7102()
+function uwwtd_update_7102(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     uwwtd_delete_node_type_error();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }    
 } 
 
 /**
@@ -199,7 +226,7 @@ function uwwtd_update_7102()
  *   field_linked_discharge_points   Linked discharge point(s)
  *   ...
  */
-function uwwtd_update_7103()
+function uwwtd_update_7103(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     $msg_error = '';
@@ -470,14 +497,18 @@ function uwwtd_update_7103()
     
     if ('' !== $msg_error) {
         throw new DrupalUpdateException($msg_error);
-    } 
+    }
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }      
 } 
 
 /**
  * Delete all view creating in the UI
  * After this activate module uwwtd_views 
  */ 
-function uwwtd_update_7104()
+function uwwtd_update_7104(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     $msg_error = '';
@@ -516,12 +547,16 @@ function uwwtd_update_7104()
         $msg = "Error, the module uwwtd_views can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
         uwwtd_install_trace($msg);
         throw new DrupalUpdateException($msg);    
-    }     
+    }
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }          
 }
 /**
  * replace all map and overlay previously created
  */ 
-function uwwtd_update_7105()
+function uwwtd_update_7105(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     
@@ -680,15 +715,20 @@ function uwwtd_update_7105()
     if ($msgexception != '') {
         throw new DrupalUpdateException($msgexception);
     }
-//     throw new DrupalUpdateException($msgexception . 'test');    
+//     throw new DrupalUpdateException($msgexception . 'test');
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 } 
 
 /**
  * activate new block home
  * and desactivate home block view map 
  */ 
-function uwwtd_update_7106()
+function uwwtd_update_7106(&$context = null)
 {
+    uwwtd_install_trace(__FUNCTION__);
     _block_rehash('uwwtd'); //theme name here
     //Change block settings old view
       db_update('block')
@@ -726,12 +766,16 @@ function uwwtd_update_7106()
 //     region      content                 content
 //     weight      -13
     drupal_flush_all_caches();
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Set country code for each country, set new map/layer, set map configuration accordingly
  */ 
-function uwwtd_update_7107()
+function uwwtd_update_7107(&$context = null)
 {
     global $conf;
     uwwtd_install_trace(__FUNCTION__);
@@ -891,41 +935,56 @@ function uwwtd_update_7107()
     //////////////////////////   
     
     //set version
-    variable_set('siif_eru_version', '7107');
+    variable_set('siif_eru_version', __FUNCTION__);
 
     drupal_flush_all_caches();
         
-//     throw new DrupalUpdateException('test7107');    
+//     throw new DrupalUpdateException('test7107');
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Rebuild all cache data for all year
  */ 
-function uwwtd_update_7108()
+function uwwtd_update_7108(&$context = null)
 {
+    uwwtd_install_trace(__FUNCTION__);
     drupal_load('module', 'uwwtd');
     uwwtd_update_cache_data();
-    variable_set('siif_eru_version', '7108');
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Rebuild map and layer 
  */ 
-function uwwtd_update_7109()
+function uwwtd_update_7109(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
     uwwtd_update_map_overlay($country_config, $country_code);    
-    variable_set('siif_eru_version', '7109');
-    drupal_flush_all_caches();    
+    variable_set('siif_eru_version', __FUNCTION__);
+    drupal_flush_all_caches();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }         
 }
 
 /**
  * Replace View UWWTD_DischargePoint (error in left join)
  */ 
-function uwwtd_update_7110()
+function uwwtd_update_7110(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     uwwtd_delete_view('UWWTD_DischargePoint'); 
@@ -933,27 +992,37 @@ function uwwtd_update_7110()
     drupal_flush_all_caches();
     drupal_load('module', 'uwwtd');
     uwwtd_update_cache_data();
-    variable_set('siif_eru_version', '7110');      
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }           
 }
 
 /**
  * Delete unused sql view UWWTD_BigCity  UWWTD_Compliance_Agglo  UWWTD_Compliance_UWWTP UWWTD_UWWTPs_Agglo
  */ 
-function uwwtd_update_7111()
+function uwwtd_update_7111(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     uwwtd_delete_view('UWWTD_BigCity');
     uwwtd_delete_view('UWWTD_Compliance_Agglo');
     uwwtd_delete_view('UWWTD_Compliance_UWWTP');
     uwwtd_delete_view('UWWTD_UWWTPs_Agglo');
-    variable_set('siif_eru_version', '7111');      
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }           
 }
 
 /**
  * Delete menu main and import new one
  * update openlayer overlay  and add new field field_siteid in content_type agglo_uww   
  */ 
-function uwwtd_update_7112()
+function uwwtd_update_7112(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     //check if module install
@@ -981,21 +1050,21 @@ function uwwtd_update_7112()
     $node = new stdClass(); // We create a new node object
     $node->type = "page"; // Or any other content type you want
     $node->title = "Download";
-    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
     $node->path = array('alias' => 'content/download'); // Setting a node path
     node_object_prepare($node); // Set some default values.
     $node->uid = 1; // Or any id you wish
                                
-    $node->body[$node->language][0]['value'] = '';
-    $node->body[$node->language][0]['summary'] = '';
-    $node->body[$node->language][0]['format'] = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
     
     $node = node_submit($node); // Prepare node for a submit
     node_save($node); // After this call we'll get a nid
     
 
     //install new main menu    
-    uwwtd_install_menu($menu, 'main-menu7112.json');   //todo change
+    uwwtd_install_menu($menu, 'main-menu7112.json');   
     
     //update on overlay waste water (add a s to agglomeration)    
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
@@ -1012,17 +1081,25 @@ function uwwtd_update_7112()
         'bundle' => 'agglo_uww',
       );
 
-    $result = field_create_instance($instance);
+    $instance_exist = field_info_instance('node', $instance['field_name'], 'agglo_uww');
+    if (! $instance_exist ) {
+        $result = field_create_instance($instance);
+    }
              
     drupal_flush_all_caches();
     
     variable_set('siif_eru_version', __FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Rebuild map and layer and main menu    
  */ 
-function uwwtd_update_7113()
+function uwwtd_update_7113(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__); 
     //install new main menu
@@ -1034,7 +1111,7 @@ function uwwtd_update_7113()
     drupal_flush_all_caches();     //needto clear cache, drupal must know the unew url uwwtps/pressure exist in hook_menu uwwtd_menu besfore creating new menu    
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
-    uwwtd_install_menu($menu, 'main-menu7113.json');   //todo change
+    uwwtd_install_menu($menu, 'main-menu7113.json');   
     
     
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
@@ -1051,25 +1128,35 @@ function uwwtd_update_7113()
 
                                                                     
     variable_set('siif_eru_version', __FUNCTION__);
-    drupal_flush_all_caches();     
+    drupal_flush_all_caches();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }          
 }
 
 /**
  * Recall redo import main menu
  */ 
-function uwwtd_update_7114()
+function uwwtd_update_7114(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     //install new main menu
     uwwtd_update_7113();
     variable_set('siif_eru_version', __FUNCTION__);
     drupal_flush_all_caches();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Import main menu
  */ 
-function uwwtd_update_7115()
+function uwwtd_update_7115(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     //install new main menu
@@ -1080,21 +1167,45 @@ function uwwtd_update_7115()
     );
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
-    uwwtd_install_menu($menu, 'main-menu7115.json');   //todo change
+    uwwtd_install_menu($menu, 'main-menu7115.json');   
     variable_set('siif_eru_version', __FUNCTION__);
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
     drupal_flush_all_caches();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * add new menu in management menu
  */ 
-function uwwtd_update_7116()
+function uwwtd_update_7116(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
 
-    $plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
+    
+    $list = menu_load_links('management');
+//     dsm($list);
+//     $bexist = false;
+    $plid = -1;
+    dsm(drupal_get_normal_path('admin/config'));
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == drupal_get_normal_path('admin/config')) {
+//             dsm($one_menu);
+            $plid = $one_menu['mlid']; 
+//             $bexist = true;
+            break;  
+        }
+    }
+//     dsm($plid);
+    if ($plid == -1) {
+        throw new DrupalUpdateException('Error, can\'t find menu admin/config in manageùent menu');     
+    }  
+    uwwtd_install_trace('find mlid admin/config in management menu : ' . $plid);  
+//     $plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
     $menu= array(
         'link_path' => drupal_get_normal_path('admin/config/uwwtd') ,
         'link_title' => 'uwwtd configuration',
@@ -1130,12 +1241,16 @@ function uwwtd_update_7116()
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
     //drupal_flush_all_caches();
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Create new page disclaimer and update content block footer
  */ 
-function uwwtd_update_7117()
+function uwwtd_update_7117(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     
@@ -1148,16 +1263,16 @@ function uwwtd_update_7117()
     $node = new stdClass(); // We create a new node object
     $node->type = "page"; // Or any other content type you want
     $node->title = "Disclaimer";
-    $node->language = LANGUAGE_NONE; // Or any language code if Locale module is enabled. More on this below *
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
     $node->path = array('alias' => 'content/disclaimer'); // Setting a node path
     node_object_prepare($node); // Set some default values.
     $node->uid = 1; // Or any id you wish
     
     uwwtd_install_trace($pathpage);
                                
-    $node->body[$node->language][0]['value'] = str_replace('[#COUNTRY#]', $country_config[$country_code]['name'], file_get_contents($pathpage));
-    $node->body[$node->language][0]['summary'] = '';
-    $node->body[$node->language][0]['format'] = 'filtered_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    $node->body['und'][0]['value'] = str_replace('[#COUNTRY#]', $country_config[$country_code]['name'], file_get_contents($pathpage));
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
     
     $node = node_submit($node); // Prepare node for a submit
     node_save($node); // After this call we'll get a nid
@@ -1166,25 +1281,123 @@ function uwwtd_update_7117()
     uwwtd_install_trace($pathbock);
     //update block
     _block_rehash('uwwtd'); //theme name here
+    
+    //find the bid of the footer block
+	$query = db_select('block_custom', 'bc');
+    $query->fields('bc', array('bid'));             
+    $query->condition('bc.info', 'Footer content', '=');
+	$result = $query->execute();
+    $bidfooter = -1;
+	foreach($result as $row){
+        $bidfooter = $row->bid;
+        break;
+	}
+    
+    if ($bidfooter == -1) {
+        throw new DrupalUpdateException('Error, can\'t find bid id for footer block');
+    }        
+    uwwtd_install_trace('find bid footer in block_custom table : ' . $bidfooter);
     //Change block settings old view
       db_update('block_custom')
       ->fields(array(
           'body' => file_get_contents($pathbock),
       ))
-      ->condition('bid', '2') //2 is the id of block footer on all website
+      ->condition('bid', $bidfooter)
       ->execute();
+      
+    //find bid of block home page
+	$query = db_select('block_custom', 'bc');
+    $query->fields('bc', array('bid'));             
+    $query->condition('bc.info', 'Home page - introduction', '=');
+	$result = $query->execute();
+    $bidhome = -1;
+	foreach($result as $row){
+        $bidhome = $row->bid;
+        break;
+	}
+    
+    if ($bidhome == -1) {
+        throw new DrupalUpdateException('Error, can\'t find bid id for home page block');
+    }        
+    uwwtd_install_trace('find bid home page in block_custom table : ' . $bidhome);
+    
+      db_update('block_custom')
+      ->fields(array(
+          'body' => $country_config[$country_code]['block_homepage'],
+      ))
+      ->condition('bid', $bidhome)
+      ->execute();
+          
 
+    ///////////////////////////////////
+    //update regulation page
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Regulations', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = $country_config[$country_code]['page_regulations'];
+//         $node->body['en'][0]['value'] = $country_config[$country_code]['page_regulations'];
+        node_save($node);
+        break;
+	}    
+
+    ///////////////////////////////////
+    //update credits page
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Credits', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = $country_config[$country_code]['page_credits'];
+//         $node->body['en'][0]['value'] = $country_config[$country_code]['page_credits'];
+        node_save($node);
+        break;
+	}    
+    
+    ///////////////////////////////////
+    //update homepage page 
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Home page', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = $country_config[$country_code]['page_homepage'];
+//         $node->body['en'][0]['value'] = $country_config[$country_code]['page_homepage'];
+        node_save($node);
+        break;
+	}       
+
+    ///////////////////////////////////
     drupal_flush_all_caches();    
     
     variable_set('siif_eru_version', __FUNCTION__);
     
-//     throw new DrupalUpdateException(__FUNCTION__); 
+//     throw new DrupalUpdateException(__FUNCTION__);
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
 }
+
+// function uwwtd_update_7123()
+// {
+//     uwwtd_update_7117();
+// }
 
 /**
  * Import main menu
  */ 
-function uwwtd_update_7118()
+function uwwtd_update_7118(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     //install new main menu
@@ -1195,17 +1408,23 @@ function uwwtd_update_7118()
     );
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
-    uwwtd_install_menu($menu, 'main-menu7118.json');   //todo change
+    uwwtd_install_menu($menu, 'main-menu7118.json');   
     variable_set('siif_eru_version', __FUNCTION__);
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
     drupal_flush_all_caches();
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }     
 }
 
 /**
  * Add a new field in content type agglomeration :  field_aggart3addcompliance 'Additionnal Compliance article3'
  */ 
-function uwwtd_update_7119() {
+function uwwtd_update_7119(&$context = null) 
+{
    
     uwwtd_install_trace(__FUNCTION__);
     
@@ -1241,8 +1460,9 @@ function uwwtd_update_7119() {
         'allowed_values_function' => '',
       ),
     );    
-
-    $result = field_create_field($field);
+    if (! field_info_field($field['field_name']) ) {
+        $result = field_create_field($field);
+    }
 
     $instance = array(
         'field_name' => $field['field_name'],
@@ -1250,16 +1470,23 @@ function uwwtd_update_7119() {
         'bundle' => 'agglomeration',
         'label' => 'Additionnal Compliance article3',
       );
-
-    $result = field_create_instance($instance);
+    $instance_exist = field_info_instance('node', $instance['field_name'], 'agglomeration');
+    if (! $instance_exist ) {
+        $result = field_create_instance($instance);
+    }
     
-    variable_set('siif_eru_version', __FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }         
 }
 
 /**
  * Update page content (useful links, ressources,)
  */ 
-function uwwtd_update_7120() {
+function uwwtd_update_7120(&$context = null) {
    
     uwwtd_install_trace(__FUNCTION__);
     
@@ -1275,12 +1502,13 @@ function uwwtd_update_7120() {
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'page', '=');
     $query->condition('n.title', 'Useful links', '=');
-    $query->condition('n.language', 'en', '=');
+    $query->condition('n.language', 'und', '=');
 	$result = $query->execute();
 	foreach($result as $row){
         $path_usefullinks_country = drupal_get_path('module', 'uwwtd') . '/script/page/useful_links_'.$country_code.'.inc';
 		$node = node_load($row->nid);
         $node->body['und'][0]['value'] = file_get_contents($path_usefullinks_country);
+//         $node->body['en'][0]['value'] = file_get_contents($path_usefullinks_country);
         node_save($node);
         break;
 	}
@@ -1289,25 +1517,31 @@ function uwwtd_update_7120() {
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'page', '=');
     $query->condition('n.title', 'Ressources', '=');
-    $query->condition('n.language', 'en', '=');
+    $query->condition('n.language', 'und', '=');
 	$result = $query->execute();
 	foreach($result as $row){
         $path_usefullinks_country = drupal_get_path('module', 'uwwtd') . '/script/page/ressource_'.$country_code.'.inc';
 		$node = node_load($row->nid);
         $node->body['und'][0]['value'] = file_get_contents($path_usefullinks_country);
+//         $node->body['en'][0]['value'] = file_get_contents($path_usefullinks_country);
         node_save($node);
         break;
 	}    
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
-    variable_set('siif_eru_version', __FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }         
 }
 
 /**
  * Import main menu, change mail website contact and mail contact page per country, add
  * new content type article 17, delete old article 17content type  
  */ 
-function uwwtd_update_7121()
+function uwwtd_update_7121(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     //install new main menu
@@ -1331,20 +1565,33 @@ function uwwtd_update_7121()
 //     uwwtd_install_menu($menu, 'menu-editorial-menu7121.json');   
 
     //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
-    $menu= array(
-        'link_path' => drupal_get_normal_path('register') ,
-        'link_title' => 'Register',
-        'description' => '' ,
-        'menu_name' => 'menu-editorial-menu',
-        'weight' => -45,
-        //'expanded' => true,
-        'mlid' => 0, 
-        'plid' => 0,
-        'customized' => 1,
-    );
-
-    $mlid = menu_link_save($menu);
-//     dsm($mlid);
+    $list = menu_load_links('menu-editorial-menu');
+//     dsm($list);
+    $bexist = false;
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == drupal_get_normal_path('register')) {
+//             dsm($one_menu);
+            $bexist = true;
+            break;  
+        }
+    }
+    
+    if (false === $bexist) {    
+        $menu= array(
+            'link_path' => drupal_get_normal_path('register') ,
+            'link_title' => 'Register',
+            'description' => '' ,
+            'menu_name' => 'menu-editorial-menu',
+            'weight' => -45,
+            //'expanded' => true,
+            'mlid' => 0, 
+            'plid' => 0,
+            'customized' => 1,
+        );
+    
+        $mlid = menu_link_save($menu);
+    //     dsm($mlid);
+    }
     menu_cache_clear_all();
     
 //     throw new DrupalUpdateException(__FUNCTION__); 
@@ -1358,11 +1605,19 @@ function uwwtd_update_7121()
         throw new DrupalUpdateException('Can\'t detect country code.');    
     } 
     
-    variable_set('site_mail', $country_config[$country_code]['website_mail']);
+    //change mail cnfigured
+    if ('l.guedet@oieau.fr' == variable_get('site_mail')) {
+        variable_set('site_mail', $country_config[$country_code]['website_mail']);
+    }
+    
+    
+    variable_set('site_name', 'UWWTD SIIF '.$country_config[$country_code]['name'].' National Node');
 
-    db_update('contact')
+    //change mail cnfigured
+    db_merge('contact')
     ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
     ->condition('category', 'Website feedback', '=')
+    ->condition('recipients', 'l.guedet@oieau.fr', '=')
     ->execute();
 
     field_cache_clear(); 
@@ -1978,13 +2233,17 @@ function uwwtd_update_7121()
     variable_set('siif_eru_version', __FUNCTION__);
     drupal_flush_all_caches();
     
-//     throw new DrupalUpdateException(__FUNCTION__);     
+//     throw new DrupalUpdateException(__FUNCTION__);
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }      
 }
 
 /**
  * desactivate cron, change settings of field, change permission on contact form ( Use the site-wide contact form ) 
  */ 
-function uwwtd_update_7122()
+function uwwtd_update_7122(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     
@@ -2012,7 +2271,11 @@ function uwwtd_update_7122()
     
     drupal_flush_all_caches();
     
-//     throw new DrupalUpdateException(__FUNCTION__);     
+//     throw new DrupalUpdateException(__FUNCTION__);
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }      
 }
 
 /**
@@ -2027,7 +2290,7 @@ function uwwtd_update_7122()
  * add new entry for admin general config uwwtd page,
  * add help description on some field,         
  */ 
-function uwwtd_update_7123()
+function uwwtd_update_7123(&$context = null)
 {
     uwwtd_install_trace(__FUNCTION__);
     
@@ -2042,7 +2305,7 @@ function uwwtd_update_7123()
     );
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
-    uwwtd_install_menu($menu, 'main-menu7123.json');   //todo change     
+    uwwtd_install_menu($menu, 'main-menu7123.json');        
 
     ////////////////////////////////////////////////////////////////
     //create new dir for register
@@ -2103,41 +2366,17 @@ function uwwtd_update_7123()
     
     ////////////////////////////////////////////////////////////////
     //update path to wkhtml config       
-    $config_wkhtml = array (
-          'bin_path' => '/usr/local/bin/wkhtmltopdf',
-          'footer_display' => 1,
-          'header_display' => 1,
-          'cover_display' => 1,
-          'toc_display' => 0,
-          'toc_depth' => '3',
-          'disablePdfCompression' => 1,
-          'margins' => 
-          array (
-            'top' => '10',
-            'bottom' => '10',
-            'right' => '10',
-            'left' => '10',
-          ),
-          'default_metadata' => 'creator|Auteur|UWWTD SIIF Slovenia National (Slovenia)
-subject|Sujet|Système d\'Information sur l\'Eau (SIE), Sandre
-description|Description|Le Service d\'Administration Nationale des Données et Référentiels sur l\'Eau (Sandre) établit et met à disposition le référentiel des données sur l’eau du système d’information sur l’eau (SIE).
-editor|Editeur|Sandre, Office National de l\'Eau et des Milieux Aquatiques (ONEMA)
-contributor|Contributeur|Office International de l\'Eau (OIEau)
-language|Langue|Fr
-type|Type|Texte
-format|Format|PDF
-spatial|Couverture géographique|France entière
-rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
-        
-        );
-    variable_set('wkhtmltopdf_configurations', $config_wkhtml);
+    uwwtd_install_configure_wkhtmltopdf();
     
     ////////////////////////////////////////////////////////////////
     //change user admin mail
     $user = user_load_by_name('admin');
 //     dsm($user);
-    $user->mail = variable_get('site_mail');
-    user_save($user);
+    
+    if ($user->mail == 'l.guedet@oieau.fr') {
+        $user->mail = variable_get('site_mail');
+        user_save($user);
+    }
     
     ////////////////////////////////////////////////////////////////
     //reload map pressure
@@ -2150,6 +2389,7 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     //set new config variable
     variable_set('display_only_active', '1');
     variable_set('min_aggenerated_display', '2000');
+    variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
     
     ////////////////////////////////////////////////////////////////
     //add new entry for admin general config uwwtd page
@@ -2272,13 +2512,20 @@ rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
     
     drupal_flush_all_caches();
     //keep this for further update
-    throw new DrupalUpdateException(__FUNCTION__);     
+    throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }          
 }
+
+
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
 function uwwtd_install_trace($message) 
-{
+{                   
     $file = drupal_realpath('public://data_errors/install_trace.log');
     $r = fopen($file, 'a');
     fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
@@ -2531,3 +2778,1028 @@ function uwwtd_install_menu($menu, $filename)
         throw new DrupalUpdateException($message);
     }
 }
+
+/**
+ *
+ */ 
+function uwwtd_install_content_type(&$context)
+{   
+    uwwtd_install_trace(__FUNCTION__);
+    
+    include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
+    
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = count($list_contenttype) + count($list_field) + count($list_contenttype);
+        $context['sandbox']['node_type_save'] = array();
+        $context['sandbox']['field_create_field'] = array();
+        $context['sandbox']['field_create_instance'] = array();
+    }
+    //use drush command 
+    
+//     uwwtd_install_trace(var_export($list_field, true));
+//     uwwtd_install_trace(var_export($list_contenttype, true));
+    $t = get_t();
+    //create bundle
+    $node_type_save_done = false;
+    if (count($context['sandbox']['node_type_save']) < count($list_contenttype)) {
+        $j = 0;
+        foreach ($list_contenttype as $content_type_name => $contenttypeinfo) {
+            if (isset($context['sandbox']['node_type_save'][$content_type_name])) {
+                continue;    
+            }
+            $context['sandbox']['node_type_save'][$content_type_name] = 1;
+            $j++;
+            $context['sandbox']['progress']++;
+            if (node_type_load($content_type_name)) {
+                continue;
+            }
+            uwwtd_install_trace('create bundle ' . $content_type_name);        
+            $contenttypeinfo['node_type_load'] = (object)$contenttypeinfo['node_type_load'];
+            
+            $status = node_type_save($contenttypeinfo['node_type_load']);
+            // Replacement rule for the messages.
+            $t_args = array('%name' => $contenttypeinfo['node_type_load']->name);
+            if ($status == SAVED_UPDATED) { // update case
+                drupal_set_message($t('The content type %name has been updated.', $t_args));
+            } elseif ($status == SAVED_NEW) { // create case
+                drupal_set_message($t('The content type %name has been added.', $t_args));
+                watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types')); 
+            }
+            if ($j >= 10) {
+                break;
+            }            
+        }
+    } else {
+        $node_type_save_done = true;
+    }
+    
+    //create field
+    
+   
+    
+    
+    $field_create_field_done = false;
+    if ($node_type_save_done) {
+        if (count($context['sandbox']['field_create_field']) < count($list_field)) {
+            $j = 0;
+            foreach ($list_field as $fieldname => $infofield) {
+                if (isset($context['sandbox']['field_create_field'][$fieldname])) {
+                    continue;    
+                }
+                $context['sandbox']['field_create_field'][$fieldname] = 1;    
+                $j++;
+                $context['sandbox']['progress']++;
+                
+                //don't create old error link
+                if ($infofield['field_name'] == 'field_uwwtd_error_link') {
+                    continue;
+                }
+                
+                if (! field_info_field($infofield['field_name']) ) {
+                    uwwtd_install_trace('create field ' . $infofield['field_name']);
+                    $result = field_create_field($infofield);
+                    $t_args = array('%name' => $fieldname);
+                    watchdog('node', 'Added field %name.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));
+                    
+                    if ($infofield['field_name'] == 'field_position_geo') {
+                        //insert the_geom field
+                        db_query('alter table drupal_field_data_field_position_geo add column the_geom geometry');                        
+                        
+                        uwwtd_install_trace('create trigger for field ' . $infofield['field_name']);
+                        //create trigger
+                        db_query('CREATE TRIGGER insert_geom_geo BEFORE INSERT ON drupal_field_data_field_position_geo FOR EACH ROW EXECUTE PROCEDURE insert_geom_to_geo()');
+                        
+                        //update_geom_geo
+                        db_query('CREATE TRIGGER update_geom_geo BEFORE UPDATE ON drupal_field_data_field_position_geo FOR EACH ROW EXECUTE PROCEDURE update_geom_to_geo()');
+                    }                    
+                }
+                if ($j >= 10) {
+                    break;
+                }         
+            }
+        } else {
+            $field_create_field_done = true;
+        }
+    } 
+    
+    //attach field to bundle
+    $field_create_instance_done = false;
+    if ($field_create_field_done) {
+        if (count($context['sandbox']['field_create_instance']) < count($list_contenttype)) {
+            $j = 0;
+            foreach ($list_contenttype as $content_type_name => $contenttypeinfo) {
+                if (isset($context['sandbox']['field_create_instance'][$content_type_name])) {
+                    continue;    
+                }
+                $context['sandbox']['field_create_instance'][$content_type_name] = 1;                
+                //create bundle
+                $j++;
+                $context['sandbox']['progress']++;
+                foreach ($contenttypeinfo['field_info_instance'] as $fieldinstance) {
+                
+                    //don't create old error link
+                    if ($fieldinstance['field_name'] == 'field_uwwtd_error_link') {
+                        continue;
+                    }
+                                    
+                    $instance_exist = field_info_instance('node', $fieldinstance['field_name'], $content_type_name);
+                    if (! $instance_exist ) {
+                        uwwtd_install_trace('create bundle field ' . $fieldinstance['field_name']);
+                        $result = field_create_instance($fieldinstance);
+                        $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
+                        watchdog('node', 'Added field %name to bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                
+                    }       
+                } 
+                if ($j >= 1) {
+                    break;
+                }                
+            }
+        } else {
+            $field_create_instance_done = true;
+        }
+    }
+    
+
+    
+//     $context['message'] = __FUNCTION__;
+//     $context['finished'] = 1;   
+    
+    $context['message'] = __FUNCTION__ .' ' . count($list_contenttype) .' + '. count($list_field) .' + '. count($list_contenttype) . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
+    
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }               
+}
+
+function uwwtd_install_configure(&$context)
+{
+    uwwtd_install_trace(__FUNCTION__);
+    global $conf;    
+    if (!isset($conf['siif_eru_country_code'])) {
+        throw new DrupalUpdateException('Please, configure the siif_eru_country_code parameter in settings.php file.');    
+    }
+    
+     
+    variable_set('rptFormRA', '3');   
+    //////////////////////////////////////////////////        
+    //enable and set default theme UWWTD
+    theme_enable(array('uwwtd'));
+    variable_set('theme_default', 'uwwtd');
+    
+    $theme_config =     array (
+          'toggle_logo' => 1,
+          'toggle_name' => 1,
+          'toggle_slogan' => 1,
+          'toggle_node_user_picture' => 1,
+          'toggle_comment_user_picture' => 1,
+          'toggle_comment_user_verification' => 1,
+          'toggle_favicon' => 1,
+          'toggle_main_menu' => 1,
+          'toggle_secondary_menu' => 1,
+          'default_logo' => 0,
+          'logo_path' => 'public://logo_0.png',
+          'default_favicon' => 1,
+          'favicon_path' => '',
+          'favicon_upload' => '',
+          'global__active_tab' => 'edit-logo',
+          'bootstrap__active_tab' => 'edit-general',
+          'bootstrap_grid_columns' => '12',
+          'bootstrap_grid_class_prefix' => 'col-sm',
+          'bootstrap_region_grid-navigation' => '',
+          'bootstrap_region_grid-header' => '',
+          'bootstrap_region_grid-highlighted' => '',
+          'bootstrap_region_grid-help' => '',
+          'bootstrap_region_grid-content' => '',
+          'bootstrap_region_grid-sidebar_first' => '3',
+          'bootstrap_region_grid-sidebar_second' => '3',
+          'bootstrap_region_grid-footer' => '',
+          'bootstrap_region_grid-page_top' => '',
+          'bootstrap_region_grid-page_bottom' => '',
+          'bootstrap_region_grid-dashboard_main' => '',
+          'bootstrap_region_grid-dashboard_sidebar' => '',
+          'bootstrap_region_grid-dashboard_inactive' => '',
+          'bootstrap_region_grid-olblockpanel' => '',
+          'bootstrap_region_grid-olmaptext_1' => '',
+          'bootstrap_region_grid_dynamic-navigation' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-header' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-highlighted' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-help' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-content' => 
+          array (
+            'sidebar_first' => 'sidebar_first',
+            'sidebar_second' => 'sidebar_second',
+          ),
+          'bootstrap_region_grid_dynamic-sidebar_first' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-sidebar_second' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-footer' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-page_top' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-page_bottom' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-dashboard_main' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-dashboard_sidebar' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-dashboard_inactive' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-olblockpanel' => 
+          array (
+          ),
+          'bootstrap_region_grid_dynamic-olmaptext_1' => 
+          array (
+          ),
+          'bootstrap_button_size' => '',
+          'bootstrap_button_colorize' => 1,
+          'bootstrap_button_iconize' => 1,
+          'bootstrap_image_shape' => '',
+          'bootstrap_image_responsive' => 1,
+          'bootstrap_table_bordered' => 0,
+          'bootstrap_table_condensed' => 0,
+          'bootstrap_table_hover' => 1,
+          'bootstrap_table_striped' => 1,
+          'bootstrap_table_responsive' => 1,
+          'bootstrap_breadcrumb' => '1',
+          'bootstrap_breadcrumb_home' => 0,
+          'bootstrap_breadcrumb_title' => 1,
+          'bootstrap_navbar_position' => '',
+          'bootstrap_navbar_inverse' => 0,
+          'bootstrap_region_well-navigation' => '',
+          'bootstrap_region_well-header' => 'well',
+          'bootstrap_region_well-highlighted' => '',
+          'bootstrap_region_well-help' => '',
+          'bootstrap_region_well-content' => '',
+          'bootstrap_region_well-sidebar_first' => 'well',
+          'bootstrap_region_well-sidebar_second' => '',
+          'bootstrap_region_well-footer' => '',
+          'bootstrap_region_well-page_top' => '',
+          'bootstrap_region_well-page_bottom' => '',
+          'bootstrap_region_well-dashboard_main' => '',
+          'bootstrap_region_well-dashboard_sidebar' => '',
+          'bootstrap_region_well-dashboard_inactive' => '',
+          'bootstrap_region_well-olblockpanel' => '',
+          'bootstrap_region_well-olmaptext_1' => '',
+          'bootstrap_anchors_fix' => 1,
+          'bootstrap_anchors_smooth_scrolling' => 1,
+          'bootstrap_popover_enabled' => 1,
+          'bootstrap_popover_animation' => 1,
+          'bootstrap_popover_html' => 0,
+          'bootstrap_popover_placement' => 'right',
+          'bootstrap_popover_selector' => '',
+          'bootstrap_popover_trigger' => 
+          array (
+            'click' => 'click',
+            'hover' => 0,
+            'focus' => 0,
+            'manual' => 0,
+          ),
+          'bootstrap_popover_trigger_autoclose' => 1,
+          'bootstrap_popover_title' => '',
+          'bootstrap_popover_content' => '',
+          'bootstrap_popover_delay' => '0',
+          'bootstrap_popover_container' => 'body',
+          'bootstrap_tooltip_enabled' => 1,
+          'bootstrap_tooltip_descriptions' => 1,
+          'bootstrap_tooltip_descriptions_length' => '200',
+          'bootstrap_tooltip_animation' => 1,
+          'bootstrap_tooltip_html' => 0,
+          'bootstrap_tooltip_placement' => 'auto left',
+          'bootstrap_tooltip_selector' => '',
+          'bootstrap_tooltip_trigger' => 
+          array (
+            'hover' => 'hover',
+            'focus' => 'focus',
+            'click' => 0,
+            'manual' => 0,
+          ),
+          'bootstrap_tooltip_delay' => '0',
+          'bootstrap_tooltip_container' => 'body',
+          'bootstrap_cdn' => '',
+          'bootstrap_bootswatch' => '',
+          'bootstrap_toggle_jquery_error' => 0,
+        );
+        
+    variable_set('theme_uwwtd_settings', $theme_config);
+    $path = drupal_get_path('module', 'uwwtd') . '/script/img/logo_0.png';
+    copy($path, 'public://logo_0.png');
+    
+    path = drupal_get_path('module', 'uwwtd') . '/script/img/carre.png';
+    copy($path, 'public://pictures/carre.png');
+    path = drupal_get_path('module', 'uwwtd') . '/script/img/triangle.png'; 
+    copy($path, 'public://pictures/triangle.png');     
+    
+    //////////////////////////////////////////////////
+    //add role editor
+    $role = new stdClass();
+    $role->name = 'editor';
+    // $role->weight = 10;
+    user_role_save($role);
+    
+    $country_code_to_save = strtolower($conf['siif_eru_country_code']);
+    variable_set('siif_eru_country_code', $country_code_to_save);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    if ($country_code != $country_code_to_save) {
+        throw new DrupalUpdateException('An error occured when saving the country code from settings.php');    
+    }
+    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    
+    
+    
+
+    variable_set('site_name', 'UWWTD SIIF '.$country_config[$country_code]['name'].' National Node');
+    
+    variable_set('rptFormRA', $country_config[$country_code]['rptFormRA']);
+
+//     variable_set('site_mail', $country_config[$country_code]['website_mail']);
+//     db_insert('contact')
+//     ->fields(array(
+//         'category' => 'Website feedback',
+//         'recipients' => variable_get('site_mail'),
+//         'reply' => '',
+//         'weight' => 0,
+//         'selected' => 1,
+//     ))
+//     ->execute();
+//     $user = user_load_by_name('admin');
+//     $user->mail = variable_get('site_mail');
+//     user_save($user);
+    
+//     variable_set('site_mail', $country_config[$country_code]['website_mail']);
+    
+    
+//     variable_set('site_name', 'UWWTD SIIF '.$country_config[$country_code]['name'].' National Node');
+    variable_set('cron_safe_threshold', 0);
+
+
+
+    foreach (array('anonymous user', 'authenticated user', 'administrator', 'editor') as $rolename) {
+        $role = user_role_load_by_name($rolename);
+        if (!$role) {
+            continue;
+        }
+        
+        user_role_grant_permissions($role->rid, array('access site-wide contact form'));
+    }
+    
+    uwwtd_install_configure_wkhtmltopdf();
+
+    //configure uwwtd display
+    variable_set('display_only_active', '1');
+    variable_set('min_aggenerated_display', '2000');
+    variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
+    
+    //////////////////////////////////////////////////    
+    //set the admin menu to folow the scrol vertical
+    //admin/config/administration/admin_menu
+    variable_set('admin_menu_position_fixed', 0);
+    
+
+    
+    //configure drupal
+    //////////////////////////////////////////////////
+//     /admin/config/content/wysiwyg 
+//     Full HTML = TinyMCE 3.5.10         
+    db_merge('wysiwyg')
+      ->key(array('format' => 'full_html'))
+      ->fields(array(
+        'editor' => 'tinymce',
+        'settings' => serialize(array (
+                                  'default' => 1,
+                                  'user_choose' => 0,
+                                  'show_toggle' => 0,
+                                  'theme' => 'advanced',
+                                  'language' => 'en',
+                                  'buttons' => 
+                                  array (
+                                    'default' => 
+                                    array (
+                                      'bold' => 1,
+                                      'italic' => 1,
+                                      'justifyleft' => 1,
+                                      'justifycenter' => 1,
+                                      'justifyright' => 1,
+                                      'justifyfull' => 1,
+                                      'bullist' => 1,
+                                      'numlist' => 1,
+                                      'outdent' => 1,
+                                      'indent' => 1,
+                                      'link' => 1,
+                                      'unlink' => 1,
+                                      'formatselect' => 1,
+                                      'code' => 1,
+                                      'cut' => 1,
+                                      'copy' => 1,
+                                    ),
+                                    'paste' => 
+                                    array (
+                                      'pastetext' => 1,
+                                    ),
+                                  ),
+                                  'toolbar_loc' => 'top',
+                                  'toolbar_align' => 'left',
+                                  'path_loc' => 'bottom',
+                                  'resizing' => 1,
+                                  'verify_html' => 1,
+                                  'preformatted' => 0,
+                                  'convert_fonts_to_spans' => 1,
+                                  'remove_linebreaks' => 1,
+                                  'apply_source_formatting' => 0,
+                                  'paste_auto_cleanup_on_paste' => 0,
+                                  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+                                  'css_setting' => 'theme',
+                                  'css_path' => '',
+                                  'css_classes' => '',
+                                )),
+      ))
+      ->execute();
+    wysiwyg_profile_cache_clear();
+      
+      
+    //set role to format
+    $radmin = user_role_load_by_name('administrator');
+    $reditor = user_role_load_by_name('editor');
+    $ranonymous = user_role_load_by_name('anonymous user');
+    $rauthenticat = user_role_load_by_name('authenticated user');
+
+    //anonymous filtered html  AND access content   
+    user_role_grant_permissions($ranonymous->rid, array('use text format filtered_html', 'access content'));
+    
+    user_role_grant_permissions($rauthenticat->rid, array('use text format filtered_html'));
+
+    //admin   php code,full , fitler
+    user_role_grant_permissions($radmin->rid, array('use text format php_code', 'use text format full_html', 'use text format filtered_html'));
+
+    //editor Full HTML , fitler
+    user_role_grant_permissions($reditor->rid, array('use text format full_html', 'use text format filtered_html'));
+    
+    ///////////////////////////////////////////////
+    ///admin/config/development/performance
+    //Cache pages for anonymous users             
+    variable_set('cache', 1);
+    //Cache blocks
+    variable_set('block_cache', 1);
+    //Minimum cache lifetime  12 hour
+    variable_set('cache_lifetime', 43200);
+    //Compress cached pages.
+    variable_set('page_compression', 1);
+    //Aggregate and compress CSS files.
+    variable_set('preprocess_css', 1);
+    //Aggregate JavaScript files.
+    variable_set('preprocess_js', 1);
+    
+    //////////////////////////////////////////////////
+    //     /admin/config/development/logging
+    //     Error messages to display 
+    //     None
+    variable_set('error_level', '0');
+         
+    //////////////////////////////////////////////////         
+    ///admin/config/development/maintenance
+    //UWWTD SIIF Slovenia National Node is currently under maintenance. We should be back shortly. Thank you for your patience.        
+    variable_set('maintenance_mode_message', "UWWTD SIIF '.$country_config[$country_code]['name'].' National Node is currently under maintenance. We should be back shortly. Thank you for your patience.");
+    
+    //////////////////////////////////////////////////    
+    ///admin/config/development/jquery_update
+    //Default jQuery Version  1.8        
+    variable_set('jquery_update_jquery_version', '1.8');
+    
+    //////////////////////////////////////////////////
+    ///admin/config/people/accounts
+//     Who can register accounts?  Administrators only
+    variable_set('user_register', 0);
+    
+    //////////////////////////////////////////////////
+    ///admin/config/regional/date-time/formats
+//     add format   "H:i:s"
+//     date_formats
+    system_date_format_save(array('type' => 'custom', 'format' => 'H:i:s', 'locked' => '0', 'is_new'=> true));
+    //add type "Time" => "H:i:s"
+//     date_format_type  
+    system_date_format_type_save(array('type' => 'time', 'title' => 'Time', 'locked' => '0', 'is_new'=> true));
+    
+    variable_set('date_format_time', 'H:i:s');
+    
+ 
+    
+    
+    //////////////////////////////////////////////////    
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;                                                                  
+}
+
+function uwwtd_install_create_page(&$context) 
+{
+    uwwtd_install_trace(__FUNCTION__);    
+    //add block and page
+//     Useful links 
+    //create a page for new download menu
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Useful links";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/useful-links'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = 'summary';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+        
+//     Ressources 
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Ressources";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/ressources'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid    
+    
+//     Home page
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Home page";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/home-page'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+    $nidhomepage = $node->nid;             
+   
+//     Credits
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Credits";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/credits'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field     
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid       
+        
+//     Regulations
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Regulations";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/regulations'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field     
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid    
+       
+       
+//     UWWTPs
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "UWWTPs";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/uwwtps'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field     
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid       
+       
+           
+//     Agglomerations
+    $node = new stdClass(); // We create a new node object
+    $node->type = "page"; // Or any other content type you want
+    $node->title = "Agglomerations";
+    $node->language = 'und'; // Or any language code if Locale module is enabled. More on this below *
+    $node->path = array('alias' => 'content/agglomerations'); // Setting a node path
+    node_object_prepare($node); // Set some default values.
+    $node->uid = 1; // Or any id you wish
+                               
+    $node->body['und'][0]['value'] = '';
+    $node->body['und'][0]['summary'] = '';
+    $node->body['und'][0]['format'] = 'full_html'; // If field has a format, you need to define it. Here we define a default filtered_html format for a body field     
+    $node = node_submit($node); // Prepare node for a submit
+    node_save($node); // After this call we'll get a nid
+    
+    //////////////////////////////////////////////////
+//     site names
+//     /admin/config/system/site-information
+//     content/home-page   
+    
+    //variable_set('site_frontpage', 'node');
+    variable_set('site_frontpage', 'node/'.$nidhomepage);    
+    
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;              
+} 
+
+function uwwtd_install_disable_module(&$context) 
+{
+    uwwtd_install_trace(__FUNCTION__);    
+    //enabled module
+    $list_module_to_disable = array(
+        'Overlay' => 'overlay',
+        'Toolbar' => 'toolbar',
+        'Update manager' => 'update',            
+        );
+        
+    if (false === module_disable($list_module_to_disable)) {
+        $msg = "Error, the module ".implode(',', $list_module_to_disable)." can't be disabled.";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;       
+}
+
+function  uwwtd_install_enable_module(&$context)
+{
+    uwwtd_install_trace(__FUNCTION__);     
+    $list_module_to_enable = array(    
+        'Contact' => 'contact',
+        'Content translation' => 'translation',
+        'Forum' => 'forum',
+        'Locale' => 'locale',
+        'PHP filter' => 'php',
+        'Administration menu' => 'admin_menu',
+        'Chaos tools' => 'ctools',
+        'Charts and Graphs' => 'charts_graphs',
+        'Charts and Graphs: Flot' => 'charts_graphs_flot',
+        'Flot' => 'flot',
+        'Date' => 'date',
+        'Date API' => 'date_api',
+        'Date Views' => 'date_views',
+        'Coder' => 'coder',
+        'Coder Review' => 'coder_review',
+        'Devel' => 'devel',
+        'Menu import' => 'menu_import',
+        'Features' => 'features',
+        'Field Group' => 'field_group',
+        'Geofield' => 'geofield',
+        'Node Reference' => 'node_reference',
+        'References' => 'references',
+        'Behavior weights' => 'behavior_weights',
+        'Language Switcher Dropdown' => 'lang_dropdown',
+        'Localization update' => 'l10n_update',
+        'Block languages' => 'i18n_block',
+        'Contact translation' => 'i18n_contact',
+        'Field translation' => 'i18n_field',
+        'Internationalization' => 'i18n',
+        'Menu translation' => 'i18n_menu',
+        'Multilingual content' => 'i18n_node',                                
+        'Multilingual forum' => 'i18n_forum',
+        'Multilingual select' => 'i18n_select',
+        'String translation' => 'i18n_string',
+        'Synchronize translations' => 'i18n_sync',
+        'Taxonomy translation' => 'i18n_taxonomy',
+        'Translation redirect' => 'i18n_redirect',
+        'Translation sets' => 'i18n_translation',
+        'User mail translation' => 'i18n_user',
+        'Variable translation' => 'i18n_variable', 
+        'OpenLayers' => 'openlayers',
+        'OpenLayers Gazetteer' => 'openlayers_gazetteer',
+        'OpenLayers Plus' => 'openlayers_plus',
+        'OpenLayers UI' => 'openlayers_ui',
+        'OpenLayers Views' => 'openlayers_views', 
+        'Entity API' => 'entity',
+        'Field custom tooltips' => 'custom_tooltips',
+        'Geocoder' => 'geocoder',
+        'Geofield Map' => 'geofield_map',
+        'geoPHP' => 'geophp',
+        'Libraries' => 'libraries',
+        'Pathauto' => 'pathauto',
+        'Proj4JS' => 'proj4js',
+        'Token' => 'token', 
+        'WKHTMLTOPDF' => 'wkhtmltopdf',
+        'Google Analytics' => 'googleanalytics',                  
+        'BeautyTips API' => 'beautytips',
+        'BeautyTips Manager' => 'beautytips_manager',
+        'BeautyTips UI' => 'beautytips_ui',
+        'jQuery Update' => 'jquery_update',
+        'Wysiwyg' => 'wysiwyg',
+        'Variable' => 'variable',
+        'Variable realm' => 'variable_realm',
+        'Variable store' => 'variable_store',
+        'Variable views' => 'variable_views',
+        'DataTables' => 'datatables',
+        'Views' => 'views',                
+        'Views Aggregator Plus' => 'views_aggregator',
+        'Views Bulk Operations' => 'views_bulk_operations',
+        'Views Charts' => 'views_charts',
+        'Views Data Export' => 'views_data_export',
+        'Views PHP' => 'views_php',
+        'Views UI' => 'views_ui',
+        'D3' => 'd3',
+        'D3 Views' => 'd3_views',
+        // 'UWWTD' => 'uwwtd',
+        'Statistics for UWWTD' => 'uwwtd_statistics',
+        'Views for UWWTD' => 'uwwtd_views',
+        'UWWTD Article 17' => 'uwwtd_art17',         
+    );
+    
+    if (false === module_enable($list_module_to_enable)) {
+        $msg = "Error, the module ".implode(',', $list_module_to_disable)." can't be enabled.";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;       
+}    
+
+function uwwtd_install_create_dir() 
+{   
+    //create dir
+	$dir = 'public://data_errors';
+	file_prepare_directory($dir, FILE_CREATE_DIRECTORY);     
+
+    uwwtd_install_trace(__FUNCTION__);
+    
+	$dir = 'public://data_shapes';
+	file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
+    
+	$dir = 'public://data_sources';
+	file_prepare_directory($dir, FILE_CREATE_DIRECTORY);    
+    
+	$dir = 'public://pictures';
+	file_prepare_directory($dir, FILE_CREATE_DIRECTORY);             
+}
+
+function uwwtd_install_batch_finished($success, $results, $operations)
+{
+    uwwtd_install_trace(__FUNCTION__);     
+    if ($success) {
+		drupal_set_message('success');
+        drupal_set_message('install sql script region_nuts and river_basin, and legacy.sql');
+	}
+	else {
+		drupal_set_message(
+			t('An error occurred ')
+		);  
+	}
+}
+
+function uwwtd_install_create_block(&$context) 
+{
+    uwwtd_install_trace(__FUNCTION__);
+  
+    ////////////////////////////////////////////////
+    //install menu editorial
+    $menu = array(
+        'menu_name' => 'menu-editorial-menu', // Drupal menu machine name
+        'title' => 'Editorial menu', // Drupal menu display name
+        'description' => '', // Optional menu description
+    );
+    menu_save($menu); 
+    uwwtd_install_menu($menu, 'menu-editorial-menu.json');
+    
+//     _block_rehash('uwwtd'); //theme name here   
+ 
+    
+    ////////////////////////////////////////////////
+    //create Home page - introduction block and put it in Content region
+     $bidhome = db_insert('block_custom')
+        ->fields(array(
+          'body' => '',
+          'info' => 'Home page - introduction',
+          'format' => 'full_html',
+        ))
+        ->execute();    
+    
+      db_insert('block')
+        ->fields(array(
+          'module' => 'block',
+          'delta' => $bidhome,
+          'theme' => 'uwwtd',
+          'status' => 1,
+          'weight' => 1,
+          'region' => 'content',
+          'visibility' => 1,
+          'pages' => '<front>',
+          'title' => '<none>',
+          'cache' =>  -1,
+        ))
+        ->execute(); 
+            
+    ////////////////////////////////////////////////     
+    //create Footer content block and put it in Footer region
+     $bidfooter = db_insert('block_custom')
+        ->fields(array(
+          'body' => '',
+          'info' => 'Footer content',
+          'format' => 'php_code',
+        ))
+        ->execute();  
+     
+      db_insert('block')
+        ->fields(array(
+          'module' => 'block',
+          'delta' => $bidfooter,
+          'theme' => 'uwwtd',
+          'status' => 1,
+          'weight' => 0,
+          'region' => 'footer',
+          'visibility' => 0,
+          'pages' => '',
+          'title' => '',
+          'cache' =>  -1,
+        ))
+        ->execute(); 
+             
+    _block_rehash('uwwtd'); //theme name here
+    
+//      db_update('block')
+//         ->fields(array(
+//           'region' => 'content',
+//         ))
+//         ->condition('theme', 'uwwtd')
+//         ->condition('delta', $bidhome)
+//         ->condition('module', 'block')           
+//         ->execute();  
+//                     
+//      db_update('block')
+//         ->fields(array(
+//           'region' => 'footer',
+//         ))
+//         ->condition('theme', 'uwwtd')
+//         ->condition('delta', $bidfooter)
+//         ->condition('module', 'block')           
+//         ->execute();                  
+    
+    
+    //////////////////////////////////////////////
+    //enabled block Language switcher dropdown (User interface text) and 
+    //move it in navigation region     lang_dropdown/language
+     db_update('block')
+        ->fields(array(
+          'region' => 'navigation',
+          'status' => 1,
+          'weight' => -14,
+          'pages' => '',
+          'title' => '<none>',
+          'visibility' => 0,
+        ))
+          ->condition('theme', 'uwwtd')
+          ->condition('delta', 'language')
+          ->condition('module', 'lang_dropdown')        
+        ->execute();  
+           
+           
+
+    //////////////////////////////////////////////
+    //move block menu editorial in Top Bar region
+     db_update('block')
+        ->fields(array(
+          'region' => 'header',
+          'status' => 1,
+          'weight' => -15,
+          'pages' => '',
+          'title' => '',
+          'visibility' => 0,
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'menu-editorial-menu')
+        ->condition('module', 'menu')            
+        ->execute();    
+    
+    ////////////////////////////////////////////////
+    //disable System help block
+     db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'help')
+        ->condition('module', 'system')           
+        ->execute(); 
+        
+    ////////////////////////////////////////////////
+    //disable Footer drupal block
+     db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'powered-by')
+        ->condition('module', 'system')           
+        ->execute();                        
+    ////////////////////////////////////////////////
+    //create Map home block and put it in Content region
+    //=> done later in hook update 6
+    
+        
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;  
+}
+
+
+function uwwtd_install_execute_sql(&$context) 
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    //create extension postgis
+    db_query('create extension postgis');    
+    //create function for trigger on position_geo table
+    db_query(' 
+        create or replace function insert_geom_to_geo() returns trigger as $$
+            BEGIN
+                IF NEW.field_position_geo_geom IS NOT NULL THEN
+                    NEW.the_geom=st_transform(st_setsrid(st_geomfromwkb(NEW.field_position_geo_geom), 4326), 4258);
+                END IF;
+                RETURN NEW;
+            END;   
+        $$ language plpgsql    
+    '); 
+    
+    db_query(' 
+        create or replace function update_geom_to_geo() returns trigger as $$
+            BEGIN
+            	IF (NEW.field_position_geo_geom != OLD.field_position_geo_geom) THEN
+            		NEW.the_geom=st_transform(st_setsrid(st_geomfromwkb(NEW.field_position_geo_geom), 4326), 4258);
+            	END IF;
+            	RETURN NEW;
+            END;
+        $$ language plpgsql    
+    ');
+    
+    $context['message'] = __FUNCTION__;
+    $context['finished'] = 1;      
+}
+
+function uwwtd_install_configure_wkhtmltopdf() {
+
+    uwwtd_install_trace(__FUNCTION__);
+      
+    $config_wkhtml = array (
+          'bin_path' => '/usr/local/bin/wkhtmltopdf',
+          'footer_display' => 1,
+          'header_display' => 1,
+          'cover_display' => 1,
+          'toc_display' => 0,
+          'toc_depth' => '3',
+          'disablePdfCompression' => 1,
+          'margins' => 
+          array (
+            'top' => '10',
+            'bottom' => '10',
+            'right' => '10',
+            'left' => '10',
+          ),
+          'default_metadata' => 'creator|Auteur|UWWTD SIIF Slovenia National (Slovenia)
+subject|Sujet|Système d\'Information sur l\'Eau (SIE), Sandre
+description|Description|Le Service d\'Administration Nationale des Données et Référentiels sur l\'Eau (Sandre) établit et met à disposition le référentiel des données sur l’eau du système d’information sur l’eau (SIE).
+editor|Editeur|Sandre, Office National de l\'Eau et des Milieux Aquatiques (ONEMA)
+contributor|Contributeur|Office International de l\'Eau (OIEau)
+language|Langue|Fr
+type|Type|Texte
+format|Format|PDF
+spatial|Couverture géographique|France entière
+rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
+        
+        );
+    variable_set('wkhtmltopdf_configurations', $config_wkhtml);            
+}
+    
