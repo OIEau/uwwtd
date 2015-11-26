@@ -137,7 +137,7 @@ echo uwwtd_insert_errors_tab($node);
    
     $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
 
-    print '<div class="uwwcontainer" style="margin-top:-70px">';
+    print '<div class="uwwcontainer" style="margin-top:-50px">';
 		if ($view_mode == 'full' && !empty($title)){
 			$fieldstat = field_view_field('node', $node, 'field_status');
 			$fieldnuts = field_view_field('node', $node, 'field_regionnuts');
