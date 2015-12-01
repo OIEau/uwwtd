@@ -2,7 +2,7 @@
     $(document).ready(function() {
         // Gestion des flipcards
         var listFlip = $(".flip");
-        console.log(listFlip);
+        //console.log(listFlip);
         if (listFlip.length > 0) {
             listFlip.flip({trigger: 'manual'});
 
@@ -201,7 +201,9 @@ var g = svg.selectAll(".arc")
 
  g.append("path")
       .attr("d", arc)
-      .style("fill", function(d) { return color(d.data.label); });
+      .style("fill", function(d) {
+            return color(d.data.label);
+        });
 
   g.append("text")
       .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
@@ -242,10 +244,10 @@ var g = svg.selectAll(".arc")
 }
 //TEST AP GRAPHS
 function display_piechart_custom(data,divid,TAnchor) {
-
-	var widthsvg = 400;
-	var width = 180;
-	var height = 180;
+    console.log(data);
+	var widthsvg = 500;
+	var width = 200;
+	var height = 200;
 	var radius = 90;
 	var color = d3.scale.category10();
 
@@ -253,7 +255,7 @@ function display_piechart_custom(data,divid,TAnchor) {
 	.attr('width', widthsvg)
 	.attr('height', height)
 	.append('g')
-	.attr('transform', 'translate(' + (width / 2) +  ',' + (width / 2) + ')');
+	.attr('transform', 'translate(' + ((width / 2)+35) +  ',' + ((width / 2)+10) + ')');
 	var arc = d3.svg.arc()
 	.outerRadius(radius)
 	.innerRadius(0);
@@ -269,11 +271,14 @@ function display_piechart_custom(data,divid,TAnchor) {
 
 	g.append("path")
 	.attr("d", arc)
-	.style("fill", function(d) { return color(d.data.label); });
+	.style("fill", function(d) {return d.data.color;})
+    .attr("title", function(d) {return d.data.label;})
+    .attr("alt", function(d) {return d.data.label;});
 
 	g.append("text")
-	.attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-	.attr("dy", ".35em")
+	//.attr("transform", function(d) { return "translate(" + (arc.centroid(d)+20) + ")"; })
+	.attr("transform", function(d) {var c = arc.centroid(d);return "translate(" + c[0]*2.3 +"," + c[1]*2.3 + ")";})
+    .attr("dy", ".35em")
 	.style("font-size", "90%")
 	.style("text-anchor", TAnchor)
 	.text(function(d) { return d.data.valueformat });
@@ -282,32 +287,26 @@ function display_piechart_custom(data,divid,TAnchor) {
 	var legendRectSize = 12;
 	var legendSpacing = 6;
 	var legend = svg.selectAll('.legend')
-	.data(color.domain())
+	.data(data)
 	.enter()
 	.append('g')
 	.attr('class', 'legend')
 	.attr('transform', function(d, i) {
 		var height = legendRectSize + legendSpacing;
-		//     var offset =  0;
-		//     var horz = -2 * legendRectSize;
-//		var horz = -radius;
-		var horz = radius + 5;
-		//     var vert = i * height - offset;
-		//var vert = i * height + radius;
-//		console.log(i);
+		var horz = radius + 45;
 		var vert = i * height - radius;
 		return 'translate(' + horz + ',' + vert + ')';
 	});
 	legend.append('rect')
 	.attr('width', legendRectSize)
 	.attr('height', legendRectSize)
-	.style('fill', color)
-	.style('stroke', color);
+	.style('fill', function(d) {return d.color; })
+	.style('stroke', '#aaaaaa');
 	legend.append('text')
 	.attr('x', legendRectSize + legendSpacing )
 	.attr('y', legendRectSize - legendSpacing + 3)
 	.attr('style', ' color: #4f4f4f;font--weight: bold;font-size: 12px;font-family: "Open Sans",sans-serif;')
-	.text(function(d) { return d; });
+	.text(function(d) { return d.label; });
 }
 
 function stackedbar_nat_gen_load(data) {
