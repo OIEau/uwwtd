@@ -157,7 +157,7 @@ echo uwwtd_insert_errors_tab($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer" style="float:left;overflow:visible;">';
-      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:335px;">';
+      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:390px;">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
@@ -271,8 +271,8 @@ echo uwwtd_insert_errors_tab($node);
 						)
 						{
 							  print ' <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
-						  
-						$output ='<table id="UwwtpDescription">
+						  $output = '<p style="font-weight:bold;">Load and concentration per parameter :</p>';						  
+						$output .='<table id="UwwtpDescription">
 								 <tr>
 									<td style="border: 1px solid #000;" class="black" ></td>
 									<td style="font-weight: bold;border: 1px solid #000;" class="black">Incoming</td>
@@ -320,6 +320,7 @@ echo uwwtd_insert_errors_tab($node);
 									<td class="light">'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
 								</tr>';		
 						$output .= '</table>';
+						$output .= '* Concentration calculated using the annual load and the annual volume of wastewater treated.';
 						print $output;
 						}
 						// print render($content['field_uwwbodincoming']);
