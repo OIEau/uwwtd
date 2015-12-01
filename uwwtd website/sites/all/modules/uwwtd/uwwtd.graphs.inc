@@ -94,12 +94,14 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$Data_uwwtd_stat_national_compliance[] = array(
 				"value" => $result['generated_sum'],
-				"label" => $result['field_aggcompliance_value_format'],
-				"valueformat" => $result['generated_sum_format'],
+				"label" => $result['field_aggcompliance_value_format'] .' ['.$result['generated_sum'].' pe]',
+				"valueformat" => $result['generated_sum_format'].' pe',
+                "color"=>isset($result['color'])?$result['color']:null
 		);
-		$String_uwwtd_stat_national_compliance .= $result['field_aggcompliance_value_format'] . ' : ' . $result['generated_sum_format'] . '<br/>';
+		$String_uwwtd_stat_national_compliance .= $result['field_aggcompliance_value_format'] . ' : ' . $result['generated_sum_format'] . ' pe<br/>';
 	}
-
+   
+    
 	// Total agglomerations by compliance
 	$Data_uwwtd_stat_agglomeration_compliance = array();
 	$String_uwwtd_stat_agglomeration_compliance = '';
@@ -108,8 +110,9 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$Data_uwwtd_stat_agglomeration_compliance[] = array(
 				"value" => $result['total_count'],
-				"label" => $result['field_aggcompliance_value_format'],
+				"label" => $result['field_aggcompliance_value_format'] .' ['.$result['total_count'].']',
 				"valueformat" => $result['total_count_format'],
+                "color"=>isset($result['color'])?$result['color']:null
 		);
 		$String_uwwtd_stat_agglomeration_compliance .= $result['field_aggcompliance_value_format'] . ' : ' . $result['total_count_format'] . '<br/>';
 	}
@@ -123,10 +126,11 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$aData_uwwtd_stat_national_uwwtpC[] = array(
 				"value" => $result['loadentering_sum'],
-				"label" => $result['field_uwwcompliance_value_format'],
-				"valueformat" => $result['loadentering_sum_format'],
+				"label" => $result['field_uwwcompliance_value_format'].' ['.$result['loadentering_sum'].' pe]',
+				"valueformat" => $result['loadentering_sum_format'].' pe',
+                "color"=>isset($result['color'])?$result['color']:null
 		);
-		$aString_uwwtd_stat_national_uwwtpC .= $result['field_uwwcompliance_value_format'] . ' : ' . $result['loadentering_sum_format'] . '<br/>';
+		$aString_uwwtd_stat_national_uwwtpC .= $result['field_uwwcompliance_value_format'] . ' : ' . $result['loadentering_sum_format'] . ' pe<br/>';
 	}
 
 	//Load entering by compliance : total agglomerations
@@ -138,8 +142,9 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$aData_uwwtd_stat_agglomeration_uwwtpC[] = array(
 				"value" => $result['total_count'],
-				"label" => $result['field_uwwcompliance_value_format'],
+				"label" => $result['field_uwwcompliance_value_format'] .' ['.$result['total_count'].']',
 				"valueformat" => $result['total_count_format'],
+                "color"=>isset($result['color'])?$result['color']:null
 		);
 		$aString_uwwtd_stat_agglomeration_uwwtpC .= $result['field_uwwcompliance_value_format'] . ' : ' . $result['total_count_format'] . '<br/>';
 	}
@@ -153,8 +158,9 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$aData_uwwtd_stat_national_uwwtpT[] = array(
 				"value" => $result['loadentering_sum'],
-				"label" => $result['field_uwwtreatmenttype_value_format'],
+				"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.$result['loadentering_sum'].' pe]',
 				"valueformat" => $result['loadentering_sum_format'],
+                "color"=>isset($result['color'])?$result['color']:null
 		);
 		$aString_uwwtd_stat_national_uwwtpT .= $result['field_uwwtreatmenttype_value_format'] . ' : ' . $result['loadentering_sum_format'] . '<br/>';
 	}
@@ -168,8 +174,9 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$aData_uwwtd_stat_agglomeration_uwwtpT[] = array(
 				"value" => $result['total_count'],
-				"label" => $result['field_uwwtreatmenttype_value_format'],
+				"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.$result['total_count'].']',
 				"valueformat" => $result['total_count_format'],
+                "color"=>isset($result['color'])?$result['color']:null
 		);
 		$aString_uwwtd_stat_agglomeration_uwwtpT .= $result['field_uwwtreatmenttype_value_format'] . ' : ' . $result['total_count_format'] . '<br/>';
 	}
@@ -193,7 +200,8 @@ function uwwtd_page_stats_graphs_result($options){
 	//Total load entering and discharged
 
 	$aData_uwwtd_load_ent_and_dis = array();
-	$aString_uwwtd_load_ent_and_dis = '';
+	$aString_uwwtd_load_ent_and_dis = '<table>';
+    $aString_uwwtd_load_ent_and_dis.= '<tr><th>Parameter</th><th>Entering load (t/year)</th><th>Discharged load (t/year)</th></tr>';
 
 	$results = uwwtd_stat_national_treatmentplant($options);
 	foreach ($results as $result){
@@ -203,30 +211,29 @@ function uwwtd_page_stats_graphs_result($options){
 				"entering" => $result['bodin_sum'],
 				"discharged" => $result['bodout_sum']
 		);
-		$aString_uwwtd_load_ent_and_dis .= 'BOD entering : ' . $result['bodin_sum_format'] . '<br/>';
-		$aString_uwwtd_load_ent_and_dis .= 'BOD discharged : ' . $result['bodout_sum_format'] . '<br/>';
+        $aString_uwwtd_load_ent_and_dis .= '<tr><td>BOD</td><td>' . $result['bodin_sum_format'] . '</td><td>'.$result['bodout_sum_format'] . '</td></tr>';
+		
 		$aData_uwwtd_load_ent_and_dis[] = array(
 				"type" => "COD",
 				"entering" => $result['codin_sum'],
 				"discharged" => $result['codout_sum']
 		);
-		$aString_uwwtd_load_ent_and_dis .= 'COD entering : ' . $result['codin_sum_format'] . '<br/>';
-		$aString_uwwtd_load_ent_and_dis .= 'COD discharged : ' . $result['codout_sum_format'] . '<br/>';
-		$aData_uwwtd_load_ent_and_dis[] = array(
+		$aString_uwwtd_load_ent_and_dis .= '<tr><td>COD</td><td>' . $result['codin_sum_format'] . '</td><td>'.$result['codout_sum_format'] . '</td></tr>';
+		
+        $aData_uwwtd_load_ent_and_dis[] = array(
 				"type" => "N",
 				"entering" => $result['nin_sum'],
 				"discharged" => $result['nout_sum']
 		);
-		$aString_uwwtd_load_ent_and_dis .= 'N entering : ' . $result['nin_sum_format'] . '<br/>';
-		$aString_uwwtd_load_ent_and_dis .= 'N discharged : ' . $result['nout_sum_format'] . '<br/>';
+		$aString_uwwtd_load_ent_and_dis .= '<tr><td>N</td><td>' . $result['nin_sum_format'] . '</td><td>'.$result['nout_sum_format'] . '</td></tr>';
 		$aData_uwwtd_load_ent_and_dis[] = array(
 				"type" => "P",
 				"entering" => $result['pin_sum'],
 				"discharged" => $result['pout_sum']
 		);
-		$aString_uwwtd_load_ent_and_dis .= 'P entering : ' . $result['pin_sum_format'] . '<br/>';
-		$aString_uwwtd_load_ent_and_dis .= 'P discharged : ' . $result['pout_sum_format'] . '<br/>';
+        $aString_uwwtd_load_ent_and_dis .= '<tr><td>P</td><td>' . $result['pin_sum_format'] . '</td><td>'.$result['pout_sum_format'] . '</td></tr>';
 	}
+    $aString_uwwtd_load_ent_and_dis.= '</table>';
 	$aColor_uwwtd_load_ent_and_dis ['domain'] = array (
 			'entering',
 			'discharged'
@@ -239,7 +246,8 @@ function uwwtd_page_stats_graphs_result($options){
 	//BOD, COD, N, P concentration
 
 	$aData_uwwtd_per_ent_and_dis = array();
-	$aString_uwwtd_per_ent_and_dis = '';
+	$aString_uwwtd_per_ent_and_dis = '<table>';
+    $aString_uwwtd_per_ent_and_dis.= '<tr><th>Parameter</th><th>Entering (mg/l)</th><th>Discharged (mg/l)</th><th>Rate (%)</th></tr>';
 
 	$results = uwwtd_stat_national_treatmentplant($options);
 	foreach ($results as $result){
@@ -249,34 +257,32 @@ function uwwtd_page_stats_graphs_result($options){
 				"incoming" => ($result['bodin_sum']/$result['uwwt_sum'])*1000,
 				"discharged" => ($result['bodout_sum']/$result['uwwt_sum'])*1000
 		);
-		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration BOD (mg/l): ') . $result['bodin_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration BOD (mg/l): ') . $result['bodout_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Rate for BOD : ') . round(((1- ($result['bodout_sum']/ $result['bodin_sum']))*100), 1) . ' %' . '<br/>';
-		$aData_uwwtd_per_ent_and_dis[] = array(
+		$aString_uwwtd_per_ent_and_dis .='<tr><td>BOD</td><td>' . $result['bodin_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. $result['bodout_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. round(((1- ($result['bodout_sum']/ $result['bodin_sum']))*100), 1) . ' %</td><td>';
+		
+        $aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "COD",
 				"incoming" => ($result['codin_sum']/$result['uwwt_sum'])*1000,
 				"discharged" => ($result['codout_sum']/$result['uwwt_sum'])*1000
 		);
-		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration COD (mg/l): ') . $result['codin_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration COD (mg/l): ') . $result['codout_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Rate for COD : ')  . round(((1- ($result['codout_sum']/ $result['codin_sum']))*100), 1) . ' %' . '<br/>';
+        $aString_uwwtd_per_ent_and_dis .='<tr><td>COD</td><td>' . $result['codin_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. $result['codout_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. round(((1- ($result['codout_sum_format']/ $result['codin_sum_format']))*100), 1) . ' %</td><td>';
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "N",
 				"incoming" => ($result['nin_sum']/$result['uwwt_sum'])*1000,
 				"discharged" => ($result['nout_sum']/$result['uwwt_sum'])*1000
 		);
-		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration N (mg/l): ') . $result['nin_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration N (mg/l): ') . $result['nout_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Rate for N : ') . round(((1- ($result['nout_sum']/ $result['nin_sum']))*100), 1) . ' %' . '<br/>';
+        
+        $aString_uwwtd_per_ent_and_dis .='<tr><td>COD</td><td>' . $result['nin_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. $result['nout_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. round(((1- ($result['nout_sum_format']/ $result['nin_sum_format']))*100), 1) . ' %</td><td>';
 		$aData_uwwtd_per_ent_and_dis[] = array(
 				"type" => "P",
 				"incoming" => ($result['pin_sum']/$result['uwwt_sum'])*1000,
 				"discharged" => ($result['pout_sum']/$result['uwwt_sum'])*1000
 		);
-		$aString_uwwtd_per_ent_and_dis .= t('Incoming concentration P (mg/l): ') . $result['pin_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Discharged concentration P (mg/l): ') . $result['pout_sum_format'] . '<br/>';
-		$aString_uwwtd_per_ent_and_dis .= t('Rate for P : ') . round(((1- ($result['pout_sum']/ $result['pin_sum']))*100), 1) . ' %' . '<br/>';
+        
+        
+		$aString_uwwtd_per_ent_and_dis .='<tr><td>P</td><td>' . $result['pin_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. $result['pout_sum_format']/$result['uwwt_sum']*1000 . '</td><td>'. round(((1- ($result['pout_sum_format']/ $result['pin_sum_format']))*100), 1) . ' %</td><td>';
+
 	}
+    $aString_uwwtd_per_ent_and_dis.= '</table>';
 	$aColor_uwwtd_per_ent_and_dis ['domain'] = array (
 			'incoming',
 			'discharged'

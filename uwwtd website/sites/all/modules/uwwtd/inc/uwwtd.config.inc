@@ -276,6 +276,22 @@ $GLOBALS['uwwtd']['all_compliance']  = array(
     'QC' => 'Questionable Compliance',
 );
 
+$GLOBALS['uwwtd']['compliance_color']  = array(
+    'NI' => '#6b6b6b',
+    'NR' => '#a2a2a2',
+    'NC' => '#d93c3c',
+    'C' => '#4f91e1',
+    '?' => '#ea8b2e',
+    'PD' => '#8fbc8f',
+    'QC' => '#e9967a',
+);
+$GLOBALS['uwwtd']['treatment_type_color']  = array(
+    'P' => '#ea8b2e',
+    'S' => '#3cc53c',
+    'MS' => '#5ddfff',
+    'NI' => '#d93c3c',
+);
+
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',
     'NI' => $GLOBALS['uwwtd']['all_compliance']['NI'],
@@ -288,7 +304,7 @@ $GLOBALS['uwwtd']['ui']['compliance'] = array(
 );
 
 //todo delete this one if all works
-$GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['ui']['compliance'];
+$GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['all_compliance'];
 
 $GLOBALS['uwwtd']['ui']['test_pass'] = array(
     'All' => '- Any -',

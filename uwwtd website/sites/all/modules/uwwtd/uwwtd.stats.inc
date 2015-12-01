@@ -369,13 +369,18 @@ function uwwtd_stat_national_uwwtp($options, $GroupBy)
 			switch ($group_by){
 				case 'f_comp.field_uwwcompliance_value' :
 					$row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
-					break;
+					$row['color'] = isset($GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']])?$GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']]:null;
+			
+                    break;
 				case 'f_uwwtreatmenttype.field_uwwtreatmenttype_value' :
 					$row['field_uwwtreatmenttype_value_format'] = is_null($row['field_uwwtreatmenttype_value']) ? '' : $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
-					break;
+					$row['color'] = isset($GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']])?$GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']]:null;
+			
+                    break;
 			}
 			$row['total_count_format'] = is_null($row['total_count']) ? '0' : uwwtd_format_number($row['total_count'], 0);
 			$row['loadentering_sum_format'] = is_null($row['loadentering_sum']) ? '0' : uwwtd_format_number($row['loadentering_sum'], 0);
+            
 			$data[] = $row;
 		}
 	}catch(Exception $e) {
@@ -481,7 +486,7 @@ function uwwtd_stat_national_compliance($options)
 			$row['aggc2_sum_format'] = is_null($row['aggc2_sum']) ? '0' : uwwtd_format_number($row['aggc2_sum'], 2);
 			$row['aggpcwt_sum_format'] = is_null($row['aggpcwt_sum']) ? '0' : uwwtd_format_number($row['aggpcwt_sum'], 2);
 			$row['generated_sum_format'] = is_null($row['generated_sum']) ? '0' : uwwtd_format_number($row['generated_sum'], 0);
-
+            $row['color'] = isset($GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']])?$GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']]:null;
 			$data[] = $row;
 		}
 	}catch(Exception $e) {
