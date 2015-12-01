@@ -1615,7 +1615,10 @@ function uwwtd_update_7121(&$context = null)
 
     //change mail cnfigured
     db_merge('contact')
-    ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
+    ->fields(array(
+            'recipients' => $country_config[$country_code]['contact_mail'],
+            'reply' => '',
+            ))
     ->condition('category', 'Website feedback', '=')
     ->condition('recipients', 'l.guedet@oieau.fr', '=')
     ->execute();
