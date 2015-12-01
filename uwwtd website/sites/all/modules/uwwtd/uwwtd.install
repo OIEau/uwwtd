@@ -2476,11 +2476,12 @@ function uwwtd_update_7123(&$context = null)
         'field_uwwwastewatertreated' => 'Volume of waste water treated and partially treated in the UWWTP',
         'field_uwwbod5perf' => 'Biological Oxygen Demand',
         'field_uwwcodperf' => 'Chemical Oxygen Demand',
-//         'field_uwwtssperf' => '',
+        'field_uwwtssperf' => 'Total Suspended Solids',
         'field_aggart3compliance' => 'Collection',
         'field_aggart4compliance' => 'Secondary treatment',
         'field_aggart5compliance' => 'More stringent treatment',
         'field_aggart6compliance' => 'Primary treatment',
+        'field_uwwotherperf' => 'Other type of more stringent treatment',
     );
     $msg_error = '';
     foreach($list_field_to_update as $fieldname => $tooltip) {
