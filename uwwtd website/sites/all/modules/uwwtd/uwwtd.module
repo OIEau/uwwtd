@@ -1083,12 +1083,21 @@ function uwwtd_get_data_uwwtp($option)
     where n.type = :typenode
     and f_annee.field_anneedata_value = :annee
     ';
-// dsm($query);
-    $param = array(
+ // dsm($query);
+
+ $nb = strlen($option['field_anneedata_value']);
+  if($nb == 1){
+	   $param = array(
+        ':typenode' => 'uwwtp',
+        ':annee' => $option,
+        );
+  }else{
+	  $param = array(
         ':typenode' => 'uwwtp',
         ':annee' => $option['field_anneedata_value'],
         );
-
+  }
+    
     try {
         $result = db_query($query, $param);
 

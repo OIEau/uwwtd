@@ -40,6 +40,41 @@ function uwwtd_get_all_year()
     return $year;
 }
 
+function uwwtd_get_all_sourcefile()
+{
+    $sourcefile = array();
+	$query = "SELECT field_sourcefile_fid FROM {field_data_field_sourcefile} group by field_sourcefile_fid order by field_sourcefile_fid desc";
+    $result = db_query($query);
+	while($record = $result->fetchAssoc()) {
+		$sourcefile[$record['field_sourcefile_fid']] = $record['field_sourcefile_fid'];
+	}
+    return $sourcefile;
+}
+
+function uwwtd_get_sourcefile($entity){
+
+	$fid = '';
+
+	$results = db_query('SELECT s.field_sourcefile_fid FROM {field_data_field_sourcefile} s WHERE s.entity_id = :fid', array(':fid' => $entity));
+
+	foreach($results as $result){
+		$fid = $result->field_sourcefile_fid;
+	}
+	return $fid;
+}
+
+function uwwtd_get_filemanaged($fid){
+
+	$filename = '';
+
+	$results = db_query('SELECT f.filename FROM {file_managed} f WHERE f.fid = :filename', array(':filename' => $fid));
+
+	foreach($results as $result){
+		$filename = $result->filename;
+	}
+	return $filename;
+}
+
 /**
  *
  */
@@ -327,7 +362,6 @@ function debug_export_xml($nid, $type, $value)
 //     dsm($s);
 //     return 'qsd';
 }
-
 
 
 /**
