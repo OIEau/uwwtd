@@ -104,7 +104,9 @@
  *
  * @ingroup themeable
  */
-echo uwwtd_insert_errors_tab($node);  
+echo uwwtd_insert_errors_tab($node); 
+
+ 
 //  $admin = 'administrator';
 //   $editor = 'editor';
 //   $roles = $GLOBALS['user']->roles;
@@ -595,15 +597,56 @@ echo uwwtd_insert_errors_tab($node);
           print '</div>';
         print '</fieldset>';
       print '</div>';
+	  $option['field_anneedata_value'] = uwwtd_get_all_year();
+	  $nbOptionannee = count($option['field_anneedata_value']);
+	  $type = $content['field_sourcefile']['#bundle'];
+	   foreach($option['field_anneedata_value'] as $optionAnnee){
+			$option['year'] = $optionAnnee;
+			$option['uwwCode'] = $content['field_inspireidlocalid'][0]['#markup'];
+			$siteId = uwwtd_get_siteid($type, $option);
+			$entity = uwwtd_check_exist($siteId);
+			
+			if(isset($entity) && $entity!=""){
+				$sourceFile = uwwtd_get_sourcefile($entity);
+				$fileManaged = uwwtd_get_filemanaged($sourceFile);
+				$arrayFile[] = array(
+					"year" => $option['year'],
+					"file" => $fileManaged
+			 );
+			}
+		 }
+	   // dsm($arrayFile);
       print '<div class="uwwthird">';
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
           print '<legend class="panel-heading">';
             print '<div class="panel-title fieldset-legend">'.t('Site information').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-            print render($content['field_anneedata']);
-            $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
-            print render($content['field_sourcefile']);
+			if(isset($arrayFile)){
+				foreach($arrayFile as $files){
+					if($files['year'] == $content['field_anneedata'][0]['#markup']){
+						if($files['file'] == $content['field_sourcefile'][0]['#file']->filename){
+						}
+					}else{
+						$server = explode('/',$_SERVER['REQUEST_URI']);
+						
+						$outputSiteInfo = '<br><b>Year of data: </b>'.$files['year'].'<br>';
+						$outputSiteInfo.= '<b>Source of data: </b><img src="/'.$server[1].'/modules/file/icons/application-octet-stream.png" title="application/xml" alt="file"/>
+						<a href=/'.$server[1].'/sites/default/files/data_sources/'.$files['file'].'>See sourcefile</a>';
+					}
+				} 
+			}
+			print render($content['field_anneedata']);
+			$content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
+			print render($content['field_sourcefile']).'<br>';
+			
+			if(isset($outputSiteInfo) && $outputSiteInfo !="")
+			{
+				print '<b><i>Other year : </i></b>';
+			}
+			
+			print $outputSiteInfo;
+            
           print '</div>';
         print '</fieldset>';
         if(isset($node->field_article17_uwwtp['und'][0]['nid'])){
