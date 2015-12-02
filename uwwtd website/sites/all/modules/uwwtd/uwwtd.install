@@ -2396,6 +2396,20 @@ function uwwtd_update_7123(&$context = null)
     variable_set('min_aggenerated_display', '2000');
     variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
     
+    //configure openlayers with local OpenLayers.js (2.13.1) version patched!
+    // openlayers_ui_version_check Release 2.13.1
+    // openlayers_source_internal_variant  original
+    // openlayers_source_type  internal
+    // openlayers_source_external  http://openlayers.org/api/2.13/OpenLayers.js
+    // openlayers_default_map  default
+    // openlayers_ui_preview_map 0
+    variable_set('openlayers_ui_version_check', 'Release 2.13.1');
+    variable_set('openlayers_source_internal_variant', 'original');
+    variable_set('openlayers_source_type', 'internal');
+    variable_set('openlayers_source_external', 'http://openlayers.org/api/2.13/OpenLayers.js');
+    variable_set('openlayers_default_map', 'default');
+    variable_set('openlayers_ui_preview_map', 0);
+    
     ////////////////////////////////////////////////////////////////
     //add new entry for admin general config uwwtd page
     menu_cache_clear_all();
