@@ -25,7 +25,8 @@
 			$('#edit-field-field_anneedata_value-wrapper').css('margin-top', '19px');
 			$('#edit-field-field_uwwloadenteringuwwtp_value-wrapper').css('margin-top', '19px');
 			$('#edit-field-field_article17_uwwtp_value-wrapper').css('margin-top', '19px');
-			$('#edit-field-field_article17_uwwtp_value-wrapper').css('margin-top', '19px');
+			$('#edit-field-field_regionnuts_value-wrapper').css('margin-top', '19px');
+			$('#edit-field-field_dcpreceivingwater_value-wrapper').css('margin-top', '19px');
 			$('.views-submit-button').css('margin-top', '19px');
 			$('.views-reset-button').css('margin-top', '19px');
 		}
