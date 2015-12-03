@@ -1730,7 +1730,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
-    $country_name = $country_config[$country_code]['name'];
+    $country_name = variable_get('siif_eru_country_name'); 
             
 	if (!isset($context['sandbox']['progress'])) {    
         $context['sandbox']['progress'] = 0;
@@ -3575,7 +3575,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
         $country_code = variable_get('siif_eru_country_code', '-1');
-        $country_name = $country_config[$country_code]['name'];
+        $country_name = variable_get('siif_eru_country_name');
         $reference_date = $annee . '/12/31';   
         $sheet->setCellValue('E1', $country_name);
         unset($country_config);
@@ -3844,7 +3844,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
         $country_code = variable_get('siif_eru_country_code', '-1');
-        $country_name = $country_config[$country_code]['name'];
+        $country_name = variable_get('siif_eru_country_name');
         $reference_date = $annee . '/12/31';
         $sheet->setCellValue('C2', $country_name);
         unset($country_config);
@@ -4467,7 +4467,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
         $country_code = variable_get('siif_eru_country_code', '-1');
-        $country_name = $country_config[$country_code]['name'];
+        $country_name = variable_get('siif_eru_country_name');
         $reference_date = $annee . '/12/31';    
         $sheet->setCellValue('C1', $country_name);
         unset($country_config);

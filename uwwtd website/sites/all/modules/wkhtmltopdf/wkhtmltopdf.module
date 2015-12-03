@@ -93,11 +93,13 @@ function wkhtmltopdf_print($params=array()){
     if(empty($conf)){
         exit("wkhtmltopdf n'est pas configuré");
     }
+    
     $dir = file_default_scheme().'://wkhtmltopdf';
     //On traite les paramétres afin de ne recuperer que ceux destinés à wkhtmltopdf
 //     uwwtd_wkhtml_trace(var_export($conf, true));
 //     uwwtd_wkhtml_trace(var_export($params, true));
     $data =wkhtmltopdf_getData($params);
+
     //On recupere les valeurs par défaut
     $dd = wkhtmltopdf_getDefaultData($conf);
     //On fusionne les tableaux afin de ne garder que l'essentiel
@@ -219,8 +221,8 @@ function wkhtmltopdf_getData($params=array()){
 }
 function wkhtmltopdf_getDefaultData($conf = array()){
     $dd=wkhtmltopdf_conf_default_metadata_to_array($conf);
-    $dd['title']=array('label'=>'Titre');
-    $dd['identifier']=array('label'=>'Identifiant');
+    $dd['title']=array('label'=>'Title');
+    $dd['identifier']=array('label'=>'Link');
     $dd['date']=array('label'=>"Date",'value'=>date('d/m/Y'));
     
     
@@ -255,27 +257,52 @@ function wkhtmltopdf_conf_default_metadata_to_array($conf=array()){
 
 //Fonction de génération du header
 function wkhtmltopdf_getHeader($data=array()){   
-    return theme('wkhtmltopdf_header', array());
+//     return theme('wkhtmltopdf_header', array());
+    $variables = array();
+    if($data['date']['value']!='') $variables['date'] = t('Last calculated : @date', array('@date' => $data['date']['value']));
+    $variables['title'] = t('UWWTD-SIIF platform: @country National wastewater SIIF', array('@country' => variable_get('siif_eru_country_name')));
+    return theme('wkhtmltopdf_header', $variables);
 }
 //Fonction de génération du header
 function wkhtmltopdf_getFooter($data=array()){
-    return theme('wkhtmltopdf_footer', array());
+    
+    global $base_url;
+    
+    $variables=array();    
+    $variables['base_url'] = $base_url; 
+    return theme('wkhtmltopdf_footer', $variables);
 }
 //Fonction de génération du Cover
 function wkhtmltopdf_getCover($data=array()){
     $variables=array();
-    
+
     $variables['title'] = '<div class="wkhtmltopdf_title">'.$data['title']['value'].'</div>';
-    if($data['subtitle']['value']!='') $variables['subtitle'] = '<div class="wkhtmltopdf_subtitle">'.$data['subtitle']['value'].'</div>';
-    if($data['creator']['value']!='') $variables['creator'] = '<div class="wkhtmltopdf_creator">'.$data['creator']['value'].'</div>';
-    if($data['date']['value']!='') $variables['date'] = '<div class="wkhtmltopdf_date">'.$data['date']['value'].'</div>';
+//     if($data['creator']['value']!='') $variables['creator'] = '<div class="wkhtmltopdf_creator">'.$data['creator']['value'].'</div>';
+    if($data['date']['value']!='') $variables['date'] = '<br/><br/><br/><div class="wkhtmltopdf_date">' . t('Date of production:') .' '.$data['date']['value'].'</div>';
     
-	$variables['doc-info'] =  $variables['title'].$variables['subtitle']. $variables['creator'].$variables['date'];
+	$variables['doc-info'] =  $variables['title']
+                                .'<div class="wkhtmltopdf_sitename">'.variable_get('site_name'). '</div>'
+                                .$variables['date'];
     
-    if($data['comment']['value']!=''){$variables['comment']='<p><b>Votre commentaire : </b></p><p>'.$data['comment']['value'].'</p>';}
-    
-    $variables['cartouche']=wkhtmltopdf_AddDCMetadata($data); 
+    $variables['cartouche']=wkhtmltopdf_AddDCMetadata($data);
+    $variables['disclaimer']=wkhtmltopdf_getDisclaimer($data);
+    $variables['nota']=wkhtmltopdf_cover_nota($data);  
     return theme('wkhtmltopdf_cover', $variables);
+}
+
+function wkhtmltopdf_getDisclaimer($data){
+    return t('<p class="title_disclaimer">Disclaimer:</p>
+              The UWWTD SIIF platform is developed to enhance expert and citizen access to information about imple-mentation of Urban Waste Water Directive (91/271/EEC). Our goal is to keep this information timely and accurate. If errors are brought to our attention, we will try to correct them. However, the Commission and its consultant accept no responsibility or liability whatsoever with regard to the information on these sheets.
+              The information presented is purely summary of the data collected, and implementation of calculations defined on the basis of the Directive with no interpretation and the way it is presented was agreed by the DG ENV representatives. It may not in any circumstances be regarded as stating an official position of the European Commission.', 
+              array('@country' => variable_get('siif_eru_country_name')));
+}
+
+function wkhtmltopdf_cover_nota($data){
+    global $base_url;
+// $base_url;                                           
+    return t('Nota: This document was produced by the website @websitename (@url), a website presenting information on waste water relevant for implementation of the European Directive 91/271/EEC.', 
+                array('@websitename' => variable_get('site_name'),
+                        '@url' => $base_url));
 }
 
 //Fonction de génération du Content
@@ -327,16 +354,25 @@ function wkhtmltopdf_getContent($data=array()){
 //     $html = str_replace('Drupal.flot', '//Drupal.flot',$html);
     //desactivate flip             
     $html = str_replace('class="container flip"', '',$html);
-    $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
-    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
-    $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
-    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
-    //page agglo/connexion only one graph
-//     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden; transform: rotateY(0deg);"', '"width:50%;margin:auto;"',$html);
-    //this line reduce the larger of the map!
-//     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width:50%;margin:auto;"',$html);
-    $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width: 1110px;margin:auto;"',$html);
-    $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '""',$html);    
+    
+    
+    
+   // 
+// $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
+// $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="rightgraph', '"margin-left:2px;" class="rightgraph',$html);
+// $html = str_replace('"height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
+// $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 529px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;" class="leftgraph', '"margin-right:2px;" class="leftgraph',$html);
+// //page agglo/connexion only one graph
+// //     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden; transform: rotateY(0deg);"', '"width:50%;margin:auto;"',$html);
+// //this line reduce the larger of the map!
+// //     $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width:50%;margin:auto;"',$html);
+// $html = str_replace('"height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '"width: 1110px;margin:auto;"',$html);
+// $html = str_replace('"transform: rotateY(-180deg); height: 280px; width: 1110px; transform-style: preserve-3d; position: absolute; transition: all 0.5s ease-out 0s; backface-visibility: hidden;"', '""',$html);
+   
+   //  
+    
+    
+        
     //desactivate flot graph canvas
 //     $html = str_replace('class="" id="flot-auto-identifier-"', 'class="marginauto" id="flot-auto-identifier-"',$html);
     $html = str_replace('flot-auto-identifier-', 'flot-auto-identifier-old-', $html);
@@ -361,7 +397,7 @@ function wkhtmltopdf_getContent($data=array()){
     $variables['content'] = $html;
 	//exit($html);
     $s = theme('wkhtmltopdf_content', $variables);
-    file_put_contents('/var/www/html/ev_uwwtd_si/sites/default/files/wkhtmltopdf/courant.html', $s);
+//     file_put_contents('/var/www/html/ev_uwwtd_si/sites/default/files/wkhtmltopdf/courant.html', $s);
     return $s;
 }
 
@@ -480,6 +516,7 @@ function wkhtmltopdf_AddDCMetadata($data){
 	foreach($dc as $metadata){
 		if(isset($data[$metadata])){ $cartouche[]=$data[$metadata];}
 	}
+
 	if(!empty($cartouche)){
 		foreach($cartouche as $ligne){
 			if(!empty($ligne)){
@@ -487,8 +524,15 @@ function wkhtmltopdf_AddDCMetadata($data){
                 if($ligne['value']=="") $ligne['value']="-";
                 //Si la ligne est une URL
                 if(substr($ligne['value'],0,4)=='http'){
-                    $ligne['value'] = l($ligne['value'], $ligne['value']);
+                    if (strlen($ligne['value']) > 120) {
+                        $ligne['value'] = l(substr($ligne['value'], 0, 120) . '...', $ligne['value']);
+                    } else {
+                        $ligne['value'] = l($ligne['value'], $ligne['value']);
+                    }                    
                 }
+                
+                $ligne['value'] = str_replace('[#COUNTRY#]', variable_get('siif_eru_country_name'), $ligne['value']);
+                
 				$md['rows'][]= array('<b>'.$ligne['label'] .' :</b> '.$ligne['value']);
 			}
 		}

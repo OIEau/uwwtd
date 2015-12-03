@@ -19,11 +19,15 @@
 <body onload="subst();">
     <table>
           <tr>
-            <td style="text-align:justify;"><!--FOOTER--></td>
-            <td style="text-align:right;">
-              <span class="date"></span> - page <span class="page"></span>/<span class="topage"></span>
+            <td style="text-align:center;">
+              -<span class="page"></span>-
             </td>
           </tr>
+          <tr>
+            <td style="text-align:right;">
+              <?php print $variables['base_url']; ?>
+            </td>
+          </tr>          
         </table>
 </body>
 </html>

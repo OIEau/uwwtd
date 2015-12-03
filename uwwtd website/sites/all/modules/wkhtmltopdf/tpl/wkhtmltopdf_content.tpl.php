@@ -22,11 +22,29 @@
     table{max-width:1500px;}*/
     #block-system-main  > h1 {display:none;}
     
+    /*chart position*/
     div.charts-row div.view-content {
         border: 0px;
     } 
     .flip-title-back{display:none;}
-    .agglo_connexion_pie{margin:auto}      
+    .agglo_connexion_pie{margin:auto}  
+    
+    .front, .back {
+        backface-visibility : none !important;
+        position : relative !important;
+        transform : none !important;
+        transform-style : none !important;
+        transition : none !important;
+    }
+    
+    .front .legend > table{
+        width:250px !important;        
+    }
+    
+    .olAlphaImg, .olAlphaImg {
+        display:none;
+    }
+        
     </style>
     <!--
     <style>
