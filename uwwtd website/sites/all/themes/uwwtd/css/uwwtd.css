@@ -562,6 +562,8 @@ display: none;
 #edit-field-field_uwwcoddischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwndischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwpdischarge_value-wrapper{width: 150px;}
+#edit-field-field_regionnuts_value-wrapper{width: 150px;}
+#edit-field-field_dcpreceivingwater_value-wrapper{width: 150px;clear:left;}
 
 #graph_per_ent_and_dis .axis path,
 #graph_per_ent_and_dis .axis line {
