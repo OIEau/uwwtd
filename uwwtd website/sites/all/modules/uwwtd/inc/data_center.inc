@@ -14,7 +14,7 @@ function uwwtd_data_form($form, &$form_state){
     $all_years = uwwtd_get_all_year();
     foreach ($options as $key => $value) {
         if (isset($all_years[$key])) {
-            $options[$key] = "$value *";              
+            $options[$key] = "$value *";               
         }
     }
 	// definition du champ input de type select pour l'annee
@@ -4635,12 +4635,19 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
  */ 
 function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
 {
-    uwwtd_trace(__FUNCTION__);            
+    uwwtd_trace(__FUNCTION__);   
+    uwwtd_trace($node->field_inspireidlocalid['und'][0]['value']);
+    uwwtd_trace($node->field_aggart3compliance['und'][0]['value']);
+    uwwtd_trace($node->field_aggart4compliance['und'][0]['value']);
+    uwwtd_trace($node->field_aggart5compliance['und'][0]['value']);
+    uwwtd_trace($node->field_aggart6compliance['und'][0]['value']);
+             
     if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
         || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
         || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
     ) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
     
@@ -4649,6 +4656,7 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']    
     ) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
     
@@ -4660,10 +4668,12 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         && $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']
         )    
     ) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
     
     if ($node->field_aggart3compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliant']) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
     }   
     
@@ -4673,21 +4683,28 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     //$percentage_lost = bcsub($node->field_aggc1['und'][0]['value'], $maxgen, 2);
     $pe_lost = $percentage_lost / 100 * $node->field_agggenerated['und'][0]['value'];
     //$pe_lost = bcmul(bcdiv($percentage_lost,100,2),$node->field_agggenerated['und'][0]['value'],2);
-        
+    
+    uwwtd_trace("maxgen = $maxgen");
+    uwwtd_trace("pe_lost = $pe_lost");
+    uwwtd_trace("percentage_lost = $percentage_lost");      
+    uwwtd_trace(__LINE__);          
     if (false === ($percentage_lost < 1 || $pe_lost <= 2000)) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }   
     
     if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     } 
-    
-    if ($node->field_aggart4compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliant']
-        ||$node->field_aggart4compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
+              
+    if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
+        ||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
+        uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }  
-    
+    uwwtd_trace(__LINE__);
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];          
 }
 
