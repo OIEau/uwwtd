@@ -2612,6 +2612,10 @@ function uwwtd_update_7124(&$context = null)
                     $result = field_create_instance($fieldinstance);
                     $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
                     watchdog('node', 'Added field %name to bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                
+                } else {
+                    field_update_instance($fieldinstance);
+                    $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
+                    watchdog('node', 'Update bundle field %name in bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                        
                 }
                 break; 
             }
