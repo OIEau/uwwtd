@@ -4816,7 +4816,28 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 0;
+                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%'] = 0; 
+                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%'] = 0; 
+                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%'] = 0;                                                                                                       
             } 
 //             else {
 //                 $context['sandbox']['uwwtpinfo_for_agglo'] &= $context['sandbox']['uwwtpinfo_for_agglo'];
@@ -4915,7 +4936,31 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering load  p. e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'];
-            }             
+            }  
+            
+//             if ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1) {
+//                 if () {
+//                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] = 0;
+//                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%'] = 0;
+//                 }                
+//                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe'] = 0;
+//                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%'] = 0;
+//                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] = 0;
+//                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%'] = 0; 
+//             }
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%'] = 0;                
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%'] = 0; 
+//             
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%'] = 0;                
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] = 0;
+//             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%'] = 0;                        
                                                 
 //             }
         }
@@ -6149,7 +6194,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['Discharged concentration P-tot  t/y'] => 'Discharged concentration P-tot  t/y',
             $ind['P rate of removal %'] => 'P rate of removal %',
             $ind['average Incoming concentration P mg/l'] => 'average Incoming concentration P mg/l',
-            $ind['average Discharge concentration P mg/l'] => 'average Discharge concentration P mg/l',   
+            $ind['average Discharge concentration P mg/l'] => 'average Discharge concentration P mg/l',
+            ////////////
+            $ind['required_rcaaP'] => 'required_rcaaP',
+            $ind['required_rcaaN'] => 'required_rcaaN',
+            $ind['required_rcab'] => 'required_rcab', 
+            $ind['required_rcac'] => 'required_rcac',  
         );
         
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
@@ -7203,6 +7253,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['uwwtp_collecting_without_treatment']] = 0;
             }
+            
+            //here field for next sheet
+            $line[$ind['required_rcaaP']] = $uwwtp->field_uwww_required_rcaap['und'][0]['value'];
+            $line[$ind['required_rcaaN']] = $uwwtp->field_uwww_required_rcaan['und'][0]['value'];
+            $line[$ind['required_rcab']]  = $uwwtp->field_uwww_required_rcab['und'][0]['value'];
+            $line[$ind['required_rcac']]  = $uwwtp->field_uwww_required_rcac['und'][0]['value'];
             
             //debug value
             $line[$ind['debug_pending_or_expired']] = $pending_or_expired;

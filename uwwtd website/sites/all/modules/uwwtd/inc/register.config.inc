@@ -260,6 +260,10 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     
     // info needed for next sheets
     'uwwtp_collecting_without_treatment' => $i++,
+    'required_rcaaP' => $i++,
+    'required_rcaaN' => $i++,
+    'required_rcab'  => $i++,
+    'required_rcac'  => $i++, 
     
     //debug info
     'debug_pending_or_expired' => $i++,

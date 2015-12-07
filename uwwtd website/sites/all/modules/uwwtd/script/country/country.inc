@@ -4,7 +4,7 @@ $country_config = array(
     'cy' => array(      //nicosie
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Cyprus',
         'openlayers_maps' => array(
               'center' => array(
@@ -41,7 +41,7 @@ It was then implemented in 2014 through the current website that give access to 
     'fr' => array(      //Paris
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'France',
         'openlayers_maps' => array(
               'center' => array(
@@ -78,7 +78,7 @@ It was then implemented in 2014 through the current website that give access to 
     'hr' => array(      //zagreb
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Croatia',
         'openlayers_maps' => array(
               'center' => array(                         
@@ -115,7 +115,7 @@ It was then implemented in 2014 through the current website that give access to 
     'ie' => array(    //Dublin
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Ireland',
         'openlayers_maps' => array(
               'center' => array(
@@ -152,7 +152,7 @@ It was then implemented in 2014 through the current website that give access to 
     'lt' => array(    //Vilnius
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Lithuania',
         'openlayers_maps' => array(
               'center' => array(
@@ -189,7 +189,7 @@ It was then implemented in 2014 through the current website that give access to 
     'pl' => array(    // 	Varsovie 
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Poland',
         'openlayers_maps' => array(
               'center' => array(
@@ -226,7 +226,7 @@ It was then implemented in 2014 through the current website that give access to 
     'ro' => array(     //Bucarest
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3', 
+//         'rptFormRA'    => '3', 
         'name' => 'Romania',
         'openlayers_maps' => array(
               'center' => array(
@@ -263,7 +263,7 @@ It was then implemented in 2014 through the current website that give access to 
     'si' => array(   //Ljubljana
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
-        'rptFormRA'    => '3',
+//         'rptFormRA'    => '3',
         'name' => 'Slovenia',
         'openlayers_maps' => array(
               'center' => array(                        

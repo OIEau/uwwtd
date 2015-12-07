@@ -2561,14 +2561,75 @@ function uwwtd_update_7123(&$context = null)
     variable_set('siif_eru_version', __FUNCTION__);
     
     drupal_flush_all_caches();
-    //keep this for further update
-    throw new DrupalUpdateException(__FUNCTION__);
+//     //keep this for further update
+//     throw new DrupalUpdateException(__FUNCTION__);
     
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }          
 }
+
+/**
+ * Delete variable rptFormRA,
+ * Create 4 new field for bundle uwwtps for rcaaN, rcaaP, rcab, rcac,
+ *
+ */  
+function uwwtd_update_7124(&$context = null)
+{
+    uwwtd_install_trace(__FUNCTION__);
+    
+    ////////////////////////////////////////////////////////////////
+    //Delete variable rptFormRA
+    variable_del('rptFormRA');   
+    
+    ////////////////////////////////////////////////////////////////
+    //Create 4 new field for bundle uwwtps for rcaaN, rcaaP, rcab, rcac
+    $list_field_to_install = array(        
+        'field_uwww_required_rcaan',
+        'field_uwww_required_rcaap',
+        'field_uwww_required_rcab',
+        'field_uwww_required_rcac',
+    );
+    
+    include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
+    $content_type_name = 'uwwtp';
+    foreach ($list_field_to_install as $fieldname) {
+        $infofield = $list_field[$fieldname];
+        if (! field_info_field($infofield['field_name']) ) {
+            uwwtd_install_trace('create field ' . $infofield['field_name']);
+            $result = field_create_field($infofield);
+            $t_args = array('%name' => $fieldname);
+            watchdog('node', 'Added field %name.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));
+        }
+        
+        foreach ($list_contenttype[$content_type_name]['field_info_instance'] as $fieldinstance) {
+            if ($fieldinstance['field_name'] == $fieldname) {
+                $instance_exist = field_info_instance('node', $fieldinstance['field_name'], $content_type_name);
+                if (! $instance_exist ) {
+                    uwwtd_install_trace('create bundle field ' . $fieldinstance['field_name']);
+                    $result = field_create_instance($fieldinstance);
+                    $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
+                    watchdog('node', 'Added field %name to bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                
+                }
+                break; 
+            }
+        }      
+    }               
+    
+    ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }      
+}    
 
 
 /***************************************************************************/
@@ -2991,7 +3052,7 @@ function uwwtd_install_configure(&$context)
     }
     
      
-    variable_set('rptFormRA', '3');   
+//     variable_set('rptFormRA', '3');   
     //////////////////////////////////////////////////        
     //enable and set default theme UWWTD
     theme_enable(array('uwwtd'));
@@ -3179,7 +3240,7 @@ function uwwtd_install_configure(&$context)
 
     variable_set('site_name', 'UWWTD SIIF '.$country_config[$country_code]['name'].' National Node');
     
-    variable_set('rptFormRA', $country_config[$country_code]['rptFormRA']);
+//     variable_set('rptFormRA', $country_config[$country_code]['rptFormRA']);
 
 //     variable_set('site_mail', $country_config[$country_code]['website_mail']);
 //     db_insert('contact')
@@ -3840,7 +3901,7 @@ function uwwtd_install_configure_wkhtmltopdf() {
   ),
   'default_metadata' => 'creator|Creator|Ministry of XX (host)
 subject|Subject|UWWTD SIIF national platform of [#COUNTRY#]
-description|Summary|Present pages are part of a project aiming at implementing UWWTD SIIF platform in [#COUNTRY#]. The concept of SIIF was developed in a communication from the Commission…
+description|Summary|Present pages are part of a project aiming at implementing UWWTD SIIF platform in [#COUNTRY#]. The Structured Implementation and Information Framework (SIIF) concept is a ongoing Euro-pean Commission (Environment Directorate General) pilot project essentially focused on the organisation and management of data in order to enhance the generation of information for policy makers, interested parties and the public at all levels on how legislation is practically implemented. The concept developed is in line with the provisions of the Public Access to Environmental Information and INSPIRE Directives.
 editor|Editor|[#COUNTRY#]
 contributor|Contributors|Office International de l\'Eau, DG Environment
 type|Type|Text

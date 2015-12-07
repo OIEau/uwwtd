@@ -119,7 +119,11 @@ $GLOBALS['uwwtd_value']['required'] = array(
     'other' => 'O',
     'nitrogen_phosphorus' => 'NP',
     'notrelevant' => 'NR',
-    'morestringent' => 'MS',    
+    'morestringent' => 'MS',
+    
+    'nitrogen_phosphorus_other' => 'NPO',
+    'nitrogen_other' => 'NO',
+    'phosphorus_other' => 'PO',    
 ); 
 
 //$GLOBALS['uwwtd_value']['inplace']['noinformation']
