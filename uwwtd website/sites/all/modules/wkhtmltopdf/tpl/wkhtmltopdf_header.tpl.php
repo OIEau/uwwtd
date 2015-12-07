@@ -23,8 +23,11 @@
     <table>
       <tr>
         <td><!--LOGO--></td>
-        <td style="text-align:justify;"><?php print trim(variable_get('site_name', 'http://'.$_SERVER['SERVER_NAME'])); ?></td>
+        <td style="text-align:justify;"><?php print trim(variable_get('site_name')); ?></td>
+        <td style="text-align:right;"><?php print $variables['date']; ?></td>
       </tr>
     </table>
+    
+    
 </body>
 </html>

@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20151102_4.xlsx',
+    'model' => '2015_register_model_20151127_6.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
@@ -25,7 +25,8 @@ $GLOBALS['uwwtd']['sheet'] = array(
     ),
     'agglo' => array(
         'csv_name' => '_agglo.csv',
-        'csv_total_name' => '_agglo.total.csv',   
+        'csv_total_name' => '_agglo.total.csv',
+        'csv_evaluation_name' => '_agglo.evaluation.csv',   
         'xlsx_name' => '_agglo.xlsx',
         'xlsx_model_sheet_name' => 'agglomeration level',
     ),
@@ -188,14 +189,14 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'In cause of failure (3)' => $i++,
     'difference between monitoring result N and P and treatment in place' => $i++,
     
-    'Number of discharge points for this UWWTP' => $i++,
-    'DCP ID' => $i++,
-    //current RCA info (Q 2013)
-    'ID of receiving water body 2' => $i++,
-    'water body type 2' => $i++,
-    'ID of the SA or LSA 2' => $i++,
-    'rcaname 2' => $i++,
-    'designation date 2' => $i++, 
+//     'Number of discharge points for this UWWTP' => $i++,
+//     'DCP ID' => $i++,
+//     //current RCA info (Q 2013)
+//     'ID of receiving water body 2' => $i++,
+//     'water body type 2' => $i++,
+//     'ID of the SA or LSA 2' => $i++,
+//     'rcaname 2' => $i++,
+//     'designation date 2' => $i++, 
 
     
     
@@ -255,9 +256,10 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'Discharged concentration P-tot  t/y' => $i++,
     'P rate of removal %' => $i++,
     'average Incoming concentration P mg/l' => $i++,
-    'average Discharge concentration P mg/l' => $i++,
+    'average Discharge concentration P mg/l' => $i++,    
     
-    
+    // info needed for next sheets
+    'uwwtp_collecting_without_treatment' => $i++,
     
     //debug info
     'debug_pending_or_expired' => $i++,
@@ -358,11 +360,18 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'previous_art5_compliance' => $i++,
     //distance_to_compliance_art._5' => $i++,
     //treatment' => $i++,
-    'previous_art5_treat_%_of_gen._load' => $i++,
-    'previous_art5_treat_in_p.e._(6)' => $i++,
+// 'previous_art5_treat_%_of_gen._load' => $i++,
+// 'previous_art5_treat_in_p.e._(6)' => $i++,
+// //performance' => $i++,
+// 'previous_art5_perf_%_of_gen._load' => $i++,
+// 'previous_art5_perf_in_p.e._(7)' => $i++,
+    
+    'distance_art5_treat_%_of_gen._load' => $i++,
+    'distance_art5_treat_in_p.e._(6)' => $i++,
     //performance' => $i++,
-    'previous_art5_perf_%_of_gen._load' => $i++,
-    'previous_art5_perf_in_p.e._(7)' => $i++,
+    'distance_art5_perf_%_of_gen._load' => $i++,
+    'distance_art5_perf_in_p.e._(7)' => $i++,
+    
     //current_rca_details' => $i++,
     'water_body_type' => $i++,
     'id_code_of_the_water_body_wfd' => $i++,

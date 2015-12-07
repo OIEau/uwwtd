@@ -193,9 +193,9 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'field_aggcompliance_value'       =>  t('Compliance'),
     'field_aggart3compliance_value'   =>  t('Article 3 compliance'),
     'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
-    'field_aggart5compliance_value'    =>  t('Article 5 compliance'),
+    'field_aggart5compliance_value'   =>  t('Article 5 compliance'),
     'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
-	'field_article17_agglo_value'   =>  t('Article 17'),
+	'field_article17_agglo_value'     =>  t('Article 17'),
 );
 
 $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(

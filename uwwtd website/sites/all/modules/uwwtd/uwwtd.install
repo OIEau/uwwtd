@@ -1615,7 +1615,10 @@ function uwwtd_update_7121(&$context = null)
 
     //change mail cnfigured
     db_merge('contact')
-    ->fields(array('recipients' => $country_config[$country_code]['contact_mail']))
+    ->fields(array(
+            'recipients' => $country_config[$country_code]['contact_mail'],
+            'reply' => '',
+            ))
     ->condition('category', 'Website feedback', '=')
     ->condition('recipients', 'l.guedet@oieau.fr', '=')
     ->execute();
@@ -2290,7 +2293,8 @@ function uwwtd_update_7122(&$context = null)
  * add new entry for admin general config uwwtd page,
  * add help description on some field,
  * update page ressources,  
- * delete page  Useful links         
+ * delete page  Useful links 
+ * Change openlayers config (use local js OpenLayers.js + patch)         
  */ 
 function uwwtd_update_7123(&$context = null)
 {
@@ -2384,7 +2388,8 @@ function uwwtd_update_7123(&$context = null)
     //reload map pressure
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
-    $country_code = variable_get('siif_eru_country_code', '-1');    
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    variable_set('siif_eru_country_name', $country_config[$country_code]['name']);    
     uwwtd_update_map_overlay($country_config, $country_code, array('uwwtp_pressure_map.inc'), array('-'), array('-'));
     
     ////////////////////////////////////////////////////////////////
@@ -2392,6 +2397,20 @@ function uwwtd_update_7123(&$context = null)
     variable_set('display_only_active', '1');
     variable_set('min_aggenerated_display', '2000');
     variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
+    
+    //configure openlayers with local OpenLayers.js (2.13.1) version patched!
+    // openlayers_ui_version_check Release 2.13.1
+    // openlayers_source_internal_variant  original
+    // openlayers_source_type  internal
+    // openlayers_source_external  http://openlayers.org/api/2.13/OpenLayers.js
+    // openlayers_default_map  default
+    // openlayers_ui_preview_map 0
+    variable_set('openlayers_ui_version_check', 'Release 2.13.1');
+    variable_set('openlayers_source_internal_variant', 'original');
+    variable_set('openlayers_source_type', 'internal');
+    variable_set('openlayers_source_external', 'http://openlayers.org/api/2.13/OpenLayers.js');
+    variable_set('openlayers_default_map', 'default');
+    variable_set('openlayers_ui_preview_map', 0);
     
     ////////////////////////////////////////////////////////////////
     //add new entry for admin general config uwwtd page
@@ -2473,11 +2492,12 @@ function uwwtd_update_7123(&$context = null)
         'field_uwwwastewatertreated' => 'Volume of waste water treated and partially treated in the UWWTP',
         'field_uwwbod5perf' => 'Biological Oxygen Demand',
         'field_uwwcodperf' => 'Chemical Oxygen Demand',
-//         'field_uwwtssperf' => '',
+        'field_uwwtssperf' => 'Total Suspended Solids',
         'field_aggart3compliance' => 'Collection',
         'field_aggart4compliance' => 'Secondary treatment',
         'field_aggart5compliance' => 'More stringent treatment',
         'field_aggart6compliance' => 'Primary treatment',
+        'field_uwwotherperf' => 'Other type of more stringent treatment',
     );
     $msg_error = '';
     foreach($list_field_to_update as $fieldname => $tooltip) {
@@ -3804,32 +3824,30 @@ function uwwtd_install_configure_wkhtmltopdf() {
     uwwtd_install_trace(__FUNCTION__);
       
     $config_wkhtml = array (
-          'bin_path' => '/usr/local/bin/wkhtmltopdf',
-          'footer_display' => 1,
-          'header_display' => 1,
-          'cover_display' => 1,
-          'toc_display' => 0,
-          'toc_depth' => '3',
-          'disablePdfCompression' => 1,
-          'margins' => 
-          array (
-            'top' => '10',
-            'bottom' => '10',
-            'right' => '10',
-            'left' => '10',
-          ),
-          'default_metadata' => 'creator|Auteur|UWWTD SIIF Slovenia National (Slovenia)
-subject|Sujet|Système d\'Information sur l\'Eau (SIE), Sandre
-description|Description|Le Service d\'Administration Nationale des Données et Référentiels sur l\'Eau (Sandre) établit et met à disposition le référentiel des données sur l’eau du système d’information sur l’eau (SIE).
-editor|Editeur|Sandre, Office National de l\'Eau et des Milieux Aquatiques (ONEMA)
-contributor|Contributeur|Office International de l\'Eau (OIEau)
-language|Langue|Fr
-type|Type|Texte
+  'bin_path' => '/usr/local/bin/wkhtmltopdf',
+  'footer_display' => 1,
+  'header_display' => 1,
+  'cover_display' => 1,
+  'toc_display' => 0,
+  'toc_depth' => '3',
+  'disablePdfCompression' => 1,
+  'margins' => 
+  array (
+    'top' => '10',
+    'bottom' => '15',
+    'right' => '10',
+    'left' => '10',
+  ),
+  'default_metadata' => 'creator|Creator|Ministry of XX (host)
+subject|Subject|UWWTD SIIF national platform of [#COUNTRY#]
+description|Summary|Present pages are part of a project aiming at implementing UWWTD SIIF platform in [#COUNTRY#]. The concept of SIIF was developed in a communication from the Commission…
+editor|Editor|[#COUNTRY#]
+contributor|Contributors|Office International de l\'Eau, DG Environment
+type|Type|Text
 format|Format|PDF
-spatial|Couverture géographique|France entière
-rights|Droits d\'usage|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
-        
-        );
+language|Language|Eng
+rights|Copyright|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
+);
     variable_set('wkhtmltopdf_configurations', $config_wkhtml);            
 }
     

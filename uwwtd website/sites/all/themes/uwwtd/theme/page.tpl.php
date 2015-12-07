@@ -100,14 +100,14 @@
 		<?php
 			$options = array();
 			//Le titre est le nom du site
-			$options['title'] = $title;
+			$options['title'] = drupal_get_title();
 			//Le sous titre le nom de la page
 			//$options['subtitle'] ='Le glossaire librement réutilisable que chacun peut améliorer';
 			//Description de la page (en fait le titre)
 			//if($title!='') $options['comment'] = str_replace("'", "&#039;", $title);
 // 			print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);
             print uwwtd_wkhtmltopdf_tag(array('.main-container'), $options);			
-		?>
+		?>     
 		</div>    
         <?php print render($page['content']); ?>
 

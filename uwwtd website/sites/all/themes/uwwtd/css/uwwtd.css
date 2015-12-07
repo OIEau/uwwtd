@@ -562,6 +562,8 @@ display: none;
 #edit-field-field_uwwcoddischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwndischarge_value-wrapper{width: 150px;}
 #edit-field-field_uwwpdischarge_value-wrapper{width: 150px;}
+#edit-field-field_regionnuts_value-wrapper{width: 150px;}
+#edit-field-field_dcpreceivingwater_value-wrapper{width: 150px;clear:left;}
 
 #graph_per_ent_and_dis .axis path,
 #graph_per_ent_and_dis .axis line {
@@ -791,10 +793,9 @@ table.dispo-annee tr td.dispo-annee{
 	padding: 20px;
 	border: 20px solid #ddd;
 	float: left;
-	font-size: 1.2em;
 	position: fixed;
-	top: 50%; left: 50%;
-	z-index: 99999;
+	top: 50%; 
+	z-index: 22222;
 	/*--Les différentes définitions de Box Shadow en CSS3--*/
 	-webkit-box-shadow: 0px 0px 20px #000;
 	-moz-box-shadow: 0px 0px 20px #000;
@@ -803,14 +804,50 @@ table.dispo-annee tr td.dispo-annee{
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+	font-size:14px;
+	min-width: 81%;
+	max-height: 94%;
+	overflow-y: auto;
+	margin-top:-12%;
 }
 
-img.btn_close {
-	float: right;
-	margin: -55px -55px 0 0;
-	opacity: 1;
-	text-shadow: none;
-	box-shadow: none;
+.popup_project_block{
+	display: none; /*--masqué par défaut--*/
+	background: #fff;
+	padding: 20px;
+	border: 20px solid #ddd;
+	float: left;
+	position: fixed;
+	top: 50%; 
+	/*left: 50%;*/
+	z-index: 22222;
+	/*Les différentes définitions de Box Shadow en CSS3*/
+	-webkit-box-shadow: 0px 0px 20px #000;
+	-moz-box-shadow: 0px 0px 20px #000;
+	box-shadow: 0px 0px 20px #000;
+	/*--Coins arrondis en CSS3s*/
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	font-size:14px;
+	min-width: 70%;
+	max-height: 94%;
+	overflow-y: auto;
+	margin-top: -23%!important;
+}
+
+
+.popup_project_block #imgProjectA img{
+	width: 30%;
+}
+.popup_project_block .legend span{
+	font-size:11px;
+}
+.popup_project_block .legend {
+	font-size:12px;
+}
+.popup_project_block #imgProjectA{
+	text-align:center;
 }
 
 #fade { /*--Masque opaque noir de fond--*/
@@ -830,3 +867,35 @@ img.btn_close {
 	padding-top: 5px;
 	
 }
+
+#imgProjectA {
+    width: 100%;
+}
+
+figure{
+	width: 45%;
+	-webkit-box-shadow: 0 3px 10px #ccc;
+	-moz-box-shadow: 0 3px 10px #ccc;
+	-webkit-transition: all 0.7s ease;
+	-moz-transition: all 1s ease;
+	position: relative;
+	margin: 0 auto;
+}
+
+
+figure:hover{
+	-webkit-transform: rotate(0deg); 
+	-moz-transform: rotate(0deg);
+	-webkit-box-shadow: 0 3px 10px #666;
+	-moz-box-shadow: 0 3px 10px #666;
+}
+ 
+figure:focus{
+	outline: none;
+	-webkit-transform: rotate(0deg) scale(2.5);
+	-moz-transform: rotate(0deg) scale(1.5);
+	-webkit-box-shadow: 0 3px 10px #666;
+	-moz-box-shadow: 0 3px 10px #666;
+	z-index: 9999;
+}
+

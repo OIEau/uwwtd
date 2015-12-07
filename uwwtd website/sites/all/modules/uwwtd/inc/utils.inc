@@ -11,6 +11,34 @@ function uwwtd_get_max_annee()
     return $annee;
 }
 
+function uwwtd_get_all_nuts($type)
+{
+	$regionnuts = '';
+	
+$results = db_query('SELECT r.field_regionnuts_value, n.n3nm FROM {field_data_field_regionnuts} r INNER JOIN regions_nuts n 
+					ON r.field_regionnuts_value = n.n3cd
+					WHERE r.bundle = :regionnuts GROUP BY r.field_regionnuts_value, n.n3nm ORDER BY n3nm', array(':regionnuts' => $type));
+	$regionnuts = array("All" =>'- Any -');
+	foreach($results as $result){
+		$regionnuts[$result->field_regionnuts_value] = $result->n3nm;
+	}
+	return $regionnuts;
+}
+
+function uwwtd_get_all_rbd($type)
+{
+	$rbd = '';
+	
+	$results = db_query('SELECT d.field_linked_discharge_points_nid, d.entity_id, dc.field_dcpreceivingwater_value FROM {field_data_field_linked_discharge_points} d 
+						INNER JOIN {field_data_field_dcpreceivingwater} dc 
+						ON d.field_linked_discharge_points_nid = dc.entity_id
+						WHERE d.bundle = :regionnuts GROUP BY d.field_linked_discharge_points_nid, d.entity_id, dc.field_dcpreceivingwater_value ORDER BY field_dcpreceivingwater_value', array(':regionnuts' => $type));
+	$rbd = array('All' => '- Any -');
+	foreach($results as $result){
+		$rbd[$result->field_dcpreceivingwater_value] = $result->field_dcpreceivingwater_value;
+	}
+	return $rbd;
+}
 /**
  *
  */
@@ -38,6 +66,41 @@ function uwwtd_get_all_year()
 		$year[$record['field_anneedata_value']] = $record['field_anneedata_value'];
 	}
     return $year;
+}
+
+function uwwtd_get_all_sourcefile()
+{
+    $sourcefile = array();
+	$query = "SELECT field_sourcefile_fid FROM {field_data_field_sourcefile} group by field_sourcefile_fid order by field_sourcefile_fid desc";
+    $result = db_query($query);
+	while($record = $result->fetchAssoc()) {
+		$sourcefile[$record['field_sourcefile_fid']] = $record['field_sourcefile_fid'];
+	}
+    return $sourcefile;
+}
+
+function uwwtd_get_sourcefile($entity){
+
+	$fid = '';
+
+	$results = db_query('SELECT s.field_sourcefile_fid FROM {field_data_field_sourcefile} s WHERE s.entity_id = :fid', array(':fid' => $entity));
+
+	foreach($results as $result){
+		$fid = $result->field_sourcefile_fid;
+	}
+	return $fid;
+}
+
+function uwwtd_get_filemanaged($fid){
+
+	$filename = '';
+
+	$results = db_query('SELECT f.filename FROM {file_managed} f WHERE f.fid = :filename', array(':filename' => $fid));
+
+	foreach($results as $result){
+		$filename = $result->filename;
+	}
+	return $filename;
 }
 
 /**
@@ -327,7 +390,6 @@ function debug_export_xml($nid, $type, $value)
 //     dsm($s);
 //     return 'qsd';
 }
-
 
 
 /**

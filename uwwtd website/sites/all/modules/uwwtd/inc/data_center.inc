@@ -1548,7 +1548,15 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         //text
         if(isset($data['aggState'])){
-            $node->field_status['und'][0]['value'] = uwwtd_check_text($data['aggState']);}
+            $node->field_status['und'][0]['value'] = uwwtd_check_text($data['aggState']);
+//             //TODO delete!!
+//             if ($node->field_status['und'][0]['value'] == 1 ) {
+//                 $node->field_status['und'][0]['value'] = 0;
+//             } else {
+//                 $node->field_status['und'][0]['value'] = 1;
+//             }
+//             //TODO delete!!
+        }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration status information found.', $timestamp, $i, $node);
 
         //text
@@ -2192,6 +2200,11 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         if(isset($data['uwwState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['uwwState']);
+//             if ($node->field_status['und'][0]['value'] == 1 ) {
+//                 $node->field_status['und'][0]['value'] = 0;
+//             } else {
+//                 $node->field_status['und'][0]['value'] = 1;
+//             }            
         }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTP status information found.', $timestamp, $i, $node);
 
         //text
@@ -4025,8 +4038,8 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
         
         if ($id == '') {
             $context['results']['nbrecorderror']++;
-            $sErrorMessage = t('Can\t find the rca code on the shape record from file "@filename"', array('@filename' => basename($chosen))) . ' : ' . var_export($record->dbf_data, true); 
-            uwwtd_trace($sErrorMessage);
+            $sErrorMessage = t('Can\t find the rca code on the shape record from file "@filename"', array('@filename' => basename($chosen))); 
+            uwwtd_trace($sErrorMessage . ' : ' . var_export($record->dbf_data, true));
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'));
             continue;
         }        
@@ -4063,7 +4076,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 			$ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
 		}
 
-		dsm($ids);
+// 		dsm($ids);
 //         $ids[]['nid'] = 173356;
 
 		if(count($ids) > 0){
@@ -4433,7 +4446,7 @@ function uwwtd_delete_error($annee, $type, &$context)
                 ) ;
 //                 dsm($del->__toString()); 
                 $result = $del->execute();
-                dsm($result);           
+//                 dsm($result);           
             break;                                     
     }
     

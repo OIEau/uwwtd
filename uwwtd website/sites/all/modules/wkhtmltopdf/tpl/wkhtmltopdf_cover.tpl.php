@@ -27,8 +27,25 @@
         div.doc-info{
             width:100%;
             text-align:center;
-            color:#3d6098;
+            color:#000000;
+            font-weight:bold; 
+            font-size:25px;
+            line-height:100%;
+            
         }
+        div.wkhtmltopdf_creator{
+        }
+        
+        div.wkhtmltopdf_title{
+        }
+        
+        div.wkhtmltopdf_sitename{
+        }         
+        
+        div.wkhtmltopdf_date{
+            font-size:12px;
+        }
+        
         div.doc-info div{
             margin:50px 5px;
         }
@@ -41,18 +58,29 @@
         div.date{
             font-size:12px;
         }
+        
+        div.disclaimer{
+            color:#000000;    
+        }
+        div.disclaimer p {
+            text-decoration:underline;
+        }
     </style>
 </head>
 <body>
   <div id="main">  
+
     <div id="header">
         <table>
           <tr>
-            <td><img src="<?php print $base_url .'/'.drupal_get_path('module', 'wkhtmltopdf').'/images/eaufrance.png'; ?>" alt="logo eaufrance"/></td>
-            <td style="text-align:justify;">Ce document provient du site <?php print variable_get('site_name', $_SERVER['SERVER_NAME']); ?> , site de la toile Eaufrance rassemblant les informations sur l'eau et les milieux aquatiques.</td>
+            <td style="text-align:justify;">
+            <?php print $variables['nota']; ?>
+            </td>
           </tr>
         </table>
     </div>
+    <p</p>
+    <p</p>
     <div id="content">
         <div class="doc-info">
              <?php print $variables['doc-info'];?>
@@ -63,18 +91,14 @@
         <div class="comment">
              <?php print $variables['comment'];?>
         </div>
-    </div>
-    <div id="footer">
-        <table>
-          <tr>
-            <td><img src="<?php print $base_url .'/'.drupal_get_path('module', 'wkhtmltopdf').'/images/eaufrance.png'; ?>" alt="logo eaufrance"/></td>
-            <td style="text-align:justify;">
-                Le portail <?php print variable_get('site_name', $_SERVER['SERVER_NAME']); ?> est le site des outils de gestion intégrée de l'eau, regroupant
-                des informations sur les documents de planification qui s'inscrivent dans la Directive Cadre Européenne sur l'Eau (DCE) pour atteindre le bon état des eaux
-            </td>
-          </tr>
-        </table>
+        <div class="disclaimer">
+            <?php print $variables['disclaimer']; ?>
+        </div>        
+        
+
+        
     </div>
   </div>
+    
 </body>
 </html>
