@@ -6318,7 +6318,7 @@ function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
     $required_treatment->reason = '';
 	if($maxgen < 2000){
         $required_treatment->required = 'Appropriate';
-        $required_treatment->reason = $reason;
+//         $required_treatment->reason = $reason;
         return $required_treatment;
 	}    
 
