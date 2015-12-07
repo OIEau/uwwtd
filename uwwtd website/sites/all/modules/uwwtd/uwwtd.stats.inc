@@ -25,9 +25,99 @@ function uwwtd_page_stats_querys()
 	return $page;
 }
 
-function uwwtd_stat_national_ms_level($options)
-{
+function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
+    $chart_data =array();
+    if(isset($data[$year]['sludge']['destination'])){
+        foreach($data[$year]['sludge']['destination'] as $k=>$v){
+            if($v>0){
+                $chart_data[]=array(
+                    'label'=>$GLOBALS['ms_level']['sludge'][$k]['label'],
+                    'value'=>$v,
+                    'valueformat'=>$v.' T DS/year',
+                    'color'=>$GLOBALS['ms_level']['sludge'][$k]['color'], 
+                );
+            }
+        }
+        
+    }
+    return $chart_data;
+}
+function uwwtd_stat_national_ms_level_preprocess_ww_reuse_chart($data, $year){
+    $chart_data =array();
+    if(isset($data[$year]['waste_water']['repartition'])){
+        foreach($data[$year]['waste_water']['repartition'] as $k=>$v){
+            if($v>0){
+                $chart_data[]=array(
+                    'label'=>$GLOBALS['ms_level']['waste_water'][$k]['label'],
+                    'value'=>$v,
+                    'valueformat'=>$v.' T DS/year',
+                    'color'=>$GLOBALS['ms_level']['waste_water'][$k]['color'], 
+                );
+            }
+        }
+        
+    }
+    return $chart_data;
+}
+function uwwtd_stat_national_ms_level_data($options){
+    $data = array();
+    $query = new EntityFieldQuery();
 
+    $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'ms_level')
+    ->propertyCondition('status', 1);
+    if(isset($options['year'])){
+        $query->fieldCondition('field_anneedata', 'value', $options['year'], '=');
+    }
+
+    if($result = $query->execute()){
+        foreach($result['node'] as $id=>$obj){
+            if($node = node_load($obj->nid)){
+                $year = $node->field_anneedata['und'][0]['value'];
+                $data[$year] = array(
+                    "sludge"=>array(
+                        'production'=>(float)$node->field_mslsludgeproduction['und'][0]['value'],
+                        'destination'=>array(
+                            'dcp'=>(float)$node->field_msldischargepipelines['und'][0]['value'],
+                            'dcs'=>(float)$node->field_msldischargeships['und'][0]['value'],
+                            'dco'=>(float)$node->field_msldischargeothers['und'][0]['value'],
+                            'rua'=>(float)$node->field_mslreusesoilagriculture['und'][0]['value'],
+                            'ruo'=>(float)$node->field_mslreuseothers['und'][0]['value'],
+                            'dil'=>(float)$node->field_msldisposallandfill['und'][0]['value'],
+                            'dii'=>(float)$node->field_msldisposalincineration['und'][0]['value'],
+                            'dio'=>(float)$node->	field_msldisposalothers['und'][0]['value'],
+                        ),
+                        'remark'=>$node->field_mslremarks['und'][0]['value'],
+                        
+                    ),
+                    "waste_water"=>array(
+                        "Re-used"=>(float)$node->field_mslwwreuseexplain['und'][0]['value'],
+                        "rate of re-used"=>(float)$node->field_mslwwreuseperc['und'][0]['value'],
+                        "repartition"=>array(
+                            'agriculture'=>(float)$node->field_mslwwreuseagri['und'][0]['value'],
+                            'industry'=>(float)$node->field_mslwwreuseind['und'][0]['value'],
+                            'others'=>(float)$node->field_mslwwreuseother['und'][0]['value'],
+                        ),
+                        
+                    ),
+                );
+                if($data[$year]['sludge']['production'] > 0){
+                    $sum = array_sum($data[$year]['sludge']['destination']);
+                    $delta = $data[$year]['sludge']['production'] - $sum;
+                    if($delta !=0){
+                        if($delta>0){
+                            $data[$year]['sludge']['destination']['missing']=$delta;
+                        }
+                        drupal_set_message("There are probably an error in sludge destination (delta = $delta t DS/y)","error");
+                    }
+                }
+            }
+        }
+        return $data;
+    }
+    return false;
+
+    /*
 	$conditions = '';
 
 	switch($options['year']){
@@ -99,7 +189,7 @@ function uwwtd_stat_national_ms_level($options)
 	}
 
 	//     dsm($data);
-	return $data;
+    */
 }
 
 function uwwtd_stat_national_treatmentplant($options)

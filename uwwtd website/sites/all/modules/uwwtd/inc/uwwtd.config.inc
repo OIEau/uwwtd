@@ -331,3 +331,25 @@ $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
     'S' => 'Secondary treatment',
     'MS' => 'More stringent treatment',
 );
+
+
+$GLOBALS['ms_level'] = array(
+    'sludge'=>array(
+        'dcp'=>array('color'=>'#B5B5BF','label'=>'Discharged into surface waters : Pipelines'),
+        'dcs'=>array('color'=>'#686872','label'=>'Discharged into surface waters : Ships'),
+        'dco'=>array('color'=>'#2D2D37','label'=>'Discharged into surface waters : Others'),
+        'rua'=>array('color'=>'#459436','label'=>'Re-used: Soil and agriculture'),
+        'ruo'=>array('color'=>'#8EC547','label'=>'Re-used: Others'),
+        'dil'=>array('color'=>'#5B3349','label'=>'Disposed: Landfill'),
+        'dii'=>array('color'=>'#F28030','label'=>'Disposed: Incineration'),
+        'dio'=>array('color'=>'#F29F80','label'=> 'Disposed: Others'),
+        'missing'=>array('color'=>'#E74C3C','label'=> 'Missing'),
+        
+    ),
+    'waste_water'=>array(
+        'agriculture'=>array('color'=>'#459436','label'=>'Agriculture'),
+        'industry'=>array('color'=>'#334D5C','label'=>'Industry'),
+        'others'=>array('color'=>'#02658C','label'=>'Others')
+    ),
+);
+

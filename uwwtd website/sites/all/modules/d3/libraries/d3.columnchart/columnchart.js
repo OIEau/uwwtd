@@ -18,8 +18,8 @@
       max = d3.max(d3.merge(settings.rows).map(function(d) { return + d; })),
       // Padding is top, right, bottom, left as in css padding.
       p = [20, 50, 30, 50],
-      w = 800,
-      h = 400,
+      w = settings.width?settings.width:800,
+      h = settings.height?settings.height:400,
       // chart is 65% and 80% of overall height
       chart = {w: w * .65, h: h * .80},
       legend = {w: w * .35, h:h},
@@ -129,13 +129,12 @@
       var group = d3.select(obj.parentNode);
 
       var tooltip = graph.append('g')
-        .attr('class', 'tooltip')
+        .attr('class', 'd3-tooltip')
         // move to the x position of the parent group
         .attr('transform', function(data) { return group.attr('transform'); })
           .append('g')
         // now move to the actual x and y of the bar within that group
         .attr('transform', function(data) { return 'translate(' + (Number(bar.attr('x')) + barWidth) + ',' + y(d) + ')'; });
-
       d3.tooltip(tooltip, d);
     }
 
@@ -145,7 +144,7 @@
       bar.attr('stroke-width', '0')
         .attr('opacity', 1);
 
-      graph.select('g.tooltip').remove();
+      graph.select('g.d3-tooltip').remove();
     }
   }
 })(jQuery);
