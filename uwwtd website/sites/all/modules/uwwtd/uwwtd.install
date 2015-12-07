@@ -2583,6 +2583,15 @@ function uwwtd_update_7124(&$context = null)
     //Delete variable rptFormRA
     variable_del('rptFormRA');   
     
+    //////////////////////////////////////////////////         
+    ///admin/config/development/maintenance
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+        
+    //UWWTD SIIF Slovenia National Node is currently under maintenance. We should be back shortly. Thank you for your patience.        
+    variable_set('maintenance_mode_message', "UWWTD SIIF ". $country_config[$country_code]['name'] . " National Node is currently under maintenance. We should be back shortly. Thank you for your patience.");    
+    
     ////////////////////////////////////////////////////////////////
     //Create 4 new field for bundle uwwtps for rcaaN, rcaaP, rcab, rcac
     $list_field_to_install = array(        
@@ -2617,14 +2626,17 @@ function uwwtd_update_7124(&$context = null)
         }      
     } 
     
-    foreach ($list_contenttype[$content_type_name]['field_info_instance'] as $fieldinstance) {
-        //update field field_uwwtreatmentrequired to add some value 
-        if ($fieldinstance['field_name'] == 'field_uwwtreatmentrequired') {
-            field_update_instance($fieldinstance);
-            $t_args = array('%name' => $fieldinstance['field_name'], '%bundle' => $content_type_name);
-            watchdog('node', 'Update bundle field %name in bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                        
-        }     
-    }              
+    //update field_uwwtreatmentrequired with new values NPO, PO, NO 
+    try {
+        field_update_field($list_field['field_uwwtreatmentrequired']);
+        $t_args = array('%name' => 'field_uwwtreatmentrequired');
+        watchdog('node', 'Update field %name with new values.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));        
+    } catch (Exception $e) {
+        $msg = "Error update field : field_uwwtreatmentrequired\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        throw $e;           
+    }
     
     ////////////////////////////////////////////////////////////////
     //end update
@@ -3397,7 +3409,7 @@ function uwwtd_install_configure(&$context)
     //////////////////////////////////////////////////         
     ///admin/config/development/maintenance
     //UWWTD SIIF Slovenia National Node is currently under maintenance. We should be back shortly. Thank you for your patience.        
-    variable_set('maintenance_mode_message', "UWWTD SIIF '.$country_config[$country_code]['name'].' National Node is currently under maintenance. We should be back shortly. Thank you for your patience.");
+    variable_set('maintenance_mode_message', "UWWTD SIIF ".$country_config[$country_code]['name']." National Node is currently under maintenance. We should be back shortly. Thank you for your patience.");
     
     //////////////////////////////////////////////////    
     ///admin/config/development/jquery_update
