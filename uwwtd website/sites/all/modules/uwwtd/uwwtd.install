@@ -2594,6 +2594,7 @@ function uwwtd_update_7124(&$context = null)
     
     include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
     $content_type_name = 'uwwtp';
+    $t = get_t();
     foreach ($list_field_to_install as $fieldname) {
         $infofield = $list_field[$fieldname];
         if (! field_info_field($infofield['field_name']) ) {
