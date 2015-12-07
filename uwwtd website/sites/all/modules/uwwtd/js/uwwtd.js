@@ -244,7 +244,6 @@ var g = svg.selectAll(".arc")
 }
 //TEST AP GRAPHS
 function display_piechart_custom(data,divid,TAnchor) {
-    console.log(data);
 	var widthsvg = 500;
 	var width = 200;
 	var height = 200;
@@ -311,8 +310,8 @@ function display_piechart_custom(data,divid,TAnchor) {
 
 function stackedbar_nat_gen_load(data) {
 	var margin = {top: 10, right: 20, bottom: 30, left: 60},
-	width = 315 - margin.left - margin.right,
-	height = 250 - margin.top - margin.bottom;
+	width = 500 - margin.left - margin.right,
+	height = 220 - margin.top - margin.bottom;
 	widthsvg = width;
 
 	var x = d3.scale.ordinal()
@@ -375,7 +374,10 @@ function stackedbar_nat_gen_load(data) {
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.attr('style', ' color: #4f4f4f;font--weight: bold;font-size: 9px;font-family: "Open Sans",sans-serif;')
-	.call(xAxis);
+	.call(xAxis)
+    .selectAll("text") 
+      .style("text-anchor", "end")
+      .attr("transform", function(d) {return "rotate(-45)" ;});
 
 	svg.append("g")
 	.attr("class", "y axis")
@@ -433,8 +435,8 @@ function stackedbar_nat_gen_load(data) {
 function stackedbar_load_ent_and_dis(data,color,divid) {
 
 	var margin = {top: 10, right: 20, bottom: 30, left: 60},
-	width = 315 - margin.left - margin.right,
-	height = 250 - margin.top - margin.bottom;
+	width = 500 - margin.left - margin.right,
+	height = 200 - margin.top - margin.bottom;
 	widthsvg = width;
 
 	var x = d3.scale.ordinal()
@@ -485,7 +487,7 @@ function stackedbar_load_ent_and_dis(data,color,divid) {
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
-	.attr("transform", "rotate(-90)")
+	.attr("transform", "rotate(-45)")
 	.attr("y", -50)
 	.attr("dy", ".71em")
 	.style("text-anchor", "end");
