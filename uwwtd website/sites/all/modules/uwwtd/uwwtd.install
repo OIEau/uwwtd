@@ -2613,16 +2613,18 @@ function uwwtd_update_7124(&$context = null)
                     $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
                     watchdog('node', 'Added field %name to bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                
                 }
-            }
-            
-            //update field field_uwwtreatmentrequired to add some value 
-            if ($fieldinstance['field_name'] == 'field_uwwtreatmentrequired') {
-                field_update_instance($fieldinstance);
-                $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
-                watchdog('node', 'Update bundle field %name in bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                        
-            }            
+            }           
         }      
-    }               
+    } 
+    
+    foreach ($list_contenttype[$content_type_name]['field_info_instance'] as $fieldinstance) {
+        //update field field_uwwtreatmentrequired to add some value 
+        if ($fieldinstance['field_name'] == 'field_uwwtreatmentrequired') {
+            field_update_instance($fieldinstance);
+            $t_args = array('%name' => $fieldinstance['field_name'], '%bundle' => $content_type_name);
+            watchdog('node', 'Update bundle field %name in bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                        
+        }     
+    }              
     
     ////////////////////////////////////////////////////////////////
     //end update
