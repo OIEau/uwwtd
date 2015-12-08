@@ -4,7 +4,7 @@ if ( !defined('UWWTD_CACHE_ACTIVE')) {
     define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
-    define('DEBUG_ALGO', false);
+    define('DEBUG_ALGO', true);
 }
 
 // $GLOBALS['uwwtd']['message']['boolean_error']
@@ -23,7 +23,7 @@ $GLOBALS['uwwtd']['message'] = array(
      'percent_not_digit_error' => 'The input data is not in digital format.',     
 );
 
-$GLOBALS['uwwtd_errors']=array();
+$GLOBALS['uwwtd_errors'] = array();
 // 0|Input
 // 1|Linking
 // 2|Geometry
@@ -143,29 +143,8 @@ $GLOBALS['uwwtd_value']['inplace'] = array(
     'noinformation' => 'NI',    
 );
 
-$GLOBALS['uwwtd']['uwwtd_years'] = array(
-	'2000' => '2000',
-	'2001' => '2001',
-	'2002' => '2002',
-	'2003' => '2003',
-	'2004' => '2004',
-	'2005' => '2005',
-	'2006' => '2006',
-	'2007' => '2007',
-	'2008' => '2008',
-	'2009' => '2009',
-	'2010' => '2010',
-	'2011' => '2011',
-	'2012' => '2012',
-	'2013' => '2013',
-	'2014' => '2014',
-	'2015' => '2015',
-	'2016' => '2016',
-	'2017' => '2017',
-	'2018' => '2018',
-	'2019' => '2019',
-	'2020' => '2020'
-);
+$GLOBALS['uwwtd']['uwwtd_years'] = range(2000, date('Y') + 5);
+$GLOBALS['uwwtd']['uwwtd_years'] = array_combine($GLOBALS['uwwtd']['uwwtd_years'], $GLOBALS['uwwtd']['uwwtd_years']);
 
 $GLOBALS['uwwtd']['ui']['operator'] = array(
     '<' => 'Is less than',

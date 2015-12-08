@@ -4409,6 +4409,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 	$data = $context['sandbox']['ids'][$i];
 	$node = node_load($data['nid']);
 
+    uwwtd_trace('calculate compliance uwwtp ' . $node->field_inspireidlocalid['und'][0]['value']);
 	// Function that checks the required treatment, the compliance and the reason for the compliance in the following form array(requiredTreatment, compliance, reason)
 //     $compliance_info = new stdClass();
 //     $compliance_info->required = '';
@@ -4422,8 +4423,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 //     $compliance_info->performance_met = '';
     $compliance_info = uwwtd_station_compliance_algo($node, $timestamp); //ALGO2 (et ALGO1)
     
-    uwwtd_trace('after uwwtd_station_compliance_algo');
-    uwwtd_trace(var_export($compliance_info, true));
+    uwwtd_trace('calculate compliance uwwtp result : ' . var_export($compliance_info, true));
     
     $node->field_uwwtreatmentrequired['und'][0]['value'] = $compliance_info->required;
     $node->field_uwww_required_rcaan['und'][0]['value'] = $compliance_info->required_rcaan;
@@ -4450,7 +4450,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
             }        
     	}
     }
-
+    uwwtd_trace('$deadLineBeforeReference = ' . $deadLineBeforeReference);
     if (false === $deadLineBeforeReference) {
 		if($compliance_info->compliance != 'C'){
 			$compliance_info->compliance = 'PD';  
@@ -4475,6 +4475,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 // and fix infinite loop in uwwtd_article3_compliance()
 function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     
+    uwwtd_trace(__FUNCTION__);        
 	if (!isset($context['sandbox']['progress'])) {
 	
 		$ids = array();
@@ -4550,6 +4551,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     }
     
     node_object_prepare($node);
+    
+    uwwtd_trace('calculate compliance for agglo : ' . $node->field_inspireidlocalid['und'][0]['value']);        
     
 	$yearReporting = $node->field_anneedata['und'][0]['value'];
     //ALGO4
@@ -4672,6 +4675,11 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
     
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']) {
+        uwwtd_trace(__LINE__);      
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    } 
+        
     if ($node->field_aggart3compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliant']) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
@@ -4846,10 +4854,25 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     
     //art5(4) applies ?
     if (true === $rcainfo['art54applies']) {
-        $incoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
-        $discharged = $rcainfo['rca_n_discharged_measured'] + $rcainfo['rca_n_discharged_calculated'] + $rcainfo['rca_n_discharged_estimated'];
-                
-        if ($incoming > 0 && (1 - ($discharged / $incoming)) > 0.75) {
+        uwwtd_trace('art54applies applies to agglo');
+        uwwtd_trace(var_export($rcainfo, true));
+        $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
+        $ndischarged = $rcainfo['rca_n_discharged_measured'] + $rcainfo['rca_n_discharged_calculated'] + $rcainfo['rca_n_discharged_estimated'];
+
+        $pincoming   = $rcainfo['rca_p_incoming_measured']   + $rcainfo['rca_p_incoming_calculated']   + $rcainfo['rca_p_incoming_estimated'];
+        $pdischarged = $rcainfo['rca_p_discharged_measured'] + $rcainfo['rca_p_discharged_calculated'] + $rcainfo['rca_p_discharged_estimated'];
+        
+        uwwtd_trace("nincoming = $nincoming");
+        uwwtd_trace("ndischarged = $ndischarged");
+        uwwtd_trace("pincoming = $pincoming");
+        uwwtd_trace("pdischarged = $pdischarged");
+        uwwtd_trace("n0.75 = " . (1 - ($ndischarged / $nincoming)));
+        uwwtd_trace("p0.75 = " . (1 - ($pdischarged / $pincoming)));
+                        
+        if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) > 0.75)
+            &&
+            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) > 0.75)
+            ) {
             return $GLOBALS['uwwtd_value']['compliance']['compliant'];
         } else {
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -5645,7 +5668,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		$compliance_info->required = 'NI';
 		$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 		$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-        uwwtd_trace(var_export($compliance_info, true));
         return $compliance_info;
 	}
 
@@ -5696,6 +5718,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		}
 	}
 	
+    uwwtd_trace('dcp and rca info use : ' . var_export($dcps, true));
 	// If we cant find any discharge points attached to this station then we return no information to the user
 	if(count($dcps) == 0){
 		$compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
@@ -5704,7 +5727,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		$compliance_info->required = 'NI';
 		$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 		$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-        uwwtd_trace(var_export($compliance_info, true));
         return $compliance_info;
 	}
 
@@ -5719,6 +5741,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $required_treatment->required_rcac = 0;
                                    
     uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen);
+    
+    uwwtd_trace('result of uwwtd_get_required_treatment : ' . var_export($required_treatment, true));
     unset($dcps);
 
     $compliance_info->required       = $required_treatment->required;
@@ -5727,8 +5751,9 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $compliance_info->required_rcaap = $required_treatment->required_rcaap;
     $compliance_info->required_rcab  = $required_treatment->required_rcab;
     $compliance_info->required_rcac  = $required_treatment->required_rcac;
-    uwwtd_trace(var_export($compliance_info, true));
     unset($required_treatment);
+    
+    uwwtd_trace('$compliance_info become : ' . var_export($compliance_info, true));
     
     //same case as below for count($dcp), missing information on dcp    
     if($compliance_info->required == 'NI'){        
@@ -5756,7 +5781,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 				$compliance_info->reason = 'Station found to be compliant because primary treatment is in place and performance is met';
 				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
-			else{
+			else{   
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
 				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
@@ -5770,7 +5795,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 				$compliance_info->reason = 'Station found to be compliant because primary performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
-			else{
+			else{                                    
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
 				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
@@ -5788,7 +5813,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 				$compliance_info->reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
-			else{
+			else{                            
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
 				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
@@ -5802,7 +5827,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 				$compliance_info->reason = 'Station found to be compliant because secondary performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
 			}
-			else{
+			else{                                     
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
 				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
@@ -6517,6 +6542,13 @@ function uwwtd_get_all_info_agguwww($node)
         $aResult['rca']['rca_n_discharged_measured']   = 0;
         $aResult['rca']['rca_n_discharged_calculated'] = 0;
         $aResult['rca']['rca_n_discharged_estimated']  = 0;
+        
+        $aResult['rca']['rca_p_incoming_measured']     = 0;
+        $aResult['rca']['rca_p_incoming_calculated']   = 0;
+        $aResult['rca']['rca_p_incoming_estimated']    = 0;
+        $aResult['rca']['rca_p_discharged_measured']   = 0;
+        $aResult['rca']['rca_p_discharged_calculated'] = 0;
+        $aResult['rca']['rca_p_discharged_estimated']  = 0;        
 		foreach($uww->field_uwwdcpliste['und'] as $dcplist){
 			$dcp = node_load($dcplist['nid']);
 			/* Cas des pays avec l'ensemble du pays en zone sensible */
@@ -6529,12 +6561,19 @@ function uwwtd_get_all_info_agguwww($node)
                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
                 if (true === uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
                     $aResult['rca']['art54applies'] = true;
-                    $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rca54applied['und'][0]['value'];
-                    $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rca54applied['und'][0]['value'];
-                    $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rca54applied['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rca54applied['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rca54applied['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rca54applied['und'][0]['value'];                    
+                    $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
+                    $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
+                    $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
+                    $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
+                    $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
+                    $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
+                    
+                    $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
+                    $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
+                    $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
+                    $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
+                    $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
+                    $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];                                        
                     break 2;
                 }
                 unset($rca);
@@ -7033,7 +7072,11 @@ function uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($uwwtp, $listperf)
 function uwwtd_rca_art54_applies($dcp) 
 {
     uwwtd_trace(__FUNCTION__);
-    return (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true));    
+    uwwtd_trace('rcatype = ' . $dcp['rcatype']);
+    uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
+    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true));
+    uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
+    return $result;    
 }
 
 /**
