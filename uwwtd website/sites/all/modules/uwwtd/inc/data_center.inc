@@ -4675,12 +4675,8 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
     
-    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']) {
-        uwwtd_trace(__LINE__);      
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-    } 
-        
-    if ($node->field_aggart3compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliant']) {
+    if ($node->field_aggart3compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliant']
+        && $node->field_aggart3compliance['und'][0]['value'] != $GLOBALS['uwwtd_value']['compliance']['compliantQC']) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
     }   

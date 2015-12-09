@@ -4959,7 +4959,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             }  
             
             //for all uwwtp with more stringent treatment, check art5
-            if (false !== strpos($uwwtp[$induww['treatment type in place (4)']], '3')) {
+            if (false !== strpos($uwwtp[$induww['treatment required']], '3')) {
                 //5a
                 if ($uwwtp[$induww['art5_final']] == 'C' && 
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
