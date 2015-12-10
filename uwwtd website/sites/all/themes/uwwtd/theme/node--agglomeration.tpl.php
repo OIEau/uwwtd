@@ -130,7 +130,7 @@ echo uwwtd_insert_errors_tab($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer" style="overflow:hidden;">';
-      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:230px;">';
+      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:240px;">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
