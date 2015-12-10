@@ -3634,7 +3634,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_aggart4compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart4compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-				'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				//'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_article17_agglo_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_article17_agglo_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
 				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
@@ -3647,7 +3647,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_aggart4compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart4compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
-				'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				//'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
 				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
 				);
@@ -3704,6 +3704,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 	  if($art17 == "No"){
 		  unset($header[9]);
 	  }
+	  unset($header[8]);
 //     $header[] = $header[0]; //todo delete
 //     $header[] = $header[0]; //todo delete
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration'], $data);
@@ -3787,7 +3788,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				$row['field_aggart3compliance_value_format'],
 				$row['field_aggart4compliance_value_format'],
 				$row['field_aggart5compliance_value_format'],
-				$row['field_aggart6compliance_value_format'],
+				// $row['field_aggart6compliance_value_format'],
 				// $row['field_aggart6compliance_value_format'],//todo delete
 				// $row['field_aggart6compliance_value_format'],//todo delete
 				$row['field_article17_agglo_value_format'],
@@ -3803,7 +3804,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				$row['field_aggart3compliance_value_format'],
 				$row['field_aggart4compliance_value_format'],
 				$row['field_aggart5compliance_value_format'],
-				$row['field_aggart6compliance_value_format'],
+				// $row['field_aggart6compliance_value_format'],
 				// $row['field_aggart6compliance_value_format'],//todo delete
 				// $row['field_aggart6compliance_value_format'],//todo delete
 
