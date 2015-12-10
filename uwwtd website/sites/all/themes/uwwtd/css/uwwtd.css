@@ -26,7 +26,8 @@ body{
 }
 
 div.olPopup .openlayers-tooltip-name a{
-    color:#2a6496;
+    /*color:#2a6496;*/
+	color:#71abdd;
     font-size:1.5em;
     font-weight:bold;
 }
@@ -338,7 +339,8 @@ article.node h1 small{
 
 .uwwrealthird{
 	width: 33%;
-	float: left;
+	display:table-cell;
+	vertical-align: top;
 }
 
 .uwwrealquart{
@@ -678,7 +680,8 @@ table.dispo-annee tr td.dispo-annee{
 	background-color: #6b6b6b;
 }
 .dispo-5, .dispo-0{
-	background-color: #ea8b2e;
+	/*background-color: #ea8b2e;*/
+	background-color: #6b6b6b;
 }
 .uwwtd-history-element h4 a{color: #fff!important;}
 
@@ -899,3 +902,15 @@ figure:focus{
 	z-index: 9999;
 }
 
+.gmnoprint .gmnoprint{top:-31px!important;}
+.node-uwwtp .uwwcontainer .flip .front{width:325px!important;}
+.node-uwwtp .uwwcontainer .flip .back{width:325px!important;}
+
+.node-agglomeration .flip .front .field-name-field-aggc1{margin-left: 21px;}
+.node-agglomeration .flip .front .field-name-field-agggenerated .custom_tooltip{width: 220px;max-width:230px;}
+.node-uwwtp .field-name-field-uwwwastewatertreated{margin-bottom: 10px;}
+.node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:400px!important;}
+
+#OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
+
+#block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
