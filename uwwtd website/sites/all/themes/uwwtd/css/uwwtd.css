@@ -906,11 +906,30 @@ figure:focus{
 .node-uwwtp .uwwcontainer .flip .front{width:325px!important;}
 .node-uwwtp .uwwcontainer .flip .back{width:325px!important;}
 
-.node-agglomeration .flip .front .field-name-field-aggc1{margin-left: 21px;}
-.node-agglomeration .flip .front .field-name-field-agggenerated .custom_tooltip{width: 220px;max-width:230px;}
-.node-uwwtp .field-name-field-uwwwastewatertreated{margin-bottom: 10px;}
+.node-agglomeration .flip .front .field-name-field-aggc1{margin-left: 21px;line-height:2;}
+.node-agglomeration .flip .front .field-name-field-agggenerated .custom_tooltip{width: 250px;max-width:250px;}
+.node-uwwtp .field-name-field-uwwwastewatertreated{margin-bottom: 10px;line-height:2;}
+
+.node-uwwtp .field-name-field-uwwloadenteringuwwtp,
+.node-uwwtp .field-name-field-physicalcapacityactivity,
+.node-uwwtp .field-name-field-uwwcompliance,
+.node-uwwtp .field-name-field-uwwtreatmenttype , 
+.node-uwwtp .field-name-field-uwwtreatmentrequired,
+.node-uwwtp .field-name-field-uwwtreatment-met,
+.node-uwwtp .field-name-field-uwwperformance-met,
+.node-agglomeration .field-name-field-agggenerated,
+.node-agglomeration .field-name-field-aggcompliance ,
+.node-agglomeration .field-name-field-aggart3compliance  ,
+.node-agglomeration .field-name-field-aggart4compliance  ,
+.node-agglomeration .field-name-field-aggart5compliance {line-height: 2;}
+
+.node-agglomeration .field-name-field-aggart4compliance .custom_tooltip{width: 235px;max-width:235px;}
+.node-agglomeration .field-name-field-aggart5compliance .custom_tooltip{width: 285px;max-width:285px;}
+
+
 .node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:400px!important;}
 
 #OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
 
 #block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
+
