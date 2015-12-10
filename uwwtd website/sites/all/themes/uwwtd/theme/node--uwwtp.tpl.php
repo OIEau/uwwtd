@@ -188,7 +188,13 @@ echo uwwtd_insert_errors_tab($node);
 			  );
 			  print theme('item_list', array('items'=>$list));
 			  print '</div>';
+			  print '<div class="dataOfClosing" style="clear:both;">';
+			  if(isset($content['field_validto']) && $content['field_validto']['#items'][0]['value'] != ""){
+				   print render($content['field_validto']);
+			  }
+			print '</div>';
             print '</div>';
+			
             print '<div class="uwwrealthird">';
               print '<div class="flip" id="uwwtp_stackedbar" style="position:relative;">
                        <div class="front">';
