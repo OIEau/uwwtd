@@ -156,6 +156,20 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['agglomerations/connection/csv'] = array(
+    'page callback' => 'uwwtd_page_agglomeration_connection',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  $items['agglomerations/connection/xls'] = array(
+    'page callback' => 'uwwtd_page_agglomeration_connection',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );    
   $items['uwwtps/compliance'] = array(
     'page callback' => 'uwwtd_page_uwwtps_compliance',
     'page arguments' => array(),
@@ -184,6 +198,20 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['uwwtps/treatment/csv'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_treatment',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  $items['uwwtps/treatment/xls'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_treatment',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );    
   $items['uwwtps/pressure'] = array(
     'page callback' => 'uwwtd_page_uwwtps_pressure',
     'page arguments' => array(),
@@ -191,6 +219,20 @@ function uwwtd_menu(){
     'access arguments' => true,
     'type' => MENU_CALLBACK,
   );
+  $items['uwwtps/pressure/csv'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_pressure',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );
+  $items['uwwtps/pressure/xls'] = array(
+    'page callback' => 'uwwtd_page_uwwtps_pressure',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+  );    
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
     'page arguments' => array(),
@@ -1819,7 +1861,7 @@ function uwwtd_sort_data($filter, $order, &$data)
 }
 
 
-function uwwtd_page_agglomeration_connection()
+function uwwtd_page_agglomeration_connection($type_export = '')
 {
     $title = 'Agglomeration connection map and list';
     drupal_set_title($title);
@@ -1842,7 +1884,7 @@ function uwwtd_page_agglomeration_connection()
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_agglo_treatment($filter['filter']);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -1893,7 +1935,8 @@ function uwwtd_page_agglomeration_connection()
     uwwtd_filter_data($filter, $data, $filter_force);
 //     uwwtd_filter_data($filter, $data);
 
-    $header  =array();
+    $header  = array();
+    $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] as $field => $name) {
         $header[] = array(
             'data' => $name,
@@ -1904,6 +1947,8 @@ function uwwtd_page_agglomeration_connection()
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
+        
+        $header_export[] = $name;
     }
 	foreach($data as $art17){
 		if(isset($art17['field_article17_agglo_value_format']) && ($art17['field_article17_agglo_value_format']== 'Yes')){
@@ -1961,7 +2006,7 @@ function uwwtd_page_agglomeration_connection()
 		if(isset($header[7]) && ($header[7]['field'] == 'field_article17_agglo_value')){
 			$rows[] = array('data' => array(
 				//$row['title'],
-				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				$row['field_regionnuts_value'],
@@ -1973,7 +2018,7 @@ function uwwtd_page_agglomeration_connection()
 		}else{
 			$rows[] = array('data' => array(
 				//$row['title'],
-				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				$row['field_regionnuts_value'],
@@ -1987,6 +2032,11 @@ function uwwtd_page_agglomeration_connection()
     // $graph['field_aggc1_value']['percent'] = $graph['field_aggc1_value']['value'] * 100 / $field_agggenerated_value;
     // $graph['field_aggpercwithouttreatment_value']['percent'] = $graph['field_aggpercwithouttreatment_value']['value'] * 100 / $field_agggenerated_value;
 
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'agglomeration_connection_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+    
     $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle, $piechart);
 
     $rendermap = uwwtd_build_map($map, $features);
@@ -2087,6 +2137,9 @@ function uwwtd_page_agglomeration_connection()
 //             . '<div class="view-content">'.$render_graph.'</div>'
 //             . '<div class="view-content">'.$render_table_graph.'</div>'
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
+
+    $link_export_csv = '<a href="'.url('agglomerations/connection/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
+    $link_export_xls = '<a href="'.url('agglomerations/connection/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
 //      ;
     $page =  '<h1>'.$title.'</h1>'
             . $form
@@ -2144,8 +2197,8 @@ function uwwtd_page_agglomeration_connection()
                 . '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->' //use for print wjhtmltopdf
-//                 . '<div class="view-content">'. $link_export_csv . '</div>'
-//                 . '<div class="view-content">'. $link_export_xls . '</div>'
+                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
+                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>'
      ;
 
@@ -2322,7 +2375,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 			$titleV = truncate_utf8($row['title'], 17, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 7);
 			$rows[] = array('data' => array(
 				//$row['title'],
-				($type_export != '' ? $titleV : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
@@ -2652,7 +2705,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
      return $page;
 }
 
-function uwwtd_page_uwwtps_treatment()
+function uwwtd_page_uwwtps_treatment($type_export = '')
 {
     $title = 'UWWTD Treatment Plants- Treatment map';
     drupal_set_title($title);  //todo
@@ -2676,7 +2729,7 @@ function uwwtd_page_uwwtps_treatment()
     $cache_name = uwwtd_get_cache_key_page_uwwtp_treatment($filter['filter']);
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -2729,6 +2782,7 @@ function uwwtd_page_uwwtps_treatment()
     uwwtd_filter_data($filter, $data, $filter_force); 
 //     dsm($data);
     $header  = array();
+    $header_export  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] as $field => $name) {
         if ($field == 'field_uwwspecification_value') {
             $header[] = array(
@@ -2746,6 +2800,8 @@ function uwwtd_page_uwwtps_treatment()
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
+        
+        $header_export[] = $name;
     }
 	foreach($data as $art17){
 		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
@@ -2844,7 +2900,7 @@ function uwwtd_page_uwwtps_treatment()
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				//$row['title'],
-				l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
@@ -2859,7 +2915,7 @@ function uwwtd_page_uwwtps_treatment()
 		}else{
 			$rows[] = array('data' => array(
 				//$row['title'],
-				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
@@ -2873,6 +2929,12 @@ function uwwtd_page_uwwtps_treatment()
 		}
 	}
 
+
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'uwwtp_treatment_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+    
     $features['uwwtp_treatment'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
 //     dsm($features);
 //     unset($data);
@@ -3087,6 +3149,10 @@ function uwwtd_page_uwwtps_treatment()
 //
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 //      ;
+
+    $link_export_csv = '<a href="'.url('uwwtps/treatment/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
+    $link_export_xls = '<a href="'.url('uwwtps/treatment/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
+    
     $page =  '<h1>'.$title.'</h1>'
 
             . $form
@@ -3144,8 +3210,8 @@ function uwwtd_page_uwwtps_treatment()
 			. '<b>'.count($rows) ." results</b>"
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'   //use for print wjhtmltopdf
-//                 . '<div class="view-content">'. $link_export_csv . '</div>'
-//                 . '<div class="view-content">'. $link_export_xls . '</div>'
+                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
+                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>';
 
      if (true === $put_in_cache) {
@@ -3158,7 +3224,7 @@ function uwwtd_page_uwwtps_treatment()
 }
 
 
-function uwwtd_page_uwwtps_pressure()
+function uwwtd_page_uwwtps_pressure($type_export = '')
 {
     $title = 'UWWTD Treatment Plants- Pressure map';
     drupal_set_title($title);  //todo
@@ -3184,7 +3250,7 @@ function uwwtd_page_uwwtps_pressure()
     $cache_name = uwwtd_get_cache_key_page_uwwtp_pressure($filter['filter']);
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
-    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous();
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
@@ -3237,6 +3303,7 @@ function uwwtd_page_uwwtps_pressure()
 //     dsm($data);
 //     dsm($data);
     $header  = array();
+    $header_export  = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] as $field => $name) {
 		$header[] = array(
 			'data' => $name,
@@ -3248,6 +3315,8 @@ function uwwtd_page_uwwtps_pressure()
         if ($filter['order'] == $name) {
             $header[count($header)-1]['sort'] = $filter['sort'];
         }
+        
+        $header_export[] = $name;
     }
     // dsm($header);
 	foreach($data as $art17){
@@ -3301,7 +3370,7 @@ function uwwtd_page_uwwtps_pressure()
 		if(isset($header[8]) && ($header[8]['field'] == 'field_article17_uwwtp_value')){
 		   $rows[] = array('data' => array(
 				//$row['title'],
-				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
@@ -3313,7 +3382,7 @@ function uwwtd_page_uwwtps_pressure()
 			));
 		}else{
 			$rows[] = array('data' => array(
-				l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value']))),
+				($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
@@ -3324,6 +3393,12 @@ function uwwtd_page_uwwtps_pressure()
 			));
 		}
     }
+    
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'uwwtp_pressure_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+        
 //     dsm($data);
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
     $optionstyle['weight']['field'] = 'field_uwwboddischarge_value';
@@ -3556,6 +3631,9 @@ function uwwtd_page_uwwtps_pressure()
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 //      ;
 
+    $link_export_csv = '<a href="'.url('uwwtps/pressure/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
+    $link_export_xls = '<a href="'.url('uwwtps/pressure/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
+    
     $page =  '<h1>'.$title.'</h1>'
             . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
@@ -3563,6 +3641,8 @@ function uwwtd_page_uwwtps_pressure()
             . '<div class="rows data-table-row">'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
+                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
+                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'                
             .'</div>'
      ;
 
@@ -3780,7 +3860,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				//$row['title'],
-				($type_export != '' ? $titleV : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				$row['field_regionnuts_value'],

@@ -15,7 +15,9 @@ function uwwtd_correction_slovenia_date() {
     while ($line = fgetcsv($r, 1000, ';')) {
         dsm($line);
         $siteId = uwwtd_get_siteid('agglomeration', array('year' => '2012', 'aggCode' => $line[0]));
+        dsm($siteId);
         $nidagglo = uwwtd_check_exist($siteId);
+        dsm($nidagglo);
         if ($nidagglo == '') {
             dsm('Error agglo ' . $line[0] . ' don\'t exists in database');
             continue;
@@ -23,15 +25,27 @@ function uwwtd_correction_slovenia_date() {
         $line[3] = uwwtd_check_date($line[3]);
         $line[4] = uwwtd_check_date($line[4]);
         $line[5] = uwwtd_check_date($line[5]);
+        
         dsm($line);
         
-//         $agg = node_load($nidagglo);
-//         
-//         $agg->field_aggperiodover3['und'][0]['value'] = $line[3];
-//         $agg->field_aggperiodover4['und'][0]['value'] = $line[4]; 
-//         $agg->field_aggperiodover5['und'][0]['value'] = $line[5];
+        $agg = node_load($nidagglo);
+        
+        dsm('before correction');
+        dsm('field_aggperiodover3 : ' . $agg->field_aggperiodover3['und'][0]['value']);
+        dsm('field_aggperiodover4 : ' . $agg->field_aggperiodover4['und'][0]['value']);
+        dsm('field_aggperiodover5 : ' . $agg->field_aggperiodover5['und'][0]['value']);
+        
+        $agg->field_aggperiodover3['und'][0]['value'] = $line[3];
+        $agg->field_aggperiodover4['und'][0]['value'] = $line[4]; 
+        $agg->field_aggperiodover5['und'][0]['value'] = $line[5];
+        
+        dsm('after correction');
+        dsm('field_aggperiodover3 : ' . $agg->field_aggperiodover3['und'][0]['value']);
+        dsm('field_aggperiodover4 : ' . $agg->field_aggperiodover4['und'][0]['value']);
+        dsm('field_aggperiodover5 : ' . $agg->field_aggperiodover5['und'][0]['value']);
+                
           
-        //node_save($agg);
+//         node_save($agg);
     }
     fclose($r);
     return 'END'; 
