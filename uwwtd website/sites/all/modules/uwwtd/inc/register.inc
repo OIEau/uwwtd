@@ -8116,7 +8116,7 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
 }
 
 function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod5monitoring, $codmonitoring) 
-{   
+{  
             //if treatment required is 2 or 3 (if not NR) then if 'uwwBOD5Perf=pass+uwwCODPerf=pass = C if not = NC
     $art4_monitoring = '';
 //             if ($line[$ind['generated load  p. e.']] < 2000

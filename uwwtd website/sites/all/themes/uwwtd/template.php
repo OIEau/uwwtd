@@ -230,8 +230,8 @@ function uwwtd_timeline_output($node){
 				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
 				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
 				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-       			if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
-                if($val == '?') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
+       			// if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+                if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
 			}
 			// $color = uwwtd_adjustBrightness($color, 50);
 			$nbAnnee = count($otherY); 
@@ -281,7 +281,7 @@ function uwwtd_timeline_output($node){
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-2">&nbsp;</div><div class="dispo-legend-label"> '.t('Not compliant').'</div></div>';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-3">&nbsp;</div><div class="dispo-legend-label"> '.t('Not relevant').'</div></div>';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-4">&nbsp;</div><div class="dispo-legend-label"> '.t('No information').'</div></div>';
-          $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-5">&nbsp;</div><div class="dispo-legend-label"> '.t('Compliant on equipment').'</div></div>';
+          // $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-5">&nbsp;</div><div class="dispo-legend-label"> '.t('Compliant on equipment').'</div></div>';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-0">&nbsp;</div><div class="dispo-legend-label"> '.t('?').'</div></div>';
           $output.='<br class="spacer"/>';
         $output.='</div>';
@@ -1640,7 +1640,21 @@ function uwwtd_render_field_with_pe($field)
         </div>
     </div>';
 }
+function uwwtd_field($field)
+{
+//     $field[0]['#markup'] = 'Not provided';
+    return uwwtd_format_number($field[0]['#markup'], 1);
+}
 
+function uwwtd_field_pe($field)
+{
+//     $field[0]['#markup'] = 'Not provided';
+    $pe = '';
+    if (true === is_numeric($field[0]['#markup'])) {
+        $pe = uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']);
+    }
+    return $pe;
+}
 // function uwwtd_preprocess_field(&$vars) {
 //     dpl($vars);
 //   if ($vars['element']['#field_name'] == 'field_my_custom_field') {

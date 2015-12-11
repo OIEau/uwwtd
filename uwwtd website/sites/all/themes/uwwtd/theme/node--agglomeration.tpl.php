@@ -130,7 +130,7 @@ echo uwwtd_insert_errors_tab($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer" style="overflow:hidden;">';
-      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
+      print '<fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:240px;">';
         print '<legend class="panel-heading">';
           print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
             print '</legend>';
@@ -152,11 +152,9 @@ echo uwwtd_insert_errors_tab($node);
               print'   </div>       
                     </div>';
             print '</div>';
+			
             print '<div class="uwwrealthird">';
-            print '&nbsp;';
-            print '</div>';
-            print '<div class="uwwrealthird" style="float:right;">';
-              print render($content['field_aggcompliance']);
+			print render($content['field_aggcompliance']);
               //print render($content['field_compliance_explication']);
               print render($content['field_aggart3compliance']);
               //print render($content['field_article_3_compliance_expli']);
@@ -164,8 +162,73 @@ echo uwwtd_insert_errors_tab($node);
               //print render($content['field_article_4_compliance_expli']);
               print render($content['field_aggart5compliance']);
               //print render($content['field_article_5_compliance_expli']);
-			   print render($content['field_aggart6compliance']);
-            print '<br><br><br></div>';
+			   // print render($content['field_aggart6compliance']);
+           $distanceToCompliance = uuwtd_get_distance_compliance($node);
+			if(uwwtd_field($content['field_aggpercwithouttreatment']) == 0 && uwwtd_field_pe($content['field_aggpercwithouttreatment']) ==0){
+			   $colorart3 = '#4f91e1';
+			 }elseif((uwwtd_field_pe($content['field_aggpercwithouttreatment']) >= 2 && uwwtd_field_pe($content['field_aggpercwithouttreatment'] <=2)) &&($distanceToCompliance['field_aggpercwithouttreatment'] >= 0 && $distanceToCompliance['field_aggpercwithouttreatment'] <= 2000)){
+				$colorart3 = '#ea8b2e';
+			}else{
+				$colorart3 = '#d93c3c';
+			}
+			
+			if($distanceToCompliance['distart4_treatment'] == 0 && $distanceToCompliance['distart4_treatment_%'] == 0){
+				$colorart4T = '#4f91e1';
+			}elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+				$colorart4T = '#ea8b2e';
+			}else{
+				$colorart4T = '#d93c3c';
+			}
+			if($distanceToCompliance['distart4_monitoring'] == 0  && $distanceToCompliance['distart4_monitoring_%'] == 0){
+				$colorart4P = '#4f91e1';
+			}elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+				$colorart4P = '#ea8b2e';
+			}else{
+				$colorart4P = '#d93c3c';
+			}
+			
+
+			if($distanceToCompliance['distart5_treatment'] == 0  && $distanceToCompliance['distart5_treatment_%'] == 0){
+				$colorart5T = '#4f91e1';
+			}elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+				$colorart5T = '#ea8b2e';
+			}elseif($distanceToCompliance['distart5_treatment_%'] > 1 && $distanceToCompliance['distart5_treatment'] > 2000){
+				$colorart5T = '#d93c3c';
+			}
+
+			if($distanceToCompliance['distart5_monitoring'] == 0  && $distanceToCompliance['distart5_monitoring_%'] == 0){
+				$colorart5P = '#4f91e1';
+			}elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+				$colorart5P = '#ea8b2e';
+			}elseif($distanceToCompliance['distart5_monitoring_%'] > 1 && $distanceToCompliance['distart5_monitoring'] > 2000){
+				$colorart5P = '#d93c3c';
+			}
+			
+            print '</div>';
+            print '<div class="uwwrealthird">';
+				print '<div class="distance">';
+				print '<p><b>Distance to compliance:</b><p>';
+					print '<table id="UwwtpDescription">';
+					print '<tr><td style="font-weight:bold;border: 1px solid #000;"></td>';
+					print '<td style="font-weight:bold;border: 1px solid #000;">Equipment</td>';
+					print '<td style="font-weight:bold;border: 1px solid #000;">Performance</td></tr>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>Connection</td>';
+					print '<td class="light" style="background-color:'.$colorart3.';color:white;">'.uwwtd_field($content['field_aggpercwithouttreatment']).'%</td>';
+					print '<td class="black"></td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart3.';color:white;">'. uwwtd_field_pe($content['field_aggpercwithouttreatment']).' p.e</td>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>2nd treatment</td>';
+					print '<td class="light" style="background-color:'.$colorart4T.';color:white;">'.number_format($distanceToCompliance['distart4_treatment_%'],1, ',', ' ').'%</td>';
+					print '<td class="black"  style="background-color:'.$colorart4P.';color:white;">'.number_format($distanceToCompliance['distart4_monitoring_%'],1, ',', ' ').'%</td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart4T.';color:white;">'.number_format($distanceToCompliance['distart4_treatment'],0, ',', ' ').' p.e </td>';
+					print '<td class="black" style="background-color:'.$colorart4P.';color:white;">'.number_format($distanceToCompliance['distart4_monitoring'],0, ',', ' ').' p.e </td></tr>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>2nd treatment</td>';
+					print '<td class="light" style="background-color:'.$colorart5T.';color:white;">'.number_format($distanceToCompliance['distart5_treatment_%'],1, ',', ' ').'%</td>';
+					print '<td class="black"  style="background-color:'.$colorart5P.';color:white;">'.number_format($distanceToCompliance['distart5_monitoring_%'],1, ',', ' ').'%</td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart5T.';color:white;">'.number_format($distanceToCompliance['distart5_treatment'],0, ',', ' ').' p.e</td>';
+					print '<td class="black" style="background-color:'.$colorart5P.';color:white;"> '.number_format($distanceToCompliance['distart5_monitoring'],0, ',', ' ').' p.e</td></tr>';
+				print '</table>';
+				print '</div;>';
+            print '</div>';
         print '</div>';
       print '</fieldset>';
     print '</div>';
@@ -190,15 +253,17 @@ echo uwwtd_insert_errors_tab($node);
           print '<legend class="panel-heading">';
             print '<div class="panel-title fieldset-legend">'.t('Characteristics').'</div>';
           print '</legend>';
+		  $nameurls=explode('/',$_SERVER['REQUEST_URI']);
+		  $nameurl= $nameurls[1];
           print '<div class="panel-body">';
 		  print '<div class ="field field-name-field-agglatitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"> Latitude : </div>';
+				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_agglatitude']['#items'][0]['value'].'&lon='.$content['field_agglongitude']['#items'][0]['value'].'&layers=Agglomerations&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a></div>';
 					print '<div class="field-items">';
 						print '<div class="field-item even"> &nbsp;'.$content['field_agglatitude']['#items'][0]['value'].'</div>';
 					print '</div>';
 			print '</div>';
 			print '<div class ="field field-name-field-agglongitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"> Longitude : </div>';
+				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_agglatitude']['#items'][0]['value'].'&lon='.$content['field_agglongitude']['#items'][0]['value'].'&layers=Agglomerations&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a></div>';
 					print '<div class="field-items">';
 						print '<div class="field-item even"> &nbsp;'.$content['field_agglongitude']['#items'][0]['value'].'</div>';
 					print '</div>';
@@ -212,6 +277,7 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_agghaveregistrationsystem']);
             print render($content['field_aggexistmaintenanceplan']);
 			print render($content['field_aggbesttechnicalknowledge']);
+			 print render($content['field_aggsewagenetwork']);
           print '</div>';
         print '</fieldset>';
       print '</div>';

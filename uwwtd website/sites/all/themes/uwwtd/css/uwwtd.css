@@ -26,7 +26,8 @@ body{
 }
 
 div.olPopup .openlayers-tooltip-name a{
-    color:#2a6496;
+    /*color:#2a6496;*/
+	color:#71abdd;
     font-size:1.5em;
     font-weight:bold;
 }
@@ -338,7 +339,8 @@ article.node h1 small{
 
 .uwwrealthird{
 	width: 33%;
-	float: left;
+	display:table-cell;
+	vertical-align: top;
 }
 
 .uwwrealquart{
@@ -678,7 +680,8 @@ table.dispo-annee tr td.dispo-annee{
 	background-color: #6b6b6b;
 }
 .dispo-5, .dispo-0{
-	background-color: #ea8b2e;
+	/*background-color: #ea8b2e;*/
+	background-color: #6b6b6b;
 }
 .uwwtd-history-element h4 a{color: #fff!important;}
 
@@ -898,4 +901,37 @@ figure:focus{
 	-moz-box-shadow: 0 3px 10px #666;
 	z-index: 9999;
 }
+
+.gmnoprint .gmnoprint{top:-31px!important;}
+.node-uwwtp .uwwcontainer .flip .front{width:325px!important;}
+.node-uwwtp .uwwcontainer .flip .back{width:325px!important;}
+
+.node-agglomeration .flip .front .field-name-field-aggc1{margin-left: 21px;line-height:2;}
+.node-agglomeration .flip .front .field-name-field-agggenerated .custom_tooltip{width: 250px;max-width:250px;}
+.node-uwwtp .field-name-field-uwwwastewatertreated{margin-bottom: 10px;line-height:2;}
+
+.node-uwwtp .field-name-field-uwwloadenteringuwwtp,
+.node-uwwtp .field-name-field-physicalcapacityactivity,
+.node-uwwtp .field-name-field-uwwcompliance,
+.node-uwwtp .field-name-field-uwwtreatmenttype , 
+.node-uwwtp .field-name-field-uwwtreatmentrequired,
+.node-uwwtp .field-name-field-uwwtreatment-met,
+.node-uwwtp .field-name-field-uwwperformance-met,
+.node-agglomeration .field-name-field-agggenerated,
+.node-agglomeration .field-name-field-aggcompliance ,
+.node-agglomeration .field-name-field-aggart3compliance  ,
+.node-agglomeration .field-name-field-aggart4compliance  ,
+.node-agglomeration .field-name-field-aggart5compliance {line-height: 2;}
+
+.node-agglomeration .field-name-field-aggart4compliance .custom_tooltip{width: 235px;max-width:235px;}
+.node-agglomeration .field-name-field-aggart5compliance .custom_tooltip{width: 285px;max-width:285px;}
+
+
+.node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:345px!important;}
+.uwwrealthird .distance p{margin:0;line-height:2;}
+
+.node-agglomeration .uwwrealthird{width:36%;}
+#OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
+
+#block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
 
