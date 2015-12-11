@@ -5,6 +5,7 @@ function uwwtd_page_stats_querys()
 {
 	$title = 'Querys for national stats';
 	drupal_set_title($title);  //todo
+	/*
 	$page =  '<h1 align="center">'.$title.'</h1><br/>';
 	dsm('function uwwtd_stat_national_compliance');
 	dsm(uwwtd_stat_national_compliance());
@@ -20,10 +21,128 @@ function uwwtd_page_stats_querys()
 	dsm(uwwtd_stat_national_uwwtp_agglo());
 	dsm('function uwwtd_stat_national_generated_by_agglomeration');
 	dsm(uwwtd_stat_national_generated_by_agglomeration());
-
-
-	return $page;
+*/
+$options = array('year'=> 2012);
+//uwwtd_stat_collect_data($options);
+$data = uwwtd_stat_sewage_network_data($options);
+dsm($data);
+	return 'fin';
 }
+
+function uwwtd_stat_sewage_network_data($options){
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
+	if (variable_get('display_only_active', '1') == 1) {
+        $conditions .= "  AND f_status.field_status_value = '1' ";
+    }   
+	$params = array(
+		':typenode' => 'agglomeration',
+		':agggenerated' => variable_get('min_aggenerated_display', '2000'), 
+	);  
+	try{  
+		$result = db_query("
+			SELECT s.field_aggsewagenetwork_value AS type, SUM(g.field_agggenerated_value) AS sn_sum,  COUNT (*) AS sn_count
+			FROM {node n
+				LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+				LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
+				LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id 
+				LEFT JOIN {field_data_field_aggsewagenetwork} s ON n.nid = s.entity_id
+			WHERE n.type = :typenode
+				AND n.status = 1
+				AND g.field_agggenerated_value > :agggenerated
+			
+		".$conditions."
+		GROUP BY s.field_aggsewagenetwork_value
+		ORDER BY s.field_aggsewagenetwork_value ASC"
+		, $params);
+		
+		$out = array();
+		while($row = $result->fetchAssoc()) {
+			if($row['type']=='') $row['type']='NI';
+			$out['count'][]=array(
+				"value" => (integer)$row['sn_count'],
+				"label" => $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'],
+				"valueformat" => uwwtd_format_number((integer)$row['sn_count']),
+				"color"=>$GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
+			);
+			$out['sum'][]=array(
+				"value" => (integer)$row['sn_sum'],
+				"label" => $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'],
+				"valueformat" => uwwtd_format_number((integer)$row['sn_sum']) .' pe',
+				"color"=>$GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
+			);
+		}
+	}catch(Exception $e) {
+		dsm($e->getMessage());
+	}
+	return $out;
+	
+}
+
+function uwwtd_stat_collect_data($options){
+	
+	switch($options['year']){
+		case 'all' :
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			break;
+	}
+	if (variable_get('display_only_active', '1') == 1) {
+        $conditions .= "  AND f_status.field_status_value = '1' ";
+    }   
+	$params = array(
+		':typenode' => 'agglomeration',
+		':agggenerated' => variable_get('min_aggenerated_display', '2000'), 
+	);  
+	  
+	$result = db_query("
+		SELECT
+			SUM (g.field_agggenerated_value) AS \"Generated load\",
+			SUM ((g.field_agggenerated_value*c1.field_aggc1_value)/100) AS cs,
+			SUM ((g.field_agggenerated_value*c2.field_aggc2_value)/100) AS ias,
+			SUM ((g.field_agggenerated_value*wot.field_aggpercwithouttreatment_value)/100) as wot
+		FROM {node n
+			LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+			LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id 
+			LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
+			LEFT JOIN {field_data_field_aggc1} c1  ON n.vid = c1.revision_id
+			LEFT JOIN {field_data_field_aggc2} c2 ON n.vid = c2.revision_id
+			LEFT JOIN {field_data_field_aggpercwithouttreatment} wot ON n.vid = wot.revision_id
+		WHERE n.type = :typenode
+			AND n.status = 1
+			AND g.field_agggenerated_value > :agggenerated
+	".$conditions
+	, $params);
+	
+	$out = array();
+	if($row = $result->fetchAssoc()){
+		
+		foreach($row as $k=>$v){
+			$out[]=array(
+				"value" => (float)$v,
+				"label" => $GLOBALS['ms_level']['connection'][$k]['label'],
+				"valueformat" => uwwtd_format_number(round($v,0)).' pe',
+				"color"=>$GLOBALS['ms_level']['connection'][$k]['color'],
+			);
+			
+		}
+		
+	}
+	
+	return $out;
+}
+
+
 
 function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
     $chart_data =array();
@@ -32,7 +151,7 @@ function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
             if($v>0){
                 $chart_data[]=array(
                     'label'=>$GLOBALS['ms_level']['sludge'][$k]['label'],
-                    'value'=>$v,
+                    'value'=>(float)$v,
                     'valueformat'=>$v.' T DS/year',
                     'color'=>$GLOBALS['ms_level']['sludge'][$k]['color'], 
                 );
@@ -339,8 +458,7 @@ function uwwtd_stat_national_treatmentplant($options)
 	return $data;
 }
 
-function uwwtd_stat_national_uwwtp($options, $GroupBy)
-{
+function uwwtd_stat_national_uwwtp($options, $GroupBy){
 	$conditions = '';
 
 	switch($options['year']){
@@ -799,13 +917,14 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
 	$data = array();
 	$param = array();
 	$aConditions = array(
-		'>2000<=10000' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
-		'>10000<=100000' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
-		'>100000' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
+		'lower than 10000 pe' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
+		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
+		'greater than 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
 	);
 
 	$query = 'select
-                     SUM(f_agggenerated.field_agggenerated_value) AS GENERATED_SUM
+					 COUNT(f_agggenerated.field_agggenerated_value) AS number,
+                     SUM(f_agggenerated.field_agggenerated_value) AS generated_sum
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -837,6 +956,7 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
 
 
 					$row['type'] = $libelle;
+					$row['generated_count_format'] = is_null($row['number']) ? '0' : uwwtd_format_number($row['number'], 0);
 					$row['generated_sum_format'] = is_null($row['generated_sum']) ? '0' : uwwtd_format_number($row['generated_sum'], 0);
 
 					$data[] = $row;

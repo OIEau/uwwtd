@@ -323,12 +323,24 @@ $GLOBALS['ms_level'] = array(
         'dii'=>array('color'=>'#F28030','label'=>'Disposed: Incineration'),
         'dio'=>array('color'=>'#F29F80','label'=> 'Disposed: Others'),
         'missing'=>array('color'=>'#E74C3C','label'=> 'Missing'),
-        
     ),
     'waste_water'=>array(
         'agriculture'=>array('color'=>'#459436','label'=>'Agriculture'),
         'industry'=>array('color'=>'#334D5C','label'=>'Industry'),
         'others'=>array('color'=>'#02658C','label'=>'Others')
     ),
+	'connection'=>array(
+		'cs'=>array('color'=>'#74ffe0','label'=>'Collective system'),
+        'ias'=>array('color'=>'#bd8842','label'=>'Individual and Appropriate Systems'),
+        'wot'=>array('color'=>'#d93c3c','label'=>'Discharge without treatment')
+	),
+	'sewage_network'=>array(
+		'B'=>array('color'=>'#4f91e1','label'=>'Separative and combine system'),
+        'S'=>array('color'=>'#bd8842','label'=>'Separative system'),
+        'C'=>array('color'=>'#bd8842','label'=>'Combine system'),
+		'NI'=>array('color'=>'#a2a2a2','label'=>'No information'),
+	)
+	
+	//E74C3C
 );
 
