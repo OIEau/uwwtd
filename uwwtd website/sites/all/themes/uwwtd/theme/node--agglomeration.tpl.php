@@ -163,11 +163,70 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_aggart5compliance']);
               //print render($content['field_article_5_compliance_expli']);
 			   // print render($content['field_aggart6compliance']);
-           
+           $distanceToCompliance = uuwtd_get_distance_compliance($node);
+			if(uwwtd_field($content['field_aggpercwithouttreatment']) == 0 && uwwtd_field_pe($content['field_aggpercwithouttreatment']) ==0){
+			   $colorart3 = '#4f91e1';
+			 }elseif((uwwtd_field_pe($content['field_aggpercwithouttreatment']) >= 2 && uwwtd_field_pe($content['field_aggpercwithouttreatment'] <=2)) &&($distanceToCompliance['field_aggpercwithouttreatment'] >= 0 && $distanceToCompliance['field_aggpercwithouttreatment'] <= 2000)){
+				$colorart3 = '#ea8b2e';
+			}else{
+				$colorart3 = '#d93c3c';
+			}
+			
+			if($distanceToCompliance['distart4_treatment'] == 0 && $distanceToCompliance['distart4_treatment_%'] == 0){
+				$colorart4T = '#4f91e1';
+			}elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+				$colorart4T = '#ea8b2e';
+			}else{
+				$colorart4T = '#d93c3c';
+			}
+			if($distanceToCompliance['distart4_monitoring'] == 0  && $distanceToCompliance['distart4_monitoring_%'] == 0){
+				$colorart4P = '#4f91e1';
+			}elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+				$colorart4P = '#ea8b2e';
+			}else{
+				$colorart4P = '#d93c3c';
+			}
+			
+
+			if($distanceToCompliance['distart5_treatment'] == 0  && $distanceToCompliance['distart5_treatment_%'] == 0){
+				$colorart5T = '#4f91e1';
+			}elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+				$colorart5T = '#ea8b2e';
+			}elseif($distanceToCompliance['distart5_treatment_%'] > 1 && $distanceToCompliance['distart5_treatment'] > 2000){
+				$colorart5T = '#d93c3c';
+			}
+
+			if($distanceToCompliance['distart5_monitoring'] == 0  && $distanceToCompliance['distart5_monitoring_%'] == 0){
+				$colorart5P = '#4f91e1';
+			}elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+				$colorart5P = '#ea8b2e';
+			}elseif($distanceToCompliance['distart5_monitoring_%'] > 1 && $distanceToCompliance['distart5_monitoring'] > 2000){
+				$colorart5P = '#d93c3c';
+			}
+			
             print '</div>';
-            print '<div class="uwwrealthird" style="float:right;">';
-				print '<div style="float:right;">';
-				// print 'Distance to compliance:';
+            print '<div class="uwwrealthird">';
+				print '<div class="distance">';
+				print '<p><b>Distance to compliance:</b><p>';
+					print '<table id="UwwtpDescription">';
+					print '<tr><td style="font-weight:bold;border: 1px solid #000;"></td>';
+					print '<td style="font-weight:bold;border: 1px solid #000;">Equipment</td>';
+					print '<td style="font-weight:bold;border: 1px solid #000;">Performance</td></tr>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>Connection</td>';
+					print '<td class="light" style="background-color:'.$colorart3.';color:white;">'.uwwtd_field($content['field_aggpercwithouttreatment']).'%</td>';
+					print '<td class="black"></td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart3.';color:white;">'. uwwtd_field_pe($content['field_aggpercwithouttreatment']).' p.e</td>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>2nd treatment</td>';
+					print '<td class="light" style="background-color:'.$colorart4T.';color:white;">'.number_format($distanceToCompliance['distart4_treatment_%'],1, ',', ' ').'%</td>';
+					print '<td class="black"  style="background-color:'.$colorart4P.';color:white;">'.number_format($distanceToCompliance['distart4_monitoring_%'],1, ',', ' ').'%</td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart4T.';color:white;">'.number_format($distanceToCompliance['distart4_treatment'],0, ',', ' ').' p.e </td>';
+					print '<td class="black" style="background-color:'.$colorart4P.';color:white;">'.number_format($distanceToCompliance['distart4_monitoring'],0, ',', ' ').' p.e </td></tr>';
+					print '<tr><td class="black" style="font-weight:bold;" rowspan=2>2nd treatment</td>';
+					print '<td class="light" style="background-color:'.$colorart5T.';color:white;">'.number_format($distanceToCompliance['distart5_treatment_%'],1, ',', ' ').'%</td>';
+					print '<td class="black"  style="background-color:'.$colorart5P.';color:white;">'.number_format($distanceToCompliance['distart5_monitoring_%'],1, ',', ' ').'%</td></tr>';
+					print '<tr><td class="light" style="background-color:'.$colorart5T.';color:white;">'.number_format($distanceToCompliance['distart5_treatment'],0, ',', ' ').' p.e</td>';
+					print '<td class="black" style="background-color:'.$colorart5P.';color:white;"> '.number_format($distanceToCompliance['distart5_monitoring'],0, ',', ' ').' p.e</td></tr>';
+				print '</table>';
 				print '</div;>';
             print '</div>';
         print '</div>';
