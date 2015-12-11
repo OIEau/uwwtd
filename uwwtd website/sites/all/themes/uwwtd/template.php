@@ -1640,7 +1640,21 @@ function uwwtd_render_field_with_pe($field)
         </div>
     </div>';
 }
+function uwwtd_field($field)
+{
+//     $field[0]['#markup'] = 'Not provided';
+    return uwwtd_format_number($field[0]['#markup'], 1);
+}
 
+function uwwtd_field_pe($field)
+{
+//     $field[0]['#markup'] = 'Not provided';
+    $pe = '';
+    if (true === is_numeric($field[0]['#markup'])) {
+        $pe = uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']);
+    }
+    return $pe;
+}
 // function uwwtd_preprocess_field(&$vars) {
 //     dpl($vars);
 //   if ($vars['element']['#field_name'] == 'field_my_custom_field') {
