@@ -1640,7 +1640,8 @@ function uwwtd_render_field_with_pe($field)
         </div>
     </div>';
 }
-function uwwtd_field($field)
+
+function uwwtd_field_num($field)
 {
 //     $field[0]['#markup'] = 'Not provided';
     return uwwtd_format_number($field[0]['#markup'], 1);
@@ -1677,7 +1678,7 @@ function uwwtd_piechart_agglonode($node, &$content)
     $aData = array();
     $aData[] = array(
         "value" => $node->field_aggc1['und'][0]['value'],
-        "label" => $content['field_agggenerated']['#title'],
+        "label" => $content['field_aggc1']['#title'],
         "color" => '#74FFE0',
         "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );

@@ -310,14 +310,6 @@ function uwwtd_page_stats_graphs_result($options){
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of treatment plant by treatment type", $front, $aString_uwwtd_stat_agglomeration_uwwtpT).'</div></div>';
     $formResult.='</div>';
     
-       
-    
-
-    
-    
-    
-
-    
     
     //==============================================
     //=============== ROW 4
@@ -327,11 +319,16 @@ function uwwtd_page_stats_graphs_result($options){
 
 	$aData_uwwtd_stat_national_generated_by_agglomeration = array();
 	$aString_uwwtd_stat_national_generated_by_agglomeration = array();
+	
+	$aData_uwwtd_stat_national_generated_by_agglomeration_count = array();
+	$aString_uwwtd_stat_national_generated_by_agglomeration_count = array();
+	
+	
 
 	$results = uwwtd_stat_national_generated_by_agglomeration($options);
-	dsm($results);
-    $legend = array("Generated load");
+    
 	$sum = 0;
+	$sum_count = 0;
 	foreach ($results as $result){
 
 		$aData_uwwtd_stat_national_generated_by_agglomeration[] = array(
@@ -340,18 +337,32 @@ function uwwtd_page_stats_graphs_result($options){
 		);
 		$sum+=$result['generated_sum'];
 		$aString_uwwtd_stat_national_generated_by_agglomeration[]= array($result['type'] , uwwtd_format_number($result['generated_sum']).' pe');
+		
+		$aData_uwwtd_stat_national_generated_by_agglomeration_count[] = array(
+				$result['type'],
+				$result['number'],
+		);
+		$sum_count+=$result['number'];
+		$aString_uwwtd_stat_national_generated_by_agglomeration_count[]= array($result['type'] , uwwtd_format_number($result['number']));
+		
+		
         
 	}
 	$aString_uwwtd_stat_national_generated_by_agglomeration[]= array('Total',uwwtd_format_number($sum).' pe');
+	$aString_uwwtd_stat_national_generated_by_agglomeration_count[]= array('Total',uwwtd_format_number($sum_count));
 	$aString_uwwtd_stat_national_generated_by_agglomeration = theme('table', array("rows"=>$aString_uwwtd_stat_national_generated_by_agglomeration, "header"=>array("Size","Values")));
+    $aString_uwwtd_stat_national_generated_by_agglomeration_count = theme('table', array("rows"=>$aString_uwwtd_stat_national_generated_by_agglomeration_count, "header"=>array("Size","Values")));
     //dsm($results);
     $formResult.='<h2 style="clear:both;">Agglomeration : generated load by agglomeration size</h2>';
     $formResult.='<div class="rows charts-row">';
         //Total generated load by agglomeration
-        $front =uwwtd_graph_render_column('graph_generatedByAgglomeration', $legend, $aData_uwwtd_stat_national_generated_by_agglomeration);;
+		$legend = array("Generated load");
+        $front =uwwtd_graph_render_column('graph_generatedByAgglomeration', $legend, $aData_uwwtd_stat_national_generated_by_agglomeration);
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Total generated load by agglomeration size", $front, $aString_uwwtd_stat_national_generated_by_agglomeration).'</div></div>';
         //Number of agglomerations by treatment type
-        $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of agglomeration by size", '----', '<p>todo</p>').'</div></div>';
+		$legend = array("Number of agglomeration");
+        $front =uwwtd_graph_render_column('graph_generatedByAgglomerationNumber', $legend, $aData_uwwtd_stat_national_generated_by_agglomeration_count);
+		$formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of agglomeration by size", $front, $aString_uwwtd_stat_national_generated_by_agglomeration_count).'</div></div>';
     $formResult.='</div>';
     
     

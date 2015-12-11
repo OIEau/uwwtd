@@ -151,6 +151,8 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_dcpwaterbodytype']);
             print render($content['field_rcatype']);
             print render($content['field_dcpsurfacewaters']);
+			print render($content['field_dcpirrigation']); //=======> ALter the label
+			
           print '</div>';
         print '</fieldset>';
       print '</div>';

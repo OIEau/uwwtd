@@ -17,7 +17,7 @@
       // - Return the highest (numeric) value from flat array.
       max = d3.max(d3.merge(settings.rows).map(function(d) { return + d; })),
       // Padding is top, right, bottom, left as in css padding.
-      p = [20, 50, 30, 50],
+      p = [20, 50, 30, 60],
       w = settings.width?settings.width:800,
       h = settings.height?settings.height:400,
       // chart is 65% and 80% of overall height
