@@ -927,8 +927,10 @@ figure:focus{
 .node-agglomeration .field-name-field-aggart5compliance .custom_tooltip{width: 285px;max-width:285px;}
 
 
-.node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:400px!important;}
+.node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:345px!important;}
+.uwwrealthird .distance p{margin:0;line-height:2;}
 
+.node-agglomeration .uwwrealthird{width:36%;}
 #OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
 
 #block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
