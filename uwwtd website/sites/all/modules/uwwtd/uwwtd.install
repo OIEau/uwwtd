@@ -2797,7 +2797,7 @@ function uwwtd_update_7124(&$context = null)
 } 
 
 /**
- * pdate map home and add layer rbd and nuts
+ * Update map home and add layer rbd and nuts
  * Configure pathauto pattern and correct wrong alias if install from scratch,
  */  
 function uwwtd_update_7125(&$context = null)
@@ -2818,7 +2818,8 @@ function uwwtd_update_7125(&$context = null)
                                                   'oieau_nuts_2.inc',
                                                   'oieau_nuts_3.inc',
                                                   'oieau_rbd.inc',
-                                                  'oieau_rbdsu.inc',), 
+                                                  'oieau_rbdsu.inc',
+                                                  'bathing_water.inc',), 
                                             array('-'));        
     
 
@@ -2836,7 +2837,7 @@ function uwwtd_update_7125(&$context = null)
           ->condition('source', 'node/%', 'LIKE')
           ->execute();        
         //recreate all alias
-        
+        //TODO
 //         'update[node_pathauto_bulk_update_batch_process]'
     }
     
@@ -2984,6 +2985,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts_3.inc',
         'oieau_rbd.inc',
         'oieau_rbdsu.inc',
+        'bathing_water.inc',
     ); 
     $list_style = array(
         'agglomerations_style.inc',
