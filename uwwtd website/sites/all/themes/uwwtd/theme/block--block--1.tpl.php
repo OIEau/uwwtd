@@ -167,56 +167,15 @@
 
   <div class="content"<?php print $content_attributes; ?>>
     <?php
-	$option['field_anneedata_value'] = uwwtd_get_max_annee();
-	$dataUwwtp = uwwtd_get_data_uwwtp($option);
-
-	$dataAggl = uwwtd_get_data_agglomeration($option);
-
-	$nbGeneratedLoad = 0;
-	$nbCollectingSystem = 0;
-	$nbPrimaryTreatement = 0;
-	$nbSecondaryTreatement = 0;
-	$nbOtherTreatement = 0;
-	$nbPhysicalCapacity = 0;
-	$nbIAS = 0;
-	foreach($dataAggl as $agglo){
-		$nbGeneratedLoad = $agglo['field_agggenerated_value']+ $nbGeneratedLoad;
-		$aggloCollectingSystem = ($agglo['field_aggc1_value'] /100) * $agglo['field_agggenerated_value'];
-		$nbCollectingSystem = $aggloCollectingSystem + $nbCollectingSystem;
-		
-		$aggloIAS = ($agglo['field_aggc2_value'] /100) * $agglo['field_agggenerated_value'];
-		$nbIAS = $aggloIAS + $nbIAS;
-	}
+	$year = uwwtd_get_max_annee();
+	$nat_stat_str = uwwtd_get_national_stat_str($year);
 	
-	foreach($dataUwwtp as $uwwtp){
-		// dsm($uwwtp);
-		if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
-			$nbPrimaryTreatement = $nbPrimaryTreatement+1;
-		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
-			$nbSecondaryTreatement = $nbSecondaryTreatement +1;
-		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "MS"){
-			$nbOtherTreatement = $nbOtherTreatement+1;
-		}
-		$nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
-	}
-	$nbCollectingSystem = $nbCollectingSystem *100 / $nbGeneratedLoad;
-	$totalCollectingSystem= number_format($nbCollectingSystem, 0, ".", " ");
-	$nbIAS =$nbIAS *100 / $nbGeneratedLoad;
-	$totalIAS = number_format($nbIAS, 0, ".", " ");
 	
-	$annee = $option['field_anneedata_value'];
-	$nbUrban = count($dataAggl);
-	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
-	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
 	
 	?><div class ="txtHomePage"><?php
 	
 	/*print render($content); */
-	 print "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population aquivalent (p.e).
-			These agglomerations generated a total load of ".$nbGeneratedLoad." (p.e). ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
-			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
-			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
-			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. "p.e. ";
+	print $nat_stat_str;
 	
 	?></div>
 	<div class="btnHomePage">

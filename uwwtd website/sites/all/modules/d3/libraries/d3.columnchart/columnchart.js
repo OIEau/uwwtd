@@ -17,11 +17,11 @@
       // - Return the highest (numeric) value from flat array.
       max = d3.max(d3.merge(settings.rows).map(function(d) { return + d; })),
       // Padding is top, right, bottom, left as in css padding.
-      p = [20, 50, 30, 50],
+      p = [20, 50, 30, 60],
       w = settings.width?settings.width:800,
       h = settings.height?settings.height:400,
       // chart is 65% and 80% of overall height
-      chart = {w: w * .65, h: h * .80},
+      chart = {w: w * .65, h: h * .70},
       legend = {w: w * .35, h:h},
       // bar width is calculated based on chart width, and amount of data
       // items - will resize if there is more or less
@@ -53,7 +53,7 @@
       .append("text")
       .attr("dy", ".71em")
       .attr("text-anchor", "end")
-      .attr('transform', function(d,i) { return "rotate(-35)"; })
+      .attr('transform', function(d,i) { return "rotate(-15)"; })
       .text(function(d,i){ return xLabels[i]; });
 
     /* LINES */
@@ -95,7 +95,7 @@
     /* LEGEND */
     var legend = svg.append("g")
       .attr("class", "legend")
-      .attr("transform", "translate(" + (chart.w + 20) + "," + 0 + ")");
+      .attr("transform", "translate(" + (chart.w + 10) + "," + 0 + ")");
 
     var keys = legend.selectAll("g")
       .data(key)

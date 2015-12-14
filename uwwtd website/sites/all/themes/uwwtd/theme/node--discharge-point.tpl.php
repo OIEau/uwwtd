@@ -133,6 +133,23 @@ echo uwwtd_insert_errors_tab($node);
           print '<legend class="panel-heading">';
             print '<div class="panel-title fieldset-legend">'.t('Characteristics').'</div>';
           print '</legend>';
+		  $nameurls=explode('/',$_SERVER['REQUEST_URI']);
+		  $nameurl= $nameurls[1];
+		  print '<div class="panel-body">';
+		  print '<div class ="field field-name-field-agglatitude field-type-number-decimal field-label-inline clearfix">';
+				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a></div>';
+					print '<div class="field-items">';
+						print '<div class="field-item even"> &nbsp;'.$content['field_dcplatitude']['#items'][0]['value'].'</div>';
+					print '</div>';
+			print '</div>';
+			print '<div class ="field field-name-field-agglongitude field-type-number-decimal field-label-inline clearfix">';
+				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_agglatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a></div>';
+					print '<div class="field-items">';
+						print '<div class="field-item even"> &nbsp;'.$content['field_dcplongitude']['#items'][0]['value'].'</div>';
+					print '</div>';
+			print '</div>';
+		  
+		  /*
           print '<div class="panel-body">';
 		   print '<div class ="field field-name-field-dcplatitude field-type-number-decimal field-label-inline clearfix">';
 				print '<div class = "field-label"> Latitude : </div>';
@@ -145,12 +162,14 @@ echo uwwtd_insert_errors_tab($node);
 					print '<div class="field-items">';
 						print '<div class="field-item even"> &nbsp;'.$content['field_dcplongitude']['#items'][0]['value'].'</div>';
 					print '</div>';
-			print '</div>';
+			print '</div>';*/
             // print render($content['field_dcplatitude']);
             // print render($content['field_dcplongitude']);
             print render($content['field_dcpwaterbodytype']);
             print render($content['field_rcatype']);
             print render($content['field_dcpsurfacewaters']);
+			print render($content['field_dcpirrigation']); //=======> ALter the label
+			
           print '</div>';
         print '</fieldset>';
       print '</div>';

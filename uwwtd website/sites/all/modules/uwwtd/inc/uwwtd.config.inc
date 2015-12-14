@@ -173,11 +173,18 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'field_inspireidlocalid_value'    =>  t('Identifier Code'),
     'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
     'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_aggcompliance_value'       =>  t('Compliance'),
+    'field_aggcompliance_value'       =>  t('Global compliance'),
+	/*
     'field_aggart3compliance_value'   =>  t('Article 3 compliance'),
     'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
     'field_aggart5compliance_value'   =>  t('Article 5 compliance'),
     'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
+	*/
+	'field_aggart3compliance_value'   =>  t('Connection compliance'),
+    'field_aggart4compliance_value'   =>  t('2nd treatment compliance'),
+    'field_aggart5compliance_value'   =>  t('3rd treatment compliance'),
+    'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
+	
 	'field_article17_agglo_value'     =>  t('Article 17'),
 );
 
@@ -187,8 +194,8 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
     'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
     'field_regionnuts_value'          =>  t('Region (NUTS)'),
     'field_aggc2_value'       =>  t('IAS (% of p.e.)'),
-    'field_aggc1_value'   =>  t('Collective system (% of p.e.) '),
-    'field_aggpercwithouttreatment_value'   =>  t('Not addressed through IAS (% of p.e.)'),
+    'field_aggc1_value'   =>  t('Collecting system (% of p.e.) '),
+    'field_aggpercwithouttreatment_value'   =>  t('Discharge without treatment (% of p.e.)'),
 	'field_article17_agglo_value'   =>  t('Article 17'),
 );
 
@@ -226,7 +233,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
     'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
     'field_uwwnremoval_value'           =>  t('N removal'),
     'field_uwwpremoval_value'           =>  t('P removal'),
-    'field_uwwspecification_value'      =>  t('More stringent treatment'),
+    'field_uwwspecification_value'      =>  t('Other more stringent treatment'),
 	'field_article17_uwwtp_value'   =>  t('Article 17'),
 );
 
@@ -323,12 +330,24 @@ $GLOBALS['ms_level'] = array(
         'dii'=>array('color'=>'#F28030','label'=>'Disposed: Incineration'),
         'dio'=>array('color'=>'#F29F80','label'=> 'Disposed: Others'),
         'missing'=>array('color'=>'#E74C3C','label'=> 'Missing'),
-        
     ),
     'waste_water'=>array(
         'agriculture'=>array('color'=>'#459436','label'=>'Agriculture'),
         'industry'=>array('color'=>'#334D5C','label'=>'Industry'),
         'others'=>array('color'=>'#02658C','label'=>'Others')
     ),
+	'connection'=>array(
+		'cs'=>array('color'=>'#74ffe0','label'=>'Connected to collecting system'),
+        'ias'=>array('color'=>'#bd8842','label'=>'Individual and Appropriate Systems'),
+        'wot'=>array('color'=>'#d93c3c','label'=>'Discharged without treatment')
+	),
+	'sewage_network'=>array(
+		'B'=>array('color'=>'#4f91e1','label'=>'Separative and combine system'),
+        'S'=>array('color'=>'#bd8842','label'=>'Separative system'),
+        'C'=>array('color'=>'#bd8842','label'=>'Combine system'),
+		'NI'=>array('color'=>'#a2a2a2','label'=>'No information'),
+	)
+	
+	//E74C3C
 );
 

@@ -832,10 +832,11 @@ function uwwtd_block_view($delta = '')
                 $optionstyle['popup'] = array(
                     'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
                     'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-                    'field_aggart3compliance_value_format' => array('label' => 'Article 3 compliance'),
-                    'field_aggart4compliance_value_format' => array('label' => 'Article 4 compliance'),
-                    'field_aggart5compliance_value_format' => array('label' => 'Article 5 compliance'),
-                );
+                    'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+                    'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
+                    'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
+                );			
+				
                 $features['agglomerations'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
                 unset($data);
                 $data = uwwtd_get_data_uwwtp($option);
@@ -1979,11 +1980,15 @@ function uwwtd_page_agglomeration_connection($type_export = '')
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Article 3 compliance'),
-        'field_aggart4compliance_value_format' => array('label' => 'Article 4 compliance'),
-        'field_aggart5compliance_value_format' => array('label' => 'Article 5 compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
+        'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
+		
+		
+		
+		
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
-        'field_aggc1_value_format' => array('label' => 'Collective system'),
+        'field_aggc1_value_format' => array('label' => 'Collecting system'),
         'field_aggc2_value_format' => array('label' => 'Individual and Appropriate Systems (IAS)'),
         'field_aggpercwithouttreatment_value_format' => array('label' => 'Discharge without treatment'),
     );
@@ -2091,13 +2096,13 @@ function uwwtd_page_agglomeration_connection($type_export = '')
     <thead>
     <tr>
         <th class="views-field views-field-field_aggc1_value" style="padding: 5px;">
-        Collective system (% of p.e.)
+        Collecting system (% of p.e.)
         </th>
         <th class="views-field views-field-field_aggc2_value" style="padding: 5px;">
         IAS (% of p.e.)
         </th>
         <th class="views-field views-field-field_aggpercwithouttreatment_value" style="padding: 5px;">
-        Not addressed through IAS (% of p.e.)
+        Discharge without treatment (% of p.e.)
         </th>
     </tr>
     </thead>
@@ -2252,14 +2257,15 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
+				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				
 				'field_article17_uwwtp_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				
 			);break;
 	   }else{
 		    $list_field = array(
@@ -2267,12 +2273,13 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
+				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
+				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
-				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				
 			);
 	   }
    }
@@ -2642,7 +2649,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div>
+                        . '<div class="flot-title"><div class="flip-title">Global compliance by number of treament plants</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
@@ -2651,7 +2658,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of plants</div>
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by number of treament plants</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -2666,7 +2673,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                     .'<div class="container flip">'
 
                       .'<div class="rightgraph front">'
-                            . '<div class="flot-title"><div class="flip-title">Compliance by load entering (p.e.)</div>
+                            . '<div class="flot-title"><div class="flip-title">Global compliance by load entering (p.e.)</div>
 
 
                             <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
@@ -2675,7 +2682,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by load entering (p.e.)</div>
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by load entering (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -3160,7 +3167,7 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Plants</div>
+                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by number of treatment plants</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
@@ -3169,7 +3176,7 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Plants</div>
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by number of treatment plants</div>
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
 
@@ -3823,14 +3830,15 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 //     $optionstyle['popup_title_type'] = 'treatment-plant';
 //     $optionstyle['popup_title_type'] = 'discharge-pointt';
     $optionstyle['popup_title_type'] = 'agglomeration';
+	
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Article 3 compliance'),
-        'field_aggart4compliance_value_format' => array('label' => 'Article 4 compliance'),
-        'field_aggart5compliance_value_format' => array('label' => 'Article 5 compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
+        'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
-//         'field_aggc1_value' => array('label' => 'Collective system'),
+//         'field_aggc1_value' => array('label' => 'Collecting system'),
 //         'field_aggc2_value' => array('label' => 'Individual and Appropriate Systems (IAS)'),
 //         'field_aggpercwithouttreatment_value' => array('label' => 'Discharge without treatment'),
     );
@@ -4165,7 +4173,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                   .'<div class="cell-content">'
                     .'<div class="container flip">'
                       .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div>
+                        . '<div class="flot-title"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
@@ -4175,7 +4183,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by number of agglomeration (&gt2000 pe)</div>
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -4191,7 +4199,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                     .'<div class="container flip">'
 
                       .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div>
+                        . '<div class="flot-title"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
@@ -4202,7 +4210,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                       .'</div>'
 
                       .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Compliance by Generated load (p.e.)</div>
+                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
 
 
                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
@@ -4560,3 +4568,54 @@ function uwwtd_node_delete($node) {
         ->execute();
 	}
 }
+
+function uwwtd_get_national_stat_str($year){
+	$option['field_anneedata_value'] = $year;
+	$dataUwwtp = uwwtd_get_data_uwwtp($option);
+
+	$dataAggl = uwwtd_get_data_agglomeration($option);
+
+	$nbGeneratedLoad = 0;
+	$nbCollectingSystem = 0;
+	$nbPrimaryTreatement = 0;
+	$nbSecondaryTreatement = 0;
+	$nbOtherTreatement = 0;
+	$nbPhysicalCapacity = 0;
+	$nbIAS = 0;
+	foreach($dataAggl as $agglo){
+		$nbGeneratedLoad = $agglo['field_agggenerated_value']+ $nbGeneratedLoad;
+		$aggloCollectingSystem = ($agglo['field_aggc1_value'] /100) * $agglo['field_agggenerated_value'];
+		$nbCollectingSystem = $aggloCollectingSystem + $nbCollectingSystem;
+		
+		$aggloIAS = ($agglo['field_aggc2_value'] /100) * $agglo['field_agggenerated_value'];
+		$nbIAS = $aggloIAS + $nbIAS;
+	}
+	
+	foreach($dataUwwtp as $uwwtp){
+		// dsm($uwwtp);
+		if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
+			$nbPrimaryTreatement = $nbPrimaryTreatement+1;
+		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
+			$nbSecondaryTreatement = $nbSecondaryTreatement +1;
+		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "MS"){
+			$nbOtherTreatement = $nbOtherTreatement+1;
+		}
+		$nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
+	}
+	$nbCollectingSystem = $nbCollectingSystem *100 / $nbGeneratedLoad;
+	$totalCollectingSystem= number_format($nbCollectingSystem, 0, ".", " ");
+	$nbIAS =$nbIAS *100 / $nbGeneratedLoad;
+	$totalIAS = number_format($nbIAS, 0, ".", " ");
+	
+	$annee = $option['field_anneedata_value'];
+	$nbUrban = count($dataAggl);
+	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
+	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
+	
+	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population aquivalent (p.e).
+			These agglomerations generated a total load of ".$nbGeneratedLoad." (p.e). ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
+			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
+			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
+			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. "p.e. ";
+}
+

@@ -44,8 +44,8 @@ function uwwtd_labelformaterpie_legend(label, series) {
 }
 
 function display_uwwtp_stackedbar(data, color) {
-	console.log(data);
-	console.log(color);
+	//console.log(data);
+	//console.log(color);
     var margin = {top: 10, right: 20, bottom: 30, left: 60},
         width = 315 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
