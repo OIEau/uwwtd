@@ -474,9 +474,6 @@ function uwwtd_page_stats_graphs_result($options){
     $aString_uwwtd_per_ent_and_dis= theme('table', array("header"=>array('Parameter','Entering (mg/l)','Discharged (mg/l)','Rate (%)'), "rows"=>$aString_uwwtd_per_ent_and_dis));
 	 
 
-    
-    
-    
     $legend =  array (
         'incoming',
         'discharged'
@@ -599,7 +596,7 @@ function uwwtd_graph_render_flipcard($title, $front, $back, $msg=''){
 }
 
 function uwwtd_graph_render_column($id, $legend, $rows){
-    $chart = array(
+  $chart = array(
     'id' => $id,
     'type' => 'ColumnChart',
     'legend' => $legend,

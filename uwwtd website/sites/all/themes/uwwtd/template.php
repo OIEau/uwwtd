@@ -1713,78 +1713,55 @@ function uwwtd_piechart_agglonode($node, &$content)
     ";
 }
 
-function uwwtd_stackedbar_uwwtpnode($node)
-{
-    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+function uwwtd_stackedbar_uwwtpnode($node){
+	//dsm($node);
+    //drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
 // field_aggc1|Collective system|#74FFE0
 // field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
 // field_aggpercwithouttreatment|Discharge without treatment|#C00000
+	$legend =  array (
+        'incoming',
+        'discharged'
+	);
+
 
     $aData = array();
     $aData[] = array(
-        "type" => 'BOD',
-//         "label" => 'BOD load',
-        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-//         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',
+        'BOD',
+        (float)(isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
+        (float)(isset($node->field_uwwboddischarge['und'][0]['value']) ? $node->field_uwwboddischarge['und'][0]['value'] : 0),
     );
     $aData[] = array(
-        "type" => 'COD',
-//         "label" => 'COD load',
-        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-//         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',
+        'COD',
+        (float)(isset($node->field_uwwcodincoming['und'][0]['value']) ? $node->field_uwwcodincoming['und'][0]['value'] : 0),
+        (float)(isset($node->field_uwwcoddischarge['und'][0]['value']) ? $node->field_uwwcoddischarge['und'][0]['value'] : 0),
     );
     $aData[] = array(
-        "type" => 'N',
-//         "label" => 'N load',
-        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-//         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',
+        'N',
+        (float)(isset($node->field_uwwnincoming['und'][0]['value']) ? $node->field_uwwnincoming['und'][0]['value'] : 0),
+        (float)(isset($node->field_uwwndischarge['und'][0]['value']) ? $node->field_uwwndischarge['und'][0]['value'] : 0),
     );
     $aData[] = array(
-        "type" => 'P',
-//         "label" => 'P load',
-        "incoming" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-        "discharged" => (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-//         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',
+        'P',
+        (float)(isset($node->field_uwwpincoming['und'][0]['value']) ? $node->field_uwwpincoming['und'][0]['value'] : 0),
+        (float)(isset($node->field_uwwpdischarge['und'][0]['value']) ? $node->field_uwwpdischarge['und'][0]['value'] : 0),
     );
-    // dsm($aData);
-    $aColor['domain'] = array ('incoming', 'discharged');
-    $aColor['range'] = array ('#74FFE0', '#C00000');
+    //$aColor['domain'] = array ('incoming', 'discharged');
+    //$aColor['range'] = array ('#74FFE0', '#C00000');
 
-//     dsm($aData);
-//     echo '<pre>';var_export($aData);echo '</pre>';
-//     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
-//     <style>
-// .axis path,
-// .axis line {
-// fill: none;
-// stroke: #000;
-// shape-rendering: crispEdges;
-// }
-//
-// .bar {
-// fill: steelblue;
-// }
-//
-// .x.axis path {
-// display: none;
-// }
-//     </style>
-    return "
-    <script>
-    jQuery(document).ready(function(){
-        display_uwwtp_stackedbar(".json_encode($aData).','. json_encode($aColor).");
-    });
-    </script>
-    ";
+
+  $chart = array(
+    'id' => 'uwwtp_ent_dis_chart',
+    'type' => 'ColumnChart',
+    'legend' => $legend,
+    'rows' => $aData,
+    'width'=>280,
+    'height'=>300,
+  );
+  return d3_draw($chart);
+
 }
 
 

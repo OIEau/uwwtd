@@ -96,7 +96,8 @@ echo uwwtd_insert_errors_tab($node);
   $nodetype = t('Discharge point');
   //dsm($content);
   //dsm($node);
-
+	$nameurls=explode('/',$_SERVER['REQUEST_URI']);
+	$nameurl= $nameurls[1];
 ?>
 <article id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <?php if ((!$page && !empty($title)) || !empty($title_prefix) || !empty($title_suffix) || $display_submitted): ?>
@@ -117,68 +118,54 @@ echo uwwtd_insert_errors_tab($node);
         print '<h1><span class="black-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="black-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="black-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="black-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
         print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].' - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small></h1><br>';
     }
+  ?>
+    
 
-    //print render($content);
-    $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-
-    print '<div class="uwwcontainer">';
-      echo render($printy);
-//       print '<div class="uwwhalf">';
-//         echo uwwtd_timeline_output($node);
-//       print '</div>';
-    print '</div>';
-    print '<div class="uwwcontainer">';
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Characteristics').'</div>';
-          print '</legend>';
-		  $nameurls=explode('/',$_SERVER['REQUEST_URI']);
-		  $nameurl= $nameurls[1];
-		  print '<div class="panel-body">';
-		  print '<div class ="field field-name-field-agglatitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a></div>';
-					print '<div class="field-items">';
-						print '<div class="field-item even"> &nbsp;'.$content['field_dcplatitude']['#items'][0]['value'].'</div>';
-					print '</div>';
-			print '</div>';
-			print '<div class ="field field-name-field-agglongitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"><a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_agglatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a></div>';
-					print '<div class="field-items">';
-						print '<div class="field-item even"> &nbsp;'.$content['field_dcplongitude']['#items'][0]['value'].'</div>';
-					print '</div>';
-			print '</div>';
-		  
-		  /*
-          print '<div class="panel-body">';
-		   print '<div class ="field field-name-field-dcplatitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"> Latitude : </div>';
-					print '<div class="field-items">';
-						print '<div class="field-item even"> &nbsp;'.$content['field_dcplatitude']['#items'][0]['value'].'</div>';
-					print '</div>';
-			print '</div>';
-			print '<div class ="field field-name-field-dcplongitude field-type-number-decimal field-label-inline clearfix">';
-				print '<div class = "field-label"> Longitude : </div>';
-					print '<div class="field-items">';
-						print '<div class="field-item even"> &nbsp;'.$content['field_dcplongitude']['#items'][0]['value'].'</div>';
-					print '</div>';
-			print '</div>';*/
-            // print render($content['field_dcplatitude']);
-            // print render($content['field_dcplongitude']);
+    <div class="uwwcontainer">
+      <?php 
+		$printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+		echo render($printy);
+	  ?>
+    </div>
+    <div class="uwwcontainer">
+      <div class="uwwthird">
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Characteristics'); ?></div>
+          </legend>
+		  <div class="panel-body">
+		   <div class ="field field-name-field-agglatitude field-type-number-decimal field-label-inline clearfix">
+			<div class = "field-label">
+				<?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a>';?>
+			</div>
+			<div class="field-items">
+				<div class="field-item even"> &nbsp;<?php print $content['field_dcplatitude']['#items'][0]['value']; ?> </div>
+			</div>
+		   </div>
+		   <div class ="field field-name-field-agglongitude field-type-number-decimal field-label-inline clearfix">
+			<div class = "field-label">
+				<?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a>';?>
+			</div>
+			<div class="field-items">
+				<div class="field-item even"> &nbsp;<?php print $content['field_dcplongitude']['#items'][0]['value']; ?> </div>
+			</div>
+		   </div>
+		   <?php 
             print render($content['field_dcpwaterbodytype']);
             print render($content['field_rcatype']);
             print render($content['field_dcpsurfacewaters']);
 			print render($content['field_dcpirrigation']); //=======> ALter the label
-			
-          print '</div>';
-        print '</fieldset>';
-      print '</div>';
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Waste Water Network Connexions').'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
+			?>
+          </div>
+        </fieldset>
+      </div>
+      <div class="uwwthird">
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Waste Water Network Connexions'); ?></div>
+          </legend>
+          <div class="panel-body">
+		  <?php
             //print render($content['field_dcpuwwliste']);
             //print render($content['field_dcprcaliste']);
             print render($content['field_linked_receiving_areas']);
@@ -186,25 +173,26 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_linked_treatment_plants']);
             print render($content['field_dcpreceivingwater']);
             print render($content['field_dcpwaterbodyid']);
-          print '</div>';
-        print '</fieldset>';
-      print '</div>';
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Site information').'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
+		?>
+          </div>
+        </fieldset>
+      </div>
+      <div class="uwwthird">
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Site information'); ?></div>
+          </legend>
+          <div class="panel-body">
+			<?php
             print render($content['field_anneedata']);
             $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
             print render($content['field_sourcefile']);
-          print '</div>';
-        print '</fieldset>';
-      print '</div>';
-    print '</div>';
+			?>
+          </div>
+        </fieldset>
+      </div>
+    </div>
 
-
-  ?>
   <?php if (!empty($content['field_tags']) || !empty($content['links'])): ?>
   <footer>
     <?php print render($content['field_tags']); ?>
