@@ -4869,9 +4869,17 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             &&
             ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) > 0.75)
             ) {
-            return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+            if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
+                return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            } else {
+                return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+            }              
         } else {
-            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
+                return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            } else {
+                return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            }              
         }
     }
     
@@ -5873,8 +5881,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf'))) {            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {            
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -5888,8 +5895,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		else{
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf'))) {                 
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -5912,8 +5918,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ptotperf'))) {            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {            
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -5927,8 +5932,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		else{
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf'))) {                 
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                 
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -5951,8 +5955,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
               
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf', 'ptotperf'))) {                         
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                         
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -5966,8 +5969,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		else{
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf', 'ptotperf'))) {                            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                            
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6063,8 +6065,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                         )) {                   
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ptotperf'))) {                         
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                         
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6077,8 +6078,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		} else {
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ptotperf'))) {                            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                           
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6103,8 +6103,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                         )) {                   
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf'))) {                         
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                         
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6117,8 +6116,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		} else {
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf'))) {                            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                            
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6143,8 +6141,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                         )) {                   
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf', 'ptotperf'))) {                         
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                         
 				$compliance_info->compliance = 'C';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
@@ -6157,8 +6154,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 		} else {
 			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
-            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))
-                && true === uwwtd_all_uwwtp_treatementperf_pass_or_nr_in($node, array('ntotperf', 'ptotperf'))) {                            
+            if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                           
 				$compliance_info->compliance = 'NC';
 				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
 				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];

@@ -2780,7 +2780,65 @@ function uwwtd_update_7124(&$context = null)
     
     if ($msg_error != '') {
         throw new DrupalUpdateException($msg_error);
-    }     
+    }
+    
+    ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+//     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }               
+} 
+
+/**
+ * pdate map home and add layer rbd and nuts
+ * Configure pathauto pattern and correct wrong alias if install from scratch,
+ */  
+function uwwtd_update_7125(&$context = null)
+{
+//     uwwtd_update_7124($context = null);
+        
+    uwwtd_install_trace(__FUNCTION__); 
+    
+    ////////////////////////////////////////////////////////////////
+    //Update map home and add layer rbd and nuts
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');                              
+    uwwtd_update_map_overlay($country_config, $country_code, 
+                                            array('waste_water_treatment_network_map.inc'), 
+                                            array('oieau_nuts_0.inc',
+                                                  'oieau_nuts_1.inc',
+                                                  'oieau_nuts_2.inc',
+                                                  'oieau_nuts_3.inc',
+                                                  'oieau_rbd.inc',
+                                                  'oieau_rbdsu.inc',), 
+                                            array('-'));        
+    
+
+        
+    //////////////////////////////////////
+    //Configure pathauto pattern and correct wrong alias if exists
+    variable_set('pathauto_node_agglomeration_pattern', 'agglomeration/[node:field_inspireidlocalid]/[node:field_anneedata]');
+    variable_set('pathauto_node_discharge_point_pattern', 'discharge-point/[node:field_inspireidlocalid]/[node:field_anneedata]');
+    variable_set('pathauto_node_receiving_area_pattern', 'receiving-area/[node:field_inspireidlocalid]/[node:field_anneedata]');
+    variable_set('pathauto_node_uwwtp_pattern', 'treatment-plant/[node:field_inspireidlocalid]/[node:field_anneedata]');
+    
+    if (1 === variable_get('uwwtd_install_from_scratch')) {
+        //delete all alias
+        db_delete('url_alias')
+          ->condition('source', 'node/%', 'LIKE')
+          ->execute();        
+        //recreate all alias
+        
+//         'update[node_pathauto_bulk_update_batch_process]'
+    }
     
     ////////////////////////////////////////////////////////////////
     //end update
@@ -2793,8 +2851,8 @@ function uwwtd_update_7124(&$context = null)
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
-    }      
-}    
+    }     
+}   
 
 
 /***************************************************************************/
@@ -2919,6 +2977,13 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_cod_pressure_.inc',
         'uwwtp_n_pressure_.inc',
         'uwwtp_p_pressure_.inc',
+        
+        'oieau_nuts_0.inc',
+        'oieau_nuts_1.inc',
+        'oieau_nuts_2.inc',
+        'oieau_nuts_3.inc',
+        'oieau_rbd.inc',
+        'oieau_rbdsu.inc',
     ); 
     $list_style = array(
         'agglomerations_style.inc',

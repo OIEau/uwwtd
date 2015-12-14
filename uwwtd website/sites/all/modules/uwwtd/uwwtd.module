@@ -365,7 +365,6 @@ function uwwtd_node_redirection($id){
 	$type= explode("/",$page_url);
 	$type= $type[4];
 	//echo "<pre>";print_r($type);echo "</pre>";
-
 	if($type=='treatment-plant'){
 		$typeR='uww';
 		$id= strtolower($id);
@@ -410,9 +409,8 @@ function uwwtd_node_redirection($id){
 		drupal_goto('<front>');
 	}
 	else{
-        drupal_goto($GLOBALS['base_url'] . '/'.$type.'/'.$id.'/'.$annee);
-		drupal_set_title($node->title);
-		//return render(node_view($node, 'full'));
+            drupal_goto($GLOBALS['base_url'] . '/'.$type.'/'.$id.'/'.$annee);
+    		drupal_set_title($node->title);        
 	}
 }
 

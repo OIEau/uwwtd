@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20151127_6.xlsx',
+    'model' => '2015_register_model_20151127_7.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
@@ -400,7 +400,13 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'more_str._treatment_installed_(p._e.)' => $i++,
     'monitoring_results_f._more_string._ok_(%_of_gen._load)' => $i++,
     'monitoring_results_f._more_string._ok_(p._e.)' => $i++,
-        
+    
+    //data needed fort later sheet    
+    'required_rcaaP' => $i++,
+    'required_rcaaN' => $i++,
+    'required_rcab'  => $i++,
+    'required_rcac'  => $i++, 
+            
     //debug data
     'debug_compliance_agglo_from_algo' => $i++,
 );

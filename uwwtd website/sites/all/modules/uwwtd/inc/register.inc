@@ -316,7 +316,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['more_str._treatment_installed_(p._e.)']]);
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']]);
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
-        
+             
         //debug data info
         $sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
 //         }
@@ -1771,96 +1771,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     
     //size of agglo/pe per class
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-//     
-//     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-//                
-//     $ragglofile = fopen($filename, 'rb');
-//     //ignore header
-//     $agglo = fgetcsv($ragglofile, 5000, ';');
-//     
-//     //array 1
-//     $graph_slice_size = array();
-//     $graph_slice_size['0_10000']['pe']  = 0;
-//     $graph_slice_size['0_10000']['number'] = 0;
-//     $graph_slice_size['10000_100000']['pe']  = 0;
-//     $graph_slice_size['10000_100000']['number'] = 0;
-//     $graph_slice_size['100000_n']['pe']  = 0;
-//     $graph_slice_size['100000_n']['number'] = 0;
-//     
-//     //array 2
-//     $graph_parameters = array();
-//     $graph_parameters['total_generated']['pe'] = 0; 
-//     $graph_parameters['total_collected']['pe'] = 0;  
-//     $graph_parameters['total_load_ias']['pe'] = 0;   
-//     $graph_parameters['total_entering']['pe'] = 0; 
-//     $graph_parameters['total_capacity']['pe'] = 0;
-//    
-//     
-//     //array 5 6 7
-//     $summary_legal['art3_C']['number'] = 0;
-//     $summary_legal['art3_C']['pe'] = 0;
-//     $summary_legal['art3_NC']['number'] = 0;
-//     $summary_legal['art3_NC']['pe'] = 0;
-//     $summary_legal['art4_C']['number'] = 0;
-//     $summary_legal['art4_C']['pe'] = 0;
-//     $summary_legal['art4_NC']['number'] = 0;
-//     $summary_legal['art4_NC']['pe'] = 0;
-//     $summary_legal['art5_C']['number'] = 0;
-//     $summary_legal['art5_C']['pe'] = 0;
-//     $summary_legal['art5_NC']['number'] = 0;
-//     $summary_legal['art5_NC']['pe'] = 0;
-//     
-//     todo get info on agglo        
-//     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
-//         //array1
-//         if ($agglo[$ind['generated_load_p.e.']] < 10001) {
-//             $graph_slice_size['0_10000']['pe']  += $agglo[$ind['generated_load_p.e.']];
-//             $graph_slice_size['0_10000']['number']++;        
-//         } elseif ($agglo[$ind['generated_load_p.e.']]  < 100000) {
-//             $graph_slice_size['10000_100000']['pe']  += $agglo[$ind['generated_load_p.e.']];
-//             $graph_slice_size['10000_100000']['number']++;             
-//         } else {   //>=100000
-//             $graph_slice_size['100000_n']['pe']  += $agglo[$ind['generated_load_p.e.']];
-//             $graph_slice_size['100000_n']['number']++;             
-//         }
-//         
-//         //array2
-//         $graph_parameters['total_generated']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         $graph_parameters['total_collected']['pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-//         $graph_parameters['total_load_ias']['pe'] += $agglo[$ind['addressed_through_ias_p._e.']];
-//         $graph_parameters['total_entering']['pe'] += $agglo[$ind['total_entering_load_p._e.']];
-//         $graph_parameters['total_capacity']['pe'] += $agglo[$ind['total_treatment_plant_design_capacity_p._e.']];
-//         
-//         //array 5 6 7
-//         if ($agglo[$ind['art3_compliance']] == 'C') {
-//             $summary_legal['art3_C']['number']++;
-//             $summary_legal['art3_C']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         }
-//         if ($agglo[$ind['art3_compliance']] == 'NC') {
-//             $summary_legal['art3_NC']['number']++;
-//             $summary_legal['art3_NC']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         }
-//         if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {     
-//             $summary_legal['art4_C']['number']++;
-//             $summary_legal['art4_C']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         }
-//         if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
-//             $summary_legal['art4_NC']['number']++;
-//             $summary_legal['art4_NC']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         }
-//         if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {    
-//             $summary_legal['art5_C']['number']++;
-//             $summary_legal['art5_C']['pe'] += $agglo[$ind['generated_load_p.e.']];
-//         }
-//         if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
-//             $summary_legal['art5_NC']['number']++;
-//             $summary_legal['art5_NC']['pe'] += $agglo[$ind['generated_load_p.e.']];        
-//         }      
-//     }
-    
     //array1
 //     dsm($graph_slice_size);
     $sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
@@ -2295,25 +2205,55 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E126', uwwtd_register_get_cell_value($previoussheet, 'C126'));
     
     //array 12  treatment details
+    // Parameters	reference year 			
+    // 	%	p.e.	number of plants	
+    // Total load generated	100,00%	5 164 016		
+    // No treatment (not connected + no treatment after connection)	5,11%	264097		sum of ((neither collecting system nor IAS)+(collected in collecting system-entering load)+(entering load for all stations with compliance article 4 =NC))
+    // IAS	0,00%	0		sum of adressed through IAS
+    // primary treatment as a maximum	0,23%	11779		sum of entering load for all stations with treatment type in place = 1
+    // secondary treatment only as a maximum (performance met)	25,22%	1302236		sum of entering load for all stations with treatment type in place = 2
+    // N removal without P removal (performance met)	6,91%	356636		sum of entering load for all stations with treatment type in place = 3N and performance Ntot=pass or NR
+    // P removal without N removal (performance met)	1,44%	74542		sum of entering load for all stations with treatment type in place = 3P and performance Ptot=pass or NR
+    // N and P removal (performance met)	0,40%	20813		sum of entering load for all stations with treatment type in place = 3NP and performance Ntot=pass or NR & Ptot=pass or NR
+    // Other more stringent treatments	60,69%	3133913		sum of entering load for all stations with treatment type in place = 3O only (no 3N, no 3NP, no P)    
     //todo
-    $sheet->setCellValue('B131', '');
-    $sheet->setCellValue('C131', '');
-    $sheet->setCellValue('B132', '');
-    $sheet->setCellValue('C132', '');
-    $sheet->setCellValue('B133', '');
-    $sheet->setCellValue('C133', '');
-    $sheet->setCellValue('B134', '');
-    $sheet->setCellValue('C134', '');
-    $sheet->setCellValue('B135', '');
-    $sheet->setCellValue('C135', '');
-    $sheet->setCellValue('B136', '');
-    $sheet->setCellValue('C136', '');
-    $sheet->setCellValue('B137', '');
-    $sheet->setCellValue('C137', '');
-    $sheet->setCellValue('B138', '');
-    $sheet->setCellValue('C138', '');
-    $sheet->setCellValue('B139', '');
-    $sheet->setCellValue('C139', '');  
+//         $context['results']['uwwtp_total_load_generated_pe'] = 0;
+//         $context['results']['uwwtp_notreatment_pe'] = 0;
+//         $context['results']['uwwtp_ias_pe'] = 0;
+//         $context['results']['uwwtp_p_as_max_pe'] = 0;
+//         $context['results']['uwwtp_s_as_max_pe'] = 0;
+//         $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
+//         $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
+//         $context['results']['uwwtp_np_removal_pe'] = 0;
+//         $context['results']['uwwtp_other_morestringent_pe'] = 0; 
+            
+    $sheet->setCellValue('B131', '100.00');
+    $sheet->setCellValue('C131', $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('D131', $context['results']['uwwtp_total_load_generated_nb']);
+    $sheet->setCellValue('B132', $context['results']['uwwtp_notreatment_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C132', $context['results']['uwwtp_notreatment_pe']);
+    $sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
+    $sheet->setCellValue('B133', $context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C133', $context['results']['uwwtp_ias_pe']);
+    $sheet->setCellValue('D133', $context['results']['uwwtp_ias_nb']);
+    $sheet->setCellValue('B134', $context['results']['uwwtp_p_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C134', $context['results']['uwwtp_p_as_max_pe']);
+    $sheet->setCellValue('D134', $context['results']['uwwtp_p_as_max_nb']);
+    $sheet->setCellValue('B135', $context['results']['uwwtp_s_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C135', $context['results']['uwwtp_s_as_max_pe']);
+    $sheet->setCellValue('D135', $context['results']['uwwtp_s_as_max_nb']);
+    $sheet->setCellValue('B136', $context['results']['uwwtp_n_removal_without_p_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C136', $context['results']['uwwtp_n_removal_without_p_pe']);
+    $sheet->setCellValue('D136', $context['results']['uwwtp_n_removal_without_p_nb']);
+    $sheet->setCellValue('B137', $context['results']['uwwtp_p_removal_without_n_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C137', $context['results']['uwwtp_p_removal_without_n_pe']);
+    $sheet->setCellValue('D137', $context['results']['uwwtp_p_removal_without_n_nb']);
+    $sheet->setCellValue('B138', $context['results']['uwwtp_np_removal_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C138', $context['results']['uwwtp_np_removal_pe']);
+    $sheet->setCellValue('D138', $context['results']['uwwtp_np_removal_nb']);
+    $sheet->setCellValue('B139', $context['results']['uwwtp_other_morestringent_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C139', $context['results']['uwwtp_other_morestringent_pe']);
+    $sheet->setCellValue('D139', $context['results']['uwwtp_other_morestringent_nb']);  
       
     //array 13    incoming/discharged        
     $sheet->getCell('C148')->setValue($context['results']['graph']['incoming_load_bod']);
@@ -4251,6 +4191,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $SA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'SA') && !$CSA && !$LSA);
             $A58 = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'A58'));
             $A54 = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'A54'));
+            
+            $rcac = (1 === $agglo[$ind['required_rcac']]);
                         
 //             dsm('art4');
 //             dsm($ind['art4_compliance_art._4_(hierarchical_approach)']);
@@ -4331,7 +4273,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 
                 //   - size > 10000 p.e. and discharge into …..CSA designated for criterion c
                 if ($agglo[$ind['generated_load_p.e.']] > 10000 
-                    && $CSA) {                
+                    && $CSA
+                    && $rcac) {                
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']++;
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
@@ -4358,7 +4301,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 
                 //   - size > 10000 p.e. and discharge into …..SA/CSA, but transition period pending
                 if ($agglo[$ind['generated_load_p.e.']] > 10000 
-                    && ($SA  || $CSA)) {                 
+                    && ($SA  || $CSA)
+                    &&  $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] == 'PD') {               
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']++;
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
@@ -4631,15 +4575,15 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['E'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe']);
             $sheet->getCell($col['F'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage']);
             
-//             $sheet->getCell($col['C'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']);
-//             $sheet->getCell($col['D'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage']);
-//             $sheet->getCell($col['E'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe']);
-//             $sheet->getCell($col['F'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage']);
+            $sheet->getCell($col['C'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']);
+            $sheet->getCell($col['D'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage']);
+            $sheet->getCell($col['E'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe']);
+            $sheet->getCell($col['F'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage']);
             
-            $sheet->getCell($col['C'].'36')->setValue('TODO');
-            $sheet->getCell($col['D'].'36')->setValue('TODO');
-            $sheet->getCell($col['E'].'36')->setValue('TODO');
-            $sheet->getCell($col['F'].'36')->setValue('TODO');            
+//             $sheet->getCell($col['C'].'36')->setValue('TODO');
+//             $sheet->getCell($col['D'].'36')->setValue('TODO');
+//             $sheet->getCell($col['E'].'36')->setValue('TODO');
+//             $sheet->getCell($col['F'].'36')->setValue('TODO');            
             
             $sheet->getCell($col['C'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']);
             $sheet->getCell($col['D'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage']);
@@ -4662,15 +4606,15 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['E'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe']);
             $sheet->getCell($col['F'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage']);
             
-//             $sheet->getCell($col['C'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']);
-//             $sheet->getCell($col['D'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage']);
-//             $sheet->getCell($col['E'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe']);
-//             $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);                                                                        
+            $sheet->getCell($col['C'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']);
+            $sheet->getCell($col['D'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage']);
+            $sheet->getCell($col['E'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe']);
+            $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);                                                                        
 
-            $sheet->getCell($col['C'].'40')->setValue('TODO (A58 ?, pending ?)');
-            $sheet->getCell($col['D'].'40')->setValue('TODO (A58 ?, pending ?)');
-            $sheet->getCell($col['E'].'40')->setValue('TODO (A58 ?, pending ?)');
-            $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');                                                                        
+//             $sheet->getCell($col['C'].'40')->setValue('TODO (A58 ?, pending ?)');
+//             $sheet->getCell($col['D'].'40')->setValue('TODO (A58 ?, pending ?)');
+//             $sheet->getCell($col['E'].'40')->setValue('TODO (A58 ?, pending ?)');
+//             $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');                                                                        
 
             
             $sheet->getCell($col['C'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']);
@@ -4719,6 +4663,27 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	if (!isset($context['sandbox']['progress'])) {
     
         $context['sandbox']['progress'] = 0;
+        
+        $context['results']['uwwtp_total_load_generated_pe'] = 0;
+        $context['results']['uwwtp_notreatment_pe'] = 0;
+        $context['results']['uwwtp_ias_pe'] = 0;
+        $context['results']['uwwtp_p_as_max_pe'] = 0;
+        $context['results']['uwwtp_s_as_max_pe'] = 0;
+        $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
+        $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
+        $context['results']['uwwtp_np_removal_pe'] = 0;
+        $context['results']['uwwtp_other_morestringent_pe'] = 0; 
+        
+        $context['results']['uwwtp_total_load_generated_nb'] = 0;
+        $context['results']['uwwtp_notreatment_nb'] = 0;
+        $context['results']['uwwtp_ias_nb'] = 0;
+        $context['results']['uwwtp_p_as_max_nb'] = 0;
+        $context['results']['uwwtp_s_as_max_nb'] = 0;
+        $context['results']['uwwtp_n_removal_without_p_nb'] = 0;
+        $context['results']['uwwtp_p_removal_without_n_nb'] = 0;
+        $context['results']['uwwtp_np_removal_nb'] = 0;
+        $context['results']['uwwtp_other_morestringent_nb'] = 0;             
+        
         $context['sandbox']['id'] = array();
             
         $query = 'select n.nid
@@ -4857,15 +4822,21 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe'] = 0;                
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe'] = 0;                                                                                                                         
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe'] = 0;
+                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaP'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaN'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcab'] = 0;
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcac'] = 0;
             } 
 //             else {
 //                 $context['sandbox']['uwwtpinfo_for_agglo'] &= $context['sandbox']['uwwtpinfo_for_agglo'];
 //             } 
 //             dsm($context['sandbox']['uwwtpinfo_for_agglo']);    
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] += $uwwtp[$induww['uww_entering load  p. e.']];
-            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] += $uwwtp[$induww['uww_capacity p. e.']];                          
-                                                                                       
+            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] += $uwwtp[$induww['uww_capacity p. e.']];
+            
+            
             if ($uwwtp[$induww['art4_final']] == 'C') {          
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  = 
@@ -4875,6 +4846,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                
+                //(entering load for all stations with compliance article 4 =NC))            
+                $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_notreatment_nb']++;                             
             }
             if ($uwwtp[$induww['art4_final']] == 'NR') {  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']];  
@@ -5044,9 +5019,71 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];
                 }
                 
-                 
-                                                                                                                  
+                
+                if ($uwwtp[$induww['required_rcaaP']] == 1) {
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaP'] = 1;
+                }
+                if ($uwwtp[$induww['required_rcaaN']] == 1) {
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaN'] = 1;
+                }
+                if ($uwwtp[$induww['required_rcab']] == 1) {
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcab'] = 1;
+                }
+                if ($uwwtp[$induww['required_rcac']] == 1) {
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcac'] = 1;
+                }                                                                                                                                                               
             }
+            
+            //for graph sheet
+            $treatmenttypeinplace_tmp = array_flip(explode(';', $uwwtp[$induww['treatment type in place (4)']]));
+//             dsm($uwwtp[$induww['treatment type in place (4)']]);
+//             dsm($treatmenttypeinplace_tmp);            
+            if ($uwwtp[$induww['treatment type in place (4)']] == '1') {            
+                $context['results']['uwwtp_p_as_max_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_p_as_max_nb']++;
+            } 
+            if (isset($treatmenttypeinplace_tmp['2'])
+                && !isset($treatmenttypeinplace_tmp['3N'])
+                && !isset($treatmenttypeinplace_tmp['3P'])
+                && !isset($treatmenttypeinplace_tmp['3NP'])
+                && !isset($treatmenttypeinplace_tmp['3other'])
+                ) {         
+                $context['results']['uwwtp_s_as_max_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_s_as_max_nb']++;
+            }
+            if (isset($treatmenttypeinplace_tmp['3N'])
+                && !isset($treatmenttypeinplace_tmp['3P'])
+                && !isset($treatmenttypeinplace_tmp['3NP'])
+                && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')
+                ) {         
+                $context['results']['uwwtp_n_removal_without_p_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_n_removal_without_p_nb']++;
+            }
+            if (isset($treatmenttypeinplace_tmp['3P'])
+                && !isset($treatmenttypeinplace_tmp['3N'])
+                && !isset($treatmenttypeinplace_tmp['3NP'])
+                &&( $uwwtp[$induww['Monitoring results -Ptot']]== 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')
+                ) {         
+                $context['results']['uwwtp_p_removal_without_n_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_p_removal_without_n_nb']++;
+            }
+            if (isset($treatmenttypeinplace_tmp['3NP'])
+                && !isset($treatmenttypeinplace_tmp['3P'])
+                && !isset($treatmenttypeinplace_tmp['3N'])
+                && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')   
+                && ($uwwtp[$induww['Monitoring results -Ptot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')   
+                ) {            
+                $context['results']['uwwtp_np_removal_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_np_removal_nb']++;
+            }
+            if (isset($treatmenttypeinplace_tmp['3other'])
+                && !isset($treatmenttypeinplace_tmp['3P'])
+                && !isset($treatmenttypeinplace_tmp['3N'])
+                && !isset($treatmenttypeinplace_tmp['3NP'])
+                ) {           
+                $context['results']['uwwtp_other_morestringent_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_other_morestringent_nb']++;
+            }    
 //             }
         }
         fclose($ruwwtpfile);
@@ -5189,6 +5226,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'] => 'monitoring results f. more string. OK (% of gen. load)',
             $ind['monitoring_results_f._more_string._ok_(p._e.)'] => 'monitoring results f. more string. OK (p. e.)',
             
+            //data needed fort later sheet            
+            $ind['required_rcaaP'] => 'required_rcaaP',
+            $ind['required_rcaaN'] => 'required_rcaaN',
+            $ind['required_rcab'] => 'required_rcab',
+            $ind['required_rcac'] => 'required_rcac',  
+                        
             //debug value
             $ind['debug_compliance_agglo_from_algo'] => 'debug_compliance_agglo_from_algo',  
         );
@@ -5211,6 +5254,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
         
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
+        
+        //for next sheet
+        $context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
+        $context['results']['uwwtp_total_load_generated_nb']++;
+        
+                
 //         dsm($uwwtpinfo_for_agglo);
 //         dsm($uwwtpinfo_for_agglo);
 //         break;
@@ -5362,6 +5411,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'neither collecting system nor IAS p. e.',
         $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
         
+        //for next sheet
+        $context['results']['uwwtp_ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
+        $context['results']['uwwtp_ias_nb'] += count($agg->field_agguwwliste['und']);
+        //(neither collecting system nor IAS)
+        $context['results']['uwwtp_notreatment_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']]; 
+        
+        //(collected in collecting system-entering load)
+        $context['results']['uwwtp_notreatment_pe'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering']);
+                
         //Distance to compliance Art. 3',
         //take all uwwtp art3 comp NC,NI,PD of the agglo and sum the data 
         //'% of gen. Load (3)',
@@ -5753,6 +5811,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             unset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']]);
         } 
         
+        //data needed fort later sheet            
+        $line[$ind['required_rcaaP']] = $uwwtpinfo_for_agglo['required_rcaaP'];
+        $line[$ind['required_rcaaN']] = $uwwtpinfo_for_agglo['required_rcaaN'];
+        $line[$ind['required_rcab']]  = $uwwtpinfo_for_agglo['required_rcab'];
+        $line[$ind['required_rcac']]  = $uwwtpinfo_for_agglo['required_rcac'];  
+                
         //debug data info
         $line[$ind['debug_compliance_agglo_from_algo']] = $agg->field_aggcompliance['und'][0]['value'];
                    
@@ -6138,8 +6202,16 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 		$context['sandbox']['max'] = count($context['sandbox']['id']);
         
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
-
-       
+                
+//         $context['results']['uwwtp_total_load_generated_pe'] = 0;
+//         $context['results']['uwwtp_notreatment_pe'] = 0;
+//         $context['results']['uwwtp_ias_pe'] = 0;
+//         $context['results']['uwwtp_p_as_max_pe'] = 0;
+//         $context['results']['uwwtp_s_as_max_pe'] = 0;
+//         $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
+//         $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
+//         $context['results']['uwwtp_np_removal_pe'] = 0;
+//         $context['results']['uwwtp_other_morestringent_pe'] = 0;       
 // 		dsm($context);
 	} 
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
@@ -6309,6 +6381,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         
+//         if ($context['sandbox']['id'][$context['sandbox']['progress']] != 173583 || $context['sandbox']['id'][$context['sandbox']['progress']] != 173557) {
+//             $context['sandbox']['progress']++;   
+//             $j++;
+//             continue;
+//         }
 //         $uwwtp = node_load($niduwwtp);
         $uwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 //         dsm($uwwtp->field_uwwaggliste['und']);
