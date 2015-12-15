@@ -25,7 +25,7 @@ function uwwtd_page_stats_querys()
 $options = array('year'=> 2012);
 //uwwtd_stat_collect_data($options);
 $data = uwwtd_stat_sewage_network_data($options);
-dsm($data);
+//dsm($data);
 	return 'fin';
 }
 
