@@ -47,3 +47,57 @@ function uwwtd_general_config($form, $form_state){
 //      dsm(uwwtd_get_keyarray_from_conf((variable_get('test', ''))));
 	return system_settings_form($form);
 }
+
+function uwwtd_download_config($form, $form_state){
+
+	$form['UI']['metadataAgglo'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Link catalog metadata Agglomerations'),
+			'#description' => t('http://www.uwwtd.oieau.fr/catalogue/srv'),
+			'#default_value'    => variable_get('metadataAgglo', '')
+	);
+    $form['UI']['metadataAggloUid'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Uid metadata Agglomerations'),
+			'#description' => t('uuid=8bbb2d949392820fdc973afe131eebd7e29d0bb5'),
+			'#default_value'    => variable_get('metadataAggloUid', '')
+	);
+	$form['UI']['metadataUwwtp'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Link catalog metadata Urban Waste Water Treatment plants'),
+			'#description' => t('http://www.uwwtd.oieau.fr/catalogue/srv'),
+			'#default_value'    => variable_get('metadataUwwtp', '')
+	);
+    $form['UI']['metadataUwwtpUid'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Uid metadata Urban Waste Water Treatment plants'),
+			'#description' => t('uuid=8e17c822fbe18debbc0243bebc2399026f7d40d7'),
+			'#default_value'    => variable_get('metadataUwwtpUid', '')
+	);
+	$form['UI']['metadataDp'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Link catalog metadata Discharge points'),
+			'#description' => t('http://www.uwwtd.oieau.fr/catalogue/srv'),
+			'#default_value'    => variable_get('metadataDp', '')
+	);
+    $form['UI']['metadataDpUid'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Uid metadata Discharge points'),
+			'#description' => t('uuid=d136df0a0bc78cb717e13aab577afdaa21f3dccf'),
+			'#default_value'    => variable_get('metadataDpUid', '')
+	);
+	$form['UI']['metadataRca'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Link catalog metadata Sensitive areas'),
+			'#description' => t('http://www.uwwtd.oieau.fr/catalogue/srv'),
+			'#default_value'    => variable_get('metadataRca', '')
+	);
+    $form['UI']['metadataRcaUid'] = array(
+			'#type' => 'textfield',
+			'#title' => t('Uid metadata Sensitive areas'),
+			'#description' => t('uuid=d136df0a0bc78cb717e13aab577afdaa21f3dccf'),
+			'#default_value'    => variable_get('metadataRcaUid', '')
+	);
+
+	return system_settings_form($form);
+}

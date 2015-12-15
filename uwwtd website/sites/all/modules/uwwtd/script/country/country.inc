@@ -37,7 +37,16 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
-    ),
+    ,
+	'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => 'e3dcd08579cd958bcaa5028b7b5fc99c5b62dcec',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => '0b3d405f94cca841715d2d679a595b0a74bf07d6',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '395eab5983b1e859a4493559e90de24d47cae488',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '5227395618eb647493f2a8c68d06d7cf2449455c',
+	),
     'fr' => array(      //Paris
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -74,7 +83,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
-    ),    
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => '',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '',
+	),    
     'hr' => array(      //zagreb
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -111,7 +128,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    ),
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '5b628e65b4c29115ad48a7213bddfa93f05c3352',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => 'a5ab0d56d60c781b39856299d5a8baaaed3cd1fc',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '912a27a10bff193276a5f4fde6422b5ce90a05d7',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '0f7832c51afc43cac0c89899781a399de0b0e04a',
+	),
     'ie' => array(    //Dublin
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -148,7 +173,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    ),    
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '1c6b1704fd655459b15dde46aa59f9fb9e89d84b',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => 'd15eb23f5bf40de2dea26471b38e68dca0939ade',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '891cbde1a01d7e2b4f3c64e7aa04d99f8b92314f',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => 'b581c2b264061fc51302685940452b3d436e12bb',
+	),    
     'lt' => array(    //Vilnius
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -185,7 +218,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    ),
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => '',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '',
+	),
     'pl' => array(    // 	Varsovie 
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -222,7 +263,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    ),
+	'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => 'e91553b13416af37cb1c1af4b41df0a69d95af2b',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => 'fb878c358115854197a77f9771463e8830711aee',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '38705496d51f2973e95172657504683dac92580e',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '3b014692338d54a94ee9892afeae6abb90a7d765',
+   ),
     'ro' => array(     //Bucarest
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -259,7 +308,15 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    ),
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '0279b40fdf6e847eee8795ec343d9f3f3826bf70',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => 'e7cf223294aa2298837fc5c56f139e7f4c4225ae',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => '8995e1257d8df55075c82ec7dc26a18801d96351',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '36503f6d796b7e29c7d96b09ef8c14f400f81dd9',
+	),
     'si' => array(   //Ljubljana
         'website_mail' => 'bfb@oieau.fr',
         'contact_mail' => 'bfb@oieau.fr',
@@ -296,5 +353,13 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                         
-    ),                               
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
+	),                               
 );      

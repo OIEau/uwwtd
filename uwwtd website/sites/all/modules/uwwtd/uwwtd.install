@@ -1191,7 +1191,7 @@ function uwwtd_update_7116(&$context = null)
 //     dsm($list);
 //     $bexist = false;
     $plid = -1;
-    dsm(drupal_get_normal_path('admin/config'));
+    
     foreach($list as $one_menu) {
         if ($one_menu['link_path'] == drupal_get_normal_path('admin/config')) {
 //             dsm($one_menu);
@@ -2831,14 +2831,36 @@ function uwwtd_update_7125(&$context = null)
     variable_set('pathauto_node_receiving_area_pattern', 'receiving-area/[node:field_inspireidlocalid]/[node:field_anneedata]');
     variable_set('pathauto_node_uwwtp_pattern', 'treatment-plant/[node:field_inspireidlocalid]/[node:field_anneedata]');
     
+    //set each 'basic page' node to have 'Generate automatic URL alias' checked
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));             
+    $query->condition('n.type', 'page', '=');
+	$result = $query->execute();
+    $listnid = array();
+	foreach($result as $row){
+        $listnid[] = $row->nid;
+	}
+    
+    foreach($listnid as $nid) {
+        $node = node_load($nid);
+        $node->path['pathauto'] = 1;
+        node_save($node);
+    }
+   
     if (1 === variable_get('uwwtd_install_from_scratch')) {
-        //delete all alias
+//         dsm('here');
+        
+        module_load_include('inc', 'pathauto');
+        module_load_include('inc', 'pathauto.pathauto');
+        
+        // Delete the existing node aliases.
         db_delete('url_alias')
-          ->condition('source', 'node/%', 'LIKE')
-          ->execute();        
-        //recreate all alias
-        //TODO
-//         'update[node_pathauto_bulk_update_batch_process]'
+        ->condition('source', 'node/%', 'LIKE')
+        ->execute();
+        
+        // Regenerate the node aliases.
+        $nids = db_query("SELECT nid FROM {node}")->fetchCol();
+        pathauto_node_update_alias_multiple($nids, 'bulkupdate');
     }
     
     ////////////////////////////////////////////////////////////////
@@ -2853,8 +2875,7 @@ function uwwtd_update_7125(&$context = null)
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }     
-}   
-
+}
 
 /***************************************************************************/
 // Function utils
