@@ -731,7 +731,7 @@ table.dispo-annee tr td.dispo-annee{
 	padding:10px 12px;
 	text-decoration:none;
 	text-shadow:1px 1px 0px #2f6627;
-	width: 140px;
+	width: 215px;
 	text-align:center;
 	vertical-align:middle;
 	margin-right: 20px;
@@ -775,7 +775,7 @@ table.dispo-annee tr td.dispo-annee{
 	padding:10px 12px;
 	text-decoration:none;
 	text-shadow:1px 1px 0px #cc9f52;
-	width: 140px;
+	width: 215px;
 	text-align:center;
 	vertical-align:middle;
 }
@@ -795,7 +795,7 @@ table.dispo-annee tr td.dispo-annee{
 
 .btnHomePage{
 	margin: 0 auto;
-	width: 320px;
+	width: 500px;
 }
 
 .popup_content_block{
@@ -942,4 +942,12 @@ figure:focus{
 #OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
 
 #block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
+
+article.node-front{
+	font-weight:bold;
+	font-size:15px;
+}
+div#block-block-1{
+	font-size:14px;
+}
 
