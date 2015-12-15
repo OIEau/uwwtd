@@ -318,6 +318,16 @@ function uwwtd_menu(){
     'file' => 'inc/uwwtd.admin.config.inc'
     );    
 
+	 $items['admin/configuration/uwwtd/download'] = array(
+    //'page callback' => 'uwwtd_page_config_ext_links',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('uwwtd_download_config'),
+    'access callback' => true,
+    'access arguments' => array('Data-management access'),
+    'type' => MENU_CALLBACK,
+    'file' => 'inc/uwwtd.admin.config.inc'
+    );  
+	
   //rebuild slovenia deadline
     $items['correction_slovenia_date'] = array(
     'page callback' => 'uwwtd_correction_slovenia_date',
