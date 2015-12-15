@@ -2799,6 +2799,8 @@ function uwwtd_update_7124(&$context = null)
 /**
  * Update map home and add layer rbd and nuts
  * Configure pathauto pattern and correct wrong alias if install from scratch,
+ * Add a menu for meta data links configuration page
+ * Update variable for config  for meta data links  
  */  
 function uwwtd_update_7125(&$context = null)
 {
@@ -2822,7 +2824,104 @@ function uwwtd_update_7125(&$context = null)
                                                   'bathing_water.inc',), 
                                             array('-'));        
     
-
+    //////////////////////////////////////
+    //Update variable for config  for meta data links
+    variable_set('metadataAgglo', $country_config[$country_code]['metadataAgglo']);
+    variable_set('metadataAggloUid', $country_config[$country_code]['metadataAggloUid']);
+    variable_set('metadataUwwtp', $country_config[$country_code]['metadataUwwtp']);
+    variable_set('metadataUwwtpUid', $country_config[$country_code]['metadataUwwtpUid']);
+    variable_set('metadataDp', $country_config[$country_code]['metadataDp']);
+    variable_set('metadataDpUid', $country_config[$country_code]['metadataDpUid']);
+    variable_set('metadataRca', $country_config[$country_code]['metadataRca']);
+    variable_set('metadataRcaUid', $country_config[$country_code]['metadataRcaUid']);
+    
+    //////////////////////////////////////
+    //Add a menu for meta data links configuration page 
+//     menu_cache_clear_all();
+    //find the parent mlid and check if menu not already exists
+    $list = menu_load_links('management');
+    $mlid = -1;
+    $menu_download_exist = false;
+    $listmid = array();
+    
+    $menu_download_plid = '';
+    $menu_download_general_conf_plid = '';
+    $menu_download_external_link_plid = ''; 
+    foreach($list as $one_menu) {
+        if ($one_menu['link_path'] == 'admin/config/uwwtd') {
+            $mlid = $one_menu['mlid'];
+            $listmid[] = $one_menu;
+//             break;     
+        }   
+        if ($one_menu['link_path'] == 'admin/configuration/uwwtd/download') {
+            $menu_download_exist = true;
+            $menu_download_plid = $one_menu['plid']; 
+        }
+        if ($one_menu['link_path'] == 'admin/configuration/uwwtd/general') {
+            $menu_download_general_conf_plid = $one_menu['plid'];
+        }
+        if ($one_menu['link_path'] == 'admin/configuration/uwwtd/extlinks') {
+            $menu_download_external_link_plid = $one_menu['plid'];
+        }
+                                          
+    } 
+    
+//     dsm($menu_download_exist);
+//     dsm($menu_download_plid);
+//     dsm($menu_download_general_conf_plid);
+//     dsm($menu_download_external_link_plid);
+//     
+//     dsm($listmid);
+    //detect error in menu if duplicate
+    if (count($listmid) > 1) {
+        //delete the link
+        if ($menu_download_plid == $menu_download_general_conf_plid
+            && $menu_download_general_conf_plid == $menu_download_external_link_plid) {
+            
+            $mlid = -1;
+            foreach($listmid as $midtouse) {
+                if ($menu_download_plid == $midtouse['mlid']) {
+                    $mlid = $midtouse['mlid'];
+                    break;
+                }
+            } 
+                    
+            if ($mlid == -1) {
+                throw new DrupalUpdateException('More than one menu admin/config/uwwtd found.');
+            }
+        } else {
+            throw new DrupalUpdateException('Can\'t detect parent menu for new link download');
+        }
+        
+        //delete the duplicate empty menu  'admin/config/uwwtd'
+        foreach($listmid as $midtodlete) {
+            if ($menu_download_plid != '' && $menu_download_plid != $midtodlete['mlid']) {
+                menu_link_delete($midtodlete['mlid']);  
+            }
+        } 
+    }
+    
+    if ($mlid == -1){
+        throw new DrupalUpdateException('Can\'t find the menu link "uwwtd configuration" in management menu.');     
+    } 
+    
+    if (false === $menu_download_exist) {
+        //check if menu already exist
+        $plid = $mlid;
+        $menu= array(
+            'link_path' => 'admin/configuration/uwwtd/download' ,
+            'link_title' => 'UWWTD download configuration',
+            'description' => 'Configure download link' ,
+            'menu_name' => 'management',
+            'weight' => 0,
+    //         'expanded' => false,
+            'mlid' => 0, 
+            'plid' => $plid,
+            'customized' => 1,
+        );    
+        $mlid = menu_link_save($menu);
+    } 
+//     menu_cache_clear_all();              
         
     //////////////////////////////////////
     //Configure pathauto pattern and correct wrong alias if exists
@@ -2862,6 +2961,7 @@ function uwwtd_update_7125(&$context = null)
         $nids = db_query("SELECT nid FROM {node}")->fetchCol();
         pathauto_node_update_alias_multiple($nids, 'bulkupdate');
     }
+    
     
     ////////////////////////////////////////////////////////////////
     //end update
