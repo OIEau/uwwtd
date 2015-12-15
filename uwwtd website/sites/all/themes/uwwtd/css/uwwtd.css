@@ -943,3 +943,4 @@ figure:focus{
 
 #block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
 
+.download, .download tr, .download tr td{border: 1px solid #000;padding: 10px;}
