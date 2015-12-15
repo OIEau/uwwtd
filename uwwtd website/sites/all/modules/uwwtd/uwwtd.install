@@ -2844,7 +2844,6 @@ function uwwtd_update_7125(&$context = null)
     $menu_download_exist = false;
     $listmid = array();
     
-    $menu_download_plid = '';
     $menu_download_general_conf_plid = '';
     $menu_download_external_link_plid = ''; 
     foreach($list as $one_menu) {
@@ -2855,7 +2854,6 @@ function uwwtd_update_7125(&$context = null)
         }   
         if ($one_menu['link_path'] == 'admin/configuration/uwwtd/download') {
             $menu_download_exist = true;
-            $menu_download_plid = $one_menu['plid']; 
         }
         if ($one_menu['link_path'] == 'admin/configuration/uwwtd/general') {
             $menu_download_general_conf_plid = $one_menu['plid'];
@@ -2875,12 +2873,11 @@ function uwwtd_update_7125(&$context = null)
     //detect error in menu if duplicate
     if (count($listmid) > 1) {
         //delete the link
-        if ($menu_download_plid == $menu_download_general_conf_plid
-            && $menu_download_general_conf_plid == $menu_download_external_link_plid) {
+        if ($menu_download_general_conf_plid == $menu_download_external_link_plid) {
             
             $mlid = -1;
             foreach($listmid as $midtouse) {
-                if ($menu_download_plid == $midtouse['mlid']) {
+                if ($menu_download_general_conf_plid == $midtouse['mlid']) {
                     $mlid = $midtouse['mlid'];
                     break;
                 }
@@ -2895,7 +2892,7 @@ function uwwtd_update_7125(&$context = null)
         
         //delete the duplicate empty menu  'admin/config/uwwtd'
         foreach($listmid as $midtodlete) {
-            if ($menu_download_plid != '' && $menu_download_plid != $midtodlete['mlid']) {
+            if ($menu_download_general_conf_plid != '' && $menu_download_general_conf_plid != $midtodlete['mlid']) {
                 menu_link_delete($midtodlete['mlid']);  
             }
         } 
