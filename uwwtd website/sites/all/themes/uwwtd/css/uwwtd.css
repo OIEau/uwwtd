@@ -31,6 +31,14 @@ div.olPopup .openlayers-tooltip-name a{
     font-size:1.5em;
     font-weight:bold;
 }
+div.olControlMousePosition{
+	left:100px;
+	font-family:12px;
+	background-color:#fff;
+	width:250px;
+	padding:3px 5px;
+}
+
 h2.block-title{
     font-size:14px;
     font-weight:bold;

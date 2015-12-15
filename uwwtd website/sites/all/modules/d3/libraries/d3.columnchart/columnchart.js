@@ -20,9 +20,8 @@
       p = [20, 50, 30, 60],
       w = settings.width?settings.width:800,
       h = settings.height?settings.height:400,
-      // chart is 65% and 80% of overall height
-      chart = {w: w * .65, h: h * .70},
-      legend = {w: w * .35, h:h},
+	  chart =(w>400? {w: w * .65, h: h * .70}:{w: w*0.8, h: h * .70}),
+	  legend =(w>400? {w: w * .35, h:h}:{w: w, h:h*0.3}),
       // bar width is calculated based on chart width, and amount of data
       // items - will resize if there is more or less
       barWidth = ((.90 * chart.w) / (rows.length * key.length)),
@@ -34,7 +33,7 @@
       y = d3.scale.linear().domain([0,max]).range([chart.h, 0]),
       z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]),
       div = (settings.id) ? settings.id : 'visualization';
-
+	console.log(w);
     var svg = d3.select('#' + div).append("svg")
       .attr("width", w)
       .attr("height", h)
@@ -94,9 +93,11 @@
 
     /* LEGEND */
     var legend = svg.append("g")
-      .attr("class", "legend")
-      .attr("transform", "translate(" + (chart.w + 10) + "," + 0 + ")");
+      .attr("class", "legend");
+	if(w>400){legend.attr("transform", "translate(" + (chart.w + 10) + "," + 0 + ")");}
+    else{legend.attr("transform", "translate( 10," + (chart.h+20) + ")");}
 
+	
     var keys = legend.selectAll("g")
       .data(key)
       .enter().append("g")

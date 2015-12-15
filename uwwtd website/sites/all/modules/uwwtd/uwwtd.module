@@ -375,7 +375,6 @@ function uwwtd_node_redirection($id){
 	$type= explode("/",$page_url);
 	$type= $type[4];
 	//echo "<pre>";print_r($type);echo "</pre>";
-
 	if($type=='treatment-plant'){
 		$typeR='uww';
 		$id= strtolower($id);
@@ -420,9 +419,8 @@ function uwwtd_node_redirection($id){
 		drupal_goto('<front>');
 	}
 	else{
-        drupal_goto($GLOBALS['base_url'] . '/'.$type.'/'.$id.'/'.$annee);
-		drupal_set_title($node->title);
-		//return render(node_view($node, 'full'));
+            drupal_goto($GLOBALS['base_url'] . '/'.$type.'/'.$id.'/'.$annee);
+    		drupal_set_title($node->title);        
 	}
 }
 
@@ -1082,6 +1080,7 @@ function uwwtd_get_data_uwwtp($option)
 		f_premoval.field_uwwpremoval_value,
 		f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
 		f_regionnuts.field_regionnuts_value,
+		nut.n3nm,
 		f_uwwbod5perf.field_uwwbod5perf_value,
 		f_uwwcodperf.field_uwwcodperf_value,
 		f_uwwntotperf.field_uwwntotperf_value,
@@ -1119,13 +1118,13 @@ function uwwtd_get_data_uwwtp($option)
         left join
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
-
         left join
             {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
                 ON n.nid = f_uwwloadenteringuwwtp.entity_id
         left join
             {field_data_field_regionnuts} f_regionnuts
                 ON n.nid = f_regionnuts.entity_id
+		LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd
         left join
             {field_data_field_uwwbod5perf} f_uwwbod5perf
                 ON n.nid = f_uwwbod5perf.entity_id
@@ -2396,7 +2395,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
-				$row['field_regionnuts_value'],
+				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
 				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
@@ -2411,7 +2410,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
-				$row['field_regionnuts_value'],
+				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
 				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],

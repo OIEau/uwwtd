@@ -147,11 +147,11 @@ $GLOBALS['uwwtd']['uwwtd_years'] = range(2000, date('Y') + 5);
 $GLOBALS['uwwtd']['uwwtd_years'] = array_combine($GLOBALS['uwwtd']['uwwtd_years'], $GLOBALS['uwwtd']['uwwtd_years']);
 
 $GLOBALS['uwwtd']['ui']['operator'] = array(
-    '<' => 'Is less than',
-    '=' => 'Is equal to',
-    '!=' => 'Is not equal to',
-    '>=' => 'Is greater than or equal to',
-    '>' => 'Is greater than',
+    '<' => t('Is less than'),
+    '=' => t('Is equal to'),
+    '!=' => t('Is not equal to'),
+    '>=' => t('Is greater than or equal to'),
+    '>' => t('Is greater than'),
 );
 
 $GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
@@ -257,13 +257,13 @@ $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
 );
 
 $GLOBALS['uwwtd']['all_compliance']  = array(
-    'NI' => 'No information',
-    'NR' => 'Not relevant',     //comprend aussi PD
-    'NC' => 'Not Compliant',
-    'C' => 'Compliant',        //comprend aussi QC
-    '?' => '?',
-    'PD' => 'Pending Deadline',
-    'QC' => 'Questionable Compliance',
+    'NI' => t('No information'),
+    'NR' => t('Not relevant'),     //comprend aussi PD
+    'NC' => t('Not Compliant'),
+    'C' => t('Compliant'),        //comprend aussi QC
+    '?' => t('?'),
+    'PD' => t('Pending Deadline'),
+    'QC' => t('Questionable Compliance'),
 );
 
 $GLOBALS['uwwtd']['compliance_color']  = array(
@@ -297,55 +297,55 @@ $GLOBALS['uwwtd']['ui']['compliance'] = array(
 $GLOBALS['uwwtd']['ui']['field']['compliance_label'] = $GLOBALS['uwwtd']['all_compliance'];
 
 $GLOBALS['uwwtd']['ui']['test_pass'] = array(
-    'All' => '- Any -',
-    'P' => 'Pass',
-    'F' => 'Fail',
-    'NR' => 'Not relevant',
+    'All' => t('- Any -'),
+    'P' => t('Pass'),
+    'F' => t('Fail'),
+    'NR' => t('Not relevant'),
 );
 
 $GLOBALS['uwwtd']['ui']['yes_no'] = array(
-    'All' => '- Any -',
-    '1' => 'Yes',
-    '0' => 'No',
+    'All' => t('- Any -'),
+    '1' => t('Yes'),
+    '0' => t('No'),
 );
 
 
 $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
-    'All' => '- Any -',
-    'NI' => 'No information',
-    'P' => 'Primary treatment',
-    'S' => 'Secondary treatment',
-    'MS' => 'More stringent treatment',
+    'All' => t('- Any -'),
+    'NI' => t('No information'),
+    'P' => t('Primary treatment'),
+    'S' => t('Secondary treatment'),
+    'MS' => t('More stringent treatment'),
 );
 
 
 $GLOBALS['ms_level'] = array(
     'sludge'=>array(
-        'dcp'=>array('color'=>'#B5B5BF','label'=>'Discharged into surface waters : Pipelines'),
-        'dcs'=>array('color'=>'#686872','label'=>'Discharged into surface waters : Ships'),
-        'dco'=>array('color'=>'#2D2D37','label'=>'Discharged into surface waters : Others'),
-        'rua'=>array('color'=>'#459436','label'=>'Re-used: Soil and agriculture'),
-        'ruo'=>array('color'=>'#8EC547','label'=>'Re-used: Others'),
-        'dil'=>array('color'=>'#5B3349','label'=>'Disposed: Landfill'),
-        'dii'=>array('color'=>'#F28030','label'=>'Disposed: Incineration'),
-        'dio'=>array('color'=>'#F29F80','label'=> 'Disposed: Others'),
-        'missing'=>array('color'=>'#E74C3C','label'=> 'Missing'),
+        'dcp'=>array('color'=>'#B5B5BF','label'=>t('Discharged into surface waters : Pipelines')),
+        'dcs'=>array('color'=>'#686872','label'=>t('Discharged into surface waters : Ships')),
+        'dco'=>array('color'=>'#2D2D37','label'=>t('Discharged into surface waters : Others')),
+        'rua'=>array('color'=>'#459436','label'=>t('Re-used: Soil and agriculture')),
+        'ruo'=>array('color'=>'#8EC547','label'=>t('Re-used: Others')),
+        'dil'=>array('color'=>'#5B3349','label'=>t('Disposed: Landfill')),
+        'dii'=>array('color'=>'#F28030','label'=>t('Disposed: Incineration')),
+        'dio'=>array('color'=>'#F29F80','label'=> t('Disposed: Others')),
+        'missing'=>array('color'=>'#E74C3C','label'=> t('Missing')),
     ),
     'waste_water'=>array(
-        'agriculture'=>array('color'=>'#459436','label'=>'Agriculture'),
-        'industry'=>array('color'=>'#334D5C','label'=>'Industry'),
-        'others'=>array('color'=>'#02658C','label'=>'Others')
+        'agriculture'=>array('color'=>'#459436','label'=>t('Agriculture')),
+        'industry'=>array('color'=>'#334D5C','label'=>t('Industry')),
+        'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#74ffe0','label'=>'Connected to collecting system'),
-        'ias'=>array('color'=>'#bd8842','label'=>'Individual and Appropriate Systems'),
-        'wot'=>array('color'=>'#d93c3c','label'=>'Discharged without treatment')
+		'cs'=>array('color'=>'#74ffe0','label'=>t('Connected to collecting system')),
+        'ias'=>array('color'=>'#bd8842','label'=>t('Individual and Appropriate Systems')),
+        'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
 	'sewage_network'=>array(
-		'B'=>array('color'=>'#4f91e1','label'=>'Separative and combine system'),
-        'S'=>array('color'=>'#bd8842','label'=>'Separative system'),
-        'C'=>array('color'=>'#bd8842','label'=>'Combine system'),
-		'NI'=>array('color'=>'#a2a2a2','label'=>'No information'),
+		'B'=>array('color'=>'#4f91e1','label'=>t('Separative and combine system')),
+        'S'=>array('color'=>'#bd8842','label'=>t('Separative system')),
+        'C'=>array('color'=>'#bd8842','label'=>t('Combine system')),
+		'NI'=>array('color'=>'#a2a2a2','label'=>t('No information')),
 	)
 	
 	//E74C3C
