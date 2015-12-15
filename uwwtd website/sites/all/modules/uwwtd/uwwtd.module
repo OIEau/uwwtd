@@ -2122,10 +2122,10 @@ function uwwtd_page_agglomeration_connection($type_export = '')
     <tbody>
         <tr>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc2_value']['value'], 2) . ' p.e
+            ' . uwwtd_format_number($graph['field_aggc1_value']['value'], 2) . ' p.e
             </td>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc1_value']['value'], 2) . ' p.e
+            ' . uwwtd_format_number($graph['field_aggc2_value']['value'], 2) . ' p.e
             </td>
             <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
             ' . uwwtd_format_number($graph['field_aggpercwithouttreatment_value']['value'], 2) . ' p.e

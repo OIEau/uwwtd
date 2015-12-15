@@ -156,7 +156,7 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$Data_uwwtd_stat_national_compliance[] = array(
 				"value" => $result['generated_sum'],
-				"label" => $result['field_aggcompliance_value_format'] .' ['.$result['generated_sum'].' pe]',
+				"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['generated_sum']).' pe]',
 				"valueformat" => $result['generated_sum_format'].' pe',
                 "color"=>isset($result['color'])?$result['color']:null
 		);
@@ -171,15 +171,15 @@ function uwwtd_page_stats_graphs_result($options){
 	$String_uwwtd_stat_agglomeration_compliance = array();
 
 	$results = uwwtd_stat_national_compliance($options);
+	$sum=0;
 	foreach ($results as $result){
-		$sum=0;
 		$Data_uwwtd_stat_agglomeration_compliance[] = array(
-				"value" => $result['total_count'],
-				"label" => $result['field_aggcompliance_value_format'] .' ['.$result['total_count'].']',
+				"value" => (integer)$result['total_count'],
+				"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['total_count']).']',
 				"valueformat" => $result['total_count_format'],
                 "color"=>isset($result['color'])?$result['color']:null
 		);
-		$sum=$result['total_count'];
+		$sum += (integer)$result['total_count'];
 		$String_uwwtd_stat_agglomeration_compliance[]= array($result['field_aggcompliance_value_format'],$result['total_count_format']);
 	}
 	$String_uwwtd_stat_agglomeration_compliance[]= array('Total',$sum);
@@ -268,7 +268,7 @@ function uwwtd_page_stats_graphs_result($options){
 	foreach ($results as $result){
 		$aData_uwwtd_stat_national_uwwtpT[] = array(
 				"value" => $result['loadentering_sum'],
-				"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.$result['loadentering_sum'].' pe]',
+				"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.uwwtd_format_number($result['loadentering_sum']).' pe]',
 				"valueformat" => $result['loadentering_sum_format'],
                 "color"=>isset($result['color'])?$result['color']:null
 		);
