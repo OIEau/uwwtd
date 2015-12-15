@@ -37,7 +37,6 @@ For more details on the UWWTD SIIF framework, look at [URL to concept paper]
 The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
-    ,
 	'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
 	'metadataAggloUid' => 'e3dcd08579cd958bcaa5028b7b5fc99c5b62dcec',
 	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
