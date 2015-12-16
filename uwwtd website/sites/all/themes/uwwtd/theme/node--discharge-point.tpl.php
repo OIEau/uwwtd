@@ -136,7 +136,7 @@ echo uwwtd_insert_errors_tab($node);
 		  <div class="panel-body">
 		   <div class ="field field-name-field-agglatitude field-type-number-decimal field-label-inline clearfix">
 			<div class = "field-label">
-				<?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a>';?>
+				<?php print '<a href="'.url('<front>').'#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a>';?>
 			</div>
 			<div class="field-items">
 				<div class="field-item even"> &nbsp;<?php print $content['field_dcplatitude']['#items'][0]['value']; ?> </div>
@@ -144,7 +144,7 @@ echo uwwtd_insert_errors_tab($node);
 		   </div>
 		   <div class ="field field-name-field-agglongitude field-type-number-decimal field-label-inline clearfix">
 			<div class = "field-label">
-				<?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a>';?>
+				<?php print '<a href="'.url('<front>').'#zoom=17&lat='.$content['field_dcplatitude']['#items'][0]['value'].'&lon='.$content['field_dcplongitude']['#items'][0]['value'].'&layers=Discharge%20points&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a>';?>
 			</div>
 			<div class="field-items">
 				<div class="field-item even"> &nbsp;<?php print $content['field_dcplongitude']['#items'][0]['value']; ?> </div>
@@ -168,9 +168,10 @@ echo uwwtd_insert_errors_tab($node);
 		  <?php
             //print render($content['field_dcpuwwliste']);
             //print render($content['field_dcprcaliste']);
-            print render($content['field_linked_receiving_areas']);
+            
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_treatment_plants']);
+			print render($content['field_linked_receiving_areas']);
             print render($content['field_dcpreceivingwater']);
             print render($content['field_dcpwaterbodyid']);
 		?>

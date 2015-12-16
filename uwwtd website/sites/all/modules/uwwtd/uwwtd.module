@@ -2154,8 +2154,6 @@ function uwwtd_page_agglomeration_connection($type_export = '')
 //             . '<div class="view-content">'.$render_table_graph.'</div>'
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 
-    $link_export_csv = '<a href="'.url('agglomerations/connection/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
-    $link_export_xls = '<a href="'.url('agglomerations/connection/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
 //      ;
     $page =  '<h1>'.$title.'</h1>'
             . $form
@@ -2210,11 +2208,16 @@ function uwwtd_page_agglomeration_connection($type_export = '')
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
-                . '<b>'.count($rows) ." results</b>"
+                . '<div class="rows data-table-row">'
+			 . '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'agglomerations/connection/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'agglomerations/connection/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->' //use for print wjhtmltopdf
-                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
-                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>'
      ;
 
@@ -2649,8 +2652,6 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
     $render_graph_nb = theme('flot_graph', $variables_nb);
     $render_graph = theme('flot_graph', $variables);
 
-    $link_export_csv = '<a href="'.url('uwwtps/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
-    $link_export_xls = '<a href="'.url('uwwtps/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
 
 
     $page = ''
@@ -2707,11 +2708,15 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
                 .'</div>'
             .'</div>'
             .'<div class="rows data-table-row">'
-			. '<b>'.count($rows) ." results</b>"
+			. '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'uwwtps/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'uwwtps/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
                 . '<div class="view-content">'. $table . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
-                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
-                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>'
      ;
      if (true === $put_in_cache) {
@@ -2726,9 +2731,14 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 function uwwtd_page_uwwtps_treatment($type_export = '')
 {
     $title = 'UWWTD Treatment Plants- Treatment map';
-    drupal_set_title($title);  //todo
+    drupal_set_title($title); 
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    
+    $keys_order = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'];
+    unset($keys_order['All']);
+    $keys_order = array_reverse(array_values($keys_order));
+    
     $type = "uwwtp";
 	$option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'];
@@ -2885,7 +2895,7 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
     );
 
 //     dsm($optionstyle);
-//     dsm($data);
+    //dsm($data);
 
 
 
@@ -2956,7 +2966,6 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
     $features['uwwtp_treatment'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
 //     dsm($features);
 //     unset($data);
-
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
 
@@ -2975,6 +2984,8 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
     $data_pie = array();
     $xaxis = array();
     $i = 0;
+    
+    $graph = array_replace(array_flip($keys_order), $graph);
     foreach($graph as $treatmenttype_format => $detail) {
         $d1 = new flotData($detail['nb']);
         $d1->label = $treatmenttype_format;//$detail['label'];
@@ -3168,8 +3179,6 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 //      ;
 
-    $link_export_csv = '<a href="'.url('uwwtps/treatment/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
-    $link_export_xls = '<a href="'.url('uwwtps/treatment/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
     
     $page =  '<h1>'.$title.'</h1>'
 
@@ -3225,11 +3234,15 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
-			. '<b>'.count($rows) ." results</b>"
+			. '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'uwwtps/treatment/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'uwwtps/treatment/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'   //use for print wjhtmltopdf
-                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
-                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
             .'</div>';
 
      if (true === $put_in_cache) {
@@ -3649,18 +3662,21 @@ function uwwtd_page_uwwtps_pressure($type_export = '')
 //             . '<div class="view-content">'. drupal_render($build) . '</div>'
 //      ;
 
-    $link_export_csv = '<a href="'.url('uwwtps/pressure/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
-    $link_export_xls = '<a href="'.url('uwwtps/pressure/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
     
     $page =  '<h1>'.$title.'</h1>'
             . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
-			. '<b>'.count($rows) ." results</b>"
+			
             . '<div class="rows data-table-row">'
+				. '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'uwwtps/pressure/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'uwwtps/pressure/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
-                . '<!--markerprinttable-->'  //use for print wjhtmltopdf
-                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
-                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'                
+                . '<!--markerprinttable-->'  //use for print wjhtmltopdf              
             .'</div>'
      ;
 
@@ -4142,41 +4158,8 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
     $render_graph = theme('flot_graph', $variables);
 
 
-    $link_export_csv = '<a href="'.url('agglomerations/compliance/csv', array('query'=>drupal_get_query_parameters())).'">csv</a>';
-    $link_export_xls = '<a href="'.url('agglomerations/compliance/xls', array('query'=>drupal_get_query_parameters())).'">xls</a>';
-/*
-//             . '<script>
-// function uwwtd_labelformaterpie(label, series) {
-//     console.log("uwwtd_labelformaterpie : " + label);
-//     return "<div class=\"pie_legend\">" + Math.round(series.percent) + "%</div>";
-// }
-// function uwwtd_labelformaterpie_legend(label, series) {
-//     console.log("uwwtd_labelformaterpie_legend " + label);
-//     return "<div class=\"pie_slice\">label + " (" + Math.round(series.percent) + "%)</div>";
-// }
-//     </script>'
+   
 
-*/
-/*
-            .'<div class="rows charts-row">'
-                .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
-                    .'<div class="container flip">'
-                      .'<div class="front">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-plus-square plus">+</i></div>'
-                        . '<div class="view-content">'.$render_graph_nb.'</div>'
-                      .'</div>'
-                      .'<div class="back">'
-                        . '<div class="flot-title"><div class="flip-title">Compliance by number of plants</div> <i class="fa fa-minus-square minus">-</i></div>'
-                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-                      .'</div>'
-                    .'</div>'
-                  .'</div>'
-                .'</div>'
-
-
-*/
-// dsm($render_graph);
     $page = ''
             . '<h1>'.$title.'</h1>'
             . $form
@@ -4235,11 +4218,17 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
-			. '<b>'.count($rows) ." results</b>"
+			 . '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'agglomerations/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'agglomerations/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
+				
                 . '<div class="view-content">'. drupal_render($build) . '</div>'
-                . '<!--markerprinttable-->'  //use for print wjhtmltopdf
-                . '<div class="view-content hideprint">'. $link_export_csv . '</div>'
-                . '<div class="view-content hideprint">'. $link_export_xls . '</div>'
+			
+                . '<!--markerprinttable-->'  //use for print wkhtmltopdf
             .'</div>'
 //     .'<script>
 //     jQuery(document).ready(function(){
@@ -4625,7 +4614,7 @@ function uwwtd_get_national_stat_str($year){
 	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
 	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
 	
-	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population aquivalent (p.e).
+	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population equivalent (p.e).
 			These agglomerations generated a total load of ".$nbGeneratedLoad." (p.e). ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
 			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
 			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.

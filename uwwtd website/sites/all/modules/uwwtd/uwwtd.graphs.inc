@@ -9,9 +9,9 @@ function uwwtd_stats_graphs_page(){
 }
 
 function uwwtd_stats_graphs_form($form, &$form_state){
-
+    $year = uwwtd_get_max_annee();
 	$form['#prefix'] = '<h1 align="center">' . t('Graphs for national stats') . '</h1>';
-	$form['description'] = array('#markup' => t('<p>Select the year to generate the graphs.</p>'));
+	
 
 	// Get available years for data
 		$query = db_select('field_data_field_anneedata', 'a');
@@ -19,27 +19,37 @@ function uwwtd_stats_graphs_form($form, &$form_state){
 		$query->orderBy('field_anneedata_value', 'DESC');
 		$results = $query->execute();
 		$years = array('all' => 'Show all');
+        $count = 0;
 		while($record = $results->fetchAssoc()) {
 			$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+            if($record['field_anneedata_value']!=$year){$count++;}
 		}
-		$form['year'] = array(
-				'#title' => t('Available years'),
-				'#type' => 'select',
-				'#options' => $years,
-				'#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : 'all',
-		);
+        
+         //TODO : add RBD, nuts and other filters ?
+        //If we have more than one year of availability
+        if($count){
+            $form['description'] = array('#markup' => t('<p>Select the year to generate the graphs.</p>'));
+            $form['year'] = array(
+                    '#title' => t('Available years'),
+                    '#type' => 'select',
+                    '#options' => $years,
+                    '#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : $year,
+            );
+           
 
-
-
-		$form['submit'] = array(
-				'#type' => 'submit',
-				'#attributes' => array('class' => array('btn-primary', 'btn')),
-				'#value' => t('Refresh graphs')
-		);
+            $form['submit'] = array(
+                    '#type' => 'submit',
+                    '#attributes' => array('class' => array('btn-primary', 'btn')),
+                    '#value' => t('Refresh graphs')
+            );
+        }
+        
 
 		if(isset($form_state['storage']['result'])) {
 			$form['#suffix'] .= $form_state['storage']['result'];
-		}
+		}else{
+            $form['#suffix'] .=uwwtd_page_stats_graphs_result(array('year'=>$year));
+        }
 
 	return $form;
 
@@ -88,12 +98,14 @@ function uwwtd_page_stats_graphs_result($options){
 	else{
 		$year = uwwtd_get_max_annee();
 	}
-	$formResult.='<p>'.uwwtd_get_national_stat_str($year).'</p>';
+	$formResult.='<p class="national-stat-str" align="justify">'.uwwtd_get_national_stat_str($year).'</p>';
 	
 	//==============================================
     //=============== ROW Collection
     //==============================================
-    
+    if(!isset($options['year'])) {
+        $options['year'] = $year;
+    }
     $collect_type = uwwtd_stat_collect_data($options);
 	$all = array_shift($collect_type);
 	//unset($collect_type[0]);
@@ -103,7 +115,7 @@ function uwwtd_page_stats_graphs_result($options){
 		$lines= array();
 		$sum = 0;
 		$sum_rate = 0;
-		foreach($collect_type as $v){
+		foreach($collect_type as $k=>$v){
 			$lines[]=array(
 				$v['label'],
 				$v['valueformat'],
@@ -111,6 +123,7 @@ function uwwtd_page_stats_graphs_result($options){
 			);
 			$sum+=$v['value']; 
 			$sum_rate+= round($v['value']/$all['value']*100);
+			$collect_type[$k]['label'].=' ['.$v['valueformat'].']'; 
 		}
 		$lines[]=array('Total', uwwtd_format_number($sum).' pe', uwwtd_format_number($sum_rate).' %');
 		$collect_type_str = theme('table', array("rows"=>$lines, "header"=>array("Destination","Values", "Rate")));
@@ -134,11 +147,11 @@ function uwwtd_page_stats_graphs_result($options){
     $formResult.='<div class="rows charts-row">';
         //Collection destination
         $front = '<svg id="graph_collect_type" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($collect_type).",'graph_collect_type','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($collect_type).",'graph_collect_type');});</script>";
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Generated Load by collection type", $front, $collect_type_str).'</div></div>';
         //Collective system type
         $front = '<svg id="graph_cs_type" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($sewage['sum']).",'graph_cs_type','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($sewage['sum']).",'graph_cs_type');});</script>";
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Generated Load by sewage network type", $front, $sewage_str).'</div></div>';
     $formResult.='</div>';
 	
@@ -151,9 +164,9 @@ function uwwtd_page_stats_graphs_result($options){
 	$Data_uwwtd_stat_national_compliance = array();
 	$String_uwwtd_stat_national_compliance = array();
 
-	$results = uwwtd_stat_national_compliance($options);
+	$national_compliance = uwwtd_stat_national_compliance($options);
 	$sum=0;
-	foreach ($results as $result){
+	foreach ($national_compliance as $result){
 		$Data_uwwtd_stat_national_compliance[] = array(
 				"value" => $result['generated_sum'],
 				"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['generated_sum']).' pe]',
@@ -170,9 +183,8 @@ function uwwtd_page_stats_graphs_result($options){
 	$Data_uwwtd_stat_agglomeration_compliance = array();
 	$String_uwwtd_stat_agglomeration_compliance = array();
 
-	$results = uwwtd_stat_national_compliance($options);
 	$sum=0;
-	foreach ($results as $result){
+	foreach ($national_compliance as $result){
 		$Data_uwwtd_stat_agglomeration_compliance[] = array(
 				"value" => (integer)$result['total_count'],
 				"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['total_count']).']',
@@ -189,15 +201,16 @@ function uwwtd_page_stats_graphs_result($options){
     $formResult.='<div class="rows charts-row">';
         //Total generated load by compliance
         $front = '<svg id="graph_generatedByCompliance" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($Data_uwwtd_stat_national_compliance).",'graph_generatedByCompliance','end');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($Data_uwwtd_stat_national_compliance).",'graph_generatedByCompliance');});</script>";
         
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Total generated load by compliance", $front, $String_uwwtd_stat_national_compliance).'</div></div>';
         //Number of agglomerations by compliance
         $front = '<svg id="graph_agglomerationByCompliance" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($Data_uwwtd_stat_agglomeration_compliance).",'graph_agglomerationByCompliance','end');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($Data_uwwtd_stat_agglomeration_compliance).",'graph_agglomerationByCompliance');});</script>";
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of agglomerations by compliance", $front, $String_uwwtd_stat_agglomeration_compliance).'</div></div>';
     $formResult.='</div>';
-
+    
+    unset($national_compliance);
     //==============================================
     //=============== ROW 2
     //==============================================
@@ -245,12 +258,12 @@ function uwwtd_page_stats_graphs_result($options){
     $formResult.='<div class="rows charts-row">';
         //Total load entering by compliance
         $front = '<svg id="graph_loadenteringByCompliance" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpC).",'graph_loadenteringByCompliance','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpC).",'graph_loadenteringByCompliance');});</script>";
         
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Total load entering by compliance", $front, $aString_uwwtd_stat_national_uwwtpC).'</div></div>';
         //Load entering by compliance : number of agglomerations
         $front = '<svg id="graph_loadenteringByComplianceAgglomeration" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_agglomeration_uwwtpC).",'graph_loadenteringByComplianceAgglomeration','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_agglomeration_uwwtpC).",'graph_loadenteringByComplianceAgglomeration');});</script>";
         
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of treatment plant by compliance", $front, $aString_uwwtd_stat_agglomeration_uwwtpC).'</div></div>';
     $formResult.='</div>';
@@ -300,12 +313,12 @@ function uwwtd_page_stats_graphs_result($options){
     $formResult.='<div class="rows charts-row">';
         //Total load entering by treatment type
         $front = '<svg id="graph_loadenteringByTreatmenttype" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpT).",'graph_loadenteringByTreatmenttype','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_national_uwwtpT).",'graph_loadenteringByTreatmenttype');});</script>";
         
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Total load entering by treatment type", $front, $aString_uwwtd_stat_national_uwwtpT).'</div></div>';
         //Number of agglomerations by treatment type
         $front = '<svg id="graph_loadenteringByTreatmenttypeAgglomeration" style="margin:10px;"/>';
-        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_agglomeration_uwwtpT).",'graph_loadenteringByTreatmenttypeAgglomeration','middle');});</script>";
+        $front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($aData_uwwtd_stat_agglomeration_uwwtpT).",'graph_loadenteringByTreatmenttypeAgglomeration');});</script>";
         
         $formResult.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard("Number of treatment plant by treatment type", $front, $aString_uwwtd_stat_agglomeration_uwwtpT).'</div></div>';
     $formResult.='</div>';
@@ -498,12 +511,13 @@ function uwwtd_page_stats_graphs_result($options){
 	$sludge_destination_str = '';
 	if(!empty($sludge_destination)){
 		$lines= array();
-		foreach($sludge_destination as $dest){
+		foreach($sludge_destination as $k=>$dest){
 			$lines[]=array(
 				$dest['label'],
 				$dest['valueformat'],
 				
 			);
+			$sludge_destination[$k]['label'].=' ['.$dest['valueformat'].']';
 		}
 		$sludge_destination_str = theme('table', array("rows"=>$lines, "header"=>array("Destination","Values")));
 	}

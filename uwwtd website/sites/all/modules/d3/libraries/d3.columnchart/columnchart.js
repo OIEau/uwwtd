@@ -33,7 +33,6 @@
       y = d3.scale.linear().domain([0,max]).range([chart.h, 0]),
       z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]),
       div = (settings.id) ? settings.id : 'visualization';
-	console.log(w);
     var svg = d3.select('#' + div).append("svg")
       .attr("width", w)
       .attr("height", h)

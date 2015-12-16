@@ -392,13 +392,13 @@ echo uwwtd_insert_errors_tab($node);
 		  ?>
           <div class="panel-body">
 			<div class ="field field-name-field-uwwlatitude field-type-number-decimal field-label-inline clearfix">
-				<div class = "field-label"><?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_uwwlatitude']['#items'][0]['value'].'&lon='.$content['field_uwwlongitude']['#items'][0]['value'].'&layers=Treatment plants&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a>';?> </div>
+				<div class = "field-label"><?php print '<a href="'.url('<front>').'#zoom=17&lat='.$content['field_uwwlatitude']['#items'][0]['value'].'&lon='.$content['field_uwwlongitude']['#items'][0]['value'].'&layers=Treatment plants&baseLayers=Google%20Maps%20Normal" target="_blank"> Latitude : </a>';?> </div>
 					<div class="field-items">
 						<div class="field-item even"> &nbsp;<?php print $content['field_uwwlatitude']['#items'][0]['value']; ?></div>
 					</div>
 			</div>
 			<div class ="field field-name-field-uwwlongitude field-type-number-decimal field-label-inline clearfix">
-				<div class = "field-label"><?php print '<a href="/'.$nameurl.'/#zoom=17&lat='.$content['field_uwwlatitude']['#items'][0]['value'].'&lon='.$content['field_uwwlongitude']['#items'][0]['value'].'&layers=Treatment plants&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a>';?> </div>
+				<div class = "field-label"><?php print '<a href="'.url('<front>').'#zoom=17&lat='.$content['field_uwwlatitude']['#items'][0]['value'].'&lon='.$content['field_uwwlongitude']['#items'][0]['value'].'&layers=Treatment plants&baseLayers=Google%20Maps%20Normal" target="_blank"> Longitude : </a>';?> </div>
 					<div class="field-items">
 						<div class="field-item even"> &nbsp;<?php print $content['field_uwwlongitude']['#items'][0]['value']; ?></div>
 					</div>
