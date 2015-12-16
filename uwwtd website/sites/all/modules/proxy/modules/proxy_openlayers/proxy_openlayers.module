@@ -1,0 +1,53 @@
+<?php
+/**
+ * @file
+ * Main Proxy OpenLayers module file
+ *
+ * This file holds the main Drupal hook functions,
+ * and API functions.
+ *
+ * @ingroup proxy
+ */
+
+/**
+ * Implements hook_help().
+ */
+function proxy_openlayers_help($path, $arg) {
+  $output = '';
+
+  switch ($path) {
+    case 'admin/help#proxy_openlayers':
+      $output = '<p>' . t('The Proxy OpenLayers module forces all OpenLayers maps to use the Proxy router.') . '</p>';
+  }
+
+  return $output;
+}
+
+/**
+ * Impements hook_openlayers_map_preprocess_alter().
+ */
+function proxy_openlayers_openlayers_map_preprocess_alter(&$map) {
+  // Add proxy value.  This forces the value when rendering.
+  $map['proxy_host'] = PROXY_ROUTER_PATH . '?' . PROXY_ROUTER_QUERY_VAR . '=';
+}
+
+/**
+ * Impements hook_form_FORM_ID_alter().
+ */
+function proxy_openlayers_form_openlayers_ui_maps_form_alter(&$form, &$form_state, $form_id) {
+  $path = PROXY_ROUTER_PATH . '?' . PROXY_ROUTER_QUERY_VAR . '=';
+
+  // This allows the value to show up in the interface.
+  $form['info']['proxy_host']['#default_value'] = $path;
+  $form['info']['proxy_host']['#value'] = $path;
+  $form['info']['proxy_host']['#disabled'] = TRUE;
+  $form['info']['proxy_host']['#description'] = 
+    '<p>' . 
+      t('<strong>This value has been taken over by the !proxy_link.</strong>',
+        array(
+          '!proxy_link' => l(t('Proxy module'), 'admin/config/system/proxy'),
+        )
+      ) . 
+    '</p>' . 
+    $form['info']['proxy_host']['#description'];
+}

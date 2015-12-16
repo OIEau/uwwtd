@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * This file holds the functions for the installing
+ * and enabling of the Proxy module.
+ *
+ * @ingroup proxy
+ */
+
+/**
+ * Implements hook_install().
+ */
+function proxy_install() {
+  // Install scheme, specifically cache table
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_install_schema('proxy')
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function proxy_uninstall() {
+  // Uninstall schema (delete db tables)
+  // TODO The drupal_(un)install_schema functions are called automatically in D7.
+  // drupal_uninstall_schema('proxy')
+
+  // Get module variables and remove
+  global $conf;
+  foreach (array_keys($conf) as $key) {
+    // Find variables that have the module prefix
+    if (strpos($key, 'proxy_') === 0) {
+      variable_del($key);
+    }
+  }
+}
+
+/**
+ * Implements hook_schema().
+ */
+function proxy_schema() {
+  $schema = array();
+
+  // Create proxy cache
+  $schema['cache_proxy'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_proxy']['description'] = 'Cache table for proxy module.';
+
+  return $schema;
+}

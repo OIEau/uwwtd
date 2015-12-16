@@ -1,0 +1,250 @@
+<?php
+
+/**
+ * @defgroup proxy proxy: Provides an API for a proxy
+ *
+ * Proxy is an API to get content from other sites.  Please
+ * note that variable names, constants, and proxy paramters
+ * are all similar to make overrides and defaults easier.
+ */
+
+/**
+ * @file
+ * Main Proxy Drupal File
+ *
+ * This file holds the main Drupal hook functions,
+ * and API functions.
+ *
+ * @ingroup proxy
+ */
+
+/**
+ * Proxy processor prefix
+ */
+define('PROXY_PROCESSOR_PREFIX', 'proxy_processor_');
+
+/**
+ * Proxy router path
+ */
+define('PROXY_ROUTER_PATH', 'proxy');
+
+/**
+ * Proxy router query var (ie proxy?var=)
+ */
+define('PROXY_ROUTER_QUERY_VAR', 'request');
+
+/**
+ * Proxy no cache option
+ */
+define('PROXY_NO_CACHE', -2);
+
+/**
+ * Proxy default cache lifetime (5 minutes)
+ */
+define('PROXY_CACHE_DEFAULT', 300);
+
+/**
+ * Proxy flood control default
+ */
+define('PROXY_FLOOD_CONTROL_DEFAULT', TRUE);
+
+/**
+ * Proxy flood default
+ */
+define('PROXY_FLOOD_INTERVAL_DEFAULT', 3600);
+
+/**
+ * Proxy flood autoban
+ */
+define('PROXY_FLOOD_AUTOBAN_DEFAULT', FALSE);
+
+/**
+ * Proxy whitelist control default
+ */
+define('PROXY_WHITELIST_CONTROL_DEFAULT', TRUE);
+
+/**
+ * Proxy whitelist domains default
+ */
+define('PROXY_WHITELIST_DOMAINS_DEFAULT', '');
+
+/**
+ * Implements hook_help().
+ */
+function proxy_help($path, $arg) {
+  $output = '';
+
+  switch ($path) {
+    case 'admin/help#proxy':
+      $output = '<p>' . t('The Proxy module provides an API to get content from other sites.') . '</p>';
+
+    case 'admin/config/system/proxy':
+      $output = '<p>' . t('The Proxy module provides a basic <a href="@url">HTTP proxy</a> for various requests.  Without any attempt at limiting use of this proxy, it can be easily abused and have severe consequences.  The defaults provided are meant to ensure that abuse can be contained.  Please have some understanding of the changes that will happen if you alter these settings.', array(
+        '@url' => 'http://en.wikipedia.org/wiki/Proxy_server#Web_proxy',
+      )) . '</p>';
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function proxy_permission() {
+  return array(
+    'administer proxy' => array(
+      'title' => t('administer proxy'),
+      'description' => t('Administer proxy settings'),
+    ),
+    'access proxy router' => array(
+      'title' => t('access proxy router'),
+      'description' => t('Access proxy router'),
+    ),
+    'reset cache via router' => array(
+      'title' => t('reset cache via router'),
+      'description' => t('Reset cache via router'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function proxy_menu() {
+  $items = array();
+
+  $items[PROXY_ROUTER_PATH] = array(
+    'title' => 'Proxy',
+    'description' => 'Proxy router.',
+    'page callback' => 'proxy_router',
+    'page arguments' => array(1),
+    'access arguments' => array('access proxy router'),
+    'file' => 'includes/proxy.router.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/system/proxy'] = array(
+    'title' => 'Proxy',
+    'description' => 'Main settings for Proxy.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('proxy_admin_settings'),
+    'access arguments' => array('administer proxy'),
+    'file' => 'includes/proxy.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Main Proxy Function
+ *
+ * Description ...
+ *
+ * @param $params
+ *   A keyed array to hold parameters for proxy request
+ *   with the following keys.
+ *   - request_uri: The URI to proxy.
+ *   - cache: Cache setting or cache lifetime in seconds.  See
+ *     _proxy_get_cache_intervals().  Default settings will be
+ *     used if not explicitley defined.
+ *   - whitelist_control: This is a TRUE or FALSE setting to turn on
+ *     the whitelist functionality.  Default settings will be
+ *     used if not explicitley defined.
+ *   - whitelist_domains: This is the list of allowed domains.
+ *     Default settings will be used if not explicitley defined.
+ *   - flood_control: This is a TRUE or FALSE setting to turn on
+ *     the flood control functionality.  Default settings will be
+ *     used if not explicitley defined.
+ *   - flood_interval: This is the flood interval setting.  It is
+ *     defined as the hourly thresehold per user.  Default settings
+ *     will be used if not explicitley defined.
+ *   - flood_autoban: TRUE or FALSE as to whether to auto-ban a
+ *     host that has exceeded the flood_interval.  Dangerous setting;
+ *     be careful when turning on. Default settings will be used if
+ *     not explicitley defined.
+ *   - processors: an array of processor information with the following
+ *     keys.  Note that unless, specified the defaults will be used
+ *     as defined on the settings page:
+ *     - processor_key: This is usually the name of processor class.
+ *       - enabled: TRUE or FALSE whether the processor will be ran.
+ *       - options: Array of options.  Not really used at the moment.
+ * @param $reset
+ *   If TRUE, proxy will bypass any cache and rebuild that cache
+ *   item.
+ * @return
+ *   Valid response object similar to return of drupal_http_request()
+ *   or an array of errors.
+ */
+function proxy($params = array(), $reset = FALSE) {
+  // Basic checking
+  if (!is_array($params) || empty($params) || empty($params['request_uri'])) {
+    return array(t('No request or incorrect parameters.'));
+  }
+
+  // Keep code out of Drupal stack unless needed
+  module_load_include('proxy.inc', 'proxy', 'includes/proxy');
+  module_load_include('processor.inc', 'proxy', 'includes/proxy');
+  return _proxy($params, $reset);
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function proxy_flush_caches() {
+  return array('cache_proxy');
+}
+
+/**
+ * Get all Processors.
+ *
+ * @return
+ *   Array of proxy processor info.
+ */
+function proxy_processors() {
+  module_load_include('processor.inc', 'proxy', 'includes/proxy');
+  ctools_include('plugins');
+  return ctools_get_plugins('proxy', 'processors');
+}
+
+/**
+ * Get Proxy Cache Intervals
+ *
+ * @return
+ *   Array of cache intervals
+ */
+function _proxy_get_cache_intervals() {
+  return array(
+    PROXY_NO_CACHE => t('No cache'),
+    (5) => t('5 seconds'),
+    (30) => t('30 seconds'),
+    (60) => t('1 minute'),
+    (60 * 5) => t('5 minutes'),
+    (60 * 10) => t('10 minutes'),
+    (60 * 30) => t('30 minutes'),
+    (60 * 60) => t('1 hour'),
+    (60 * 60 * 24) => t('1 day'),
+    (60 * 60 * 24 * 7) => t('1 week'),
+    CACHE_TEMPORARY => t('Default Drupal cache life'),
+    CACHE_PERMANENT => t('Permanent'),
+  );
+}
+
+/**
+ * Debug function around watchdog
+ */
+function _proxy_debug($message = '', $var = array()) {
+  $message = $message . '<br />
+    <pre>
+      ' . var_export($var, TRUE) . '
+    </pre>
+  ';
+  watchdog('proxy', $message, array(), WATCHDOG_DEBUG);
+}
+
+/**
+ * Implements hook_proxy_processors().
+ */
+function proxy_proxy_processors() {
+  module_load_include('processors.inc', 'proxy', 'processors/proxy');
+  return _proxy_proxy_processors();
+}

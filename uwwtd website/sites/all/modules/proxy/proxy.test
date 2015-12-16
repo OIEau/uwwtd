@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Tests for proxy.
+ */
+
+/**
+ * Basic Test Class for proxy
+ */
+class ProxyTest extends DrupalWebTestCase {
+
+  /**
+   * Get Info
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Basic Proxy Test',
+      'description' => 'Ensure that the proxy functionality is working correctly.',
+      'group' => 'Proxy',
+    );
+  }
+
+  /**
+   * Set Up
+   */
+  public function setUp() {
+    // Enable any modules required for the test
+    parent::setUp('proxy');
+    
+    // Create user that has access
+    $user = $this->drupalCreateUser(array('access proxy router'));
+    $this->drupalLogin($user);
+
+    // Set whitelist
+    variable_set('proxy_whitelist_domains', '*drupal*');
+  }
+
+  /**
+   * Test to check proxyion methods with direct API call.
+   */
+  public function testBasicProxy() {
+    $params['request_uri'] = 'http://drupal.org/';
+    $check_content = 'Dries Buytaert';
+
+    // Get proxy content
+    $content = proxy($params);
+    // Check for specific content
+    //$this->verbose(var_export($content, TRUE));
+    $this->assertTrue((stripos($content->data, $check_content) > 0), t('Ensure that the correct content is returned from drupal.org using just the proxy API.'));
+  }
+
+  /**
+   * Test Router functionality by visting proxy page.
+   */
+  public function testRouterProxy() {
+    $check_content = 'Dries Buytaert';
+    $path = 'proxy';
+    $options = array(
+      'query' => array(
+        'reset' => 'TRUE',
+        'request' => 'http://drupal.org/',
+      ),
+    );
+
+    // Go to path (drupalGet utilizes url() function).
+    $this->drupalGet($path, $options);
+    $this->assertRaw($check_content, t('Ensure that the correct text shows on the page using the proxy router.'));
+  }
+
+  /**
+   * Test Cache functionality
+   */
+  public function testCacheProxy() {
+    // Variables
+    $url = 'http://drupal.org/';
+    $params['request_uri'] = $url;
+    // Set cache to 5 minutes
+    $params['cache'] = REQUEST_TIME + (60 * 5);
+
+    // Go to path
+    $content_orig = proxy($params);
+    $content_cache = proxy($params);
+    $this->assertEqual($content_orig, $content_cache, t('Ensure that the cache returns the same for drupal.org.'));
+  }
+}
