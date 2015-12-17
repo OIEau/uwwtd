@@ -1,4 +1,4 @@
-/*================Mettre ici toutes les mises en forme spécifique pour le site du CITET========================*/
+/*================Mettre ici toutes les mises en forme spécifique pour le site du UWWTD========================*/
 
 
 body{
@@ -967,3 +967,20 @@ a.export-result-btn:hover{
 	color:#000;
 }
 
+div.ol-wms-content-popup{
+    background-color:#fff;
+    max-width:300px;
+    max-height:200px;
+    overflow:scroll;
+}
+div.ol-wms-content-popup table{
+    margin-bottom:15px;
+}
+div.ol-wms-content-popup table caption{
+    font-size:14px;
+    color:#2a6496;
+    text-align:left
+}
+div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
+    padding:3px;
+}
