@@ -6,7 +6,7 @@ function uwwtd_correction_slovenia_date() {
     if ('si' != variable_get('siif_eru_country_code', '-1')) {
         return '';
     }
-    $r = fopen('public://data_sources/SI_register_deadlines-agglo.csv', 'rb');
+    $r = fopen(drupal_get_path('module', 'uwwtd') . '/script/correction/SI_register_deadlines-agglo.csv', 'rb');
     dsm($r);
     //header line
     $line = fgetcsv($r, 1000, ';');
@@ -45,7 +45,7 @@ function uwwtd_correction_slovenia_date() {
         dsm('field_aggperiodover5 : ' . $agg->field_aggperiodover5['und'][0]['value']);
                 
           
-//         node_save($agg);
+        node_save($agg);
     }
     fclose($r);
     return 'END'; 
