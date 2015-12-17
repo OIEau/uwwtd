@@ -152,7 +152,7 @@ function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
                 $chart_data[]=array(
                     'label'=>$GLOBALS['ms_level']['sludge'][$k]['label'],
                     'value'=>(float)$v,
-                    'valueformat'=>$v.' T DS/year',
+                    'valueformat'=>uwwtd_format_number($v).' T DS/year',
                     'color'=>$GLOBALS['ms_level']['sludge'][$k]['color'], 
                 );
             }
@@ -917,9 +917,9 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
 	$data = array();
 	$param = array();
 	$aConditions = array(
-		'lower than 10000 pe' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
+		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
 		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
-		'greater than 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
+		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
 	);
 
 	$query = 'select

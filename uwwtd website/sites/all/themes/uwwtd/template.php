@@ -1677,33 +1677,24 @@ function uwwtd_piechart_agglonode($node, &$content)
 // field_aggpercwithouttreatment|Discharge without treatment|#C00000
     $aData = array();
     $aData[] = array(
-        "value" => $node->field_aggc1['und'][0]['value'],
+        "value" => (float)$node->field_aggc1['und'][0]['value'],
         "label" => $content['field_aggc1']['#title'],
         "color" => '#74FFE0',
         "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
-        "value" => $node->field_aggc2['und'][0]['value'],
+        "value" => (float)$node->field_aggc2['und'][0]['value'],
         "label" => $content['field_aggc2']['#title'],
         "color" => '#BD8842',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
-        "value" => $node->field_aggpercwithouttreatment['und'][0]['value'],
+        "value" => (float)$node->field_aggpercwithouttreatment['und'][0]['value'],
         "label" => $content['field_aggpercwithouttreatment']['#title'],
         "color" => '#C00000',
         "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
     );
-//     return "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js\"></script>
-//     return "
-//     <script>
-//     (function ($) {
-//     $(document).ready(function() {
-//         display_uwwtp_stackedbar(".json_encode($aData).");
-//         });
-//     })(jQuery);
-//     </script>
-//     ";
+
     return "
     <script>
     jQuery(document).ready(function(){

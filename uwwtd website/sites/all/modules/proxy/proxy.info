@@ -1,0 +1,17 @@
+name = Proxy
+description = A simple, yet powerful HTTP proxy API module.
+core = 7.x
+php = 5.2
+configure = admin/config/system/proxy
+dependencies[] = ctools
+
+files[] = proxy.test
+files[] = includes/proxy.processor.inc
+files[] = processors/proxy_processor_proxify_urls.inc
+
+; Information added by drupal.org packaging script on 2012-03-22
+version = "7.x-1.0-beta3"
+core = "7.x"
+project = "proxy"
+datestamp = "1332435050"
+

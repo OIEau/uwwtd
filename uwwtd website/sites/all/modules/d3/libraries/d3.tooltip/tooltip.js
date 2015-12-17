@@ -25,7 +25,7 @@
   d3.tooltip = function(tipjar, txt, h, w) {
 
     var tooltip = {
-      w: 65,
+      w: 95,
       h: 40,
       // The width of the triangular tip as it is on the base
       tipW: 12,

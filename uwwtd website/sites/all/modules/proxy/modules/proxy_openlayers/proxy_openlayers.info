@@ -1,0 +1,14 @@
+name = Proxy OpenLayers
+description = Forces all OpenLayers maps to use Proxy.  Make sure to set up Proxy correctly.
+core = 7.x
+php = 5.2
+dependencies[] = proxy
+dependencies[] = openlayers
+package = "OpenLayers"
+
+; Information added by drupal.org packaging script on 2012-03-22
+version = "7.x-1.0-beta3"
+core = "7.x"
+project = "proxy"
+datestamp = "1332435050"
+
