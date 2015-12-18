@@ -1647,14 +1647,22 @@ function uwwtd_field_num($field)
     return uwwtd_format_number($field[0]['#markup'], 1);
 }
 
-function uwwtd_field_pe($field)
+function uwwtd_field_pe($field, $format=true)
 {
 //     $field[0]['#markup'] = 'Not provided';
     $pe = '';
+	
     if (true === is_numeric($field[0]['#markup'])) {
-        $pe = uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']);
-    }
-    return $pe;
+        $pe = $field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value'];
+    }elseif(true === is_numeric($field[0]['#markup']['und'][0]['value'])){
+		$pe = $field[0]['#markup']['und'][0]['value'] / 100 * $field['#object']['und'][0]['value'];
+	}
+	if($format==true){
+		return uwwtd_format_number($pe);
+	}else{
+		return $pe;
+	}
+    
 }
 // function uwwtd_preprocess_field(&$vars) {
 //     dpl($vars);
