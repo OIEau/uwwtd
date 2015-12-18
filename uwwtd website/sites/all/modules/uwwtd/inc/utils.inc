@@ -1105,20 +1105,37 @@ function uuwtd_get_distance_compliance($agg){
 	$uww_aggcode['distart5_treatment_%'] = 0;
 	$uww_aggcode['distart5_monitoring'] = 0;
 	$uww_aggcode['distart5_monitoring_%'] = 0;
+	$uwwtp_loadentering = 0;
+	$total_uwwtp_loadentering_pe =0;
 	foreach($agg->field_agguwwliste['und'] as $uwwtpnid){
 
 		$uwwtp = node_load($uwwtpnid['nid']);
 		$annee = $agg->field_anneedata['und'][0]['value'];
 		$treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
-
 		$treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
-
 		$agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
 		$agglo_uwwtp = node_load($agglo_uwwtpnid);
 		$agglo_uwwtp_perc = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
 		
-		$aggC1 = $agg->field_aggc1['und'][0]['value'];
+		$total_agglo_uwwtp_perc += $agglo_uwwtp_perc;
+		$aggC1_pourc = $agg->field_aggc1['und'][0]['value'];
 		$aggGenerated = $agg->field_agggenerated['und'][0]['value'];
+		//Add DG 17/12/15
+		//Collecting system
+		$aggTable = array();
+		$aggTable[0]['#markup']=$agg->field_aggc1;
+		$aggTable['#object']=$agg->field_agggenerated;
+		$aggC1_pe = uwwtd_field_pe($aggTable, false);
+
+		$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+		$totalG_uwwtp_loadentering_pourc += $agglo_uwwtp_loadentering_pourc;
+		
+		$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+		$totalG_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+		
+		$totalG_pe= $totalG_uwwtp_loadentering_pe - $aggC1_pe;
+		$totalG_pourc= $totalG_uwwtp_loadentering_pourc - $aggC1_pourc;
+
 		$line = array();
 		$line['Monitoring results - BOD5'] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
 		//'Monitoring results -COD',
@@ -1130,29 +1147,121 @@ function uuwtd_get_distance_compliance($agg){
 
 		$art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
 		$art4_performance = uwwtd_get_register_art4_monitoring_compliance($treatment_required, $line['Monitoring results - BOD5'], $line['Monitoring results -COD']); 
-		
 		$art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
 		$art5_performance = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line['Monitoring results -Ntot'], $line['Monitoring results -Ptot']); 
-
+	
+		if(($totalG_pe >= 2000) || ($totalG_pourc >1)){
+			if ($art4_treatment_type == 'NC'){
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
+				}
+				
+			}
+			if ($art4_performance == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
+				}
+			}
+			if ($art5_treatment == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
+				}
+			}
+			if ($art5_performance == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
+				}
+			} 
+		}else{
+			if ($art4_treatment_type == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe;
+				}
+			}
+			if ($art4_performance == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe;
+				}
+			}
+			if ($art5_treatment == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe;
+				}
+			}
+			if ($art5_performance == 'NC') {
+				if($uwwtp->field_uwwcompliance== "NC"){
+					$aggTable = array();
+					$aggTable[0]['#markup']=$agg->field_aggc1;
+					$aggTable['#object']=$agg->field_agggenerated;
+					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe;
+				}
+			} 
+		}
 		if ($art4_treatment_type == 'NC') {
-			$uww_aggcode['distart4_treatment'] += $agglo_uwwtp_perc/100 * ($aggC1/100 * $aggGenerated);
-			$uww_aggcode['distart4_treatment_%'] =
-			$uww_aggcode['distart4_treatment'] * 100 / $aggGenerated;
-		} 
+			$uww_aggcode['distart4_treatment_%'] = $uww_aggcode['distart4_treatment'] / $aggC1_pe;
+		}
 		if ($art4_performance == 'NC') {
-			$uww_aggcode['distart4_monitoring'] += $agglo_uwwtp_perc/100 * ($aggC1/100 * $aggGenerated);
-			$uww_aggcode['distart4_monitoring_%'] =
-			$uww_aggcode['distart4_monitoring'] * 100 / $aggGenerated;
+			$uww_aggcode['distart4_monitoring_%'] = $uww_aggcode['distart4_monitoring'] / $aggC1_pe;
+			
 		}
 		if ($art5_treatment == 'NC') {
-			$uww_aggcode['distart5_treatment'] += $agglo_uwwtp_perc/100 * ($aggC1/100 * $aggGenerated);
-			$uww_aggcode['distart5_treatment_%'] =
-			$uww_aggcode['distart5_treatment'] * 100 / $aggGenerated;
+			$uww_aggcode['distart5_treatment_%'] = $uww_aggcode['distart5_treatment'] / $aggC1_pe;
 		}
 		if ($art5_performance == 'NC') {
-			$uww_aggcode['distart5_monitoring'] += $agglo_uwwtp_perc/100 * ($aggC1/100 * $aggGenerated);
-			$uww_aggcode['distart5_monitoring_%'] =
-			$uww_aggcode['distart5_monitoring'] * 100 / $aggGenerated;
+			$uww_aggcode['distart5_monitoring_%'] =	$uww_aggcode['distart5_monitoring'] / $aggC1_pe;
 		} 
 	}
 
