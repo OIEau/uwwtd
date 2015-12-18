@@ -4621,3 +4621,26 @@ function uwwtd_get_national_stat_str($year){
 			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. " p.e. ";
 }
 
+function uwwtd_wms_getfeatureinfo_alter(&$result){
+    foreach($result as $layer=>$features){
+        if($layer=='4'){
+            $layer = 'Bathing water';
+            $data =array();
+            $keys = array('Bathingwatername','Country', 'Watertype', '2012', '2013', '2014', '2015', '2016', '2017', '2018','Linktobathingwaterprofile');
+            foreach($features as $feature){
+                $item = array_intersect_key($feature, array_flip($keys));
+                if(isset($item['Linktobathingwaterprofile']) && $item['Linktobathingwaterprofile']!=''){
+                    $item['Linktobathingwaterprofile'] = l("More information", $item['Linktobathingwaterprofile'], array('attributes'=>array('target'=>'_blank')));
+                }
+                $data[] = $item;
+            }
+            $result[$layer] = $data;
+            unset($result[4]);
+        }
+        elseif(is_numeric($layer)){
+            unset($result[$layer]);
+        }
+        
+    }
+    
+}
