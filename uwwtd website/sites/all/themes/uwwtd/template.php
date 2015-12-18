@@ -33,133 +33,133 @@ function uwwtd_adjustBrightness($hex, $steps){
 }
 
 function uwwtd_check_history($id, $annee){
-	//Get all the nodes with the same id
-	$query = db_select('field_data_field_inspireidlocalid', 'n');
-	$query->fields('n', array('entity_id'));
-	$query->condition('n.field_inspireidlocalid_value', $id, '=');
-	$ids = array();
-	$results = $query->execute();
-	foreach($results as $result){
-		$node = node_load($result->entity_id);
-		$ids[] = $node->nid;
-	}
+  //Get all the nodes with the same id
+  $query = db_select('field_data_field_inspireidlocalid', 'n');
+  $query->fields('n', array('entity_id'));
+  $query->condition('n.field_inspireidlocalid_value', $id, '=');
+  $ids = array();
+  $results = $query->execute();
+  foreach($results as $result){
+    $node = node_load($result->entity_id);
+    $ids[] = $node->nid;
+  }
 
-	if(count($ids) == 0) return false;
-	else return $ids;
+  if(count($ids) == 0) return false;
+  else return $ids;
 }
 
 function uwwtd_preprocess_field(&$variables){
 
-	// For discharge point values
-	if (
-		$variables['element']['#field_name'] == 'field_rcatype' ||
-		$variables['element']['#field_name'] == 'field_dcpwaterbodytype'
-	){
-		// rcatype
-		if($variables['element']['#items']['0']['value'] == 'NA') $variables['items']['0']['#markup'] = t('Normal Area');
-		if($variables['element']['#items']['0']['value'] == 'SA') $variables['items']['0']['#markup'] = t('Sensitive Area');
-		if($variables['element']['#items']['0']['value'] == 'CSA') $variables['items']['0']['#markup'] = t('Catchment sensitive area');
-		if($variables['element']['#items']['0']['value'] == 'LSA') $variables['items']['0']['#markup'] = t('Less sensititve area');
+  // For discharge point values
+  if (
+    $variables['element']['#field_name'] == 'field_rcatype' ||
+    $variables['element']['#field_name'] == 'field_dcpwaterbodytype'
+  ){
+    // rcatype
+    if($variables['element']['#items']['0']['value'] == 'NA') $variables['items']['0']['#markup'] = t('Normal Area');
+    if($variables['element']['#items']['0']['value'] == 'SA') $variables['items']['0']['#markup'] = t('Sensitive Area');
+    if($variables['element']['#items']['0']['value'] == 'CSA') $variables['items']['0']['#markup'] = t('Catchment sensitive area');
+    if($variables['element']['#items']['0']['value'] == 'LSA') $variables['items']['0']['#markup'] = t('Less sensititve area');
 
-		// waterbody
-		if($variables['element']['#items']['0']['value'] == 'ES') $variables['items']['0']['#markup'] = t('Estuary');
-		if($variables['element']['#items']['0']['value'] == 'CW') $variables['items']['0']['#markup'] = t('Coastal waters');
-		if($variables['element']['#items']['0']['value'] == 'FW') $variables['items']['0']['#markup'] = t('Freshwater');
-	}
+    // waterbody
+    if($variables['element']['#items']['0']['value'] == 'ES') $variables['items']['0']['#markup'] = t('Estuary');
+    if($variables['element']['#items']['0']['value'] == 'CW') $variables['items']['0']['#markup'] = t('Coastal waters');
+    if($variables['element']['#items']['0']['value'] == 'FW') $variables['items']['0']['#markup'] = t('Freshwater');
+  }
 
-	// For booleans
-	if (
-		$variables['element']['#field_name'] == 'field_uwwprimarytreatment' ||
-		$variables['element']['#field_name'] == 'field_uwwsecondarytreatment' ||
-		$variables['element']['#field_name'] == 'field_uwwpremoval' ||
-		$variables['element']['#field_name'] == 'field_uwwnremoval' ||
-		$variables['element']['#field_name'] == 'field_uwwuv' ||
-		$variables['element']['#field_name'] == 'field_uwwchlorination' ||
-		$variables['element']['#field_name'] == 'field_uwwozonation' ||
-		$variables['element']['#field_name'] == 'field_uwwsandfiltration' ||
-		$variables['element']['#field_name'] == 'field_uwwmicrofiltration' ||
-		$variables['element']['#field_name'] == 'field_uwwothertreat' ||
-		$variables['element']['#field_name'] == 'field_uwwaccidents' ||
-		$variables['element']['#field_name'] == 'field_dcpsurfacewaters' ||
-		$variables['element']['#field_name'] == 'field_aggcritb' ||
-		$variables['element']['#field_name'] == 'field_aggcritca' ||
-		$variables['element']['#field_name'] == 'field_aggcritcb' ||
-		$variables['element']['#field_name'] == 'field_aggchanges' ||
-		$variables['element']['#field_name'] == 'field_aggbesttechnicalknowledge' ||
-		$variables['element']['#field_name'] == 'field_agghaveregistrationsystem' ||
-		$variables['element']['#field_name'] == 'field_aggexistmaintenanceplan' ||
-		$variables['element']['#field_name'] == 'field_aggpressuretest' ||
-		$variables['element']['#field_name'] == 'field_aggvideoinspections' ||
-		$variables['element']['#field_name'] == 'field_aggothermeasures' ||
-		$variables['element']['#field_name'] == 'field_aggaccoverflows' ||
-		$variables['element']['#field_name'] == 'field_aggcapacity' ||
-		$variables['element']['#field_name'] == 'field_agg_dilution_rates' ||
-		$variables['element']['#field_name'] == 'field_rcaanitro' ||
-		$variables['element']['#field_name'] == 'field_rcaaphos' ||
-		$variables['element']['#field_name'] == 'field_rcab' ||
-		$variables['element']['#field_name'] == 'field_rcac' ||
-		$variables['element']['#field_name'] == 'field_rcamorphology' ||
-		$variables['element']['#field_name'] == 'field_rcahydrologie' ||
-		$variables['element']['#field_name'] == 'field_rcahydraulic' ||
-		$variables['element']['#field_name'] == 'field_rcaabsencerisk' ||
-		$variables['element']['#field_name'] == 'field_rca54applied' ||
-		$variables['element']['#field_name'] == 'field_rca_parameter_n' ||
-		$variables['element']['#field_name'] == 'field_rca_parameter_p' ||
-		$variables['element']['#field_name'] == 'field_rca_parameter_other' ||
-		$variables['element']['#field_name'] == 'field_rca52applied' ||
-		$variables['element']['#field_name'] == 'field_rca58applied'
-
-
-	){
-		//check for custom tooltips
-		$tt = '';
-		$field_info = field_info_field($variables['element']['#field_name']);
-		if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
-			$tt = $variables['items'][0]['#markup'];
-		}
-
-		if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
-			$variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
-		}
-		elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
-			$variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/cross.png" />';
-		}
-	}
-
-	// For percentage '%'
-	if (
-
-		$variables['element']['#field_name'] == 'field_aggc1' ||
-		$variables['element']['#field_name'] == 'field_aggc2' ||
-		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
-		$variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
-		$variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
-		$variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
+  // For booleans
+  if (
+    $variables['element']['#field_name'] == 'field_uwwprimarytreatment' ||
+    $variables['element']['#field_name'] == 'field_uwwsecondarytreatment' ||
+    $variables['element']['#field_name'] == 'field_uwwpremoval' ||
+    $variables['element']['#field_name'] == 'field_uwwnremoval' ||
+    $variables['element']['#field_name'] == 'field_uwwuv' ||
+    $variables['element']['#field_name'] == 'field_uwwchlorination' ||
+    $variables['element']['#field_name'] == 'field_uwwozonation' ||
+    $variables['element']['#field_name'] == 'field_uwwsandfiltration' ||
+    $variables['element']['#field_name'] == 'field_uwwmicrofiltration' ||
+    $variables['element']['#field_name'] == 'field_uwwothertreat' ||
+    $variables['element']['#field_name'] == 'field_uwwaccidents' ||
+    $variables['element']['#field_name'] == 'field_dcpsurfacewaters' ||
+    $variables['element']['#field_name'] == 'field_aggcritb' ||
+    $variables['element']['#field_name'] == 'field_aggcritca' ||
+    $variables['element']['#field_name'] == 'field_aggcritcb' ||
+    $variables['element']['#field_name'] == 'field_aggchanges' ||
+    $variables['element']['#field_name'] == 'field_aggbesttechnicalknowledge' ||
+    $variables['element']['#field_name'] == 'field_agghaveregistrationsystem' ||
+    $variables['element']['#field_name'] == 'field_aggexistmaintenanceplan' ||
+    $variables['element']['#field_name'] == 'field_aggpressuretest' ||
+    $variables['element']['#field_name'] == 'field_aggvideoinspections' ||
+    $variables['element']['#field_name'] == 'field_aggothermeasures' ||
+    $variables['element']['#field_name'] == 'field_aggaccoverflows' ||
+    $variables['element']['#field_name'] == 'field_aggcapacity' ||
+    $variables['element']['#field_name'] == 'field_agg_dilution_rates' ||
+    $variables['element']['#field_name'] == 'field_rcaanitro' ||
+    $variables['element']['#field_name'] == 'field_rcaaphos' ||
+    $variables['element']['#field_name'] == 'field_rcab' ||
+    $variables['element']['#field_name'] == 'field_rcac' ||
+    $variables['element']['#field_name'] == 'field_rcamorphology' ||
+    $variables['element']['#field_name'] == 'field_rcahydrologie' ||
+    $variables['element']['#field_name'] == 'field_rcahydraulic' ||
+    $variables['element']['#field_name'] == 'field_rcaabsencerisk' ||
+    $variables['element']['#field_name'] == 'field_rca54applied' ||
+    $variables['element']['#field_name'] == 'field_rca_parameter_n' ||
+    $variables['element']['#field_name'] == 'field_rca_parameter_p' ||
+    $variables['element']['#field_name'] == 'field_rca_parameter_other' ||
+    $variables['element']['#field_name'] == 'field_rca52applied' ||
+    $variables['element']['#field_name'] == 'field_rca58applied'
 
 
-	){
+  ){
+    //check for custom tooltips
+    $tt = '';
+    $field_info = field_info_field($variables['element']['#field_name']);
+    if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
+      $tt = $variables['items'][0]['#markup'];
+    }
+
+    if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
+    }
+    elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/cross.png" />';
+    }
+  }
+
+  // For percentage '%'
+  if (
+
+    $variables['element']['#field_name'] == 'field_aggc1' ||
+    $variables['element']['#field_name'] == 'field_aggc2' ||
+    $variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
+    $variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
+    $variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
+    $variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
+
+
+  ){
         if ($variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>') {
-		  $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
+      $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
         }
 //         dsm($variables);
-	}
+  }
 
 //     if ($variables['element']['#field_name'] == 'field_aggc1' ||
-// 		$variables['element']['#field_name'] == 'field_aggc2' ||
-// 		$variables['element']['#field_name'] == 'field_aggpercwithouttreatment') {
+//    $variables['element']['#field_name'] == 'field_aggc2' ||
+//    $variables['element']['#field_name'] == 'field_aggpercwithouttreatment') {
 //         $pe = $variables['element']['#object']->field_agggenerated['und'][0]['value'] * $variables['element']['#object']->{$variables['element']['#field_name']}['und'][0]['value']/ 100;
 //         $variables['items']['0']['#markup'] .= ' (' . $pe .')';
 //     }
 
-	// For compliance colors
-	if (
-		$variables['element']['#field_name'] == 'field_aggart3compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart4compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart5compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart6compliance' ||
-		$variables['element']['#field_name'] == 'field_aggcompliance' ||
-		$variables['element']['#field_name'] == 'field_uwwcompliance'
-	){
+  // For compliance colors
+  if (
+    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
+    $variables['element']['#field_name'] == 'field_aggcompliance' ||
+    $variables['element']['#field_name'] == 'field_uwwcompliance'
+  ){
 //         dsm($variables['element']);
         //override PD and QC value, we don't want to display QC and PD (for now)
         if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ])) {
@@ -170,85 +170,85 @@ function uwwtd_preprocess_field(&$variables){
 //         dsm($variables['element']);
     }
 
-	// For compliance colors
-	if (
-		$variables['element']['#field_name'] == 'field_aggart3compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart4compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart5compliance' ||
-		$variables['element']['#field_name'] == 'field_aggart6compliance' ||
-		$variables['element']['#field_name'] == 'field_aggcompliance' ||
-		$variables['element']['#field_name'] == 'field_uwwcompliance'
-	){
-		if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
-		if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
-		if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
-		if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
-		if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
-		if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
-		if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
-		if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
+  // For compliance colors
+  if (
+    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
+    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
+    $variables['element']['#field_name'] == 'field_aggcompliance' ||
+    $variables['element']['#field_name'] == 'field_uwwcompliance'
+  ){
+    if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
+    if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
+    if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
+    if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
+    if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
+    if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
+    if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
+    if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
 
-		$variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
-	}
+    $variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
+  }
 }
 
 function uwwtd_timeline_output($node){
-	$output = '';
-	$histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
-	if($histories != false){
-		$otherList = array();
-		$output .= '<div class="uwwtd-history">';
-		$output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
-		<legend class="panel-heading">
-		<div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
-		</legend>';
-		foreach($histories as $history){	
-			$other = node_load($history);
-			$otherY = $other->field_anneedata['und'][0]['value'];
-			$otherList[$otherY] = array('node'=>$other);
-		}
-		ksort($otherList);
-		$output .='<table class = "dispo-annee">
-							<tbody>
-								<tr>
-									<td class="dispo-before"><div></div></td>';
-		foreach($otherList as $other){
-			$ting = $other['node'];
-			if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
-			if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
+  $output = '';
+  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+  if($histories != false){
+    $otherList = array();
+    $output .= '<div class="uwwtd-history">';
+    $output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
+    <legend class="panel-heading">
+    <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
+    </legend>';
+    foreach($histories as $history){  
+      $other = node_load($history);
+      $otherY = $other->field_anneedata['und'][0]['value'];
+      $otherList[$otherY] = array('node'=>$other);
+    }
+    ksort($otherList);
+    $output .='<table class = "dispo-annee">
+              <tbody>
+                <tr>
+                  <td class="dispo-before"><div></div></td>';
+    foreach($otherList as $other){
+      $ting = $other['node'];
+      if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
+      if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
 
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
                 $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
             }
 
-			//default colors
-			$color = '#6b6b6b'; $borderc = '#6b5e66';
+      //default colors
+      $color = '#6b6b6b'; $borderc = '#6b5e66';
 
-			if(isset($val)){
-				if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
-				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
-				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
-				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-       			// if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+      if(isset($val)){
+        if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
+        if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
+        if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
+        if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
+            // if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
                 if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
-			}
-			// $color = uwwtd_adjustBrightness($color, 50);
-			$nbAnnee = count($otherY); 
-			$j=0;
+      }
+      // $color = uwwtd_adjustBrightness($color, 50);
+      $nbAnnee = count($otherY); 
+      $j=0;
             $cell = 0;
-			for($a=1;$a<=$nbAnnee;$a++){
+      for($a=1;$a<=$nbAnnee;$a++){
                 if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-			        $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
-						$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-						// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
-					$output .= '</td>';
-				}else{
-					$output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element">';
-						$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
-						// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
-					$output .= '</td>';
-				}
+              $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
+            $output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+            // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+          $output .= '</td>';
+        }else{
+          $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element">';
+            $output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+            // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+          $output .= '</td>';
+        }
                 //Si on arrive a 16 cellules, un retour à la ligne s'impose
                 if($cell==16){
                     $output.='<td class="dispo-next">...</td></tr><tr><td class="dispo-next">...</td>';
@@ -260,23 +260,23 @@ function uwwtd_timeline_output($node){
                 $j++;
             }
 
-			// if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-				// $output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
-				// $output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-				// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
-				// $output .= '</div>';
-			// }
-			// else{
-				// $output .= '<div class="uwwtd-history-element">';
-				// $output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
-				// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
-				// $output .= '</div>';
-			// }
-		}
-			$output.='<td class="dispo-after"><div></div></td>';
+      // if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+        // $output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
+        // $output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+        // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+        // $output .= '</div>';
+      // }
+      // else{
+        // $output .= '<div class="uwwtd-history-element">';
+        // $output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+        // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+        // $output .= '</div>';
+      // }
+    }
+      $output.='<td class="dispo-after"><div></div></td>';
           $output.='</tr>';
         $output.='</table>';
-		$output.='<div class="dispo-legend">';
+    $output.='<div class="dispo-legend">';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-1">&nbsp;</div><div class="dispo-legend-label"> '.t('Compliant').'</div></div>';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-2">&nbsp;</div><div class="dispo-legend-label"> '.t('Not compliant').'</div></div>';
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-3">&nbsp;</div><div class="dispo-legend-label"> '.t('Not relevant').'</div></div>';
@@ -285,73 +285,73 @@ function uwwtd_timeline_output($node){
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-0">&nbsp;</div><div class="dispo-legend-label"> '.t('?').'</div></div>';
           $output.='<br class="spacer"/>';
         $output.='</div>';
-		$output .= '</fieldset></div><br>';
-	}
+    $output .= '</fieldset></div><br>';
+  }
 
-	return $output;
+  return $output;
 }
 
 function uwwtd_field_attach_view_alter(&$output, $context){
-	if ($context['entity_type'] != 'node' || $context['view_mode'] != 'full') {
-		return;
-	}
+  if ($context['entity_type'] != 'node' || $context['view_mode'] != 'full') {
+    return;
+  }
 
-	$node = $context['entity'];
-	// Load all instances of the fields for the node.
-	$instances = _field_invoke_get_instances('node', $node->type, array('default' => TRUE, 'deleted' => FALSE));
-	//dsm($instances);
+  $node = $context['entity'];
+  // Load all instances of the fields for the node.
+  $instances = _field_invoke_get_instances('node', $node->type, array('default' => TRUE, 'deleted' => FALSE));
+  //dsm($instances);
 
-	foreach($instances as $field_name => $instance){
-		// Set content for fields they are empty.
-		if(empty($node->{$field_name})){
-			$display = field_get_display($instance, 'full', $node);
-			// Do not add field that is hidden in current display.
-			if($display['type'] == 'hidden'){
-				continue;
-			}
-			// Load field settings.
-			$field = field_info_field($field_name);
+  foreach($instances as $field_name => $instance){
+    // Set content for fields they are empty.
+    if(empty($node->{$field_name})){
+      $display = field_get_display($instance, 'full', $node);
+      // Do not add field that is hidden in current display.
+      if($display['type'] == 'hidden'){
+        continue;
+      }
+      // Load field settings.
+      $field = field_info_field($field_name);
 
-			// test for dates
-			//dsm($field['type']);
-			if($field['type'] === 'date'){
-				if(empty($output[$field_name]['#items'])){
-					$output[$field_name] = array(
-						'#theme' => 'field',
-						'#title' => $instance['label'],
-						'#label_display' => 'inline',
-						'#field_type' => $field['type'],
-						'#field_name' => $field_name,
-						'#bundle' => $node->type,
-						'#object' => $node,
-						'#items' => array(0 => array('value' => '')),
-						'#entity_type' => 'node',
-						'#weight' => $display['weight'],
-						0 => array('#markup' => '<p>'.t('-').'</p>'),
-					);
-					//dsm($output);
-				}
-			}
+      // test for dates
+      //dsm($field['type']);
+      if($field['type'] === 'date'){
+        if(empty($output[$field_name]['#items'])){
+          $output[$field_name] = array(
+            '#theme' => 'field',
+            '#title' => $instance['label'],
+            '#label_display' => 'inline',
+            '#field_type' => $field['type'],
+            '#field_name' => $field_name,
+            '#bundle' => $node->type,
+            '#object' => $node,
+            '#items' => array(0 => array('value' => '')),
+            '#entity_type' => 'node',
+            '#weight' => $display['weight'],
+            0 => array('#markup' => '<p>'.t('-').'</p>'),
+          );
+          //dsm($output);
+        }
+      }
 
-			//dsm($field);
-			if(empty($output[$field_name]['#items'])){
-				$output[$field_name] = array(
-					'#theme' => 'field',
-					'#title' => $instance['label'],
-					'#label_display' => 'inline',
-					'#field_type' => $field['type'],
-					'#field_name' => $field_name,
-					'#bundle' => $node->type,
-					'#object' => $node,
-					'#items' => array(0 => array('value' => '')),
-					'#entity_type' => 'node',
-					'#weight' => $display['weight'],
-					0 => array('#markup' => '<p>'.t('Not provided').'</p>'),
-				);
-			}
-			//dsm($field);
-		}
-	}
+      //dsm($field);
+      if(empty($output[$field_name]['#items'])){
+        $output[$field_name] = array(
+          '#theme' => 'field',
+          '#title' => $instance['label'],
+          '#label_display' => 'inline',
+          '#field_type' => $field['type'],
+          '#field_name' => $field_name,
+          '#bundle' => $node->type,
+          '#object' => $node,
+          '#items' => array(0 => array('value' => '')),
+          '#entity_type' => 'node',
+          '#weight' => $display['weight'],
+          0 => array('#markup' => '<p>'.t('Not provided').'</p>'),
+        );
+      }
+      //dsm($field);
+    }
+  }
 }
 
 function uwwtd_preprocess_node(&$vars){
@@ -361,128 +361,128 @@ function uwwtd_preprocess_node(&$vars){
 }
 
 function uwwtd_render_article17_aglo($nid){
-	$art17 = node_load($nid);
+  $art17 = node_load($nid);
 
-	$output = '';
-	//field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-	if(isset($art17->field_art17_flaggreasons['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggreasons', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  $output = '';
+  //field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+  if(isset($art17->field_art17_flaggreasons['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggreasons', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggmeasures['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggmeasures', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggmeasures['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggmeasures', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggexpecdatestart['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestart', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggexpecdatestart['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestart', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggexpecdatestartw['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestartw', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggexpecdatestartw['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestartw', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggexpecdatecomple['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatecomple', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggexpecdatecomple['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatecomple', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flagginv['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flagginv', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flagginv['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flagginv', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggeufundname['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggeufundname', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggeufundname['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggeufundname', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggeufund['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggeufund', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flaggeufund['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggeufund', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flaggcomments['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flaggcomments', array('display' => 'inline'));
-		$output .= render($champ);
-	}
-	return $output;
+  if(isset($art17->field_art17_flaggcomments['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flaggcomments', array('display' => 'inline'));
+    $output .= render($champ);
+  }
+  return $output;
 }
 
 function uwwtd_render_article17_uwwtp($nid){
-	$art17 = node_load($nid);
+  $art17 = node_load($nid);
 
-	$output = '';
-	//field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-	if(isset($art17->field_art17_flatpreasons['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpreasons', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  $output = '';
+  //field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+  if(isset($art17->field_art17_flatpreasons['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpreasons', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpmeasures['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpmeasures', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpmeasures['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpmeasures', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpecdatestartw['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpecdatestartw['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpecdatecomple['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpecdatecomple['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpinv['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpinv', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpinv['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpinv', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpeufundname['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpeufundname', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpeufundname['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpeufundname', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpeufund['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpeufund', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpeufund['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpeufund', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpcomments['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpcomments', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpcomments['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpcomments', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpload['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpload', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpload['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpload', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpcapacity['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpcapacity', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpcapacity['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpcapacity', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatptexpectreatment['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatptexpectreatment', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatptexpectreatment['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatptexpectreatment', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpecdateperfor['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpecdateperfor['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	if(isset($art17->field_art17_flatpexpecdatestart['und'][0]['value'])){
-		$champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array('display' => 'inline'));
-		$output .= render($champ);
-	}
+  if(isset($art17->field_art17_flatpexpecdatestart['und'][0]['value'])){
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array('display' => 'inline'));
+    $output .= render($champ);
+  }
 
-	return $output;
+  return $output;
 }
 
 function uwwtd_insert_errors_tab($node){
@@ -502,35 +502,35 @@ function uwwtd_insert_errors_tab($node){
         return '';
     }
 
-	$values = array();
+  $values = array();
 
-// 	// Get list of all elements
-// 	$raws = $node->field_uwwtd_error_link['und'];
-// 	$all = array();
-// 	foreach($raws as $raw){
-// 		$all[] = $raw['nid'];
-// 	}
+//  // Get list of all elements
+//  $raws = $node->field_uwwtd_error_link['und'];
+//  $all = array();
+//  foreach($raws as $raw){
+//    $all[] = $raw['nid'];
+//  }
 //
-// 	// group by import
-// 	foreach($all as $single){
-// 		$error = node_load($single);
-// 		if($error->nid !== null){
-// 			$id = $error->field_uwwtd_err_identifier['und'][0]['value'];
-// 			$type = $error->field_uwwtd_err_type['und'][0]['value'];
-// 			$cat = $error->field_uwwtd_err_category['und'][0]['value'];
+//  // group by import
+//  foreach($all as $single){
+//    $error = node_load($single);
+//    if($error->nid !== null){
+//      $id = $error->field_uwwtd_err_identifier['und'][0]['value'];
+//      $type = $error->field_uwwtd_err_type['und'][0]['value'];
+//      $cat = $error->field_uwwtd_err_category['und'][0]['value'];
 //
-// 			// Set values
-// 			$values[$id][$type][$cat][] = array(
-// 				'id' => $id,
-// 				'timestamp' => $error->field_uwwtd_err_timestamp['und'][0]['value'],
-// 				'time' => $error->field_uwwtd_err_time['und'][0]['value'],
-// 				'message' => $error->field_uwwtd_err_message['und'][0]['value'],
-// 				'type' => $type,
-// 				'category' => $error->field_uwwtd_err_category['und'][0]['value'],
-// 				'nid' => $error->nid
-// 			);
-// 		}
-// 	}
+//      // Set values
+//      $values[$id][$type][$cat][] = array(
+//        'id' => $id,
+//        'timestamp' => $error->field_uwwtd_err_timestamp['und'][0]['value'],
+//        'time' => $error->field_uwwtd_err_time['und'][0]['value'],
+//        'message' => $error->field_uwwtd_err_message['und'][0]['value'],
+//        'type' => $type,
+//        'category' => $error->field_uwwtd_err_category['und'][0]['value'],
+//        'nid' => $error->nid
+//      );
+//    }
+//  }
 
     $query = 'select errid as id,
                     type, category,
@@ -550,773 +550,779 @@ function uwwtd_insert_errors_tab($node){
     $result = db_query($query, $param);
     while($row = $result->fetchAssoc()) {
         $values[ $row['id'] ][ $row['type'] ][ $row['category'] ][] = array(
-        	'id' => $row['id'],
-        	'timestamp' => $row['timestamp'],
-        	'message' => $row['message'],
-        	'type' => $row['type'],
-        	'category' => $row['category'],
-        	'nid' => $row['nid'],
+          'id' => $row['id'],
+          'timestamp' => $row['timestamp'],
+          'message' => $row['message'],
+          'type' => $row['type'],
+          'category' => $row['category'],
+          'nid' => $row['nid'],
         );
     }
 
-	if(empty($values)) return false;
+  if(empty($values)) return false;
 
-	// get overall total errors for node
-	$overallTotal = 0;
-	foreach($values as $value){
-		foreach($value as $type){
-			$overallTotal = (isset($type['0']) ? count($type['0']) : 0) 
+  // get overall total errors for node
+  $overallTotal = 0;
+  foreach($values as $value){
+    foreach($value as $type){
+      $overallTotal = (isset($type['0']) ? count($type['0']) : 0) 
                             + (isset($type['1']) ? count($type['1']) : 0) 
                             + (isset($type['2']) ? count($type['2']) : 0) 
                             + (isset($type['3']) ? count($type['3']) : 0) 
                             + (isset($type['4']) ? count($type['4']) : 0) 
                             + $overallTotal;
-		}
-	}
-	if($overallTotal === 0) $overallTotal = null;
+    }
+  }
+  if($overallTotal === 0) $overallTotal = null;
 
-	// Start output
-	$output = '<div class="uwwtd_errors_tab">';
-		$output .= '<h3><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$overallTotal.'</span></span> Errors</h3>';
-		$count = 0 ;
-		foreach($values as $value){
-			$totalW = 0;$totalWI = 0;$totalWL = 0;$totalWG = 0;$totalWC = 0;$totalWF = 0;
-			$totalN = 0;$totalNI = 0;$totalNL = 0;$totalNG = 0;$totalNC = 0;$totalNF = 0;
-			$totalE = 0;$totalEI = 0;$totalEL = 0;$totalEG = 0;$totalEC = 0;$totalEF = 0;
-			$total= 0;
-			// get Category
-// 			$field = field_info_field('field_uwwtd_err_category');
-// 			$label = $field['settings']['allowed_values'];
+  // Start output
+  $output = '<div class="uwwtd_errors_tab">';
+    $output .= '<h3><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$overallTotal.'</span></span> Errors</h3>';
+    $count = 0 ;
+    foreach($values as $value){
+      $totalW = 0;$totalWI = 0;$totalWL = 0;$totalWG = 0;$totalWC = 0;$totalWF = 0;
+      $totalN = 0;$totalNI = 0;$totalNL = 0;$totalNG = 0;$totalNC = 0;$totalNF = 0;
+      $totalE = 0;$totalEI = 0;$totalEL = 0;$totalEG = 0;$totalEC = 0;$totalEF = 0;
+      $total= 0;
+      // get Category
+//      $field = field_info_field('field_uwwtd_err_category');
+//      $label = $field['settings']['allowed_values'];
 
-			// get date
-			//type erreur warning
-			if(isset($value['1']))
-			{
-				if(isset($value['1']['0']))
-				{
-					foreach ($value['1']['0'] as $categories){
-						$labelWI = 'Warning Input';$totalWI = count($value['1']['0']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['1']['1']))
-				{
-					foreach ($value['1']['1'] as $categories){
-						$labelWL = 'Warning Linking';$totalWL = count($value['1']['1']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['1']['2']))
-				{
-					foreach ($value['1']['2'] as $categories){
-						$labelWG = 'Warning Geometry';$totalWG = count($value['1']['2']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['1']['3']))
-				{
-					foreach ($value['1']['3'] as $categories){
-						$labelWC = 'Warning Conformity';$totalWC = count($value['1']['3']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['1']['4']))
-				{
-					foreach ($value['1']['4'] as $categories){
-						$labelWF = 'Warning Format';$totalWF = count($value['1']['4']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				$totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;
-			}
-			//type erreur notification
-			if(isset($value['0']))
-			{
-				if(isset($value['0']['0']))
-				{
-					foreach ($value['0']['0'] as $categories){
-						$labelNI = 'Notification Input';$totalNI = count($value['0']['0']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['0']['1']))
-				{
-					foreach ($value['0']['1'] as $categories){
-						$labelNL = 'Notification Linking';$totalNL = count($value['0']['1']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['0']['2']))
-				{
-					foreach ($value['0']['2'] as $categories){
-						$labelNG = 'Notification Geometry';$totalNG = count($value['0']['2']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['0']['3']))
-				{
-					foreach ($value['0']['3'] as $categories){
-						$labelNC = 'Notification Conformity';$totalNC = count($value['0']['3']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['0']['4']))
-				{
-					foreach ($value['0']['4'] as $categories){
-						$labelNF = 'Notification Format';$totalNF = count($value['0']['4']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				$totalN = $totalNI + $totalNL + $totalNG + $totalNC + $totalNF;
-			}
-			//type erreur error
-			if(isset($value['2']))
-			{
-				if(isset($value['2']['0']))
-				{
-					foreach ($value['2']['0'] as $categories){
-						$labelEI = 'Error Input';$totalEI = count($value['2']['0']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['2']['1']))
-				{
-					foreach ($value['2']['1'] as $categories){
-						$labelEL = 'Error Linking';$totalEL = count($value['2']['1']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['2']['2']))
-				{
-					foreach ($value['2']['2'] as $categories){
-						$labelEG = 'Error Geometry';$totalEG = count($value['2']['2']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['2']['3']))
-				{
-					foreach ($value['2']['3'] as $categories){
-						$labelEC = 'Error Conformity';$totalEC = count($value['2']['3']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				if(isset($value['2']['4']))
-				{
-					foreach ($value['2']['4'] as $categories){
-						$labelEF = 'Error Format';$totalEF = count($value['2']['4']);
-						//$time = $categories['timestamp'];
-						$date =date('d-m-Y H:i:s', $categories['timestamp']);
-					}
-				}
-				$totalE = $totalEI + $totalEL + $totalEG + $totalEC + $totalEF;
-			}
-			$total = $totalW + $totalN + $totalE;
-			if($total === 0) $total = null;
-			$output .= '<div class="uwwtd_errors_tab_header">';
-				$output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Imported at : '.$date.'</span></h4>';
+      // get date
+      //type erreur warning
+      if(isset($value['1']))
+      {
+        if(isset($value['1']['0']))
+        {
+          foreach ($value['1']['0'] as $categories){
+            $labelWI = 'Warning Input';$totalWI = count($value['1']['0']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['1']['1']))
+        {
+          foreach ($value['1']['1'] as $categories){
+            $labelWL = 'Warning Linking';$totalWL = count($value['1']['1']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['1']['2']))
+        {
+          foreach ($value['1']['2'] as $categories){
+            $labelWG = 'Warning Geometry';$totalWG = count($value['1']['2']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['1']['3']))
+        {
+          foreach ($value['1']['3'] as $categories){
+            $labelWC = 'Warning Conformity';$totalWC = count($value['1']['3']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['1']['4']))
+        {
+          foreach ($value['1']['4'] as $categories){
+            $labelWF = 'Warning Format';$totalWF = count($value['1']['4']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        $totalW = $totalWI + $totalWL + $totalWG + $totalWC + $totalWF;
+      }
+      //type erreur notification
+      if(isset($value['0']))
+      {
+        if(isset($value['0']['0']))
+        {
+          foreach ($value['0']['0'] as $categories){
+            $labelNI = 'Notification Input';$totalNI = count($value['0']['0']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['0']['1']))
+        {
+          foreach ($value['0']['1'] as $categories){
+            $labelNL = 'Notification Linking';$totalNL = count($value['0']['1']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['0']['2']))
+        {
+          foreach ($value['0']['2'] as $categories){
+            $labelNG = 'Notification Geometry';$totalNG = count($value['0']['2']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['0']['3']))
+        {
+          foreach ($value['0']['3'] as $categories){
+            $labelNC = 'Notification Conformity';$totalNC = count($value['0']['3']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['0']['4']))
+        {
+          foreach ($value['0']['4'] as $categories){
+            $labelNF = 'Notification Format';$totalNF = count($value['0']['4']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        $totalN = $totalNI + $totalNL + $totalNG + $totalNC + $totalNF;
+      }
+      //type erreur error
+      if(isset($value['2']))
+      {
+        if(isset($value['2']['0']))
+        {
+          foreach ($value['2']['0'] as $categories){
+            $labelEI = 'Error Input';$totalEI = count($value['2']['0']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['2']['1']))
+        {
+          foreach ($value['2']['1'] as $categories){
+            $labelEL = 'Error Linking';$totalEL = count($value['2']['1']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['2']['2']))
+        {
+          foreach ($value['2']['2'] as $categories){
+            $labelEG = 'Error Geometry';$totalEG = count($value['2']['2']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['2']['3']))
+        {
+          foreach ($value['2']['3'] as $categories){
+            $labelEC = 'Error Conformity';$totalEC = count($value['2']['3']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        if(isset($value['2']['4']))
+        {
+          foreach ($value['2']['4'] as $categories){
+            $labelEF = 'Error Format';$totalEF = count($value['2']['4']);
+            //$time = $categories['timestamp'];
+            $date =date('d-m-Y H:i:s', $categories['timestamp']);
+          }
+        }
+        $totalE = $totalEI + $totalEL + $totalEG + $totalEC + $totalEF;
+      }
+      $total = $totalW + $totalN + $totalE;
+      if($total === 0) $total = null;
+      $output .= '<div class="uwwtd_errors_tab_header">';
+        $output .= '<h4><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_total">'.$total.'</span></span><span class="uwwtd_errors_tab_header_title"> Imported at : '.$date.'</span></h4>';
 
-				if(isset($value['0'])){
-					$output .= '<div class="uwwtd_errors_tab_type_header">';
+        if(isset($value['0'])){
+          $output .= '<div class="uwwtd_errors_tab_type_header">';
 
-					//catégorie notification input
-					if(isset($value['0']['0'])){
-						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNI">'.$totalNI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNI.':</span></h5>';
-						foreach($value['0']['0'] as $error){
-							//dsm($error);
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						//$totalI = 0;
-					}
-					if(isset($value['0']['1']))
-					{//catégorie notification Linking
-						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNL">'.$totalNL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNL.':</span></h5>';
-						foreach($value['0']['1'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalL = 0;
-					}
-					if(isset($value['0']['2']))
-					{//catégorie notification Geometry
-						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNG">'.$totalNG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNG.':</span></h5>';
-						foreach($value['0']['2'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalG = 0;
-					}
-					if(isset($value['0']['3']))
-					{//catégorie notification Conformity
-						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNC">'.$totalNC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNC.':</span></h5>';
-						foreach($value['0']['3'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalC = 0;
-					}
-					if(isset($value['0']['4']))
-					{//catégorie notification Format
-						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNF">'.$totalNF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNF.':</span></h5>';
-						foreach($value['0']['4'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalF = 0;
-					}
-					$output .= '</div>';
+          //catégorie notification input
+          if(isset($value['0']['0'])){
+            $output .= '<div class="uwwtd_error_Input">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNI">'.$totalNI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNI.':</span></h5>';
+            foreach($value['0']['0'] as $error){
+              //dsm($error);
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            //$totalI = 0;
+          }
+          if(isset($value['0']['1']))
+          {//catégorie notification Linking
+            $output .= '<div class="uwwtd_error_Linking">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNL">'.$totalNL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNL.':</span></h5>';
+            foreach($value['0']['1'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalL = 0;
+          }
+          if(isset($value['0']['2']))
+          {//catégorie notification Geometry
+            $output .= '<div class="uwwtd_error_Geometry">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNG">'.$totalNG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNG.':</span></h5>';
+            foreach($value['0']['2'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalG = 0;
+          }
+          if(isset($value['0']['3']))
+          {//catégorie notification Conformity
+            $output .= '<div class="uwwtd_error_Conformity">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNC">'.$totalNC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNC.':</span></h5>';
+            foreach($value['0']['3'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalC = 0;
+          }
+          if(isset($value['0']['4']))
+          {//catégorie notification Format
+            $output .= '<div class="uwwtd_error_Format">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalNF">'.$totalNF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelNF.':</span></h5>';
+            foreach($value['0']['4'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_notification.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalF = 0;
+          }
+          $output .= '</div>';
 
-				}
-				if(isset($value['1'])){
-					$output .= '<div class="uwwtd_errors_tab_type_header">';
+        }
+        if(isset($value['1'])){
+          $output .= '<div class="uwwtd_errors_tab_type_header">';
 
-					//catégorie warning input
-					if(isset($value['1']['0'])){
-						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWI">'.$totalWI.'</span></span><span class="uwwtd_errors_tab_header_titleWI">'.$labelWI.':</span></h5>';
-						foreach($value['1']['0'] as $error){
-							//dsm($error);
-							$output .= '<div class="uwwtd_error errorWI">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalI = 0;
-					}
-					if(isset($value['1']['1']))
-					{//catégorie warning Linking
-						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWL">'.$totalWL.'</span></span><span class="uwwtd_errors_tab_header_titleWL">'.$labelWL.':</span></h5>';
-						foreach($value['1']['1'] as $error){
-							$output .= '<div class="uwwtd_error errorWL">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalL = 0;
-					}
-					if(isset($value['1']['2']))
-					{//catégorie warning Geometry
-						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWG">'.$totalWG.'</span></span><span class="uwwtd_errors_tab_header_titleWG">'.$labelWG.':</span></h5>';
-						foreach($value['1']['2'] as $error){
-							$output .= '<div class="uwwtd_error errorWG">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalG = 0;
-					}
-					if(isset($value['1']['3']))
-					{//catégorie warning Conformity
-						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWC">'.$totalWC.'</span></span><span class="uwwtd_errors_tab_header_titleWC">'.$labelWC.':</span></h5>';
-						foreach($value['1']['3'] as $error){
-							$output .= '<div class="uwwtd_error errorWC">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalC = 0;
-					}
-					if(isset($value['1']['4']))
-					{//catégorie warning Format
-						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWF">'.$totalWF.'</span></span><span class="uwwtd_errors_tab_header_titleWF">'.$labelWF.':</span></h5>';
-						foreach($value['1']['4'] as $error){
-							$output .= '<div class="uwwtd_error errorWF">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalF = 0;
-					}
-					$output .= '</div>';
-				}
-				if(isset($value['2'])){
-					$output .= '<div class="uwwtd_errors_tab_type_header">';
-					//catégorie error input
-					if(isset($value['2']['0'])){
-						$output .= '<div class="uwwtd_error_Input">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEI">'.$totalEI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEI.':</span></h5>';
-						foreach($value['2']['0'] as $error){
-							//dsm($error);
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalI = 0;
-					}
-					if(isset($value['2']['1']))
-					{//catégorie error Linking
-						$output .= '<div class="uwwtd_error_Linking">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEL">'.$totalEL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEL.':</span></h5>';
-						foreach($value['2']['1'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalL = 0;
-					}
-					if(isset($value['2']['2']))
-					{//catégorie error Geometry
-						$output .= '<div class="uwwtd_error_Geometry">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEG">'.$totalEG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEG.':</span></h5>';
-						foreach($value['2']['2'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalG = 0;
-					}
-					if(isset($value['2']['3']))
-					{//catégorie error Conformity
-						$output .= '<div class="uwwtd_error_Conformity">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEC">'.$totalEC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEC.':</span></h5>';
-						foreach($value['2']['3'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalC = 0;
-					}
-					if(isset($value['2']['4']))
-					{//catégorie error Format
-						$output .= '<div class="uwwtd_error_Format">';
-							$output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEF">'.$totalEF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEF.':</span></h5>';
-						foreach($value['2']['4'] as $error){
-							$output .= '<div class="uwwtd_error">';
-								$output .= '<ul>';
-									$output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
-									$output .= '<li>'.$error['message'].'</li>';
-// 									$output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
-								$output .= '</ul>';
-							$output .= '</div>';
-						}$output .= '</div>';
-						$totalF = 0;
-					}
-					$output .= '</div>';
-				}
-			$output .= '</div>';
-		}
-	$output .= '</div>';
+          //catégorie warning input
+          if(isset($value['1']['0'])){
+            $output .= '<div class="uwwtd_error_Input">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWI">'.$totalWI.'</span></span><span class="uwwtd_errors_tab_header_titleWI">'.$labelWI.':</span></h5>';
+            foreach($value['1']['0'] as $error){
+              //dsm($error);
+              $output .= '<div class="uwwtd_error errorWI">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWI.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalI = 0;
+          }
+          if(isset($value['1']['1']))
+          {//catégorie warning Linking
+            $output .= '<div class="uwwtd_error_Linking">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWL">'.$totalWL.'</span></span><span class="uwwtd_errors_tab_header_titleWL">'.$labelWL.':</span></h5>';
+            foreach($value['1']['1'] as $error){
+              $output .= '<div class="uwwtd_error errorWL">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWL.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalL = 0;
+          }
+          if(isset($value['1']['2']))
+          {//catégorie warning Geometry
+            $output .= '<div class="uwwtd_error_Geometry">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWG">'.$totalWG.'</span></span><span class="uwwtd_errors_tab_header_titleWG">'.$labelWG.':</span></h5>';
+            foreach($value['1']['2'] as $error){
+              $output .= '<div class="uwwtd_error errorWG">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWG.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalG = 0;
+          }
+          if(isset($value['1']['3']))
+          {//catégorie warning Conformity
+            $output .= '<div class="uwwtd_error_Conformity">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWC">'.$totalWC.'</span></span><span class="uwwtd_errors_tab_header_titleWC">'.$labelWC.':</span></h5>';
+            foreach($value['1']['3'] as $error){
+              $output .= '<div class="uwwtd_error errorWC">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWC.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalC = 0;
+          }
+          if(isset($value['1']['4']))
+          {//catégorie warning Format
+            $output .= '<div class="uwwtd_error_Format">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalWF">'.$totalWF.'</span></span><span class="uwwtd_errors_tab_header_titleWF">'.$labelWF.':</span></h5>';
+            foreach($value['1']['4'] as $error){
+              $output .= '<div class="uwwtd_error errorWF">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_warning.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" data-category="'.$labelWF.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalF = 0;
+          }
+          $output .= '</div>';
+        }
+        if(isset($value['2'])){
+          $output .= '<div class="uwwtd_errors_tab_type_header">';
+          //catégorie error input
+          if(isset($value['2']['0'])){
+            $output .= '<div class="uwwtd_error_Input">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEI">'.$totalEI.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEI.':</span></h5>';
+            foreach($value['2']['0'] as $error){
+              //dsm($error);
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalI = 0;
+          }
+          if(isset($value['2']['1']))
+          {//catégorie error Linking
+            $output .= '<div class="uwwtd_error_Linking">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEL">'.$totalEL.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEL.':</span></h5>';
+            foreach($value['2']['1'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalL = 0;
+          }
+          if(isset($value['2']['2']))
+          {//catégorie error Geometry
+            $output .= '<div class="uwwtd_error_Geometry">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEG">'.$totalEG.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEG.':</span></h5>';
+            foreach($value['2']['2'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalG = 0;
+          }
+          if(isset($value['2']['3']))
+          {//catégorie error Conformity
+            $output .= '<div class="uwwtd_error_Conformity">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEC">'.$totalEC.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEC.':</span></h5>';
+            foreach($value['2']['3'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalC = 0;
+          }
+          if(isset($value['2']['4']))
+          {//catégorie error Format
+            $output .= '<div class="uwwtd_error_Format">';
+              $output .= '<h5><span class="uwwtd_tab_header_total_wrapper"><span class="uwwtd_tab_header_totalEF">'.$totalEF.'</span></span><span class="uwwtd_errors_tab_header_title">'.$labelEF.':</span></h5>';
+            foreach($value['2']['4'] as $error){
+              $output .= '<div class="uwwtd_error">';
+                $output .= '<ul>';
+                  $output .= '<li><img src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_error.png" /></li>';
+                  $output .= '<li>'.$error['message'].'</li>';
+//                  $output .= '<li><img data-id="'.$error['nid'].'" data-attached="'.$node->nid.'" class="uwwtd_ignore" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/uwwtd_ignore.png" /></li>';
+                $output .= '</ul>';
+              $output .= '</div>';
+            }$output .= '</div>';
+            $totalF = 0;
+          }
+          $output .= '</div>';
+        }
+      $output .= '</div>';
+    }
+  $output .= '</div>';
 
-	return $output;
+  return $output;
 }
 
 function uwwtd_get_uww_graphic($node){
-	global $base_url;
-	$src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+  global $base_url;
+  $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+  $nbAgglos = 0;
+  $reseau = array();
+  $reseau['nid'] = $node->nid;
+  $reseau['title'] = $node->title;
+  $reseau['id'] = $node->field_siteid['und'][0]['value'];
+  $reseau['compliance'] = $node->field_uwwcompliance['und'][0]['value'];
+  $reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
 
-	$nbAgglos = 0;
-	$reseau = array();
-	$reseau['nid'] = $node->nid;
-	$reseau['title'] = $node->title;
-	$reseau['id'] = $node->field_siteid['und'][0]['value'];
-	$reseau['compliance'] = $node->field_uwwcompliance['und'][0]['value'];
-	$reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
+  $reseau['primary'] = array(
+    'treatment' => (isset($node->field_uwwprimarytreatment['und'][0]['value']) ? $node->field_uwwprimarytreatment['und'][0]['value'] : '')
+  );
 
-	$reseau['primary'] = array(
-		'treatment' => (isset($node->field_uwwprimarytreatment['und'][0]['value']) ? $node->field_uwwprimarytreatment['und'][0]['value'] : '')
-	);
+  $reseau['secondary'] = array(
+    'treatment' => (isset($node->field_uwwsecondarytreatment['und'][0]['value']) ? $node->field_uwwsecondarytreatment['und'][0]['value'] : '')
+  );
 
-	$reseau['secondary'] = array(
-		'treatment' => (isset($node->field_uwwsecondarytreatment['und'][0]['value']) ? $node->field_uwwsecondarytreatment['und'][0]['value'] : '')
-	);
+  $reseau['n-removal'] = array(
+    'treatment' => (isset($node->field_uwwnremoval['und'][0]['value']) ? $node->field_uwwnremoval['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwntotperf['und'][0]['value']) ? $node->field_uwwntotperf['und'][0]['value'] : '')
+  );
 
-	$reseau['n-removal'] = array(
-		'treatment' => (isset($node->field_uwwnremoval['und'][0]['value']) ? $node->field_uwwnremoval['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwntotperf['und'][0]['value']) ? $node->field_uwwntotperf['und'][0]['value'] : '')
-	);
+  $reseau['p-removal'] = array(
+    'treatment' => (isset($node->field_uwwpremoval['und'][0]['value']) ? $node->field_uwwpremoval['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwptotperf['und'][0]['value']) ? $node->field_uwwptotperf['und'][0]['value'] : '')
+  );
 
-	$reseau['p-removal'] = array(
-		'treatment' => (isset($node->field_uwwpremoval['und'][0]['value']) ? $node->field_uwwpremoval['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwptotperf['und'][0]['value']) ? $node->field_uwwptotperf['und'][0]['value'] : '')
-	);
+  $reseau['uv'] = array(
+    'treatment' => (isset($node->field_uwwuv['und'][0]['value']) ? $node->field_uwwuv['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
+  );
 
-	$reseau['uv'] = array(
-		'treatment' => (isset($node->field_uwwuv['und'][0]['value']) ? $node->field_uwwuv['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
-	);
+  $reseau['micro'] = array(
+    'treatment' => (isset($node->uwwmicrofiltration['und'][0]['value']) ? $node->uwwmicrofiltration['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
+  );
 
-	$reseau['micro'] = array(
-		'treatment' => (isset($node->uwwmicrofiltration['und'][0]['value']) ? $node->uwwmicrofiltration['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
-	);
+  $reseau['chlorination'] = array(
+    'treatment' => (isset($node->field_uwwchlorination['und'][0]['value']) ? $node->field_uwwchlorination['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value']  : '')
+  );
 
-	$reseau['chlorination'] = array(
-		'treatment' => (isset($node->field_uwwchlorination['und'][0]['value']) ? $node->field_uwwchlorination['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value']  : '')
-	);
+  $reseau['ozonation'] = array(
+    'treatment' => (isset($node->field_uwwozonation['und'][0]['value']) ? $node->field_uwwozonation['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
+  );
 
-	$reseau['ozonation'] = array(
-		'treatment' => (isset($node->field_uwwozonation['und'][0]['value']) ? $node->field_uwwozonation['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
-	);
+  $reseau['other'] = array(
+    'treatment' => (isset($node->field_uwwothertreat['und'][0]['value']) ? $node->field_uwwothertreat['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
+  );
 
-	$reseau['other'] = array(
-		'treatment' => (isset($node->field_uwwothertreat['und'][0]['value']) ? $node->field_uwwothertreat['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
-	);
+  $reseau['sand'] = array(
+    'treatment' => (isset($node->field_uwwsandfiltration['und'][0]['value']) ? $node->field_uwwsandfiltration['und'][0]['value'] : ''),
+    'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
+  );
 
-	$reseau['sand'] = array(
-		'treatment' => (isset($node->field_uwwsandfiltration['und'][0]['value']) ? $node->field_uwwsandfiltration['und'][0]['value'] : ''),
-		'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
-	);
+  $reseau['agglos'] = array();
+  foreach($node->field_linked_agglomerations['und'] as $aggs){
+    $nbAgglos++;
+    $agg = node_load($aggs['nid']);
 
-	$reseau['agglos'] = array();
-	foreach($node->field_linked_agglomerations['und'] as $aggs){
-		$nbAgglos++;
-		$agg = node_load($aggs['nid']);
-		$reseau['agglos'][$agg->nid]['nid'] = $agg->nid;
-		$reseau['agglos'][$agg->nid]['title'] = $agg->title;
-		$reseau['agglos'][$agg->nid]['id'] = $agg->field_siteid['und'][0]['value'];
-		$reseau['agglos'][$agg->nid]['generated'] = $agg->field_agggenerated['und'][0]['value'];
-	}
+    $reseau['agglos'][$agg->nid]['nid'] = $agg->nid;
+    $reseau['agglos'][$agg->nid]['title'] = $agg->title;
+    $reseau['agglos'][$agg->nid]['id'] = $agg->field_siteid['und'][0]['value'];
+    $reseau['agglos'][$agg->nid]['generated'] = $agg->field_agggenerated['und'][0]['value'];
+  }
 
-	$nbDcps = 0;
-	foreach($node->field_linked_discharge_points['und'] as $dcps){
-		$nbDcps++;
-		$dcp = node_load($dcps['nid']);
-		$rca = node_load($dcp->field_linked_receiving_areas['und'][0]['nid']);
-		$reseau['dcps'][$dcp->nid]['nid'] = $dcp->nid;
-		$reseau['dcps'][$dcp->nid]['title'] = $dcp->title;
-		$reseau['dcps'][$dcp->nid]['id'] = $dcp->field_siteid['und'][0]['value'];
-		$reseau['dcps'][$dcp->nid]['rcaNid'] = $rca->nid;
-		$reseau['dcps'][$dcp->nid]['rcaTitle'] = $rca->title;
-		$reseau['dcps'][$dcp->nid]['rcaType'] = $dcp->field_rcatype['und'][0]['value'];
-	}
-// 	dsm($reseau);
+  $nbDcps = 0;
+  foreach($node->field_linked_discharge_points['und'] as $dcps){
+    $nbDcps++;
+    $dcp = node_load($dcps['nid']);
+    $rca = node_load($dcp->field_linked_receiving_areas['und'][0]['nid']);
+    $reseau['dcps'][$dcp->nid]['nid'] = $dcp->nid;
+    $reseau['dcps'][$dcp->nid]['title'] = $dcp->title;
+    $reseau['dcps'][$dcp->nid]['id'] = $dcp->field_siteid['und'][0]['value'];
+    $reseau['dcps'][$dcp->nid]['rcaNid'] = $rca->nid;
+    $reseau['dcps'][$dcp->nid]['rcaTitle'] = $rca->title;
+    $reseau['dcps'][$dcp->nid]['rcaType'] = $dcp->field_rcatype['und'][0]['value'];
+  }
 
-	$output = '<div class="graphic-container">';
+  $output = '<div class="graphic-container">';
 
-	$output .= '<div class="agglomeration-graphic">
-	        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
-	        <div class="graphic-title">';
-	        	$output .= '<a href="#">Agglomerations : '.count($reseau['agglos']).'</a>
-	        	<span class="aggs-list">';
-					foreach($reseau['agglos'] as $agglo){
-					          $output .= 'Agglomeration : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
-					          (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
-					}
+  $output .= '<div class="agglomeration-graphic">';
+            if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
+                $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-nc.png" alt="reseau">';
+            } elseif ($agg->field_aggcompliance['und'][0]['value'] == 'C') {
+                $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-c.png" alt="reseau">';
+            } else {
+                $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">';
+            }
+          
 
-	$output .= '</span></div></div>';
+            $output .= '<div class="graphic-title">';
+            $output .= '<a href="#">Agglomerations : '.count($reseau['agglos']).'</a>
+            <span class="aggs-list">';
+          foreach($reseau['agglos'] as $agglo){
+                    $output .= 'Agglomeration : '.l($agglo['title'], "node/".$agglo['nid']).'<br>
+                    (Generated : '.uwwtd_format_number($agglo['generated'], 0).' p.e)<br>';
+          }
 
-	$output .= '<div class="connectors">';
+  $output .= '</span></div></div>';
+
+  $output .= '<div class="connectors">';
         $output .= '<img width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau">';
     $output .= '</div>';
     $offset = 0;
     $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
+      if($reseau['compliance'] == 'C'){ $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';}
+      elseif($reseau['compliance'] == 'NC'){ $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"  title="Main treatment">';}
+          else {$output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';}
 
-	    if($reseau['compliance'] == 'C'){ $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';}
-	    elseif($reseau['compliance'] == 'NC'){ $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"  title="Main treatment">';}
-else {$output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';}
+    $output .= '<div class="graphic-title">
+      '.l($reseau['title'], "node/".$reseau['nid']).'
+    </div>
+    <div class="station-load">Entering :<br>'.uwwtd_format_number($reseau['load'], 0).' p.e</div>
+  </div>';
 
-		$output .= '<div class="graphic-title">
-			'.l($reseau['title'], "node/".$reseau['nid']).'
-		</div>
-		<div class="station-load">Entering :<br>'.uwwtd_format_number($reseau['load'], 0).' p.e</div>
-	</div>';
+  $output .= '<div class="more-wrapper">';
+    if($reseau['n-removal']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['n-removal']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['n-removal']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('N').'</div>';
+      $output .= '</div>';
+    }
 
-	$output .= '<div class="more-wrapper">';
-		if($reseau['n-removal']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['n-removal']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['n-removal']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('N').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['p-removal']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['p-removal']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['p-removal']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('P').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['p-removal']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['p-removal']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['p-removal']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('P').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['uv']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['uv']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['uv']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('UV').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['uv']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['uv']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['uv']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('UV').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['micro']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['micro']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['micro']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('MICRO').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['micro']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['micro']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['micro']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('MICRO').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['chlorination']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['chlorination']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['chlorination']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('CHLOR').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['chlorination']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['chlorination']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['chlorination']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('CHLOR').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['ozonation']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['ozonation']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['ozonation']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('OZONE').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['ozonation']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['ozonation']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['ozonation']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('OZONE').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['sand']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['sand']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['sand']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('SAND').'</div>';
+      $output .= '</div>';
+    }
 
-		if($reseau['sand']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['sand']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['sand']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('SAND').'</div>';
-			$output .= '</div>';
-		}
+    if($reseau['other']['treatment'] == '1'){
+      $output .= '<div class="more">';
+      if($reseau['other']['performance'] == 'P'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      elseif($reseau['other']['performance'] == 'F'){
+        $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      else{
+        $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+      }
+      $output .= '<div class="more-text">'.t('O').'</div>';
+      $output .= '</div>';
+    }
+  $output .= '</div>';
 
-		if($reseau['other']['treatment'] == '1'){
-			$output .= '<div class="more">';
-			if($reseau['other']['performance'] == 'P'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			elseif($reseau['other']['performance'] == 'F'){
-				$output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			else{
-				$output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-			}
-			$output .= '<div class="more-text">'.t('O').'</div>';
-			$output .= '</div>';
-		}
-	$output .= '</div>';
-
-	$offset = 0;
+  $offset = 0;
     $totalDcps = 0;
     $totalDcpsT = 0;
     $totalDcpsB = 0;
 
     $output .= '<div class="dcp-connections" style="top: -'.$offset.'px">';
 
-	$nbDcps = count($reseau['dcps']);
-	$totalDcps = $totalDcps + $nbDcps;
-	$nbDcpsT = 0;
-	$nbDcpsB = 0;
+  $nbDcps = count($reseau['dcps']);
+  $totalDcps = $totalDcps + $nbDcps;
+  $nbDcpsT = 0;
+  $nbDcpsB = 0;
 //     $nbPlants = 0;
-	for ($i=0; $i <= $nbDcps; $i++) {
+  for ($i=0; $i <= $nbDcps; $i++) {
 
-		if($i > 1){
+    if($i > 1){
 
-		  if($i % 2 == 0){
-		    $nbDcpsT ++;
-		    $totalDcpsT++;
-		  }
-		  else{
-		    $nbDcpsB ++;
-		    $totalDcpsB++;
-		  }
-		}
-	}
-	if($nbDcpsT == 1) $topMarge = 50;
-	else $topMarge = 0 + ($nbDcpsT * 48);
-// 	if($nbPlants > 1) $topMarge = $topMarge - 1;
-// 	if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
-	if($topMarge < 0) $topMarge = 0;
-	$topMarge = $topMarge - (2 * $topMarge);
-
-
-	$output .= '<div class="station-dcp-connections">';
-	$output .= '<div>';
+      if($i % 2 == 0){
+        $nbDcpsT ++;
+        $totalDcpsT++;
+      }
+      else{
+        $nbDcpsB ++;
+        $totalDcpsB++;
+      }
+    }
+  }
+  if($nbDcpsT == 1) $topMarge = 50;
+  else $topMarge = 0 + ($nbDcpsT * 48);
+//  if($nbPlants > 1) $topMarge = $topMarge - 1;
+//  if($nbPlants == 1 && $nbDcps == 1) $topMarge = 3;
+  if($topMarge < 0) $topMarge = 0;
+  $topMarge = $topMarge - (2 * $topMarge);
 
 
-	 $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
+  $output .= '<div class="station-dcp-connections">';
+  $output .= '<div>';
 
-	    $output .= '</div>
-	  </div>';
+
+   $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
+
+      $output .= '</div>
+    </div>';
 
     $output .= '</div>
 
     <div class="dcps-wrapper">';
 
 
-	$output .= '<div class="station-dcp" style="top: 0px;">
-		<div>
-			<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau"  title="Discharge point">
-		  	<div class="graphic-title">';
-				$output .= l(count($reseau['dcps'])." DCP(S)", "#");
-				$output .= '<div class="dcps-hidden-list">';
-					$output .= 'Discharge point: ';
-					foreach($reseau['dcps'] as $dcp) {
-		    			$output .= l($dcp['title'], "node/".$dcp['nid']);
-		    			$output .= '<br>';
-		    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
-		    			$output .=  '('.$dcp['rcaType'].')';
-		    			$output .= '<br><br>';
-					}
-		  		$output .= '</div>
-		  	</div>
-		</div>
-	</div>
+  $output .= '<div class="station-dcp" style="top: 0px;">
+    <div>
+      <img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau"  title="Discharge point">
+        <div class="graphic-title">';
+        $output .= l(count($reseau['dcps'])." DCP(S)", "#");
+        $output .= '<div class="dcps-hidden-list">';
+          $output .= 'Discharge point: ';
+          foreach($reseau['dcps'] as $dcp) {
+              $output .= l($dcp['title'], "node/".$dcp['nid']);
+              $output .= '<br>';
+              $output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+              $output .=  '('.$dcp['rcaType'].')';
+              $output .= '<br><br>';
+          }
+          $output .= '</div>
+        </div>
+    </div>
+  </div>
 </div>';
 
     $output .= '</div><div class="graphic-legend">
-    	<ul><b>Main treatment : </b>
-    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
-    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
-    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
-    	</ul>
-    	<ul><b>More stringent treatment : <br> Performance : </b>
-    		<li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
-    		<li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
-    		<li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
-    	</ul>
-    	<ul><br><b>Type :</b>
-			<li><span>N</span> : Nitrogen removal</li>
-			<li><span>P</span> : Phosphorus removal</li>
-			<li><span>UV</span> : UV treatment</li>
-			<li><span>MICRO</span> : Micro Filtration</li>
-    	</ul>
-    	<ul><br><b>Type : </b>
-			<li><span>CHLOR</span> : Chlorination</li>
-			<li><span>OZONE</span> : Ozonation</li>
-			<li><span>SAND</span> : Sand filtration</li>
-			<li><span>O</span> : Other more stringent</li>
-		</ul>
-		<ul><b>Discharge  point : </b>
-			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
-			<li><span>DCP(S)</span> : Discharge point(s)</li>
-		</ul>
+      <ul><b>Main treatment : </b>
+        <li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+        <li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+        <li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+      </ul>
+      <ul><b>More stringent treatment : <br> Performance : </b>
+        <li><img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau"> : Pass performance</li>
+        <li><img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau"> : Fail performance</li>
+        <li><img src="'.$src.'/images/graphic/ms-small.png" alt="reseau"> : Not relevant</li>
+      </ul>
+      <ul><br><b>Type :</b>
+      <li><span>N</span> : Nitrogen removal</li>
+      <li><span>P</span> : Phosphorus removal</li>
+      <li><span>UV</span> : UV treatment</li>
+      <li><span>MICRO</span> : Micro Filtration</li>
+      </ul>
+      <ul><br><b>Type : </b>
+      <li><span>CHLOR</span> : Chlorination</li>
+      <li><span>OZONE</span> : Ozonation</li>
+      <li><span>SAND</span> : Sand filtration</li>
+      <li><span>O</span> : Other more stringent</li>
+    </ul>
+    <ul><b>Discharge  point : </b>
+      <li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
+      <li><span>DCP(S)</span> : Discharge point(s)</li>
+    </ul>
     </div>';
 
-	return $output;
+  return $output;
 }
 
 function uwwtd_get_agglo_graphic($node){
-	global $base_url;
+  global $base_url;
       $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
 
       $totalout = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']);
@@ -1328,7 +1334,6 @@ function uwwtd_get_agglo_graphic($node){
       foreach($node->field_linked_treatment_plants['und'] as $uwws){
         $nbPlants++;
         $uww = node_load($uwws['nid']);
-
         //get station entering sums
         $query = db_select('node', 'n');
         $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
@@ -1439,7 +1444,6 @@ function uwwtd_get_agglo_graphic($node){
         }
       }
       $topMarge = $nbPlantsB * 95;
-
       $output = '';
 
     $output .= '<div class="ias">
@@ -1450,9 +1454,17 @@ function uwwtd_get_agglo_graphic($node){
     </div>
     <div class="graphic-container">
 
-      <div class="agglomeration-graphic">
-        <img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">
-        <div class="graphic-title">
+      <div class="agglomeration-graphic">';
+          if ($node->field_aggcompliance['und'][0]['value'] == 'NC') {
+            $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-nc.png" alt="reseau">';
+          } elseif ($node->field_aggcompliance['und'][0]['value'] == 'C') {
+            $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-c.png" alt="reseau">';
+          } else {
+            $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">';
+          }
+
+
+        $output.= '<div class="graphic-title">
           '.l($node->title, "node/".$node->nid).'<br>
           Generated load : '.uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0).' p.e
         </div>
@@ -1482,11 +1494,8 @@ function uwwtd_get_agglo_graphic($node){
       if($nbPlants % 2 == 0){
         $offset = 50;
       }
-
       foreach($reseau as $station){
-
         $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
-
             if($station['compStation'] == 'C') $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
             elseif($station['compStation'] == 'NC') $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau" title="Main treatment">';
             else $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
@@ -1578,24 +1587,24 @@ function uwwtd_get_agglo_graphic($node){
     <div class="dcps-wrapper" style="top:-'. $topMarge .'px">';
 
     foreach($reseau as $station){
-    	$output .= '<div class="station-dcp" style="top: 0px;">
-			<div>
-			  	<img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau" title="Discharge point">';
-			  	$output .= '<div class="graphic-title">';
-			  		$output .= l(count($station['dcps'])." DCP(S)", "#");
-			  		$output .= '<div class="dcps-hidden-list">';
-    					foreach($station['dcps'] as $dcp) {
-			    			$output .= l($dcp['title'], "node/".$dcp['nid']);
-			    			$output .= '<br>';
-			    			$output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
-			    			$output .= ' ('.$dcp['rcaType'].')';
-			    			$output .= '<br>';
-			    			$output .= '<br>';
-			  			}
-			  		$output .= '</div>
-			  	</div>
-			</div>
-		</div>';
+      $output .= '<div class="station-dcp" style="top: 0px;">
+      <div>
+          <img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau" title="Discharge point">';
+          $output .= '<div class="graphic-title">';
+            $output .= l(count($station['dcps'])." DCP(S)", "#");
+            $output .= '<div class="dcps-hidden-list">';
+              foreach($station['dcps'] as $dcp) {
+                $output .= l($dcp['title'], "node/".$dcp['nid']);
+                $output .= '<br>';
+                $output .= l($dcp['rcaTitle'], "node/".$dcp['rcaNid']);
+                $output .= ' ('.$dcp['rcaType'].')';
+                $output .= '<br>';
+                $output .= '<br>';
+              }
+            $output .= '</div>
+          </div>
+      </div>
+    </div>';
     }
 
     $output .= '</div>
@@ -1606,20 +1615,20 @@ function uwwtd_get_agglo_graphic($node){
     </div>
     <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
     <div class="graphic-legend">
-    	<ul><b>Main treatment :</b>
-    		<li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
-    		<li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
-    		<li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
-    	</ul>
-    	<ul><b>More stringent treatment : <br>Type : </b>
-			<li><span>N</span> : Nitrogen removal</li>
-			<li><span>P</span> : Phosphorus removal</li>
-			<li><span>O</span> : Other more stringent</li>
-    	</ul>
-		<ul><b>Discharge point :</b>
-			<li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
-			<li><span>DCP(S)</span> : Discharge point(s)</li>
-		</ul>
+      <ul><b>Main treatment :</b>
+        <li><img src="'.$src.'/images/graphic/station-c.png" alt="reseau"> : Compliant</li>
+        <li><img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"> : Not compliant</li>
+        <li><img src="'.$src.'/images/graphic/station.png" alt="reseau"> : No information / Not relevant</li>
+      </ul>
+      <ul><b>More stringent treatment : <br>Type : </b>
+      <li><span>N</span> : Nitrogen removal</li>
+      <li><span>P</span> : Phosphorus removal</li>
+      <li><span>O</span> : Other more stringent</li>
+      </ul>
+    <ul><b>Discharge point :</b>
+      <li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
+      <li><span>DCP(S)</span> : Discharge point(s)</li>
+    </ul>
     </div>
   </div>';
 
@@ -1705,17 +1714,17 @@ function uwwtd_piechart_agglonode($node, &$content)
 }
 
 function uwwtd_stackedbar_uwwtpnode($node){
-	//dsm($node);
+  //dsm($node);
     //drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
 // field_aggc1|Collective system|#74FFE0
 // field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
 // field_aggpercwithouttreatment|Discharge without treatment|#C00000
-	$legend =  array (
+  $legend =  array (
         'incoming',
         'discharged'
-	);
+  );
 
 
     $aData = array();
@@ -1760,34 +1769,34 @@ function uwwtd_stackedbar_uwwtpnode($node){
 
 function uwwtd_menu_link__main_menu(&$variables)
 {
-	$element = $variables['element'];
+  $element = $variables['element'];
 
-  	$sub_menu = ($element['#below'] ? drupal_render($element['#below']) : '');
-  	$depth = $element['#original_link']['depth'] + 1;
+    $sub_menu = ($element['#below'] ? drupal_render($element['#below']) : '');
+    $depth = $element['#original_link']['depth'] + 1;
 
-  	$unused = array('leaf', 'first', 'menu-mlid-' . $element['#original_link']['mlid']);
-  	$element['#attributes']['class'] = array_diff($element['#attributes']['class'], $unused);
+    $unused = array('leaf', 'first', 'menu-mlid-' . $element['#original_link']['mlid']);
+    $element['#attributes']['class'] = array_diff($element['#attributes']['class'], $unused);
 
-  	$element['#attributes']['class'][] = 'menu-item';
-  	$element['#attributes']['class'][] = 'menu-item--depth-' . $element['#original_link']['depth'];
+    $element['#attributes']['class'][] = 'menu-item';
+    $element['#attributes']['class'][] = 'menu-item--depth-' . $element['#original_link']['depth'];
 
-  	$element['#localized_options']['html'] = TRUE;
-  	$element['#localized_options']['attributes']['class'][] = 'menu-link';
-  	$element['#localized_options']['attributes']['class'][] = 'menu-link--depth-' . $element['#original_link']['depth'];
+    $element['#localized_options']['html'] = TRUE;
+    $element['#localized_options']['attributes']['class'][] = 'menu-link';
+    $element['#localized_options']['attributes']['class'][] = 'menu-link--depth-' . $element['#original_link']['depth'];
 
-  	if (!empty($sub_menu)) {
-    	// Wrap menu-level for each level.
-    	$sub_menu = '<div class="menu-level menu-level--' . $depth . '">' .  $sub_menu . '</div>';
-  	}
-  	// krumo($element); 
-  	if ($depth == 2 && $element['#below']) {
-  		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-down"></i></span>', $element['#href'], $element['#localized_options']);
-  	} elseif ($depth == 3 && $element['#below']) {
-  		$link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-right"></i></span>', $element['#href'], $element['#localized_options']);
-  	} else {
-  		$link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
-  	}  
-  	return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
+    if (!empty($sub_menu)) {
+      // Wrap menu-level for each level.
+      $sub_menu = '<div class="menu-level menu-level--' . $depth . '">' .  $sub_menu . '</div>';
+    }
+    // krumo($element); 
+    if ($depth == 2 && $element['#below']) {
+      $link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-down"></i></span>', $element['#href'], $element['#localized_options']);
+    } elseif ($depth == 3 && $element['#below']) {
+      $link = l('<span class="title">' . $element['#title'] . ' <i style="float:right;line-height:20px;" class="fa fa-caret-right"></i></span>', $element['#href'], $element['#localized_options']);
+    } else {
+      $link = l('<span class="title">' . $element['#title'] . '</span>', $element['#href'], $element['#localized_options']);
+    }  
+    return '<li' . drupal_attributes($element['#attributes']) . '>' . $link . $sub_menu . '</li>';
 
 }
 
@@ -1804,37 +1813,37 @@ function uwwtd_wkhtmltopdf_tag($selector, $options)
 }
 
 function uwwtd_menu_link__user_menu(&$variables) {
-	$element = $variables['element'];
-	// krumo($element);
-	$menu_link = $element['#href'];
-	switch ($menu_link) {
-	 	case 'user':
-	 		return '<li><a href="'. $menu_link .'"><i class="fa fa-user"></i></a></li>';
-	 		break;
-	 	case 'user/logout':
-	 		return '<li><a href="'. $menu_link .'"><i class="fa fa-power-off"></i></a></li>';
-	 		break;
+  $element = $variables['element'];
+  // krumo($element);
+  $menu_link = $element['#href'];
+  switch ($menu_link) {
+    case 'user':
+      return '<li><a href="'. $menu_link .'"><i class="fa fa-user"></i></a></li>';
+      break;
+    case 'user/logout':
+      return '<li><a href="'. $menu_link .'"><i class="fa fa-power-off"></i></a></li>';
+      break;
 
-	 	default:
-	 		return '<li><a href="'. $menu_link .'">'. $element['#title'] .'</a></li>';
-	 		break;
-	 }
+    default:
+      return '<li><a href="'. $menu_link .'">'. $element['#title'] .'</a></li>';
+      break;
+   }
 }
 
 function uwwtd_preprocess_html(&$vars) {
     // Add font awesome cdn.
-  	drupal_add_css('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css', array(
-    	'type' => 'external'
+    drupal_add_css('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.css', array(
+      'type' => 'external'
     ));
 }
 
 
 function uwwtd_table($vars) {
-	$header= $vars['header'];
-	$rows= $vars['rows'];
-	$attributes= $vars['attributes'];
-	$caption= $vars['caption'];
-	$rows_multiple= $vars['rows_multiple'];
+  $header= $vars['header'];
+  $rows= $vars['rows'];
+  $attributes= $vars['attributes'];
+  $caption= $vars['caption'];
+  $rows_multiple= $vars['rows_multiple'];
  
   
   // Add sticky headers, if applicable.
@@ -1858,20 +1867,20 @@ function uwwtd_table($vars) {
       $thead_set = '';
       // Format the table header:
       if (count($header)) {
-		  $output .=' <thead>';
+      $output .=' <thead>';
           foreach($header as $number => $head){
             $ts = tablesort_init($head);
             // HTML requires that the thead tag has tr tags in it followed by tbody
             // tags. Using if clause to check and see if we have any rows and whether
             // the thead tag is already open
                 $output .= ' <tr>';
-				
+        
             //$output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
             foreach ($head as $cell) {
               $cell = tablesort_header($cell, $head, $ts);
               $output .= _theme_table_cell($cell, TRUE);
             }
-			 $output .='</tr>';
+       $output .='</tr>';
         }
             // Using ternary operator to close the tags based on whether or not there are rows
             $output .= (count($rows) ? " </thead>\n" : "</tr>\n");
