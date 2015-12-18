@@ -168,11 +168,11 @@ echo uwwtd_insert_errors_tab($node);
                 $distanceToCompliance = uuwtd_get_distance_compliance($node);
                 if(uwwtd_field_num($content['field_aggpercwithouttreatment']) == 0 && uwwtd_field_pe($content['field_aggpercwithouttreatment']) ==0){
                    $colorart3 = '#4f91e1';
-                 }elseif((uwwtd_field_pe($content['field_aggpercwithouttreatment']) >= 2 && uwwtd_field_pe($content['field_aggpercwithouttreatment'] <=2)) &&($distanceToCompliance['field_aggpercwithouttreatment'] >= 0 && $distanceToCompliance['field_aggpercwithouttreatment'] <= 2000)){
-                    $colorart3 = '#d93c3c';
+                 }elseif((uwwtd_field_pe($content['field_aggpercwithouttreatment']) >= 0 && uwwtd_field_pe($content['field_aggpercwithouttreatment'] <=2)) &&($distanceToCompliance['field_aggpercwithouttreatment'] >= 0 && $distanceToCompliance['field_aggpercwithouttreatment'] <= 2000)){
+                    $colorart3 = '#ea8b2e';
                 }else{
                     //Cas des seuils limites
-                    $colorart3 = '#ea8b2e';
+                    $colorart3 = '#d93c3c';
                     
                 }
                 
@@ -180,15 +180,14 @@ echo uwwtd_insert_errors_tab($node);
                 if($distanceToCompliance['distart4_treatment'] == 0 && $distanceToCompliance['distart4_treatment_%'] == 0){
                     $colorart4T = '#4f91e1';
                 }
-                //================================> 1ère condition fausse
-                elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+                elseif(($distanceToCompliance['distart4_treatment_%'] >= 0 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
                     $colorart4T = '#ea8b2e';
                 }else{
                     $colorart4T = '#d93c3c';
                 }
                 if($distanceToCompliance['distart4_monitoring'] == 0  && $distanceToCompliance['distart4_monitoring_%'] == 0){
                     $colorart4P = '#4f91e1';
-                }elseif(($distanceToCompliance['distart4_treatment_%'] >= 1 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
+                }elseif(($distanceToCompliance['distart4_treatment_%'] >= 0 && $distanceToCompliance['distart4_treatment_%'] <= 1) &&($distanceToCompliance['distart4_monitoring'] >= 0 && $distanceToCompliance['distart4_monitoring'] <= 2000)){
                     $colorart4P = '#ea8b2e';
                 }else{
                     $colorart4P = '#d93c3c';
@@ -201,7 +200,7 @@ echo uwwtd_insert_errors_tab($node);
                 else{
                     if($distanceToCompliance['distart5_treatment'] == 0  && $distanceToCompliance['distart5_treatment_%'] == 0){
                         $colorart5T = '#4f91e1';
-                    }elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+                    }elseif(($distanceToCompliance['distart5_treatment_%'] >= 0 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
                         $colorart5T = '#ea8b2e';
                     }elseif($distanceToCompliance['distart5_treatment_%'] > 1 && $distanceToCompliance['distart5_treatment'] > 2000){
                         $colorart5T = '#d93c3c';
@@ -209,7 +208,7 @@ echo uwwtd_insert_errors_tab($node);
 
                     if($distanceToCompliance['distart5_monitoring'] == 0  && $distanceToCompliance['distart5_monitoring_%'] == 0){
                         $colorart5P = '#4f91e1';
-                    }elseif(($distanceToCompliance['distart5_treatment_%'] >= 1 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
+                    }elseif(($distanceToCompliance['distart5_treatment_%'] >= 0 && $distanceToCompliance['distart5_treatment_%'] <= 1) &&($distanceToCompliance['distart5_monitoring'] >= 0 && $distanceToCompliance['distart5_monitoring'] <= 2000)){
                         $colorart5P = '#ea8b2e';
                     }elseif($distanceToCompliance['distart5_monitoring_%'] > 1 && $distanceToCompliance['distart5_monitoring'] > 2000){
                         $colorart5P = '#d93c3c';
