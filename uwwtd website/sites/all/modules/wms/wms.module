@@ -1,0 +1,425 @@
+<?php
+// $Id$
+
+
+/**
+ * @file
+ * WMS module.
+ */
+
+/**
+ * @return
+ * Array of permissions a users should have to use this functionality
+ */
+function wms_check_perm_getfeatureinfo() {
+  $result = TRUE;
+  foreach (module_implements('perm_getfeatureinfo') as $module) {
+    $function = $module . 'perm_getfeatureinfo';
+    $result = $result && call_user_func_array($function);
+  }
+  return $result;
+}
+
+/**
+ * @return
+ * Array of permissions a users should have to use this functionality
+ */
+function wms_check_perm_getlegend() {
+  $result = TRUE;
+  foreach (module_implements('perm_getlegend') as $module) {
+    $function = $module . 'perm_getlegend';
+    $result = $result && call_user_func_array($function);
+  }
+  return $result;
+}
+
+/**
+ * implements hook_menu().
+ */
+function wms_menu() {
+  $items['openlayers/wms/wmsgetfeatureinfo'] = array(
+    'page callback' => 'wms_ajax_wmsgetfeatureinfo',
+    'type' => MENU_CALLBACK,
+    'access callback' => 'wms_check_perm_getfeatureinfo',
+  );
+  $items['openlayers/wms/wmsgetlegend'] = array(
+    'page callback' => 'wms_ajax_wmsgetlegend',
+    'type' => MENU_CALLBACK,
+    'access callback' => 'wms_check_perm_getlegend',
+  );
+  return $items;
+}
+
+/**
+ * @return
+ * HTML of the results that is inserted in the results block
+ *
+ */
+function wms_ajax_wmsgetfeatureinfo() {
+  $urls = $_POST['url'];
+  $output='';
+  //krumo($urls);
+  foreach((array)$urls as $url){
+      $url_array = parse_url($url);
+      $query = $url_array['query'];
+      parse_str($query, $params);
+
+      $layerstp = explode(',', $params['QUERY_LAYERS']);
+      $layers = array();
+      foreach ($layerstp as $layer) {
+        $layertp = explode(':', $layer);
+        $layers[] = array(
+          'namespace' => $layertp[0],
+          'layer' => $layertp[0],
+        );
+      }
+
+      $requesturl = array(
+        'request_uri' => $url,
+      );  
+      $content_object = proxy($requesturl);
+      //krumo($content_object);
+    if (in_array($params['INFO_FORMAT'], array('text/html','text/plain'))) {
+        // Handle specific codes
+        switch ($content_object->code) {
+          case 200:
+          case 304:
+          case 301:
+          case 302:
+          case 307:
+            $output.= trim($content_object->data);
+            break;
+          default:
+            $output.= t('An error occured while retrieving the data.');
+        }
+    }
+    elseif (is_array($content_object)) {
+        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
+          print $content_object[0] . t("Check the proxy module settings.");
+          exit();
+        }
+        $output.=print_r( $content_object,true);
+    }
+    elseif ($content_object) {
+        if ($content_object->code == 200) {
+          $return = (string) $content_object->data;
+          $resultarray =array();
+          //JSON Case
+          if($params['INFO_FORMAT'] == 'application/geojson'){
+            if($data = json_decode(trim($content_object->data))){
+                if(!empty($data->features)){
+                    foreach($data->features as $k=>$f){
+                        //If we don't have the layer name in the feature, we use the name in query 
+                        if(!isset($f->layerName)){
+                            $layer = $params['QUERY_LAYERS'];
+                        }
+                        else{
+                            $layer = (string)$f->layerName;
+                        }
+                        
+                        
+                        foreach((array)$f->properties as $c=>$v){
+                            //force the key to be a string
+                            $resultarray[$layer][$k][(string)$c] = $v;
+                        }
+                    }
+                }
+            }
+          }
+          //XML Case
+          else{
+            $resultarray = wms_process_wmsgetfeatureinfo_result($return, $layers);
+          }
+          //module_invoke_all('wms_getfeatureinfo', $resultarray);
+          drupal_alter('wms_getfeatureinfo', $resultarray);
+          if(!empty($resultarray)){
+            $output.= theme('wms_getfeatureinfo', array('result' => $resultarray, 'layers' => $layers));
+          }
+        }
+    }
+    else {
+        $output.= t('Something went wrong');
+    }
+  }
+  exit($output); 
+}
+
+/**
+ * @return
+ * HTML of the results that is inserted in the results block
+ *
+ */
+function wms_ajax_wmsgetlegend() {
+  $url = $_POST['url'];
+  $url_array = parse_url($url);
+  $query = $url_array['query'];
+  parse_str($query, $params);
+
+  $layerstp = explode(',', $params['QUERY_LAYERS']);
+  $layers = array();
+  foreach ($layerstp as $layer) {
+    $layertp = explode(':', $layer);
+    $layers[] = array(
+      'namespace' => $layertp[0],
+      'layer' => $layertp[1],
+    );
+  }
+
+  $requesturl = array(
+    'request_uri' => $url,
+  );
+  $content_object = proxy($requesturl);
+  
+  // Handle specific codes
+  switch ($content_object->code) {
+    case 200:
+    case 304:
+      break;
+      // OK
+
+    case 301:
+    case 302:
+    case 307:
+      // Permanent Redirect
+      print $content_object->data;
+      exit();
+      break;
+    default:
+      print t('An error occured while retrieving the data.');
+      exit();
+  }
+  if (is_array($content_object)) {
+    if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
+      print $content_object[0] . t("Check the proxy module settings.");
+      exit();
+    }
+    print_r($content_object);
+  }
+  elseif ($content_object) {
+    if ($content_object->code == 200) {
+      $return = base64_encode($content_object->data);
+      print '<img src="data:image/gif;base64,' . $return . '" alt="Legend" />';
+      exit();
+    }
+  }
+  else {
+    print 'Something went wrong';
+  }
+}
+
+/**
+ * implements hook_trigger_info
+ *
+ */
+function wms_trigger_info() {
+  return array(
+    'wms' => array(
+      'wms_perm_getfeatureinfo' => array(
+        'label' => t('user_access checks if someone can process getfeatureinfo results'),
+      ),
+      'wms_perm_getlegend' => array(
+        'label' => t('user_access checks if someone can process getlegend results'),
+      ),
+      'wms_process_getfeatureinfo' => array(
+        'label' => t('When someone clicks the \'process\' link in the getfeatureresult table'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ *
+ * It simply tells panels where to find the .inc files that define various
+ * args, contexts, content_types. In this case the subdirectories of
+ * ctools_plugin_example/panels are used.
+ */
+function wms_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'openlayers' && ($plugin == 'behaviors')) {
+    return "plugins/behaviors";
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_api().
+ */
+function wms_ctools_plugin_api($module, $api) {
+  if ($module == "openlayers") {
+    switch ($api) {
+      case 'openlayers_behaviors':
+        return array('version' => 1);
+      case 'openlayers_layers':
+        return array('version' => 1);
+    }
+  }
+}
+
+/**
+ * Implements hook_openlayers_behaviors().
+ */
+// function wms_openlayers_behaviors() {
+//   return array(
+//     'openlayers_behavior_wmsgetfeatureinfo' => array(
+//       'title' => t('Get Feature Info'),
+//       'description' => t('Queries WMS server for more info about features on the map.'),
+//       'type' => 'layer',
+//       'path' => drupal_get_path('module', 'wms') . '/includes/behaviors',
+//       'file' => 'openlayers_behavior_wmsgetfeatureinfo.inc',
+//       'behavior' => array(
+//         'class' => 'openlayers_behavior_wmsgetfeatureinfo',
+//         'parent' => 'openlayers_behavior',
+//       ),
+//     ),
+//     'openlayers_behavior_wmsgetlegend' => array(
+//       'title' => t('Get Layer Legend'),
+//       'description' => t('Queries WMS server active layer\'s legend.'),
+//       'type' => 'layer',
+//       'path' => drupal_get_path('module', 'wms') . '/includes/behaviors',
+//       'file' => 'openlayers_behavior_wmsgetlegend.inc',
+//       'behavior' => array(
+//         'class' => 'openlayers_behavior_wmsgetlegend',
+//         'parent' => 'openlayers_behavior',
+//       ),
+//     ),
+//   );
+// }
+
+/**
+ * Implements hook_theme().
+ */
+function wms_theme() {
+
+  $items['wms_getfeatureinfo'] = array(
+    'template' => 'wms-getfeatureinfo',
+    'variables' => array(
+      'result' => NULL,
+      'layers' => NULL,
+    ),
+  );
+  return $items;
+}
+
+function wms_preprocess_wms_getfeatureinfo(&$variables) {
+  $rows = array();
+  $header = array();
+  foreach ($variables['result'] as $layer => $data) {
+    foreach ($data as $row) {
+      foreach ($row as $headername => $field) {
+        $headerdata[] = array(
+          'data' => $headername,
+          'class' => $headername,
+        );
+        $rowdata[] = array(
+          'data' => $field,
+          'class' => $headername,
+        );
+      }
+      $header[] = $headerdata;
+      $rows[] = $rowdata;
+      unset($rowdata);
+      unset($headerdata);
+    }
+    $variables['tables'][$layer]['header'] = $header[0];
+    $variables['tables'][$layer]['rows'] = $rows;
+    $variables['htmltables'][] = theme_table(Array(
+        'header' => $header[0],
+        'rows' => $rows,
+         'attributes' => Array('class' => Array()),
+        'colgroups' => Array(),
+       'caption' => "My Caption",
+        'sticky' => TRUE,
+        'empty' => t("No results")
+       )
+    );
+    unset($header);
+    unset($rows);
+  }
+}
+
+/**
+ * @param string $rawxml
+ * The XML coming from the GetFeatureInfo call on the server
+ *
+ * @param Array $layers
+ * Array of layers that were requested from the WMS server
+ *
+ * @return Array
+ * Array of fields + values
+  */
+function wms_process_wmsgetfeatureinfo_result($rawxml, $layers) {
+  module_load_include('inc', 'wms', 'includes/gml_to_wkt');
+  $xmlresult = simplexml_load_string($rawxml);
+  $errors = libxml_get_errors();
+  foreach ($errors as $error) {
+    /* no errors to be found that are any help*/
+    return display_xml_error($error, $xml);
+  }
+  libxml_clear_errors();
+  $namespaces = $xmlresult->getNameSpaces(true);
+
+  $gml = $xmlresult;
+  $result = array();
+  foreach ($layers as $layer) {
+    $layername = $layer['layer'];
+    $namespace = $layer['namespace'];
+    $features = $gml->{$layername . '_layer'};
+    foreach ($features as $feature) {
+      $featuredetails = $feature;
+      foreach ((array) $featuredetails as $key => $value) {
+        if (!isset($layerresult)) {
+          $layerresult = array();
+        }
+        if (is_string($value)) {
+          $layerresult[$key] = $value;
+        }
+        else {
+          $the_geom = $value->children($namespaces['gml']);
+          if ((isset($the_geom)) && ($wkt = wms_getwkt($the_geom))) {
+            $layerresult[$key] = $wkt;
+          }
+        }
+      }
+      if (isset($layerresult)) {
+        $result[$namespace . ":" . $layername][] = $layerresult;
+      }
+      unset($layerresult);
+    }
+  }
+  return $result;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function wms_block_info() {
+  $blocks['getfeatureinforesults']['info'] = t('GetFeatureInfo Results');
+  $blocks['getlegend']['info'] = t('GetLegend From Layer');
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function wms_block_view($delta) {
+  $block = array();
+  switch ($delta) {
+    case 'getfeatureinforesults':
+      $block['subject'] = "";
+      $block['content'] = '<div style="display: none"><div id="getfeatureinfo">' . t('Click a feature on the map to see the details') . '</div></div>';
+      return $block;
+      break;
+    case 'getlegend':
+      $block['subject'] = t('Map legend');
+      $block['content'] = '<div style="display: none"><div id="getlegend">' . t('Select a layer to show it\'s legend.') . '</div></div>';
+      return $block;
+      break;
+  }
+}
+
+/**
+ * Implements hook_openlayers_layers().
+ */
+function wms_openlayers_layers() {
+  module_load_include('inc', 'wms', 'includes/wms_layers');
+  return _wms_openlayers_layers();
+}

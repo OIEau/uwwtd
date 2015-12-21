@@ -1,0 +1,11 @@
+;$Id$
+name = "WMS"
+description = "Provides a WMS Getfeatureinfo behaviour for Openlayers WMS layers"
+dependencies[] = openlayers
+dependencies[] = proxy
+dependencies[] = ctools
+
+core = 7.x
+
+files[] = wms.module
+

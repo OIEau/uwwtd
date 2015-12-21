@@ -1,0 +1,3 @@
+<?php
+
+include_once 'wms_getfeatureinfo_demo.features.inc';
