@@ -2974,6 +2974,65 @@ function uwwtd_update_7125(&$context = null)
     }     
 }
 
+//Update for WMS && stat : 21/12/2105
+function uwwtd_update_7126(&$context = null){
+    uwwtd_install_trace(__FUNCTION__); 
+    
+    if (false === module_enable(array('proxy'))) {
+        $msg = "Error, modules proxy can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    if (false === module_enable(array('wms'))) {
+        $msg = "Error, modules wms can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    
+    //Add behavior to maps 
+    //Load the map preset 
+    if($preset = openlayers_map_load('waste_water_treatment_network_map', true)){
+        $update = false;
+        if(!isset($preset->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'])){
+            $preset->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'] = array(
+              'getfeatureinfo_usevisiblelayers' => 1,
+              'getfeatureinfo_layers' => 'google_satellite',
+              'getfeatureinfo_info_format' => 'application/geojson',
+              'getfeatureinfo_highlight' => 0,
+              'getfeatureinfo_htmlelement' => 'getfeatureinfo',
+              'getfeatureinfo_properties' => '',
+              'getfeatureinfo_feature_count' => '5',
+            );
+            $update = true;
+        }
+        if(!isset($preset->data['behaviors']['openlayers_behavior_wmsgetlegend'])){
+            $preset->data['behaviors']['openlayers_behavior_wmsgetlegend'] = array(
+                "getlegend_htmlelement"=>"getlegend",
+            );
+            $update = true;
+        }
+        if($update){
+            openlayers_map_save($preset);
+        }
+    }
+    
+    
+    ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+//     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+    
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

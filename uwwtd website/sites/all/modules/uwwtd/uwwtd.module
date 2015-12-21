@@ -266,8 +266,8 @@ function uwwtd_menu(){
     	//'page arguments' => array('uwwtd_debug_form'),
     	//'access callback' => TRUE,
     	'access arguments' => array('Data-management access'),
-//     	'file' => 'utils.inc',
-//     	'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
+     	'file' => 'utils.inc',
+     	'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
     );
   $items['stats/querys'] = array(
   		'page callback' => 'uwwtd_page_stats_querys',

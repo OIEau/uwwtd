@@ -639,8 +639,8 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
 }
 
 function uwwtd_debug(){
-	
-    return '';
+	$preset = openlayers_map_load('waste_water_treatment_network_map', true);
+    dsm($preset);
 
     return 'debug';
 }
