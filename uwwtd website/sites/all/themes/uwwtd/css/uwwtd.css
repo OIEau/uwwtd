@@ -975,11 +975,13 @@ div.ol-wms-content-popup{
 }
 div.ol-wms-content-popup table{
     margin-bottom:15px;
+    min-width:290px;
 }
 div.ol-wms-content-popup table caption{
     font-size:14px;
     color:#2a6496;
-    text-align:left
+    text-align:left;
+    min-width:290px;
 }
 div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     padding:3px;
