@@ -355,6 +355,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
 }
 
 function uwwtd_preprocess_node(&$vars){
+    
     if($vars["is_front"]){
        $vars["theme_hook_suggestions"][] = "node__front";
     }
@@ -1680,12 +1681,14 @@ function uwwtd_field_pe($field, $format=true)
 //   }
 // }
 
-function uwwtd_piechart_agglonode($node, &$content)
-{
-    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+function uwwtd_piechart_agglonode($node, &$content){
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+    drupal_add_js(drupal_get_path('module', 'd3')."/js/d3.js");
+    drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.extend/d3.extend.js");
+    drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.tooltip/tooltip.js");
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-
+    
 // echo '<pre>';var_export($content);echo '</pre>';
 // echo '<pre>';var_export($content);echo '</pre>';
 // exit;

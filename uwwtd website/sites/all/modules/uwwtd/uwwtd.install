@@ -2983,6 +2983,22 @@ function uwwtd_update_7126(&$context = null){
         uwwtd_install_trace($msg);
         throw new DrupalUpdateException($msg);    
     }
+    else{
+        $update = false;
+        module_load_include('proxy.inc', 'proxy', 'includes/proxy');
+        $proxy = variable_get('proxy_whitelist_domains', PROXY_WHITELIST_DOMAINS_DEFAULT);
+        $approved = _proxy_match_domain('water.discomap.eea.europa.eu', $proxy);
+        if (!$approved) {
+            $update = true;
+            $proxy.="\n\rwater.discomap.eea.europa.eu";
+        }
+        $approved = _proxy_match_domain('water.discomap.eea.europa.eu', $proxy);
+        if (!$approved) {
+            $update = true;
+            $proxy.="\n\rmaps.oieau.fr";
+        }
+        if($update) variable_set('proxy_whitelist_domains',$proxy);
+    }
     if (false === module_enable(array('wms'))) {
         $msg = "Error, modules wms can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
         uwwtd_install_trace($msg);
