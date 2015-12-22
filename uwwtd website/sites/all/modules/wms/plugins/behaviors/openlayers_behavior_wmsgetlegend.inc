@@ -37,8 +37,8 @@ class openlayers_behavior_wmsgetlegend extends openlayers_behavior {
     return array(
       'getlegend_htmlelement' => array(
         '#type' => 'textfield',
-        '#description' => t("An HTML element (#id!) that will be filled
-          with the query result. Ommit the # here. If you use the GetLegend block, the value should be 'getlegend'"),
+        '#description' => t("An HTML element that will be filled
+          with the query result. Give the jQuery selector (#id or .class). If you use the GetLegend block, the value should be 'getlegend'"),
         '#default_value' => isset($defaults['getlegend_htmlelement']) ?
           $defaults['getlegend_htmlelement'] : "getlegend",
       ),

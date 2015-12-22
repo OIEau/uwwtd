@@ -49,12 +49,6 @@
         $strokeColor_rgb = _openlayers_plus_hex2rgb(check_plain($item['data']['strokeColor']));
         $strokeColor_rgba = "rgba(" . $strokeColor_rgb['red'] . ", " . $strokeColor_rgb['green'] . ", " . $strokeColor_rgb['blue'] . ", " . $item['data']['strokeOpacity'] . ")";
       ?>
-      <!-- <div class='legend-item clear-block'>
-      <span class='swatch' style='border: <?php print $item['data']['strokeWidth']; ?>px solid <?php print $strokeColor_rgba; ?>; background: <?php print $fillColor_rgba; ?>'></span>
-      <?php if (!empty($layer['title'])): ?>
-        <?php print check_plain($item['title']) ?>
-        </div>
-      <?php endif; ?> -->
     <?php endif; ?>      
     <?php if (!empty($item['data']['externalGraphic'])): ?>    
       <div class='legend-item clear-block'>

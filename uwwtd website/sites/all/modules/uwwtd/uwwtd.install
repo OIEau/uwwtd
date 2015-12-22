@@ -3023,8 +3023,12 @@ function uwwtd_update_7126(&$context = null){
         }
         if(!isset($preset->data['behaviors']['openlayers_behavior_wmsgetlegend'])){
             $preset->data['behaviors']['openlayers_behavior_wmsgetlegend'] = array(
-                "getlegend_htmlelement"=>"getlegend",
+                "getlegend_htmlelement"=>"div.openlayers-legends",
             );
+            $update = true;
+        }
+        elseif($preset->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement']!="div.openlayers-legends"){
+            $preset->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement'] = "div.openlayers-legends";
             $update = true;
         }
         if($update){
