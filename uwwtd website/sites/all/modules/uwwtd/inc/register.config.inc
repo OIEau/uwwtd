@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20151127_7.xlsx',
+    'model' => '2015_register_model_20151127_8.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
@@ -153,8 +153,13 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'uww_code' => $i++,
     'uww_name' => $i++,
     'uww_status' => $i++,
+    
+    'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load' => $i++,
+    'uww_entering_load_calculated_UwwtpAgglo_p._e.' => $i++,
+    
     'uww_entering this UWWTP % of gen. load' => $i++,
     'uww_entering load  p. e.' => $i++,
+    
     'uww_capacity p. e.' => $i++,
     'uww2_status' => $i++,
     //Previous UWWTP general info',

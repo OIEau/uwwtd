@@ -1095,6 +1095,7 @@ function uwwtd_get_array_from_conf($value){
     return $result;
 }
 
+//TODO a revoir!!
 function uuwtd_get_distance_compliance($agg){
 	require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
 	$uww_aggcode['distart4_treatment'] = 0;
@@ -1107,6 +1108,13 @@ function uuwtd_get_distance_compliance($agg){
 	$uww_aggcode['distart5_monitoring_%'] = 0;
 	$uwwtp_loadentering = 0;
 	$total_uwwtp_loadentering_pe =0;
+    
+    $totalG_uwwtp_loadentering_pourc = 0;
+    $totalG_uwwtp_loadentering_pe = 0;
+    $total_agglo_uwwtp_perc = 0;
+    
+    $aggC1_pe = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //uwwtd_field_pe($aggTable, false);
+    
 	foreach($agg->field_agguwwliste['und'] as $uwwtpnid){
 
 		$uwwtp = node_load($uwwtpnid['nid']);
@@ -1118,23 +1126,24 @@ function uuwtd_get_distance_compliance($agg){
 		$agglo_uwwtp_perc = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
 		
 		$total_agglo_uwwtp_perc += $agglo_uwwtp_perc;
-		$aggC1_pourc = $agg->field_aggc1['und'][0]['value'];
-		$aggGenerated = $agg->field_agggenerated['und'][0]['value'];
+// 		$aggC1_pourc = $agg->field_aggc1['und'][0]['value'];
+// 		$aggGenerated = $agg->field_agggenerated['und'][0]['value'];
 		//Add DG 17/12/15
 		//Collecting system
-		$aggTable = array();
-		$aggTable[0]['#markup']=$agg->field_aggc1;
-		$aggTable['#object']=$agg->field_agggenerated;
-		$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 		$aggTable = array();
+// 		$aggTable[0]['#markup']=$agg->field_aggc1;
+// 		$aggTable['#object']=$agg->field_agggenerated;
+		
 
-		$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+		$agglo_uwwtp_loadentering_pourc = $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
 		$totalG_uwwtp_loadentering_pourc += $agglo_uwwtp_loadentering_pourc;
 		
-		$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+		//$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+        $uwwtp_loadentering_pe = $agglo_uwwtp_loadentering_pourc/100 * $agg->field_agggenerated['und'][0]['value'];
 		$totalG_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 		
-		$totalG_pe= $totalG_uwwtp_loadentering_pe - $aggC1_pe;
-		$totalG_pourc= $totalG_uwwtp_loadentering_pourc - $aggC1_pourc;
+		$totalG_pe = $totalG_uwwtp_loadentering_pe - $aggC1_pe;
+		$totalG_pourc = $totalG_uwwtp_loadentering_pourc - $agg->field_aggc1['und'][0]['value'];
 
 		$line = array();
 		$line['Monitoring results - BOD5'] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
@@ -1153,49 +1162,48 @@ function uuwtd_get_distance_compliance($agg){
 		if(($totalG_pe >= 2000) || ($totalG_pourc >1)){
 			if ($art4_treatment_type == 'NC'){
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();              
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
-				
 			}
 			if ($art4_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();                                  
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
 			}
 			if ($art5_treatment == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
 			}
 			if ($art5_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
@@ -1203,50 +1211,50 @@ function uuwtd_get_distance_compliance($agg){
 		}else{
 			if ($art4_treatment_type == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_treatment'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art4_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_monitoring'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art5_treatment == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_treatment'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art5_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_monitoring'] += $uwwtp_loadentering_pe;
 				}
 			} 
 		}
@@ -1266,4 +1274,17 @@ function uuwtd_get_distance_compliance($agg){
 	}
 
 	return $uww_aggcode;
+}
+
+/**
+ * Check if the first parameter year is before or equal the second parameter year
+ * 
+ * @param   string   $deadlinedate      a date formated YYYY-mm-dd
+ * @param   string   $referenceyear     the reference year YYYY to compare with
+ * @return  boolean   
+ */ 
+function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear) 
+{
+	$date = explode('-', $deadlinedate);
+	return $date[0] <= $referenceyear;
 }
