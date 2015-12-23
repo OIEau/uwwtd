@@ -3016,36 +3016,13 @@ function uwwtd_update_7126(&$context = null){
         'natura2000.inc',
         'soe_monitoring_stations.inc'
     );
-    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array());
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
     
-    
-    foreach($new_overlays as $filename) {
-        if (false === empty($overlay) && false === in_array($filename, $overlay)) {
-            continue;
-        }
-        include($pathtooverlay . $filename);
-        if (isset($openlayers_layers)) {
-            $row = array();
-            $row['name'] = $openlayers_layers->name;
-            $row['title'] = $openlayers_layers->title;
-            $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_layers->description;
-            $row['data'] = $openlayers_layers->data;
-            $msgresult = 'ok';
-            try {
-                uwwtd_insert_openlayers('openlayers_layers', $row);
-            } catch (Exception $e) {
-                $msgresult = 'error';
-                $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
-            }
-            uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
-        } else {
-            uwwtd_install_trace('Error, $openlayers_layers not found');          
-        }
-    }
     
     //Change default theme, behaviors and add layers for all openlayers map
     $maps = openlayers_maps(true);
-    foreach($maps as $name=>$map){
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
         if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
             $update = false;
             
@@ -3109,6 +3086,8 @@ function uwwtd_update_7126(&$context = null){
                 $update = true;
             }
             
+            
+            
             //===Add layers
             //From http://discomap.eea.europa.eu/home.html
             // need more ?
@@ -3117,25 +3096,41 @@ function uwwtd_update_7126(&$context = null){
             // http://water.discomap.eea.europa.eu/arcgis/services/RiversLakesSoE/WISE_SoE_RL_Quality_OrthophosphateRivers_Dyna_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS
             $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
             foreach($new_layers as $layer=>$weight){
-                if(!isset($map->layers[$layer])){
-                    $map->layers[$layer] = $layer;
-                    $map->layer_weight[$layer] = $weight;
-                    $map->layer_styles[$layer] = 0;
-                    $map->layer_styles_select[$layer] = 0;
-                    $map->layer_styles_temporary[$layer] = 0;
-                    $map->layer_activated[$layer] = 0;
-                    $map->layer_switcher[$layer] = $layer;
-                    $update = true;
-                }
+                $map->data['layers'][$layer] = $layer;
+                $map->data['layer_weight'][$layer] = $weight;
+                $map->data['layer_styles'][$layer] = 0;
+                $map->data['layer_styles_select'][$layer] = 0;
+                $map->data['layer_styles_temporary'][$layer] = 0;
+                $map->data['layer_activated'][$layer] = 0;
+                $map->data['layer_switcher'][$layer] = $layer;
+                $update = true;
             }
-
+            $map->data['layers']['openlayers_geojson_picture_this'] = 0;
+            $map->data['layers']['geofield_formatter'] = 0;
+            $map->data['layers']['openlayers_kml_example'] = 0;
             
+            
+            $map->data['layers']['oieau_rbd'] = 0;
+            $map->data['layers']['oieau_rbdsu'] = 0;
+            $map->data['layers']['oieau_nuts_0'] = 0;
+            $map->data['layers']['oieau_nuts_1'] = 0;
+            $map->data['layers']['oieau_nuts_2'] = 0;
+            $map->data['layers']['oieau_nuts_3'] = 0;
+            
+            $map->data['layer_switcher']['oieau_rbd'] = 0;
+            $map->data['layer_switcher']['oieau_rbdsu'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_0'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_1'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_2'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_3'] = 0;
             
             
             //Update the map if needed
-            if($update){
+            //if($update){
                 openlayers_map_save($map);
-            }
+            //}
+            
+            
             
             
             
@@ -3290,6 +3285,10 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_rbd.inc',
         'oieau_rbdsu.inc',
         'bathing_water.inc',
+        'oieau_nuts.inc',
+        'oieau_rbd_rbdsu.inc',
+        'natura2000.inc',
+        'soe_monitoring_stations.inc'
         
     ); 
     $list_style = array(

@@ -93,8 +93,35 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    /*
+    $maps = openlayers_maps(true);
+    dsm($maps);
     
+    $map = openlayers_map_load('waste_water_treatment_network_map', true);
+    dsm($map);
+    $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
+    foreach($new_layers as $layer=>$weight){
+        $map->data['layers'][$layer] = $layer;
+        $map->data['layer_weight'][$layer] = $weight;
+        $map->data['layer_styles'][$layer] = 0;
+        $map->data['layer_styles_select'][$layer] = 0;
+        $map->data['layer_styles_temporary'][$layer] = 0;
+        $map->data['layer_activated'][$layer] = 0;
+        $map->data['layer_switcher'][$layer] = $layer;
+        $update = true;
+    }
+    $map->data['layers']['openlayers_geojson_picture_this'] = 0;
+    $map->data['layers']['geofield_formatter'] = 0;
+    $map->data['layers']['openlayers_kml_example'] = 0;
     
+    //Update the map if needed
+    //if($update){
+    dsm($map);
+        openlayers_map_save($map);
+    
+    $map = openlayers_map_load('waste_water_treatment_network_map', true);
+    dsm($map);
+    */
     return 'debug';
 }
 
