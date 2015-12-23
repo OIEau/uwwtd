@@ -92,6 +92,13 @@ if (!function_exists('array_column')) {
 }
 
 
+function uwwtd_debug(){
+    
+    
+    return 'debug';
+}
+
+
 /**
  *
  */
@@ -730,13 +737,7 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
     return $s;
 }
 
-function uwwtd_debug(){
-	//$preset = openlayers_map_load('waste_water_treatment_network_map', true);
-    $var = variable_get('proxy_whitelist_domains', PROXY_WHITELIST_DOMAINS_DEFAULT);
-    dsm(explode("\r\n", $var));
 
-    return 'debug';
-}
 
 function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null){
     if($node){

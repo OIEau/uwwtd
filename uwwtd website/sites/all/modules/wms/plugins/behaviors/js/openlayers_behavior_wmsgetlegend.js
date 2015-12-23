@@ -25,6 +25,9 @@
     function fetchLegend() {
       container.html('');
       var wms_layers = [];
+      var sublayers;
+      var url;
+      var urls = [];
       if (data.map.behaviors['openlayers_behavior_wmsgetlegend']) {
         for(layer in data.openlayers.layers) {
           if ((data.openlayers.layers[layer].CLASS_NAME == "OpenLayers.Layer.WMS") && (data.openlayers.layers[layer].isBaseLayer == false) && (data.openlayers.layers[layer].visibility == true)){
@@ -34,41 +37,38 @@
         if (wms_layers !== undefined) {
             params ={};
             for(layer in wms_layers) {
-                if(legend[wms_layers[layer].params.LAYERS[0]]){
-                    container.append(legend[wms_layers[layer].params.LAYERS[0]]);
-                }
-                else{
+                sublayers =  wms_layers[layer].params.LAYERS[0].split(',');
+                for(l in sublayers){
                     params = {
                         REQUEST: 'GetLegendGraphic',
-                        LAYER: wms_layers[layer].params.LAYERS[0],
+                        LAYER: sublayers[l],
                         EXCEPTIONS: '',
                         SRS: '',
                         LAYERS: '',
                         FORMAT: 'image/png'
                     };
-                    
-                    $.ajax({
-                        type: 'POST',
-                        url: Drupal.settings.basePath + 'openlayers/wms/wmsgetlegend',
-                        data: {
-                          ajax: true,
-                          url: wms_layers[layer].getFullRequestString(params)
-                        },
-                        success: function(result){
-                            if(result!=''){
-                                $(result).attr('width', '90%');
-                                var content = $('<div class="'+wms_layers[layer].params.LAYERS[0]+'">').append(result);
-                                container.append(content);
-                                legend[wms_layers[layer].params.LAYERS[0]] = content;
-                            }
-                        },
-                        fail: function(result){
-                            
-                        }
-                    });
+                    urls.push( wms_layers[layer].getFullRequestString(params));    
                 }
                 
             }
+        }
+        if (urls.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: Drupal.settings.basePath + 'openlayers/wms/wmsgetlegend',
+                data: {
+                  ajax: true,
+                  url: urls
+                },
+                success: function(result){
+                    if(result!=''){
+                        container.append(result);
+                    }
+                },
+                fail: function(result){
+                    
+                }
+            });  
         }
       }
     }
