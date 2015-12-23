@@ -355,6 +355,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
 }
 
 function uwwtd_preprocess_node(&$vars){
+    
     if($vars["is_front"]){
        $vars["theme_hook_suggestions"][] = "node__front";
     }
@@ -1325,9 +1326,9 @@ function uwwtd_get_agglo_graphic($node){
   global $base_url;
       $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
 
-      $totalout = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']);
-      $totalWOT = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggpercwithouttreatment['und'][0]['value']);
-      $totalIAS = floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc2['und'][0]['value']);
+//       $totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
+      $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
+      $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
 
       $nbPlants = 0;
       $reseau = array();
@@ -1339,19 +1340,20 @@ function uwwtd_get_agglo_graphic($node){
         $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
-        $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+//         $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
         $query->fields('n', array('nid', 'title'));
         $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
-        $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+//         $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
         $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
         $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
         $result = $query->execute();
         while($record = $result->fetchAssoc()){
-          $perce = $record['field_agglo_uww_perc_ent_uw_value'];
-          $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+          $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
+//           $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
         }
 
-        $totale = floor(($totalout / 100) * $perce);
+//        $totale = floor(($totalout / 100) * $perce);
+        $total_entering = $node->field_agggenerated['und'][0]['value'] / 100 * $perce_entering;
 
         $msType = false;
         if($uww->field_uwwnremoval['und'][0]['value'] == '1'){
@@ -1411,8 +1413,8 @@ function uwwtd_get_agglo_graphic($node){
         }
 
         $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
-        $reseau[$uwws['nid']]['loadEntering'] = $totale;
-        $reseau[$uwws['nid']]['percEntering'] = $perce;
+        $reseau[$uwws['nid']]['loadEntering'] = $total_entering;
+        $reseau[$uwws['nid']]['percEntering'] = $perce_entering;
         $reseau[$uwws['nid']]['mstype'] = $msType;
         $reseau[$uwws['nid']]['title'] = $uww->title;
         $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
@@ -1469,7 +1471,7 @@ function uwwtd_get_agglo_graphic($node){
           Generated load : '.uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0).' p.e
         </div>
         <div class="agglo-load">
-          Collective system :<br>'.uwwtd_format_number(floor(($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc1['und'][0]['value']), 0).' p.e <br>('.uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) .'%)
+          Collective system :<br>'.uwwtd_format_number($node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'], 0).' p.e <br>('.uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) .'%)
         </div>
       </div>
 
@@ -1680,12 +1682,14 @@ function uwwtd_field_pe($field, $format=true)
 //   }
 // }
 
-function uwwtd_piechart_agglonode($node, &$content)
-{
-    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+function uwwtd_piechart_agglonode($node, &$content){
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+    drupal_add_js(drupal_get_path('module', 'd3')."/js/d3.js");
+    drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.extend/d3.extend.js");
+    drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.tooltip/tooltip.js");
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-
+    
 // echo '<pre>';var_export($content);echo '</pre>';
 // echo '<pre>';var_export($content);echo '</pre>';
 // exit;

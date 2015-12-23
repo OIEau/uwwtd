@@ -12,58 +12,63 @@
 (function ($) {
   // Initialize settings array.
   Drupal.openlayers.openlayers_behavior_wmsgetlegend = Drupal.openlayers.openlayers_behavior_wmsgetlegend || {};
-
   // Add the wmsgetlegend behavior.
   Drupal.openlayers.addBehavior('openlayers_behavior_wmsgetlegend', function (data, options) {
+     
     var map = data.openlayers;
-    var layer;
-
+    var legend = {};
+    var container = $('<div class="legend legend-wms" />').appendTo($(options.getlegend_htmlelement));
+    container.attr('id','openlayers-behavior-wmsgetlegend-target');
     /**
      * fetchLegend : Retrieve the legend for the visible layer.
      */
     function fetchLegend() {
+      container.html('');
+      var wms_layers = [];
+      var sublayers;
+      var url;
+      var urls = [];
       if (data.map.behaviors['openlayers_behavior_wmsgetlegend']) {
-        // Get visible layer.
-        // THIS ONLY WORKS IF ONE LAYER IS VISIBLE AT ANYTIME (BASE LAYER EXCLUDED).
-        // TODO handle multiple layers/legends.
-        var layers = map.getLayersBy('visibility', true);
-        var wmslayer;
-        for(i in layers) {
-          if(layers[i].isBaseLayer === false && layers[i].displayInLayerSwitcher !== 0) {
-            var wmslayer = layers[i];
+        for(layer in data.openlayers.layers) {
+          if ((data.openlayers.layers[layer].CLASS_NAME == "OpenLayers.Layer.WMS") && (data.openlayers.layers[layer].isBaseLayer == false) && (data.openlayers.layers[layer].visibility == true)){
+            wms_layers.push(data.openlayers.layers[layer]);
           }
         }
-        
-        if (wmslayer !== undefined) {
-          // Get layer name from WMS layer.
-          var layername = wmslayer.params.LAYERS[0];
-
-          Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement =
-            options.getlegend_htmlelement;
-          Drupal.openlayers.openlayers_behavior_wmsgetlegend.layers = layers;
-            Drupal.openlayers.openlayers_behavior_wmsgetlegend.beforegetlegend();
-
-          // Override/add parameters to request string.
-          var params = {
-            REQUEST: 'GetLegendGraphic',
-            LAYER: layername,
-            EXCEPTIONS: '',
-            SRS: '',
-            LAYERS: '',
-            FORMAT: 'image/png'
-          };
-
-          var url = wmslayer.getFullRequestString(params);
-          $.ajax({
-            type: 'POST',
-            url: Drupal.settings.basePath + 'openlayers/wms/wmsgetlegend',
-            data: {
-              ajax: true,
-              url: url
-            },
-            success: Drupal.openlayers.openlayers_behavior_wmsgetlegend.fillHTML,
-            fail: Drupal.openlayers.openlayers_behavior_wmsgetlegend.fillHTMLerror
-          });
+        if (wms_layers !== undefined) {
+            params ={};
+            for(layer in wms_layers) {
+                sublayers =  wms_layers[layer].params.LAYERS[0].split(',');
+                for(l in sublayers){
+                    params = {
+                        REQUEST: 'GetLegendGraphic',
+                        LAYER: sublayers[l],
+                        EXCEPTIONS: '',
+                        SRS: '',
+                        LAYERS: '',
+                        FORMAT: 'image/png'
+                    };
+                    urls.push( wms_layers[layer].getFullRequestString(params));    
+                }
+                
+            }
+        }
+        if (urls.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: Drupal.settings.basePath + 'openlayers/wms/wmsgetlegend',
+                data: {
+                  ajax: true,
+                  url: urls
+                },
+                success: function(result){
+                    if(result!=''){
+                        container.append(result);
+                    }
+                },
+                fail: function(result){
+                    
+                }
+            });  
         }
       }
     }
@@ -74,20 +79,4 @@
     // Add listener to retrieve legend each time a layer is selected.
     map.events.register('changelayer', this, fetchLegend);
   });
-
-  Drupal.openlayers.openlayers_behavior_wmsgetlegend.beforegetlegend = function() {
-    $("#" + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement).parent().css("display", "block");
-    $("#" + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement).html("<div class='ajax-progress'><div class='throbber'></div></div>");
-    return;
-  };
-
-  Drupal.openlayers.openlayers_behavior_wmsgetlegend.fillHTML = function(result) {
-    $('#' + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement).html(result);
-    Drupal.attachBehaviors($('#' + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement));
-  };
-
-  Drupal.openlayers.openlayers_behavior_wmsgetlegend.fillHTMLerror = function(result) {
-    $('#' + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement).html(result);
-    Drupal.attachBehaviors($('#' + Drupal.openlayers.openlayers_behavior_wmsgetlegend.getlegend_htmlelement));
-  };
 })(jQuery);

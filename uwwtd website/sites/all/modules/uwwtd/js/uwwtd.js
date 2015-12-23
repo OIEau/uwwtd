@@ -170,21 +170,23 @@ function display_agglo_piechart(data) {
     var radius = 50;
 	var divid = 'agglo_piechart_back';
     var max_legend_label = 25;
-	display_piechart(data,divid,widthsvg,width,height,radius,max_legend_label);
+    var innerRadius = 25;
+	display_piechart(data,divid,widthsvg,width,height,innerRadius,radius,max_legend_label);
 }
 //TEST AP GRAPHS
 function display_piechart_custom(data,divid) {
 	var widthsvg = 500;
 	var width = 200;
 	var height = 200;
-	var radius = 90;
+	var radius = 72;
+    var innerRadius = 42;
     var max_legend_label = 42;
-	display_piechart(data,divid,widthsvg,width,height,radius,max_legend_label);
+	display_piechart(data,divid,widthsvg,width,height,radius,innerRadius,max_legend_label);
 }
 
 
 
-function display_piechart(data,divid,widthsvg,width,height,radius,max_legend_label){
+function display_piechart(data,divid,widthsvg,width,height,radius,innerRadius,max_legend_label){
 	var color = d3.scale.category10();
 	var wedges = data;
 	
@@ -195,7 +197,7 @@ function display_piechart(data,divid,widthsvg,width,height,radius,max_legend_lab
 	.attr('transform', 'translate(' + ((width / 2)+20) +  ',' + ((width / 2)+10) + ')');
 	var arc = d3.svg.arc()
 	.outerRadius(radius)
-	.innerRadius(0);
+	.innerRadius(innerRadius);
 	
 	var circle = d3.svg.arc()
         .outerRadius(radius - 10)
@@ -220,7 +222,16 @@ function display_piechart(data,divid,widthsvg,width,height,radius,max_legend_lab
 
 	var pieLabels = g.append("text")
 	//.attr("transform", function(d) { return "translate(" + (arc.centroid(d)+20) + ")"; })
-	.attr("transform", function(d) {var c = arc.centroid(d);return "translate(" + c[0]*2.3 +"," + c[1]*2.3 + ")";})
+	//.attr("transform", function(d) {var c = arc.centroid(d);return "translate(" + c[0]*2.3 +"," + c[1]*2.3 + ")";})
+    .attr("transform", function(d) {
+        var c = arc.centroid(d),
+            x = c[0],
+            y = c[1],
+            // pythagorean theorem for hypotenuse
+            h = Math.sqrt(x*x + y*y);
+        return "translate(" + (x/h * (radius+12) ) +  ',' +
+           (y/h * (radius+12)) +  ")"; 
+    })
     .attr("dy", ".35em")
 	.style("font-size", "90%")
 	.style("text-anchor", "middle")

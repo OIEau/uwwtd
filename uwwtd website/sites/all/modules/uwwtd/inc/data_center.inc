@@ -5506,12 +5506,19 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     	foreach($node->field_uwwaggliste['und'] as $agg){
     		$dateaggl = node_load($agg['nid']);
 
-            if ( $dateaggl->field_aggperiodover4['und'][0]['value'] < $dateReportingReference
-                ||$dateaggl->field_aggperiodover5['und'][0]['value'] < $dateReportingReference
-                || $dateaggl->field_aggperiodover6['und'][0]['value'] < $dateReportingReference) {
+//             if ($dateaggl->field_aggperiodover4['und'][0]['value'] < $dateReportingReference
+//                 ||$dateaggl->field_aggperiodover5['und'][0]['value'] < $dateReportingReference
+//                 || $dateaggl->field_aggperiodover6['und'][0]['value'] < $dateReportingReference) {
+//                 $deadLineBeforeReference = true;
+//                 break;
+//             } 
+            
+            if (deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
+                || deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
+                || deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover6['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
                 $deadLineBeforeReference = true;
                 break;
-            }        
+            }                    
     	}
     }
     uwwtd_trace('$deadLineBeforeReference = ' . $deadLineBeforeReference);
@@ -5849,7 +5856,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPercent = 0;      
     foreach($listUwwtpCompliance as $uwwtp) {
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_aggc1['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
         }
     }
@@ -5975,7 +5982,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_aggc1['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
         }
     }
@@ -6187,18 +6194,7 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
    return $aResult;   
 }
 
-/**
- * Check if the first parameter year is before or equal the second parameter year
- * 
- * @param   string   $deadlinedate      a date formated YYYY-mm-dd
- * @param   string   $referenceyear     the reference year YYYY to compare with
- * @return  boolean   
- */ 
-function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear) 
-{
-	$date = explode('-', $deadlinedate);
-	return $date[0] <= $referenceyear;
-}
+
 
 
 function uwwtd_conformity_finished($success, $results, $operations) {

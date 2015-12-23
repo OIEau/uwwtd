@@ -1,5 +1,131 @@
 <?php
 
+if (!function_exists('array_column')) {
+    /**
+     * Returns the values from a single column of the input array, identified by
+     * the $columnKey.
+     *
+     * Optionally, you may provide an $indexKey to index the values in the returned
+     * array by the values from the $indexKey column in the input array.
+     *
+     * @param array $input A multi-dimensional array (record set) from which to pull
+     *                     a column of values.
+     * @param mixed $columnKey The column of values to return. This value may be the
+     *                         integer key of the column you wish to retrieve, or it
+     *                         may be the string key name for an associative array.
+     * @param mixed $indexKey (Optional.) The column to use as the index/keys for
+     *                        the returned array. This value may be the integer key
+     *                        of the column, or it may be the string key name.
+     * @return array
+     */
+    function array_column($input = null, $columnKey = null, $indexKey = null)
+    {
+        // Using func_get_args() in order to check for proper number of
+        // parameters and trigger errors exactly as the built-in array_column()
+        // does in PHP 5.5.
+        $argc = func_num_args();
+        $params = func_get_args();
+        if ($argc < 2) {
+            trigger_error("array_column() expects at least 2 parameters, {$argc} given", E_USER_WARNING);
+            return null;
+        }
+        if (!is_array($params[0])) {
+            trigger_error(
+                'array_column() expects parameter 1 to be array, ' . gettype($params[0]) . ' given',
+                E_USER_WARNING
+            );
+            return null;
+        }
+        if (!is_int($params[1])
+            && !is_float($params[1])
+            && !is_string($params[1])
+            && $params[1] !== null
+            && !(is_object($params[1]) && method_exists($params[1], '__toString'))
+        ) {
+            trigger_error('array_column(): The column key should be either a string or an integer', E_USER_WARNING);
+            return false;
+        }
+        if (isset($params[2])
+            && !is_int($params[2])
+            && !is_float($params[2])
+            && !is_string($params[2])
+            && !(is_object($params[2]) && method_exists($params[2], '__toString'))
+        ) {
+            trigger_error('array_column(): The index key should be either a string or an integer', E_USER_WARNING);
+            return false;
+        }
+        $paramsInput = $params[0];
+        $paramsColumnKey = ($params[1] !== null) ? (string) $params[1] : null;
+        $paramsIndexKey = null;
+        if (isset($params[2])) {
+            if (is_float($params[2]) || is_int($params[2])) {
+                $paramsIndexKey = (int) $params[2];
+            } else {
+                $paramsIndexKey = (string) $params[2];
+            }
+        }
+        $resultArray = array();
+        foreach ($paramsInput as $row) {
+            $key = $value = null;
+            $keySet = $valueSet = false;
+            if ($paramsIndexKey !== null && array_key_exists($paramsIndexKey, $row)) {
+                $keySet = true;
+                $key = (string) $row[$paramsIndexKey];
+            }
+            if ($paramsColumnKey === null) {
+                $valueSet = true;
+                $value = $row;
+            } elseif (is_array($row) && array_key_exists($paramsColumnKey, $row)) {
+                $valueSet = true;
+                $value = $row[$paramsColumnKey];
+            }
+            if ($valueSet) {
+                if ($keySet) {
+                    $resultArray[$key] = $value;
+                } else {
+                    $resultArray[] = $value;
+                }
+            }
+        }
+        return $resultArray;
+    }
+}
+
+
+function uwwtd_debug(){
+    /*
+    $maps = openlayers_maps(true);
+    dsm($maps);
+    
+    $map = openlayers_map_load('waste_water_treatment_network_map', true);
+    dsm($map);
+    $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
+    foreach($new_layers as $layer=>$weight){
+        $map->data['layers'][$layer] = $layer;
+        $map->data['layer_weight'][$layer] = $weight;
+        $map->data['layer_styles'][$layer] = 0;
+        $map->data['layer_styles_select'][$layer] = 0;
+        $map->data['layer_styles_temporary'][$layer] = 0;
+        $map->data['layer_activated'][$layer] = 0;
+        $map->data['layer_switcher'][$layer] = $layer;
+        $update = true;
+    }
+    $map->data['layers']['openlayers_geojson_picture_this'] = 0;
+    $map->data['layers']['geofield_formatter'] = 0;
+    $map->data['layers']['openlayers_kml_example'] = 0;
+    
+    //Update the map if needed
+    //if($update){
+    dsm($map);
+        openlayers_map_save($map);
+    
+    $map = openlayers_map_load('waste_water_treatment_network_map', true);
+    dsm($map);
+    */
+    return 'debug';
+}
+
+
 /**
  *
  */
@@ -638,12 +764,7 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
     return $s;
 }
 
-function uwwtd_debug(){
-	$preset = openlayers_map_load('waste_water_treatment_network_map', true);
-    dsm($preset);
 
-    return 'debug';
-}
 
 function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null){
     if($node){
@@ -1095,6 +1216,7 @@ function uwwtd_get_array_from_conf($value){
     return $result;
 }
 
+//TODO a revoir!!
 function uuwtd_get_distance_compliance($agg){
 	require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
 	$uww_aggcode['distart4_treatment'] = 0;
@@ -1107,6 +1229,13 @@ function uuwtd_get_distance_compliance($agg){
 	$uww_aggcode['distart5_monitoring_%'] = 0;
 	$uwwtp_loadentering = 0;
 	$total_uwwtp_loadentering_pe =0;
+    
+    $totalG_uwwtp_loadentering_pourc = 0;
+    $totalG_uwwtp_loadentering_pe = 0;
+    $total_agglo_uwwtp_perc = 0;
+    
+    $aggC1_pe = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //uwwtd_field_pe($aggTable, false);
+    
 	foreach($agg->field_agguwwliste['und'] as $uwwtpnid){
 
 		$uwwtp = node_load($uwwtpnid['nid']);
@@ -1118,23 +1247,24 @@ function uuwtd_get_distance_compliance($agg){
 		$agglo_uwwtp_perc = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
 		
 		$total_agglo_uwwtp_perc += $agglo_uwwtp_perc;
-		$aggC1_pourc = $agg->field_aggc1['und'][0]['value'];
-		$aggGenerated = $agg->field_agggenerated['und'][0]['value'];
+// 		$aggC1_pourc = $agg->field_aggc1['und'][0]['value'];
+// 		$aggGenerated = $agg->field_agggenerated['und'][0]['value'];
 		//Add DG 17/12/15
 		//Collecting system
-		$aggTable = array();
-		$aggTable[0]['#markup']=$agg->field_aggc1;
-		$aggTable['#object']=$agg->field_agggenerated;
-		$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 		$aggTable = array();
+// 		$aggTable[0]['#markup']=$agg->field_aggc1;
+// 		$aggTable['#object']=$agg->field_agggenerated;
+		
 
-		$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+		$agglo_uwwtp_loadentering_pourc = $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
 		$totalG_uwwtp_loadentering_pourc += $agglo_uwwtp_loadentering_pourc;
 		
-		$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+		//$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+        $uwwtp_loadentering_pe = $agglo_uwwtp_loadentering_pourc/100 * $agg->field_agggenerated['und'][0]['value'];
 		$totalG_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 		
-		$totalG_pe= $totalG_uwwtp_loadentering_pe - $aggC1_pe;
-		$totalG_pourc= $totalG_uwwtp_loadentering_pourc - $aggC1_pourc;
+		$totalG_pe = $totalG_uwwtp_loadentering_pe - $aggC1_pe;
+		$totalG_pourc = $totalG_uwwtp_loadentering_pourc - $agg->field_aggc1['und'][0]['value'];
 
 		$line = array();
 		$line['Monitoring results - BOD5'] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
@@ -1153,49 +1283,48 @@ function uuwtd_get_distance_compliance($agg){
 		if(($totalG_pe >= 2000) || ($totalG_pourc >1)){
 			if ($art4_treatment_type == 'NC'){
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();              
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
-				
 			}
 			if ($art4_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();                                  
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
 			}
 			if ($art5_treatment == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
 			}
 			if ($art5_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
 					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe + $totalG_pe;
 				}
@@ -1203,50 +1332,50 @@ function uuwtd_get_distance_compliance($agg){
 		}else{
 			if ($art4_treatment_type == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart4_treatment'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_treatment'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art4_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart4_monitoring'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart4_monitoring'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art5_treatment == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart5_treatment'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_treatment'] += $uwwtp_loadentering_pe;
 				}
 			}
 			if ($art5_performance == 'NC') {
 				if($uwwtp->field_uwwcompliance== "NC"){
-					$aggTable = array();
-					$aggTable[0]['#markup']=$agg->field_aggc1;
-					$aggTable['#object']=$agg->field_agggenerated;
-					$aggC1_pe = uwwtd_field_pe($aggTable, false);
-					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
-					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
-					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
-					$uww_aggcode['distart5_monitoring'] = $total_uwwtp_loadentering_pe;
+// 					$aggTable = array();
+// 					$aggTable[0]['#markup']=$agg->field_aggc1;
+// 					$aggTable['#object']=$agg->field_agggenerated;
+// 					$aggC1_pe = uwwtd_field_pe($aggTable, false);
+// 					$agglo_uwwtp_loadentering_pourc= $agglo_uwwtp->field_agglo_uww_perc_ent_uw ['und'][0]['value'];
+// 					$uwwtp_loadentering_pe = (($agglo_uwwtp_loadentering_pourc/100) * $aggC1_pe);
+// 					$total_uwwtp_loadentering_pe += $uwwtp_loadentering_pe;
+					$uww_aggcode['distart5_monitoring'] += $uwwtp_loadentering_pe;
 				}
 			} 
 		}
@@ -1266,4 +1395,17 @@ function uuwtd_get_distance_compliance($agg){
 	}
 
 	return $uww_aggcode;
+}
+
+/**
+ * Check if the first parameter year is before or equal the second parameter year
+ * 
+ * @param   string   $deadlinedate      a date formated YYYY-mm-dd
+ * @param   string   $referenceyear     the reference year YYYY to compare with
+ * @return  boolean   
+ */ 
+function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear) 
+{
+	$date = explode('-', $deadlinedate);
+	return $date[0] <= $referenceyear;
 }

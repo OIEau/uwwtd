@@ -79,7 +79,21 @@ function wms_ajax_wmsgetfeatureinfo() {
       );  
       $content_object = proxy($requesturl);
       //krumo($content_object);
-    if (in_array($params['INFO_FORMAT'], array('text/html','text/plain'))) {
+    if (is_array($content_object)) {
+        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
+          print $content_object[0] . t("Check the proxy module settings.");
+          exit();
+        }
+        elseif(strtolower(substr($content_object[0], 0, 17)) == "data not returned"){
+            //Do nothing
+            //$output.='',
+        }
+        else{
+            $output.=print_r( $content_object,true);
+        }
+        
+    }
+    elseif (in_array($params['INFO_FORMAT'], array('text/html','text/plain'))) {
         // Handle specific codes
         switch ($content_object->code) {
           case 200:
@@ -92,13 +106,6 @@ function wms_ajax_wmsgetfeatureinfo() {
           default:
             $output.= t('An error occured while retrieving the data.');
         }
-    }
-    elseif (is_array($content_object)) {
-        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
-          print $content_object[0] . t("Check the proxy module settings.");
-          exit();
-        }
-        $output.=print_r( $content_object,true);
     }
     elseif ($content_object) {
         if ($content_object->code == 200) {
@@ -131,7 +138,7 @@ function wms_ajax_wmsgetfeatureinfo() {
             $resultarray = wms_process_wmsgetfeatureinfo_result($return, $layers);
           }
           //module_invoke_all('wms_getfeatureinfo', $resultarray);
-          drupal_alter('wms_getfeatureinfo', $resultarray);
+          drupal_alter('wms_getfeatureinfo', $resultarray, $url_array);
           if(!empty($resultarray)){
             $output.= theme('wms_getfeatureinfo', array('result' => $resultarray, 'layers' => $layers));
           }
@@ -150,61 +157,63 @@ function wms_ajax_wmsgetfeatureinfo() {
  *
  */
 function wms_ajax_wmsgetlegend() {
-  $url = $_POST['url'];
-  $url_array = parse_url($url);
-  $query = $url_array['query'];
-  parse_str($query, $params);
+  $urls = $_POST['url'];
+  $output='';
+  foreach((array)$urls as $url){
+      $url_array = parse_url($url);
+      $query = $url_array['query'];
+      parse_str($query, $params);
 
-  $layerstp = explode(',', $params['QUERY_LAYERS']);
-  $layers = array();
-  foreach ($layerstp as $layer) {
-    $layertp = explode(':', $layer);
-    $layers[] = array(
-      'namespace' => $layertp[0],
-      'layer' => $layertp[1],
-    );
-  }
+      $layerstp = explode(',', $params['QUERY_LAYERS']);
+      $layers = array();
+      foreach ($layerstp as $layer) {
+        $layertp = explode(':', $layer);
+        $layers[] = array(
+          'namespace' => $layertp[0],
+          'layer' => $layertp[1],
+        );
+      }
 
-  $requesturl = array(
-    'request_uri' => $url,
-  );
-  $content_object = proxy($requesturl);
-  
-  // Handle specific codes
-  switch ($content_object->code) {
-    case 200:
-    case 304:
-      break;
-      // OK
+      $requesturl = array(
+        'request_uri' => $url,
+      );
+      $content_object = proxy($requesturl);
+      
+      // Handle specific codes
+      switch ($content_object->code) {
+        case 200:
+        case 304:
+          break;
+          // OK
 
-    case 301:
-    case 302:
-    case 307:
-      // Permanent Redirect
-      print $content_object->data;
-      exit();
-      break;
-    default:
-      print t('An error occured while retrieving the data.');
-      exit();
+        case 301:
+        case 302:
+        case 307:
+          // Permanent Redirect
+          $output.= '<div class="legend">'.$content_object->data.'</div>';
+          break;
+        default:
+          $output.= '<div class="legend">'.t('An error occured while retrieving the data.').'</div>';
+      }
+      if (is_array($content_object)) {
+        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
+          $output.= '<div class="legend">'.$content_object[0] . t("Check the proxy module settings.").'</div>';
+        }
+        $output.=print_r($content_object,true);
+      }
+      elseif ($content_object) {
+        if ($content_object->code == 200) {
+          $return = base64_encode($content_object->data);
+          $return = '<img src="data:image/gif;base64,' . $return . '" alt="Legend" />';
+          drupal_alter('wms_getlegend', $return, $url_array);
+          if($return!='') $output.= '<div class="legend">'.$return.'</div>';
+        }
+      }
+      else {
+        $output.= '<div class="legend">Something went wrong</div>';
+      }
   }
-  if (is_array($content_object)) {
-    if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
-      print $content_object[0] . t("Check the proxy module settings.");
-      exit();
-    }
-    print_r($content_object);
-  }
-  elseif ($content_object) {
-    if ($content_object->code == 200) {
-      $return = base64_encode($content_object->data);
-      print '<img src="data:image/gif;base64,' . $return . '" alt="Legend" />';
-      exit();
-    }
-  }
-  else {
-    print 'Something went wrong';
-  }
+  exit($output);
 }
 
 /**
