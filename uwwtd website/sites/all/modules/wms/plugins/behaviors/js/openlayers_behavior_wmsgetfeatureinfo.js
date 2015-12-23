@@ -116,7 +116,6 @@
                 wmslayers.push(wms_layers[layer].getFullRequestString(params));
               }
             }
-            console.log(wmslayers);
             
             if (wmslayers.length > 0) { 
               //FIX ME ==> get all layers by WMS domain and not just only the first or the last one

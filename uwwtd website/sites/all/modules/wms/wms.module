@@ -79,7 +79,21 @@ function wms_ajax_wmsgetfeatureinfo() {
       );  
       $content_object = proxy($requesturl);
       //krumo($content_object);
-    if (in_array($params['INFO_FORMAT'], array('text/html','text/plain'))) {
+    if (is_array($content_object)) {
+        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
+          print $content_object[0] . t("Check the proxy module settings.");
+          exit();
+        }
+        elseif(strtolower(substr($content_object[0], 0, 17)) == "data not returned"){
+            //Do nothing
+            //$output.='',
+        }
+        else{
+            $output.=print_r( $content_object,true);
+        }
+        
+    }
+    elseif (in_array($params['INFO_FORMAT'], array('text/html','text/plain'))) {
         // Handle specific codes
         switch ($content_object->code) {
           case 200:
@@ -92,13 +106,6 @@ function wms_ajax_wmsgetfeatureinfo() {
           default:
             $output.= t('An error occured while retrieving the data.');
         }
-    }
-    elseif (is_array($content_object)) {
-        if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
-          print $content_object[0] . t("Check the proxy module settings.");
-          exit();
-        }
-        $output.=print_r( $content_object,true);
     }
     elseif ($content_object) {
         if ($content_object->code == 200) {
