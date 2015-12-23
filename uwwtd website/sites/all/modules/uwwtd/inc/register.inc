@@ -64,6 +64,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     //CSV 
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
 
@@ -91,7 +92,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));                    
-
+ 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));  
 }
 
@@ -575,8 +576,13 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['uww_code'], $context['sandbox']['line'], $uwwtp[$ind['uww_code']]);
         $sheet->setCellValueByColumnAndRow($ind['uww_name'], $context['sandbox']['line'], $uwwtp[$ind['uww_name']]);
         $sheet->setCellValueByColumnAndRow($ind['uww_status'], $context['sandbox']['line'], $uwwtp[$ind['uww_status']]);
+        
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
+        
         $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]);
         $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering load  p. e.']]);
+        
         $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_capacity p. e.']]);
         $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_reference year'], $context['sandbox']['line'], $uwwtp[$ind['previous_reference year']]);
@@ -1149,7 +1155,8 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
         
         if ('' !== $agglo_uwwtpnid) {
             $agglo_uwwtp = node_load($agglo_uwwtpnid);
-            $entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']);
+//             $entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']);
+            $entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
 //             $percent_of_generating_load = $entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value']; 
             
             if (false !== strpos($uwwtp_treat_inplace, '3other') || false !== strpos($uwwtp_treat_inplace, '3NP')
@@ -5300,19 +5307,32 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
 //              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' )));             
         
-        if ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
-             || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
-             || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
-            )
+        
+//         if ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
+//              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
+//              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
+//             )
+        
+        $deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
+             || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
+             || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
+            );
+                        
+        if ( true === $deadline_before
              && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
             {
             $pending_or_expired = 'EXP';
-        }   
-        if (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
-             && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
-             && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
+        }  
+         
+//         if (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
+//              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
+//              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
+//              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+//             {
+            
+        if (false === $deadline_before
              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
-            {
+            {            
             $pending_or_expired = 'PD';
         }   
 //         dsm($pending_or_expired);                  
@@ -5977,13 +5997,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
-        if ($line[$ind['generated_load_p.e.']] < 10001) {
+        if ($line[$ind['generated_load_p.e.']] >= 2000 && $line[$ind['generated_load_p.e.']] < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $line[$ind['generated_load_p.e.']];
             $context['results']['graph']['0_10000']['number']++;        
-        } elseif ($line[$ind['generated_load_p.e.']]  < 100000) {
+        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 100001) {
             $context['results']['graph']['10000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
             $context['results']['graph']['10000_100000']['number']++;             
-        } else {   //>=100000
+        } elseif ($line[$ind['generated_load_p.e.']] >= 100001) {
             $context['results']['graph']['100000_n']['pe']  += $line[$ind['generated_load_p.e.']];
             $context['results']['graph']['100000_n']['number']++;             
         }
@@ -6243,6 +6263,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['uww_code'] => 'code',
             $ind['uww_name'] => 'name',
             $ind['uww_status'] => 'status',
+            
+            $ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'] => 'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load',
+            $ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'] => 'uww_entering_load_calculated_UwwtpAgglo_p._e.',            
+                        
             $ind['uww_entering this UWWTP % of gen. load'] => 'entering this UWWTP % of gen. load',
             $ind['uww_entering load  p. e.'] => 'entering load  p. e.',
             $ind['uww_capacity p. e.'] => 'capacity p. e.',
@@ -6446,28 +6470,43 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $siteid = uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
 //             dsm($siteid);
             $nidagglouwwtp = uwwtd_check_exist($siteid);
-            
+//             dsm($siteid . '/' . $uwwtp->field_inspireidlocalid['und'][0]['value'] . '/' . $uwwtp->nid . '/' . $nidagglouwwtp);
+
             if ('' != $nidagglouwwtp) {
+//                 dsm('ici');
                 $agglo_uwwtp = node_load($nidagglouwwtp);
     //             dsm($agglo_uwwtp);
                 //'entering this UWWTP % of gen. load',
-                $uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value']/ 100 * $agg->field_agggenerated['und'][0]['value']);
-                $line[$ind['uww_entering this UWWTP % of gen. load']] = $uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];              
+                //$uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value']/ 100 * $agg->field_agggenerated['und'][0]['value']);
+//                 $uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];//$uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];              
                 //'entering load  p. e.',
-                $line[$ind['uww_entering load  p. e.']] = $uww_entering_load_pe;
+                $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
                 
                 $field_agglo_uww_perc_ent_uw = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 unset($agglo_uwwtp, $siteid);
             } else {
-                $line[$ind['uww_entering this UWWTP % of gen. load']] = '';              
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = '';              
                 //'entering load  p. e.',
-                $line[$ind['uww_entering load  p. e.']] = '';
+                $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = '';
                 $field_agglo_uww_perc_ent_uw = 0; 
-            }                        
+            } 
+            
+            $line[$ind['uww_entering this UWWTP % of gen. load']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value'];
+            $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];         
+            
+//             dsm($line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
+//             dsm($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
+//             dsm($line[$ind['uww_entering this UWWTP % of gen. load']]);
+//             dsm($line[$ind['uww_entering load  p. e.']]);
+            
+                                   
             //'capacity p. e.',
             $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
             //'status', 
             $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
+            
+            
             
             //Previous UWWTP general info
             $previousagglonid = uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'])));
@@ -6493,7 +6532,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 dsm($previousagglo);
                 $previous_reference_year = $context['sandbox']['previous_year']; 
 //                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
-                $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
+                //$previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
+                $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
                 $previous_capacity_pe = $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'];
                 if (isset($line[$ind['uww_entering load  p. e.']])) {
                     $previous_percentage_of_change_of_entering_load = $previous_entering_load_pe * 100 / $line[$ind['uww_entering load  p. e.']];
@@ -6794,18 +6834,18 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             
             //check if uwwtp under expired or pending deadline
             $pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
-                                                                              substr($line[$ind['deadline for Art. 3 compliance']], 0, 4),
-                                                                              substr($line[$ind['deadline for Art. 4 compliance']], 0, 4),
-                                                                              substr($line[$ind['deadline for Art. 5 compliance']], 0, 4),
+                                                                              $line[$ind['deadline for Art. 3 compliance']],
+                                                                              $line[$ind['deadline for Art. 4 compliance']],
+                                                                              $line[$ind['deadline for Art. 5 compliance']],
                                                                               $uwwtp);
                                   
            
             $previous_pending_or_expired = '';
             if (isset($previousuwwtp)) {                 
                 $previous_pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
-                                                                                  substr($line[$ind['deadline for Art. 3 compliance']], 0, 4),
-                                                                                  substr($line[$ind['deadline for Art. 4 compliance']], 0, 4),
-                                                                                  substr($line[$ind['deadline for Art. 5 compliance']], 0, 4),
+                                                                                  $line[$ind['deadline for Art. 3 compliance']],
+                                                                                  $line[$ind['deadline for Art. 4 compliance']],
+                                                                                  $line[$ind['deadline for Art. 5 compliance']],
                                                                                   $previousuwwtp);
             }
                                                                                           
@@ -7587,6 +7627,111 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 /**
  *
  */ 
+function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context)
+{
+	if (!isset($context['sandbox']['progress'])) {
+    
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['id'] = array();
+        
+        //get all agglomeration without station (= no trace of the agglo nid inn agglo_uwwtp content)
+        $query = 'select n.nid
+        from {node} n    
+            left join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and not EXISTS (select 1 from {field_data_field_agglo_uww_agglo} where field_agglo_uww_agglo_nid = n.nid)
+        ';
+        
+// select n.nid
+//         from drupal_node n    
+//             left join
+//                 drupal_field_data_field_anneedata f_annee
+//                     ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+//         where n.type = 'agglomeration'
+//             and f_annee.field_anneedata_value = 2011
+//             and n.nid not EXISTS (select 1 from drupal_field_data_field_agglo_uww_agglo where field_agglo_uww_agglo_nid = n.nid)
+                    
+        $param = array(
+            ':typenode' => 'agglomeration',
+            ':annee' => $annee,
+            );
+    
+        try {
+            $result = db_query($query, $param);
+            while($row = $result->fetchAssoc()) {
+                $context['sandbox']['id'][] = $row['nid'];
+            }
+        }catch(Exception $e) {
+            dsm($e->getMessage());
+        }
+            	
+		$context['sandbox']['max'] = count($context['sandbox']['id']);
+        
+	} 
+    $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
+    
+    
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
+    $r = fopen($filename, 'ab');  
+    
+    $j = 0;
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    
+        $agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
+        
+        $line = array();
+        
+        $line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
+        //'name',
+        $line[$ind['aggname']] = $agg->title;
+        //'status',
+        $line[$ind['aggstatus']] = $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
+        //'generated load  p. e.',     
+        $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
+        //'deadline for Art. 3 compliance',    
+        $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+        //'deadline for Art. 4 compliance',
+        $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+        //'deadline for Art. 5 compliance',
+        $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+        
+        //Collection
+        //'collected in collecting system % of gen. load',
+        $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
+        //'collected in collecting system  p. e.',
+        $line[$ind['collected in collecting system  p. e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+        //'addressed through IAS % of gen. load', 
+        $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+        //'addressed through IAS p. e.',        
+        $line[$ind['addressed through IAS p. e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+        //'neither collecting system nor IAS % of gen. load',      
+        $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+        //'neither collecting system nor IAS p. e.',   
+        $line[$ind['neither collecting system nor IAS p. e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+                
+        fputcsv($r, $line, ';');
+        
+        unset($agg);
+    
+        $j++;
+        $context['sandbox']['progress']++;           
+    } 
+    
+    fclose($r);
+    
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' (second pass for aggloemration without uwwtp) ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];    
+    
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+} 
+
+/**
+ *
+ */ 
 function uwwtd_create_register_2015_rca_sheet1($annee, &$context) 
 {
 //     dsm('la');
@@ -8101,12 +8246,15 @@ function uwwtd_get_register_treatmenttype_inplace($uwwtp)
 
 function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $deadlineart4, $deadlineart5, $uwwtp)
 {                                                                             
-    $pending_or_expired = '';        
+    $pending_or_expired = '';   
+    
+    $deadline_before = (deadline_beforeorequal_to_referenceyear($deadlineart3, $annee)
+         || deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)
+         || deadline_beforeorequal_to_referenceyear($deadlineart5, $annee)
+        );
+                 
     if (
-        ($deadlineart3 < $annee
-         || $deadlineart4 < $annee
-         || $deadlineart5 < $annee
-        )
+        true === $deadline_before
          && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
         ) {
         $pending_or_expired = 'EXP';
@@ -8114,10 +8262,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
     
     //pending deadline    PD + les C avec date pas dépassée
     if (
-        ($deadlineart3 >= $annee
-         && $deadlineart4 >= $annee
-         && $deadlineart5 >= $annee
-        )
+        false === $deadline_before
         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
         ) {
         $pending_or_expired = 'PD';
@@ -8410,17 +8555,17 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
     if ($line[$nr] > 0) {
         return 'NR';
     }
-    if ($line[$nc] == 0 && $deadline_agglo <= $reporting_year) {
+    if ($line[$nc] == 0 && $deadline_agglo < $reporting_year) {
         return 'C';
     }
-    if ($deadline_agglo <= $reporting_year
+    if ($deadline_agglo < $reporting_year
         && $line[$nc] > 0
         && $art5x_NC_collected <= 1 
         && $line[$nc_pe] < 2000
         ) {
         return 'C';
     } 
-    if ($deadline_agglo <= $reporting_year
+    if ($deadline_agglo < $reporting_year
         && 
         ($line[$nc] > 1 || $line[$nc_pe] >= 2000)
         ) {
