@@ -598,11 +598,16 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         }
 
         $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'],$context['sandbox']['line'], $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]);
-        if (abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
+        if ($uwwtp[$ind['previous_Percentage of change of capacity (2) %']] != 'NI' && abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
             $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
                 ->getFill()
                 ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                 ->getStartColor()->setARGB('FFFFC000');        
+        } else {
+            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
+                ->getFill()
+                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+                ->getStartColor()->setARGB('FFFFFFFF');           
         }  
                   
         $sheet->setCellValueByColumnAndRow($ind['water body type'],$context['sandbox']['line'], $uwwtp[$ind['water body type']]);
