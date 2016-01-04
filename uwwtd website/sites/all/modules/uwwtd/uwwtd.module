@@ -894,9 +894,10 @@ function uwwtd_get_data_agglomeration($option){
 //     dsm($cache_name);
     $cache = '';
 	$putincache =true;
+    /*
 	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
-	}
+	}*/
     if ($putincache && UWWTD_CACHE_ACTIVE === true) {
         $cache = cache_get($cache_name, 'cache');
     }
@@ -923,9 +924,10 @@ function uwwtd_get_data_agglomeration($option){
 			 f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
              f_status.field_status_value,
 			 st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
-			 st_transform(f_geo.the_geom, 4326) geom,
 			 f_article17_agglo.field_article17_agglo_nid,
-			 f_dcpre_agglo.field_dcpreceivingwater_value 
+			 f_dcpre_agglo.field_dcpreceivingwater_value,
+            rbd.eurbdcode as rbd,
+            rbd.rbdname 
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -979,6 +981,9 @@ function uwwtd_get_data_agglomeration($option){
 		left join
             {field_data_field_dcpreceivingwater} f_dcpre_agglo
                 ON f_dcp_agglo.field_linked_discharge_points_nid = f_dcpre_agglo.entity_id
+        left join 
+            river_basin rbd
+                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)        
     where n.type = :typenode
         and f_annee.field_anneedata_value = :annee
 	order by n.title 	
@@ -988,27 +993,11 @@ function uwwtd_get_data_agglomeration($option){
         ':annee' => $option['field_anneedata_value'],
     );
     
-	if(isset($option['rbd']) && $option['rbd'] !="All"){
-        $query = '
-            WITH data AS('.$query.')
-            SELECT data.*
-            FROM data, river_basin rbd
-            WHERE rbd.eurbdcode=:region and data.geom && rbd.the_geom4326 and ST_Intersects(data.geom, rbd.the_geom4326)
-        ';
-        $param[":region"]=$option['rbd'];
-    }
-	//
-    /*
-	if(isset($option['rbd']) && $option['rbd'] !="All"){
-		
-	}
-    */
    // dsm($param);
     try {
         
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
-            unset($row['geom']);
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ])) {
                 $row['field_aggcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ];
@@ -1067,9 +1056,10 @@ function uwwtd_get_data_uwwtp($option)
     $cache_name = uwwtd_get_cache_key_uwwtp($option);
     $cache  = '';
     $putincache =true;
-	if(isset($option['rbd']) && $option['rbd'] !="All"){
+	
+    /*if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
-	}
+	}*/
     if ($putincache && UWWTD_CACHE_ACTIVE === true) {
         $cache = cache_get($cache_name, 'cache');
     }
@@ -1102,9 +1092,10 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwpdischarge.field_uwwpdischarge_value,
         f_status.field_status_value,
 		st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
-        st_transform(f_geo.the_geom, 4326) geom,
 		f_article17_uwwtp.field_article17_uwwtp_nid,
-		f_dcpre_uwwtp.field_dcpreceivingwater_value 
+		f_dcpre_uwwtp.field_dcpreceivingwater_value,
+        rbd.eurbdcode as rbd,
+        rbd.rbdname
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
@@ -1182,6 +1173,9 @@ function uwwtd_get_data_uwwtp($option)
 		left join
             {field_data_field_dcpreceivingwater} f_dcpre_uwwtp
                 ON f_dcp_uwwtp.field_uwwdcpliste_nid = f_dcpre_uwwtp.entity_id
+        left join 
+            river_basin rbd
+                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
     where n.type = :typenode
         and f_annee.field_anneedata_value = :annee
     order by n.title
@@ -1200,15 +1194,6 @@ function uwwtd_get_data_uwwtp($option)
         ':annee' => $option['field_anneedata_value'],
         );
   }
-  if(isset($option['rbd']) && $option['rbd'] !="All"){
-        $query = '
-            WITH data AS('.$query.')
-            SELECT data.*
-            FROM data, river_basin rbd
-            WHERE rbd.eurbdcode=:region and data.geom && rbd.the_geom4326 and ST_Intersects(data.geom, rbd.the_geom4326)
-        ';
-        $param[":region"]=$option['rbd'];
-    }
   
     
     try {
@@ -1766,7 +1751,7 @@ function uwwtd_get_form_filter($option)
 function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 {
      //For RBD data are already filtered
-     unset($filter['filter']['rbd']);
+     //unset($filter['filter']['rbd']);
 //     dsm($forcefilter);
     //no need to treat annee, already filter by request
     if (isset($filter['filter']['field_anneedata_value'])) {
@@ -2037,6 +2022,7 @@ function uwwtd_page_agglomeration_connection($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+				$row['rbd'].' '.$row['rbdname'],
 				$row['field_aggc2_value_format'],
 				$row['field_aggc1_value_format'],
 				$row['field_aggpercwithouttreatment_value_format'],
@@ -2049,6 +2035,7 @@ function uwwtd_page_agglomeration_connection($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+                $row['rbd'].' '.$row['rbdname'],
 				$row['field_aggc2_value_format'],
 				$row['field_aggc1_value_format'],
 				$row['field_aggpercwithouttreatment_value_format'],
@@ -2412,6 +2399,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+                $row['rbd'].' '.$row['rbdname'],
 				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
@@ -2427,6 +2415,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+                $row['rbd'].' '.$row['rbdname'],
 				$row['field_uwwtreatmenttype_value_format'],
 				$row['field_uwwcompliance_value_format'],
 				$row['field_uwwbod5perf_value_format'],
@@ -2944,7 +2933,8 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
-				$row['field_uwwprimarytreatment_value_format'],
+				$row['rbd'].' '.$row['rbdname'],
+                $row['field_uwwprimarytreatment_value_format'],
 				$row['field_uwwsecondarytreatment_value_format'],
 				$row['field_uwwnremoval_value_format'],
 				$row['field_uwwpremoval_value_format'],
@@ -2959,7 +2949,8 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
 				$row['field_uwwloadenteringuwwtp_value_format'],
 				$row['field_physicalcapacityactivity_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
-				$row['field_uwwprimarytreatment_value_format'],
+				$row['rbd'].' '.$row['rbdname'],
+                $row['field_uwwprimarytreatment_value_format'],
 				$row['field_uwwsecondarytreatment_value_format'],
 				$row['field_uwwnremoval_value_format'],
 				$row['field_uwwpremoval_value_format'],
@@ -3909,6 +3900,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+                $row['rbd'].' '.$row['rbdname'],
 				$row['field_aggcompliance_value_format'],
 				$row['field_aggart3compliance_value_format'],
 				$row['field_aggart4compliance_value_format'],
@@ -3925,6 +3917,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				$row['field_inspireidlocalid_value'],
 				$row['field_agggenerated_value_format'],
 				($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
+                $row['rbd'].' '.$row['rbdname'],
 				$row['field_aggcompliance_value_format'],
 				$row['field_aggart3compliance_value_format'],
 				$row['field_aggart4compliance_value_format'],
