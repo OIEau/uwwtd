@@ -337,8 +337,8 @@ $GLOBALS['ms_level'] = array(
         'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#74ffe0','label'=>t('Connected to collecting system')),
-        'ias'=>array('color'=>'#bd8842','label'=>t('Individual and Appropriate Systems')),
+		'cs'=>array('color'=>'#00658e','label'=>t('Connected to collecting system')),
+        'ias'=>array('color'=>'#00ced1','label'=>t('Individual and Appropriate Systems')),
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
 	'sewage_network'=>array(

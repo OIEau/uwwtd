@@ -93,10 +93,23 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    /*
+    
     $maps = openlayers_maps(true);
     dsm($maps);
     
+    $map = $maps['agglomeration'];
+    dsm(strpos($map->data['image_path'], "default_dark"));
+    if(strpos($map->data['image_path'], "default_dark")){
+        $map->data['image_path'] = str_replace('default_dark', 'default_white', $map->data['image_path']);
+        $update = true;
+    }
+    if(strpos($map->data['css_path'], "default_dark")){
+        $map->data['css_path'] = str_replace('default_dark', 'default_white', $map->data['css_path']);
+        $update = true;
+    }
+    dsm($map);
+    
+    /*
     $map = openlayers_map_load('waste_water_treatment_network_map', true);
     dsm($map);
     $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
@@ -158,8 +171,8 @@ $results = db_query(
 }
 
 function uwwtd_get_all_rbd($type){
-	$rbd = '';
-	
+	$rbd = array('All' => t('- Any -'));
+	/*
 	$results = db_query(
 		'SELECT dc.field_dcpreceivingwater_value,  rb.rbdname
 		FROM {field_data_field_linked_discharge_points} d 
@@ -170,10 +183,26 @@ function uwwtd_get_all_rbd($type){
 		ORDER BY rb.rbdname', 
 		array(':type' => $type)
 	);
-	$rbd = array('All' => '- Any -');
 	foreach($results as $result){
 		$rbd[$result->field_dcpreceivingwater_value] = $result->rbdname.' '. $result->field_dcpreceivingwater_value;
+	}*/
+    
+    
+    $results = db_query(
+        '
+            SELECT rb.eurbdcode,  rb.rbdname
+            FROM river_basin rb
+            WHERE lower(c_cd) = :cc
+            GROUP BY rb.eurbdcode,  rb.rbdname
+            ORDER BY rb.rbdname ASC
+        ',
+        array(':cc' => variable_get('siif_eru_country_code', '%'))
+    );
+    foreach($results as $result){
+		$rbd[$result->eurbdcode] = $result->rbdname.' '. $result->eurbdcode;
 	}
+    
+    
 	return $rbd;
 }
 /**

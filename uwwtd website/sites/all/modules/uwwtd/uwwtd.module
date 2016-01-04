@@ -802,8 +802,7 @@ function uwwtd_get_cache_key_page_uwwtp_pressure($option)
     return 'page_uwwtp_pressure_' . $option['field_anneedata_value'];
 }
 
-function uwwtd_block_view($delta = '')
-{
+function uwwtd_block_view($delta = ''){
     switch ($delta) {
         case 'map_home':
             $cache = '';
@@ -889,14 +888,13 @@ function uwwtd_block_view($delta = '')
 /**
  * Get all agglomeration data for a year
  */
-function uwwtd_get_data_agglomeration($option)
-{
-	//        dsm(__FUNCTION__);
+function uwwtd_get_data_agglomeration($option){
+    //        dsm(__FUNCTION__);
     $cache_name = uwwtd_get_cache_key_agglomeration($option);
 //     dsm($cache_name);
     $cache = '';
 	$putincache =true;
-	if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
+	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
 	}
     if ($putincache && UWWTD_CACHE_ACTIVE === true) {
@@ -925,6 +923,7 @@ function uwwtd_get_data_agglomeration($option)
 			 f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
              f_status.field_status_value,
 			 st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+			 st_transform(f_geo.the_geom, 4326) geom,
 			 f_article17_agglo.field_article17_agglo_nid,
 			 f_dcpre_agglo.field_dcpreceivingwater_value 
     from {node} n
@@ -982,27 +981,34 @@ function uwwtd_get_data_agglomeration($option)
                 ON f_dcp_agglo.field_linked_discharge_points_nid = f_dcpre_agglo.entity_id
     where n.type = :typenode
         and f_annee.field_anneedata_value = :annee
-		
-
+	order by n.title 	
     ';
-	if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
-		$query .= "and f_dcpre_agglo.field_dcpreceivingwater_value=:region";
-		$query .= " order by n.title";
-	}else{
-		$query .= " order by n.title";
-	}
-	
     $param = array(
         ':typenode' => 'agglomeration',
         ':annee' => $option['field_anneedata_value'],
-        );
-	if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
-		$param[":region"]=$option['field_dcpreceivingwater_value'];
+    );
+    
+	if(isset($option['rbd']) && $option['rbd'] !="All"){
+        $query = '
+            WITH data AS('.$query.')
+            SELECT data.*
+            FROM data, river_basin rbd
+            WHERE rbd.eurbdcode=:region and data.geom && rbd.the_geom4326 and ST_Intersects(data.geom, rbd.the_geom4326)
+        ';
+        $param[":region"]=$option['rbd'];
+    }
+	//
+    /*
+	if(isset($option['rbd']) && $option['rbd'] !="All"){
+		
 	}
+    */
    // dsm($param);
     try {
+        
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
+            unset($row['geom']);
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ])) {
                 $row['field_aggcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_aggcompliance_value'] ];
@@ -1061,7 +1067,7 @@ function uwwtd_get_data_uwwtp($option)
     $cache_name = uwwtd_get_cache_key_uwwtp($option);
     $cache  = '';
     $putincache =true;
-	if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
+	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
 	}
     if ($putincache && UWWTD_CACHE_ACTIVE === true) {
@@ -1096,6 +1102,7 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwpdischarge.field_uwwpdischarge_value,
         f_status.field_status_value,
 		st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+        st_transform(f_geo.the_geom, 4326) geom,
 		f_article17_uwwtp.field_article17_uwwtp_nid,
 		f_dcpre_uwwtp.field_dcpreceivingwater_value 
     from {node} n
@@ -1176,15 +1183,11 @@ function uwwtd_get_data_uwwtp($option)
             {field_data_field_dcpreceivingwater} f_dcpre_uwwtp
                 ON f_dcp_uwwtp.field_uwwdcpliste_nid = f_dcpre_uwwtp.entity_id
     where n.type = :typenode
-    and f_annee.field_anneedata_value = :annee
+        and f_annee.field_anneedata_value = :annee
+    order by n.title
     ';
  // dsm($query);
-	if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
-		$query .= "and f_dcpre_uwwtp.field_dcpreceivingwater_value=:region";
-		$query .= " order by n.title";
-	}else{
-		$query .= " order by n.title";
-	}
+
  $nb = strlen($option['field_anneedata_value']);
   if($nb == 1){
 	   $param = array(
@@ -1197,9 +1200,16 @@ function uwwtd_get_data_uwwtp($option)
         ':annee' => $option['field_anneedata_value'],
         );
   }
-  if(isset($option['field_dcpreceivingwater_value']) && $option['field_dcpreceivingwater_value'] !="All"){
-		$param[":region"]=$option['field_dcpreceivingwater_value'];
-	}
+  if(isset($option['rbd']) && $option['rbd'] !="All"){
+        $query = '
+            WITH data AS('.$query.')
+            SELECT data.*
+            FROM data, river_basin rbd
+            WHERE rbd.eurbdcode=:region and data.geom && rbd.the_geom4326 and ST_Intersects(data.geom, rbd.the_geom4326)
+        ';
+        $param[":region"]=$option['rbd'];
+    }
+  
     
     try {
         $result = db_query($query, $param);
@@ -1735,8 +1745,8 @@ function uwwtd_get_form_filter($option)
 	  $filter['filter']['field_regionnuts_value'] = $_GET['field_regionnuts_value'];
     } 
 
-	if (isset($_GET['field_dcpreceivingwater_value']) && array_key_exists($_GET['field_dcpreceivingwater_value'], $option['allrbd'])  && $_GET['field_dcpreceivingwater_value'] != 'All') {
-	  $filter['filter']['field_dcpreceivingwater_value'] = $_GET['field_dcpreceivingwater_value'];
+	if (isset($_GET['rbd']) && array_key_exists($_GET['rbd'], $option['allrbd'])  && $_GET['rbd'] != 'All') {
+	  $filter['filter']['rbd'] = $_GET['rbd'];
     }
 	
     if (isset($_GET['order']) && in_array($_GET['order'], $option['order'])) {
@@ -1755,7 +1765,8 @@ function uwwtd_get_form_filter($option)
 
 function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 {
-	// dsm($filter);
+     //For RBD data are already filtered
+     unset($filter['filter']['rbd']);
 //     dsm($forcefilter);
     //no need to treat annee, already filter by request
     if (isset($filter['filter']['field_anneedata_value'])) {
@@ -1916,7 +1927,7 @@ function uwwtd_page_agglomeration_connection($type_export = '')
 				'field_aggpercwithouttreatment_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggpercwithouttreatment_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_article17_agglo_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_article17_agglo_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			);
 	   }else{
 		   $list_field = array(
@@ -1926,7 +1937,7 @@ function uwwtd_page_agglomeration_connection($type_export = '')
 				'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_aggpercwithouttreatment_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggpercwithouttreatment_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 				);
 		}
 	}
@@ -2274,7 +2285,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
@@ -2290,7 +2301,7 @@ function uwwtd_page_uwwtps_compliance($type_export = '')
 				'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
 				'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 				'field_uwwbod5perf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwbod5perf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwcodperf_value'        => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcodperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
 				'field_uwwntotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwntotperf_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
@@ -2786,7 +2797,7 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
 				'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_article17_uwwtp_value'  			=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			);break;
 	   }else{
 		   $list_field = array(
@@ -2797,7 +2808,7 @@ function uwwtd_page_uwwtps_treatment($type_export = '')
 				'field_uwwnremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwnremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_uwwpremoval_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwpremoval_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			);
 	   }
 	}
@@ -3306,7 +3317,7 @@ function uwwtd_page_uwwtps_pressure($type_export = '')
 				'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 				'field_article17_uwwtp_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			);break;
 	   }else{
 		   $list_field = array(
@@ -3317,7 +3328,7 @@ function uwwtd_page_uwwtps_pressure($type_export = '')
 			'field_uwwndischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwndischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 			'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
 			'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-			'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+			'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			
 		);
 	   }
@@ -3737,7 +3748,6 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_agglomeration($filter['filter']);
-	// dsm($data);
    foreach($data as $art){
 	   // dsm($art);
 	  if(isset($art['field_article17_agglo_nid']) || ($art['field_article17_agglo_nid']!= '')){
@@ -3751,9 +3761,10 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				//'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_article17_agglo_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_article17_agglo_value'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 			);
-	   }else{
+	   }
+       else{
 		   $list_field = array(
 				'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
 				'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -3763,7 +3774,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
 				'field_aggart5compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart5compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				//'field_aggart6compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart6compliance_value'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
 				'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_regionnuts_value'], 'type' => 'selectregion', 'data' => $option['allnuts']),
-				'field_dcpreceivingwater_value' => array('title' => 'River Basin District', 'type' => 'select', 'data' => $option['allrbd']),
+				'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
 				);
 	   }
    }
@@ -3780,8 +3791,7 @@ function uwwtd_page_agglomeration_compliance($type_export = '')
         $filter_force['filter']['field_status_value'] = '1';
     }
 	// dsm($filter);
-    uwwtd_filter_data($filter, $data, $filter_force);
-//     dsm($data);        
+    uwwtd_filter_data($filter, $data, $filter_force);        
 //     uwwtd_filter_data($filter, $data);
     $header = array();
     $header_export = array();

@@ -3027,12 +3027,12 @@ function uwwtd_update_7126(&$context = null){
             $update = false;
             
             //===Change default path of theme
-            if(strpos($map->data['image_path'], "default_black")){
-                $map->data['image_path'] = str_replace('default_black', 'default_white', $map->data['image_path']);
+            if(strpos($map->data['image_path'], "default_dark")){
+                $map->data['image_path'] = str_replace('default_dark', 'default_white', $map->data['image_path']);
                 $update = true;
             }
-            if(strpos($map->data['css_path'], "default_black")){
-                $map->data['css_path'] = str_replace('default_black', 'default_white', $map->data['css_path']);
+            if(strpos($map->data['css_path'], "default_dark")){
+                $map->data['css_path'] = str_replace('default_dark', 'default_white', $map->data['css_path']);
                 $update = true;
             }
             
@@ -3124,6 +3124,11 @@ function uwwtd_update_7126(&$context = null){
             $map->data['layer_switcher']['oieau_nuts_2'] = 0;
             $map->data['layer_switcher']['oieau_nuts_3'] = 0;
             
+            
+            if($name=='agglomeration'){
+                $map->data['behaviors']['openlayers_plus_behavior_piechart']['fields_series']="field_aggc1|Collecting system|#00658e\r\nfield_aggc2|Individual and Appropriate Systems (IAS)|#00ced1\r\nfield_aggpercwithouttreatment|Discharge without treatment|#d93c3c";
+                
+            }
             
             //Update the map if needed
             //if($update){
