@@ -87,33 +87,36 @@
             }
             var wmslayers = [];
             var params;
+            var sublayers;
             // TODO check if all layers have same projection
             // TODO check if all layers are from same server
             for (layer in Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.layers) {
               if (wms_layers[layer].visibility && wms_layers[layer].displayInLayerSwitcher !== 0 && (wms_layers[layer].CLASS_NAME == "OpenLayers.Layer.WMS") && wms_layers[layer].isBaseLayer == false ) {
-                
-                params = {
-                    REQUEST: "GetFeatureInfo",
-                    BBOX: wms_layers[layer].getExtent().toBBOX(),
-                    I: Math.round(evt.xy.x),
-                    J: Math.round(evt.xy.y),
-                    INFO_FORMAT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_info_format, 
-                    QUERY_LAYERS: wms_layers[layer].params.LAYERS,
-                    LAYERS: wms_layers[layer].params.LAYERS,
-                    FEATURE_COUNT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_feature_count,
-                    CRS: wms_layers[layer].projection['projCode'],
-                    WIDTH: data.openlayers.size.w,
-                    HEIGHT: data.openlayers.size.h,
-					VERSION : '1.3.0',
-                    //Remove unwanted parameters
-                    FORMAT:null,
-                    SRS:null,
-                    TRANSPARENT:null,
-                    EXCEPTIONS: null,
-                    //LAYERS:null, ==> for mapserver we need this param
-                    STYLES:null
-                };
-                wmslayers.push(wms_layers[layer].getFullRequestString(params));
+                sublayers =  wms_layers[layer].params.LAYERS[0].split(',');
+                for(l in sublayers){
+                    params = {
+                        REQUEST: "GetFeatureInfo",
+                        BBOX: wms_layers[layer].getExtent().toBBOX(),
+                        I: Math.round(evt.xy.x),
+                        J: Math.round(evt.xy.y),
+                        INFO_FORMAT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_info_format, 
+                        QUERY_LAYERS: sublayers[l],
+                        LAYERS: wms_layers[layer].params.LAYERS,
+                        FEATURE_COUNT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_feature_count,
+                        CRS: wms_layers[layer].projection['projCode'],
+                        WIDTH: data.openlayers.size.w,
+                        HEIGHT: data.openlayers.size.h,
+                        VERSION : '1.3.0',
+                        //Remove unwanted parameters
+                        FORMAT:null,
+                        SRS:null,
+                        TRANSPARENT:null,
+                        EXCEPTIONS: null,
+                        //LAYERS:null, ==> for mapserver we need this param
+                        STYLES:null
+                    };
+                    wmslayers.push(wms_layers[layer].getFullRequestString(params));
+                }
               }
             }
             

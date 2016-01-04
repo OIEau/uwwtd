@@ -2987,12 +2987,12 @@ function uwwtd_update_7126(&$context = null){
         $update = false;
         module_load_include('proxy.inc', 'proxy', 'includes/proxy');
         $proxy = variable_get('proxy_whitelist_domains', PROXY_WHITELIST_DOMAINS_DEFAULT);
-        $approved = _proxy_match_domain('water.discomap.eea.europa.eu', $proxy);
+        $approved = _proxy_match_domain('*.discomap.eea.europa.eu', $proxy);
         if (!$approved) {
             $update = true;
-            $proxy.="\n\rwater.discomap.eea.europa.eu";
+            $proxy.="\n\r*.discomap.eea.europa.eu";
         }
-        $approved = _proxy_match_domain('water.discomap.eea.europa.eu', $proxy);
+        $approved = _proxy_match_domain('*.discomap.eea.europa.eu', $proxy);
         if (!$approved) {
             $update = true;
             $proxy.="\n\rmaps.oieau.fr";
@@ -3005,37 +3005,139 @@ function uwwtd_update_7126(&$context = null){
         throw new DrupalUpdateException($msg);    
     }
     
-    //Add behavior to maps 
-    //Load the map preset 
-    if($preset = openlayers_map_load('waste_water_treatment_network_map', true)){
-        $update = false;
-        if(!isset($preset->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'])){
-            $preset->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'] = array(
-              'getfeatureinfo_usevisiblelayers' => 1,
-              'getfeatureinfo_layers' => 'google_satellite',
-              'getfeatureinfo_info_format' => 'application/geojson',
-              'getfeatureinfo_highlight' => 0,
-              'getfeatureinfo_htmlelement' => 'getfeatureinfo',
-              'getfeatureinfo_properties' => '',
-              'getfeatureinfo_feature_count' => '5',
-            );
-            $update = true;
-        }
-        if(!isset($preset->data['behaviors']['openlayers_behavior_wmsgetlegend'])){
-            $preset->data['behaviors']['openlayers_behavior_wmsgetlegend'] = array(
-                "getlegend_htmlelement"=>"div.openlayers-legends",
-            );
-            $update = true;
-        }
-        elseif($preset->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement']!="div.openlayers-legends"){
-            $preset->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement'] = "div.openlayers-legends";
-            $update = true;
-        }
-        if($update){
-            openlayers_map_save($preset);
-        }
-    }
     
+    //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'oieau_nuts.inc',
+        'oieau_rbd_rbdsu.inc',
+        'natura2000.inc',
+        'soe_monitoring_stations.inc'
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
+    
+    
+    //Change default theme, behaviors and add layers for all openlayers map
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            $update = false;
+            
+            //===Change default path of theme
+            if(strpos($map->data['image_path'], "default_black")){
+                $map->data['image_path'] = str_replace('default_black', 'default_white', $map->data['image_path']);
+                $update = true;
+            }
+            if(strpos($map->data['css_path'], "default_black")){
+                $map->data['css_path'] = str_replace('default_black', 'default_white', $map->data['css_path']);
+                $update = true;
+            }
+            
+            
+            //===Add behaviors
+            //wmsgetfeatureinfo
+            if(!isset($map->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'])){
+                $map->data['behaviors']['openlayers_behavior_wmsgetfeatureinfo'] = array(
+                  'getfeatureinfo_usevisiblelayers' => 1,
+                  'getfeatureinfo_layers' => 'google_satellite',
+                  'getfeatureinfo_info_format' => 'application/geojson',
+                  'getfeatureinfo_highlight' => 0,
+                  'getfeatureinfo_htmlelement' => 'getfeatureinfo',
+                  'getfeatureinfo_properties' => '',
+                  'getfeatureinfo_feature_count' => '5',
+                );
+                $update = true;
+            }
+            //wmsgetlegend
+            if(!isset($map->data['behaviors']['openlayers_behavior_wmsgetlegend'])){
+                $map->data['behaviors']['openlayers_behavior_wmsgetlegend'] = array(
+                    "getlegend_htmlelement"=>"div.openlayers-legends",
+                );
+                $update = true;
+            }
+            elseif($map->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement']!="div.openlayers-legends"){
+                $map->data['behaviors']['openlayers_behavior_wmsgetlegend']['getlegend_htmlelement'] = "div.openlayers-legends";
+                $update = true;
+            }
+            
+            
+            //mouseposition
+            if(!isset($map->data['behaviors']['openlayers_behavior_mouseposition'])){
+                $map->data['behaviors']['openlayers_behavior_mouseposition'] = array(
+                  'prefix' => 'Cursor position : ',
+                  'separator' => ', ',
+                  'suffix' => ' (EPSG:4326)',
+                  'numDigits' => '6',
+                  'emptyString' => '',
+                );
+                $update = true;
+            }
+            //permalink
+            if(!isset($map->data['behaviors']['openlayers_plus_behavior_permalink'])){
+                $map->data['behaviors']['openlayers_plus_behavior_permalink'] = array();
+                $update = true;
+            }
+            //scaleline
+            if(!isset($map->data['behaviors']['openlayers_behavior_scaleline'])){
+                $map->data['behaviors']['openlayers_behavior_scaleline'] = array();
+                $update = true;
+            }
+            
+            
+            
+            //===Add layers
+            //From http://discomap.eea.europa.eu/home.html
+            // need more ?
+            // ---> à creuser :  http://water.discomap.eea.europa.eu/arcgis/services/RiversLakesSoE/RiversAndLakes_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS
+            // http://water.discomap.eea.europa.eu/arcgis/services/RiversLakesSoE/WISE_SoE_RL_Quality_NitrateRivers_Dyna_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS
+            // http://water.discomap.eea.europa.eu/arcgis/services/RiversLakesSoE/WISE_SoE_RL_Quality_OrthophosphateRivers_Dyna_WM/MapServer/WMSServer?request=GetCapabilities&service=WMS
+            $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
+            foreach($new_layers as $layer=>$weight){
+                $map->data['layers'][$layer] = $layer;
+                $map->data['layer_weight'][$layer] = $weight;
+                $map->data['layer_styles'][$layer] = 0;
+                $map->data['layer_styles_select'][$layer] = 0;
+                $map->data['layer_styles_temporary'][$layer] = 0;
+                $map->data['layer_activated'][$layer] = 0;
+                $map->data['layer_switcher'][$layer] = $layer;
+                $update = true;
+            }
+            $map->data['layers']['openlayers_geojson_picture_this'] = 0;
+            $map->data['layers']['geofield_formatter'] = 0;
+            $map->data['layers']['openlayers_kml_example'] = 0;
+            
+            
+            $map->data['layers']['oieau_rbd'] = 0;
+            $map->data['layers']['oieau_rbdsu'] = 0;
+            $map->data['layers']['oieau_nuts_0'] = 0;
+            $map->data['layers']['oieau_nuts_1'] = 0;
+            $map->data['layers']['oieau_nuts_2'] = 0;
+            $map->data['layers']['oieau_nuts_3'] = 0;
+            
+            $map->data['layer_switcher']['oieau_rbd'] = 0;
+            $map->data['layer_switcher']['oieau_rbdsu'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_0'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_1'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_2'] = 0;
+            $map->data['layer_switcher']['oieau_nuts_3'] = 0;
+            
+            
+            //Update the map if needed
+            //if($update){
+                openlayers_map_save($map);
+            //}
+            
+            
+            
+            
+            
+            
+            
+        }  
+    }
     
     ////////////////////////////////////////////////////////////////
     //end update
@@ -3183,6 +3285,11 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_rbd.inc',
         'oieau_rbdsu.inc',
         'bathing_water.inc',
+        'oieau_nuts.inc',
+        'oieau_rbd_rbdsu.inc',
+        'natura2000.inc',
+        'soe_monitoring_stations.inc'
+        
     ); 
     $list_style = array(
         'agglomerations_style.inc',
