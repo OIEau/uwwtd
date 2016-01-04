@@ -161,7 +161,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'uww_entering load  p. e.' => $i++,
     
     'uww_capacity p. e.' => $i++,
-    'uww2_status' => $i++,
+//     'uww2_status' => $i++,
     //Previous UWWTP general info',
     'previous_reference year' => $i++,
     'previous_entering load p. e.' => $i++,
