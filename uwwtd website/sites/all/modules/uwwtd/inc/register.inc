@@ -584,7 +584,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering load  p. e.']]);
         
         $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_capacity p. e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
+//         $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_reference year'], $context['sandbox']['line'], $uwwtp[$ind['previous_reference year']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], $uwwtp[$ind['previous_entering load p. e.']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], $uwwtp[$ind['previous_capacity p. e.']]);
@@ -4840,44 +4840,51 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                 $context['sandbox']['uwwtpinfo_for_agglo'] &= $context['sandbox']['uwwtpinfo_for_agglo'];
 //             } 
 //             dsm($context['sandbox']['uwwtpinfo_for_agglo']);    
-            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] += $uwwtp[$induww['uww_entering load  p. e.']];
+            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] += $uwwtp[$induww['uww_capacity p. e.']];
             
             
             if ($uwwtp[$induww['art4_final']] == 'C') {          
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                            
+//                 dsm($uww_aggcode);            
+//                 if ($uww_aggcode == 'CY11-Agglo' || $uww_aggcode == 'CY52-Agglo') {
+//                     dsm($uww_aggcode . '('.$uwwtp[$induww['generated load  p. e.']].'):'.$uwwtp[$induww['uww_code']] . '('.$uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']].'):');
+//                     dsm($context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']);
+//                     dsm($context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']);
+//                 }                            
             }
             if ($uwwtp[$induww['art4_final']] == 'NC') {              
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']]; 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 
                 //(entering load for all stations with compliance article 4 =NC))            
-                $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_notreatment_nb']++;                             
             }
             if ($uwwtp[$induww['art4_final']] == 'NR') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']];  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             
             if ($uwwtp[$induww['art4_final']] == 'NI') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']];  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             
             if ($uwwtp[$induww['art4_final']] == 'PD') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']];  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             
             if ($uwwtp[$induww['art4_final']] == '?') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      += $uwwtp[$induww['uww_entering load  p. e.']];  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }                                    
@@ -4885,7 +4892,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             //Secondary: installed?
             if ($uwwtp[$induww['Secondary: installed?']] == '1') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_installed'] = 1;  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_percent'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                                     
             }   
@@ -4893,7 +4900,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             if ($uwwtp[$induww['Secondary:  monitoring passed?']] == '1') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_passed'] = 1;  
                  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_percent'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                  
             }                               
@@ -4902,7 +4909,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             if ($uwwtp[$induww['More stringent:  installed?']] == '1') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_installed'] = 1;  
                  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_percent'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];         
             }   
@@ -4910,7 +4917,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             if ($uwwtp[$induww['More stringent: monitoring passed?']] == '1') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_passed'] = 1;  
                  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                   
             }
@@ -4920,22 +4927,22 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             }   
             
             if ($uwwtp[$induww['art4_treatment']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art4_monitoring']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             } 
             if ($uwwtp[$induww['art5_treatment']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering load  p. e.']]; 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art5_monitoring']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering load  p. e.']]; 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }  
@@ -4945,14 +4952,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 //5a
                 if ($uwwtp[$induww['art5_final']] == 'C' && 
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 }
                 
                 if ($uwwtp[$induww['art5_final']] == 'NC' && 
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                                 
@@ -4962,7 +4969,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 
                 if (($uwwtp[$induww['art5_final']] == 'NR') && 
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 } 
@@ -4970,14 +4977,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 //5b
                 if ($uwwtp[$induww['art5_final']] == 'C' && 
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 }
                 
                 if ($uwwtp[$induww['art5_final']] == 'NC' && 
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                                 
@@ -4986,7 +4993,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 
                 if (($uwwtp[$induww['art5_final']] == 'NR') && 
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 }
@@ -4994,14 +5001,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 //5c
                 if ($uwwtp[$induww['art5_final']] == 'C' && 
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 }
                 
                 if ($uwwtp[$induww['art5_final']] == 'NC' && 
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                                 
@@ -5010,20 +5017,20 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 
                 if (($uwwtp[$induww['art5_final']] == 'NR') && 
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];     
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%']  = 
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
                 } 
                 
                 //5
                 if ($uwwtp[$induww['art5_final']] == 'C') {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }                                                                                              
                 if ($uwwtp[$induww['art5_final']] == 'NC') {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }                                                                              
                 if ($uwwtp[$induww['art5_final']] == 'NR') {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe']  += $uwwtp[$induww['uww_entering load  p. e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
                 
                 
@@ -5046,7 +5053,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             dsm($uwwtp[$induww['treatment type in place (4)']]);
 //             dsm($treatmenttypeinplace_tmp);            
             if ($uwwtp[$induww['treatment type in place (4)']] == '1') {            
-                $context['results']['uwwtp_p_as_max_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_p_as_max_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_p_as_max_nb']++;
             } 
             if (isset($treatmenttypeinplace_tmp['2'])
@@ -5055,7 +5062,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 && !isset($treatmenttypeinplace_tmp['3other'])
                 ) {         
-                $context['results']['uwwtp_s_as_max_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_s_as_max_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_s_as_max_nb']++;
             }
             if (isset($treatmenttypeinplace_tmp['3N'])
@@ -5063,7 +5070,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')
                 ) {         
-                $context['results']['uwwtp_n_removal_without_p_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_n_removal_without_p_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_n_removal_without_p_nb']++;
             }
             if (isset($treatmenttypeinplace_tmp['3P'])
@@ -5071,7 +5078,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 &&( $uwwtp[$induww['Monitoring results -Ptot']]== 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')
                 ) {         
-                $context['results']['uwwtp_p_removal_without_n_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_p_removal_without_n_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_p_removal_without_n_nb']++;
             }
             if (isset($treatmenttypeinplace_tmp['3NP'])
@@ -5080,7 +5087,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')   
                 && ($uwwtp[$induww['Monitoring results -Ptot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')   
                 ) {            
-                $context['results']['uwwtp_np_removal_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_np_removal_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_np_removal_nb']++;
             }
             if (isset($treatmenttypeinplace_tmp['3other'])
@@ -5088,7 +5095,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3N'])
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 ) {           
-                $context['results']['uwwtp_other_morestringent_pe'] += $uwwtp[$induww['uww_entering load  p. e.']];
+                $context['results']['uwwtp_other_morestringent_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_other_morestringent_nb']++;
             }    
 //             }
@@ -5398,13 +5405,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             dsm($previousagg);
             $previous_aggcode =  $previousagg->field_inspireidlocalid['und'][0]['value'];
             $previous_gen = $previousagg->field_agggenerated['und'][0]['value'];
-            if ($previousagg->field_agggenerated['und'][0]['value'] == $agg->field_agggenerated['und'][0]['value']) {
-                $previous_percentage = '0';                
-            } elseif ($previousagg->field_agggenerated['und'][0]['value'] > $agg->field_agggenerated['und'][0]['value']) {
-                $previous_percentage = 100 - ($agg->field_agggenerated['und'][0]['value'] * 100 / $previousagg->field_agggenerated['und'][0]['value']);
-            } else { //<
-                $previous_percentage = -1 * (100 - ($previousagg->field_agggenerated['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']));
-            }                        
+            
+            $previous_percentage = (($agg->field_agggenerated['und'][0]['value'] / $previousagg->field_agggenerated['und'][0]['value']) - 1) * 100;
+            
+//             if ($previousagg->field_agggenerated['und'][0]['value'] == $agg->field_agggenerated['und'][0]['value']) {
+//                 $previous_percentage = '0';                
+//             } elseif ($previousagg->field_agggenerated['und'][0]['value'] > $agg->field_agggenerated['und'][0]['value']) {
+//                 $previous_percentage = 100 - ($agg->field_agggenerated['und'][0]['value'] * 100 / $previousagg->field_agggenerated['und'][0]['value']);
+//             } else { //<
+//                 $previous_percentage = -1 * (100 - ($previousagg->field_agggenerated['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']));
+//             }                        
         }            
         //'reported ?',
          $line[$ind['previous_reported_?']] = $previous_reported;
@@ -5907,37 +5917,38 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                  
             $context['sandbox'][$typestat]['generated_pe'] += $line[$ind['generated_load_p.e.']];
             $context['sandbox'][$typestat]['previous_generated_pe'] += $line[$ind['previous_gen._load_p.e.']];
-            $context['sandbox'][$typestat]['total_percent'] += $line[$ind['total_%_(2)']];
-            $context['sandbox'][$typestat]['collected_percent'] += $line[$ind['connected_to_collecting_system']];
+//             $context['sandbox'][$typestat]['total_percent'] += $line[$ind['total_%_(2)']];
+//             $context['sandbox'][$typestat]['collected_percent'] += $line[$ind['connected_to_collecting_system']];
             $context['sandbox'][$typestat]['collected_pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
-            $context['sandbox'][$typestat]['ias_percent'] += $line[$ind['addressed_through_ias_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['ias_percent'] += $line[$ind['addressed_through_ias_%_of_gen._load']];
             $context['sandbox'][$typestat]['ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
-            $context['sandbox'][$typestat]['not_collected_percent'] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['not_collected_percent'] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $context['sandbox'][$typestat]['not_collected_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
             
-            $context['sandbox'][$typestat]['distance_art3_percent'] += $line[$ind['dist_art3_%_of_gen._load_(3)']];
+//             $context['sandbox'][$typestat]['distance_art3_percent'] += $line[$ind['dist_art3_%_of_gen._load_(3)']];
             $context['sandbox'][$typestat]['distance_art3_pe'] += $line[$ind['dist_art3_in_p.e.']];
             
             $context['sandbox'][$typestat]['ratio_entering'] += $line[$ind['total_entering_load_p._e.']];
-            $context['sandbox'][$typestat]['ratio_connected_entering'] += $line[$ind['ratio_connected/enentering_%']];
+//             $context['sandbox'][$typestat]['ratio_connected_entering'] += $line[$ind['ratio_connected/enentering_%']];
             $context['sandbox'][$typestat]['ratio_capacity'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
-            $context['sandbox'][$typestat]['ratio_entering_capacity'] += $line[$ind['ratio_total_entering_load/total_design_capacity_%']];
+//             $context['sandbox'][$typestat]['ratio_entering_capacity'] += $line[$ind['ratio_total_entering_load/total_design_capacity_%']];
             
-            $context['sandbox'][$typestat]['art4_c_percent'] += $line[$ind['art4_compliant_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['art4_c_percent'] += $line[$ind['art4_compliant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_c_pe'] += $line[$ind['art4_compliant_p._e.']];
-            $context['sandbox'][$typestat]['art4_nc_percent'] += $line[$ind['art4_not_compliant_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['art4_nc_percent'] += $line[$ind['art4_not_compliant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_nc_pe'] += $line[$ind['art4_not_compliant']];
-            $context['sandbox'][$typestat]['art4_nr_percent'] += $line[$ind['art4_not_relevant_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['art4_nr_percent'] += $line[$ind['art4_not_relevant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_nr_pe'] += $line[$ind['art4_not_relevant']];
             
-            $context['sandbox'][$typestat]['distance_art4_treatment_percent'] += $line[$ind['dist_art4_treat__%_of_connected_load']];
+//             $context['sandbox'][$typestat]['distance_art4_treatment_percent'] += $line[$ind['dist_art4_treat__%_of_connected_load']];
             $context['sandbox'][$typestat]['distance_art4_treatment_pe'] += $line[$ind['dist_art4_treat_in_p.e._(4)']];                           
-            $context['sandbox'][$typestat]['distance_art4_performance_percent'] += $line[$ind['dist_art4_perf_%_of_connected_load']];
+//             $context['sandbox'][$typestat]['distance_art4_performance_percent'] += $line[$ind['dist_art4_perf_%_of_connected_load']];
             $context['sandbox'][$typestat]['distance_art4_performance_pe'] += $line[$ind['dist_art4_perf_in_p.e._(5)']];
             
-            $context['sandbox'][$typestat]['distance_art5_treatment_percent'] += $line[$ind['distance_art5_treat_%_of_gen._load']];
+            
+//             $context['sandbox'][$typestat]['distance_art5_treatment_percent'] += $line[$ind['distance_art5_treat_%_of_gen._load']];
             $context['sandbox'][$typestat]['distance_art5_treatment_pe'] += $line[$ind['distance_art5_treat_in_p.e._(6)']];                        
-            $context['sandbox'][$typestat]['distance_art5_performance_percent'] += $line[$ind['distance_art5_perf_%_of_gen._load']];
+//             $context['sandbox'][$typestat]['distance_art5_performance_percent'] += $line[$ind['distance_art5_perf_%_of_gen._load']];
             $context['sandbox'][$typestat]['distance_art5_performance_pe'] += $line[$ind['distance_art5_perf_in_p.e._(7)']];
             
             $context['sandbox'][$typestat]['secondary_installed'] += $line[$ind['secondary_treatment_installed_(p._e.)']];
@@ -5953,7 +5964,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox'][$type_rca]['compliant_agglo'] = 0;
                 $context['sandbox'][$type_rca]['notcompliant_agglo'] = 0;
                 $context['sandbox'][$type_rca]['subjected_load']['generated'] = 0;
-                $context['sandbox'][$type_rca]['subjected_load']['collected'] = 0;
+                $context['sandbox'][$type_rca]['subjected_load']['collected'] = 0;                
                 $context['sandbox'][$type_rca]['compliant_load']['generated'] = 0;
                 $context['sandbox'][$type_rca]['compliant_load']['collected'] = 0;
                 $context['sandbox'][$type_rca]['notcompliant_load']['generated'] = 0;
@@ -5975,22 +5986,22 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             
             $context['sandbox'][$type_rca]['subjected_agglo']++;
             $context['sandbox'][$type_rca]['subjected_load']['generated'] += $line[$ind['generated_load_p.e.']];
-            $context['sandbox'][$type_rca]['subjected_load']['collected'] += $line[$ind['connected_to_collecting_system']];
+            $context['sandbox'][$type_rca]['subjected_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
                 
             if ($agg->field_aggcompliance['und'][0]['value'] == 'C') {
                 $context['sandbox'][$type_rca]['compliant_agglo']++;
                 $context['sandbox'][$type_rca]['compliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system']];             
+                $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];             
             }
             if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
                 $context['sandbox'][$type_rca]['notcompliant_agglo']++;
                 $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system']];           
+                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];           
             }   
             if ($pending_or_expired == 'PD') {
                 $context['sandbox'][$type_rca]['exempted']++;
                 $context['sandbox'][$type_rca]['exempted_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system']];           
+                $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];           
             }         
         }  
         
@@ -6073,33 +6084,69 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         foreach ($listtypestat as $typestat) {
             ${$typestat}[$ind['generated_load_p.e.']] = $context['sandbox'][$typestat]['generated_pe'] ;
             ${$typestat}[$ind['previous_gen._load_p.e.']] = $context['sandbox'][$typestat]['previous_generated_pe'] ;
-            ${$typestat}[$ind['total_%_(2)']] = $context['sandbox'][$typestat]['total_percent'] ;
-            ${$typestat}[$ind['connected_to_collecting_system']] = $context['sandbox'][$typestat]['collected_percent'] ;
+            
+//             ${$typestat}[$ind['total_%_(2)']] = $context['sandbox'][$typestat]['total_percent'] ;
+            
+            ${$typestat}[$ind['total_%_(2)']] = ($context['sandbox'][$typestat]['collected_pe'] + $context['sandbox'][$typestat]['ias_pe'] + $context['sandbox'][$typestat]['not_collected_pe']) * 100 / $context['sandbox'][$typestat]['generated_pe']; 
+            
+//             ${$typestat}[$ind['connected_to_collecting_system']] = $context['sandbox'][$typestat]['collected_percent'] ;
+            ${$typestat}[$ind['connected_to_collecting_system']] = $context['sandbox'][$typestat]['collected_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
+            
             ${$typestat}[$ind['connected_to_collecting_system_p._e.']] = $context['sandbox'][$typestat]['collected_pe'] ;
-            ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['ias_percent'] ;
+            
+//             ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['ias_percent'] ;
+            ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] =  $context['sandbox'][$typestat]['ias_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
+            
             ${$typestat}[$ind['addressed_through_ias_p._e.']] = $context['sandbox'][$typestat]['ias_pe'] ;
-            ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_percent'] ;
+            
+//             ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_percent'] ;
+            ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
+            
             ${$typestat}[$ind['neither_collecting_system_nor_ias_p._e.']] = $context['sandbox'][$typestat]['not_collected_pe'] ;
-            ${$typestat}[$ind['dist_art3_%_of_gen._load_(3)']] = $context['sandbox'][$typestat]['distance_art3_percent'] ;
+            
+//             ${$typestat}[$ind['dist_art3_%_of_gen._load_(3)']] = $context['sandbox'][$typestat]['distance_art3_percent'] ;
+            ${$typestat}[$ind['dist_art3_%_of_gen._load_(3)']] = ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            
             ${$typestat}[$ind['dist_art3_in_p.e.']] = $context['sandbox'][$typestat]['distance_art3_pe']         ;
+
             ${$typestat}[$ind['total_entering_load_p._e.']] = $context['sandbox'][$typestat]['ratio_entering'] ;
-            ${$typestat}[$ind['ratio_connected/enentering_%']] = $context['sandbox'][$typestat]['ratio_connected_entering'] ;
+//             ${$typestat}[$ind['ratio_connected/enentering_%']] = $context['sandbox'][$typestat]['ratio_connected_entering'] ;
+            //$line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['connected_to_collecting_system_p._e.']];
+            ${$typestat}[$ind['ratio_connected/enentering_%']] = ${$typestat}[$ind['total_entering_load_p._e.']] * 100 / ${$typestat}[$ind['connected_to_collecting_system_p._e.']];
+            
             ${$typestat}[$ind['total_treatment_plant_design_capacity_p._e.']] = $context['sandbox'][$typestat]['ratio_capacity'] ;
-            ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] = $context['sandbox'][$typestat]['ratio_entering_capacity'] ;
-            ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_percent'] ;
+//             ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] = $context['sandbox'][$typestat]['ratio_entering_capacity'] ;
+            //$line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['total_treatment_plant_design_capacity_p._e.']];
+            ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] =  ${$typestat}[$ind['total_entering_load_p._e.']] * 100 / ${$typestat}[$ind['total_treatment_plant_design_capacity_p._e.']]; 
+
+//             ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_percent'] ;
+            ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
             ${$typestat}[$ind['art4_compliant_p._e.']] = $context['sandbox'][$typestat]['art4_c_pe']  ;
-            ${$typestat}[$ind['art4_not_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nc_percent'] ;
+            
+//             ${$typestat}[$ind['art4_not_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nc_percent'] ;
+            ${$typestat}[$ind['art4_not_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nc_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['art4_not_compliant']] = $context['sandbox'][$typestat]['art4_nc_pe'] ;
-            ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_percent'] ;
+            
+//             ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_percent'] ;
+            ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe']; 
             ${$typestat}[$ind['art4_not_relevant']] = $context['sandbox'][$typestat]['art4_nr_pe'] ;
-            ${$typestat}[$ind['dist_art4_treat__%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_treatment_percent'] ;
+            
+//             ${$typestat}[$ind['dist_art4_treat__%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_treatment_percent'] ;
+            ${$typestat}[$ind['dist_art4_treat__%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_treatment_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['dist_art4_treat_in_p.e._(4)']] = $context['sandbox'][$typestat]['distance_art4_treatment_pe'];
-            ${$typestat}[$ind['dist_art4_perf_%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_performance_percent'] ;
+            
+//             ${$typestat}[$ind['dist_art4_perf_%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_performance_percent'] ;
+            ${$typestat}[$ind['dist_art4_perf_%_of_connected_load']] =   $context['sandbox'][$typestat]['distance_art4_performance_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['dist_art4_perf_in_p.e._(5)']] = $context['sandbox'][$typestat]['distance_art4_performance_pe'] ;
-            ${$typestat}[$ind['distance_art5_treat_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_treatment_percent'] ;
+            
+//             ${$typestat}[$ind['distance_art5_treat_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_treatment_percent'] ;
+            ${$typestat}[$ind['distance_art5_treat_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_treatment_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['distance_art5_treat_in_p.e._(6)']] = $context['sandbox'][$typestat]['distance_art5_treatment_pe'];
-            ${$typestat}[$ind['distance_art5_perf_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_performance_percent'] ;
+            
+//             ${$typestat}[$ind['distance_art5_perf_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_performance_percent'] ;
+            ${$typestat}[$ind['distance_art5_perf_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_performance_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['distance_art5_perf_in_p.e._(7)']] = $context['sandbox'][$typestat]['distance_art5_performance_pe']         ;
+            
             ${$typestat}[$ind['secondary_treatment_installed_(p._e.)']] = $context['sandbox'][$typestat]['secondary_installed'] ;
             ${$typestat}[$ind['monitoring_results_f._secondary_ok']] = $context['sandbox'][$typestat]['secondary_monitoring'] ;
             ${$typestat}[$ind['more_str._treatment_installed_(p._e.)']] = $context['sandbox'][$typestat]['morestringent_installed'] ;
@@ -6108,9 +6155,26 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             dsm($$typestat);
             for ($j = 1, $max = count($ind); $j < $max; $j++) {
                 if ('' !== (${$typestat}[$j])) {
+                    //here % col are added but recalculate after the loop
                     $totalline[$j] += ${$typestat}[$j];
                 }
-            }  
+            } 
+            //calcul the %
+            $totalline[$ind['total_%_(2)']] = ($totalline[$ind['connected_to_collecting_system_p._e.']] + $totalline[$ind['addressed_through_ias_p._e.']] + $totalline[$ind['neither_collecting_system_nor_ias_p._e.']]) * 100 / $totalline[$ind['generated_load_p.e.']];
+            
+            $totalline[$ind['connected_to_collecting_system']] = $totalline[$ind['connected_to_collecting_system_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
+            $totalline[$ind['addressed_through_ias_%_of_gen._load']] = $totalline[$ind['addressed_through_ias_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $totalline[$ind['neither_collecting_system_nor_ias_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['dist_art3_%_of_gen._load_(3)']] = $totalline[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            $totalline[$ind['ratio_connected/enentering_%']] = $totalline[$ind['total_entering_load_p._e.']] * 100 / $totalline[$ind['connected_to_collecting_system_p._e.']];
+            $totalline[$ind['ratio_total_entering_load/total_design_capacity_%']] = $totalline[$ind['total_entering_load_p._e.']] * 100 / $totalline[$ind['total_treatment_plant_design_capacity_p._e.']];
+            $totalline[$ind['art4_compliant_%_of_gen._load']] = $totalline[$ind['art4_compliant_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['art4_not_compliant_%_of_gen._load']] = $totalline[$ind['art4_not_compliant']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
+            $totalline[$ind['art4_not_relevant_%_of_gen._load']] = $totalline[$ind['art4_not_relevant']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['dist_art4_treat__%_of_connected_load']] = $totalline[$ind['dist_art4_treat_in_p.e._(4)']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['dist_art4_perf_%_of_connected_load']] = $totalline[$ind['dist_art4_perf_in_p.e._(5)']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['distance_art5_treat_%_of_gen._load']] = $totalline[$ind['distance_art5_treat_in_p.e._(6)']] * 100 / $totalline[$ind['generated_load_p.e.']];
+            $totalline[$ind['distance_art5_perf_%_of_gen._load']] = $totalline[$ind['distance_art5_perf_in_p.e._(7)']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
         }
         
 //         dsm($totalline);
@@ -6270,7 +6334,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['uww_entering this UWWTP % of gen. load'] => 'entering this UWWTP % of gen. load',
             $ind['uww_entering load  p. e.'] => 'entering load  p. e.',
             $ind['uww_capacity p. e.'] => 'capacity p. e.',
-            $ind['uww2_status'] => 'status',
+//             $ind['uww2_status'] => 'status',
             //Previous UWWTP general info',
             $ind['previous_reference year'] => 'reference year',
             $ind['previous_entering load p. e.'] => 'entering load p. e.',
@@ -6504,7 +6568,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'capacity p. e.',
             $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
             //'status', 
-            $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
+//             $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
             
             
             
@@ -6535,11 +6599,19 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //$previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
                 $previous_capacity_pe = $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'];
-                if (isset($line[$ind['uww_entering load  p. e.']])) {
-                    $previous_percentage_of_change_of_entering_load = $previous_entering_load_pe * 100 / $line[$ind['uww_entering load  p. e.']];
+                if (isset($line[$ind['uww_entering load  p. e.']]) && $previous_entering_load_pe > 0) {
+//                     $previous_percentage_of_change_of_entering_load = $previous_entering_load_pe * 100 / $line[$ind['uww_entering load  p. e.']];
+                    $previous_percentage_of_change_of_entering_load =  ($line[$ind['uww_entering load  p. e.']] -  $previous_entering_load_pe) / $previous_entering_load_pe * 100;
+                } else {
+                    $previous_percentage_of_change_of_entering_load = 'NI';
                 }
-                if (isset($line[$ind['uww_capacity p. e.']])) {
-                    $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
+                
+                if (isset($line[$ind['uww_capacity p. e.']]) && $previous_capacity_pe > 0) {
+//                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
+                    
+                    $previous_percentage_of_change_of_capacity = ($line[$ind['uww_capacity p. e.']] - $previous_capacity_pe) / $previous_capacity_pe* 100;
+                } else {
+                    $previous_percentage_of_change_of_capacity = 'NI';
                 }
 //                 unset($previousuwwtp);
 //                 unset($previousagglo_uwwtp);
@@ -7397,7 +7469,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             =IF(‘generated load’ <2000;
                 "NR"; ‘More stringent  - installed’ * ‘More stringent - monitoring passed’)
             */      
-            $morestringentfinal = ($morestringentinstalled == '1' && $morestringentpassed = '1' ? '1': '0');
+            $morestringentfinal = ($morestringentinstalled == '1' && $morestringentpassed == '1' ? '1': '0');
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentfinal = 'NR';
             }            
@@ -7408,56 +7480,153 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Volume of waste water treated m3/y']] = $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
             
             //'Incoming loads BOD-tot  t/y',       field_uwwbodincoming
-            $line[$ind['Incoming loads BOD-tot  t/y']] = $uwwtp->field_uwwbodincoming['und'][0]['value'];
-            $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
+            if (isset($uwwtp->field_uwwbodincoming['und'][0]['value'])) {
+                $line[$ind['Incoming loads BOD-tot  t/y']] = $uwwtp->field_uwwbodincoming['und'][0]['value'];
+                $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
+            } else {
+                $line[$ind['Incoming loads BOD-tot  t/y']] = 0;
+            }
+            
             //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge 
-            $line[$ind['Discharged loads BOD-tot  t/y']] = $uwwtp->field_uwwboddischarge['und'][0]['value'];
-            $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
+            if (isset($uwwtp->field_uwwboddischarge['und'][0]['value'])) {
+                $line[$ind['Discharged loads BOD-tot  t/y']] = $uwwtp->field_uwwboddischarge['und'][0]['value'];
+                $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
+            } else {
+                $line[$ind['Discharged loads BOD-tot  t/y']] = 0;
+            }
+                        
             //'BOD rate of removal %',      round(((1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100), 2)
-            $line[$ind['BOD rate of removal %']] = (1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100;
-            //'average Incoming concentration BOD mg/l', ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;  
-            $line[$ind['average Incoming concentration BOD mg/l']] = ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($uwwtp->field_uwwboddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwbodincoming['und'][0]['value'] > 0) {
+                $line[$ind['BOD rate of removal %']] = (1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100;
+            } else {
+                $line[$ind['BOD rate of removal %']] = '';
+            }
+            
+            //'average Incoming concentration BOD mg/l', ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+            if (isset($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {  
+                $line[$ind['average Incoming concentration BOD mg/l']] = ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Incoming concentration BOD mg/l']] = '';
+            }
+            
             //'average Discharge concentration BOD mg/l', ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            $line[$ind['average Discharge concentration BOD mg/l']] = ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if (isset($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration BOD mg/l']] = ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Discharge concentration BOD mg/l']] = '';
+            }
 
             //'Incoming cocentration COD-tot   t/y',   field_uwwcodincoming
-            $line[$ind['Incoming cocentration COD-tot   t/y']] = $uwwtp->field_uwwcodincoming['und'][0]['value'];
-            $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming cocentration COD-tot   t/y']];
+            if (isset($uwwtp->field_uwwcodincoming['und'][0]['value'])) {
+                $line[$ind['Incoming cocentration COD-tot   t/y']] = $uwwtp->field_uwwcodincoming['und'][0]['value'];
+                $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming cocentration COD-tot   t/y']];
+            } else {
+                $line[$ind['Incoming cocentration COD-tot   t/y']] = 0;
+            }
+            
             //'Discharged concentration COD-tot  t/y',    field_uwwcoddischarge
-            $line[$ind['Discharged concentration COD-tot  t/y']] = $uwwtp->field_uwwcoddischarge['und'][0]['value'];
-            $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
+            if (isset($uwwtp->field_uwwcoddischarge['und'][0]['value'])) {
+                $line[$ind['Discharged concentration COD-tot  t/y']] = $uwwtp->field_uwwcoddischarge['und'][0]['value'];
+                $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
+            } else {
+                $line[$ind['Discharged concentration COD-tot  t/y']] = '';
+            }
+            
             //'COD rate of removal %',   round(( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%'
-            $line[$ind['COD rate of removal %']] =  ( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100);
+            if ($uwwtp->field_uwwcoddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwcodincoming['und'][0]['value'] > 0) {
+                $line[$ind['COD rate of removal %']] =  ( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100);
+            } else {
+                $line[$ind['COD rate of removal %']] = '';
+            }            
+            
             //'average Incoming concentration COD mg/l',  ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000; 
-            $line[$ind['average Incoming concentration COD mg/l']] = ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if (isset($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration COD mg/l']] = ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Incoming concentration COD mg/l']] = '';
+            }
+            
             //'average Discharge concentration COD mg/l',  ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            $line[$ind['average Discharge concentration COD mg/l']] = ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-
+            if (isset($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration COD mg/l']] = ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Discharge concentration COD mg/l']] = '';
+            }
+            
             //'Incoming loads N-tot   t/y',   field_uwwnincoming
-            $line[$ind['Incoming loads N-tot   t/y']] = $uwwtp->field_uwwnincoming['und'][0]['value'];
-            $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
+            if (isset($uwwtp->field_uwwnincoming['und'][0]['value'])) {
+                $line[$ind['Incoming loads N-tot   t/y']] = $uwwtp->field_uwwnincoming['und'][0]['value'];
+                $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
+            } else {
+                $line[$ind['Incoming loads N-tot   t/y']] = '';
+            }
             //'Discharged loads N-tot  t/y',   field_uwwndischarge
-            $line[$ind['Discharged loads N-tot  t/y']] = $uwwtp->field_uwwndischarge['und'][0]['value'];
-            $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
+            if (isset($uwwtp->field_uwwndischarge['und'][0]['value'])) {
+                $line[$ind['Discharged loads N-tot  t/y']] = $uwwtp->field_uwwndischarge['und'][0]['value'];
+                $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
+            } else {
+                $line[$ind['Discharged loads N-tot  t/y']] = '';
+            }
+            
             //'N rate of removal %',   round(( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%'
-            $line[$ind['N rate of removal %']] = ( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100);
+            if ($uwwtp->field_uwwndischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwnincoming['und'][0]['value'] > 0) {
+                $line[$ind['N rate of removal %']] = ( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100);
+            } else {
+                $line[$ind['N rate of removal %']] = '';
+            }
+            
+                        
             //'average Incoming concentration N mg/l',         ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            $line[$ind['average Incoming concentration N mg/l']] = ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if (isset($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration N mg/l']] = ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Incoming concentration N mg/l']] = '';
+            }
+            
             //'average Discharge concentration N mg/l',    ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            $line[$ind['average Discharge concentration N mg/l']] = ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-
+            if (isset($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration N mg/l']] = ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Discharge concentration N mg/l']] = '';
+            }
+            
             //'Incoming cocentration P-tot   t/y',    field_uwwpincoming
-            $line[$ind['Incoming cocentration P-tot   t/y']] = $uwwtp->field_uwwpincoming['und'][0]['value'];
-            $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming cocentration P-tot   t/y']];
+            if (isset($uwwtp->field_uwwpincoming['und'][0]['value'])) {
+                $line[$ind['Incoming cocentration P-tot   t/y']] = $uwwtp->field_uwwpincoming['und'][0]['value'];
+                $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming cocentration P-tot   t/y']];
+            } else {
+                $line[$ind['Incoming cocentration P-tot   t/y']] = '';
+            }
+            
             //'Discharged concentration P-tot  t/y',    field_uwwpdischarge
-            $line[$ind['Discharged concentration P-tot  t/y']] = $uwwtp->field_uwwpdischarge['und'][0]['value'];
-            $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
+            if (isset($uwwtp->field_uwwpdischarge['und'][0]['value'])) {
+                $line[$ind['Discharged concentration P-tot  t/y']] = $uwwtp->field_uwwpdischarge['und'][0]['value'];
+                $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
+            } else {
+                $line[$ind['Discharged concentration P-tot  t/y']] = '';
+            }
+            
             //'P rate of removal %',   round(( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%'
-            $line[$ind['P rate of removal %']] = ( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100);
+            if ($uwwtp->field_uwwpdischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwpincoming['und'][0]['value'] > 0) {
+                $line[$ind['P rate of removal %']] = ( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100);
+            } else {
+                $line[$ind['P rate of removal %']] = '';
+            }
+            
+                        
             //'average Incoming concentration P mg/l',  ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            $line[$ind['average Incoming concentration P mg/l']] = ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-            //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000; 
-            $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if (isset($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration P mg/l']] = ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Incoming concentration P mg/l']] = '';
+            }
+            
+            //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
+            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) { 
+                $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            } else {
+                $line[$ind['average Discharge concentration P mg/l']] = '';
+            }
             
             //needed on next sheets :
             //here same test as in tpl node--uwwtp.tpl.php
@@ -7559,20 +7728,38 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         $line[$ind['uww_capacity p. e.']] = $context['sandbox']['expired']['capacity_pe'] + $context['sandbox']['pending']['capacity_pe'];
         $line[$ind['previous_entering load p. e.']] = $context['sandbox']['expired']['previous_entering_pe'] + $context['sandbox']['pending']['previous_entering_pe'];
         $line[$ind['previous_capacity p. e.']] = $context['sandbox']['expired']['previous_capacity_pe'] + $context['sandbox']['pending']['previous_capacity_pe'];
-        $line[$ind['previous_Percentage of change of entering load (1) %']] = 
-            (($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
-
-        if ($line[$ind['previous_Percentage of change of entering load (1) %']] == -100) {
-            $line[$ind['previous_Percentage of change of entering load (1) %']] = '0';
+        
+//         $previous_percentage_of_change_of_entering_load =  
+//             ($line[$ind['uww_entering load  p. e.']] -  $previous_entering_load_pe) 
+//             / $previous_entering_load_pe * 100;    
+    
+        if ($line[$ind['uww_entering load  p. e.']] > 0 && $line[$ind['previous_entering load p. e.']] > 0) {
+            $line[$ind['previous_Percentage of change of entering load (1) %']] = 
+                //(($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;           
+                ($line[$ind['uww_entering load  p. e.']] - $line[$ind['previous_entering load p. e.']]) / $line[$ind['previous_entering load p. e.']] * 100;
+        } else {
+            $line[$ind['previous_Percentage of change of entering load (1) %']] = 'NI';
         }
+        
+//         if ($line[$ind['previous_Percentage of change of entering load (1) %']] == -100) {
+//             $line[$ind['previous_Percentage of change of entering load (1) %']] = '0';
+//         }
 
-        $line[$ind['previous_Percentage of change of capacity (2) %']] = 
-                    (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;        
+
+        if ($line[$ind['previous_capacity p. e.']] > 0 && $line[$ind['uww_capacity p. e.']] > 0) {
+    //                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];            
+            $line[$ind['previous_Percentage of change of capacity (2) %']] = ($line[$ind['uww_capacity p. e.']] - $line[$ind['previous_capacity p. e.']]) / $line[$ind['previous_capacity p. e.']]* 100;
+        } else {
+            $line[$ind['previous_Percentage of change of capacity (2) %']] = 'NI';
+        }
+        
+//         $line[$ind['previous_Percentage of change of capacity (2) %']] = 
+//                     (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;        
 //         );
 
-        if ($line[$ind['previous_Percentage of change of capacity (2) %']] == -100) {
-            $line[$ind['previous_Percentage of change of capacity (2) %']] = '0';
-        }
+//         if ($line[$ind['previous_Percentage of change of capacity (2) %']] == -100) {
+//             $line[$ind['previous_Percentage of change of capacity (2) %']] = '0';
+//         }
         
         fputcsv($r, $line, ';');
             
