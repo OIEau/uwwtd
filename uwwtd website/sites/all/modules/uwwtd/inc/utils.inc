@@ -1237,7 +1237,7 @@ function uwwtd_get_array_from_conf($value){
     $lines = explode("\n", $value);
 //     dsm($lines);
     foreach($lines as $line){
-        dsm($line);
+        //dsm($line);
         $result[] = trim($line);
     }
 

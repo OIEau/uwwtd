@@ -68,49 +68,12 @@ function uwwtd_preprocess_field(&$variables){
   }
 
   // For booleans
-  if (
-    $variables['element']['#field_name'] == 'field_uwwprimarytreatment' ||
-    $variables['element']['#field_name'] == 'field_uwwsecondarytreatment' ||
-    $variables['element']['#field_name'] == 'field_uwwpremoval' ||
-    $variables['element']['#field_name'] == 'field_uwwnremoval' ||
-    $variables['element']['#field_name'] == 'field_uwwuv' ||
-    $variables['element']['#field_name'] == 'field_uwwchlorination' ||
-    $variables['element']['#field_name'] == 'field_uwwozonation' ||
-    $variables['element']['#field_name'] == 'field_uwwsandfiltration' ||
-    $variables['element']['#field_name'] == 'field_uwwmicrofiltration' ||
-    $variables['element']['#field_name'] == 'field_uwwothertreat' ||
-    $variables['element']['#field_name'] == 'field_uwwaccidents' ||
-    $variables['element']['#field_name'] == 'field_dcpsurfacewaters' ||
-    $variables['element']['#field_name'] == 'field_aggcritb' ||
-    $variables['element']['#field_name'] == 'field_aggcritca' ||
-    $variables['element']['#field_name'] == 'field_aggcritcb' ||
-    $variables['element']['#field_name'] == 'field_aggchanges' ||
-    $variables['element']['#field_name'] == 'field_aggbesttechnicalknowledge' ||
-    $variables['element']['#field_name'] == 'field_agghaveregistrationsystem' ||
-    $variables['element']['#field_name'] == 'field_aggexistmaintenanceplan' ||
-    $variables['element']['#field_name'] == 'field_aggpressuretest' ||
-    $variables['element']['#field_name'] == 'field_aggvideoinspections' ||
-    $variables['element']['#field_name'] == 'field_aggothermeasures' ||
-    $variables['element']['#field_name'] == 'field_aggaccoverflows' ||
-    $variables['element']['#field_name'] == 'field_aggcapacity' ||
-    $variables['element']['#field_name'] == 'field_agg_dilution_rates' ||
-    $variables['element']['#field_name'] == 'field_rcaanitro' ||
-    $variables['element']['#field_name'] == 'field_rcaaphos' ||
-    $variables['element']['#field_name'] == 'field_rcab' ||
-    $variables['element']['#field_name'] == 'field_rcac' ||
-    $variables['element']['#field_name'] == 'field_rcamorphology' ||
-    $variables['element']['#field_name'] == 'field_rcahydrologie' ||
-    $variables['element']['#field_name'] == 'field_rcahydraulic' ||
-    $variables['element']['#field_name'] == 'field_rcaabsencerisk' ||
-    $variables['element']['#field_name'] == 'field_rca54applied' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_n' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_p' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_other' ||
-    $variables['element']['#field_name'] == 'field_rca52applied' ||
-    $variables['element']['#field_name'] == 'field_rca58applied'
-
-
-  ){
+  if (in_array($variables['element']['#field_name'], array(
+        'field_uwwprimarytreatment','field_uwwsecondarytreatment','field_uwwpremoval','field_uwwnremoval','field_uwwuv','field_uwwchlorination','field_uwwozonation','field_uwwsandfiltration','field_uwwmicrofiltration','field_uwwothertreat','field_uwwaccidents',
+        'field_dcpsurfacewaters',
+        'field_aggcritb','field_aggcritca','field_aggcritcb','field_aggchanges','field_aggbesttechnicalknowledge','field_agghaveregistrationsystem','field_aggexistmaintenanceplan','field_aggpressuretest','field_aggvideoinspections','field_aggothermeasures','field_aggaccoverflows','field_aggcapacity','field_agg_dilution_rates',
+        'field_rcaanitro','field_rcaaphos','field_rcab','field_rcac','field_rcamorphology','field_rcahydrologie','field_rcahydraulic','field_rcaabsencerisk','field_rca54applied','field_rca_parameter_n','field_rca_parameter_p','field_rca_parameter_other','field_rca52applied','field_rca58applied'
+    ))){
     //check for custom tooltips
     $tt = '';
     $field_info = field_info_field($variables['element']['#field_name']);
@@ -119,29 +82,18 @@ function uwwtd_preprocess_field(&$variables){
     }
 
     if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(base_path().path_to_theme().'/images/tick.png'). '"/>';
     }
     elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/cross.png" />';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(base_path().path_to_theme().'/images/cross.png'). '"/>';
     }
   }
 
   // For percentage '%'
-  if (
-
-    $variables['element']['#field_name'] == 'field_aggc1' ||
-    $variables['element']['#field_name'] == 'field_aggc2' ||
-    $variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
-
-
+  if (in_array($variables['element']['#field_name'], array('field_aggc1','field_aggc2','field_aggpercwithouttreatment','field_aggpercprimtreatment','field_aggpercsectreatment','field_aggpercstringenttreatment'))
+       && $variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>'
   ){
-        if ($variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>') {
-      $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
-        }
-//         dsm($variables);
+    $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
   }
 
 //     if ($variables['element']['#field_name'] == 'field_aggc1' ||
@@ -152,44 +104,35 @@ function uwwtd_preprocess_field(&$variables){
 //     }
 
   // For compliance colors
-  if (
-    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
-    $variables['element']['#field_name'] == 'field_aggcompliance' ||
-    $variables['element']['#field_name'] == 'field_uwwcompliance'
-  ){
+  if (in_array($variables['element']['#field_name'], array('field_aggart3compliance','field_aggart4compliance','field_aggart5compliance','field_aggart6compliance','field_aggcompliance','field_uwwcompliance'))){
 //         dsm($variables['element']);
         //override PD and QC value, we don't want to display QC and PD (for now)
+        /* This function disable the tooltips ===> why*/
         if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ])) {
             $variables['element']['#items']['0']['value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ];
             $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][ $variables['element']['#items']['0']['value'] ];
-            $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
+            //We need to keep the tooltip.
+            if($pos = strpos($variables['items']['0']['#markup'], '</div>')){
+                $variables['items']['0']['#markup'] = substr($variables['items']['0']['#markup'],0,$pos+6) .$variables['element']['0']['#markup'];
+            }
+            else{
+                $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
+            }
+            
         }
-//         dsm($variables['element']);
+        
+        if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
+        if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
+        if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
+        if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
+        if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
+        if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
+        if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
+        if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
+
+        $variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
+
     }
-
-  // For compliance colors
-  if (
-    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
-    $variables['element']['#field_name'] == 'field_aggcompliance' ||
-    $variables['element']['#field_name'] == 'field_uwwcompliance'
-  ){
-    if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
-    if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
-    if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
-    if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
-    if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
-    if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
-    if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
-    if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
-
-    $variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
-  }
 }
 
 function uwwtd_timeline_output($node){
@@ -1689,31 +1632,25 @@ function uwwtd_piechart_agglonode($node, &$content){
     drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.extend/d3.extend.js");
     drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.tooltip/tooltip.js");
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-    
-// echo '<pre>';var_export($content);echo '</pre>';
-// echo '<pre>';var_export($content);echo '</pre>';
-// exit;
-// field_aggc1|Collective system|#74FFE0
-// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
-// field_aggpercwithouttreatment|Discharge without treatment|#C00000
+
     $aData = array();
     $aData[] = array(
         "value" => (float)$node->field_aggc1['und'][0]['value'],
-        "label" => $content['field_aggc1']['#title'],
-        "color" => '#74FFE0',
+        "label" => $GLOBALS['ms_level']['connection']['cs']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['cs']['color'],
         "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => (float)$node->field_aggc2['und'][0]['value'],
-        "label" => $content['field_aggc2']['#title'],
-        "color" => '#BD8842',
-        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
+        "label" => $GLOBALS['ms_level']['connection']['ias']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['ias']['color'],
+        "valueformat" =>  ($node->field_aggc2['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => (float)$node->field_aggpercwithouttreatment['und'][0]['value'],
-        "label" => $content['field_aggpercwithouttreatment']['#title'],
-        "color" => '#C00000',
-        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
+        "label" => $GLOBALS['ms_level']['connection']['wot']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['wot']['color'],
+        "valueformat" =>  ($node->field_aggpercwithouttreatment['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
     );
 
     return "

@@ -84,7 +84,7 @@
 			var attached = this.getAttribute("data-attached");
 		    var data = 'action=delete_error&id=' + id + '&attached=' + attached;
 
-		    console.log(data);
+		    //console.log(data);
 
 			request = $.ajax({
 				type: "post",

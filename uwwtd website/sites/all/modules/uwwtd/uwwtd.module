@@ -4623,7 +4623,7 @@ function uwwtd_get_national_stat_str($year){
 			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
 			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. " p.e. ";
 }
-
+//hook_wms_getlegend_alter
 function uwwtd_wms_getlegend_alter(&$result, &$url){
     parse_str($url['query'], $params);
     if($result!='' && !$url["processed"]){
@@ -4650,7 +4650,7 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
     }
     $url["processed"] = true;
 }
-
+//hook_wms_getfeatureinfo_alter
 function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     foreach($result as $layer=>$features){
         //Natura 2000
