@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined('UWWTD_CACHE_ACTIVE')) {
-    define('UWWTD_CACHE_ACTIVE', false);
+    define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
     define('DEBUG_ALGO', true);
@@ -183,7 +183,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'title'                                  =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'           =>  array('label'=>t('Identifier Code')),
     'field_agggenerated_value_format'        =>  array('label'=>t('Generated Load (p.e.)'), 'sort_field'=>'field_agggenerated_value', 'sort_mod'=>'numeric'),
-    'sum_uwwtp_format'                       =>  array('label'=>t('UWWTP capacity'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
+    'sum_uwwtp_format'                    =>  array('label'=>t('Total UWWTP capacity (p.e.)'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
     'n3nm'                                   =>  array('label'=>t('Region (NUTS)')),
     'rbd'                                    =>  array('label'=>t('RBD')),
     'field_aggcompliance_value_format'       =>  array('label'=>t('Global compliance'), 'sort_field'=>'field_aggcompliance_value'),
@@ -197,7 +197,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
     'title'                               =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'        =>  array('label'=>t('Identifier Code')),
     'field_agggenerated_value_format'            =>  array('label'=>t('Generated Load (p.e.)'), 'sort_field'=>'field_agggenerated_value', 'sort_mod'=>'numeric'),
-    'sum_uwwtp_format'                    =>  array('label'=>t('UWWTP capacity'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
+    'sum_uwwtp_format'                    =>  array('label'=>t('Total UWWTP capacity (p.e.)'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
     'n3nm'                                =>  array('label'=>t('Region (NUTS)')),
     'rbd'                                 =>  array('label'=>t('RBD')),
     'field_aggc1_value_format'                   =>  array('label'=>t('Collecting system (% of p.e.) '), 'sort_field'=>'field_aggc1_value', 'sort_mod'=>'numeric'),
