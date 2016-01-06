@@ -1817,8 +1817,9 @@ function uwwtd_table($vars) {
       // Format the table header:
       if (count($header)) {
       $output .=' <thead>';
+        $ts = tablesort_init($head);
           foreach($header as $number => $head){
-            $ts = tablesort_init($head);
+            
             // HTML requires that the thead tag has tr tags in it followed by tbody
             // tags. Using if clause to check and see if we have any rows and whether
             // the thead tag is already open
@@ -1826,10 +1827,10 @@ function uwwtd_table($vars) {
         
             //$output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
             foreach ($head as $cell) {
-              $cell = tablesort_header($cell, $head, $ts);
+              $cell = uwwtd_tablesort_header($cell, $head, $ts);
               $output .= _theme_table_cell($cell, TRUE);
             }
-       $output .='</tr>';
+            $output .='</tr>';
         }
             // Using ternary operator to close the tags based on whether or not there are rows
             $output .= (count($rows) ? " </thead>\n" : "</tr>\n");
@@ -1837,8 +1838,10 @@ function uwwtd_table($vars) {
       else {
         $ts = array();
       }
+    
+    }
     // One header row
-    }else{
+    else{
          // Format the table header:
       if (count($header)) {
         $ts = tablesort_init($header);
@@ -1846,7 +1849,7 @@ function uwwtd_table($vars) {
         // tags. Using ternary operator to check and see if we have any rows.
         $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
         foreach ($header as $cell) {
-          $cell = tablesort_header($cell, $header, $ts);
+          $cell = uwwtd_tablesort_header($cell, $header, $ts);
           $output .= _theme_table_cell($cell, TRUE);
         }
         // Using ternary operator to close the tags based on whether or not there are rows
@@ -1906,3 +1909,28 @@ function uwwtd_table($vars) {
   return $output;
 }
 
+function uwwtd_tablesort_header($cell, $header, $ts){
+  // Special formatting for the currently sorted column header.
+  if (is_array($cell) && isset($cell['field'])) {
+    //Manage the sort field
+    if(isset($cell['sorter'])) $order = $cell['sorter'];
+    elseif(isset($cell['field'])) $order = $cell['data'];
+    else $order = $cell['data'];
+    $title = t('sort by @s', array('@s' => $cell['data']));
+    if ($order == $ts['name'] || $order == $_REQUEST['order']) {
+      $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
+      $cell['class'][] = 'active';
+      $image = theme('tablesort_indicator', array('style' => $ts['sort']));
+    }
+    else {
+      // If the user clicks a different header, we want to sort ascending initially.
+      $ts['sort'] = 'asc';
+      $image = '';
+    }
+
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $order, 'sort_mod' => isset($cell['sort_mod'])?$cell['sort_mod']:'text')), 'html' => TRUE));
+
+    unset($cell['field'], $cell['sort']);
+  }
+  return $cell;
+}
