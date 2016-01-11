@@ -364,21 +364,23 @@ legend.panel-heading{
 	text-align: center;
 }
 
-.views-exposed-widget {
-font-size:13px;
+.views-exposed-form .views-exposed-widget {
+    font-size:12px;
+    max-width:90px;
 }
-.views-exposed-form .views-exposed-widget{float:left;padding:.1em 1em 0 0;}
+.views-exposed-form .views-exposed-widget{float:left;margin:3px 8px 0 0;padding:0;}
 .views-exposed-form label{
-	font-size: 13px;
+	font-size: 12px;
 	font-weight: normal;
-  color:#000000;
+    color:#000000;
+    max-width:89px;
 }
-.form-control {
-  padding: 3px 6x;
+.views-exposed-form .form-control {
+  padding: 3px 6px;
   font-size: 12px;
-  line-height: 16px;
-
- }
+  line-height: 14px;
+  max-width:89px;
+}
 
 /* ac 18/03/15 */
 span.bump{
@@ -986,3 +988,4 @@ div.ol-wms-content-popup table caption{
 div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     padding:3px;
 }
+

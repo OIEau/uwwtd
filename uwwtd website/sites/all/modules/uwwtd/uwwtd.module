@@ -4422,7 +4422,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
         elseif($url['host']=='maps.oieau.fr'){
             //NUTS
             if(substr($layer, 0,4)=='NUTS'){
-                $new_layer = t('Nomenclature des unités territoriales (NUTS)').' '.t('level').' '.substr($layer, -1);
+                $new_layer = t('Nomenclature des Unités Territoriales Statistiques (NUTS)').' '.t('level').' '.substr($layer, -1);
                 foreach($features as $feature){
                     $item = array(
                         "NUTS ID"=>$feature['NUTS_ID'],
@@ -4434,7 +4434,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
                 unset($result[$layer]);
             }
             elseif($layer=='RBD'){
-                $new_layer =t("River Bassin Districts (RBD)");
+                $new_layer =t("River Basin Districts (RBD)");
                 $keys = array("C_CD","EURBDCode","RBD_MS_CD","EUCD_RBD","RBDName","RBDNameNL","Internatio");
                 foreach($features as $feature){
                     $data[] = array_intersect_key($feature, array_flip($keys));

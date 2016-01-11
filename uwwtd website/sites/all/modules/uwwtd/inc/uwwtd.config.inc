@@ -214,7 +214,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
 	'field_physicalcapacityactivity_value_format'    =>  array('label'=>t('Physical Capacity (p.e.)'), 'sort_field'=>'field_physicalcapacityactivity_value', 'sort_mod'=>'numeric'),
     'n3nm'          =>  array('label'=>t('Region (NUTS)')),
     'rbd'          =>  array('label'=>t('RBD')),
-    'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment type in place')),
+    'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment in place')),
     'field_uwwcompliance_value_format'       =>  array('label'=>t('Compliance')),
     'field_uwwbod5perf_value_format'   =>  array('label'=>t('BOD5'), 'sort_field'=>'field_uwwbod5perf_value'),
     'field_uwwcodperf_value_format'   =>  array('label'=>t('COD'), 'sort_field'=>'field_uwwcodperf_value'),
