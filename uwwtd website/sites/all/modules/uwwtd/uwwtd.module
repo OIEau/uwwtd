@@ -232,7 +232,17 @@ function uwwtd_menu(){
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
-  );    
+  );
+
+  $items['sensitive_areas'] = array(
+    'title' => 'Sensitive areas',
+    'page callback' => 'uwwtd_sensitive_areas_page',
+    'access callback' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
     'page arguments' => array(),
@@ -755,6 +765,10 @@ function uwwtd_get_cache_key_agglomeration($option)
 {
     return 'data_agglomeration_' . $option['field_anneedata_value'];
 }
+function uwwtd_get_cache_key_sensitive_area($option)
+{
+    return 'data_sensitive_area_' . $option['field_anneedata_value'];
+}
 
 function uwwtd_get_cache_key_uwwtp($option)
 {
@@ -780,6 +794,10 @@ function uwwtd_is_user_anonymous()
 function uwwtd_get_cache_key_page_agglo_compliance($option)
 {
     return 'page_agglomeration_compliance_' . $option['field_anneedata_value'];
+}
+function uwwtd_get_cache_key_page_sensitive_area($option)
+{
+    return 'page_sensitive_area_' . $option['field_anneedata_value'];
 }
 
 function uwwtd_get_cache_key_page_agglo_treatment($option)
@@ -1734,11 +1752,13 @@ function uwwtd_get_form_filter($option)
         && isset($_GET['field_uwwpdischarge_value']['value'])
         && '' != ($_GET['field_uwwpdischarge_value']['value'] = trim($_GET['field_uwwpdischarge_value']['value']))
         && ctype_digit($_GET['field_uwwpdischarge_value']['value'])
-//         && !empty($_GET['field_uwwpdischarge_value']['value'])
         ) {
         $filter['filter']['field_uwwpdischarge_value_op'] = $_GET['field_uwwpdischarge_value_op'];
         $filter['filter']['field_uwwpdischarge_value']['value'] = (int)$_GET['field_uwwpdischarge_value']['value'];
     }
+    
+    
+    
 
 	if (isset($_GET['field_article17_uwwtp_value_art']) && in_array($_GET['field_article17_uwwtp_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
         && $_GET['field_article17_uwwtp_value_art'] != 'All') {
@@ -1758,7 +1778,44 @@ function uwwtd_get_form_filter($option)
 	  $filter['filter']['rbd'] = $_GET['rbd'];
     }
 	
-    $sort_options = array();
+    
+    //=======RCA
+    
+    if (isset($_GET['tot_design_capacity_op']) && in_array($_GET['tot_design_capacity_op'], array_keys($GLOBALS['uwwtd']['ui']['operator']))
+        && isset($_GET['tot_design_capacity']['value'])
+        && '' != ($_GET['tot_design_capacity']['value'] = trim($_GET['tot_design_capacity']['value']))
+        && ctype_digit($_GET['tot_design_capacity']['value'])
+        ) {
+        $filter['filter']['tot_design_capacity_op'] = $_GET['tot_design_capacity_op'];
+        $filter['filter']['tot_design_capacity']['value'] = (int)$_GET['tot_design_capacity']['value'];
+    }
+    if (isset($_GET['tot_entering_load_op']) && in_array($_GET['tot_entering_load_op'], array_keys($GLOBALS['uwwtd']['ui']['operator']))
+        && isset($_GET['tot_entering_load']['value'])
+        && '' != ($_GET['tot_entering_load']['value'] = trim($_GET['tot_entering_load']['value']))
+        && ctype_digit($_GET['tot_entering_load']['value'])
+        ) {
+        $filter['filter']['tot_entering_load_op'] = $_GET['tot_entering_load_op'];
+        $filter['filter']['tot_entering_load']['value'] = (int)$_GET['tot_entering_load']['value'];
+    }
+    if (isset($_GET['zonetype']) && array_key_exists($_GET['zonetype'], $option['zonetype'])  && $_GET['zonetype'] != 'All') {
+	  $filter['filter']['zonetype'] = $_GET['zonetype'];
+    }
+    
+    if (isset($_GET['rca52']) && in_array($_GET['rca52'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca52'] != 'All') {
+        $filter['filter']['rca52']['value'] = $_GET['rca52'];
+    }
+    if (isset($_GET['rca54']) && in_array($_GET['rca52'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca54'] != 'All') {
+        $filter['filter']['rca54']['value'] = $_GET['rca54'];
+    }
+    if (isset($_GET['rca58']) && in_array($_GET['rca58'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca58'] != 'All') {
+        $filter['filter']['rca58']['value'] = $_GET['rca58'];
+    }
+
+    
+    
     if(!empty($option['order'])){
         foreach($option['order'] as $k=>$v){
             
@@ -1859,6 +1916,10 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
                 }
             }
         }
+        
+        
+        //FIX ME : not just art 17
+        /*
 		if ($keepRow == true) {
 		 foreach($list_operator_field_art as $one_operator_art) {
 			if($one_operator_art['art']['value'] == 0){
@@ -1877,6 +1938,7 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
 			}
 		 }
 		}
+        */
         //treat force filter
         if ($keepRow == true) {
             if (!empty($forcefilter)) {
@@ -3989,6 +4051,7 @@ function uwwtd_get_url_path($type, $param = array())
         case 'agglomeration':
         case 'treatment-plant':
         case 'discharge-point':
+        case 'receiving-area':
             $path .= $type;
             foreach ($param as $value) {
                 $path.= '/' . $value;
