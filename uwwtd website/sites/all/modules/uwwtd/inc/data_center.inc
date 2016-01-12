@@ -5855,10 +5855,11 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
     foreach($listUwwtpCompliance as $uwwtp) {
-        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+        // BB - 12/01/2016 - Draft 10 of algo
+        // if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
             $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
-        }
+        // }
     }
             
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
@@ -5979,12 +5980,13 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
     foreach($listUwwtpCompliance as $uwwtp) {
-        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
-                                                    $GLOBALS['uwwtd_value']['inplace']['secondary'],
-                                                    $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+        // BB - 12/01/2016 - Draft 10
+        // if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
+                                                    //$GLOBALS['uwwtd_value']['inplace']['secondary'],
+                                                    //$GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
             $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
-        }
+        //}
     }
         
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
