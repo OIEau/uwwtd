@@ -3144,6 +3144,35 @@ function uwwtd_update_7126(&$context = null){
         }  
     }
     
+    
+    //add new openlayers style for RCA 
+    //$GLOBALS['uwwtd_value']['rcatype_color']
+    if(!empty($GLOBALS['uwwtd_value']['rcatype_color'])){
+        foreach($GLOBALS['uwwtd_value']['rcatype_color'] as $type=>$color){
+            $row['name'] ='rca_'.strtolower($type);
+            $row['title'] ='RCA '.$type;
+            $row['description'] = date('Y-m-d H:i:s');
+            $row['data'] = array(
+              'pointRadius' => 6,
+              'fillColor' => $color,
+              'strokeColor' => '#000000',
+              'strokeWidth' => 1,
+              'fillOpacity' => 0.9,
+              'strokeOpacity' => 0.9,
+              'strokeLinecap' => 'round',
+              'strokeDashstyle' => 'solid',
+              'graphicOpacity' => 1,
+              'labelAlign' => 'cm',
+            );
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_styles', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers style ' . $row['title'] . '('.$msgresult.')'."\n";
+            }
+        }
+    }
     ////////////////////////////////////////////////////////////////
     //end update
     variable_set('siif_eru_version', __FUNCTION__);

@@ -115,6 +115,15 @@ $GLOBALS['uwwtd_value']['rcatype_labels']=array(
     'A54'=>t('A54 Sensitive Area'),
     'A58'=>t('A58 Sensitive Area'),
 );
+$GLOBALS['uwwtd_value']['rcatype_color']=array(
+    'All' => "#aaaaaa",
+    'SA'=>"#ff0000",
+    'CSA'=>"#800080",
+    'LSA'=>"#ffdead",
+    'NA'=>"#4682b4",
+    'A54'=>"#ffff00",
+    'A58'=>"#9acd32",
+);
 
 
 
@@ -268,9 +277,9 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'title'                           =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
     'zonetype_format'=>array('label'=>t('Type of area')),
-    'rca52'=>array('label'=>t('Article 52 applied')),
-    'rca54'=>array('label'=>t('Article 54 applied')),
-    'rca58'=>array('label'=>t('Article 58 applied')),
+    'rca52_format'=>array('label'=>t('Article 52 applied')),
+    'rca54_format'=>array('label'=>t('Article 54 applied')),
+    'rca58_format'=>array('label'=>t('Article 58 applied')),
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),

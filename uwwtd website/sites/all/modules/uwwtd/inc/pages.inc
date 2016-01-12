@@ -39,6 +39,8 @@ function uwwtd_get_data_sensitive_areas($option){
             rca52.field_rca52applied_value as rca52,
             rca54.field_rca54applied_value as rca54,
             rca58.field_rca58applied_value as rca58,
+            st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+            st_area(st_transform(f_geo.the_geom, 3035)) area,
             COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
             SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
             SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
@@ -61,6 +63,9 @@ function uwwtd_get_data_sensitive_areas($option){
         LEFT join
             {field_data_field_rca58applied} rca58
                 ON n.nid = rca58.entity_id
+        LEFT JOIN 
+            {field_data_field_position_geo} f_geo 
+                ON n.nid = f_geo.entity_id
         LEFT join
             {field_data_field_linked_treatment_plants} uwwtp
                 ON n.nid = uwwtp.entity_id
@@ -70,7 +75,7 @@ function uwwtd_get_data_sensitive_areas($option){
         LEFT join
             {field_data_field_uwwloadenteringuwwtp} entering
                 ON uwwtp.field_linked_treatment_plants_nid = entering.entity_id
-                
+              
         WHERE n.type = :typenode
             AND f_annee.field_anneedata_value = :annee
         GROUP BY 
@@ -81,11 +86,12 @@ function uwwtd_get_data_sensitive_areas($option){
             zt.field_specialisedzonetype_value,
             rca52.field_rca52applied_value,
             rca54.field_rca54applied_value,
-            rca58.field_rca58applied_value
+            rca58.field_rca58applied_value,
+            f_geo.the_geom
         ORDER BY n.title
     ';
     
-    
+    // add rca state
     
     $param = array(
         ':typenode' => 'receiving_area',
@@ -105,8 +111,10 @@ function uwwtd_get_data_sensitive_areas($option){
             $row['tot_design_capacity_format'] =  ($row['tot_design_capacity']?uwwtd_format_number($row['tot_design_capacity']):'-');
             $row['tot_entering_load_format'] =  ($row['tot_entering_load']?uwwtd_format_number($row['tot_entering_load']):'-');
             $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
-            
-            
+            $row['rca52_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca52']];
+            $row['rca54_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca54']];
+            $row['rca58_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca58']];
+            $row['area_format'] =  ($row['area']?uwwtd_format_number($row['area']/1000000).' km²':'-');
             $data[] = $row;
         }
 		if($putincache){
@@ -137,9 +145,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    //$preset_name = 'agg_compliance_map';
-    //$preset = openlayers_preset_load($preset_name);
-    //$map    = openlayers_build_map($preset->data);
+    $preset_name = 'receiving_area_test';
+    $preset = openlayers_preset_load($preset_name);
+    $map    = openlayers_build_map($preset->data);
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_sensitive_area($filter['filter']);
@@ -160,9 +168,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
         'tot_design_capacity'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
         'tot_entering_load'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
-        'rca52'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-        'rca54'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
-        'rca58'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca52'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca54'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca58'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
         'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
     );
 // dsm($list_field);
@@ -192,28 +200,29 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     */
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['rca'], $data);
 //     dsm($data);
-/*
+
     $optionstyle = array();
     //get the color for the point
-    $optionstyle['color']['list'] = uwwtd_get_point_color_from_preset($preset);
-    $optionstyle['color']['field'] = 'field_aggcompliance_value_format';
+    $optionstyle['color']['list'] =$GLOBALS['uwwtd_value']['rcatype_color'];
+    $optionstyle['color']['field'] = 'zonetype';
     //get the size of the point
+/*
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
     $optionstyle['weight']['field'] = 'field_agggenerated_value';
-    $optionstyle['popup_title_type'] = 'agglomeration';
-	
+    
+*/	
+    $optionstyle['popup_title_type'] = 'receiving-area';
     $optionstyle['popup'] = array(
-        'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
-        'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
-        'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
-        'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
-//         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
-//         'field_aggc1_value' => array('label' => 'Collecting system'),
-//         'field_aggc2_value' => array('label' => 'Individual and Appropriate Systems (IAS)'),
-//         'field_aggpercwithouttreatment_value' => array('label' => 'Discharge without treatment'),
+        'field_inspireidlocalid_value' => array('label' => 'ID'),
+        'zonetype_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['zonetype_format']['label']),
+        'rca52_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label']),
+        'rca54_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label']),
+        'rca58_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label']),
+        'area_format' => array('label' => 'Area'),
+        'tot_design_capacity_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label']),
+        'tot_entering_load_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label']),
+
     );
-*/
 
     //todo format data in table
     $graph = array();
@@ -222,9 +231,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('receiving-area', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
             'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
             'zonetype_format'=>$row['zonetype_format'],
-            'rca52'=>$row['rca52'],
-            'rca54'=>$row['rca54'],
-            'rca58'=>$row['rca58'],
+            'rca52_format'=>$row['rca52_format'],
+            'rca54_format'=>$row['rca54_format'],
+            'rca58_format'=>$row['rca58_format'],
             'uwwtps'=>$row['uwwtps'],
             'tot_design_capacity_format'=>$row['tot_design_capacity_format'],
             'tot_entering_load_format'=>$row['tot_entering_load_format']
@@ -252,10 +261,10 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
     }
 
-
-    //$features['compliance_map'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-//     dsm($features);
-    //$rendermap = uwwtd_build_map($map, $features);
+    dsm($map);
+    $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    dsm($features);
+    $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
 

@@ -1345,9 +1345,16 @@ function uwwtd_get_data_dcp($option)
     return $data;
 }
 
-function uwwtd_build_feature($data, $option, &$returnvalue)
-{
-
+function uwwtd_build_feature($data, $option, &$returnvalue){
+    if(isset($data[0]['area'])){
+        $area = array();
+        foreach ($data as $key => $row)
+        {
+            $area[$key] = (float)$row['area'];
+        }
+        array_multisort($area, SORT_ASC, $data);
+        unset($area);
+    }
     $feature = array();
 //     dsm($option);
     $i = 0;
@@ -1407,7 +1414,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue)
                 'data' => $chart,
                 'piechartid' => 'pie_' .$i,
             ),
-            'style' => null,
+            'style' => null, //TODO to find the style name
             'wkt' => $row['wkt'],
         );
     }
