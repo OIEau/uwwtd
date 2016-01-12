@@ -8,7 +8,6 @@
 function uwwtd_get_data_sensitive_areas($option){
     //Note : Receving area = sensitive area
     
-    dsm($option);
     //        dsm(__FUNCTION__);
     $cache_name = uwwtd_get_cache_key_sensitive_area($option);
     //     dsm($cache_name);
@@ -181,7 +180,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         $filter_force['filter']['field_status_value'] = '1';
     }
     */
-	dsm($filter);
+	//dsm($filter);
     uwwtd_filter_data($filter, $data, $filter_force);        
 //     uwwtd_filter_data($filter, $data);
     

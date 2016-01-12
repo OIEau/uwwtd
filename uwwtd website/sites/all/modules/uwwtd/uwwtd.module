@@ -1801,17 +1801,17 @@ function uwwtd_get_form_filter($option)
 	  $filter['filter']['zonetype'] = $_GET['zonetype'];
     }
     
-    if (isset($_GET['rca52']) && in_array($_GET['rca52'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
-        && $_GET['rca52'] != 'All') {
-        $filter['filter']['rca52']['value'] = $_GET['rca52'];
+    if (isset($_GET['rca52_art']) && in_array($_GET['rca52_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca52_art'] != 'All') {
+        $filter['filter']['rca52_art']['value'] = $_GET['rca52_art'];
     }
-    if (isset($_GET['rca54']) && in_array($_GET['rca52'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
-        && $_GET['rca54'] != 'All') {
-        $filter['filter']['rca54']['value'] = $_GET['rca54'];
+    if (isset($_GET['rca54_art']) && in_array($_GET['rca52_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca54_art'] != 'All') {
+        $filter['filter']['rca54_art']['value'] = $_GET['rca54_art'];
     }
-    if (isset($_GET['rca58']) && in_array($_GET['rca58'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
-        && $_GET['rca58'] != 'All') {
-        $filter['filter']['rca58']['value'] = $_GET['rca58'];
+    if (isset($_GET['rca58_art']) && in_array($_GET['rca58_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
+        && $_GET['rca58_art'] != 'All') {
+        $filter['filter']['rca58_art']['value'] = $_GET['rca58_art'];
     }
 
     
@@ -1848,8 +1848,7 @@ function uwwtd_get_form_filter($option)
     return $filter;
 }
 
-function uwwtd_filter_data($filter, &$data, $forcefilter = array())
-{
+function uwwtd_filter_data($filter, &$data, $forcefilter = array()){
      //For RBD data are already filtered
      //unset($filter['filter']['rbd']);
 //     dsm($forcefilter);
@@ -1917,28 +1916,24 @@ function uwwtd_filter_data($filter, &$data, $forcefilter = array())
             }
         }
         
-        
-        //FIX ME : not just art 17
-        /*
+        //change nd@oieau.fr : not just art 17
 		if ($keepRow == true) {
 		 foreach($list_operator_field_art as $one_operator_art) {
 			if($one_operator_art['art']['value'] == 0){
-				if((isset($row['field_article17_agglo_value_format']) && $row['field_article17_agglo_value_format'] =="Yes" ) ||(isset($row['field_article17_uwwtp_value_format']) && $row['field_article17_uwwtp_value_format'] =="Yes")){
+				if((isset($row[$one_operator_art['field']]) && $row[$one_operator_art['field']] =="1" )){
 					$keepRow = false;
-//                     dsm(__LINE__);
 						break;
 				}
 			}
 			if($one_operator_art['art']['value'] == 1){
-				if((isset($row['field_article17_agglo_value_format']) && $row['field_article17_agglo_value_format'] =="No" ) ||(isset($row['field_article17_uwwtp_value_format']) && $row['field_article17_uwwtp_value_format'] =="No")){
+				if((isset($row[$one_operator_art['field']]) && $row[$one_operator_art['field']] =="0" )){
 					$keepRow = false;
-//                     dsm(__LINE__);
 						break;
 				}
 			}
 		 }
 		}
-        */
+        
         //treat force filter
         if ($keepRow == true) {
             if (!empty($forcefilter)) {
