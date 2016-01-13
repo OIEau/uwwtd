@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20151127_8.xlsx',
+    'model' => '2015_register_model_20160112_2.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
