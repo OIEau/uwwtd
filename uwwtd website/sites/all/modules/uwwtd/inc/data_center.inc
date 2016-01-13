@@ -5996,9 +5996,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
-    foreach($listUwwtpCompliance as $uwwtp) {
-
-    foreach($listUwwtpCompliance as $uwwtp) {        
+    foreach($listUwwtpCompliance as $uwwtp) {       
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
