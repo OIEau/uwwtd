@@ -1346,77 +1346,98 @@ function uwwtd_get_data_dcp($option)
 }
 
 function uwwtd_build_feature($data, $option, &$returnvalue){
+    
+    //Sort data by area
     if(isset($data[0]['area'])){
         $area = array();
         foreach ($data as $key => $row)
         {
             $area[$key] = (float)$row['area'];
         }
-        array_multisort($area, SORT_ASC, $data);
+        array_multisort($area, SORT_DESC, $data);
         unset($area);
     }
+    //Load openlayers styles 
+    $styles = openlayers_styles();
+    
+    
     $feature = array();
 //     dsm($option);
     $i = 0;
     $returnvalue = '';
     foreach($data as $row) {
-        $i++;
-        $description = '';
-        if (isset($option['popup'])) {
-            foreach($option['popup'] as $field => $detail) {
-                $description .= "  \n  <span class=\"views-field views-field-".$field."\">    <span class=\"views-label views-label-".$field."\">".$detail['label'].": </span>    <span class=\"field-content\">"
-                                . $row[$field] .
-                                "</span>  </span>";
+        if(isset($row['wkt'])){
+            $i++;
+            $description = '';
+            if (isset($option['popup'])) {
+                foreach($option['popup'] as $field => $detail) {
+                    $description .= "  \n  <span class=\"views-field views-field-".$field."\">    <span class=\"views-label views-label-".$field."\">".$detail['label'].": </span>    <span class=\"field-content\">"
+                                    . $row[$field] .
+                                    "</span>  </span>";
+                }
             }
-        }
 
-        $title = l($row['title'], uwwtd_get_url_path($option['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])), array('attributes'=>array('target'=>'_blank')));
-
-        $color = '#000000';
-        if (isset($option['color'])) {
-            $color = $option['color']['list'][$row[ $option['color']['field'] ]];
-        }
-
-        $weight = 1;
-        if (isset($option['weight'])) {
-           foreach($option['weight']['list'] as $key => $value) {
-             if ($row[ $option['weight']['field'] ] < $value) {
-                $weight = $key;
-                break;
-             }
-             if ($value == 0) {
-                $weight = $key;
-             }
-           }
-        }
-        $chart = array();
-        if (isset($option['piechart'])) {
-            foreach($option['piechart'] as $field => $detail) {
-                $chart[] = array(
-                    'label' => $detail['label'],
-                    'value' => $row[$field],
-                    'color' => $detail['color'],
-
-
-                );
+            $title = l($row['title'], uwwtd_get_url_path($option['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])), array('attributes'=>array('target'=>'_blank')));
+            
+            //Color of the feature
+            $color = '#000000';
+            $style = null;
+            if (isset($option['color']) && isset($row[ $option['color']['field']])) {
+                if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
+                    $color = $option['color']['list'][$row[ $option['color']['field'] ]];
+                }
+                
+                //Style of the feature 
+                //FIX ME make it more generic
+                $style_name = $option['style_prefix'].strtolower($row[ $option['color']['field'] ]);
+                if(isset($styles[$style_name])){
+                    $style = $style_name;
+                }
+                
             }
-            $returnvalue .= uwwtd_get_svg_piechart($i, $row, $option, $option['piechart_weight_style'][$weight]);
+            //Weigth of the feature (radius of circle)
+            $weight = 1;
+            if (isset($option['weight'])) {
+               foreach($option['weight']['list'] as $key => $value) {
+                 if ($row[ $option['weight']['field'] ] < $value) {
+                    $weight = $key;
+                    break;
+                 }
+                 if ($value == 0) {
+                    $weight = $key;
+                 }
+               }
+            }
+            $chart = array();
+            //Pie chart def ===> FIX ME : is it really use ?
+            if (isset($option['piechart'])) {
+                foreach($option['piechart'] as $field => $detail) {
+                    $chart[] = array(
+                        'label' => $detail['label'],
+                        'value' => $row[$field],
+                        'color' => $detail['color'],
 
+
+                    );
+                }
+                $returnvalue .= uwwtd_get_svg_piechart($i, $row, $option, $option['piechart_weight_style'][$weight]);
+
+            }
+            
+            $feature[] = array(
+                'projection' => 'EPSG:4326',
+                'attributes' => array(
+                    'name'=> $title,
+                    'description'=> $description,
+                    'weight' => $weight,
+                    'color' => $color,//'#000000',
+                    'data' => $chart,
+                    'piechartid' => 'pie_' .$i,
+                ),
+                'style' => ($style?$styles[$style]->data:null), //TODO to find the style name
+                'wkt' => $row['wkt'],
+            );
         }
-
-        $feature[] = array(
-            'projection' => 'EPSG:4326',
-            'attributes' => array(
-                'name'=> $title,
-                'description'=> $description,
-                'weight' => $weight,
-                'color' => $color,//'#000000',
-                'data' => $chart,
-                'piechartid' => 'pie_' .$i,
-            ),
-            'style' => null, //TODO to find the style name
-            'wkt' => $row['wkt'],
-        );
     }
 
     return $feature;

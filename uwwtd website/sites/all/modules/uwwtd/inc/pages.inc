@@ -205,6 +205,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     //get the color for the point
     $optionstyle['color']['list'] =$GLOBALS['uwwtd_value']['rcatype_color'];
     $optionstyle['color']['field'] = 'zonetype';
+    $optionstyle['style_prefix'] = 'rca_';
     //get the size of the point
 /*
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
@@ -261,9 +262,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
     }
 
-    dsm($map);
+    //dsm($map);
     $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-    dsm($features);
+    //dsm($features);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
