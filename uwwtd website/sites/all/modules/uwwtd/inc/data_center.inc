@@ -5862,10 +5862,12 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPercent = 0;
     foreach($listUwwtpCompliance as $uwwtp) {
         // BB - 12/01/2016 - Draft 10 of algo
+
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
             $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
+
     }
 
     uwwtd_trace($totalLoadenteringPE);
@@ -5882,8 +5884,18 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     
     // BB - 12/01/2016 - Draft 11 - New condition coming from art. 10
     // load collected in collecting system - sum of load entering the tp
-    $pe_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPE;
-    $percentage_lost = ($pe_lost * 100) / $agg->field_aggc1['und'][0]['value'];
+    // $percentage_lost = ($pe_lost * 100) / $agg->field_aggc1['und'][0]['value'];
+    // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
+    $totalLoadenteringPercent = 0;
+    foreach ($listUwwtpCompliance as $aUwwtp) {
+        $totalLoadenteringPercent = $aUwwtp['agglo_uww_perc_ent_uw'];
+    }
+    $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
+    $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
+
+    uwwtd_trace($pe_lost);
+    uwwtd_trace($percentage_lost);
+
     if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
@@ -5997,10 +6009,11 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
-    foreach($listUwwtpCompliance as $uwwtp) {        
+    foreach($listUwwtpCompliance as $uwwtp) {       
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+
             $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
