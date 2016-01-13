@@ -1762,7 +1762,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
                                          $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
     
     //get previous year
@@ -2321,7 +2320,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D173')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C173'));
     $sheet->getCell('D174')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C174'));
     $sheet->getCell('D175')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C175'));
-    $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));               
+    $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));          
+    
     
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
