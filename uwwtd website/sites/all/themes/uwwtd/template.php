@@ -68,49 +68,12 @@ function uwwtd_preprocess_field(&$variables){
   }
 
   // For booleans
-  if (
-    $variables['element']['#field_name'] == 'field_uwwprimarytreatment' ||
-    $variables['element']['#field_name'] == 'field_uwwsecondarytreatment' ||
-    $variables['element']['#field_name'] == 'field_uwwpremoval' ||
-    $variables['element']['#field_name'] == 'field_uwwnremoval' ||
-    $variables['element']['#field_name'] == 'field_uwwuv' ||
-    $variables['element']['#field_name'] == 'field_uwwchlorination' ||
-    $variables['element']['#field_name'] == 'field_uwwozonation' ||
-    $variables['element']['#field_name'] == 'field_uwwsandfiltration' ||
-    $variables['element']['#field_name'] == 'field_uwwmicrofiltration' ||
-    $variables['element']['#field_name'] == 'field_uwwothertreat' ||
-    $variables['element']['#field_name'] == 'field_uwwaccidents' ||
-    $variables['element']['#field_name'] == 'field_dcpsurfacewaters' ||
-    $variables['element']['#field_name'] == 'field_aggcritb' ||
-    $variables['element']['#field_name'] == 'field_aggcritca' ||
-    $variables['element']['#field_name'] == 'field_aggcritcb' ||
-    $variables['element']['#field_name'] == 'field_aggchanges' ||
-    $variables['element']['#field_name'] == 'field_aggbesttechnicalknowledge' ||
-    $variables['element']['#field_name'] == 'field_agghaveregistrationsystem' ||
-    $variables['element']['#field_name'] == 'field_aggexistmaintenanceplan' ||
-    $variables['element']['#field_name'] == 'field_aggpressuretest' ||
-    $variables['element']['#field_name'] == 'field_aggvideoinspections' ||
-    $variables['element']['#field_name'] == 'field_aggothermeasures' ||
-    $variables['element']['#field_name'] == 'field_aggaccoverflows' ||
-    $variables['element']['#field_name'] == 'field_aggcapacity' ||
-    $variables['element']['#field_name'] == 'field_agg_dilution_rates' ||
-    $variables['element']['#field_name'] == 'field_rcaanitro' ||
-    $variables['element']['#field_name'] == 'field_rcaaphos' ||
-    $variables['element']['#field_name'] == 'field_rcab' ||
-    $variables['element']['#field_name'] == 'field_rcac' ||
-    $variables['element']['#field_name'] == 'field_rcamorphology' ||
-    $variables['element']['#field_name'] == 'field_rcahydrologie' ||
-    $variables['element']['#field_name'] == 'field_rcahydraulic' ||
-    $variables['element']['#field_name'] == 'field_rcaabsencerisk' ||
-    $variables['element']['#field_name'] == 'field_rca54applied' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_n' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_p' ||
-    $variables['element']['#field_name'] == 'field_rca_parameter_other' ||
-    $variables['element']['#field_name'] == 'field_rca52applied' ||
-    $variables['element']['#field_name'] == 'field_rca58applied'
-
-
-  ){
+  if (in_array($variables['element']['#field_name'], array(
+        'field_uwwprimarytreatment','field_uwwsecondarytreatment','field_uwwpremoval','field_uwwnremoval','field_uwwuv','field_uwwchlorination','field_uwwozonation','field_uwwsandfiltration','field_uwwmicrofiltration','field_uwwothertreat','field_uwwaccidents',
+        'field_dcpsurfacewaters',
+        'field_aggcritb','field_aggcritca','field_aggcritcb','field_aggchanges','field_aggbesttechnicalknowledge','field_agghaveregistrationsystem','field_aggexistmaintenanceplan','field_aggpressuretest','field_aggvideoinspections','field_aggothermeasures','field_aggaccoverflows','field_aggcapacity','field_agg_dilution_rates',
+        'field_rcaanitro','field_rcaaphos','field_rcab','field_rcac','field_rcamorphology','field_rcahydrologie','field_rcahydraulic','field_rcaabsencerisk','field_rca54applied','field_rca_parameter_n','field_rca_parameter_p','field_rca_parameter_other','field_rca52applied','field_rca58applied'
+    ))){
     //check for custom tooltips
     $tt = '';
     $field_info = field_info_field($variables['element']['#field_name']);
@@ -119,29 +82,18 @@ function uwwtd_preprocess_field(&$variables){
     }
 
     if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/tick.png" />';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
     }
     elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="http://'.$_SERVER['HTTP_HOST'].base_path().path_to_theme().'/images/cross.png" />';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
     }
   }
 
   // For percentage '%'
-  if (
-
-    $variables['element']['#field_name'] == 'field_aggc1' ||
-    $variables['element']['#field_name'] == 'field_aggc2' ||
-    $variables['element']['#field_name'] == 'field_aggpercwithouttreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercprimtreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercsectreatment' ||
-    $variables['element']['#field_name'] == 'field_aggpercstringenttreatment'
-
-
+  if (in_array($variables['element']['#field_name'], array('field_aggc1','field_aggc2','field_aggpercwithouttreatment','field_aggpercprimtreatment','field_aggpercsectreatment','field_aggpercstringenttreatment'))
+       && $variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>'
   ){
-        if ($variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>') {
-      $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
-        }
-//         dsm($variables);
+    $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
   }
 
 //     if ($variables['element']['#field_name'] == 'field_aggc1' ||
@@ -152,44 +104,35 @@ function uwwtd_preprocess_field(&$variables){
 //     }
 
   // For compliance colors
-  if (
-    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
-    $variables['element']['#field_name'] == 'field_aggcompliance' ||
-    $variables['element']['#field_name'] == 'field_uwwcompliance'
-  ){
+  if (in_array($variables['element']['#field_name'], array('field_aggart3compliance','field_aggart4compliance','field_aggart5compliance','field_aggart6compliance','field_aggcompliance','field_uwwcompliance'))){
 //         dsm($variables['element']);
         //override PD and QC value, we don't want to display QC and PD (for now)
+        /* This function disable the tooltips ===> why*/
         if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ])) {
             $variables['element']['#items']['0']['value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $variables['element']['#items']['0']['value'] ];
             $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][ $variables['element']['#items']['0']['value'] ];
-            $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
+            //We need to keep the tooltip.
+            if($pos = strpos($variables['items']['0']['#markup'], '</div>')){
+                $variables['items']['0']['#markup'] = substr($variables['items']['0']['#markup'],0,$pos+6) .$variables['element']['0']['#markup'];
+            }
+            else{
+                $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
+            }
+            
         }
-//         dsm($variables['element']);
+        
+        if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
+        if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
+        if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
+        if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
+        if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
+        if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
+        if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
+        if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
+
+        $variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
+
     }
-
-  // For compliance colors
-  if (
-    $variables['element']['#field_name'] == 'field_aggart3compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart4compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart5compliance' ||
-    $variables['element']['#field_name'] == 'field_aggart6compliance' ||
-    $variables['element']['#field_name'] == 'field_aggcompliance' ||
-    $variables['element']['#field_name'] == 'field_uwwcompliance'
-  ){
-    if($variables['element']['#items']['0']['value'] == 'C') $spanclass ='c';
-    if($variables['element']['#items']['0']['value'] == 'NC') $spanclass ='nc';
-    if($variables['element']['#items']['0']['value'] == 'AddQC') $spanclass ='nc';
-    if($variables['element']['#items']['0']['value'] == 'QC') $spanclass ='c';
-    if($variables['element']['#items']['0']['value'] == 'NR') $spanclass ='nr';
-    if($variables['element']['#items']['0']['value'] == 'NI') $spanclass ='ni';
-    if($variables['element']['#items']['0']['value'] == 'CE') $spanclass ='ce';
-    if($variables['element']['#items']['0']['value'] == 'RNC') $spanclass ='c';
-
-    $variables['items']['0']['#markup'] = '<span class="'.$spanclass.'">'.$variables['items']['0']['#markup'].'</span>';
-  }
 }
 
 function uwwtd_timeline_output($node){
@@ -1323,16 +1266,16 @@ function uwwtd_get_uww_graphic($node){
 }
 
 function uwwtd_get_agglo_graphic($node){
-  global $base_url;
-      $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+    global $base_url;
+    $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
 
-//       $totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
-      $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
-      $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
+    //$totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
+    $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
+    $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
 
-      $nbPlants = 0;
-      $reseau = array();
-      foreach($node->field_linked_treatment_plants['und'] as $uwws){
+    $nbPlants = 0;
+    $reseau = array();
+    foreach($node->field_linked_treatment_plants['und'] as $uwws){
         $nbPlants++;
         $uww = node_load($uwws['nid']);
         //get station entering sums
@@ -1340,76 +1283,73 @@ function uwwtd_get_agglo_graphic($node){
         $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
-//         $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+        //$query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
         $query->fields('n', array('nid', 'title'));
         $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
-//         $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+        //$query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
         $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
         $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
         $result = $query->execute();
         while($record = $result->fetchAssoc()){
-          $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
-//           $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+            $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
+            //$mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
         }
 
-//        $totale = floor(($totalout / 100) * $perce);
+        //$totale = floor(($totalout / 100) * $perce);
         $total_entering = $node->field_agggenerated['und'][0]['value'] / 100 * $perce_entering;
-
         $msType = false;
         if($uww->field_uwwnremoval['und'][0]['value'] == '1'){
-          $msType = 'N';
-          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
-            $msType = 'NP';
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'NPO';
+            $msType = 'N';
+            if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+                $msType = 'NP';
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ) {
+                    $msType = 'NPO';
+                }
             }
-          }
-          else{
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'NO';
+            else{
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'NO';
+                }
             }
-          }
-        }
-        else{
-          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
-            $msType = 'P';
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'PO';
+        } else {
+            if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+                $msType = 'P';
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'PO';
+                }
+            } else {
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'O';
+                }
             }
-          }
-          else{
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'O';
-            }
-          }
         }
 
         $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
@@ -1419,35 +1359,31 @@ function uwwtd_get_agglo_graphic($node){
         $reseau[$uwws['nid']]['title'] = $uww->title;
         $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
         foreach($uww->field_linked_discharge_points['und'] as $dcps){
-          $loadedDcp = node_load($dcps['nid']);
-          $dcpNid = $loadedDcp->nid;
-          $dcpTitle = $loadedDcp->title;
-          $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+            $loadedDcp = node_load($dcps['nid']);
+            $dcpNid = $loadedDcp->nid;
+            $dcpTitle = $loadedDcp->title;
+            $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
-      }
+    }
 
-      $nbPlantsT = 0;
-      $nbPlantsB = 0;
-      for ($i=0; $i <= $nbPlants; $i++) {
-
+    $nbPlantsT = 0;
+    $nbPlantsB = 0;
+    for ($i=0; $i <= $nbPlants; $i++) {
         if($i > 1){
-
-          if($i % 2 == 0){
-            $nbPlantsT ++;
-          }
-          else{
-            $nbPlantsB ++;
-          }
+            if($i % 2 == 0){
+                $nbPlantsT ++;
+            } else {
+                $nbPlantsB ++;
+            }
         }
-      }
-      $topMarge = $nbPlantsB * 95;
-      $output = '';
-
+    }
+    $topMarge = $nbPlantsB * 95;
+    $output = '';
     $output .= '<div class="ias">
       <div class="graphic-title">
         '.t('Individual And Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
@@ -1457,9 +1393,9 @@ function uwwtd_get_agglo_graphic($node){
     <div class="graphic-container">
 
       <div class="agglomeration-graphic">';
-          if ($node->field_aggcompliance['und'][0]['value'] == 'NC') {
+          if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-nc.png" alt="reseau">';
-          } elseif ($node->field_aggcompliance['und'][0]['value'] == 'C') {
+          } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'QC') {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-c.png" alt="reseau">';
           } else {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">';
@@ -1689,31 +1625,25 @@ function uwwtd_piechart_agglonode($node, &$content){
     drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.extend/d3.extend.js");
     drupal_add_js(drupal_get_path('module', 'd3')."/libraries/d3.tooltip/tooltip.js");
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-    
-// echo '<pre>';var_export($content);echo '</pre>';
-// echo '<pre>';var_export($content);echo '</pre>';
-// exit;
-// field_aggc1|Collective system|#74FFE0
-// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
-// field_aggpercwithouttreatment|Discharge without treatment|#C00000
+
     $aData = array();
     $aData[] = array(
         "value" => (float)$node->field_aggc1['und'][0]['value'],
-        "label" => $content['field_aggc1']['#title'],
-        "color" => '#74FFE0',
+        "label" => $GLOBALS['ms_level']['connection']['cs']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['cs']['color'],
         "valueformat" => ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc1['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => (float)$node->field_aggc2['und'][0]['value'],
-        "label" => $content['field_aggc2']['#title'],
-        "color" => '#BD8842',
-        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
+        "label" => $GLOBALS['ms_level']['connection']['ias']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['ias']['color'],
+        "valueformat" =>  ($node->field_aggc2['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggc2['und'][0]['value']) . ' %'),
     );
     $aData[] = array(
         "value" => (float)$node->field_aggpercwithouttreatment['und'][0]['value'],
-        "label" => $content['field_aggpercwithouttreatment']['#title'],
-        "color" => '#C00000',
-        "valueformat" =>  ($node->field_aggc1['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
+        "label" => $GLOBALS['ms_level']['connection']['wot']['label'],
+        "color" => $GLOBALS['ms_level']['connection']['wot']['color'],
+        "valueformat" =>  ($node->field_aggpercwithouttreatment['und'][0]['value'] == 0 ? '' : uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value']) . ' %'),
     );
 
     return "
@@ -1880,8 +1810,9 @@ function uwwtd_table($vars) {
       // Format the table header:
       if (count($header)) {
       $output .=' <thead>';
+        $ts = tablesort_init($head);
           foreach($header as $number => $head){
-            $ts = tablesort_init($head);
+            
             // HTML requires that the thead tag has tr tags in it followed by tbody
             // tags. Using if clause to check and see if we have any rows and whether
             // the thead tag is already open
@@ -1889,10 +1820,10 @@ function uwwtd_table($vars) {
         
             //$output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
             foreach ($head as $cell) {
-              $cell = tablesort_header($cell, $head, $ts);
+              $cell = uwwtd_tablesort_header($cell, $head, $ts);
               $output .= _theme_table_cell($cell, TRUE);
             }
-       $output .='</tr>';
+            $output .='</tr>';
         }
             // Using ternary operator to close the tags based on whether or not there are rows
             $output .= (count($rows) ? " </thead>\n" : "</tr>\n");
@@ -1900,8 +1831,10 @@ function uwwtd_table($vars) {
       else {
         $ts = array();
       }
+    
+    }
     // One header row
-    }else{
+    else{
          // Format the table header:
       if (count($header)) {
         $ts = tablesort_init($header);
@@ -1909,7 +1842,7 @@ function uwwtd_table($vars) {
         // tags. Using ternary operator to check and see if we have any rows.
         $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
         foreach ($header as $cell) {
-          $cell = tablesort_header($cell, $header, $ts);
+          $cell = uwwtd_tablesort_header($cell, $header, $ts);
           $output .= _theme_table_cell($cell, TRUE);
         }
         // Using ternary operator to close the tags based on whether or not there are rows
@@ -1969,3 +1902,28 @@ function uwwtd_table($vars) {
   return $output;
 }
 
+function uwwtd_tablesort_header($cell, $header, $ts){
+  // Special formatting for the currently sorted column header.
+  if (is_array($cell) && isset($cell['field'])) {
+    //Manage the sort field
+    if(isset($cell['sorter'])) $order = $cell['sorter'];
+    elseif(isset($cell['field'])) $order = $cell['data'];
+    else $order = $cell['data'];
+    $title = t('sort by @s', array('@s' => $cell['data']));
+    if ($order == $ts['name'] || $order == $_REQUEST['order']) {
+      $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
+      $cell['class'][] = 'active';
+      $image = theme('tablesort_indicator', array('style' => $ts['sort']));
+    }
+    else {
+      // If the user clicks a different header, we want to sort ascending initially.
+      $ts['sort'] = 'asc';
+      $image = '';
+    }
+
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('attributes' => array('title' => $title), 'query' => array_merge($ts['query'], array('sort' => $ts['sort'], 'order' => $order, 'sort_mod' => isset($cell['sort_mod'])?$cell['sort_mod']:'text')), 'html' => TRUE));
+
+    unset($cell['field'], $cell['sort']);
+  }
+  return $cell;
+}

@@ -8330,6 +8330,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
 //         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+        $objReader->setIncludeCharts(TRUE);
         $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));                                        
         $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));     
 //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
@@ -8344,7 +8345,8 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $target_path = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
-//     dsm($target_path);    
+//     dsm($target_path);  
+    $objWriter->setIncludeCharts(TRUE);  
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);  

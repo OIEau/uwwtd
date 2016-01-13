@@ -106,6 +106,27 @@ $GLOBALS['uwwtd_value']['rcatype'] = array(
     'sensitive_area' => 'SA',
     '?' => 'A58',
 );
+$GLOBALS['uwwtd_value']['rcatype_labels']=array(
+    'All' => t('- Any -'),
+    'SA'=>t('Sensitive Area'),
+    'CSA'=>t('Catchment of Sensitive Area'),
+    'LSA'=>t('Less Sensitive Area'),
+    'NA'=>t('Normal Area'),
+    'A54'=>t('A54 Sensitive Area'),
+    'A58'=>t('A58 Sensitive Area'),
+);
+$GLOBALS['uwwtd_value']['rcatype_color']=array(
+    'All' => "#aaaaaa",
+    'SA'=>"#ff0000",
+    'CSA'=>"#800080",
+    'LSA'=>"#ffdead",
+    'NA'=>"#4682b4",
+    'A54'=>"#ffff00",
+    'A58'=>"#9acd32",
+);
+
+
+
 //$GLOBALS['uwwtd_value']['required']['appropriate']
 //$GLOBALS['uwwtd_value']['required']['notrelevant']
 //$GLOBALS['uwwtd_value']['required']['primary']
@@ -120,7 +141,6 @@ $GLOBALS['uwwtd_value']['required'] = array(
     'nitrogen_phosphorus' => 'NP',
     'notrelevant' => 'NR',
     'morestringent' => 'MS',
-    
     'nitrogen_phosphorus_other' => 'NPO',
     'nitrogen_other' => 'NO',
     'phosphorus_other' => 'PO',    
@@ -164,92 +184,106 @@ $GLOBALS['uwwtd']['ui']['operatorfunction'] = array(
 );
 
 $GLOBALS['uwwtd']['ui']['sort'] = array(
-    'asc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;},
-    'desc' => function ($a, $b) {if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;},
+    'asc' => function ($a, $b) {
+        if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } 
+        if($GLOBALS['uwwtd']['ui']['sortmod']=='numeric') return ((float)$a[$GLOBALS['uwwtd']['ui']['sortfield']] < (float)$b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;
+        elseif($GLOBALS['uwwtd']['ui']['sortmod']=='text') return ((string)$a[$GLOBALS['uwwtd']['ui']['sortfield']] < (string)$b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;
+        else return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? -1 : 1;
+        
+    },
+    'desc' => function ($a, $b) {
+        if ($a[$GLOBALS['uwwtd']['ui']['sortfield']] == $b[$GLOBALS['uwwtd']['ui']['sortfield']]) { return 0; } 
+        if($GLOBALS['uwwtd']['ui']['sortmod']=='numeric') return ((float)$a[$GLOBALS['uwwtd']['ui']['sortfield']] < (float)$b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;
+        elseif($GLOBALS['uwwtd']['ui']['sortmod']=='text') return ((string)$a[$GLOBALS['uwwtd']['ui']['sortfield']] < (string)$b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1; 
+        else return ($a[$GLOBALS['uwwtd']['ui']['sortfield']] < $b[$GLOBALS['uwwtd']['ui']['sortfield']]) ? 1 : -1;
+    },
 );
-// dsm($data);
+
+
 $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_aggcompliance_value'       =>  t('Global compliance'),
-	/*
-    'field_aggart3compliance_value'   =>  t('Article 3 compliance'),
-    'field_aggart4compliance_value'   =>  t('Article 4 compliance'),
-    'field_aggart5compliance_value'   =>  t('Article 5 compliance'),
-    'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
-	*/
-	'field_aggart3compliance_value'   =>  t('Connection compliance'),
-    'field_aggart4compliance_value'   =>  t('2nd treatment compliance'),
-    'field_aggart5compliance_value'   =>  t('3rd treatment compliance'),
-    'field_aggart6compliance_value'   =>  t('Article 6 compliance'),
-	
-	'field_article17_agglo_value'     =>  t('Article 17'),
+    'title'                                  =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'           =>  array('label'=>t('Identifier Code')),
+    'field_agggenerated_value_format'        =>  array('label'=>t('Generated Load (p.e.)'), 'sort_field'=>'field_agggenerated_value', 'sort_mod'=>'numeric'),
+    'sum_uwwtp_format'                    =>  array('label'=>t('Total UWWTP capacity (p.e.)'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
+    'n3nm'                                   =>  array('label'=>t('Region (NUTS)')),
+    'rbd'                                    =>  array('label'=>t('RBD')),
+    'field_aggcompliance_value_format'       =>  array('label'=>t('Global compliance'), 'sort_field'=>'field_aggcompliance_value'),
+	'field_aggart3compliance_value_format'   =>  array('label'=>t('Connection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
+    'field_aggart4compliance_value_format'   =>  array('label'=>t('2nd treatment compliance'), 'sort_field'=>'field_aggart4compliance_value'),
+    'field_aggart5compliance_value_format'   =>  array('label'=>t('3rd treatment compliance'), 'sort_field'=>'field_aggart5compliance_value'),
+    'field_aggart6compliance_value_format'   =>  array('label'=>t('Article 6 compliance'), 'sort_field'=>'field_aggart6compliance_value'),
+	'field_article17_agglo_value_format'     =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_agglo_value'), 
 );
-
 $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_agggenerated_value'        =>  t('Generated Load (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-    'field_aggc2_value'       =>  t('IAS (% of p.e.)'),
-    'field_aggc1_value'   =>  t('Collecting system (% of p.e.) '),
-    'field_aggpercwithouttreatment_value'   =>  t('Discharge without treatment (% of p.e.)'),
-	'field_article17_agglo_value'   =>  t('Article 17'),
+    'title'                               =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'        =>  array('label'=>t('Identifier Code')),
+    'field_agggenerated_value_format'            =>  array('label'=>t('Generated Load (p.e.)'), 'sort_field'=>'field_agggenerated_value', 'sort_mod'=>'numeric'),
+    'sum_uwwtp_format'                    =>  array('label'=>t('Total UWWTP capacity (p.e.)'), 'sort_field'=>'sum_uwwtp', 'sort_mod'=>'numeric'),
+    'n3nm'                                =>  array('label'=>t('Region (NUTS)')),
+    'rbd'                                 =>  array('label'=>t('RBD')),
+    'field_aggc1_value_format'                   =>  array('label'=>t('Collecting system (% of p.e.) '), 'sort_field'=>'field_aggc1_value', 'sort_mod'=>'numeric'),
+    'field_aggc2_value_format'                   =>  array('label'=>t('IAS (% of p.e.)'), 'sort_field'=>'field_aggc2_value', 'sort_mod'=>'numeric'),
+    'field_aggpercwithouttreatment_value_format' =>  array('label'=>t('Discharge without treatment (% of p.e.)'), 'sort_field'=>'field_aggpercwithouttreatment_value', 'sort_mod'=>'numeric'),
+	'field_article17_agglo_value_format'         =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_agglo_value'), 
 );
 
-// field_aggc1|Collective system|#74FFE0
-// field_aggc2|Individual and Appropriate Systems (IAS)|#BD8842
-// field_aggpercwithouttreatment|Discharge without treatment|#C00000
 
 $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
-    'title'                           =>  t('Name'),
-    'field_inspireidlocalid_value'    =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'        =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_regionnuts_value'          =>  t('Region (NUTS)'),
-//     'field_uwwcompliance_value'       =>  t('Compliance'),
-//     'field_uwwbod5perf_value'   =>  t('Performance: BOD5'),
-//     'field_uwwcodperf_value'   =>  t('Performance: COD '),
-//     'field_uwwntotperf_value'   =>  t('Performance: Total nitrogen'),
-//     'field_uwwptotperf_value'   =>  t('Performance: Total phosphorus'),
-    'field_uwwtreatmenttype_value'   =>  t('Treatment type in place'),
-    'field_uwwcompliance_value'       =>  t('Compliance'),
-    'field_uwwbod5perf_value'   =>  t('BOD5'),
-    'field_uwwcodperf_value'   =>  t('COD '),
-    'field_uwwntotperf_value'   =>  t('Total nitrogen'),
-    'field_uwwptotperf_value'   =>  t('Total phosphorus'),    
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
+    'title'                           =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
+    'field_uwwloadenteringuwwtp_value_format'        =>  array('label'=>t('Load entering (p.e.)'), 'sort_field'=>'field_uwwloadenteringuwwtp_value', 'sort_mod'=>'numeric'),
+	'field_physicalcapacityactivity_value_format'    =>  array('label'=>t('Physical Capacity (p.e.)'), 'sort_field'=>'field_physicalcapacityactivity_value', 'sort_mod'=>'numeric'),
+    'n3nm'          =>  array('label'=>t('Region (NUTS)')),
+    'rbd'          =>  array('label'=>t('RBD')),
+    'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment in place')),
+    'field_uwwcompliance_value_format'       =>  array('label'=>t('Compliance')),
+    'field_uwwbod5perf_value_format'   =>  array('label'=>t('BOD5'), 'sort_field'=>'field_uwwbod5perf_value'),
+    'field_uwwcodperf_value_format'   =>  array('label'=>t('COD'), 'sort_field'=>'field_uwwcodperf_value'),
+    'field_uwwntotperf_value_format'   =>  array('label'=>t('Total nitrogen'), 'sort_field'=>'field_uwwntotperf_value'),
+    'field_uwwptotperf_value_format'   =>  array('label'=>t('Total phosphorus'), 'sort_field'=>'field_uwwptotperf_value'),    
+	'field_article17_uwwtp_value_format'   =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_uwwtp_value'),
 );
 
 $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'] = array(
-    'title'                             =>  t('Name'),
-    'field_inspireidlocalid_value'      =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_regionnuts_value'            =>  t('Region (NUTS)'),
-    'field_uwwprimarytreatment_value'   =>  t('Primary treatment'),
-    'field_uwwsecondarytreatment_value' =>  t('Secondary treatment'),
-    'field_uwwnremoval_value'           =>  t('N removal'),
-    'field_uwwpremoval_value'           =>  t('P removal'),
-    'field_uwwspecification_value'      =>  t('Other more stringent treatment'),
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
+    'title'                             =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'      =>  array('label'=>t('Identifier Code')),
+    'field_uwwloadenteringuwwtp_value_format'  =>  array('label'=>t('Load entering (p.e.)'), 'sort_field'=>'field_uwwloadenteringuwwtp_value', 'sort_mod'=>'numeric'),
+	'field_physicalcapacityactivity_value_format'    =>  array('label'=>t('Physical Capacity (p.e.)'), 'sort_field'=>'field_physicalcapacityactivity_value', 'sort_mod'=>'numeric'),
+    'n3nm'            =>  array('label'=>t('Region (NUTS)')),
+    'rbd'          =>  array('label'=>t('RBD')),
+    'field_uwwprimarytreatment_value_format'   =>  array('label'=>t('Primary treatment'), 'sort_field'=>'field_uwwprimarytreatment_value'),
+    'field_uwwsecondarytreatment_value_format' =>  array('label'=>t('Secondary treatment'), 'sort_field'=>'field_uwwsecondarytreatment_value'),
+    'field_uwwnremoval_value_format'           =>  array('label'=>t('N removal'), 'sort_field'=>'field_uwwnremoval_value'),
+    'field_uwwpremoval_value_format'           =>  array('label'=>t('P removal'), 'sort_field'=>'field_uwwpremoval_value'),
+    'field_uwwspecification_value'      =>  array('label'=>t('Other more stringent treatment')),
+	'field_article17_uwwtp_value_format'   =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_uwwtp_value'),
 );
 
 
 $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
-    'title'                             =>  t('Name'),
-    'field_inspireidlocalid_value'      =>  t('Identifier Code'),
-    'field_uwwloadenteringuwwtp_value'  =>  t('Load entering (p.e.)'),
-	'field_physicalcapacityactivity_value'    =>  t('Physical Capacity (p.e.)'),
-    'field_uwwboddischarge_value'      =>  t('Discharged load BOD (t per year)'),
-    'field_uwwcoddischarge_value'      =>  t('Discharged load COD (t per year)'),
-    'field_uwwndischarge_value'      =>  t('Discharged load Ntot (t per year)'),
-    'field_uwwpdischarge_value'      =>  t('Discharged load Ptot (t per year)'),
-	'field_article17_uwwtp_value'   =>  t('Article 17'),
+    'title'                             =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'      =>  array('label'=>t('Identifier Code')),
+    'field_uwwloadenteringuwwtp_value_format'  =>  array('label'=>t('Load entering (p.e.)'), 'sort_field'=>'field_uwwloadenteringuwwtp_value', 'sort_mod'=>'numeric'),
+	'field_physicalcapacityactivity_value_format'    =>  array('label'=>t('Physical Capacity (p.e.)'), 'sort_field'=>'field_physicalcapacityactivity_value', 'sort_mod'=>'numeric'),
+    'n3nm'            =>  array('label'=>t('Region (NUTS)')),
+    'rbd'          =>  array('label'=>t('RBD')),
+    'field_uwwboddischarge_value_format'      =>  array('label'=>t('Discharged load BOD (t per year)'), 'sort_field'=>'field_uwwboddischarge_value', 'sort_mod'=>'numeric'),
+    'field_uwwcoddischarge_value_format'      =>  array('label'=>t('Discharged load COD (t per year)'), 'sort_field'=>'field_uwwcoddischarge_value', 'sort_mod'=>'numeric'),
+    'field_uwwndischarge_value_format'      =>  array('label'=>t('Discharged load Ntot (t per year)'), 'sort_field'=>'field_uwwndischarge_value', 'sort_mod'=>'numeric'),
+    'field_uwwpdischarge_value_format'      =>  array('label'=>t('Discharged load Ptot (t per year)'), 'sort_field'=>'field_uwwpdischarge_value', 'sort_mod'=>'numeric'),
+	'field_article17_uwwtp_value_format'   =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_uwwtp_value'),
 );
-
+$GLOBALS['uwwtd']['ui']['field']['rca'] = array(
+    'title'                           =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
+    'zonetype_format'=>array('label'=>t('Type of area')),
+    'rca52_format'=>array('label'=>t('Article 52 applied')),
+    'rca54_format'=>array('label'=>t('Article 54 applied')),
+    'rca58_format'=>array('label'=>t('Article 58 applied')),
+    'uwwtps'=>array('label'=>t('Number of UWWTP')),
+    'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
+    'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+);
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
     'PD' => 'NR',
@@ -337,8 +371,8 @@ $GLOBALS['ms_level'] = array(
         'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#74ffe0','label'=>t('Connected to collecting system')),
-        'ias'=>array('color'=>'#bd8842','label'=>t('Individual and Appropriate Systems')),
+		'cs'=>array('color'=>'#00658e','label'=>t('Connected to collecting system')),
+        'ias'=>array('color'=>'#00ced1','label'=>t('Individual and Appropriate Systems')),
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
 	'sewage_network'=>array(
@@ -347,7 +381,5 @@ $GLOBALS['ms_level'] = array(
         'C'=>array('color'=>'#bd8842','label'=>t('Combine system')),
 		'NI'=>array('color'=>'#a2a2a2','label'=>t('No information')),
 	)
-	
-	//E74C3C
 );
 
