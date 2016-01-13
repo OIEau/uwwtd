@@ -3129,18 +3129,7 @@ function uwwtd_update_7126(&$context = null){
                 $map->data['behaviors']['openlayers_plus_behavior_piechart']['fields_series']="field_aggc1|Collecting system|#00658e\r\nfield_aggc2|Individual and Appropriate Systems (IAS)|#00ced1\r\nfield_aggpercwithouttreatment|Discharge without treatment|#d93c3c";
                 
             }
-            
-            //Update the map if needed
-            //if($update){
-                openlayers_map_save($map);
-            //}
-            
-            
-            
-            
-            
-            
-            
+            openlayers_map_save($map);
         }  
     }
     
@@ -3174,10 +3163,84 @@ function uwwtd_update_7126(&$context = null){
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
+}
+
+//Change content of ressources & regulation pages
+function uwwtd_update_7127(&$context = null){
+    uwwtd_install_trace(__FUNCTION__); 
+    
+    ///////////////////////////////////
+    //update regulation page
+    $regulation_content = '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:31991L0271" target="_blank">Directive 91/271/EC original version</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:31998L0015" target="_blank">Directive 98/15/EEC amending Directive 91/271/EEC</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:01991L0271-20140101" target="_blank">Directive 91/271/EC Consolidated version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/Transitional%20periods%20Croatia.pdf" target="_blank">Deadlines of transitional periods for Croatia</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1405007191767&amp;uri=CELEX:32014D0431" target="_blank">Commission Implementing Decision 2014/431/EU of 26 June 2014 concerning formats for reporting on the national programmes for the implementation of Council Directive 91/271/EEC</a></li><li><a href="https://circabc.europa.eu/w/browse/b5f6847d-53fb-4894-8410-709e265f7f83" target="_blank">Commission Implementing Decision 2014/431/EEC excel templates (EIONET)</a></li><li><a href="http://inspire.ec.europa.eu/" target="_blank">Directive establishing an Infrastructure for Spatial Information in the European Community (INSPIRE) 2007/2/EC</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32003L0004" target="_blank">Directive on public access to environmental information 2003/4/EC</a></li></ul><h2>European Guidance</h2><ul><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/info/pdf/terms.pdf" target="_blank">Terms and Definitions of the Urban Waste Water Treatment Directive</a></li></ul><h2>National regulations</h2>';
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Regulations', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = $regulation_content;
+        $node->body['und'][0]['format'] = 'full_html';
+        node_save($node);
+        break;
+	} 
+    //update Ressources page
+    $ressource_content = '<h2>European Commission - Directorate General Environment</h2><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h2>European Environment Agency</h2><h3><strong>Reporting Obligation Database (ROD):</strong></h3><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><h3><strong>Access to data and visualisation</strong></h3><ul><li>European Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU data viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3>&nbsp;</h3><h2>European funds and loans</h2><ul><li>DG Regio :&nbsp; <a href="http://ec.europa.eu/regional_policy/" target="_blank">http:://ec.europa.eu/regional_policy/</a></li><li>Funding LIFE projects : <a href="http://ec.europa.eu/environment/life/funding/life.htm" target="_blank">http://ec.europa.eu/environment/life/funding/life.htm</a></li><li>Waste Water LIFE project : <a href="http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;theme=77&amp;projectList" target="_blank">http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;theme=77&amp;projectList</a></li><li>European Investment Bank : <a href="http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en" target="_blank">http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en</a></li></ul><p>&nbsp;</p><h2>SIIF European and national platform</h2><ul><li>Generic open-source platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>';
+	$query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Ressources', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = $ressource_content;
+        $node->body['und'][0]['format'] = 'full_html';
+        node_save($node);
+        break;
+	} 
+    
+    
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    //     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+    
+}
+
+//Manage RCA pages
+function uwwtd_update_7128(&$context = null){
+    uwwtd_install_trace(__FUNCTION__); 
+    
+    
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    //     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
     
     //==========DEBUG : permet de relancer la mise à jour si besoin.
     throw new DrupalUpdateException(__FUNCTION__);
 }
+
+
+
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
