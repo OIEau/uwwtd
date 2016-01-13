@@ -3169,14 +3169,14 @@ function uwwtd_update_7126(&$context = null){
 function uwwtd_update_7127(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
-    ///////////////////////////////////
+        ///////////////////////////////////
     //update regulation page
     $regulation_content = '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:31991L0271" target="_blank">Directive 91/271/EC original version</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:31998L0015" target="_blank">Directive 98/15/EEC amending Directive 91/271/EEC</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:01991L0271-20140101" target="_blank">Directive 91/271/EC Consolidated version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/Transitional%20periods%20Croatia.pdf" target="_blank">Deadlines of transitional periods for Croatia</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1405007191767&amp;uri=CELEX:32014D0431" target="_blank">Commission Implementing Decision 2014/431/EU of 26 June 2014 concerning formats for reporting on the national programmes for the implementation of Council Directive 91/271/EEC</a></li><li><a href="https://circabc.europa.eu/w/browse/b5f6847d-53fb-4894-8410-709e265f7f83" target="_blank">Commission Implementing Decision 2014/431/EEC excel templates (EIONET)</a></li><li><a href="http://inspire.ec.europa.eu/" target="_blank">Directive establishing an Infrastructure for Spatial Information in the European Community (INSPIRE) 2007/2/EC</a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32003L0004" target="_blank">Directive on public access to environmental information 2003/4/EC</a></li></ul><h2>European Guidance</h2><ul><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/info/pdf/terms.pdf" target="_blank">Terms and Definitions of the Urban Waste Water Treatment Directive</a></li></ul><h2>National regulations</h2>';
 	$query = db_select('node', 'n');
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'page', '=');
     $query->condition('n.title', 'Regulations', '=');
-    $query->condition('n.language', 'und', '=');
+    $query->condition('n.language', 'en', '=');
 	$result = $query->execute();
 	foreach($result as $row){
 		$node = node_load($row->nid);
@@ -3191,7 +3191,7 @@ function uwwtd_update_7127(&$context = null){
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'page', '=');
     $query->condition('n.title', 'Ressources', '=');
-    $query->condition('n.language', 'und', '=');
+    $query->condition('n.language', 'en', '=');
 	$result = $query->execute();
 	foreach($result as $row){
 		$node = node_load($row->nid);
@@ -3199,7 +3199,7 @@ function uwwtd_update_7127(&$context = null){
         $node->body['und'][0]['format'] = 'full_html';
         node_save($node);
         break;
-	} 
+	}
     
     
      ////////////////////////////////////////////////////////////////
@@ -3220,6 +3220,7 @@ function uwwtd_update_7127(&$context = null){
 //Manage RCA pages
 function uwwtd_update_7128(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
+    
     
     
      ////////////////////////////////////////////////////////////////
