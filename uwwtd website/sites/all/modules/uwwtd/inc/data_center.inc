@@ -5996,11 +5996,16 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPercent = 0;      
     foreach($listUwwtpCompliance as $uwwtp) {
         // BB - 12/01/2016 - Draft 10
-        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
+        /*
+        , 
                                                     //$GLOBALS['uwwtd_value']['inplace']['secondary'],
-                                                    //$GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+                                                    //$GLOBALS['uwwtd_value']['inplace']['noinformation']
+        
+        */
+        
+        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary']))) {
             $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw']
+            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
     }
       
