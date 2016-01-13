@@ -5764,11 +5764,15 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     uwwtd_trace("maxgen = $maxgen");
     uwwtd_trace("pe_lost = $pe_lost");
     uwwtd_trace("percentage_lost = $percentage_lost");      
-    uwwtd_trace(__LINE__);          
-    if (false === ($percentage_lost < 1 || $pe_lost <= 2000)) {
-        uwwtd_trace(__LINE__);      
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-    }   
+    uwwtd_trace(__LINE__);
+
+
+    // BB - 13/01/2016 - Draft 11 - This condition goes into algo 7   
+
+    // if (false === ($percentage_lost < 1 || $pe_lost <= 2000)) {
+        // uwwtd_trace(__LINE__);      
+        // return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    // }   
     
     if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
@@ -5855,13 +5859,13 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
-    $totalLoadenteringPercent = 0;      
+    $totalLoadenteringPercent = 0;
     foreach($listUwwtpCompliance as $uwwtp) {
         // BB - 12/01/2016 - Draft 10 of algo
-        // if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
-        // }
+        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
+        }
     }
             
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
@@ -5872,7 +5876,13 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }  
     } 
     
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
+    
+    // BB - 12/01/2016 - Draft 11 - New condition coming from art. 10
+    // load collected in collecting system - sum of load entering the tp
+    $pe_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPE;
+    $percentage_lost = ($pe_lost * 100) / $agg->field_aggc1['und'][0]['value'];
+    if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
+        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
     
     if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
@@ -5986,14 +5996,14 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPercent = 0;      
     foreach($listUwwtpCompliance as $uwwtp) {
         // BB - 12/01/2016 - Draft 10
-        // if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
+        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     //$GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     //$GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
-        //}
+            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw']
+        }
     }
-        
+      
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
