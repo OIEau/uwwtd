@@ -4853,16 +4853,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                            
-//                 dsm($uww_aggcode);            
-//                 if ($uww_aggcode == 'CY11-Agglo' || $uww_aggcode == 'CY52-Agglo') {
-//                     dsm($uww_aggcode . '('.$uwwtp[$induww['generated load  p. e.']].'):'.$uwwtp[$induww['uww_code']] . '('.$uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']].'):');
-//                     dsm($context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']);
-//                     dsm($context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']);
-//                 }                            
+                         
             }
-            if ($uwwtp[$induww['art4_final']] == 'NC') {              
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
+            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD') {              
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 
@@ -4871,7 +4865,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['results']['uwwtp_notreatment_nb']++;                             
             }
             if ($uwwtp[$induww['art4_final']] == 'NR') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['percent']  = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
@@ -4931,7 +4925,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }   
             
-            if ($uwwtp[$induww['art4_treatment']] == 'NC') {
+            if ($uwwtp[$induww['art4_treatment type']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -4941,7 +4935,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             } 
-            if ($uwwtp[$induww['art5_treatment']] == 'NC') {
+            if ($uwwtp[$induww['art5_treatment type']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -5546,18 +5540,25 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                         ) 
         */
         $compart4hierarchical = '';
-        if ($agg->field_aggart4compliance['und'][0]['value'] == 'NR') { 
+        if ($agg->field_aggart4compliance['und'][0]['value'] == 'NR' ||
+            $agg->field_aggart4compliance['und'][0]['value'] == 'NI' ||
+            $agg->field_aggart4compliance['und'][0]['value'] == '?' ||
+            $agg->field_aggart3compliance['und'][0]['value'] == 'NR' ||
+            $agg->field_aggart3compliance['und'][0]['value'] == 'NI' ||
+            $agg->field_aggart3compliance['und'][0]['value'] == '?' 
+            ) { 
             $compart4hierarchical = $agg->field_aggart4compliance['und'][0]['value'];
-        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'C'
-                  || $agg->field_aggart3compliance['und'][0]['value'] == 'QC'
-                  || $agg->field_aggart4compliance['und'][0]['value'] == 'C' 
+        } elseif (($agg->field_aggart3compliance['und'][0]['value'] == 'C'
+                  || $agg->field_aggart3compliance['und'][0]['value'] == 'QC')
+                  && $agg->field_aggart4compliance['und'][0]['value'] == 'C' 
                   ) {
             $compart4hierarchical = 'C';
-        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'NC'
-                  || $agg->field_aggart4compliance['und'][0]['value'] == 'NC' 
-                  ) {
+        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD') {
+            $compart4hierarchical = 'PD';
+        } else {
             $compart4hierarchical = 'NC';
-        }                          
+        } 
+
         $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] = $compart4hierarchical;
         
         //Compliance Art. 4 previous reporting',
@@ -5583,34 +5584,34 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                         
         //Compliance Art. 5',
         //'compliant 5 a  (% of gen. load)', 
-        $line[$ind['compliant_5_a_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5a_C_%'];
+        $line[$ind['compliant_5_a_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5a_C_%'];
         //'compliant 5 a  (p. e.)',     
-        $line[$ind['compliant_5_a_(p._e.)']] = $uwwtpinfo_for_agglo['art5a_C_pe'];
+        $line[$ind['compliant_5_a_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5a_C_pe'];
         //'not compliant 5 a  (% of gen. load)',
-        $line[$ind['not_compliant_5_a_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5a_NC_%'];
+        $line[$ind['not_compliant_5_a_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5a_NC_%'];
         //'not compliant 5 a  (p. e.)',
-        $line[$ind['not_compliant_5_a_(p._e.)']] = $uwwtpinfo_for_agglo['art5a_NC_pe'];
+        $line[$ind['not_compliant_5_a_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NC_pe'];
         //'not relevant 5 a   (% of gen. load)',
-        $line[$ind['not_relevant_5_a_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5a_NR_%'];
+        $line[$ind['not_relevant_5_a_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5a_NR_%'];
         //'not relevant 5 a   (p. e.)',
-        $line[$ind['not_relevant_5_a_(p._e.)']] = $uwwtpinfo_for_agglo['art5a_NR_pe'];
+        $line[$ind['not_relevant_5_a_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5a_NR_pe'];
         
         //'Compliance Art. 5a (only)',
         $line[$ind['compliance_art._5a_(only)']] = uwwtd_register_getcompliance_art5x_only('a', $ind, $line, $uwwtpinfo_for_agglo['art5a_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
         $line[$ind['compliance_art._5a_(hierarchical_approach)']] = uwwtd_register_getcompliance_art5x_hierarchical('a', $ind, $line);
                         
         //'compliant 5 b    (% of gen. load)',
-        $line[$ind['compliant_5_b_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5b_C_%'];
+        $line[$ind['compliant_5_b_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5b_C_%'];
         //'compliant 5 b    (p. e.)',
-        $line[$ind['compliant_5_b_(p._e.)']] = $uwwtpinfo_for_agglo['art5b_C_pe'];
+        $line[$ind['compliant_5_b_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5b_C_pe'];
         //'not compliant 5 b  (% of gen. load)',
-        $line[$ind['not_compliant_5_b_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5b_NC_%'];
+        $line[$ind['not_compliant_5_b_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 :  $uwwtpinfo_for_agglo['art5b_NC_%'];
         //'not compliant 5 b   (p. e.)',
-        $line[$ind['not_compliant_5_b_(p._e.)']] = $uwwtpinfo_for_agglo['art5b_NC_pe'];
+        $line[$ind['not_compliant_5_b_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_NC_pe'];
         //'not relevant 5 b   (% of gen. load)',
-        $line[$ind['not_relevant_5_b_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5b_NR_%'];
+        $line[$ind['not_relevant_5_b_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_NR_%'];
         //'not relevant 5 b   (p. e.)',
-        $line[$ind['not_relevant_5_b_(p._e.)']] = $uwwtpinfo_for_agglo['art5b_NR_pe'];
+        $line[$ind['not_relevant_5_b_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_NR_pe'];
         
         //'Compliance Art. 5b (only)',
         $line[$ind['compliance_art._5b_(only)']] = uwwtd_register_getcompliance_art5x_only('b', $ind, $line, $uwwtpinfo_for_agglo['art5b_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
@@ -5618,17 +5619,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['compliance_art._5b_(hierarchical_approach)']] =  uwwtd_register_getcompliance_art5x_hierarchical('b', $ind, $line);
                         
         //'compliant 5 c      (% of gen. load)',
-        $line[$ind['compliant_5_c_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5c_C_%'];
+        $line[$ind['compliant_5_c_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_C_%'];
         //'compliant 5 c       (p. e.)',
-        $line[$ind['compliant_5_c__(p._e.)']] = $uwwtpinfo_for_agglo['art5c_C_pe'];        
+        $line[$ind['compliant_5_c__(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_C_pe'];        
         //'not compliant 5 c   (% of gen. load)',
-        $line[$ind['not_compliant_5_c_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5c_NC_%'];
+        $line[$ind['not_compliant_5_c_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NC_%'];
         //'not compliant 5 c   (p. e.)',
-        $line[$ind['not_compliant_5_c_(p._e.)']] = $uwwtpinfo_for_agglo['art5c_NC_pe'];
+        $line[$ind['not_compliant_5_c_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NC_pe'];
         //'not relevant 5 c   (% of gen. load)',
-        $line[$ind['not_relevant_5_c_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5c_NR_%'];
+        $line[$ind['not_relevant_5_c_(%_of_gen._load)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NR_%'];
         //'not relevant 5 c  (p. e.)',
-        $line[$ind['not_relevant_5_c_(p._e.)']] = $uwwtpinfo_for_agglo['art5c_NR_pe'];
+        $line[$ind['not_relevant_5_c_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NR_pe'];
                                   
         //'Compliance Art. 5c (only)',
         $line[$ind['compliance_art._5c_(only)']] = uwwtd_register_getcompliance_art5x_only('c', $ind, $line, $uwwtpinfo_for_agglo['art5c_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
@@ -5636,11 +5637,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['compliance_art._5c_(hierarchical_approach)']] =  uwwtd_register_getcompliance_art5x_hierarchical('c', $ind, $line);
               
         //'compliant Art. 5 (p. e.)',
-        $line[$ind['compliant_art._5_(p._e.)']] = $uwwtpinfo_for_agglo['art5_C_pe'];
+        $line[$ind['compliant_art._5_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_C_pe'];
         //'not compliant Art. 5 (p. e.)',
-        $line[$ind['not_compliant_art._5_(p._e.)']] = $uwwtpinfo_for_agglo['art5_NC_pe'];
+        $line[$ind['not_compliant_art._5_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NC_pe'];
         //'Art. 5 not relevant  (p. e.)',
-        $line[$ind['art._5_not_relevant_(p._e.)']] = $uwwtpinfo_for_agglo['art5_NR_pe'];
+        $line[$ind['art._5_not_relevant_(p._e.)']] = ($agg->agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NR_pe'];
         
         //'Compliance Art. 5 (whole agglo)',
         $line[$ind['compliance_art._5_(whole_agglo)']] = $agg->field_aggart5compliance['und'][0]['value'];
