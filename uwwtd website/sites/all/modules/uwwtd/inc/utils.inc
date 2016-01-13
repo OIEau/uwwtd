@@ -94,48 +94,19 @@ if (!function_exists('array_column')) {
 
 function uwwtd_debug(){
     
-    $maps = openlayers_maps(true);
-
-    dsm($maps);
-    
-    $map = $maps['agglomeration'];
-    dsm(strpos($map->data['image_path'], "default_dark"));
-    if(strpos($map->data['image_path'], "default_dark")){
-        $map->data['image_path'] = str_replace('default_dark', 'default_white', $map->data['image_path']);
-        $update = true;
+//dsm(array_keys(openlayers_styles()));
+    //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
+    module_load_include('php','uwwtd','inc/ShapeFile.inc');
+    module_load_include('inc','uwwtd','inc/data_center');
+    $shp = new ShapeFile(drupal_realpath('sites/default/files/data_shapes/SI_SA_river.shp'));
+    foreach($shp->records as $record){
+        //dsm($record);
+        $shpdata = $record->shp_data['parts'][0]['points'];
+        $geodata = uwwtd_coord_transform_polygon($shpdata);
+        dsm($geodata);
+        break;
     }
-    if(strpos($map->data['css_path'], "default_dark")){
-        $map->data['css_path'] = str_replace('default_dark', 'default_white', $map->data['css_path']);
-        $update = true;
-    }
-    dsm($map);
     
-    /*
-    $map = openlayers_map_load('waste_water_treatment_network_map', true);
-    dsm($map);
-    $new_layers = array('oieau_rbd_rbdsu'=>5,'oieau_nuts'=>6,'bathing_water'=>7, 'soe_monitoring_stations'=>8, 'natura_2000'=>9);
-    foreach($new_layers as $layer=>$weight){
-        $map->data['layers'][$layer] = $layer;
-        $map->data['layer_weight'][$layer] = $weight;
-        $map->data['layer_styles'][$layer] = 0;
-        $map->data['layer_styles_select'][$layer] = 0;
-        $map->data['layer_styles_temporary'][$layer] = 0;
-        $map->data['layer_activated'][$layer] = 0;
-        $map->data['layer_switcher'][$layer] = $layer;
-        $update = true;
-    }
-    $map->data['layers']['openlayers_geojson_picture_this'] = 0;
-    $map->data['layers']['geofield_formatter'] = 0;
-    $map->data['layers']['openlayers_kml_example'] = 0;
-    
-    //Update the map if needed
-    //if($update){
-    dsm($map);
-        openlayers_map_save($map);
-    
-    $map = openlayers_map_load('waste_water_treatment_network_map', true);
-    dsm($map);
-    */
     return 'debug';
 }
 
