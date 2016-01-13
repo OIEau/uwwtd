@@ -700,7 +700,7 @@ return $this->_windowStatus;
         $command = $this->_bin;
         
         //$command .= " --debug-javascript";
-        $command .= " --javascript-delay 5000";
+        //$command .= " --javascript-delay 5000";
         //$command .= " --no-stop-slow-scripts";
         $command .= " --load-error-handling ignore";
         
@@ -726,15 +726,16 @@ return $this->_windowStatus;
         
         
         $command .= (mb_strlen($this->getCoverHtml()) > 0) ? " cover \"".$this->getCoverHtml()."\"" : "";
+        $command .= (mb_strlen($this->getHeaderHtml()) > 0) ? " --header-html \"" . $this->getHeaderHtml() . "\"" : "";
+        $command .= (mb_strlen($this->getFooterHtml()) > 0) ? " --footer-html \"" . $this->getFooterHtml() . "\"" : "";
         //$command .= ($this->getPdfCompression()) ?'':' --disable-pdf-compression';
         
         $command .= ' "%input%"';
         
-        $command .= (mb_strlen($this->getHeaderHtml()) > 0) ? " --header-html \"" . $this->getHeaderHtml() . "\"" : "";
-        $command .= (mb_strlen($this->getFooterHtml()) > 0) ? " --footer-html \"" . $this->getFooterHtml() . "\"" : "";
+        
                 
         $command .= " -"; //laisse cette ligne sinon ca ne marche plus
-
+        
         if ( $this->getRunInVirtualX() )
           $command = 'xvfb-run ' . $command;
           
@@ -762,8 +763,11 @@ return $this->_windowStatus;
             $input = $this->getFilePath();
         }
 
-        //echo( str_replace('%input%', $input, $this->_getCommand())."<br/>");
-        $content = $this->_exec(str_replace('%input%', $input, $this->_getCommand()));
+        
+        $command = str_replace('%input%', $input, $this->_getCommand());
+        /*krumo($input);
+        exit( $command);*/
+        $content = $this->_exec($command);
 
         if (strpos(mb_strtolower($content['stderr']), 'error'))
                 throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
