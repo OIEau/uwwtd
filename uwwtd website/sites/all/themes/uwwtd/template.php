@@ -82,10 +82,10 @@ function uwwtd_preprocess_field(&$variables){
     }
 
     if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(base_path().path_to_theme().'/images/tick.png'). '"/>';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
     }
     elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(base_path().path_to_theme().'/images/cross.png'). '"/>';
+      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
     }
   }
 
@@ -1266,16 +1266,16 @@ function uwwtd_get_uww_graphic($node){
 }
 
 function uwwtd_get_agglo_graphic($node){
-  global $base_url;
-      $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
+    global $base_url;
+    $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
 
-//       $totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
-      $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
-      $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
+    //$totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
+    $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
+    $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
 
-      $nbPlants = 0;
-      $reseau = array();
-      foreach($node->field_linked_treatment_plants['und'] as $uwws){
+    $nbPlants = 0;
+    $reseau = array();
+    foreach($node->field_linked_treatment_plants['und'] as $uwws){
         $nbPlants++;
         $uww = node_load($uwws['nid']);
         //get station entering sums
@@ -1283,76 +1283,73 @@ function uwwtd_get_agglo_graphic($node){
         $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
         $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
-//         $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+        //$query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
         $query->fields('n', array('nid', 'title'));
         $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
-//         $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+        //$query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
         $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
         $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
         $result = $query->execute();
         while($record = $result->fetchAssoc()){
-          $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
-//           $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+            $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
+            //$mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
         }
 
-//        $totale = floor(($totalout / 100) * $perce);
+        //$totale = floor(($totalout / 100) * $perce);
         $total_entering = $node->field_agggenerated['und'][0]['value'] / 100 * $perce_entering;
-
         $msType = false;
         if($uww->field_uwwnremoval['und'][0]['value'] == '1'){
-          $msType = 'N';
-          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
-            $msType = 'NP';
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'NPO';
+            $msType = 'N';
+            if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+                $msType = 'NP';
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ) {
+                    $msType = 'NPO';
+                }
             }
-          }
-          else{
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'NO';
+            else{
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'NO';
+                }
             }
-          }
-        }
-        else{
-          if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
-            $msType = 'P';
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'PO';
+        } else {
+            if($uww->field_uwwpremoval['und'][0]['value'] == '1'){
+                $msType = 'P';
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'PO';
+                }
+            } else {
+                if(
+                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
+                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
+                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
+                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
+                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
+                ){
+                    $msType = 'O';
+                }
             }
-          }
-          else{
-            if(
-              $uww->field_uwwuv['und'][0]['value'] == '1' ||
-              $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-              $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-              $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-              $uww->field_uwwothertreat['und'][0]['value'] == '1'
-            ){
-              $msType = 'O';
-            }
-          }
         }
 
         $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
@@ -1362,35 +1359,31 @@ function uwwtd_get_agglo_graphic($node){
         $reseau[$uwws['nid']]['title'] = $uww->title;
         $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
         foreach($uww->field_linked_discharge_points['und'] as $dcps){
-          $loadedDcp = node_load($dcps['nid']);
-          $dcpNid = $loadedDcp->nid;
-          $dcpTitle = $loadedDcp->title;
-          $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
-          $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+            $loadedDcp = node_load($dcps['nid']);
+            $dcpNid = $loadedDcp->nid;
+            $dcpTitle = $loadedDcp->title;
+            $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
-      }
+    }
 
-      $nbPlantsT = 0;
-      $nbPlantsB = 0;
-      for ($i=0; $i <= $nbPlants; $i++) {
-
+    $nbPlantsT = 0;
+    $nbPlantsB = 0;
+    for ($i=0; $i <= $nbPlants; $i++) {
         if($i > 1){
-
-          if($i % 2 == 0){
-            $nbPlantsT ++;
-          }
-          else{
-            $nbPlantsB ++;
-          }
+            if($i % 2 == 0){
+                $nbPlantsT ++;
+            } else {
+                $nbPlantsB ++;
+            }
         }
-      }
-      $topMarge = $nbPlantsB * 95;
-      $output = '';
-
+    }
+    $topMarge = $nbPlantsB * 95;
+    $output = '';
     $output .= '<div class="ias">
       <div class="graphic-title">
         '.t('Individual And Appropriate Systems:').' '.uwwtd_format_number($totalIAS, 0).' p.e ('.uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1).'%)
@@ -1400,9 +1393,9 @@ function uwwtd_get_agglo_graphic($node){
     <div class="graphic-container">
 
       <div class="agglomeration-graphic">';
-          if ($node->field_aggcompliance['und'][0]['value'] == 'NC') {
+          if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-nc.png" alt="reseau">';
-          } elseif ($node->field_aggcompliance['und'][0]['value'] == 'C') {
+          } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'QC') {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-c.png" alt="reseau">';
           } else {
             $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">';

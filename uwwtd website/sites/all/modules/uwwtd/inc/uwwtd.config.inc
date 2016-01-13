@@ -106,6 +106,103 @@ $GLOBALS['uwwtd_value']['rcatype'] = array(
     'sensitive_area' => 'SA',
     '?' => 'A58',
 );
+$GLOBALS['uwwtd_value']['rcatype_labels']=array(
+    'All' => t('- Any -'),
+    'SA'=>t('Sensitive Area'),
+    'CSA'=>t('Catchment of Sensitive Area'),
+    'LSA'=>t('Less Sensitive Area'),
+    'NA'=>t('Normal Area'),
+    'A54'=>t('A54 Sensitive Area'),
+    'A58'=>t('A58 Sensitive Area'),
+);
+$GLOBALS['uwwtd_value']['rcatype_color']=array(
+    'All' => array(
+      'pointRadius' => 6,
+      'fillColor' => "#aaaaaa",
+      'strokeColor' => '#000000',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.9,
+      'strokeOpacity' => 0.9,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'SA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#ff0000",
+      'strokeColor' => "#ff0000",
+      'strokeWidth' => 3,
+      'fillOpacity' => 0.8,
+      'strokeOpacity' => 1,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'CSA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#800080",
+      'strokeColor' => '#800080',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.4,
+      'strokeOpacity' => 0.8,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'LSA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#ffdead",
+      'strokeColor' => "#ffdead",
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.6,
+      'strokeOpacity' => 0.8,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'NA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#4682b4",
+      'strokeColor' => '#000000',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.6,
+      'strokeOpacity' => 0.8,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'A54'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#ffff00",
+      'strokeColor' => '#000000',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.9,
+      'strokeOpacity' => 0.9,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'A58'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#9acd32",
+      'strokeColor' => '#000000',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.9,
+      'strokeOpacity' => 0.9,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    )
+);
+
+
 //$GLOBALS['uwwtd_value']['required']['appropriate']
 //$GLOBALS['uwwtd_value']['required']['notrelevant']
 //$GLOBALS['uwwtd_value']['required']['primary']
@@ -214,7 +311,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
 	'field_physicalcapacityactivity_value_format'    =>  array('label'=>t('Physical Capacity (p.e.)'), 'sort_field'=>'field_physicalcapacityactivity_value', 'sort_mod'=>'numeric'),
     'n3nm'          =>  array('label'=>t('Region (NUTS)')),
     'rbd'          =>  array('label'=>t('RBD')),
-    'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment type in place')),
+    'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment in place')),
     'field_uwwcompliance_value_format'       =>  array('label'=>t('Compliance')),
     'field_uwwbod5perf_value_format'   =>  array('label'=>t('BOD5'), 'sort_field'=>'field_uwwbod5perf_value'),
     'field_uwwcodperf_value_format'   =>  array('label'=>t('COD'), 'sort_field'=>'field_uwwcodperf_value'),
@@ -252,7 +349,17 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'] = array(
     'field_uwwpdischarge_value_format'      =>  array('label'=>t('Discharged load Ptot (t per year)'), 'sort_field'=>'field_uwwpdischarge_value', 'sort_mod'=>'numeric'),
 	'field_article17_uwwtp_value_format'   =>  array('label'=>t('Article 17'), 'sort_field'=>'field_article17_uwwtp_value'),
 );
-
+$GLOBALS['uwwtd']['ui']['field']['rca'] = array(
+    'title'                           =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
+    'zonetype_format'=>array('label'=>t('Type of area')),
+    'rca52_format'=>array('label'=>t('Article 52 applied')),
+    'rca54_format'=>array('label'=>t('Article 54 applied')),
+    'rca58_format'=>array('label'=>t('Article 58 applied')),
+    'uwwtps'=>array('label'=>t('Number of UWWTP')),
+    'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
+    'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+);
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
     'PD' => 'NR',
@@ -350,7 +457,5 @@ $GLOBALS['ms_level'] = array(
         'C'=>array('color'=>'#bd8842','label'=>t('Combine system')),
 		'NI'=>array('color'=>'#a2a2a2','label'=>t('No information')),
 	)
-	
-	//E74C3C
 );
 

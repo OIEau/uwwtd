@@ -4878,7 +4878,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 	// including the shapefile reader class
 	//require_once 'ShapeFile.inc.php';
     
-    require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
+    module_load_include('php','uwwtd','inc/ShapeFile.inc');
 // 	uwwtd_debug_trace('new ShapeFile'); 
 	// importing the downloaded shapefile
 	$shp = new ShapeFile(drupal_realpath($chosen));
@@ -4893,7 +4893,9 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 //         uwwtd_debug_trace('$record->dbf_data = ' .var_export($record->dbf_data, true));
 		$id = '';
 		$shptype = '1';
-
+        
+        
+        //FIX ME  : $shptype & $geoType are not used ? can we remove these vars ?
 		if(isset($record->dbf_data['EUCD_SA_CM'])){
 			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_CM']);
 			$shptype = '1';
@@ -5762,11 +5764,15 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     uwwtd_trace("maxgen = $maxgen");
     uwwtd_trace("pe_lost = $pe_lost");
     uwwtd_trace("percentage_lost = $percentage_lost");      
-    uwwtd_trace(__LINE__);          
-    if (false === ($percentage_lost < 1 || $pe_lost <= 2000)) {
-        uwwtd_trace(__LINE__);      
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-    }   
+    uwwtd_trace(__LINE__);
+
+
+    // BB - 13/01/2016 - Draft 11 - This condition goes into algo 7   
+
+    // if (false === ($percentage_lost < 1 || $pe_lost <= 2000)) {
+        // uwwtd_trace(__LINE__);      
+        // return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+    // }   
     
     if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
@@ -5853,19 +5859,44 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
-    $totalLoadenteringPercent = 0;      
+    $totalLoadenteringPercent = 0;
     foreach($listUwwtpCompliance as $uwwtp) {
+        // BB - 12/01/2016 - Draft 10 of algo
+
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
+            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
+
     }
+
+    uwwtd_trace($totalLoadenteringPE);
+    uwwtd_trace($totalLoadenteringPercent);
             
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];    
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        } else {
+            return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+        }  
     } 
     
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
+    
+    // BB - 12/01/2016 - Draft 11 - New condition coming from art. 10
+    // load collected in collecting system - sum of load entering the tp
+    // $percentage_lost = ($pe_lost * 100) / $agg->field_aggc1['und'][0]['value'];
+    // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
+    $totalLoadenteringPercent = 0;
+    foreach ($listUwwtpCompliance as $aUwwtp) {
+        $totalLoadenteringPercent = $aUwwtp['agglo_uww_perc_ent_uw'];
+    }
+    $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
+    $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
+
+    uwwtd_trace($pe_lost);
+    uwwtd_trace($percentage_lost);
+
+    if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     }
     
@@ -5978,17 +6009,22 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
-    foreach($listUwwtpCompliance as $uwwtp) {
+    foreach($listUwwtpCompliance as $uwwtp) {       
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE     += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];   
+
+            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
     }
-        
+      
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        } else {
+            return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+        }
     }
     
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
@@ -6478,18 +6514,14 @@ function uwwtd_coord_transform($lat, $long){
 	//dsm($table);
 }
 
-function uwwtd_coord_transform_polygon($parts){
-
-	$sql = "SELECT ST_Transform(ST_GeomFromText('POLYGON((";
+function  uwwtd_coord_transform_line($parts){
+    
+	$sql = "SELECT ST_Transform(ST_GeomFromText('LINE((";
 
 	$numParts = count($parts);
 	$count = 0;
 
 	foreach($parts as $k=>$part){
-		if($k == 0){
-			$firstLat = $part['x'];
-			$firstLong = $part['y'];
-		}
 
 		$count++;
 
@@ -6498,14 +6530,6 @@ function uwwtd_coord_transform_polygon($parts){
 
 		$sql .= $lat.' '.$long;
 		if($count < $numParts) $sql .= ',';
-		else{
-			$lastLat = $part['x'];
-			$lastLong = $part['y'];
-		}
-	}
-
-	if($lastLat != $firstLat || $lastLong != $firstLong){
-		$sql .= ','.$firstLat.' '.$firstLong;
 	}
 
 	$sql .= "))', 4258),4326) AS geo";
@@ -6522,7 +6546,7 @@ function uwwtd_coord_transform_polygon($parts){
 	$result = db_query($sql);
 	foreach ($result as $record) {
   		$table['bin'] = $record->bin;
-  		$table['polygon'] = 'polygon';
+  		$table['polygon'] = 'line';
   		//$table['geoy'] = $record->geoy;
   		//$table['geox'] = $record->geox;
   		$table['geohash'] = $record->geohash;
@@ -6530,6 +6554,58 @@ function uwwtd_coord_transform_polygon($parts){
 	return $table;
 }
 
+function uwwtd_coord_transform_polygon($parts){
+    $type  = 'POLYGON';
+	
+
+	$numParts = count($parts);
+	$count = 0;
+    $def = '';
+	foreach($parts as $k=>$part){
+		if($k == 0){
+			$firstLat = $part['x'];
+			$firstLong = $part['y'];
+		}
+
+		$count++;
+
+		$lat = str_replace(",",".",$part['x']);
+		$long = str_replace(",",".",$part['y']);
+
+		$def .= $lat.' '.$long;
+		if($count < $numParts) $def .= ',';
+		else{
+			$lastLat = $part['x'];
+			$lastLong = $part['y'];
+		}
+	}
+
+	if($lastLat != $firstLat || $lastLong != $firstLong){
+		$type  = 'LINESTRING';
+        
+        //$sql .= ','.$firstLat.' '.$firstLong;
+	}
+    if($type  == 'LINESTRING') $sql = "SELECT ST_Transform(ST_GeomFromText('".$type."(".$def.")', 4258),4326) AS geo";
+    else $sql = "SELECT ST_Transform(ST_GeomFromText('".$type."((".$def."))', 4258),4326) AS geo";
+	$result = db_query($sql);
+	foreach ($result as $record) {
+  		$geo = $record->geo;
+  		//dsm($geo);
+	}
+
+	// create array
+	$table = array();
+	$sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+	$result = db_query($sql);
+	foreach ($result as $record) {
+  		$table['bin'] = $record->bin;
+  		$table['polygon'] = strtolower($type);
+  		$table['geohash'] = $record->geohash;
+	}
+	return $table;
+}
+
+//TODO check if multipolygon is not a multline
 function uwwtd_coord_transform_multipolygon($parts){
 	$sql = "SELECT ST_Transform(ST_GeomFromText('MULTIPOLYGON(";
 
