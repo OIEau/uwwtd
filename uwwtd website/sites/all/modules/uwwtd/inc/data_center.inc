@@ -5867,6 +5867,9 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
     }
+
+    uwwtd_trace($totalLoadenteringPE);
+    uwwtd_trace($totalLoadenteringPercent);
             
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
