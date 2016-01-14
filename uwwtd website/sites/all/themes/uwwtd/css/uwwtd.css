@@ -374,6 +374,7 @@ legend.panel-heading{
 	font-weight: normal;
     color:#000000;
     max-width:89px;
+    height:32px;
 }
 .views-exposed-form .form-control {
   padding: 3px 6px;
