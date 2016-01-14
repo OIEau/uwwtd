@@ -205,8 +205,6 @@ echo uwwtd_insert_errors_tab($node);
             <div class="uwwrealthird">
                 <div class="distance">
                 <p><b>Distance to compliance:</b></p>
-                    <?php dsm($node); ?>
-                    <?php dsm($distanceToCompliance); ?>
 
                     <table id="UwwtpDescription">
                         <tr>
