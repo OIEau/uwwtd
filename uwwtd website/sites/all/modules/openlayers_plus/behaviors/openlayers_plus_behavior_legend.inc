@@ -51,6 +51,7 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
     $options = array();
     $styles = openlayers_styles();
     uasort($map['layers'], 'openlayers_plus_layer_compare');
+    //dsm($map);
     foreach ($map['layers'] as $layer => $layer_data) {
       if (isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && $map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) {
         $selected_layer_style = $map['layer_styles'][$layer];
@@ -76,6 +77,13 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
               'layer' => $layer_data,
               'layer_id' => $layer,
             ));
+        /*
+        dsm($legend_title);
+        dsm($layer);
+        dsm($layer_data);
+        dsm($legend[$layer]['data']);
+        */
+        //dsm($options[$layer]);
 		//Modif nd@oieau.fr prise en compte des légendes avec scale point
 		if(isset($map['behaviors']['openlayers_plus_behavior_scalepoints']) && !empty($map['behaviors']['openlayers_plus_behavior_scalepoints']) && $map['behaviors']['openlayers_plus_behavior_scalepoints']['layers'][$layer] != '0'){
 			$additional_legend = '';

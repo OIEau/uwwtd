@@ -1452,6 +1452,9 @@ function uwwtd_build_map($map, $features) {
     $map['layers'][$overlay]['features'] = $feature;
   }
 
+  //FIX ME : manage overridens style in openlayer_plus_legend for layers if style is define on feature (renderinf is make before feature association)
+  
+  
   // Return themed map if no errors found
   if (empty($map['errors'])) {
     $js = array('openlayers' => array('maps' => array($map['id'] => $map)));

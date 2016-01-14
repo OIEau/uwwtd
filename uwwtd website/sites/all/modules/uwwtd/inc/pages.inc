@@ -264,7 +264,6 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
     //dsm($map);
     $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-    //dsm($features);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
