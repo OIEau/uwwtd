@@ -3033,7 +3033,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
      return $page;
 }
 
- 
+ function uwwtd_dcp_page($type_export = ''){
+    return 'dcp !!!'; 
+ }
  
 /* 
 function uwwtd_sensitive_areas_page() {

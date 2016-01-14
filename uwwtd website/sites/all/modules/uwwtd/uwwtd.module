@@ -272,6 +272,51 @@ function uwwtd_menu(){
     'file' => 'pages.inc',
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
   );
+  $items['sensitive_areas/csv'] = array(
+    'page callback' => 'uwwtd_sensitive_areas_page',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['sensitive_areas/xls'] = array(
+    'page callback' => 'uwwtd_sensitive_areas_page',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  
+  $items['discharge-points'] = array(
+    'title' => 'Discharge points',
+    'page callback' => 'uwwtd_dcp_page',
+    'access callback' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/csv'] = array(
+    'page callback' => 'uwwtd_dcp_page',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/xls'] = array(
+    'page callback' => 'uwwtd_dcp_page',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
   
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
