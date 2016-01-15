@@ -188,13 +188,13 @@ function uwwtd_page_stats_graphs_result($options){
     //==============================================
     
     // Récupération des données des graphs:
-    $frontAndBackGraph1 = getRow7Graph1($options);
-    $frontGraph2 = getRow7Graph2($frontAndBackGraph1[0], options);
+    $ms_levelFrontAndBackGraph1 = getRow7Graph1($options);
+    $frontGraph2 = getRow7Graph2($ms_levelFrontAndBackGraph1[0], $options);
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
-    	t("Sludge destination"), 'graph_sludge_dest', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	t("Water re-use"), $frontGraph2, options);
+    	t("Sludge destination"), 'graph_sludge_dest', $ms_levelFrontAndBackGraph1[0],  $ms_levelFrontAndBackGraph1[1], $ms_levelFrontAndBackGraph1[2],
+    	t("Water re-use"), $frontGraph2, $options);
 	
 	return  $formResult;
 }
@@ -524,7 +524,7 @@ function getRow7Graph1($options) {
 		$sludge_destination_str = theme('table', array("rows"=>$lines, "header"=>array("Destination","Values")));
 	}
 	
-	return array($ms_level, $sludge_destination_str);
+	return array($ms_level, $sludge_destination_str, $sludge_destination);
 }
 
 /**
@@ -532,7 +532,7 @@ function getRow7Graph1($options) {
  */
 function getRow7Graph2($ms_level, $options) {
 	$ww_reuse = '';
-	if ($ms_level[$options['year']]['waste_water']['Re-used'] > 0) {
+	if (!empty($ms_level[$options['year']]['waste_water']['Re-used']) && $ms_level[$options['year']]['waste_water']['Re-used'] > 0) {
 		$ww_reuse = $ms_level[$options['year']]['waste_water']['Re-used'].' m3 of treated waste water are re-used.';
 		if ($ms_level[$options['year']]['waste_water']['rate of re-used']){
 			$ww_reuse .=' It represent '.$ms_level[$options['year']]['waste_water']['rate of re-used'].' % of the total volume treated';
@@ -576,7 +576,6 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		$graph2Title, $graph2Id, $graph2Front, $graph2Back) {
 	$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$html.='<div class="rows charts-row">';
-	
 		// Création du code html pour le graph1 :
 		$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
 		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
@@ -599,7 +598,6 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
 		$graph2Legend, $graph2Id, $graph2Title, $graph2Front, $graph2Back) {
 	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
 	$html.='<div class="rows charts-row">';
-	
 		// Création du code html pour le graph1 :
 		if (array_sum (array_column($graph1Front, 1))){
 			$front = uwwtd_graph_render_column($graph1Id, $graph1Legend, $graph1Front);
@@ -623,19 +621,18 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
  * Ajoute au code html donné le code html pour afficher un graph camembert et un texte.
  */
 function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
-		$graph1Title, $graph1Id, $graph1Front, $graph1Back,
+		$graph1Title, $graph1Id, $ms_level, $graph1Front, $graph1Back,
 		$graph2Title, $graph2Text, $options) {
 	$html .='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$html .='<div class="rows charts-row">';
-
 		// Création du code html pour le graph1 :
-		$msg_sludge = '';
-		if ($graph1Front[$options['year']]['sludge']['production'] > 0) {
-			$msg_sludge = "Production : ". $graph1Front[$options['year']]['sludge']['production']." T DS/year";
-		}
 		$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
-		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(". json_encode($graph1Front) .", '". $graph1Id ."');});</script>";
-		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back, $msg_sludge).'</div></div>';
+		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(". json_encode($graph1Back) .", '". $graph1Id ."','middle');});</script>";
+		$msg_sludge = '';
+		if ($ms_level[$options['year']]['sludge']['production'] > 0) {
+			$msg_sludge = "Production : ". $ms_level[$options['year']]['sludge']['production']." T DS/year";
+		}
+		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Front, $msg_sludge).'</div></div>';
 	
 		// Création du code html pour le graph2 :
 		$html .= '<div class="cell charts-rows-cell"><div class="cell-content"><div class="flot-title">Water re-use</div><p>'. $graph2Text .'</p></div></div>';
