@@ -270,6 +270,9 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'required_rcab'  => $i++,
     'required_rcac'  => $i++, 
     'field_agglo_uww_perc_ent_uw' => $i++,
+    'compliance5a' => $i++,
+    'compliance5b' => $i++,
+    'compliance5c' => $i++,
     
     //debug info
     'debug_pending_or_expired' => $i++,
