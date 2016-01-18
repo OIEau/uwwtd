@@ -5,40 +5,26 @@ function uwwtd_page_stats_querys()
 {
 	$title = 'Querys for national stats';
 	drupal_set_title($title);  //todo
-	/*
-	$page =  '<h1 align="center">'.$title.'</h1><br/>';
-	dsm('function uwwtd_stat_national_compliance');
-	dsm(uwwtd_stat_national_compliance());
-	dsm('function uwwtd_stat_national_uwwtp(\'compliance\')');
-	dsm(uwwtd_stat_national_uwwtp('compliance'));
-	dsm('function uwwtd_stat_national_uwwtp(\'treatmenttype\')');
-	dsm(uwwtd_stat_national_uwwtp('treatmenttype'));
-	dsm('function uwwtd_stat_national_treatmentplant');
-	dsm(uwwtd_stat_national_treatmentplant());
-	dsm('function uwwtd_stat_national_ms_level');
-	dsm(uwwtd_stat_national_ms_level());
-	dsm('function uwwtd_stat_national_uwwtp_agglo');
-	dsm(uwwtd_stat_national_uwwtp_agglo());
-	dsm('function uwwtd_stat_national_generated_by_agglomeration');
-	dsm(uwwtd_stat_national_generated_by_agglomeration());
-*/
-$options = array('year'=> 2012);
-//uwwtd_stat_collect_data($options);
-$data = uwwtd_stat_sewage_network_data($options);
-//dsm($data);
+	$options = array('year'=> 2012);
+	$data = uwwtd_stat_sewage_network_data($options);
 	return 'fin';
 }
 
-function uwwtd_stat_sewage_network_data($options){
-	switch($options['year']){
-		case 'all' :
+/**
+ * Récupère en base les données pour Graph 1 de la ligne 1 : "Generated Load by collection type".
+ */
+function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
+	switch ($yearSelected) {
+		case ALL_YEARS :
+			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
 			break;
 		case '' :
 			break;
 		default :
-			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $yearSelected . "'";
 			break;
 	}
+
 	if (variable_get('display_only_active', '1') == 1) {
         $conditions .= "  AND f_status.field_status_value = '1' ";
     }   
@@ -46,23 +32,87 @@ function uwwtd_stat_sewage_network_data($options){
 		':typenode' => 'agglomeration',
 		':agggenerated' => variable_get('min_aggenerated_display', '2000'), 
 	);  
-	try{  
+
+	$result = db_query("
+		SELECT
+			f_annee.field_anneedata_value as year,
+			SUM (g.field_agggenerated_value) AS \"Generated load\",
+			SUM ((g.field_agggenerated_value*c1.field_aggc1_value)/100) AS cs,
+			SUM ((g.field_agggenerated_value*c2.field_aggc2_value)/100) AS ias,
+			SUM ((g.field_agggenerated_value*wot.field_aggpercwithouttreatment_value)/100) as wot
+		FROM {node n
+			LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+			LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id 
+			LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
+			LEFT JOIN {field_data_field_aggc1} c1  ON n.vid = c1.revision_id
+			LEFT JOIN {field_data_field_aggc2} c2 ON n.vid = c2.revision_id
+			LEFT JOIN {field_data_field_aggpercwithouttreatment} wot ON n.vid = wot.revision_id
+		WHERE n.type = :typenode
+			AND n.status = 1
+			AND g.field_agggenerated_value > :agggenerated". 
+			$conditions
+	 ." GROUP BY f_annee.field_anneedata_value
+		ORDER BY f_annee.field_anneedata_value", 
+	$params);
+	
+	$out = array();
+	if ($dataByYears = $result->fetchAllAssoc('year')) {
+		// Pour chaque ligne retournée :
+		foreach ($dataByYears as $year => $dataByYear) {
+			// Pour chaque colonne de la ligne :
+			foreach ($dataByYear as $key => $data) {
+				if ($key != 'year') {
+					$out[$year][] = array(
+						"value" => (float)$data,
+						"label" => $GLOBALS['ms_level']['connection'][$key]['label'],
+						"valueformat" => uwwtd_format_number(round($data, 0)).' pe',
+						"color" => $GLOBALS['ms_level']['connection'][$key]['color'],
+					);
+				}
+			}
+		}
+	}
+	
+	return $out;
+}
+
+/**
+ * Récupère en base les données pour Graph 2 de la ligne 1 : "Generated Load by collection type".
+ */
+function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
+	switch ($yearSelected) {
+		case ALL_YEARS :
+			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $yearSelected . "'";
+			break;
+	}
+	if (variable_get('display_only_active', '1') == 1) {
+		$conditions .= "  AND f_status.field_status_value = '1' ";
+	}
+	$params = array(
+		':typenode' => 'agglomeration',
+		':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+	);
+	try {
 		$result = db_query("
 			SELECT s.field_aggsewagenetwork_value AS type, SUM(g.field_agggenerated_value) AS sn_sum,  COUNT (*) AS sn_count
-			FROM {node n
+			FROM {node} n
 				LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
 				LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
-				LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id 
+				LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id
 				LEFT JOIN {field_data_field_aggsewagenetwork} s ON n.nid = s.entity_id
 			WHERE n.type = :typenode
 				AND n.status = 1
-				AND g.field_agggenerated_value > :agggenerated
-			
-		".$conditions."
+				AND g.field_agggenerated_value > :agggenerated ".
+				$conditions."
 		GROUP BY s.field_aggsewagenetwork_value
 		ORDER BY s.field_aggsewagenetwork_value ASC"
-		, $params);
-		
+				, $params);
+
 		$out = array();
 		while($row = $result->fetchAssoc()) {
 			if($row['type']=='') $row['type']='NI';
@@ -79,67 +129,11 @@ function uwwtd_stat_sewage_network_data($options){
 				"color"=>$GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
 			);
 		}
-	}catch(Exception $e) {
+	} catch(Exception $e) {
 		dsm($e->getMessage());
 	}
 	return $out;
-	
-}
 
-function uwwtd_stat_collect_data($options){
-	
-	switch($options['year']){
-		case 'all' :
-			break;
-		case '' :
-			break;
-		default :
-			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
-			break;
-	}
-	if (variable_get('display_only_active', '1') == 1) {
-        $conditions .= "  AND f_status.field_status_value = '1' ";
-    }   
-	$params = array(
-		':typenode' => 'agglomeration',
-		':agggenerated' => variable_get('min_aggenerated_display', '2000'), 
-	);  
-	  
-	$result = db_query("
-		SELECT
-			SUM (g.field_agggenerated_value) AS \"Generated load\",
-			SUM ((g.field_agggenerated_value*c1.field_aggc1_value)/100) AS cs,
-			SUM ((g.field_agggenerated_value*c2.field_aggc2_value)/100) AS ias,
-			SUM ((g.field_agggenerated_value*wot.field_aggpercwithouttreatment_value)/100) as wot
-		FROM {node n
-			LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
-			LEFT JOIN {field_data_field_status} f_status ON n.nid = f_status.entity_id 
-			LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
-			LEFT JOIN {field_data_field_aggc1} c1  ON n.vid = c1.revision_id
-			LEFT JOIN {field_data_field_aggc2} c2 ON n.vid = c2.revision_id
-			LEFT JOIN {field_data_field_aggpercwithouttreatment} wot ON n.vid = wot.revision_id
-		WHERE n.type = :typenode
-			AND n.status = 1
-			AND g.field_agggenerated_value > :agggenerated
-	".$conditions
-	, $params);
-	
-	$out = array();
-	if($row = $result->fetchAssoc()){
-		
-		foreach($row as $k=>$v){
-			$out[]=array(
-				"value" => (float)$v,
-				"label" => $GLOBALS['ms_level']['connection'][$k]['label'],
-				"valueformat" => uwwtd_format_number(round($v,0)).' pe',
-				"color"=>$GLOBALS['ms_level']['connection'][$k]['color'],
-			);
-			
-		}
-		
-	}
-	
-	return $out;
 }
 
 
@@ -968,6 +962,21 @@ function uwwtd_stat_national_generated_by_agglomeration($options)
 
 
 	return $data;
+}
+
+/**
+ * Retourne la chaine "(test1, test2, test3, -1)" créée à partir du tableau de string donné.
+ */
+function getInSql($strings) {
+	// Construction de la string pour le IN sql :
+	$inSql = '(';
+	if (!empty($strings)) {
+		foreach ($strings as $string) {
+			$inSql .= "'". $string ."', ";
+		}
+	}
+	$inSql .= "'-1')";
+	return $inSql;
 }
 
 ?>
