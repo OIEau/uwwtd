@@ -4925,7 +4925,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }   
             
-            if ($uwwtp[$induww['art4_treatment type']] == 'NC') {
+            if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false !== strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -5843,7 +5843,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $morestringent_passed_pe      = '';
         $morestringent_passed_percent = '';  
         if ($uwwtpinfo_for_agglo['morestringent_passed'] == 1) {  
-            $secondary_passed_pe = $uwwtpinfo_for_agglo['morestringent_monitoring_pe']; 
+            $morestringent_passed_pe = $uwwtpinfo_for_agglo['morestringent_monitoring_pe']; 
             $morestringent_passed_percent = $uwwtpinfo_for_agglo['morestringent_monitoring_percent']; 
         }            
         $line[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']] = $morestringent_passed_percent;
@@ -8702,6 +8702,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
             break;                                        
     }
 
+
    if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NI'
         || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == '?'
         || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {
@@ -8712,7 +8713,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
         return 'PD';
     }
 
-    if ($line[$ind['generated_load_p.e.']] <= 10000) {
+    if ($line[$ind['generated_load_p.e.']] <= 10000 || $compart5x == 'NR') {
         return 'NR';
     }
     if ($line[$ind['art4_compliance_art._4_(only)']] == 'C'
@@ -8775,12 +8776,12 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
         return 'NR';
     }
 
-    if ($deadline_agglo > $reporting_year) {
-        return 'PD';
-    }
-
     if ($line[$nr] >= 0 && $line[$c] == 0 && $line[$nc] == 0) {
         return 'NR';
+    }
+
+    if ($deadline_agglo > $reporting_year) {
+        return 'PD';
     }
 
     if ($line[$nc] == 0 && $line[$c] > 0) {
