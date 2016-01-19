@@ -99,7 +99,10 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	);
 	try {
 		$result = db_query("
-			SELECT s.field_aggsewagenetwork_value AS type, SUM(g.field_agggenerated_value) AS sn_sum,  COUNT (*) AS sn_count
+			SELECT f_annee.field_anneedata_value as year,
+				s.field_aggsewagenetwork_value AS type, 
+				SUM(g.field_agggenerated_value) AS sn_sum,  
+				COUNT (*) AS sn_count
 			FROM {node} n
 				LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
 				LEFT JOIN {field_data_field_agggenerated} g ON n.vid = g.revision_id
@@ -109,31 +112,24 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 				AND n.status = 1
 				AND g.field_agggenerated_value > :agggenerated ".
 				$conditions."
-		GROUP BY s.field_aggsewagenetwork_value
-		ORDER BY s.field_aggsewagenetwork_value ASC"
+		GROUP BY f_annee.field_anneedata_value, s.field_aggsewagenetwork_value
+		ORDER BY f_annee.field_anneedata_value"
 				, $params);
 
 		$out = array();
-		while($row = $result->fetchAssoc()) {
-			if($row['type']=='') $row['type']='NI';
-			$out['count'][]=array(
-				"value" => (integer)$row['sn_count'],
-				"label" => $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'],
-				"valueformat" => uwwtd_format_number((integer)$row['sn_count']),
-				"color"=>$GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
-			);
-			$out['sum'][]=array(
-				"value" => (integer)$row['sn_sum'],
-				"label" => $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'],
-				"valueformat" => uwwtd_format_number((integer)$row['sn_sum']) .' pe',
-				"color"=>$GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
-			);
+		while ($row = $result->fetchAssoc()) {
+			if ($row['type'] == '') {
+				$row['type'] = 'NI';
+			}
+			$networkTypeName = $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'];
+			$out[$networkTypeName]['data'][$row['year']] = uwwtd_format_number((integer)$row['sn_sum']) .' pe, '.
+				uwwtd_format_number((integer)$row['sn_count']);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());
 	}
+	
 	return $out;
-
 }
 
 

@@ -239,7 +239,86 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 	$frontTmp = uwwtd_stat_collect_data($yearSelected, $yearsPossibles);
 	if (!empty($frontTmp)) {
 		$front = $frontTmp;
-		$back = getBackFromFront($front);
+		$rows = array();
+	
+		// Transforme les clefs en 0, 1, 2, ...
+		$dataByYears = array_values($front);
+		
+		// Pour chaque groupe d'éléments de la première année :
+		$destinations = array();
+		if (array_key_exists('0', $dataByYears) && !empty($dataByYears[0])) {
+			// Pour chaque groupe d'éléments :
+			$isFirst = true;
+			foreach ($dataByYears[0] as $elements) {
+				// Discard le premier groupe d'éléments :
+				if ($isFirst) {
+					$isFirst = false;
+				} else {
+					// Récupération de l'intitulé de la destination :
+					if (array_key_exists('label', $elements) && !empty($elements['label'])) {
+						$destinations[] = $elements['label'];
+					}
+				}
+			}
+				
+			// Ajout du Total :
+			$destinations[] = t('Total');
+		}
+		
+		// Pour les entetes du tableau :
+		$columns = array();
+		$columns[0][]['data'] = 'Destination';
+		
+		// Pour chaque destinations possibles :
+		foreach ($destinations as $destination) {
+			// Ecriture des intitulés de destination :
+			$rows[$destination]['data']['Destination'] = $destination;
+		}
+		
+		// Pour chaque année :
+		foreach ($front as $year => $groupElements) {
+			// Récupération du total :
+			$all = array_shift($groupElements);
+				
+			// Pour les entetes du tableau :
+			$columns[0][]['data'] = $year;
+				
+			// Remise à zéro du Total :
+			$sum = 0;
+			$sum_rate = 0;
+				
+			// Pour chaque groupe d'éléments :
+			foreach ($groupElements as $elements) {
+				// Pour chaque destinations :
+				foreach ($destinations as $destination) {
+					// Si la destination correspond au label :
+					if (array_key_exists('label', $elements) && ($destination == $elements['label'] || $destination == t('Total'))) {
+						// Si c'est la ligne Total :
+						if ($destination == t('Total')) {
+							$rows[$destination]['data'][$year] = uwwtd_format_number($sum).' pe, '.  uwwtd_format_number($sum_rate).' %';
+						} else {
+							$rows[$destination]['data'][$year] = $elements['valueformat'] .', '. round($elements['value'] / $all['value']*100 ,1) .' %';
+							$sum += $elements['value'];
+							$sum_rate += round($elements['value'] / $all['value']*100);
+						}
+					}
+				}
+			}
+		}
+	
+		// Récupération du DOM du tableau :
+		$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
+		
+		// Ajout des légendes :
+		$back .= '
+		<table class="stats-graphs table table-hover table-striped sticky-enabled">
+ 			<thead> 
+				<tr>
+					<th><i>*pe: Population equivalent, *%: Rate</i></th>
+				</tr>
+			</thead>
+		</table>';
+		
 	}
 	return array($front, $back);
 }
@@ -248,27 +327,48 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
  * Retourne les données pour le graph "Generated Load by sewage network type" :
  */
 function getRow1Graph2($yearSelected, $yearsPossibles) {
-	$sewage_str = '';
-	$sewage = array();
-	$sewageTmp = uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles);
-	if(!empty($sewageTmp)){
-		$sewage = $sewageTmp;
-		dsm($sewage);
-		$lines= array();
-		if (!empty($sewage['sum'])) {
-			foreach($sewage['sum'] as $k=>$v){
-				$lines[]=array(
-								$v['label'],
-								$v['valueformat'],
-								$sewage['count'][$k]['valueformat']
-				);
+	$back = '';
+	$front = array();
+	$frontTmp = uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles);
+	if (!empty($frontTmp)) {
+		$front = $frontTmp;
+		$rows = $front;
+		$columns = array();
+		
+		// Pour chaque années possible :
+		$columns[0][]['data'] = t("Network type");
+		
+		// Pour chaque Network type :
+		foreach ($front as $newtworkTypeName => $networkType) {
+			// Si ce NetworkType contient des data :
+			if (array_key_exists('data', $networkType)) {
+				// Ajout au début du tableau de la case avec l'intitulé du network type :
+				array_unshift($rows[$newtworkTypeName]['data'], $newtworkTypeName);
+				
+				// Pour chaque année :
+				foreach (array_keys($networkType['data']) as $year) {
+					// Récupération des entetes du tableau :
+					$columns[0][$year]['data'] = $year;
+				}
 			}
 		}
-		$sewage_str = theme('table', array("rows"=>$lines, "header"=>array(t("Network type"),t("Load"), t("Number of agglomeration"))));
+		
+		// Récupération du DOM du tableau :
+		$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
+		
+		// Ajout des légendes :
+		$back .= '
+		<table class="stats-graphs table table-hover table-striped sticky-enabled">
+ 			<thead>
+				<tr>
+					<th><i>*pe: Population equivalent, *: Number of agglomeration</i></th>
+				</tr>
+			</thead>
+		</table>';
 	} else {
-		$sewage['sum'] = array();
+		$front['sum'] = array();
 	}
-	return array($sewage['sum'], $sewage_str);
+	return array($front['sum'], $back);
 }
 
 /**
@@ -582,88 +682,6 @@ function getRow7Graph2($ms_level, $options) {
 	}
 	
 	return $ww_reuse;
-}
-
-/**
- * Retourne le back fabriqué à partir du front donné.
- */
-function getBackFromFront($front) {
-	$back = '';
-	$rows = array();
-	
-	// Transforme les clefs en 0, 1, 2, ...
-	$dataByYears = array_values($front);
-	
-	// Pour chaque groupe d'éléments de la première année :
-	$destinations = array();
-	if (array_key_exists('0', $dataByYears) && !empty($dataByYears[0])) {
-		// Pour chaque groupe d'éléments :
-		$isFirst = true;
-		foreach ($dataByYears[0] as $elements) {
-			// Discard le premier groupe d'éléments :
-			if ($isFirst) {
-				$isFirst = false;
-			} else {
-				// Récupération de l'intitulé de la destination :
-				if (array_key_exists('label', $elements) && !empty($elements['label'])) {
-					$destinations[] = $elements['label'];
-				}
-			}
-		}
-			
-		// Ajout du Total :
-		$destinations[] = t('Total');
-	}
-	
-	// Pour les entetes du tableau :
-	$columns = array();
-	$columns[0][]['data'] = 'Destination';
-	
-	// Pour chaque destinations possibles :
-	foreach ($destinations as $destination) {
-		// Ecriture des intitulés de destination :
-		$rows[$destination]['data']['Destination'] = $destination;
-	}
-	
-	// Pour chaque année :
-	foreach ($front as $year => $groupElements) {
-		// Récupération du total :
-		$all = array_shift($groupElements);
-			
-		// Pour les entetes du tableau :
-		$columns[0][]['data'] = $year;
-			
-		// Remise à zéro du Total :
-		$sum = 0;
-		$sum_rate = 0;
-			
-		// Pour chaque groupe d'éléments :
-		foreach ($groupElements as $elements) {
-			// Pour chaque destinations :
-			foreach ($destinations as $destination) {
-				// Si la destination correspond au label :
-				if (array_key_exists('label', $elements) && ($destination == $elements['label'] || $destination == t('Total'))) {
-					// Si c'est la ligne Total :
-					if ($destination == t('Total')) {
-						$rows[$destination]['data'][$year] = uwwtd_format_number($sum).' pe, '.  uwwtd_format_number($sum_rate).' %';
-					} else {
-						$rows[$destination]['data'][$year] = $elements['valueformat'] .', '. round($elements['value'] / $all['value']*100 ,1) .' %';
-						$sum += $elements['value'];
-						$sum_rate += round($elements['value'] / $all['value']*100);
-					}
-				}
-			}
-		}
-	}
-	
-	// Récupération du DOM du tableau :
-	$back = theme('table', array('rows' => $rows,
-		'header' => $columns,
-		'rows_multiple' => true,
-		'attributes' => array('class' => 'stats-graphs'),
-	));
-	
-	return $back;
 }
 
 /**
