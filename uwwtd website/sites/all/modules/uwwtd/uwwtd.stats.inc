@@ -11,7 +11,7 @@ function uwwtd_page_stats_querys()
 }
 
 /**
- * Récupère en base les données pour Graph 1 de la ligne 1 : "Generated Load by collection type".
+ * Récupère en base les données pour Graph 1 de la ligne 1.
  */
 function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
 	switch ($yearSelected) {
@@ -77,7 +77,7 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
 }
 
 /**
- * Récupère en base les données pour Graph 2 de la ligne 1 : "Generated Load by collection type".
+ * Récupère en base les données pour Graph 2 de la ligne 1.
  */
 function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	switch ($yearSelected) {
@@ -132,7 +132,242 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	return $out;
 }
 
+/**
+ * Récupère en base les données pour Graph 1 et 2 de la ligne 2.
+ */ 
+function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
+	$data = array();
+	$param = array();
+	$conditions = '';
+	switch ($yearSelected) {
+		case ALL_YEARS :
+			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $yearSelected . "'";
+			break;
+	}
 
+	if (variable_get('display_only_active', '1') == 1) {
+		$conditions .= "  AND f_status.field_status_value = '1' ";
+	}
+
+	$query = 'select 
+		 f_annee.field_anneedata_value as year,
+		 f_comp.field_aggcompliance_value,
+		 COUNT(n.title) AS  TOTAL_COUNT,
+		 SUM(f_aggc2.field_aggc2_value) AS AGGC2_SUM,
+         SUM(f_aggc1.field_aggc1_value) AS AGGC1_SUM,
+         SUM(f_aggpercwithouttreatment.field_aggpercwithouttreatment_value) AS AGGPCWT_SUM,
+         SUM(f_agggenerated.field_agggenerated_value) AS GENERATED_SUM
+    from {node} n
+        left join
+            {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+        left join
+            {field_data_field_inspireidlocalid} f_aggcode
+                ON n.nid = f_aggcode.entity_id
+        left join
+            {field_data_field_agggenerated} f_agggenerated
+                ON n.nid = f_agggenerated.entity_id
+        left join
+            {field_data_field_aggart3compliance} f_art3
+                ON n.nid = f_art3.entity_id
+        left join
+            {field_data_field_aggart4compliance} f_art4
+                ON n.nid = f_art4.entity_id
+        left join
+            {field_data_field_aggart5compliance} f_art5
+                ON n.nid = f_art5.entity_id
+        left join
+            {field_data_field_aggart6compliance} f_art6
+                ON n.nid = f_art6.entity_id
+        left join
+            {field_data_field_aggcompliance} f_comp
+                ON n.nid = f_comp.entity_id
+        left join
+            {field_data_field_regionnuts} f_nuts
+                ON n.nid = f_nuts.entity_id
+        left join
+            {field_data_field_aggc2} f_aggc2
+                ON n.nid = f_aggc2.entity_id
+        left join
+            {field_data_field_aggc1} f_aggc1
+                ON n.nid = f_aggc1.entity_id
+        left join
+            {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
+                ON n.nid = f_aggpercwithouttreatment.entity_id
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
+        left join
+            {field_data_field_position_geo} f_geo
+                ON n.nid = f_geo.entity_id
+		where n.type = :typenode
+        and f_agggenerated.field_agggenerated_value > :agggenerated '.
+    	$conditions .
+    	' group BY f_annee.field_anneedata_value, f_comp.field_aggcompliance_value
+    	order by f_annee.field_anneedata_value';
+
+    $param = array(
+    	':typenode' => 'agglomeration',
+    	':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+    );
+    try {
+    	$result = db_query($query,$param);
+    	while($row = $result->fetchAssoc()) {
+    		$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
+    		$data[$complianceState]['data']['Compliance state'] = $complianceState;
+    		if (is_null($row['generated_sum']) || is_null($row['total_count'])) {
+    										// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
+    			$data[$complianceState]['data'][$row['year']] = array(0, '0', 0, '0');
+    		} else {
+    			$data[$complianceState]['data'][$row['year']] = array($row['generated_sum'], 
+    				uwwtd_format_number($row['generated_sum'], 0) .' pe', 
+    				$row['total_count'],
+    				uwwtd_format_number($row['total_count'], 0),
+    			);
+    		}
+    	}
+    } catch(Exception $e) {
+    	dsm($e->getMessage());
+    }
+    return $data;
+}
+
+/**
+ * Récupère en base les données pour Graph 1 et 2 de la ligne 3.
+ */
+function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
+	$conditions = '';
+	switch($yearSelected){
+		case ALL_YEARS :
+			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
+			break;
+		case '' :
+			break;
+		default :
+			$conditions .= " and  f_annee.field_anneedata_value = '" . $yearSelected . "'";
+			break;
+	}
+	if (variable_get('display_only_active', '1') == 1) {
+		$conditions .= "  AND f_status.field_status_value = '1' ";
+	}
+	switch ($groupBy){
+		case 'compliance' :
+			$group_by = 'f_comp.field_uwwcompliance_value';
+			break;
+		case 'treatmenttype' :
+			$group_by = 'f_uwwtreatmenttype.field_uwwtreatmenttype_value';
+			break;
+		default:
+			$group_by = 'f_comp.field_uwwcompliance_value';
+	}
+	$data = array();
+	$query = 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
+	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
+			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
+    from {node} n
+        left join
+            {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+        left join
+            {field_data_field_inspireidlocalid} f_uwwcode
+                ON n.nid = f_uwwcode.entity_id
+        left join
+            {field_data_field_uwwprimarytreatment} f_primarytreatment
+                ON n.nid = f_primarytreatment.entity_id
+        left join
+            {field_data_field_uwwsecondarytreatment} f_secondarytreatment
+                ON n.nid = f_secondarytreatment.entity_id
+        left join
+            {field_data_field_uwwnremoval} f_nremoval
+                ON n.nid = f_nremoval.entity_id
+        left join
+            {field_data_field_uwwpremoval} f_premoval
+                ON n.nid = f_premoval.entity_id
+        left join
+            {field_data_field_uwwcompliance} f_comp
+                ON n.nid = f_comp.entity_id
+        left join
+            {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
+                ON n.nid = f_uwwloadenteringuwwtp.entity_id
+        left join
+            {field_data_field_regionnuts} f_regionnuts
+                ON n.nid = f_regionnuts.entity_id
+        left join
+            {field_data_field_uwwbod5perf} f_uwwbod5perf
+                ON n.nid = f_uwwbod5perf.entity_id
+        left join
+            {field_data_field_uwwcodperf} f_uwwcodperf
+                ON n.nid = f_uwwcodperf.entity_id
+        left join
+            {field_data_field_uwwntotperf} f_uwwntotperf
+                ON n.nid = f_uwwntotperf.entity_id
+        left join
+            {field_data_field_uwwptotperf} f_uwwptotperf
+                ON n.nid = f_uwwptotperf.entity_id
+        left join
+            {field_data_field_uwwtreatmenttype} f_uwwtreatmenttype
+                ON n.nid = f_uwwtreatmenttype.entity_id
+        left join
+            {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
+                ON n.nid = f_physicalcapacityactivity.entity_id
+        left join
+            {field_data_field_uwwspecification} f_uwwspecification
+                ON n.nid = f_uwwspecification.entity_id
+        left join
+            {field_data_field_uwwboddischarge} f_uwwboddischarge
+                ON n.nid = f_uwwboddischarge.entity_id
+        left join
+            {field_data_field_uwwcoddischarge} f_uwwcoddischarge
+                ON n.nid = f_uwwcoddischarge.entity_id
+        left join
+            {field_data_field_uwwndischarge} f_uwwndischarge
+                ON n.nid = f_uwwndischarge.entity_id
+        left join
+            {field_data_field_uwwpdischarge} f_uwwpdischarge
+                ON n.nid = f_uwwpdischarge.entity_id
+        left join
+            {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
+        left join
+            {field_data_field_position_geo} f_geo
+                ON n.nid = f_geo.entity_id
+		where n.type = :typenode
+
+    ' .
+    $conditions . '
+		group by f_annee.field_anneedata_value,' . $group_by;
+
+    $param = array(
+    				':typenode' => 'uwwtp',
+    );
+    try {
+    	$result = db_query($query,$param);
+    	while ($row = $result->fetchAssoc()) {
+    		$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
+    		$data[$complianceState]['data']['Compliance state'] = $complianceState;
+    		if (is_null($row['loadentering_sum']) || is_null($row['total_count'])) {
+    			// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
+    			$data[$complianceState]['data'][$row['year']] = array(0, '0', 0, '0');
+    		} else {
+    			$data[$complianceState]['data'][$row['year']] = array($row['loadentering_sum'],
+    				uwwtd_format_number($row['loadentering_sum'], 0) .' pe',
+    				$row['total_count'],
+    				uwwtd_format_number($row['total_count'], 0),
+    			);
+    		}
+    	}
+    	
+    }catch(Exception $e) {
+    	dsm($e->getMessage());
+    }
+
+    return $data;
+}
 
 function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
     $chart_data =array();
@@ -445,253 +680,6 @@ function uwwtd_stat_national_treatmentplant($options)
 		dsm($e->getMessage());
 	}
 
-	return $data;
-}
-
-function uwwtd_stat_national_uwwtp($options, $GroupBy){
-	$conditions = '';
-
-	switch($options['year']){
-		case 'all' :
-			break;
-		case '' :
-			break;
-		default :
-			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
-			break;
-	}
-    
-      if (variable_get('display_only_active', '1') == 1) {
-          $conditions .= "  AND f_status.field_status_value = '1' ";
-      }     
-
-	switch ($GroupBy){
-		case 'compliance' :
-			$group_by = 'f_comp.field_uwwcompliance_value';
-			break;
-		case 'treatmenttype' :
-			$group_by = 'f_uwwtreatmenttype.field_uwwtreatmenttype_value';
-			break;
-		default:
-			$group_by = 'f_comp.field_uwwcompliance_value';
-	}
-
-
-	$data = array();
-
-	$query = 'select ' . $group_by . ',';
-	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
-			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
-    from {node} n
-        left join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-        left join
-            {field_data_field_inspireidlocalid} f_uwwcode
-                ON n.nid = f_uwwcode.entity_id
-        left join
-            {field_data_field_uwwprimarytreatment} f_primarytreatment
-                ON n.nid = f_primarytreatment.entity_id
-        left join
-            {field_data_field_uwwsecondarytreatment} f_secondarytreatment
-                ON n.nid = f_secondarytreatment.entity_id
-        left join
-            {field_data_field_uwwnremoval} f_nremoval
-                ON n.nid = f_nremoval.entity_id
-        left join
-            {field_data_field_uwwpremoval} f_premoval
-                ON n.nid = f_premoval.entity_id
-        left join
-            {field_data_field_uwwcompliance} f_comp
-                ON n.nid = f_comp.entity_id
-
-        left join
-            {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
-                ON n.nid = f_uwwloadenteringuwwtp.entity_id
-        left join
-            {field_data_field_regionnuts} f_regionnuts
-                ON n.nid = f_regionnuts.entity_id
-        left join
-            {field_data_field_uwwbod5perf} f_uwwbod5perf
-                ON n.nid = f_uwwbod5perf.entity_id
-        left join
-            {field_data_field_uwwcodperf} f_uwwcodperf
-                ON n.nid = f_uwwcodperf.entity_id
-        left join
-            {field_data_field_uwwntotperf} f_uwwntotperf
-                ON n.nid = f_uwwntotperf.entity_id
-        left join
-            {field_data_field_uwwptotperf} f_uwwptotperf
-                ON n.nid = f_uwwptotperf.entity_id
-        left join
-            {field_data_field_uwwtreatmenttype} f_uwwtreatmenttype
-                ON n.nid = f_uwwtreatmenttype.entity_id
-        left join
-            {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
-                ON n.nid = f_physicalcapacityactivity.entity_id
-        left join
-            {field_data_field_uwwspecification} f_uwwspecification
-                ON n.nid = f_uwwspecification.entity_id
-        left join
-            {field_data_field_uwwboddischarge} f_uwwboddischarge
-                ON n.nid = f_uwwboddischarge.entity_id
-        left join
-            {field_data_field_uwwcoddischarge} f_uwwcoddischarge
-                ON n.nid = f_uwwcoddischarge.entity_id
-        left join
-            {field_data_field_uwwndischarge} f_uwwndischarge
-                ON n.nid = f_uwwndischarge.entity_id
-        left join
-            {field_data_field_uwwpdischarge} f_uwwpdischarge
-                ON n.nid = f_uwwpdischarge.entity_id
-        left join
-            {field_data_field_status} f_status
-                ON n.nid = f_status.entity_id                       
-        left join
-            {field_data_field_position_geo} f_geo
-                ON n.nid = f_geo.entity_id
-		where n.type = :typenode 
-    
-    ' .
-		$conditions . '
-		group by ' . $group_by;
-
-	$param = array(
-			':typenode' => 'uwwtp',
-	);
-//     dsm($query);
-//     dsm($param);
-	try {
-		$result = db_query($query,$param);
-		while($row = $result->fetchAssoc()) {
-			switch ($group_by){
-				case 'f_comp.field_uwwcompliance_value' :
-					$row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
-					$row['color'] = isset($GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']])?$GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']]:null;
-			
-                    break;
-				case 'f_uwwtreatmenttype.field_uwwtreatmenttype_value' :
-					$row['field_uwwtreatmenttype_value_format'] = is_null($row['field_uwwtreatmenttype_value']) ? '' : $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
-					$row['color'] = isset($GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']])?$GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']]:null;
-			
-                    break;
-			}
-			$row['total_count_format'] = is_null($row['total_count']) ? '0' : uwwtd_format_number($row['total_count'], 0);
-			$row['loadentering_sum_format'] = is_null($row['loadentering_sum']) ? '0' : uwwtd_format_number($row['loadentering_sum'], 0);
-            
-			$data[] = $row;
-		}
-	}catch(Exception $e) {
-		dsm($e->getMessage());
-	}
-
-	return $data;
-}
-
-
-
-
-function uwwtd_stat_national_compliance($options)
-{
-
-	$data = array();
-	$param = array();
-	$conditions = '';
-
-	switch($options['year']){
-		case 'all' :
-			break;
-		case '' :
-			break;
-		default :
-			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
-			break;
-	}
-
-      if (variable_get('display_only_active', '1') == 1) {
-          $conditions .= "  AND f_status.field_status_value = '1' ";
-      } 
-      
-
-	$query = 'select f_comp.field_aggcompliance_value,
-					 COUNT(n.title) AS  TOTAL_COUNT,
-					 SUM(f_aggc2.field_aggc2_value) AS AGGC2_SUM,
-                     SUM(f_aggc1.field_aggc1_value) AS AGGC1_SUM,
-                     SUM(f_aggpercwithouttreatment.field_aggpercwithouttreatment_value) AS AGGPCWT_SUM,
-                     SUM(f_agggenerated.field_agggenerated_value) AS GENERATED_SUM
-    from {node} n
-        left join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-        left join
-            {field_data_field_inspireidlocalid} f_aggcode
-                ON n.nid = f_aggcode.entity_id
-        left join
-            {field_data_field_agggenerated} f_agggenerated
-                ON n.nid = f_agggenerated.entity_id
-        left join
-            {field_data_field_aggart3compliance} f_art3
-                ON n.nid = f_art3.entity_id
-        left join
-            {field_data_field_aggart4compliance} f_art4
-                ON n.nid = f_art4.entity_id
-        left join
-            {field_data_field_aggart5compliance} f_art5
-                ON n.nid = f_art5.entity_id
-        left join
-            {field_data_field_aggart6compliance} f_art6
-                ON n.nid = f_art6.entity_id
-        left join
-            {field_data_field_aggcompliance} f_comp
-                ON n.nid = f_comp.entity_id
-        left join
-            {field_data_field_regionnuts} f_nuts
-                ON n.nid = f_nuts.entity_id
-        left join
-            {field_data_field_aggc2} f_aggc2
-                ON n.nid = f_aggc2.entity_id
-        left join
-            {field_data_field_aggc1} f_aggc1
-                ON n.nid = f_aggc1.entity_id
-        left join
-            {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
-                ON n.nid = f_aggpercwithouttreatment.entity_id
-        left join
-            {field_data_field_status} f_status
-                ON n.nid = f_status.entity_id                       
-        left join
-            {field_data_field_position_geo} f_geo
-                ON n.nid = f_geo.entity_id
-		where n.type = :typenode 
-        and f_agggenerated.field_agggenerated_value > :agggenerated
-    ' .
-		$conditions . '
-	group by f_comp.field_aggcompliance_value
-    ';
-
-	$param = array(
-			':typenode' => 'agglomeration',
-            ':agggenerated' => variable_get('min_aggenerated_display', '2000'),
-	);
-//     dsm($query);
-//     dsm($param);
-	try {
-		$result = db_query($query,$param);
-		while($row = $result->fetchAssoc()) {
-			$row['field_aggcompliance_value_format'] = is_null($row['field_aggcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
-			$row['total_count_format'] = is_null($row['total_count']) ? '0' : uwwtd_format_number($row['total_count'], 0);
-			$row['aggc1_sum_format'] = is_null($row['aggc1_sum']) ? '0' : uwwtd_format_number($row['aggc1_sum'], 2);
-			$row['aggc2_sum_format'] = is_null($row['aggc2_sum']) ? '0' : uwwtd_format_number($row['aggc2_sum'], 2);
-			$row['aggpcwt_sum_format'] = is_null($row['aggpcwt_sum']) ? '0' : uwwtd_format_number($row['aggpcwt_sum'], 2);
-			$row['generated_sum_format'] = is_null($row['generated_sum']) ? '0' : uwwtd_format_number($row['generated_sum'], 0);
-            $row['color'] = isset($GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']])?$GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']]:null;
-			$data[] = $row;
-		}
-	}catch(Exception $e) {
-		dsm($e->getMessage());
-	}
-
-	//     dsm($data);
 	return $data;
 }
 

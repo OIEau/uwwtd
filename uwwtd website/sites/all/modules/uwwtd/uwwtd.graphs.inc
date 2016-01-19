@@ -111,78 +111,49 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'), 
-    	t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
+    	t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
-    
-    
-    
-    // S'il n'y a qu'une année de sélectionnée :
-//     if (count($yearsSelected) == 1) {
-//     	// Récupération des données des graphs:
-//     	$frontAndBackGraph1 = getRow1Graph1($yearsSelected[0]);
-//     	$frontAndBackGraph2 = getRow1Graph2($yearsSelected[0]);
-    	 
-//     	// Création du code html pour ces graphs :
-//     	$formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'),
-//     			t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-//     			t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
-//     } else {
-//     	$frontAndBackGraphs1 = array();
-//     	$frontAndBackGraphs2 = array();
-    
-//     	// Pour chaque année selectionnée :
-//     	foreach($yearsSelected as $yearSelected) {
-//     		// Récupération des données du graph :
-//     		$frontAndBackGraphs1[] = getRow1Graph1($yearSelected);
-//     		$frontAndBackGraphs2[] = getRow1Graph2($yearSelected);
-//     	}
-//     	$formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : Generated load by collection"),
-//     			$yearsSelected, 'graph_collect_type', t("Generated Load by collection type"), $frontAndBackGraphs1,
-//     			$yearsSelected, 'graph_cs_type', t("Generated Load by sewage network type"), $frontAndBackGraphs2);
-//     }
-    
     
     //==============================================
     //=============== ROW 2 : Agglomeration : Generated load by compliance
     //==============================================
     
-// 	// Récupération des données des graphs:
-// 	$national_compliance = uwwtd_stat_national_compliance($options);
-// 	$frontAndBackGraph1 = getRow2Graph1($national_compliance);
-// 	$frontAndBackGraph2 = getRow2Graph2($national_compliance);
+    // Récupération des données des graphs:// Récupération des données des graphs:
+	$results = uwwtd_stat_national_compliance($yearSelected, $yearsPossibles);
+	$frontAndBackGraph1And2 = getRow2Graph1and2($results);
 	
-// 	// Création du code html pour ces graphs :
-// 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
-// 			t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-// 			t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
+	// Création du code html pour ces graphs :
+	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
+		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
+		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
     
     
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
     //==============================================
     
-//     // Récupération des données des graphs:
-//     $frontAndBackGraph1 = getRow3Graph1($options);
-//     $frontAndBackGraph2 = getRow3Graph2($options);
+    // Récupération des données des graphs:
+	$results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
+    $frontAndBackGraph1 = getRow2Graph1and2($results);
     
-//     // Création du code html pour ces graphs :
-//     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
-//     		t("Total load entering by compliance"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-//     		t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
+    // Création du code html pour ces graphs :
+    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
+    	t("Total load entering by compliance"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
+    	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3]);
     
 
     //==============================================
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
     //==============================================
 
-//     // Récupération des données des graphs:
-//     $frontAndBackGraph1 = getRow4Graph1($options);
-//     $frontAndBackGraph2 = getRow4Graph2($options);
+    // Récupération des données des graphs:
+    $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
+    $frontAndBackGraph1 = getRow2Graph1and2($results);
     
-//     // Création du code html pour ces graphs :
-//     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
-//     		t("Total load entering by treatment type"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-//     		t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
+    // Création du code html pour ces graphs :
+    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
+    		t("Total load entering by treatment type"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
+    		t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3]);
     
 	
     //==============================================
@@ -305,6 +276,8 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 				}
 			}
 		}
+		
+		dsm($rows);
 	
 		// Récupération du DOM du tableau :
 		$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
@@ -335,7 +308,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 		$rows = $front;
 		$columns = array();
 		
-		// Pour chaque années possible :
+		// Définition des entete de colonnes :
 		$columns[0][]['data'] = t("Network type");
 		
 		// Pour chaque Network type :
@@ -347,7 +320,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 				
 				// Pour chaque année :
 				foreach (array_keys($networkType['data']) as $year) {
-					// Récupération des entetes du tableau :
+					// Définition des entete de colonnes :
 					$columns[0][$year]['data'] = $year;
 				}
 			}
@@ -372,155 +345,111 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 }
 
 /**
- * Retourne les données pour le graph "Total generated load by compliance".
+ * Retourne les données pour les graphes "Total generated load by compliance" et "Number of agglomerations by compliance".
  */
-function getRow2Graph1($national_compliance) {
-	$Data_uwwtd_stat_national_compliance = array();
-	$String_uwwtd_stat_national_compliance = array();
-	$sum = 0;
+function getRow2Graph1and2($results) {
+	// Variables du graph 1 :
+	$graph1Front = array();
+	$graph1Back = '';
+	$columns = array();
+	$graph1Rows = $results;
+	$graph1Sums = array();
 	
-	if (!empty($national_compliance)) {
-		foreach ($national_compliance as $result){
-			$Data_uwwtd_stat_national_compliance[] = array(
-							"value" => $result['generated_sum'],
-							"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['generated_sum']).' pe]',
-							"valueformat" => $result['generated_sum_format'].' pe',
-							"color"=>isset($result['color'])?$result['color']:null
-			);
-			$sum+=$result['generated_sum'];
-			$String_uwwtd_stat_national_compliance[]= array($result['field_aggcompliance_value_format'], $result['generated_sum_format'] . ' pe');
+	// Variables du graph 2 :
+	$graph2Front = array();
+	$graph2Back = '';
+	$graph2Rows = $results;
+	$graph2Sums = array();
+	
+	if (!empty($results)) {
+		foreach ($results as $complianceStateName => $complianceState) {
+			if (array_key_exists('data', $complianceState)) {
+				foreach ($complianceState['data'] as $keyElement => $element) {
+					// Définition des entete de colonnes :
+					$columns[0][$keyElement]['data'] = $keyElement;
+					
+					// Si c'est une valeur pour une année :
+					if (is_array($element) && 
+						array_key_exists(0, $element) && 
+						array_key_exists(1, $element) &&
+						array_key_exists(2, $element) &&
+						array_key_exists(3, $element)) {
+						// Redéfinition de la valeur de l'année :
+						$graph1Rows[$complianceStateName]['data'][$keyElement] = $element[1];
+						$graph2Rows[$complianceStateName]['data'][$keyElement] = $element[3];
+						
+						// Calcul de la somme :
+						if (!array_key_exists($keyElement, $graph1Sums)) {
+							$graph1Sums[$keyElement] = 0;
+						}
+						$graph1Sums[$keyElement] += $element[0];
+						if (!array_key_exists($keyElement, $graph2Sums)) {
+							$graph2Sums[$keyElement] = 0;
+						}
+						$graph2Sums[$keyElement] += $element[2];
+					}
+				}
+			}
 		}
 	}
-	$String_uwwtd_stat_national_compliance[] = array('Total', uwwtd_format_number($sum) . ' pe');
-	$String_uwwtd_stat_national_compliance = theme('table', array("rows"=>$String_uwwtd_stat_national_compliance,"header"=>array(t("Compliance state"), t("Generated load"))));
 	
-	return array($Data_uwwtd_stat_national_compliance, $String_uwwtd_stat_national_compliance);
-}
-
-/**
- * Retourne les données pour le graph "Number of agglomerations by compliance".
- */
-function getRow2Graph2($national_compliance) {
-	$Data_uwwtd_stat_agglomeration_compliance = array();
-	$String_uwwtd_stat_agglomeration_compliance = array();
-	$sum = 0;
-	
-	if (!empty($national_compliance)) {
-		foreach ($national_compliance as $result){
-			$Data_uwwtd_stat_agglomeration_compliance[] = array(
-							"value" => (integer)$result['total_count'],
-							"label" => $result['field_aggcompliance_value_format'] .' ['.uwwtd_format_number($result['total_count']).']',
-							"valueformat" => $result['total_count_format'],
-							"color"=>isset($result['color'])?$result['color']:null
-			);
-			$sum += (integer)$result['total_count'];
-			$String_uwwtd_stat_agglomeration_compliance[]= array($result['field_aggcompliance_value_format'],$result['total_count_format']);
+	// Pour chaque ligne :
+	foreach ($graph1Rows as $complianceStateName => $complianceState) {
+		if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
+			// Pour toutes les colonnes existantes :
+			foreach (array_keys($columns[0]) as $columsName) {
+				if (!array_key_exists($columsName, $complianceState['data'])) {
+					// Remplissage des trous :
+					$graph1Rows[$complianceStateName]['data'][$columsName] = ' - ';
+				}
+			}
 		}
 	}
-	$String_uwwtd_stat_agglomeration_compliance[]= array('Total',$sum);
-	$String_uwwtd_stat_agglomeration_compliance = theme('table', array("rows"=>$String_uwwtd_stat_agglomeration_compliance,"header"=>array(t("Compliance state"), t("Number"))));
-	
-	return array($Data_uwwtd_stat_agglomeration_compliance, $String_uwwtd_stat_agglomeration_compliance);
-}
-
-/**
- * Retourne les données pour le graph "Total load entering by compliance".
- */
-function getRow3Graph1($options) {
-	$aData_uwwtd_stat_national_uwwtpC = array();
-	$aString_uwwtd_stat_national_uwwtpC = array();
-	$results = uwwtd_stat_national_uwwtp($options,'compliance');
-	$sum = 0;
-	
-	foreach ($results as $result){
-		$aData_uwwtd_stat_national_uwwtpC[] = array(
-						"value" => $result['loadentering_sum'],
-						"label" => $result['field_uwwcompliance_value_format'].' ['.$result['loadentering_sum'].' pe]',
-						"valueformat" => $result['loadentering_sum_format'].' pe',
-						"color"=>isset($result['color'])?$result['color']:null
-		);
-		$sum+=$result['loadentering_sum'];
-		$aString_uwwtd_stat_national_uwwtpC[]= array($result['field_uwwcompliance_value_format'] , $result['loadentering_sum_format'] . ' pe');
+	foreach ($graph2Rows as $complianceStateName => $complianceState) {
+		if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
+			// Pour toutes les colonnes existantes :
+			foreach (array_keys($columns[0]) as $columsName) {
+				if (!array_key_exists($columsName, $complianceState['data'])) {
+					// Remplissage des trous :
+					$graph2Rows[$complianceStateName]['data'][$columsName] = ' - ';
+				}
+			}
+		}
 	}
-	$aString_uwwtd_stat_national_uwwtpC[]= array(t('Total'),uwwtd_format_number($sum) . ' pe');
-	$aString_uwwtd_stat_national_uwwtpC = theme('table', array("rows"=>$aString_uwwtd_stat_national_uwwtpC,"header"=>array(t("Compliance state"), t("Load entering"))));
 	
-	return array($aData_uwwtd_stat_national_uwwtpC, $aString_uwwtd_stat_national_uwwtpC);
-}
-
-/**
- * Retourne les données pour le graph "Number of treatment plant by compliance".
- */
-function getRow3Graph2($options) {
-	$aData_uwwtd_stat_agglomeration_uwwtpC = array();
-	$aString_uwwtd_stat_agglomeration_uwwtpC = array();
-	$results = uwwtd_stat_national_uwwtp($options,'compliance');
-	$sum = 0;
-	
-	foreach ($results as $result){
-		$aData_uwwtd_stat_agglomeration_uwwtpC[] = array(
-						"value" => $result['total_count'],
-						"label" => $result['field_uwwcompliance_value_format'] .' ['.$result['total_count'].']',
-						"valueformat" => $result['total_count_format'],
-						"color"=>isset($result['color'])?$result['color']:null
-		);
-		$sum+=$result['total_count'];
-		$aString_uwwtd_stat_agglomeration_uwwtpC[]= array($result['field_uwwcompliance_value_format'], $result['total_count_format'] );
+	// Ajout des Total :
+	$graph1Rows['Total']['data']['Compliant state'] = 'Total';
+	foreach ($graph1Sums as $year => $sum) {
+		$graph1Rows['Total']['data'][$year] = $sum .' pe';
 	}
-	$aString_uwwtd_stat_agglomeration_uwwtpC[]= array('Total',uwwtd_format_number($sum));
-	$aString_uwwtd_stat_agglomeration_uwwtpC = theme('table', array("rows"=>$aString_uwwtd_stat_agglomeration_uwwtpC,"header"=>array(t("Compliance state"), t("Number"))));
-	
-	return array($aData_uwwtd_stat_agglomeration_uwwtpC, $aString_uwwtd_stat_agglomeration_uwwtpC);
-}
-
-/**
- * Retourne les données pour le graph "Total load entering by treatment type".
- */
-function getRow4Graph1($options) {
-	$aData_uwwtd_stat_national_uwwtpT = array();
-	$aString_uwwtd_stat_national_uwwtpT = array();
-	$results = uwwtd_stat_national_uwwtp($options,'treatmenttype');
-	$sum = 0;
-	
-	foreach ($results as $result){
-		$aData_uwwtd_stat_national_uwwtpT[] = array(
-						"value" => $result['loadentering_sum'],
-						"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.uwwtd_format_number($result['loadentering_sum']).' pe]',
-						"valueformat" => $result['loadentering_sum_format'],
-						"color"=>isset($result['color'])?$result['color']:null
-		);
-		$sum+=$result['loadentering_sum'];
-		$aString_uwwtd_stat_national_uwwtpT[]= array($result['field_uwwtreatmenttype_value_format'], $result['loadentering_sum_format'].' pe' );
+	$graph2Rows['Total']['data']['Compliant state'] = 'Total';
+	foreach ($graph2Sums as $year => $sum) {
+		$graph2Rows['Total']['data'][$year] = $sum;
 	}
-	$aString_uwwtd_stat_national_uwwtpT[]= array(t('Total'),uwwtd_format_number($sum).' pe');
-	$aString_uwwtd_stat_national_uwwtpT = theme('table', array("rows"=>$aString_uwwtd_stat_national_uwwtpT,"header"=>array(t("Compliance state"), t("Load entering"))));
 	
-	return array($aData_uwwtd_stat_national_uwwtpT, $aString_uwwtd_stat_national_uwwtpT);
-}
-
-/**
- * Retourne les données pour le graph "Number of treatment plant by treatment type".
- */
-function getRow4Graph2($options) {
-	$aData_uwwtd_stat_agglomeration_uwwtpT = array();
-	$aString_uwwtd_stat_agglomeration_uwwtpT = array();
-	$results = uwwtd_stat_national_uwwtp($options,'treatmenttype');
-	$sum = 0;
+	// Récupération du DOM des tableau :
+	$graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
+	$graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
 	
-	foreach ($results as $result){
-		$aData_uwwtd_stat_agglomeration_uwwtpT[] = array(
-						"value" => $result['total_count'],
-						"label" => $result['field_uwwtreatmenttype_value_format'] .' ['.$result['total_count'].']',
-						"valueformat" => $result['total_count_format'],
-						"color"=>isset($result['color'])?$result['color']:null
-		);
-		$sum+=$result['total_count'];
-		$aString_uwwtd_stat_agglomeration_uwwtpT[] = array($result['field_uwwtreatmenttype_value_format'], $result['total_count_format']);
-	}
-	$aString_uwwtd_stat_agglomeration_uwwtpT[]= array(t('Total'),uwwtd_format_number($sum));
-	$aString_uwwtd_stat_agglomeration_uwwtpT = theme('table', array("rows"=>$aString_uwwtd_stat_agglomeration_uwwtpT,"header"=>array(t("Compliance state"), t("Number"))));
+	// Ajout des légendes :
+	$graph1Back .= '
+		<table class="stats-graphs table table-hover table-striped sticky-enabled">
+ 			<thead>
+				<tr>
+					<th><i>*pe: Population equivalent</i></th>
+				</tr>
+			</thead>
+		</table>';
+	$graph2Back .= '
+		<table class="stats-graphs table table-hover table-striped sticky-enabled">
+ 			<thead>
+				<tr>
+					<th><i>*: Number of agglomerations</i></th>
+				</tr>
+			</thead>
+		</table>';
 	
-	return array($aData_uwwtd_stat_agglomeration_uwwtpT, $aString_uwwtd_stat_agglomeration_uwwtpT);
+	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
 }
 
 /**
