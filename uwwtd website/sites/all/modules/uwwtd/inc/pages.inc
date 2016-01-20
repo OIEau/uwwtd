@@ -395,8 +395,7 @@ function uwwtd_get_data_uwwtp($option)
     return $data;
 }
 
-function uwwtd_get_data_dcp($option)
-{
+function uwwtd_get_data_dcp($option){
     $cache_name = uwwtd_get_cache_key_dcp($option);
     $cache  ='';
     if (UWWTD_CACHE_ACTIVE === true) {
@@ -410,6 +409,13 @@ function uwwtd_get_data_dcp($option)
     $query = 'select n.title,
                      f_annee.field_anneedata_value,
                      f_dcpcode.field_inspireidlocalid_value,
+                     zt.field_rcatype_value as zonetype,
+                     uwwtp.title as uwwtp_name,
+                     uwwtp.nid as uwwtp_id,
+                     f_comp.field_uwwcompliance_value,
+                     f_physicalcapacityactivity.field_physicalcapacityactivity_value,
+                     rca.title as rca_name,
+                     rca.nid as rca_id,
                      st_astext(st_transform(f_geo.the_geom, 4326)) wkt
     from {node} n
         LEFT join
@@ -419,8 +425,30 @@ function uwwtd_get_data_dcp($option)
             {field_data_field_inspireidlocalid} f_dcpcode
                 ON n.nid = f_dcpcode.entity_id
         LEFT join
+            {field_data_field_rcatype} zt
+                ON n.nid = zt.entity_id        
+        LEFT join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
+        LEFT join 
+            {field_data_field_linked_treatment_plants} tp
+                ON n.nid = tp.entity_id
+        LEFT join
+            {node} uwwtp
+                ON uwwtp.nid = tp.field_linked_treatment_plants_nid
+        LEFT join
+            {field_data_field_uwwcompliance} f_comp
+                ON uwwtp.nid = f_comp.entity_id
+        LEFT join
+            {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
+                ON uwwtp.nid = f_physicalcapacityactivity.entity_id
+        LEFT join 
+            {field_data_field_linked_receiving_areas} rc
+                ON n.nid = rc.entity_id
+        LEFT join
+            {node} rca
+                ON rca.nid = rc.field_linked_receiving_areas_nid
+                
     where n.type = :typenode
     and f_annee.field_anneedata_value = :annee
     ';
@@ -437,14 +465,20 @@ function uwwtd_get_data_dcp($option)
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
+            
+            $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
+            $row['rca_format'] =  l($row['rca_name'], 'node/'.$row['rca_id']);
+            $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
+            $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
+            $row['field_physicalcapacityactivity_value_format'] =  uwwtd_format_number($row['field_physicalcapacityactivity_value']);
+            
+            
             $data[] = $row;
         }
         cache_set($cache_name, $data, 'cache', CACHE_PERMANENT);
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
-
-//     dsm($data);
     return $data;
 }
 
@@ -604,9 +638,6 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-        $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
-        $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_agglomeration($filter['filter']);
@@ -712,13 +743,6 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         }
         $graph[$row['field_aggcompliance_value_format']]['nb']++;
         $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
-        //format data
-//         $row['field_agggenerated_value_format'] = uwwtd_format_number($row['field_agggenerated_value']);
-//         $row['field_aggcompliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
-//         $row['field_aggart3compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart3compliance_value']];
-//         $row['field_aggart4compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']];
-//         $row['field_aggart5compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']];
-//         $row['field_aggart6compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']];
 
 		if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
@@ -781,182 +805,54 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     unset($data);
 
     //first graph number agglo
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
+    $data_pie_1 = array();
+    $data_table_1 = array();
+    $data_pie_2 = array();
+    $data_table_2 = array();
+    $total_1 = 0;
+    $total_2 = 0;
+    
 //     dsm($optionstyle);
     foreach($graph as $compliance_format => $detail) {
         $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;//$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance];//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance]);
-//         $xaxis[] = array($i++, $compliance_format.'__pppp');
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  = new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-
-    $variables_nb = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-1',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph_nb = theme('flot_graph', $variables);
-
-    $render_table_graph_nb = '
-
-    <table id="views-aggregator-datatable-nb" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Number of agglomeration
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph_nb .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['nb']) . '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['nb'];
-      }
-
-      $render_table_graph_nb .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
-    //second graph load generated
-    $data_pie = array();
-
-    $xaxis = array();
-    $i = 0;
-//     $aData = array();
-
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['field_agggenerated_value']);
-        $d1->label =$compliance_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-    $variables = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-2',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-    $render_graph = theme('flot_graph', $variables);
-
-    $render_table_graph = '
-
-    <table id="views-aggregator-datatable" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Generated load (p.e.)
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['field_agggenerated_value']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['field_agggenerated_value'];
-      }
-
-      $render_table_graph .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
-    //dsm($rows[0]['data']);
-    $build['tablesort_table'] = array(
-            '#theme' => 'table',
-            '#header' => $header,
-            '#rows' => $rows,
+        $d1->label = $compliance_format;
+        $d1->color = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_1[] = $d1;
+        $data_table_1[]=array(
+            uwwtd_format_number($detail['nb']),
+            $compliance_format
         );
-    //build export data on ODT,XML,CSV,DOC...
-    $render_graph_nb = theme('flot_graph', $variables_nb);
-    $render_graph = theme('flot_graph', $variables);
+        $total_1 += $detail['nb'];
+        
+        
+        $d2 = new flotData($detail['field_agggenerated_value']);
+        $d2->label =$compliance_format;//$detail['label'];
+        $d2->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
+        $data_pie_2[] = $d2;
+        $data_table_2[]=array(
+            uwwtd_format_number($detail['field_agggenerated_value']),
+            $compliance_format
+        );
+        $total_2 += $detail['field_agggenerated_value'];
+    }
+    $data_table_1[] = array( uwwtd_format_number($total_1), '');
+    $data_table_2[] = array( uwwtd_format_number($total_2), '');
+    
+    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
+    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
+    $header_2 = array(t('Generated load (p.e.)'),t('Compliance'));
+    $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
+    unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
+
+    $build['tablesort_table'] = array(
+        '#theme' => 'table',
+        '#header' => $header,
+        '#rows' => $rows,
+    );
 
    //============================Render the page ==> TODO use a true template/theme function 
 
@@ -967,50 +863,12 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-                      .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph_nb.'</div>'
-                      .'</div>'
-
-                      .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-
-                      .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph.'</div>'
-
-                      .'</div>'
-
-                      .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Global compliance by Generated load (p.e.)"), $render_graph, $render_table_graph,'')
                   .'</div>'
                 .'</div>'
             .'</div>'
@@ -1029,9 +887,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
             .'</div>'
      ;
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables_nb,
-                                    'flot2' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
@@ -1065,7 +921,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-        $render_graph = theme('flot_graph', $cache->data['flot1']);
         return $cache->data['page'];
     }
 
@@ -1235,33 +1090,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
             $data_pie[] = $d1;
         }
     }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-    $variables = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-1',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-            'class' => 'agglo_connexion_pie',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
     if(!empty($graph)){
         foreach($graph as $k=>$item){
             $graph[$k]['label'] = substr($item['label'], 0,strpos($item['label'],'('));
@@ -1271,109 +1099,31 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         }
     }
     $render_table_graph = theme('table', array('rows'=>$graph, 'header'=>array(t('Treatment'),t('Total in p.e.'),t('Rate in %'))));
-    /*
-    '
 
-    <table id="views-aggregator-datatable" class="views-table cols-2" style="width: 650px; ">
-    <thead>
-    <tr>
-        <th class="views-field views-field-field_aggc1_value" style="padding: 5px;">
-        Collecting system (% of p.e.)
-        </th>
-        <th class="views-field views-field-field_aggc2_value" style="padding: 5px;">
-        IAS (% of p.e.)
-        </th>
-        <th class="views-field views-field-field_aggpercwithouttreatment_value" style="padding: 5px;">
-        Discharge without treatment (% of p.e.)
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc1_value']['value'], 2) . ' p.e
-            </td>
-            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggc2_value']['value'], 2) . ' p.e
-            </td>
-            <td class="views-field" style="border-right: 1px solid #dddddd; padding: 5px;">
-            ' . uwwtd_format_number($graph['field_aggpercwithouttreatment_value']['value'], 2) . ' p.e
-            </td>
-        </tr>
-    </tbody>
-    </table>
-
-      ';*/
 
     $build['tablesort_table'] = array(
-            '#theme' => 'table',
-            '#header' => $header,
-            '#rows' => $rows,
-        );
+        '#theme' => 'table',
+        '#header' => $header,
+        '#rows' => $rows,
+    );
     //build export data on ODT,XML,CSV,DOC...
 
     //todo save view and map and .install update map/style/overlay
-    $render_graph = theme('flot_graph', $variables);
-//     $page =  '<h1>'.$title.'</h1>'
-//             . $form
-//             . $piechart
-//             . $rendermap
-//             . '<div class="view-content flot-title">Generated load (p.e.) distribution</div>'
-//             . '<div class="view-content">'.$render_graph.'</div>'
-//             . '<div class="view-content">'.$render_table_graph.'</div>'
-//             . '<div class="view-content">'. drupal_render($build) . '</div>'
+    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie, 'flot-auto-identifier-1'));
 
-//      ;
+
     $page =  '<h1>'.$title.'</h1>'
             . $form
             . $piechart                  //style="page-break-after:always;"
             . '<div class="rows map-row" >'.$rendermap.'</div>'
+            
+            
             . '<div class="rows charts-row">'
                 .'<div>'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-
-                      .'<div class="leftgraph front" style="-webkit-backface-visibility: hidden;">'
-                        . '<div class="flot-title"><div class="flip-title">Generated load (p.e.) distribution</div>
-
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph.'</div>'
-                      .'</div>'
-
-                      .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Generated load (p.e.) distribution</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Generated load (p.e.) distribution"), $render_graph, $render_table_graph,'')
                   .'</div>'
                 .'</div>'
-//                 .'<div class="cell charts-rows-cell">'
-//                   .'<div class="cell-content">'
-//                     .'<div class="container flip">'
-//                       .'<div class="front">'
-//                         . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div>
-//
-//                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-//                         </div>'
-//                         . '<div class="view-content">'.$render_graph.'</div>'
-//                       .'</div>'
-//                       .'<div class="back">'
-//                         . '<div class="flot-title"><div class="flip-title">Compliance by Generated load (p.e.)</div>
-//
-//                         <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-//                         </div>'
-//                         . '<div class="view-content">'.$render_table_graph.'</div>'
-//                       .'</div>'
-//                     .'</div>'
-//                   .'</div>'
                 .'</div>'
             .'</div>'
             . '<div class="rows data-table-row">'
@@ -1391,8 +1141,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
      ;
 
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
@@ -1426,9 +1175,6 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-        $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
-        $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
 //     dsm('not in cache');    
@@ -1596,189 +1342,44 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-
-//  f_annee.field_anneedata_value,
-//  f_aggcode.field_inspireidlocalid_value,
-//  f_agggenerated.field_agggenerated_value,
-//  f_art3.field_aggart3compliance_value,
-//  f_art4.field_aggart4compliance_value,
-//  f_art5.field_aggart5compliance_value,
-//  f_art6.field_aggart6compliance_value,
-//  f_comp.field_aggcompliance_value,
-//  f_nuts.field_regionnuts_value,
     unset($data);
-
-    //first graph number agglo
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
+    
+    
     foreach($graph as $compliance_format => $detail) {
         $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $compliance_format);
+        $d1->label = $compliance_format;
+        $d1->color = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_1[] = $d1;
+        $data_table_1[]=array(
+            uwwtd_format_number($detail['nb']),
+            $compliance_format
+        );
+        $total_1 += $detail['nb'];
+        
+        
+        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
+        $d2->label =$compliance_format;//$detail['label'];
+        $d2->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
+        $data_pie_2[] = $d2;
+        $data_table_2[]=array(
+            uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
+            $compliance_format
+        );
+        $total_2 += $detail['field_uwwloadenteringuwwtp_value'];
     }
+    $data_table_1[] = array( uwwtd_format_number($total_1), '');
+    $data_table_2[] = array( uwwtd_format_number($total_2), '');
+    
+    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
+    $header_1 = array(t('Number of plants'),t('Compliance'));
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
+    $header_2 = array(t('Load entering (p.e.)'),t('Compliance'));
+    $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-//     todo legend color
-//     $optionstyle['color']  = array(
-//         'C' => "#4f91e1",
-//         'NR' => "#a2a2a2",
-//         'NC' => "#d93c3c",
-//         'NI' => "#6b6b6b",
-//     );
-
-    $variables_nb = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-1',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph_nb = theme('flot_graph', $variables_nb);
-
-    $render_table_graph_nb = '
-
-    <table id="views-aggregator-datatable-nb" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Number of plants
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph_nb .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['nb']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['nb'];
-      }
-
-      $render_table_graph_nb .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
-    //second graph load generated
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d1->label = $compliance_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $compliance_format);
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-    $variables = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-2',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph = theme('flot_graph', $variables);
-
-    $render_table_graph = '
-
-    <table id="views-aggregator-datatable" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Load entering (p.e.)
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['field_uwwloadenteringuwwtp_value'];
-      }
-
-      $render_table_graph .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
+    unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
+    
 
 	$headers = array();
     
@@ -1803,11 +1404,6 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 			'rows_multiple'=>true,
             'attributes' => array('class' => 'customTable'),     
         ));   
-    //build export data on ODT,XML,CSV,DOC...
-    $render_graph_nb = theme('flot_graph', $variables_nb);
-    $render_graph = theme('flot_graph', $variables);
-
-
 
     $page = ''
             . '<h1>'.$title.'</h1>'
@@ -1816,49 +1412,12 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
             .'<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-                      .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Global compliance by number of treament plants</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph_nb.'</div>'
-                      .'</div>'
-
-                      .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by number of treament plants</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Global compliance by number of treament plants"), $render_graph_nb, $render_table_graph_nb,'')
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-
-                      .'<div class="rightgraph front">'
-                            . '<div class="flot-title"><div class="flip-title">Global compliance by load entering (p.e.)</div>
-
-
-                            <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                            </div>'
-                            . '<div class="view-content">'.$render_graph.'</div>'
-                      .'</div>'
-
-                      .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by load entering (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Treatment type in place by Load entering (p.e.)"), $render_graph, $render_table_graph,'')
                   .'</div>'
                 .'</div>'
             .'</div>'
@@ -1875,9 +1434,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
             .'</div>'
      ;
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables_nb,
-                                    'flot2' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
@@ -1917,9 +1474,6 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-        $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
-        $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
 //     dsm('not in cache');
@@ -1995,43 +1549,16 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
     $optionstyle['weight']['field'] = 'field_physicalcapacityactivity_value';
 
-//     dsm($optionstyle);
-    //todo get tis value from database!
-//     $optionstyle = array();
-//     $optionstyle['weight'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-//     $optionstyle['weight']['list'] = $GLOBALS['uwwtd']['ui']['pe_weight'];
-//     $optionstyle['weight']['field'] = 'field_physicalcapacityactivity_value';
-
-
-//     array(
-//       1 =>  2000,
-//       2 =>  10000,
-//       3 =>  150000,
-//       4 =>  0,
-//     );
-    //todo get tis value from database!
-    //todo : get field name for database NC => not compliant ...
-//     $optionstyle['color']['list']  = $GLOBALS['uwwtd']['ui']['more_stringent_color'];
-//     $optionstyle['color']['field'] = 'field_uwwtreatmenttype_value';
-
-//     $optionstyle['popup_title_type'] = 'treatment-plant';
-//     $optionstyle['popup_title_type'] = 'discharge-pointt';
     $optionstyle['popup_title_type'] = 'treatment-plant';
     $optionstyle['popup'] = array(
-        'field_uwwtreatmenttype_value_format' => array('label' => 'Treatment type in place'),
-        'field_physicalcapacityactivity_value_format' => array('label' => 'Capacity'),
-        'field_uwwcompliance_value_format' => array('label' => 'Compliance'),
-        'field_uwwprimarytreatment_value_format' => array('label' => 'Primary treatment'),
-        'field_uwwsecondarytreatment_value_format' => array('label' => 'Secondary treatment'),
-        'field_uwwnremoval_value_format' => array('label' => 'N-removal'),
-        'field_uwwpremoval_value_format' => array('label' => 'P-removal'),
+        'field_uwwtreatmenttype_value_format' => array('label' => t('Treatment type in place')),
+        'field_physicalcapacityactivity_value_format' => array('label' => t('Capacity')),
+        'field_uwwcompliance_value_format' => array('label' => t('Compliance')),
+        'field_uwwprimarytreatment_value_format' => array('label' => t('Primary treatment')),
+        'field_uwwsecondarytreatment_value_format' => array('label' => t('Secondary treatment')),
+        'field_uwwnremoval_value_format' => array('label' => t('N-removal')),
+        'field_uwwpremoval_value_format' => array('label' => t('P-removal')),
     );
-
-//     dsm($optionstyle);
-    //dsm($data);
-
-
-
 
     //todo format data in table
     $graph = array();
@@ -2104,216 +1631,50 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 //     unset($data);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-
-//  f_annee.field_anneedata_value,
-//  f_aggcode.field_inspireidlocalid_value,
-//  f_agggenerated.field_agggenerated_value,
-//  f_art3.field_aggart3compliance_value,
-//  f_art4.field_aggart4compliance_value,
-//  f_art5.field_aggart5compliance_value,
-//  f_art6.field_aggart6compliance_value,
-//  f_comp.field_aggcompliance_value,
-//  f_nuts.field_regionnuts_value,
     unset($data);
-
-    //first graph number agglo
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
     
     $graph = array_replace(array_flip($keys_order), $graph);
     foreach($graph as $treatmenttype_format => $detail) {
         $d1 = new flotData($detail['nb']);
-        $d1->label = $treatmenttype_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $treatmenttype_format);
+        $d1->label = $treatmenttype_format;
+        $d1->color = $optionstyle['color']['list'][$treatmenttype_format];
+        $data_pie_1[] = $d1;
+        $data_table_1[]=array(
+            uwwtd_format_number($detail['nb']),
+            $treatmenttype_format
+        );
+        $total_1 += $detail['nb'];
+        
+        
+        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
+        $d2->label =$treatmenttype_format;//$detail['label'];
+        $d2->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
+        $data_pie_2[] = $d2;
+        $data_table_2[]=array(
+            uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
+            $treatmenttype_format
+        );
+        $total_2 += $detail['field_uwwloadenteringuwwtp_value'];
     }
+    $data_table_1[] = array( uwwtd_format_number($total_1), '');
+    $data_table_2[] = array( uwwtd_format_number($total_2), '');
+    
+    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
+    $header_1 = array(t('Number of plants'),t('Treatment type in place'));
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
+    $header_2 = array(t('Load entering (p.e.)'),t('Treatment type in place'));
+    $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-//     todo legend color
-//     $optionstyle['color']  = array(
-//         'C' => "#4f91e1",
-//         'NR' => "#a2a2a2",
-//         'NC' => "#d93c3c",
-//         'NI' => "#6b6b6b",
-//     );
-
-    $variables_nb = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-1',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph_nb = theme('flot_graph', $variables);
-
-    $render_table_graph_nb = '
-
-    <table id="views-aggregator-datatable-nb" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Number of plants
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Treatment type in place
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $treatmenttype_format => $detail) {
-        $render_table_graph_nb .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['nb']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $treatmenttype_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['nb'];
-      }
-
-      $render_table_graph_nb .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
-    //second graph load generated
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
-    foreach($graph as $treatmenttype_format => $detail) {
-        $d1 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d1->label = $treatmenttype_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $treatmenttype_format);
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-    $variables = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-2',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph = theme('flot_graph', $variables);
-
-    $render_table_graph = '
-
-    <table id="views-aggregator-datatable" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Load entering (p.e.)
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Treatment type in place
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $treatmenttype_format => $detail) {
-        $render_table_graph .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '.  $treatmenttype_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['field_uwwloadenteringuwwtp_value'];
-      }
-
-      $render_table_graph .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
+    unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
+    
 
     $build['tablesort_table'] = array(
             '#theme' => 'table',
             '#header' => $header,
             '#rows' => $rows,
         );
-    //build export data on ODT,XML,CSV,DOC...
-
-    //todo save view and map and .install update map/style/overlay
-    $render_graph_nb = theme('flot_graph', $variables_nb);
-    $render_graph = theme('flot_graph', $variables);
-//     $page = '<h1>'.$title.'</h1>'
-//             . $form
-//             . $rendermap
-//             . '<div class="flot-title">Treatment type in place by Plants</div>'
-//             . '<div class="view-content">'.$render_graph_nb.'</div>'
-//             . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-//
-//             . '<div class="flot-title">Treatment type in place by Load entering (p.e.)</div>'
-//             . '<div class="view-content">'.$render_graph.'</div>'
-//             . '<div class="view-content">'.$render_table_graph.'</div>'
-//
-//             . '<div class="view-content">'. drupal_render($build) . '</div>'
-//      ;
 
     
     $page =  '<h1>'.$title.'</h1>'
@@ -2323,49 +1684,13 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-                      .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by number of treatment plants</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph_nb.'</div>'
-                      .'</div>'
-
-                      .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by number of treatment plants</div>
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Treatment type in place by number of treatment plants"), $render_graph_nb, $render_table_graph_nb,'')
+                    
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .'<div class="container flip">'
-
-                      .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph.'</div>'
-
-                      .'</div>'
-                      .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Treatment type in place by Load entering (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph.'</div>'
-                      .'</div>'
-                    .'</div>'
+                    .uwwtd_page_render_flipcard(t("Treatment type in place by Load entering (p.e.)"), $render_graph, $render_table_graph,'')
                   .'</div>'
                 .'</div>'
             .'</div>'
@@ -2382,9 +1707,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             .'</div>';
 
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables_nb,
-                                    'flot2' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
@@ -2422,9 +1745,6 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-//         $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
-//         $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
 //     dsm('not in cache');
@@ -2625,9 +1945,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 
 
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables_nb,
-                                    'flot2' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
@@ -2664,9 +1982,6 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
-//         dsm('in cache');
-        $render_graph_nb = theme('flot_graph', $cache->data['flot1']);
-        $render_graph = theme('flot_graph', $cache->data['flot2']);
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_sensitive_areas($filter['filter']);
@@ -2774,248 +2089,26 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     unset($features);
     unset($data);
 
-    //first graph number agglo
-    $data_pie = array();
-    $xaxis = array();
-    $i = 0;
-//     dsm($optionstyle);
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;//$GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance];//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-//         $xaxis[] = array($i++, $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$compliance]);
-//         $xaxis[] = array($i++, $compliance_format.'__pppp');
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  = new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-
-    $variables_nb = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-1',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-//     $render_graph_nb = theme('flot_graph', $variables);
-
-    $render_table_graph_nb = '
-
-    <table id="views-aggregator-datatable-nb" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Number of agglomeration
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph_nb .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['nb']) . '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['nb'];
-      }
-
-      $render_table_graph_nb .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
-    //second graph load generated
-    $data_pie = array();
-
-    $xaxis = array();
-    $i = 0;
-//     $aData = array();
-
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['field_agggenerated_value']);
-        $d1->label =$compliance_format;//$detail['label'];
-        $d1->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie[] = $d1;
-    }
-
-    $options = new flotStylePie();
-//     $options->axis_range('yaxis', array(null,100), 4);
-//     $options->axis_ticks('xaxis', $xaxis);
-    $options->legend  =new StdClass();
-    $options->legend->show = true;
-    $options->legend->position = "ne";
-    $options->resize = true;
-    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
-    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
-    //!!//custom for replace string by callback in module flot...//!!//
-    $options->replace = new StdClass();
-    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
-    //!!//custom for replace string by callback in module flot...//!!//
-
-    $variables = array(
-        'data' => $data_pie,
-        'element' => array(
-            'id' => 'flot-auto-identifier-2',
-            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
-        ),
-//         'legend' => TRUE,
-//         'zoom' => false,
-        'options' => clone $options,
-    );
-
-    $render_graph = theme('flot_graph', $variables);
-
-    $render_table_graph = '
-
-    <table id="views-aggregator-datatable" class="views-table cols-2">
-    <thead>
-    <tr>
-        <th class="views-field views-field-title">
-        Generated load (p.e.)
-        </th>
-        <th class="views-field views-field-field-aggcompliance">
-        Compliance
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-      ';
-      $i = 0;
-      $total = 0;
-      foreach($graph as $compliance_format => $detail) {
-        $render_table_graph .= '<tr class="'.($i % 2 == 0 ? 'odd' : 'even').' views-row-first">
-            <td class="views-field views-field-title">
-            ' . uwwtd_format_number($detail['field_agggenerated_value']). '
-            </td>
-            <td class="views-field views-field-field-aggcompliance">
-            '. $compliance_format . '
-            </td>
-        </tr>';
-        $i++;
-        $total += $detail['field_agggenerated_value'];
-      }
-
-      $render_table_graph .= '</tbody>
-        <tfoot>
-        <tr>
-            <th class="views-field views-field-title">
-            ' . uwwtd_format_number($total) . '
-            </th>
-            <th class="views-field views-field-field-aggcompliance">
-            </th>
-        </tr>
-        </tfoot>
-        </table>
-        ';
-
+    //================================TODO INSERT GRAPH HERE
+    
+    
     //dsm($rows[0]['data']);
     $build['tablesort_table'] = array(
             '#theme' => 'table',
             '#header' => $header,
             '#rows' => $rows,
         );
-    //build export data on ODT,XML,CSV,DOC...
-    //$render_graph_nb = theme('flot_graph', $variables_nb);
-    //$render_graph = theme('flot_graph', $variables);
-
-
-   //============================Render the page ==> TODO use a true template/theme function 
 
     $page = ''
             . '<h1>'.$title.'</h1>'
             . $form
             . '<div class="rows map-row" >'.$rendermap.'</div>'
-            /*
-            . '<div class="rows charts-row" >'
-                .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
-                    .'<div class="container flip">'
-                      .'<div class="leftgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph_nb.'</div>'
-                      .'</div>'
-
-                      .'<div class="leftgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by number of agglomeration (&gt2000 pe)</div>
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph_nb.'</div>'
-                      .'</div>'
-                    .'</div>'
-                  .'</div>'
-                .'</div>'
-                .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
-                    .'<div class="container flip">'
-
-                      .'<div class="rightgraph front">'
-                        . '<div class="flot-title"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">
-                        </div>'
-                        . '<div class="view-content">'.$render_graph.'</div>'
-
-                      .'</div>'
-
-                      .'<div class="rightgraph back">'
-                        . '<div class="flot-title flip-title-back"><div class="flip-title">Global compliance by Generated load (p.e.)</div>
-
-
-                        <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">
-                        </div>'
-                        . '<div class="view-content">'.$render_table_graph.'</div>'
-                      .'</div>'
-                    .'</div>'
-                  .'</div>'
-                .'</div>'
-            .'</div>'
-            */
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
 				. '<div class="hideprint export-result"> | Download results: '
-					.l('csv', 'agglomerations/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
-					.l('xls', 'agglomerations/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+					.l('csv', 'sensitive_areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'sensitive_areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
 				
@@ -3025,16 +2118,242 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             .'</div>'
      ;
      if (true === $put_in_cache) {
-        cache_set($cache_name, array('page' => $page,
-                                    'flot1' => $variables_nb,
-                                    'flot2' => $variables), 'cache_page', CACHE_PERMANENT);
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
 
      return $page;
 }
 
- function uwwtd_dcp_page($type_export = ''){
-    return 'dcp !!!'; 
+function uwwtd_dcp_page($type_export = ''){
+     
+    
+    $title = 'Discharge points';
+    drupal_set_title($title);
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+	$type = "discharge_point";
+    $option = array();
+
+    $option['order'] = $GLOBALS['uwwtd']['ui']['field']['dcp'];
+    $option['default']['order'] = 'title';//$GLOBALS['uwwtd']['ui']['field']['rca']['_format'];
+    //$option['default']['sort_mod'] = 'numeric';
+    $option['default']['sort'] = 'asc';
+    $option['allyear'] = uwwtd_get_all_year();
+    $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
+
+    $filter = uwwtd_get_form_filter($option);
+    $preset_name = 'dcp_map';
+    $preset = openlayers_preset_load($preset_name);
+    $map    = openlayers_build_map($preset->data);
+
+    $cache = '';
+    $cache_name = uwwtd_get_cache_key_page_dcp($filter['filter']);
+
+    //use cache only for page with no filter , or only the year and default sort
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
+    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+        $cache = cache_get($cache_name, 'cache_page');
+    }
+    if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
+        return $cache->data['page'];
+    }
+	$data = uwwtd_get_data_dcp($filter['filter']);
+    
+    $list_field = array(
+    
+        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
+    /*
+        'tot_design_capacity'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+        'tot_entering_load'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+        'rca52'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca54'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca58'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        
+    */
+    );
+// dsm($list_field);
+    $form = uwwtd_filter_form($list_field, $filter);
+
+
+//     dsm($data);
+    //e.vincent / bruno want to show only agglo > 2000
+    $filter_force = array();
+    /*
+    
+    $filter_force['filter']['field_agggenerated_value_op'] = '>';
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    if (variable_get('display_only_active', '1') == 1) {
+        $filter_force['filter']['field_status_value'] = '1';
+    }
+    */
+	//dsm($filter);
+    uwwtd_filter_data($filter, $data, $filter_force);        
+//     uwwtd_filter_data($filter, $data);
+    
+    /*
+	  if($art17 == "No"){
+		  unset($header[9]);
+	  }
+	  unset($header[8]);
+    */
+    uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['dcp'], $data);
+//     dsm($data);
+
+    $optionstyle = array();
+    //get the color for the point
+    $optionstyle['color']['list'] = uwwtd_get_point_color_from_preset($preset);
+    //$optionstyle['color']['field'] = 'uwwtp_compliance_format';
+    $optionstyle['color']['field'] = 'field_uwwcompliance_value_format';
+    //get the size of the point
+    $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
+    $optionstyle['weight']['field'] = 'field_physicalcapacityactivity_value';
+	
+    $optionstyle['popup_title_type'] = 'discharge-point';
+    $optionstyle['popup'] = array(
+        'field_inspireidlocalid_value' => array('label' => 'ID'),
+        'rca_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rca_format']['label']),
+        'zonetype_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label']),
+        'uwwtp_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['uwwtp_format']['label']),
+        'field_uwwcompliance_value_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['field_uwwcompliance_value_format']['label']),
+    );
+    
+    //todo format data in table
+    $graph = array();
+    foreach($data as $row) {
+        $rows[] = array('data' => array(
+            'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+            'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
+            'rca_format'=>$row['rca_format'],
+            'zonetype_format'=>$row['zonetype_format'],
+            'uwwtp_format'=>$row['uwwtp_format'],
+            'field_uwwcompliance_value_format'=>$row['field_uwwcompliance_value_format'],
+        ));
+        
+        if(!isset($graph[$row['zonetype']][$row['field_uwwcompliance_value']])){
+            $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['nb'] = 0;
+            $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load'] = 0;
+            
+        }
+        $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['nb']++;
+        $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load']+=$row['field_physicalcapacityactivity_value'];
+        
+    }
+    
+    $header = array();
+    $header_export = array();
+    foreach($GLOBALS['uwwtd']['ui']['field']['dcp'] as $field => $info) {
+        if(isset($rows[0]['data'][$field])){
+            $header[$field] = array(
+                'data' => $info['label'],
+                'field' => $field,
+                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+            );
+            $header_export[] = $info['label'];
+        }
+        
+    }
+    
+    //here export data and exit
+    if ($type_export != '') {
+        uwwtd_export_data($type_export, 'dcp_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    }
+    $features['dcp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $rendermap = uwwtd_build_map($map, $features);
+    
+    unset($features);
+    unset($data);
+
+    $rows_nb = array();
+    $rows_load = array();
+    $legend = array();
+    $color =array();
+    $total_nb=array();
+    $total_load=array();
+    //TODO : Add graph HERE
+    if(!empty($graph)){
+        foreach($graph as $type=>$item){
+            if(empty($legend)){
+                $legend = array_keys($item);
+                foreach($legend as $i=>$j){
+                    $legend[$i]= $GLOBALS['uwwtd']['all_compliance'][$j];
+                    $color[$i]= $GLOBALS['uwwtd']['compliance_color'][$j];
+                }
+            }
+            $line_nb = array();
+            $line_load = array();
+            
+            $line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            foreach($item as $k=>$v){
+                $line_nb[] = $v['nb'];
+                $line_load[] = $v['load'];
+                //FIX ME nd@oieau.fr
+                //$total_nb[$k]+=$v['nb'];
+            }
+            $rows_nb[] = $line_nb;
+            $rows_load[] = $line_load;  
+        } 
+    }
+    
+    $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
+    $dcp_graph= uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
+    array_unshift($total_nb, t('Total'));
+    array_unshift($total_load, t('Total'));
+    //FIX ME nd@oieau.fr
+    //$rows_nb[]=$total_nb;
+    array_unshift($legend, t('Area type'));
+    $dcp_table_nb = theme('table', array('rows'=>$rows_nb, 'header'=>$legend));
+    $dcp_table = theme('table', array('rows'=>$rows_load, 'header'=>$legend));
+    //dsm($rows[0]['data']);
+    $build['tablesort_table'] = array(
+            '#theme' => 'table',
+            '#header' => $header,
+            '#rows' => $rows,
+        );
+
+
+   //============================Render the page ==> TODO use a true template/theme function 
+
+    $page = ''
+            . '<h1>'.$title.'</h1>'
+            . $form
+            . '<div class="rows map-row" >'.$rendermap.'</div>'
+            
+            . '<div class="rows charts-row" >'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .uwwtd_page_render_flipcard(t("Global compliance by number of discharge point and by receving area type"), $dcp_graph_nb, $dcp_table_nb, t("The compliance of the discharge point is based on the linked UWWTP's compliance"))
+                  
+                  .'</div>'
+                .'</div>'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content">'
+                    .uwwtd_page_render_flipcard(t("Global compliance by load entering of discharge point and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the UWWTP's compliance and load entering"))
+                  .'</div>'
+                .'</div>'
+            .'</div>'
+            . '<div class="rows data-table-row">'
+			 . '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'discharge-points/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'discharge-points/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
+				
+                . '<div class="view-content">'. drupal_render($build) . '</div>'
+			
+                . '<!--markerprinttable-->'  //use for print wkhtmltopdf
+            .'</div>'
+     ;
+     if (true === $put_in_cache) {
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
+     }
+
+     return $page; 
  }
  
 /* 
@@ -3175,6 +2494,70 @@ function uwwtd_build_sensitive_areas_table($year = '') {
 
 //====================================================================== Others function for pages rendering
 
+function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
+    $content = 
+        '<div class="container flip">'
+          .'<div class="leftgraph front">'
+            . '<div class="flot-title">'
+                .'<div class="flip-title">'.$title.'</div>'
+                .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">'
+            . '</div>'
+            . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'.$front.'</div>'
+          .'</div>'
+
+          .'<div class="leftgraph back">'
+            . '<div class="flot-title flip-title-back">'
+                .'<div class="flip-title">'.$title.'</div>'
+                .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">'
+            . '</div>'
+            . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'. $back .'</div>'
+          .'</div>'
+        .'</div>';
+    return $content;
+}
+
+function uwwtd_page_build_flot_piechart($data, $id){
+    $options = new flotStylePie();
+    $options->legend  = new StdClass();
+    $options->legend->show = true;
+    $options->legend->position = "ne";
+    $options->resize = true;
+    $options->legend->labelFormatter = 'uwwtd_labelformaterpie_legend';
+    $options->series->pie->label->formatter = 'uwwtd_labelformaterpie';
+    $options->replace = new StdClass();
+    $options->replace->transform_on_callback = array($options->legend->labelFormatter, $options->series->pie->label->formatter);
+
+    return array(
+        'data' => $data,
+        'element' => array(
+            'id' => $id,
+            'style' => 'width: 500px; height: 200px; padding: 0px; position: relative;',
+        ),
+        'options' => clone $options,
+    );
+    
+}
+
+function uwwtd_page_render_column($id, $legend, $color, $rows, $stacked=false){
+  $chart = array(
+    'id' => $id,
+    'type' => ($stacked?'StackedColumnChart':'ColumnChart'),
+    'legend' => $legend,
+    'rows' => $rows,
+    'width'=>510,
+    'height'=>190,
+  );
+  
+  if(!empty($color)){
+      $chart['color'] = $color;
+  }
+  
+  
+  return d3_draw($chart);
+    
+    
+}
+
 function uwwtd_build_feature($data, $option, &$returnvalue){
     
     //Sort data by area
@@ -3192,7 +2575,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
     
     
     $feature = array();
-//     dsm($option);
     $i = 0;
     $returnvalue = '';
     foreach($data as $row) {
@@ -3238,6 +2620,14 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                  }
                }
             }
+            /*
+            print_r($option['weight']['field']).'<br>';
+            print '<pre>'.print_r($row,true).'</pre>';
+            
+            print $weight.'<br>';
+            
+            if($i>20) exit();
+            */
             $chart = array();
             //Pie chart def ===> FIX ME : is it really use ?
             if (isset($option['piechart'])) {
