@@ -1226,15 +1226,17 @@ function uuwtd_get_distance_compliance($agg){
         $collected_by_uww_for_this_agglo = $agg->field_agggenerated['und'][0]['value'] * ($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
 
         if($agg->field_aggart4compliance['und'][0]['value'] == 'NC') {
-            $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+            // $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
             if (false === strpos($treatmenttypeinplace, '2')) {
                 $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
                 $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                $art4complianceTreat = 'NC';
             }
 
             if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
                 $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
                 $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                $art4compliancePerf = 'NC';
             }
         }
 
@@ -1244,10 +1246,12 @@ function uuwtd_get_distance_compliance($agg){
             if ($art5_treatment_compliance == 'NC') {
                 $dist_art5_treatment_pe += $collected_by_uww_for_this_agglo;
                 $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                $art5complianceTreat = 'NC';
             }
             if ($art5_perf_compliance == 'NC') {
                 $dist_art5_perf_pe += $collected_by_uww_for_this_agglo;
                 $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                $art5compliancePerf = 'NC';
             }
             if ($art5_perf_compliance == 'NR') {
                 $dist_art5_perf_pe = '-';
@@ -1259,13 +1263,18 @@ function uuwtd_get_distance_compliance($agg){
     $dtc = array(
         'art4_treat_pe' => $dist_art4_treatment_pe,
         'art4_treat_percent' => $dist_art4_treatment_percent,
+        'art4_treatment_compliance' => $art4complianceTreat,
         'art4_perf_pe' => $dist_art4_perf_pe,
         'art4_perf_percent' => $dist_art4_perf_percent,
+        'art4_perf_compliance' => $art4compliancePerf,
         'art5_treat_pe' => $dist_art5_treatment_pe,
         'art5_treat_percent' => $dist_art5_treatment_percent,
+        'art5_treat_compliance' => $art5complianceTreat,
         'art5_perf_pe' => $dist_art5_perf_pe,
         'art5_perf_percent' => $dist_art5_perf_percent,
+        'art5_perf_compliance' => $art5compliancePerf,
         );
+    dsm($dtc);
 
     return $dtc;	
 }

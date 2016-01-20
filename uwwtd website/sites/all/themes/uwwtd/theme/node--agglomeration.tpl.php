@@ -177,13 +177,13 @@ echo uwwtd_insert_errors_tab($node);
                 }
 
                 // Article 4
-                if ($distanceToCompliance['art4_treat_pe'] > 0) {
+                if ($distanceToCompliance['art4_treatment_compliance'] == 'NC') {
                     $colorart4T = '#d93c3c';
                 } else {
                     $colorart4T = '#4f91e1';
                 }
 
-                if ($distanceToCompliance['art4_perf_pe'] > 0) {
+                if ($distanceToCompliance['art4_perf_compliance'] == 'NC') {
                     $colorart4P = '#d93c3c';
                 } else {
                     $colorart4P = '#4f91e1';
@@ -195,13 +195,13 @@ echo uwwtd_insert_errors_tab($node);
                 } 
 
                 // Article 5
-                if ($distanceToCompliance['art5_treat_pe'] > 0) {
+                if ($distanceToCompliance['art5_treat_compliance'] == 'NC') {
                     $colorart5T = '#d93c3c';
                 } else {
                     $colorart5T = '#4f91e1';
                 }
 
-                if ($distanceToCompliance['art5_perf_pe'] > 0) {
+                if ($distanceToCompliance['art5_perf_compliance'] == 'NC') {
                     $colorart5P = '#d93c3c';
                 } else {
                     $colorart5P = '#4f91e1';
