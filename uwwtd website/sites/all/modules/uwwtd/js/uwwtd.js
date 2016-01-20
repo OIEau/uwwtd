@@ -44,8 +44,6 @@ function uwwtd_labelformaterpie_legend(label, series) {
 }
 
 function display_uwwtp_stackedbar(data, color) {
-	//console.log(data);
-	//console.log(color);
     var margin = {top: 10, right: 20, bottom: 30, left: 60},
         width = 315 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
@@ -57,18 +55,10 @@ function display_uwwtp_stackedbar(data, color) {
     var y = d3.scale.linear()
         .rangeRound([height, 0]);
 
-    // var color = d3.scale.ordinal()
-    //     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-   //         'colorincoming' => '#74FFE0',
-//         'colordischarge' => '#C00000',
-
 
     var color = d3.scale.ordinal()
     .domain(color.domain)
     .range(color.range);
-
-//     var color = d3.scale.category10();
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -87,17 +77,6 @@ function display_uwwtp_stackedbar(data, color) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "type"; }));
-
-//     var domain = [];
-//     var range = [];
-//     for (var i = 0; i < data.length; i++) {
-//         domain.push(data[i].label);
-//         range.push(data[i].color);
-//     }
-//
-//     var color = d3.scale.ordinal()
-//     .domain(domain)
-//     .range(range);
 
   data.forEach(function(d) {
     var y0 = 0;
@@ -158,8 +137,6 @@ function display_uwwtp_stackedbar(data, color) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-
-
 }
 
 function display_agglo_piechart(data) {

@@ -33,6 +33,12 @@
       y = d3.scale.linear().domain([0,max]).range([chart.h, 0]),
       z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]),
       div = (settings.id) ? settings.id : 'visualization';
+      
+    var colors = (typeof settings.color!= 'undefined'?settings.color:null);
+      
+      
+      
+      
     var svg = d3.select('#' + div).append("svg")
       .attr("width", w)
       .attr("height", h)
@@ -46,14 +52,23 @@
     var xTicks = graph.selectAll("g.ticks")
       .data(rows)
       .enter().append("g")
-      .attr("class","ticks")
-      .attr('transform', function(d,i) { return 'translate(' + (x(i) + (barGroupWidth / 2)) + ',' + (chart.h) + ')'})
-      .append("text")
-      .attr("dy", ".71em")
-      .attr("text-anchor", "end")
-      .attr('transform', function(d,i) { return "rotate(-15)"; })
-      .text(function(d,i){ return xLabels[i]; });
-
+          .attr("class","ticks")
+          .attr('transform', function(d,i) { return 'translate(' + (x(i) + (barGroupWidth / 2)) + ',' + (chart.h) + ')'})
+          .append("text")
+          .attr("dy", ".71em")
+          .attr("text-anchor", "end")
+          .attr('transform', function(d,i) { return "rotate(-15)"; })
+          .html(function(d,i){ 
+           var content = '';
+            var label = d3.splitString(xLabels[i],20);
+            d3.selectAll(label)
+              .each(function(d, i) {
+                content = content+'<tspan text-anchor="end" x="0" y="'+ (20 * i) +'">'+label[i]+'</tspan>';
+              });
+            return content;
+        });
+        
+        
     /* LINES */
     var rule = graph.selectAll("g.rule")
       .data(y.ticks(4))
@@ -86,7 +101,13 @@
       .attr("height", function(d) { return chart.h - y(d); })
       .attr('x', function (d,i) { return i * barWidth; })
       .attr('y', function (d,i) { return y(d); })
-      .attr('fill', function(d,i) { return d3.rgb(z(i)); })
+      .attr('fill', function(d,i) { 
+        
+        if(colors!=null && typeof(colors[i]) !='undefined'){
+            return colors[i];
+        }
+        return d3.rgb(z(i)); 
+      })
       .on('mouseover', function(d, i) { showToolTip(d, i, this); })
       .on('mouseout', function(d, i) { hideToolTip(d, i, this); });
 
@@ -103,7 +124,12 @@
       .attr("transform", function(d,i) { return "translate(0," + d3.tileText(d,15) + ")"});
 
     keys.append("rect")
-      .attr("fill", function(d,i) { return d3.rgb(z(i)); })
+      .attr("fill", function(d,i) { 
+        if(colors!=null && typeof(colors[i])!='undefined'){
+            return colors[i];
+        }
+        return d3.rgb(z(i)); 
+      })
       .attr("width", 16)
       .attr("height", 16)
       .attr("y", 0)

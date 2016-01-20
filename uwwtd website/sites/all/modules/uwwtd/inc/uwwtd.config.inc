@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined('UWWTD_CACHE_ACTIVE')) {
-    define('UWWTD_CACHE_ACTIVE', true);
+    define('UWWTD_CACHE_ACTIVE', false);
 }
 if ( !defined('DEBUG_ALGO')) {
     define('DEBUG_ALGO', true);
@@ -359,6 +359,15 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+);
+$GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
+    'title'                           =>  array('label'=>t('Name')),
+    'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
+    'zonetype_format'=>array('label'=>t('Type of area')),
+    'rca_format'=>array('label'=>t('Linked receiving areas')),
+    'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
+    'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
+    
 );
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
