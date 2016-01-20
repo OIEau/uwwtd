@@ -1969,7 +1969,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    $preset_name = 'receiving_area_test';
+    $preset_name = 'rca_map';
     $preset = openlayers_preset_load($preset_name);
     $map    = openlayers_build_map($preset->data);
 
@@ -2084,7 +2084,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
 
     //dsm($map);
-    $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
@@ -2107,8 +2107,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
 				. '<div class="hideprint export-result"> | Download results: '
-					.l('csv', 'sensitive_areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
-					.l('xls', 'sensitive_areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+					.l('csv', 'sensitive-areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'sensitive-areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
 				
