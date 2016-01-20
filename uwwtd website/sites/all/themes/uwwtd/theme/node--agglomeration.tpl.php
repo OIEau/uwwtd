@@ -177,28 +177,40 @@ echo uwwtd_insert_errors_tab($node);
                 }
 
                 // Article 4
-                if ($node->field_aggart4compliance['und'][0]['value'] == 'C') {
-                    $colorart4T = '#4f91e1';
-                    $colorart4P = '#4f91e1';
-                } elseif ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+                if ($distanceToCompliance['art4_treat_pe'] > 0) {
                     $colorart4T = '#d93c3c';
-                    $colorart4P = '#d93c3c';
                 } else {
-                    $colorart4T = '#a2a2a2';
-                    $colorart4P = '#a2a2a2';
+                    $colorart4T = '#4f91e1';
                 }
 
+                if ($distanceToCompliance['art4_perf_pe'] > 0) {
+                    $colorart4P = '#d93c3c';
+                } else {
+                    $colorart4P = '#4f91e1';
+                }
+
+                if ($node->field_aggart4compliance['und'][0]['value'] == 'NR' || $node->field_aggart4compliance['und'][0]['value'] == 'NR') {
+                    $colorart4T = '#a2a2a2';
+                    $colorart4P = '#a2a2a2';
+                } 
+
                 // Article 5
-                if ($node->field_aggart5compliance['und'][0]['value'] == 'C') {
-                    $colorart5T = '#4f91e1';
-                    $colorart5P = '#4f91e1';
-                } elseif ($node->field_aggart5compliance['und'][0]['value'] == 'NC') {
+                if ($distanceToCompliance['art5_treat_pe'] > 0) {
                     $colorart5T = '#d93c3c';
+                } else {
+                    $colorart5T = '#4f91e1';
+                }
+
+                if ($distanceToCompliance['art5_perf_pe'] > 0) {
                     $colorart5P = '#d93c3c';
                 } else {
+                    $colorart5P = '#4f91e1';
+                }
+
+                if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->field_aggart5compliance['und'][0]['value'] == 'PD') {
                     $colorart5T = '#a2a2a2';
                     $colorart5P = '#a2a2a2';
-                }
+                } 
             ?>
             
             
@@ -222,21 +234,21 @@ echo uwwtd_insert_errors_tab($node);
                         </tr>
                         <tr>
                             <td class="black" style="font-weight:bold;" rowspan="2">2nd treatment</td>
-                            <td class="light" style="background-color:<?php print $colorart4T;?>;color:white;"><?php print number_format($distanceToCompliance['distart4_treatment_%'],1, ',', ' ');?>%</td>
-                            <td class="black"  style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['distart4_monitoring_%'],1, ',', ' ');?>%</td>
+                            <td class="light" style="background-color:<?php print $colorart4T;?>;color:white;"><?php print number_format($distanceToCompliance['art4_treat_percent'],1, ',', ' ');?>%</td>
+                            <td class="black"  style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['art4_perf_percent'],1, ',', ' ');?>%</td>
                         </tr>
                         <tr>
-                            <td class="light" style="background-color:<?php print $colorart4T;?>;color:white;"><?php print number_format($distanceToCompliance['distart4_treatment'],0, ',', ' ');?> p.e </td>
-                            <td class="black" style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['distart4_monitoring'],0, ',', ' ');?> p.e </td>
+                            <td class="light" style="background-color:<?php print $colorart4T;?>;color:white;"><?php print number_format($distanceToCompliance['art4_treat_pe'],0, ',', ' ');?> p.e </td>
+                            <td class="black" style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['art4_perf_pe'],0, ',', ' ');?> p.e </td>
                         </tr>
                         <tr>
                             <td class="black" style="font-weight:bold;" rowspan="2">3rd treatment</td>
-                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['distart5_treatment_%'],1, ',', ' ').'%');?></td>
-                            <td class="black"  style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['distart5_monitoring_%'],1, ',', ' ').'%');?></td>
+                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_treat_percent'],1, ',', ' ').'%');?></td>
+                            <td class="black"  style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_perf_percent'],1, ',', ' ').'%');?></td>
                         </tr>
                         <tr>
-                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['distart5_treatment'],0, ',', ' ').' p.e');?></td>
-                            <td class="black" style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['distart5_monitoring'],0, ',', ' ').' p.e');?></td>
+                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_treat_pe'],0, ',', ' ').' p.e');?></td>
+                            <td class="black" style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_perf_pe'],0, ',', ' ').' p.e');?></td>
                         </tr>
                     </table>
                 </div>
