@@ -1,7 +1,3 @@
-Agglomerations {"url":"agglomeration","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
--Compliance map {"url":"agglomeration\/compliance","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
-Agglomeration {"url":"agglomerations\/compliance","hidden":true,"lang":"und","weight":"-44"}
-Agglomeration treatment map {"url":"agglomerations\/treatment","hidden":true,"lang":"und","weight":"-43"}
 Home {"url":"<front>","lang":"und","weight":"-50"}
 View/Discover {"url":"content\/agglomerations","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
 -Sensitive areas {"url":"sensitive-areas","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-46"}

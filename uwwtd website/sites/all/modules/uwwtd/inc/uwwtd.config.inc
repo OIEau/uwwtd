@@ -363,8 +363,8 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
-    'zonetype_format'=>array('label'=>t('Type of area')),
     'rca_format'=>array('label'=>t('Linked receiving areas')),
+    'zonetype_format'=>array('label'=>t('Type of area')),
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
     

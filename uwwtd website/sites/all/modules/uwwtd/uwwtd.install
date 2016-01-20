@@ -3276,8 +3276,25 @@ function uwwtd_update_7128(&$context = null){
     throw new DrupalUpdateException(__FUNCTION__);
 }
 
-
-
+function uwwtd_update_7129(&$context = null){
+    uwwtd_install_trace(__FUNCTION__);
+    
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    //     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+    
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+}
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
