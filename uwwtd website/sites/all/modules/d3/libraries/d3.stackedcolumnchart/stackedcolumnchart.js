@@ -5,55 +5,73 @@
 
 (function($) {
 
-  Drupal.d3.columnchart = function (select, settings) {
-
-    var rows = settings.rows,
-      // Use first value in each row as the label.
-      xLabels = rows.map(function(d) { return d.shift(); })
-      key = settings.legend,
-      // From inside out:
-      // - Convert all values to numeric numbers.
-      // - Merge all sub-arrays into one flat array.
-      // - Return the highest (numeric) value from flat array.
-      max = d3.max(d3.merge(settings.rows).map(function(d) { return + d; })),
-      // Padding is top, right, bottom, left as in css padding.
-      p = [20, 50, 30, 60],
-      w = settings.width?settings.width:800,
-      h = settings.height?settings.height:400,
-	  chart =(w>400? {w: w * .65, h: h * .70}:{w: w*0.8, h: h * .70}),
-	  legend =(w>400? {w: w * .35, h:h}:{w: w, h:h*0.3}),
-      // bar width is calculated based on chart width, and amount of data
-      // items - will resize if there is more or less
-      barWidth = ((.90 * chart.w) / (rows.length * key.length)),
-      // each cluster of bars - makes coding later easier
-      barGroupWidth = (key.length * barWidth),
-      // space in between each set
-      barSpacing = (.10 * chart.w) / rows.length,
-      x = d3.scale.linear().domain([0,rows.length]).range([0,chart.w]),
-      y = d3.scale.linear().domain([0,max]).range([chart.h, 0]),
-      z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]),
-      div = (settings.id) ? settings.id : 'visualization';
+  Drupal.d3.stackedcolumnchart = function (select, settings) {
+    var rows = settings.rows;
+    //Original data
+    var xLabels = rows.map(function(d) { return d.shift(); });
+    var dataset = [];
+    rows.map(function(d, i){
+        d.map(function(d, j){
+            if(!dataset[j]) dataset[j] = [];
+            dataset[j][i]={"y":d};
+        });
+        
+    });
+    var div = (settings.id) ? settings.id : 'visualization';  
       
+    //Width and height
+    
+    var w = settings.width?settings.width:800;
+    var h = settings.height?settings.height:400;
+    var z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]);
+    var p = [20, 50, 30, 60];
+    var chart =(w>400? {w: w * .65, h: h * .70}:{w: w*0.8, h: h * .70});
+	var legend =(w>400? {w: w * .35, h:h}:{w: w, h:h*0.3});
+    var key = settings.legend;
     var colors = (typeof settings.color!= 'undefined'?settings.color:null);
-      
-      
-      
-      
-    var svg = d3.select('#' + div).append("svg")
-      .attr("width", w)
-      .attr("height", h)
-      .append("g")
-      .attr("transform", "translate(" + p[3] + "," + p[0] + ")");
+    
+    //Set up stack method
+    var stack = d3.layout.stack();
 
+    //Data, stacked
+    stack(dataset);
+
+    //Set up scales
+    var xScale = d3.scale.ordinal()
+        .domain(d3.range(dataset[0].length))
+        .rangeRoundBands([0, chart.w], 0.05);
+
+    var yScale = d3.scale.linear()
+        .domain([0,				
+            d3.max(dataset, function(d) {
+                return d3.max(d, function(d) {
+                    return d.y0 + d.y;
+                });
+            })
+        ])
+        .range([0, chart.h]);
+        
+    var barWidth = xScale.rangeBand();    
+    //Easy colors accessible via a 10-step ordinal scale
+    //var colors = d3.scale.category10();
+
+    //Create SVG element
+    var svg = d3.select("#"+div)
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .attr("transform", "translate(" + p[3] + "," + p[0] + ")");
     var graph = svg.append("g")
       .attr("class", "chart");
+    
 
     /* X AXIS  */
+    
     var xTicks = graph.selectAll("g.ticks")
-      .data(rows)
+      .data(dataset[0])
       .enter().append("g")
           .attr("class","ticks")
-          .attr('transform', function(d,i) { return 'translate(' + (x(i) + (barGroupWidth / 2)) + ',' + (chart.h) + ')'})
+          .attr('transform', function(d,i) { return 'translate(' + (xScale(i) + (barWidth / 2)) + ',' + (chart.h) + ')'})
           .append("text")
           .attr("dy", ".71em")
           .attr("text-anchor", "end")
@@ -67,57 +85,65 @@
               });
             return content;
         });
-        
-        
+    
     /* LINES */
+    
     var rule = graph.selectAll("g.rule")
-      .data(y.ticks(4))
+      .data(yScale.ticks(4))
       .enter().append("g")
       .attr("class", "rule")
-      .attr("transform", function(d) { return "translate(0," + y(d) + ")"; });
+      .attr("transform", function(d) { return "translate(0," + (chart.h - yScale(d)) + ")"; });
 
     rule.append("line")
       .attr("x2", chart.w)
       .style("stroke", function(d) { return d ? "#ccc" : "#000"; })
       .style("stroke-opacity", function(d) { return d ? .7 : null; });
-
+    
     /* Y AXIS */
+    
     rule.append("text")
       .attr("x", -15)
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
       .text(d3.format(",d"));
-
-    var bar = graph.selectAll('g.bars')
-      .data(rows)
-      .enter().append('g')
-      .attr('class', 'bargroup')
-      .attr('transform', function(d,i) { return "translate(" + i * (barGroupWidth + barSpacing) + ", 0)"; });
-
-    bar.selectAll('rect')
-      .data(function(d) { return d; })
-      .enter().append('rect')
-      .attr("width", barWidth)
-      .attr("height", function(d) { return chart.h - y(d); })
-      .attr('x', function (d,i) { return i * barWidth; })
-      .attr('y', function (d,i) { return y(d); })
-      .attr('fill', function(d,i) { 
+      
+    // Add a group for each row of data
+    var groups = graph.selectAll("g.bars")
+        .data(dataset)
+        .enter()
+        .append("g")
+        .attr('fill', function(d,i) { 
+            if(colors!=null && typeof(colors[i]) !='undefined'){
+                return colors[i];
+            }
+            return d3.rgb(z(i)); 
+          });
+    // Add a rect for each data value
+    
+    var rects = groups.selectAll("rect")
+        .data(function(d) { return d; })
+        .enter()
+        .append("rect")
+        .attr("x", function(d, i) {
+            return xScale(i);
+        })
+        .attr("y", function(d) {
+            return chart.h-(yScale(d.y)+yScale(d.y0));
+        })
+        .attr("height", function(d) {
+            return yScale(d.y);
+        })
+        .attr("width", barWidth)
+        .on('mouseover', function(d, i) { showToolTip(d, i, this); })
+        .on('mouseout', function(d, i) { hideToolTip(d, i, this); });
         
-        if(colors!=null && typeof(colors[i]) !='undefined'){
-            return colors[i];
-        }
-        return d3.rgb(z(i)); 
-      })
-      .on('mouseover', function(d, i) { showToolTip(d, i, this); })
-      .on('mouseout', function(d, i) { hideToolTip(d, i, this); });
-
+    
     /* LEGEND */
     var legend = svg.append("g")
       .attr("class", "legend");
 	if(w>400){legend.attr("transform", "translate(" + (chart.w + 10) + "," + 0 + ")");}
     else{legend.attr("transform", "translate( 10," + (chart.h+20) + ")");}
 
-	
     var keys = legend.selectAll("g")
       .data(key)
       .enter().append("g")
@@ -145,6 +171,8 @@
       .attr("y", function(d,i) { return i * 20})
       .attr("dy", "1em");
 
+
+    
     function showToolTip(d, i, obj) {
       // Change color and style of the bar.
       var bar = d3.select(obj);
@@ -160,8 +188,8 @@
         .attr('transform', function(data) { return group.attr('transform'); })
           .append('g')
         // now move to the actual x and y of the bar within that group
-        .attr('transform', function(data) { return 'translate(' + (Number(bar.attr('x')) + barWidth) + ',' + y(d) + ')'; });
-      d3.tooltip(tooltip, d);
+        .attr('transform', function(data) { return 'translate(' + (Number(bar.attr('x')) + barWidth) + ',' + (chart.h - yScale(d.y)) + ')'; });
+      d3.tooltip(tooltip, d.y);
     }
 
     function hideToolTip(d, i, obj) {
