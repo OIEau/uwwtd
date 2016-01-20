@@ -7094,11 +7094,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             
             //'monitoring',
-            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']]);
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
             
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot);
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value']);
             }
             
             //'final',
@@ -8624,7 +8624,7 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     return $art5_treatment;          
 }  
 
-function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot)
+function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $required_rcaB, $required_rcaC)
 {            
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
     $art5_monitoring = '';            
@@ -8654,6 +8654,10 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
         case 'NR':
             $art5_monitoring = 'NR';
             break;                                                                                          
+    }
+
+    if ($required_rcaB == '1' || $required_rcaC == '1') {
+        $art5_monitoring = 'NR';
     }
     
     return $art5_monitoring;            
