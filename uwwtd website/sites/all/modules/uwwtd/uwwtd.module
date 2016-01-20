@@ -264,7 +264,7 @@ function uwwtd_menu(){
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
   );
 
-  $items['sensitive_areas'] = array(
+  $items['sensitive-areas'] = array(
     'title' => 'Sensitive areas',
     'page callback' => 'uwwtd_sensitive_areas_page',
     'access callback' => true,

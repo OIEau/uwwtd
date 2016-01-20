@@ -1969,7 +1969,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    $preset_name = 'receiving_area_test';
+    $preset_name = 'rca_map';
     $preset = openlayers_preset_load($preset_name);
     $map    = openlayers_build_map($preset->data);
 
@@ -2084,7 +2084,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
 
     //dsm($map);
-    $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
@@ -2107,8 +2107,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
 				. '<div class="hideprint export-result"> | Download results: '
-					.l('csv', 'sensitive_areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
-					.l('xls', 'sensitive_areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+					.l('csv', 'sensitive-areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'sensitive-areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
 				
@@ -2221,6 +2221,7 @@ function uwwtd_dcp_page($type_export = ''){
     
     //todo format data in table
     $graph = array();
+    $keys = array();
     foreach($data as $row) {
         $rows[] = array('data' => array(
             'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
@@ -2231,6 +2232,7 @@ function uwwtd_dcp_page($type_export = ''){
             'field_uwwcompliance_value_format'=>$row['field_uwwcompliance_value_format'],
         ));
         
+        if(!in_array($row['field_uwwcompliance_value'], $keys )){ $keys[] = $row['field_uwwcompliance_value'];}
         if(!isset($graph[$row['zonetype']][$row['field_uwwcompliance_value']])){
             $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['nb'] = 0;
             $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load'] = 0;
@@ -2239,6 +2241,28 @@ function uwwtd_dcp_page($type_export = ''){
         $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['nb']++;
         $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load']+=$row['field_physicalcapacityactivity_value'];
         
+    }
+    //We have to set values for empty cell of graph matrix
+    //Sort keys
+    foreach($GLOBALS['uwwtd']['all_compliance'] as $k=>$v){
+        if(in_array($k, $keys)){
+            $order[] = $k;
+        }
+    }
+
+    if(!empty($graph) && !empty($order)){
+        foreach($graph as $k=>$line){
+            $new_line = array();
+            foreach($order as $key){
+                if(!isset($line[$key])){
+                    $new_line[$key] = 0;
+                }
+                else{
+                    $new_line[$key] = $line[$key];
+                }
+            }
+            $graph[$k] = $new_line ;
+        } 
     }
     
     $header = array();
@@ -2272,7 +2296,6 @@ function uwwtd_dcp_page($type_export = ''){
     $color =array();
     $total_nb=array();
     $total_load=array();
-    //TODO : Add graph HERE
     if(!empty($graph)){
         foreach($graph as $type=>$item){
             if(empty($legend)){
@@ -2297,9 +2320,8 @@ function uwwtd_dcp_page($type_export = ''){
             $rows_load[] = $line_load;  
         } 
     }
-    
     $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
-    $dcp_graph= uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
+    $dcp_graph=uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
     array_unshift($total_nb, t('Total'));
     array_unshift($total_load, t('Total'));
     //FIX ME nd@oieau.fr
@@ -2331,7 +2353,7 @@ function uwwtd_dcp_page($type_export = ''){
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard(t("Global compliance by load entering of discharge point and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the UWWTP's compliance and load entering"))
+                    .uwwtd_page_render_flipcard(t("Global compliance by load entering and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the UWWTP's compliance and load entering"))
                   .'</div>'
                 .'</div>'
             .'</div>'

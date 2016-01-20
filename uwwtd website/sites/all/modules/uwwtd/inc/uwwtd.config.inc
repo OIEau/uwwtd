@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined('UWWTD_CACHE_ACTIVE')) {
-    define('UWWTD_CACHE_ACTIVE', false);
+    define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
     define('DEBUG_ALGO', true);
@@ -363,8 +363,8 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
-    'zonetype_format'=>array('label'=>t('Type of area')),
     'rca_format'=>array('label'=>t('Linked receiving areas')),
+    'zonetype_format'=>array('label'=>t('Type of area')),
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
     
@@ -376,13 +376,13 @@ $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
 );
 
 $GLOBALS['uwwtd']['all_compliance']  = array(
-    'NI' => t('No information'),
-    'NR' => t('Not relevant'),     //comprend aussi PD
-    'NC' => t('Not Compliant'),
     'C' => t('Compliant'),        //comprend aussi QC
-    '?' => t('?'),
-    'PD' => t('Pending Deadline'),
     'QC' => t('Questionable Compliance'),
+    'PD' => t('Pending Deadline'),
+    'NC' => t('Not Compliant'),
+    'NR' => t('Not relevant'),     //comprend aussi PD
+    'NI' => t('No information'),
+    '?' => t('?'),
 );
 
 $GLOBALS['uwwtd']['compliance_color']  = array(

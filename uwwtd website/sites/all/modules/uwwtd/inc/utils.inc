@@ -96,6 +96,7 @@ function uwwtd_debug(){
     
 //dsm(array_keys(openlayers_styles()));
     //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
+    /*
     module_load_include('php','uwwtd','inc/ShapeFile.inc');
     module_load_include('inc','uwwtd','inc/data_center');
     $shp = new ShapeFile(drupal_realpath('sites/default/files/data_shapes/SI_SA_river.shp'));
@@ -106,7 +107,7 @@ function uwwtd_debug(){
         dsm($geodata);
         break;
     }
-    
+    */
     return 'debug';
 }
 

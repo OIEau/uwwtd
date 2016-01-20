@@ -3217,11 +3217,11 @@ function uwwtd_update_7127(&$context = null){
     
 }
 
-//Manage RCA pages
+//Manage RCA, DCP pages
 function uwwtd_update_7128(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
-    //update Ressources page
+    //=== Update Ressources page
     $ressource_content = '<h2>European Commission - Directorate General Environment</h2><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h2>European Environment Agency</h2><h3><strong>Reporting Obligation Database (ROD):</strong></h3><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><h3><strong>Access to data and visualisation</strong></h3><ul><li>European Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU data viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3>&nbsp;</h3><h2>European funds and loans</h2><ul><li>DG Regio :&nbsp; <a href="http://ec.europa.eu/regional_policy/" target="_blank">http:://ec.europa.eu/regional_policy/</a></li><li>Funding LIFE projects : <a href="http://ec.europa.eu/environment/life/funding/life.htm" target="_blank">http://ec.europa.eu/environment/life/funding/life.htm</a></li><li>Water life project : <a href="http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75" target="_blank">http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75</a></li><li>European Investment Bank : <a href="http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en" target="_blank">http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en</a></li></ul><p>&nbsp;</p><h2>SIIF European and national platform</h2><ul><li>Generic open-source platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>';
 	$query = db_select('node', 'n');
     $query->fields('n', array('nid'));
@@ -3237,7 +3237,45 @@ function uwwtd_update_7128(&$context = null){
         break;
 	}
     
+    //=== Install new main menu
+    menu_cache_clear_all();
     
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7128.json');
+    
+    menu_cache_clear_all();
+    
+    //=== Install new OL layers and presets
+    //dcp map
+     //update on overlay waste water (add a s to agglomeration)    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code, array('dcp_map.inc','rca_map.inc'), array('rca.inc'), array('-'));
+    
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    //     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+    
+}
+
+function uwwtd_update_7129(&$context = null){
+    uwwtd_install_trace(__FUNCTION__);
     
      ////////////////////////////////////////////////////////////////
     //end update
@@ -3255,9 +3293,6 @@ function uwwtd_update_7128(&$context = null){
     //==========DEBUG : permet de relancer la mise à jour si besoin.
     throw new DrupalUpdateException(__FUNCTION__);
 }
-
-
-
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
@@ -3367,11 +3402,16 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_compliance_map.inc',
         'uwwtp_treatment_map.inc',
         'uwwtp_pressure_map.inc',
+        'dcp_map.inc',
+        'rca_map.inc',
+        
     );
     $list_overlay = array(
+        //Drupal vector layers
         'agglomerations.inc',
         'uwwtp.inc',
         'dcp.inc',
+        'rca.inc',
         'compliance_map.inc',
         'agglomeration_treatment.inc',
         'uwwtp_compliance_map.inc',
@@ -3381,6 +3421,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_n_pressure_.inc',
         'uwwtp_p_pressure_.inc',
         
+        //WMS Layers
         'oieau_nuts_0.inc',
         'oieau_nuts_1.inc',
         'oieau_nuts_2.inc',
