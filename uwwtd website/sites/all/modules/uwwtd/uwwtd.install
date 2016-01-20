@@ -3272,8 +3272,6 @@ function uwwtd_update_7128(&$context = null){
         $context['finished'] = 1;
     }  
     
-    //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
 }
 
 function uwwtd_update_7129(&$context = null){
