@@ -1281,9 +1281,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
-			$titleV = truncate_utf8($row['title'], 17, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 7);
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1299,7 +1298,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 			));
 		}else{
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1572,9 +1571,8 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
 
 		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
-			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1589,7 +1587,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 			));
 		}else{
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
