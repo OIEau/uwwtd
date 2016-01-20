@@ -376,13 +376,13 @@ $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
 );
 
 $GLOBALS['uwwtd']['all_compliance']  = array(
-    'NI' => t('No information'),
-    'NR' => t('Not relevant'),     //comprend aussi PD
-    'NC' => t('Not Compliant'),
     'C' => t('Compliant'),        //comprend aussi QC
-    '?' => t('?'),
-    'PD' => t('Pending Deadline'),
     'QC' => t('Questionable Compliance'),
+    'PD' => t('Pending Deadline'),
+    'NC' => t('Not Compliant'),
+    'NR' => t('Not relevant'),     //comprend aussi PD
+    'NI' => t('No information'),
+    '?' => t('?'),
 );
 
 $GLOBALS['uwwtd']['compliance_color']  = array(
