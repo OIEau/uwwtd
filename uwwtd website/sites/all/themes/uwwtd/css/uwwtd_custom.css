@@ -22,12 +22,13 @@ div.charts-row div.view-content{
     border:1px solid #dddddd;
     border-radius: 0 0 5px 5px;
     margin:0px;
-    padding-bottom: 20px;
+    padding-bottom: 14px;
 }
 div.flip-title{
     float:left;
     margin-top: 7px;
-    padding-left: 15px;
+    padding: 0 5px;
+    font-size:13px;
 }
 div.rows{
     margin:10px 0;
@@ -42,7 +43,7 @@ div.charts-row .back table{
     width:100%;
 }
 div.charts-row div.container{
-    height:280px;
+    height:295px;
     width:100%;
 }
 

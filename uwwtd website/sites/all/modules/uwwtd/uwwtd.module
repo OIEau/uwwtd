@@ -264,7 +264,7 @@ function uwwtd_menu(){
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
   );
 
-  $items['sensitive_areas'] = array(
+  $items['sensitive-areas'] = array(
     'title' => 'Sensitive areas',
     'page callback' => 'uwwtd_sensitive_areas_page',
     'access callback' => true,
@@ -1032,6 +1032,9 @@ function uwwtd_update_cache_data($list_year = array())
 
 function uwwtd_format_number($number, $precision = 0)
 {
+  if ($number === '-') {
+    return $number;
+  }
     return number_format($number, $precision, '.', ' ');
 }
 function uwwtd_format_decimal($number, $precision = 1)

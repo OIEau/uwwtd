@@ -177,13 +177,13 @@ echo uwwtd_insert_errors_tab($node);
                 }
 
                 // Article 4
-                if ($distanceToCompliance['art4_treat_pe'] > 0) {
+                if ($distanceToCompliance['art4_treatment_compliance'] == 'NC') {
                     $colorart4T = '#d93c3c';
                 } else {
                     $colorart4T = '#4f91e1';
                 }
 
-                if ($distanceToCompliance['art4_perf_pe'] > 0) {
+                if ($distanceToCompliance['art4_perf_compliance'] == 'NC') {
                     $colorart4P = '#d93c3c';
                 } else {
                     $colorart4P = '#4f91e1';
@@ -195,13 +195,13 @@ echo uwwtd_insert_errors_tab($node);
                 } 
 
                 // Article 5
-                if ($distanceToCompliance['art5_treat_pe'] > 0) {
+                if ($distanceToCompliance['art5_treat_compliance'] == 'NC') {
                     $colorart5T = '#d93c3c';
                 } else {
                     $colorart5T = '#4f91e1';
                 }
 
-                if ($distanceToCompliance['art5_perf_pe'] > 0) {
+                if ($distanceToCompliance['art5_perf_compliance'] == 'NC') {
                     $colorart5P = '#d93c3c';
                 } else {
                     $colorart5P = '#4f91e1';
@@ -210,7 +210,11 @@ echo uwwtd_insert_errors_tab($node);
                 if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->field_aggart5compliance['und'][0]['value'] == 'PD') {
                     $colorart5T = '#a2a2a2';
                     $colorart5P = '#a2a2a2';
-                } 
+                }
+
+                if ($distanceToCompliance['art5_perf_pe'] === '-') {
+                    $colorart5P = '#a2a2a2';
+                }
             ?>
             
             
@@ -243,12 +247,12 @@ echo uwwtd_insert_errors_tab($node);
                         </tr>
                         <tr>
                             <td class="black" style="font-weight:bold;" rowspan="2">3rd treatment</td>
-                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_treat_percent'],1, ',', ' ').'%');?></td>
-                            <td class="black"  style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_perf_percent'],1, ',', ' ').'%');?></td>
+                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_treat_percent'],1).'%');?></td>
+                            <td class="black"  style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_perf_percent'],1).'%');?></td>
                         </tr>
                         <tr>
-                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_treat_pe'],0, ',', ' ').' p.e');?></td>
-                            <td class="black" style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':number_format($distanceToCompliance['art5_perf_pe'],0, ',', ' ').' p.e');?></td>
+                            <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_treat_pe'],0).' p.e');?></td>
+                            <td class="black" style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_perf_pe'],0).' p.e');?></td>
                         </tr>
                     </table>
                 </div>

@@ -83,7 +83,7 @@
 
     /* Y AXIS */
     rule.append("text")
-      .attr("x", -15)
+      .attr("x", -5)
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
       .text(d3.format(",d"));
@@ -112,9 +112,10 @@
       .on('mouseout', function(d, i) { hideToolTip(d, i, this); });
 
     /* LEGEND */
+    d3.y = 0;
     var legend = svg.append("g")
       .attr("class", "legend");
-	if(w>400){legend.attr("transform", "translate(" + (chart.w + 10) + "," + 0 + ")");}
+	if(w>400){legend.attr("transform", "translate(" + (chart.w + 5) + "," + 0 + ")");}
     else{legend.attr("transform", "translate( 10," + (chart.h+20) + ")");}
 
 	
@@ -130,8 +131,8 @@
         }
         return d3.rgb(z(i)); 
       })
-      .attr("width", 16)
-      .attr("height", 16)
+      .attr("width", 15)
+      .attr("height", 15)
       .attr("y", 0)
       .attr("x", 0);
 
@@ -141,7 +142,7 @@
       .data(function(d,i) { return d3.splitString(key[i], 15); })
       .enter().append("text")
       .text(function(d,i) { return d})
-      .attr("x", 20)
+      .attr("x", 17)
       .attr("y", function(d,i) { return i * 20})
       .attr("dy", "1em");
 

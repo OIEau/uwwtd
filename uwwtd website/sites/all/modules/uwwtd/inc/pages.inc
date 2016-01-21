@@ -1281,9 +1281,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
-			$titleV = truncate_utf8($row['title'], 17, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 7);
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1299,7 +1298,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 			));
 		}else{
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1572,9 +1571,8 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
 
 		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
-			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1589,7 +1587,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 			));
 		}else{
 			$rows[] = array('data' => array(
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1969,7 +1967,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    $preset_name = 'receiving_area_test';
+    $preset_name = 'rca_map';
     $preset = openlayers_preset_load($preset_name);
     $map    = openlayers_build_map($preset->data);
 
@@ -2084,7 +2082,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
 
     //dsm($map);
-    $features['test_receiving_areas_openlayers_1'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
@@ -2107,8 +2105,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
 				. '<div class="hideprint export-result"> | Download results: '
-					.l('csv', 'sensitive_areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
-					.l('xls', 'sensitive_areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+					.l('csv', 'sensitive-areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'sensitive-areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
 				
@@ -2221,6 +2219,7 @@ function uwwtd_dcp_page($type_export = ''){
     
     //todo format data in table
     $graph = array();
+    $keys = array();
     foreach($data as $row) {
         $rows[] = array('data' => array(
             'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
@@ -2231,6 +2230,7 @@ function uwwtd_dcp_page($type_export = ''){
             'field_uwwcompliance_value_format'=>$row['field_uwwcompliance_value_format'],
         ));
         
+        if(!in_array($row['field_uwwcompliance_value'], $keys )){ $keys[] = $row['field_uwwcompliance_value'];}
         if(!isset($graph[$row['zonetype']][$row['field_uwwcompliance_value']])){
             $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['nb'] = 0;
             $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load'] = 0;
@@ -2240,7 +2240,29 @@ function uwwtd_dcp_page($type_export = ''){
         $graph[$row['zonetype']][$row['field_uwwcompliance_value']]['load']+=$row['field_physicalcapacityactivity_value'];
         
     }
-    dsm($graph);
+    //We have to set values for empty cell of graph matrix
+    //Sort keys
+    foreach($GLOBALS['uwwtd']['all_compliance'] as $k=>$v){
+        if(in_array($k, $keys)){
+            $order[] = $k;
+        }
+    }
+
+    if(!empty($graph) && !empty($order)){
+        foreach($graph as $k=>$line){
+            $new_line = array();
+            foreach($order as $key){
+                if(!isset($line[$key])){
+                    $new_line[$key] = 0;
+                }
+                else{
+                    $new_line[$key] = $line[$key];
+                }
+            }
+            $graph[$k] = $new_line ;
+        } 
+    }
+    
     $header = array();
     $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['dcp'] as $field => $info) {
@@ -2267,10 +2289,11 @@ function uwwtd_dcp_page($type_export = ''){
     unset($data);
 
     $rows_nb = array();
+    $rows_load = array();
     $legend = array();
     $color =array();
     $total_nb=array();
-    //TODO : Add graph HERE
+    $total_load=array();
     if(!empty($graph)){
         foreach($graph as $type=>$item){
             if(empty($legend)){
@@ -2280,34 +2303,36 @@ function uwwtd_dcp_page($type_export = ''){
                     $color[$i]= $GLOBALS['uwwtd']['compliance_color'][$j];
                 }
             }
-            $line = array();
-            $line[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_nb = array();
+            $line_load = array();
+            
+            $line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
             foreach($item as $k=>$v){
-                $line[] = $v['nb'];
+                $line_nb[] = $v['nb'];
+                $line_load[] = $v['load'];
                 //FIX ME nd@oieau.fr
                 //$total_nb[$k]+=$v['nb'];
             }
-            $rows_nb[] = $line;
-        }
-        
+            $rows_nb[] = $line_nb;
+            $rows_load[] = $line_load;  
+        } 
     }
-    dsm($legend);
-    
-    $dcp_graph= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
+    $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
+    $dcp_graph=uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
     array_unshift($total_nb, t('Total'));
+    array_unshift($total_load, t('Total'));
     //FIX ME nd@oieau.fr
     //$rows_nb[]=$total_nb;
     array_unshift($legend, t('Area type'));
-    $dcp_table = theme('table', array('rows'=>$rows_nb, 'header'=>$legend));
+    $dcp_table_nb = theme('table', array('rows'=>$rows_nb, 'header'=>$legend));
+    $dcp_table = theme('table', array('rows'=>$rows_load, 'header'=>$legend));
     //dsm($rows[0]['data']);
     $build['tablesort_table'] = array(
             '#theme' => 'table',
             '#header' => $header,
             '#rows' => $rows,
         );
-    //build export data on ODT,XML,CSV,DOC...
-    //$render_graph_nb = theme('flot_graph', $variables_nb);
-    //$render_graph = theme('flot_graph', $variables);
 
 
    //============================Render the page ==> TODO use a true template/theme function 
@@ -2315,18 +2340,18 @@ function uwwtd_dcp_page($type_export = ''){
     $page = ''
             . '<h1>'.$title.'</h1>'
             . $form
-            //. '<div class="rows map-row" >'.$rendermap.'</div>'
+            . '<div class="rows map-row" >'.$rendermap.'</div>'
             
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard('Number of discharge point by receving area type', $dcp_graph, $dcp_table, '')
+                    .uwwtd_page_render_flipcard(t("Global compliance by number of discharge point and by receving area type"), $dcp_graph_nb, $dcp_table_nb, t("The compliance of the discharge point is based on the linked UWWTP's compliance"))
                   
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard('--------------', 'front', 'back', '')
+                    .uwwtd_page_render_flipcard(t("Global compliance by load entering and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the UWWTP's compliance and load entering"))
                   .'</div>'
                 .'</div>'
             .'</div>'
@@ -2339,7 +2364,7 @@ function uwwtd_dcp_page($type_export = ''){
 				.'</div>'
 			 .'</div>'
 				
-                //. '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
             .'</div>'
@@ -2497,7 +2522,7 @@ function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
                 .'<div class="flip-title">'.$title.'</div>'
                 .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">'
             . '</div>'
-            . '<div class="flip-content view-content"><b>'.$msg .'</b>'.$front.'</div>'
+            . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'.$front.'</div>'
           .'</div>'
 
           .'<div class="leftgraph back">'
@@ -2505,7 +2530,7 @@ function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
                 .'<div class="flip-title">'.$title.'</div>'
                 .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">'
             . '</div>'
-            . '<div class="flip-content view-content"><b>'.$msg .'</b>'. $back .'</div>'
+            . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'. $back .'</div>'
           .'</div>'
         .'</div>';
     return $content;
@@ -2540,7 +2565,7 @@ function uwwtd_page_render_column($id, $legend, $color, $rows, $stacked=false){
     'legend' => $legend,
     'rows' => $rows,
     'width'=>510,
-    'height'=>200,
+    'height'=>190,
   );
   
   if(!empty($color)){
