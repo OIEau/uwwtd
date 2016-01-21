@@ -47,6 +47,10 @@ div.charts-row div.container{
     width:100%;
 }
 
+.cell-content-extended {
+    height:360px;
+}
+
 .button-flipper {
   float: right;
   margin-top: -1px;

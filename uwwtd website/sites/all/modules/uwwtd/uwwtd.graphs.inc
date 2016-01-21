@@ -112,7 +112,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'), 
     	t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
-    	t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1]);
+    	t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
+    	true);
     
     //==============================================
     //=============== ROW 2 : Agglomeration : Generated load by compliance
@@ -125,7 +126,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 	// Création du code html pour ces graphs :
 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
 		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
-		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
+		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
+		false);
     
     
     //==============================================
@@ -139,7 +141,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
     	t("Total load entering by compliance"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3]);
+    	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
+    	true);
     
 
     //==============================================
@@ -666,15 +669,18 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
  */
 function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		$graph1Title, $graph1Id, $graph1Front, $graph1Back, 
-		$graph2Title, $graph2Id, $graph2Front, $graph2Back) {
-	
-			dsm($graph1Back);
+		$graph2Title, $graph2Id, $graph2Front, $graph2Back,
+		$isBigTable) {
 	$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
+	$classCustom = '';
+	if ($isBigTable) {
+		$classCustom = '-extended';
+	}
 	$html.='<div class="rows charts-row">';
 		// Création du code html pour le graph1 :
 		$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
 		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
-		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
+		$html.= '<div class="cell charts-rows-cell"><div class="cell-content'. $classCustom .'">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		
 		// Création du code html pour le graph2 :
 		$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
