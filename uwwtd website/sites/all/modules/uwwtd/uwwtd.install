@@ -3238,7 +3238,7 @@ function uwwtd_update_7128(&$context = null){
 	}
     
     //=== Install new main menu
-    menu_cache_clear_all();
+    drupal_flush_all_caches();
     
     $menu = array(
         'menu_name' => 'main-menu', // Drupal menu machine name

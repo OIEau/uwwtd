@@ -59,10 +59,10 @@
     var svg = d3.select("#"+div)
                 .append("svg")
                 .attr("width", w)
-                .attr("height", h)
-                .attr("transform", "translate(" + p[3] + "," + p[0] + ")");
+                .attr("height", h);
     var graph = svg.append("g")
-      .attr("class", "chart");
+      .attr("class", "chart")
+      .attr("transform", "translate(" + p[3] + "," + p[0] + ")");
     
 
     /* X AXIS  */
@@ -142,7 +142,8 @@
     d3.y = 0;
     var legend = svg.append("g")
       .attr("class", "legend");
-	if(w>400){legend.attr("transform", "translate(" + (chart.w + 5) + "," + 0 + ")");}
+    //.attr("transform", "translate(" + p[3] + "," + p[0] + ")")
+	if(w>400){legend.attr("transform", "translate(" + (p[3] + chart.w + 5) + "," + 0 + ")");}
     else{legend.attr("transform", "translate( 10," + (chart.h+20) + ")");}
 
     var keys = legend.selectAll("g")
