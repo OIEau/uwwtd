@@ -212,7 +212,7 @@ echo uwwtd_insert_errors_tab($node);
                     $colorart5P = '#a2a2a2';
                 }
 
-                if ($distanceToCompliance['art5_perf_pe'] == '-') {
+                if ($distanceToCompliance['art5_perf_pe'] === '-') {
                     $colorart5P = '#a2a2a2';
                 }
             ?>
