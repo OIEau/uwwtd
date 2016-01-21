@@ -606,6 +606,72 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	return $data;
 }
 
+/**
+ * Récupère en base les données pour le graph 1 de la ligne 7.
+ */
+function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
+	$data = array();
+	$query = new EntityFieldQuery();
+	$query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'ms_level')
+		->propertyCondition('status', 1);
+	if (isset($yearSelected)){
+		switch($yearSelected){
+			case ALL_YEARS :
+				$query->fieldCondition('field_anneedata', 'value', (array)$yearsPossibles, 'IN');
+				break;
+			default :
+				$query->fieldCondition('field_anneedata', 'value', $yearSelected, '=');
+		}
+		
+	}
+	$query->fieldOrderBy('field_anneedata', 'value', 'ASC');
+	if ($result = $query->execute()) {
+		foreach($result['node'] as $id => $obj) {
+			if ($node = node_load($obj->nid)) {
+				$year = $node->field_anneedata['und'][0]['value'];
+				$data[$year] = array(
+					"sludge"=>array(
+						'production'=>(float)$node->field_mslsludgeproduction['und'][0]['value'],
+						'destination'=>array(
+							'dcp'=>(float)$node->field_msldischargepipelines['und'][0]['value'],
+							'dcs'=>(float)$node->field_msldischargeships['und'][0]['value'],
+							'dco'=>(float)$node->field_msldischargeothers['und'][0]['value'],
+							'rua'=>(float)$node->field_mslreusesoilagriculture['und'][0]['value'],
+							'ruo'=>(float)$node->field_mslreuseothers['und'][0]['value'],
+							'dil'=>(float)$node->field_msldisposallandfill['und'][0]['value'],
+							'dii'=>(float)$node->field_msldisposalincineration['und'][0]['value'],
+							'dio'=>(float)$node->	field_msldisposalothers['und'][0]['value'],
+						),
+						'remark'=>$node->field_mslremarks['und'][0]['value'],
+					),
+					"waste_water"=>array(
+						"Re-used"=>(float)$node->field_mslwwreuseexplain['und'][0]['value'],
+						"rate of re-used"=>(float)$node->field_mslwwreuseperc['und'][0]['value'],
+						"repartition"=>array(
+							'agriculture'=>(float)$node->field_mslwwreuseagri['und'][0]['value'],
+							'industry'=>(float)$node->field_mslwwreuseind['und'][0]['value'],
+							'others'=>(float)$node->field_mslwwreuseother['und'][0]['value'],
+						),
+					),
+				);
+				if ($data[$year]['sludge']['production'] > 0) {
+					$sum = array_sum($data[$year]['sludge']['destination']);
+					$delta = $data[$year]['sludge']['production'] - $sum;
+					if($delta !=0){
+						if($delta>0){
+							$data[$year]['sludge']['destination']['missing']=$delta;
+						}
+						drupal_set_message("There are probably an error in sludge destination (delta = $delta t DS/y)","error");
+					}
+				}
+			}
+		}
+		return $data;
+	}
+	return false;
+}
+
 function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
     $chart_data =array();
     if(isset($data[$year]['sludge']['destination'])){
@@ -639,138 +705,6 @@ function uwwtd_stat_national_ms_level_preprocess_ww_reuse_chart($data, $year){
         
     }
     return $chart_data;
-}
-function uwwtd_stat_national_ms_level_data($options){
-    $data = array();
-    $query = new EntityFieldQuery();
-
-    $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'ms_level')
-    ->propertyCondition('status', 1);
-    if(isset($options['year'])){
-        $query->fieldCondition('field_anneedata', 'value', $options['year'], '=');
-    }
-
-    if($result = $query->execute()){
-        foreach($result['node'] as $id=>$obj){
-            if($node = node_load($obj->nid)){
-                $year = $node->field_anneedata['und'][0]['value'];
-                $data[$year] = array(
-                    "sludge"=>array(
-                        'production'=>(float)$node->field_mslsludgeproduction['und'][0]['value'],
-                        'destination'=>array(
-                            'dcp'=>(float)$node->field_msldischargepipelines['und'][0]['value'],
-                            'dcs'=>(float)$node->field_msldischargeships['und'][0]['value'],
-                            'dco'=>(float)$node->field_msldischargeothers['und'][0]['value'],
-                            'rua'=>(float)$node->field_mslreusesoilagriculture['und'][0]['value'],
-                            'ruo'=>(float)$node->field_mslreuseothers['und'][0]['value'],
-                            'dil'=>(float)$node->field_msldisposallandfill['und'][0]['value'],
-                            'dii'=>(float)$node->field_msldisposalincineration['und'][0]['value'],
-                            'dio'=>(float)$node->	field_msldisposalothers['und'][0]['value'],
-                        ),
-                        'remark'=>$node->field_mslremarks['und'][0]['value'],
-                        
-                    ),
-                    "waste_water"=>array(
-                        "Re-used"=>(float)$node->field_mslwwreuseexplain['und'][0]['value'],
-                        "rate of re-used"=>(float)$node->field_mslwwreuseperc['und'][0]['value'],
-                        "repartition"=>array(
-                            'agriculture'=>(float)$node->field_mslwwreuseagri['und'][0]['value'],
-                            'industry'=>(float)$node->field_mslwwreuseind['und'][0]['value'],
-                            'others'=>(float)$node->field_mslwwreuseother['und'][0]['value'],
-                        ),
-                        
-                    ),
-                );
-                if($data[$year]['sludge']['production'] > 0){
-                    $sum = array_sum($data[$year]['sludge']['destination']);
-                    $delta = $data[$year]['sludge']['production'] - $sum;
-                    if($delta !=0){
-                        if($delta>0){
-                            $data[$year]['sludge']['destination']['missing']=$delta;
-                        }
-                        drupal_set_message("There are probably an error in sludge destination (delta = $delta t DS/y)","error");
-                    }
-                }
-            }
-        }
-        return $data;
-    }
-    return false;
-
-    /*
-	$conditions = '';
-
-	switch($options['year']){
-		case 'all' :
-			break;
-		case '' :
-			break;
-		default :
-			$conditions .= " and  f_annee.field_anneedata_value = '" . $options['year'] . "'";
-			break;
-	}
-
-	$data = array();
-	$param = array();
-
-	$query = 'select
-				SUM(f_msldischargepipelines.field_msldischargepipelines_value) AS disc_pipelines_SUM,
-				SUM(f_msldischargeships.field_msldischargeships_value) AS disc_ships_SUM,
-				SUM(f_msldischargeothers.field_msldischargeothers_value) AS disc_others_SUM,
-				SUM(f_mslreusesoilagriculture.field_mslreusesoilagriculture_value) AS ru_agriculture_SUM,
-				SUM(f_mslreuseothers.field_mslreuseothers_value) AS ru_others_SUM,
-				SUM(f_msldisposallandfill.field_msldisposallandfill_value) AS disp_landfill_SUM,
-				SUM(f_msldisposalincineration.field_msldisposalincineration_value) AS disp_incineration_SUM,
-				SUM(f_msldisposalothers.field_msldisposalothers_value) AS disp_others_SUM
-    from {node} n
-    	left join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-		 left join
-            {field_data_field_msldischargepipelines} f_msldischargepipelines
-                ON n.nid = f_msldischargepipelines.entity_id
-		left join
-            {field_data_field_msldischargeships} f_msldischargeships
-                ON n.nid = f_msldischargeships.entity_id
-		left join
-            {field_data_field_msldischargeothers} f_msldischargeothers
-                ON n.nid = f_msldischargeothers.entity_id
-		left join
-            {field_data_field_mslreusesoilagriculture} f_mslreusesoilagriculture
-                ON n.nid = f_mslreusesoilagriculture.entity_id
-		left join
-            {field_data_field_mslreuseothers} f_mslreuseothers
-                ON n.nid = f_mslreuseothers.entity_id
-		left join
-            {field_data_field_msldisposallandfill} f_msldisposallandfill
-                ON n.nid = f_msldisposallandfill.entity_id
-		left join
-            {field_data_field_msldisposalincineration} f_msldisposalincineration
-                ON n.nid = f_msldisposalincineration.entity_id
-		left join
-            {field_data_field_msldisposalothers} f_msldisposalothers
-                ON n.nid = f_msldisposalothers.entity_id 
-    where n.type = :typenode' . $conditions;
-
-
-	$param = array(
-			':typenode' => 'ms_level',
-	);
-
-
-	try {
-		$result = db_query($query,$param);
-		while($row = $result->fetchAssoc()) {
-
-			$data[] = $row;
-		}
-	}catch(Exception $e) {
-		dsm($e->getMessage());
-	}
-
-	//     dsm($data);
-    */
 }
 
 function uwwtd_stat_national_uwwtp_agglo($options)

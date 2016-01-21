@@ -105,7 +105,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 1: Agglomeration : Generated load by collection
     //==============================================
 
-	// Récupération des données des graphs:
+	// Récupération des données des graphs :
     $frontAndBackGraph1 = getRow1Graph1($yearSelected, $yearsPossibles);
     $frontAndBackGraph2 = getRow1Graph2($yearSelected, $yearsPossibles);
     
@@ -118,7 +118,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 2 : Agglomeration : Generated load by compliance
     //==============================================
     
-    // Récupération des données des graphs:
+    // Récupération des données des graphs :
 	$results = uwwtd_stat_national_compliance($yearSelected, $yearsPossibles);
 	$frontAndBackGraph1And2 = getRow2Graph1and2($results);
 	
@@ -132,7 +132,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
     //==============================================
     
-    // Récupération des données des graphs:
+    // Récupération des données des graphs :
 	$results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
     $frontAndBackGraph1 = getRow2Graph1and2($results);
     
@@ -146,7 +146,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
     //==============================================
 
-    // Récupération des données des graphs:
+    // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
     $frontAndBackGraph1 = getRow2Graph1and2($results);
     
@@ -160,7 +160,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 5 : Agglomeration : generated load by agglomeration size
     //==============================================
     
-    // Récupération des données des graphs:
+    // Récupération des données des graphs :
 	$results = uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPossibles);
     $frontAndBackGraph1And2 = getRow2Graph1and2($results);
     
@@ -174,29 +174,30 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 6 : Waste water treatement plant : Total load entering and discharged
     //==============================================
     
-    // Récupération des données des graphs:
+    // Récupération des données des graphs :
     $results = uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles);
-    $frontAndBackGraph1 = getRow6Graph1And2($results);
+    $frontAndBackGraph1And2 = getRow6Graph1And2($results);
     
     // Création du code html pour ces graphs :
     $legend =  array(t('incoming'), t('discharged'));
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"),
-    	$legend, 'uwwtd_load_ent_and_dis', t("Total generated load by agglomeration size"), $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	$legend, 'per_ent_and_dis', t("Number of agglomeration by size"), $frontAndBackGraph1[2], $frontAndBackGraph1[3]);
+    	$legend, 'uwwtd_load_ent_and_dis', t("Total generated load by agglomeration size"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
+    	$legend, 'per_ent_and_dis', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
     
 	
 	//==============================================
     //=============== ROW 7 : MS Level statistics
     //==============================================
     
-//     // Récupération des données des graphs:
-//     $ms_levelFrontAndBackGraph1 = getRow7Graph1($options);
-//     $frontGraph2 = getRow7Graph2($ms_levelFrontAndBackGraph1[0], $options);
+    // Récupération des données des graphs :
+    $results = uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles);
+    $frontAndBackGraph1 = getRow7Graph1($yearSelected, $results);
+    $frontGraph2 = getRow7Graph2($results, $yearSelected, $yearsPossibles);
     
-//     // Création du code html pour ces graphs :
-//     $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
-//     	t("Sludge destination"), 'graph_sludge_dest', $ms_levelFrontAndBackGraph1[0],  $ms_levelFrontAndBackGraph1[1], $ms_levelFrontAndBackGraph1[2],
-//     	t("Water re-use"), $frontGraph2, $options);
+    // Création du code html pour ces graphs :
+    $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
+    	t("Sludge destination"), 'graph_sludge_dest', $results,  $frontAndBackGraph1[0], $frontAndBackGraph1[1],
+    	t("Water re-use"), $frontGraph2, $yearSelected, $yearsPossibles);
 	
 	return  $formResult;
 }
@@ -278,8 +279,6 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 			}
 		}
 		
-		dsm($rows);
-	
 		// Récupération du DOM du tableau :
 		$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
 		
@@ -466,7 +465,6 @@ function getRow6Graph1And2($results) {
 	$graph2Front = array();
 	$graph2Back = '';
 	$graph2Rows = $results;
-	dsm($results);
 	if (!empty($results)) {
 		foreach ($results as $rowName => $row) {
 			if (array_key_exists('data', $row)) {
@@ -475,20 +473,26 @@ function getRow6Graph1And2($results) {
 					$columns[0][$keyElement]['data'] = $keyElement;
 						
 					// Si c'est une valeur pour une année :
-					if (is_array($element) &&
-						array_key_exists('in', $element) && 
-						array_key_exists(0, $element['in']) && 
-						array_key_exists(1, $element['in']) &&
-						array_key_exists('out', $element) && 
-						array_key_exists(0, $element['out']) && 
-						array_key_exists(1, $element['out']) &&
-						array_key_exists('sum', $element)) {
-						// Redéfinition de la valeur de l'année :
-						$graph1Rows[$rowName]['data'][$keyElement] = $element['in'][1] .' el, '. $element['out'][1] .' dl';
-						$graph2Rows[$rowName]['data'][$keyElement] = 
-							round(($element['in'][0] / $element['sum']) * bcpow(10, 9) , 1). ', '.
-							round(($element['out'][0] / $element['sum']) * bcpow(10, 9) , 1). ', '.
-							round(((1 - ($element['out'][0]/ $element['sum']))*100), 1) . ' %';
+					if (is_array($element)) {
+						if (array_key_exists('in', $element) && 
+							array_key_exists(0, $element['in']) && 
+							array_key_exists(1, $element['in']) &&
+							array_key_exists('out', $element) && 
+							array_key_exists(0, $element['out']) && 
+							array_key_exists(1, $element['out']) &&
+							array_key_exists('sum', $element)) {
+							// Redéfinition de la valeur de l'année :
+							$graph1Rows[$rowName]['data'][$keyElement] = $element['in'][1] .' el, '. $element['out'][1] .' dl';
+							
+							// Vincent Godé 20/01/2016, Attention : à revoir, résultats étranges :
+							$graph2Rows[$rowName]['data'][$keyElement] = 
+								round(($element['in'][0] / $element['sum']) , 1). ', '.
+								round(($element['out'][0] / $element['sum']) , 1). ', '.
+								round(((1 - ($element['out'][0] / $element['sum']))*100) / 1000, 1) . ' %';
+						} else {
+							$graph1Rows[$rowName]['data'][$keyElement] = ' - ';
+							$graph2Rows[$rowName]['data'][$keyElement] = ' - ';
+						}
 					}
 				}
 			}
@@ -500,18 +504,19 @@ function getRow6Graph1And2($results) {
 		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
 			// Pour toutes les colonnes existantes :
 			foreach (array_keys($columns[0]) as $columsName) {
-				if (!array_key_exists($columsName, $row['data'])) {
+				if (!array_key_exists($columsName, $row['data']) || empty($graph1Rows[$rowName]['data'][$columsName])) {
 					// Remplissage des trous :
 					$graph1Rows[$rowName]['data'][$columsName] = ' - ';
 				}
 			}
 		}
 	}
+	
 	foreach ($graph2Rows as $rowName => $row) {
 		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
 			// Pour toutes les colonnes existantes :
 			foreach (array_keys($columns[0]) as $columsName) {
-				if (!array_key_exists($columsName, $row['data'])) {
+				if (!array_key_exists($columsName, $row['data']) || empty($graph2Rows[$rowName]['data'][$columsName])) {
 					// Remplissage des trous :
 					$graph2Rows[$rowName]['data'][$columsName] = ' - ';
 				}
@@ -541,118 +546,118 @@ function getRow6Graph1And2($results) {
 			</thead>
 		</table>';
 	
-	
-	
-	
-	
 	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
-}
-
-/**
- * Retourne les données pour le graph "BOD, COD, N, P concentration".
- */
-function getRow6Graph2($options) {
-	$aData_uwwtd_per_ent_and_dis = array();
-	$aString_uwwtd_per_ent_and_dis = array();
-	$results = uwwtd_stat_national_treatmentplant($options);
-	foreach ($results as $result) {
-		$aData_uwwtd_per_ent_and_dis[] = array("BOD", 
-			(float)($result['bodin_sum']/$result['uwwt_sum'])*bcpow(10, 9), 
-			(float)($result['bodout_sum']/$result['uwwt_sum'])*bcpow(10, 9));
-		$aString_uwwtd_per_ent_and_dis[] = array('BOD', 
-			round($result['bodin_sum_format']/$result['uwwt_sum']*bcpow(10, 9) , 1), 
-			round($result['bodout_sum_format']/$result['uwwt_sum']*bcpow(10, 9), 1), 
-			round(((1- ($result['bodout_sum']/ $result['bodin_sum']))*100), 1) . ' %');
-		$aData_uwwtd_per_ent_and_dis[] = array("COD", 
-			(float)($result['codin_sum']/$result['uwwt_sum'])*bcpow(10, 9), 
-			(float)($result['codout_sum']/$result['uwwt_sum'])*bcpow(10, 9));
-		$aString_uwwtd_per_ent_and_dis[] = array('COD', 
-			round($result['codin_sum_format']/$result['uwwt_sum']*bcpow(10, 9), 1), 
-			round($result['codout_sum_format']/$result['uwwt_sum']*bcpow(10, 9), 1), 
-			round(((1- ($result['codout_sum_format']/ $result['codin_sum_format']))*100), 1) . ' %');
-		$aData_uwwtd_per_ent_and_dis[] = array("N", 
-			(float)($result['nin_sum']/$result['uwwt_sum'])*bcpow(10, 9), 
-			(float)($result['nout_sum']/$result['uwwt_sum'])*bcpow(10, 9));
-		$aString_uwwtd_per_ent_and_dis[] = array('N', 
-			round(($result['nin_sum_format']/$result['uwwt_sum'])*bcpow(10, 9), 1) , 
-			round(($result['nout_sum_format']/$result['uwwt_sum'])*bcpow(10, 9), 1), 
-			round(((1- ($result['nout_sum_format']/ $result['nin_sum_format']))*100), 1) . ' %');
-		$aData_uwwtd_per_ent_and_dis[] = array("P", 
-			(float)($result['pin_sum']/$result['uwwt_sum'])*bcpow(10, 9), 
-			(float)($result['pout_sum']/$result['uwwt_sum'])*bcpow(10, 9));
-	
-		//FIX ME : why only 10^6
-		$aString_uwwtd_per_ent_and_dis[]=array( 'P',
-			round(($result['pin_sum']/$result['uwwt_sum'])*bcpow(10, 6), 1) ,
-			round(($result['pout_sum']/$result['uwwt_sum'])*bcpow(10, 6), 1),
-			round(((1- ($result['pout_sum_format']/ $result['pin_sum_format']))*100), 1) . ' %'
-		);
-	}
-	$aString_uwwtd_per_ent_and_dis= theme('table', array("header"=>array('Parameter','Entering (mg/l)','Discharged (mg/l)','Rate (%)'), "rows"=>$aString_uwwtd_per_ent_and_dis));
-	
-	return array($aData_uwwtd_per_ent_and_dis, $aString_uwwtd_per_ent_and_dis);
 }
 
 /**
  * Retourne les données pour le graph "Sludge destination".
  */
-function getRow7Graph1($options) {
-	$sludge_destination_str = '';
-	$ms_level = uwwtd_stat_national_ms_level_data($options);
-	$sludge_destination = uwwtd_stat_national_ms_level_preprocess_sludge_chart($ms_level, $options['year']);
-	if (!empty($sludge_destination)) {
-		$lines= array();
-		foreach ($sludge_destination as $k=>$dest) {
-			$lines[] = array(
-				$dest['label'],
-				$dest['valueformat'],
-			);
-			$sludge_destination[$k]['label'].=' ['.$dest['valueformat'].']';
+function getRow7Graph1($yearSelected, $results) {
+	$front = array();
+	$back = '';
+	$columns = array();
+	$rows = array();
+	
+	$columns[0]['Destination']['data'] = 'Destination';
+	if (!empty($results)) {
+		foreach ($results as $year => $row) {
+			// Définition des entete de colonnes :
+			$columns[0][$year]['data'] = $year;
+			
+			if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
+				foreach ($row['sludge']['destination'] as $keyElement => $element) {
+					if (!empty($element)) {
+						$rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
+						
+						// Ajout de la ligne :
+						$rows[$keyElement]['data'][$year] = $element;
+					}
+				}
+			}
 		}
-		$sludge_destination_str = theme('table', array("rows"=>$lines, "header"=>array("Destination","Values")));
 	}
 	
-	return array($ms_level, $sludge_destination_str, $sludge_destination);
+	// Pour chaque ligne :
+	foreach ($rows as $rowName => $row) {
+		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
+			// Pour toutes les colonnes existantes :
+			foreach (array_keys($columns[0]) as $columsName) {
+				if (!array_key_exists($columsName, $row['data'])) {
+					// Remplissage des trous :
+					$rows[$rowName]['data'][$columsName] = ' - ';
+				}
+			}
+		}
+	}
+	
+	// Récupération du DOM du tableau :
+	$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
+	
+	// Ajout des légendes :
+	$back .= '
+		<table class="stats-graphs table table-hover table-striped sticky-enabled">
+ 			<thead>
+				<tr>
+					<th><i>*: DS/year</i></th>
+				</tr>
+			</thead>
+		</table>';
+	
+	return array($back, $front);
 }
 
 /**
  * Retourne les données pour le cadre "Water re-use".
  */
-function getRow7Graph2($ms_level, $options) {
+function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
 	$ww_reuse = '';
-	if (!empty($ms_level[$options['year']]['waste_water']['Re-used']) && $ms_level[$options['year']]['waste_water']['Re-used'] > 0) {
-		$ww_reuse = $ms_level[$options['year']]['waste_water']['Re-used'].' m3 of treated waste water are re-used.';
-		if ($ms_level[$options['year']]['waste_water']['rate of re-used']){
-			$ww_reuse .=' It represent '.$ms_level[$options['year']]['waste_water']['rate of re-used'].' % of the total volume treated';
+	$yearsToProcess = array();
+	if ($yearSelected === ALL_YEARS && !empty($yearsPossibles)) {
+		$yearsToProcess = $yearsPossibles;
+		if (array_key_exists(ALL_YEARS, $yearsToProcess)) {
+			unset($yearsToProcess[ALL_YEARS]);
 		}
-		$rep='';
-		if ($ms_level[$options['year']]['waste_water']['repartition']['agriculture']){
-			$rep = ' in agriculture';
-		}
-		if ($ms_level[$options['year']]['waste_water']['repartition']['industry']){
-			$rep .= ($rep!=''?', ':'').' in industry';
-		}
-		if ($ms_level[$options['year']]['waste_water']['repartition']['others']){
-			$rep .= ($rep!=''?', ':'').' in others use.';
-		}
-		$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
-	} elseif($ms_level[$options['year']]['waste_water']['rate of re-used']){
-		$ww_reuse .=' It represent '.$ms_level[$options['year']]['waste_water']['rate of re-used'].' % of treated waste water are re-used.';
-		$rep='';
-		if ($ms_level[$options['year']]['waste_water']['repartition']['agriculture']){
-			$rep = ' in agriculture';
-		}
-		if ($ms_level[$options['year']]['waste_water']['repartition']['industry']){
-			$rep .= ($rep!=''?', ':'').' in industry';
-		}
-		if ($ms_level[$options['year']]['waste_water']['repartition']['others']){
-			$rep .= ($rep!=''?', ':'').' in others use.';
-		}
-		$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
-	} else{
-		$ww_reuse ='No information';
+	} else {
+		$yearsToProcess[] = $yearSelected;
 	}
 	
+	// Pour chaque année :
+	foreach ($yearsToProcess as $yearToProcess) {
+		$ww_reuse .= '<div><b>'. $yearToProcess .' : </b>';
+		if (!empty($ms_level[$yearToProcess]['waste_water']['Re-used']) && $ms_level[$yearToProcess]['waste_water']['Re-used'] > 0) {
+			$ww_reuse .= $ms_level[$yearToProcess]['waste_water']['Re-used'].' m3 of treated waste water are re-used.';
+			if ($ms_level[$yearToProcess]['waste_water']['rate of re-used']){
+				$ww_reuse .=' It represent '.$ms_level[$yearToProcess]['waste_water']['rate of re-used'].' % of the total volume treated';
+			}
+			$rep='';
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['agriculture']){
+				$rep = ' in agriculture';
+			}
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['industry']){
+				$rep .= ($rep!=''?', ':'').' in industry';
+			}
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['others']){
+				$rep .= ($rep!=''?', ':'').' in others use.';
+			}
+			$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
+		} elseif($ms_level[$yearToProcess]['waste_water']['rate of re-used']){
+			$ww_reuse .=' It represent '.$ms_level[$yearToProcess]['waste_water']['rate of re-used'].' % of treated waste water are re-used.';
+			$rep='';
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['agriculture']){
+				$rep = ' in agriculture';
+			}
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['industry']){
+				$rep .= ($rep!=''?', ':'').' in industry';
+			}
+			if ($ms_level[$yearToProcess]['waste_water']['repartition']['others']){
+				$rep .= ($rep!=''?', ':'').' in others use.';
+			}
+			$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
+		} else{
+			$ww_reuse .='No information';
+		}
+		$ww_reuse .= '</div>';
+	}
 	return $ww_reuse;
 }
 
@@ -662,6 +667,8 @@ function getRow7Graph2($ms_level, $options) {
 function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		$graph1Title, $graph1Id, $graph1Front, $graph1Back, 
 		$graph2Title, $graph2Id, $graph2Front, $graph2Back) {
+	
+			dsm($graph1Back);
 	$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$html.='<div class="rows charts-row">';
 		// Création du code html pour le graph1 :
@@ -709,17 +716,33 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
  * Ajoute au code html donné le code html pour afficher un graph camembert et un texte.
  */
 function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
-		$graph1Title, $graph1Id, $ms_level, $graph1Front, $graph1Back,
-		$graph2Title, $graph2Text, $options) {
+		$graph1Title, $graph1Id, $results, $graph1Front, $graph1Back,
+		$graph2Title, $graph2Text, $yearSelected, $yearsPossibles) {
 	$html .='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$html .='<div class="rows charts-row">';
 		// Création du code html pour le graph1 :
 		$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
 		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(". json_encode($graph1Back) .", '". $graph1Id ."','middle');});</script>";
-		$msg_sludge = '';
-		if ($ms_level[$options['year']]['sludge']['production'] > 0) {
-			$msg_sludge = "Production : ". $ms_level[$options['year']]['sludge']['production']." T DS/year";
+		$msg_sludge = 'Production : ';
+		
+		// Gestion des productions par années :
+		switch ($yearSelected){
+			case ALL_YEARS :
+				if (!empty($yearsPossibles)) {
+					foreach ($yearsPossibles as $yearPossible) {
+						if ($results[$yearPossible]['sludge']['production'] > 0) {
+							$msg_sludge .= '<i>'. $yearPossible .': </i>'. $results[$yearPossible]['sludge']['production'] .', ';
+						}
+					}
+					$msg_sludge .= " (T DS/year)";
+				}
+				break;
+			default :
+				if ($results[$yearSelected]['sludge']['production'] > 0) {
+					$msg_sludge .= $results[$yearSelected]['sludge']['production']." T DS/year";
+				}
 		}
+		
 		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Front, $msg_sludge).'</div></div>';
 	
 		// Création du code html pour le graph2 :
