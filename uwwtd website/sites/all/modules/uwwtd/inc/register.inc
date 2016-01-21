@@ -8630,21 +8630,21 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
     $art5_monitoring = '';            
     switch($treatment_required) {
         case '3N':   
-            if ($monitoring_Ntot == 'Pass') {
+            if ($monitoring_Ntot == 'Pass' || $monitoring_Ntot == 'P') {
                 $art5_monitoring = 'C';
             } else {
                 $art5_monitoring = 'NC';
             }                
             break;                
         case '3P':
-            if ($monitoring_Ptot == 'Pass') {
+            if ($monitoring_Ptot == 'Pass' || $monitoring_Ptot == 'P') {
                 $art5_monitoring = 'C';
             } else {
                 $art5_monitoring = 'NC';
             }                 
             break;                
         case '3NP':
-            if ($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass') {
+            if (($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_Ptot == 'P')) {
                 $art5_monitoring = 'C';
             } else {
                 $art5_monitoring = 'NC';
