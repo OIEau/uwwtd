@@ -5877,6 +5877,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     uwwtd_trace($totalLoadenteringPercent);
 
     if ($totalLoadenteringPE === 0) {
+        uwwtd_add_error($agg->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $GLOBALS['uwwtd']['message']['total_load_entering_uwwtd_null'], time(), null, $agg);
         return $GLOBALS['uwwtd_value']['compliance']['no_information'];
     }
             
