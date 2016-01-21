@@ -5860,6 +5860,9 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;
+
+
+
     foreach($listUwwtpCompliance as $uwwtp) {
         // BB - 12/01/2016 - Draft 10 of algo
 
@@ -5872,6 +5875,10 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
 
     uwwtd_trace($totalLoadenteringPE);
     uwwtd_trace($totalLoadenteringPercent);
+
+    if ($totalLoadenteringPE === 0) {
+        return $GLOBALS['uwwtd_value']['compliance']['no_information'];
+    }
             
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
@@ -5895,6 +5902,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
 
     uwwtd_trace($pe_lost);
     uwwtd_trace($percentage_lost);
+
+
 
     if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
         return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
