@@ -20,7 +20,8 @@ $GLOBALS['uwwtd']['message'] = array(
      'coord_latitude_europe_error' => 'Latitude not found to be in Europe.',
      'coord_longitude_europe_error' => 'Longitude not found to be in Europe.',
      'percent_interval_error' => 'The number must be between 0 and 100.',
-     'percent_not_digit_error' => 'The input data is not in digital format.',     
+     'percent_not_digit_error' => 'The input data is not in digital format.',    
+     'total_load_entering_uwwtd_null' => 'The total all load entering is equal 0.',    
 );
 
 $GLOBALS['uwwtd_errors'] = array();
