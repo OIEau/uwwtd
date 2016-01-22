@@ -122,8 +122,13 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 				$row['type'] = 'NI';
 			}
 			$networkTypeName = $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'];
-			$out[$networkTypeName]['data'][$row['year']] = uwwtd_format_number((integer)$row['sn_sum']) .' pe, '.
-				uwwtd_format_number((integer)$row['sn_count']);
+			$out[$networkTypeName]['data'][$row['year']] = array(
+				'equValue' => $row['sn_sum'],
+				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']). ' pe',
+				'aggValue' => $row['sn_count'],
+				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']),
+				'color' => $GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
+			);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());

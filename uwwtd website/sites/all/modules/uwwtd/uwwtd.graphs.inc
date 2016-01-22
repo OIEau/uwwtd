@@ -214,11 +214,58 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 	$front = array();
 	$frontTmp = uwwtd_stat_collect_data($yearSelected, $yearsPossibles);
 	if (!empty($frontTmp)) {
-		$front = $frontTmp;
+		// Pour un graph avec plusieurs années :
+		if ($yearSelected == ALL_YEARS) {
+			// Pour chaque année :
+			foreach ($frontTmp as $year => $groupElements) {
+				// Suppresion du groupe du total :
+				array_shift($frontTmp[$year]);
+			}
+			// Pour chaque année :
+			foreach ($frontTmp as $year => $yearRow) {
+				foreach ($yearRow as $groupElements) {
+					if (array_key_exists('label', $groupElements) && 
+						array_key_exists('value', $groupElements) && 
+						array_key_exists('color', $groupElements)) {
+						$front['data'][$year][0] = (string)$year;
+						$front['data'][$year][$groupElements['label']] = $groupElements['value'];
+						$front['color'][$groupElements['label']] = $groupElements['color'];
+						$front['legend'][$groupElements['label']] = $groupElements['label'];
+					}
+				}
+			}
+
+			// Remplacement des keys par des 0, 1, 2 ... (nécessaire pour le traceurs de graph) :
+			foreach ($front['data'] as $year => $groupElements) {
+				$front['data'][$year] = array_values($groupElements);
+			}
+			$front['data'] = array_values($front['data']);
+			$front['legend'] = array_values($front['legend']);
+			$front['color'] = array_values($front['color']);
+		} else {
+			$front = $frontTmp;
+			
+			// Pour chaque année :
+			foreach ($front as $year => $groupElements) {
+				// Suppresion de la ligne du total :
+				array_shift($front[$year]);
+			}
+			// Pour chaque année (restantes) :
+			foreach ($front as $year => $groupElements) {
+				// Pour chaque groupe d'éléments  :
+				foreach ($groupElements as $elementsKey => $elements) {
+					if (array_key_exists('label', $elements) && array_key_exists('valueformat', $elements)) {
+						// Réécriture de l'intitulé du label :
+						$front[$year][$elementsKey]['label'] = $elements['label']. ' ['. $elements['valueformat'] .']';
+					}
+				}
+			}
+		}
+			
 		$rows = array();
 	
 		// Transforme les clefs en 0, 1, 2, ...
-		$dataByYears = array_values($front);
+		$dataByYears = array_values($frontTmp);
 		
 		// Pour chaque groupe d'éléments de la première année :
 		$destinations = array();
@@ -252,7 +299,7 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 		}
 		
 		// Pour chaque année :
-		foreach ($front as $year => $groupElements) {
+		foreach ($frontTmp as $year => $groupElements) {
 			// Récupération du total :
 			$all = array_shift($groupElements);
 				
@@ -295,6 +342,7 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 			</thead>
 		</table>';
 	}
+	
 	return array($front, $back);
 }
 
@@ -306,25 +354,68 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 	$front = array();
 	$frontTmp = uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles);
 	if (!empty($frontTmp)) {
-		$front = $frontTmp;
-		$rows = $front;
+		// Pour un graph avec plusieurs années :
+		if ($yearSelected == ALL_YEARS) {
+			// Pour chaque Network type :
+			foreach ($frontTmp as $newtworkTypeName => $networkType) {
+				if (array_key_exists('data', $networkType)) {
+					// Pour chaque annéee :
+					foreach ($networkType['data'] as $year => $values) {
+						$front['data'][$year][0] = (string)$year;
+						$front['data'][$year][$newtworkTypeName] = (Integer)$values['equValue'];
+						$front['color'][$newtworkTypeName] = $values['color'];
+						$front['legend'][$newtworkTypeName] = $newtworkTypeName;
+					}
+				}
+			}
+			
+			// Remplacement des keys par des 0, 1, 2 ... (nécessaire pour le traceurs de graph) :
+			foreach ($front['data'] as $year => $groupElements) {
+				$front['data'][$year] = array_values($groupElements);
+			}
+			$front['data'] = array_values($front['data']);
+			$front['legend'] = array_values($front['legend']);
+			$front['color'] = array_values($front['color']);
+		} else {
+			// Pour chaque Network type :
+			foreach ($frontTmp as $newtworkTypeName => $networkType) {
+				if (array_key_exists('data', $networkType)) {
+					// Pour chaque annéee :
+					foreach ($networkType['data'] as $year => $values) {
+						// Création d'une ligne pour le front :
+						$front[$year][] = array('value' => $values['equValue'], 
+							 'label' => $newtworkTypeName,
+							 'valueformat' => $values['equFormated'],
+							 'color' => '#00658e');
+					}
+				}
+			}
+		}
+		
+		$rows = $frontTmp;
 		$columns = array();
 		
 		// Définition des entete de colonnes :
 		$columns[0][]['data'] = t("Network type");
 		
 		// Pour chaque Network type :
-		foreach ($front as $newtworkTypeName => $networkType) {
+		foreach ($rows as $newtworkTypeName => $networkType) {
 			// Si ce NetworkType contient des data :
 			if (array_key_exists('data', $networkType)) {
 				// Ajout au début du tableau de la case avec l'intitulé du network type :
-				array_unshift($rows[$newtworkTypeName]['data'], $newtworkTypeName);
+				$rows[$newtworkTypeName]['data'][0] = $newtworkTypeName;
 				
 				// Pour chaque année :
-				foreach (array_keys($networkType['data']) as $year) {
+				foreach ($networkType['data'] as $year => $values) {
 					// Définition des entete de colonnes :
 					$columns[0][$year]['data'] = $year;
+					
+					// Réécriture de la ligne :
+					$rows[$newtworkTypeName]['data'][$year] = $values['equFormated'] .', '. $values['aggFormated'];
 				}
+				
+				// Tri selon les clés :
+				ksort($rows[$newtworkTypeName]['data']);
 			}
 		}
 		
@@ -340,10 +431,9 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 				</tr>
 			</thead>
 		</table>';
-	} else {
-		$front['sum'] = array();
-	}
-	return array($front['sum'], $back);
+	} 
+	
+	return array($front, $back);
 }
 
 /**
@@ -677,16 +767,31 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		$classCustom = '-extended';
 	}
 	$html.='<div class="rows charts-row">';
-		// Création du code html pour le graph1 :
-		$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
-		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
+		// Création du code html pour le graph 1 :
+		if (count($graph1Front) <= 1) {
+			$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+			$keys = array_keys($graph1Front);
+			$graph1Front = $graph1Front[$keys[0]];
+			$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
+		} elseif (array_key_exists('data', $graph1Front) && 
+			array_key_exists('color', $graph1Front) && 
+			array_key_exists('legend', $graph1Front)) {
+			$front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+		}
 		$html.= '<div class="cell charts-rows-cell"><div class="cell-content'. $classCustom .'">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		
-		// Création du code html pour le graph2 :
-		$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
-		$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
+		// Création du code html pour le graph 2 :
+		if (count($graph2Front) <= 1) {
+			$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+			$keys = array_keys($graph2Front);
+			$graph2Front = $graph2Front[$keys[0]];
+			$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
+		} elseif (array_key_exists('data', $graph2Front) &&
+			array_key_exists('color', $graph2Front) &&
+			array_key_exists('legend', $graph2Front)) {
+			$front .= uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
+		}
 		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
-	
 	$html.='</div>';
 	return $html;
 }
@@ -701,7 +806,7 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
 	$html.='<div class="rows charts-row">';
 		// Création du code html pour le graph1 :
 		if (array_sum (array_column($graph1Front, 1))){
-			$front = uwwtd_graph_render_column($graph1Id, $graph1Legend, $graph1Front);
+			$front = uwwtd_graph_render_column($graph1Id, $graph1Legend, array(), $graph1Front);
 		} else {
 			$front = t("No information");
 		}
@@ -709,7 +814,7 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
 		
 		// Création du code html pour le graph2 :
 		if (array_sum (array_column($graph2Front, 1))) {
-			$front = uwwtd_graph_render_column($graph2Id, $graph2Legend, $graph2Front);
+			$front = uwwtd_graph_render_column($graph2Id, $graph2Legend, array(), $graph2Front);
 		} else {
 			$front = t("No information");
 		}
@@ -780,16 +885,23 @@ function uwwtd_graph_render_flipcard($title, $front, $back, $msg=''){
     return $content;
 }
 
-function uwwtd_graph_render_column($id, $legend, $rows){
+function uwwtd_graph_render_column($id, $legend, $color, $rows, $stacked=false){
   $chart = array(
-    'id' => $id,
-    'type' => 'ColumnChart',
-    'legend' => $legend,
-    'rows' => $rows,
-    'width'=>510,
-    'height'=>200,
-  );
-  return d3_draw($chart);
+	'id' => $id,
+	'type' => ($stacked?'StackedColumnChart':'ColumnChart'),
+	'legend' => $legend,
+	'rows' => $rows,
+	'width'=>510,
+	'height'=>220,
+	);
+
+	if(!empty($color)){
+		$chart['color'] = $color;
+	}
+
+
+	return d3_draw($chart);
 }
+
 
 ?>
