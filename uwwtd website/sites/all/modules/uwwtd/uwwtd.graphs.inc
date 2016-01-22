@@ -121,7 +121,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_compliance($yearSelected, $yearsPossibles);
-	$frontAndBackGraph1And2 = getRow2Graph1and2($results);
+	$frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
 	
 	// Création du code html pour ces graphs :
 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
@@ -136,7 +136,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
-    $frontAndBackGraph1 = getRow2Graph1and2($results);
+    $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
@@ -151,7 +151,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
-    $frontAndBackGraph1 = getRow2Graph1and2($results);
+    $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
@@ -165,7 +165,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPossibles);
-    $frontAndBackGraph1And2 = getRow2Graph1and2($results);
+    $frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"),
@@ -439,7 +439,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 /**
  * Retourne les données pour les graphes "Total generated load by compliance" et "Number of agglomerations by compliance".
  */
-function getRow2Graph1and2($results) {
+function getRow2Graph1and2($results, $yearSelected) {
 	// Variables du graph 1 :
 	$graph1Front = array();
 	$graph1Back = '';
@@ -453,7 +453,16 @@ function getRow2Graph1and2($results) {
 	$graph2Rows = $results;
 	$graph2Sums = array();
 	
+	dsm($results);
 	if (!empty($results)) {
+		// Création du tableau pour le front :
+		if ($yearSelected == ALL_YEARS) {
+			// Transformer le $results en trois tableau $color, $legend et $data utilisable par la fonction uwwtd_graph_render_column.
+		} else {
+			// Transformer le $results
+		}
+		
+		// Création du tableau pour le back :
 		foreach ($results as $complianceStateName => $complianceState) {
 			if (array_key_exists('data', $complianceState)) {
 				foreach ($complianceState['data'] as $keyElement => $element) {
