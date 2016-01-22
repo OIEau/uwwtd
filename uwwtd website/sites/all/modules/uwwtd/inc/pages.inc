@@ -2312,18 +2312,22 @@ function uwwtd_dcp_page($type_export = ''){
                 $line_nb[] = $v['nb'];
                 $line_load[] = $v['load'];
                 //FIX ME nd@oieau.fr
-                //$total_nb[$k]+=$v['nb'];
+                $total_nb[$k]+=$v['nb'];
+                $total_load[$k]+=$v['load'];
+                
             }
             $rows_nb[] = $line_nb;
             $rows_load[] = $line_load;  
         } 
     }
+    
     $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
     $dcp_graph=uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
     array_unshift($total_nb, t('Total'));
     array_unshift($total_load, t('Total'));
     //FIX ME nd@oieau.fr
-    //$rows_nb[]=$total_nb;
+    $rows_nb[]=$total_nb;
+    $rows_load[]=$total_load;
     array_unshift($legend, t('Area type'));
     $dcp_table_nb = theme('table', array('rows'=>$rows_nb, 'header'=>$legend));
     $dcp_table = theme('table', array('rows'=>$rows_load, 'header'=>$legend));
@@ -2345,13 +2349,14 @@ function uwwtd_dcp_page($type_export = ''){
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard(t("Global compliance by number of discharge point and by receving area type"), $dcp_graph_nb, $dcp_table_nb, t("The compliance of the discharge point is based on the linked UWWTP's compliance"))
+                    
+                    .uwwtd_page_render_flipcard(t("Compliance of the UWWTP linked to the discharge point by number and by receving area type"), $dcp_graph_nb, $dcp_table_nb, t("The compliance of the discharge point is based on the linked waste water treatment plant's compliance"))
                   
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard(t("Global compliance by load entering and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the UWWTP's compliance and load entering"))
+                    .uwwtd_page_render_flipcard(t("Compliance of the UWWTP linked to the discharge point by load entering and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the waste water treatment plant's compliance and load entering"))
                   .'</div>'
                 .'</div>'
             .'</div>'
@@ -2520,7 +2525,7 @@ function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
           .'<div class="leftgraph front">'
             . '<div class="flot-title">'
                 .'<div class="flip-title">'.$title.'</div>'
-                .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table">'
+                .'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table"></div>'
             . '</div>'
             . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'.$front.'</div>'
           .'</div>'
@@ -2528,7 +2533,7 @@ function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
           .'<div class="leftgraph back">'
             . '<div class="flot-title flip-title-back">'
                 .'<div class="flip-title">'.$title.'</div>'
-                .'<img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram">'
+                .'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram"></div>'
             . '</div>'
             . '<div class="flip-content view-content"><div class="flip-msg">'.$msg .'</div>'. $back .'</div>'
           .'</div>'
