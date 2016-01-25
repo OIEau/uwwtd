@@ -2321,6 +2321,12 @@ function uwwtd_dcp_page($type_export = ''){
         } 
     }
     
+
+    // Pour afficher ce qui est attendu pour crééer un graph pulti colonnes (voir sur /discharge-points) :
+//     dsm($rows_nb);
+//     dsm($color);
+//     dsm($legend);
+
     $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
     $dcp_graph=uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
     array_unshift($total_nb, t('Total'));
