@@ -51,7 +51,8 @@
         ])
         .range([0, chart.h]);
         
-    var barWidth = xScale.rangeBand();    
+    var barWidth = xScale.rangeBand();
+    if(barWidth>100)barWidth=100;
     //Easy colors accessible via a 10-step ordinal scale
     //var colors = d3.scale.category10();
 
