@@ -2570,7 +2570,6 @@ function uwwtd_page_build_flot_piechart($data, $id){
 }
 
 function uwwtd_page_render_column($id, $legend, $color, $rows, $stacked=false){
-  dsm($rows);
   $chart = array(
     'id' => $id,
     'type' => ($stacked?'StackedColumnChart':'ColumnChart'),

@@ -107,7 +107,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 
 	// Récupération des données des graphs :
     $frontAndBackGraph1 = getRow1Graph1($yearSelected, $yearsPossibles);
-    dsm($frontAndBackGraph1);
     $frontAndBackGraph2 = getRow1Graph2($yearSelected, $yearsPossibles);
     
     // Création du code html pour ces graphs :
@@ -123,13 +122,12 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_compliance($yearSelected, $yearsPossibles);
 	$frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
-	
+    
 	// Création du code html pour ces graphs :
 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
 		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
 		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
 		false);
-    
     
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
@@ -145,11 +143,11 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	true);
     
-
+    
     //==============================================
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
     //==============================================
-
+    
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
@@ -174,6 +172,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	array(), 'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
     
     
+    
     //==============================================
     //=============== ROW 6 : Waste water treatement plant : Total load entering and discharged
     //==============================================
@@ -189,6 +188,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	$legend, 'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
     	$legend, 'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
     
+    
 	
 	//==============================================
     //=============== ROW 7 : MS Level statistics
@@ -196,9 +196,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles);
-    dsm($results);
     $frontAndBackGraph1 = getRow7Graph1($yearSelected, $results);
-    dsm($frontAndBackGraph1);
     $frontGraph2 = getRow7Graph2($results, $yearSelected, $yearsPossibles);
     
     // Création du code html pour ces graphs :
@@ -462,6 +460,52 @@ function getRow2Graph1and2($results, $yearSelected) {
 		// Création du tableau pour le front :
 		if ($yearSelected == ALL_YEARS) {
 			// Transformer le $results en trois tableau $color, $legend et $data utilisable par la fonction uwwtd_graph_render_column.
+            foreach($results as $state=>$v){
+                $data = $v['data'];
+                reset( $data );
+                $label = current( $data );
+                $key   = key( $data );
+                if($key){
+                    unset( $data[ $key ]);
+                }
+                foreach($data as $year=>$item){
+                    $graph1Front['data'][$year][0] = (string)$year;
+                    $graph1Front['data'][$year][$state] = (integer)$item['pe'];
+                    $graph1Front['color'][$state] = $item['color'];
+                    $graph1Front['legend'][$state] = $label;
+                    $graph2Front['data'][$year][0] = (string)$year;
+                    $graph2Front['data'][$year][$state] = (integer)$item['nb'];
+                    $graph2Front['color'][$state] = $item['color'];
+                    $graph2Front['legend'][$state] = $label;
+                    
+                }
+            }
+            //Bouche trou 
+            foreach($graph1Front['data'] as $key=>$values){
+                $item = array($values[0]);
+                unset($values[0]);
+                foreach($graph1Front['legend'] as $legend){
+                    $item[] = isset($values[$legend])?$values[$legend]:0;  
+                }
+                $graph1Front['data'][$key] = $item;
+            }
+            foreach($graph2Front['data'] as $key=>$values){
+                $item = array($values[0]);
+                unset($values[0]);
+                foreach($graph2Front['legend'] as $legend){
+                    $item[] = isset($values[$legend])?$values[$legend]:0;  
+                }
+                $graph2Front['data'][$key] = $item;
+            }
+            
+            $graph1Front['data'] = array_values($graph1Front['data']);
+			$graph1Front['legend'] = array_values($graph1Front['legend']);
+			$graph1Front['color'] = array_values($graph1Front['color']);
+            $graph2Front['data'] = array_values($graph2Front['data']);
+			$graph2Front['legend'] = array_values($graph2Front['legend']);
+			$graph2Front['color'] = array_values($graph2Front['color']);
+            
+
 		} else {
 			foreach($results as $state=>$v){
                 $data = $v['data'];
@@ -849,39 +893,50 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle,
 	$html.='<div class="rows charts-row">';
 		// Création du code html pour le graph1 :
 		if (!empty($graph1Front)){
-            $graph1Front_rows =array();
-            $graph1FrontLegend = array();
-            $graph1FrontColor = array();
-            foreach($graph1Front as $key=>$val){
-                $item = array((string)$key);
-                foreach($val as $k=>$v){
-                    $item[] =$v['value'];
-                    $graph1FrontLegend[$v['label']] =$v['label']; 
-                    $graph1FrontColor[$v['label']] =$v['color']; 
+            if(!isset($graph1Front['data'])){
+                $graph1Front_rows =array();
+                $graph1FrontLegend = array();
+                $graph1FrontColor = array();
+                foreach($graph1Front as $key=>$val){
+                    $item = array((string)$key);
+                    foreach($val as $k=>$v){
+                        $item[] =$v['value'];
+                        $graph1FrontLegend[$v['label']] =$v['label']; 
+                        $graph1FrontColor[$v['label']] =$v['color']; 
+                    }
+                    $graph1Front_rows[] = $item;
                 }
-                $graph1Front_rows[] = $item;
+                $front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, true);
             }
-			$front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, true);
-		} else {
+            else{
+                $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+            }
+		} 
+        else {
 			$front = t("No information");
 		}
 		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		
 		// Création du code html pour le graph2 :
 		if (!empty($graph2Front)){
-            $graph2Front_rows =array();
-            $graph2FrontLegend = array();
-            $graph2FrontColor = array();
-            foreach($graph2Front as $key=>$val){
-                $item = array((string)$key);
-                foreach($val as $k=>$v){
-                    $item[] =$v['value'];
-                    $graph2FrontLegend[$v['label']] =$v['label']; 
-                    $graph2FrontColor[$v['label']] =$v['color']; 
+            if(!isset($graph1Front['data'])){
+                $graph2Front_rows =array();
+                $graph2FrontLegend = array();
+                $graph2FrontColor = array();
+                foreach($graph2Front as $key=>$val){
+                    $item = array((string)$key);
+                    foreach($val as $k=>$v){
+                        $item[] =$v['value'];
+                        $graph2FrontLegend[$v['label']] =$v['label']; 
+                        $graph2FrontColor[$v['label']] =$v['color']; 
+                    }
+                    $graph2Front_rows[] = $item;
                 }
-                $graph2Front_rows[] = $item;
+                $front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, true);
             }
-			$front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, true);
+            else{
+                $front = uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
+            }
 		} else {
 			$front = t("No information");
 		}

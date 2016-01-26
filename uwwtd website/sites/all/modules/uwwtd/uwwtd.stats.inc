@@ -241,6 +241,11 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
     } catch(Exception $e) {
     	dsm($e->getMessage());
     }
+    if(!empty($data)){
+        $keys_order = $GLOBALS['uwwtd']['all_compliance'];    
+        $data = array_replace(array_flip($keys_order), $data);
+    }
+    
     return $data;
 }
 
