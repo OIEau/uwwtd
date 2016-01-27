@@ -1785,11 +1785,15 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     //array1
 //     dsm($graph_slice_size);
     $sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
-    $sheet->setCellValue('C5', $context['results']['graph']['0_10000']['pe']);
-    $sheet->setCellValue('B6', $context['results']['graph']['10000_100000']['number']);
-    $sheet->setCellValue('C6', $context['results']['graph']['10000_100000']['pe']);
-    $sheet->setCellValue('B7', $context['results']['graph']['100000_n']['number']);
-    $sheet->setCellValue('C7', $context['results']['graph']['100000_n']['pe']);
+    $sheet->setCellValue('C5', round($context['results']['graph']['0_10000']['pe'], 0));
+    $sheet->setCellValue('B6', $context['results']['graph']['10000_15000']['number']);
+    $sheet->setCellValue('C6', round($context['results']['graph']['10000_15000']['pe'], 0));
+    $sheet->setCellValue('B7', $context['results']['graph']['15000_100000']['number']);
+    $sheet->setCellValue('C7', round($context['results']['graph']['15000_100000']['pe'], 0));
+    $sheet->setCellValue('B8', $context['results']['graph']['100000_150000']['number']);
+    $sheet->setCellValue('C8', round($context['results']['graph']['100000_150000']['pe'], 0));
+    $sheet->setCellValue('B9', $context['results']['graph']['150000_n']['number']);
+    $sheet->setCellValue('C9', round($context['results']['graph']['150000_n']['pe'], 0));
     
     //previous
     $sheet->setCellValue('D5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
@@ -1800,11 +1804,11 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E7', uwwtd_register_get_cell_value($previoussheet, 'C7')); 
     
     //array2
-    $sheet->setCellValue('B15', $context['results']['graph']['total_generated']['pe']);
-    $sheet->setCellValue('B16', $context['results']['graph']['total_collected']['pe']);
-    $sheet->setCellValue('B17', $context['results']['graph']['total_load_ias']['pe']);
-    $sheet->setCellValue('B18', $context['results']['graph']['total_entering']['pe']);
-    $sheet->setCellValue('B19', $context['results']['graph']['total_capacity']['pe']);
+    $sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
+    $sheet->setCellValue('B16', round($context['results']['graph']['total_collected']['pe'], 0));
+    $sheet->setCellValue('B17', round($context['results']['graph']['total_load_ias']['pe'], 0));
+    $sheet->setCellValue('B18', round($context['results']['graph']['total_entering']['pe'], 0));
+    $sheet->setCellValue('B19', round($context['results']['graph']['total_capacity']['pe'], 0));
     
     //previous
     $sheet->setCellValue('C15', uwwtd_register_get_cell_value($previoussheet, 'B15'));
@@ -1820,43 +1824,49 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (false === $previous_year) {
         $replaceyearby = 'N/A';
     }
-    $cell = $sheet->getCell('A52');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A53');
+    $cell = $sheet->getCell('A54');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A55');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A56');
+    $cell = $sheet->getCell('A57');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A58');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A59');
+    $cell = $sheet->getCell('A60');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A62');
+    $cell = $sheet->getCell('A61');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A63');
+    $cell = $sheet->getCell('A64');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A65');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A66');
+    $cell = $sheet->getCell('A67');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A68');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A69');
+    $cell = $sheet->getCell('A70');
+    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
+    $cell = $sheet->getCell('A71');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
                                                         
     $sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
-    $sheet->setCellValue('C43', $context['results']['graph']['art3_C']['pe']);
+    $sheet->setCellValue('C43', round($context['results']['graph']['art3_C']['pe']));
     $sheet->setCellValue('B44', $context['results']['graph']['art3_NC']['number']);
-    $sheet->setCellValue('C44', $context['results']['graph']['art3_NC']['pe']);
-    $sheet->setCellValue('B45', $context['results']['graph']['art4_C']['number']);
-    $sheet->setCellValue('C45', $context['results']['graph']['art4_C']['pe']);
-    $sheet->setCellValue('B46', $context['results']['graph']['art4_NC']['number']);
-    $sheet->setCellValue('C46', $context['results']['graph']['art4_NC']['pe']);
-    $sheet->setCellValue('B47', $context['results']['graph']['art5_C']['number']);
-    $sheet->setCellValue('C47', $context['results']['graph']['art5_C']['pe']);
-    $sheet->setCellValue('B48', $context['results']['graph']['art5_NC']['number']);
-    $sheet->setCellValue('C48', $context['results']['graph']['art5_NC']['pe']); 
+    $sheet->setCellValue('C44', round($context['results']['graph']['art3_NC']['pe']));
+    $sheet->setCellValue('B45', $context['results']['graph']['art3_NR']['number']);
+    $sheet->setCellValue('C45', round($context['results']['graph']['art3_NR']['pe']));
+    $sheet->setCellValue('B46', $context['results']['graph']['art4_C']['number']);
+    $sheet->setCellValue('C46', round($context['results']['graph']['art4_C']['pe']));
+    $sheet->setCellValue('B47', $context['results']['graph']['art4_NC']['number']);
+    $sheet->setCellValue('C47', round($context['results']['graph']['art4_NC']['pe']));
+    $sheet->setCellValue('B48', $context['results']['graph']['art4_NR']['number']);
+    $sheet->setCellValue('C48', round($context['results']['graph']['art4_NR']['pe']));
+    $sheet->setCellValue('B49', $context['results']['graph']['art5_C']['number']);
+    $sheet->setCellValue('C49', round($context['results']['graph']['art5_C']['pe']));
+    $sheet->setCellValue('B50', $context['results']['graph']['art5_NC']['number']);
+    $sheet->setCellValue('C50', round($context['results']['graph']['art5_NC']['pe']));
+    $sheet->setCellValue('B51', $context['results']['graph']['art5_NR']['number']);
+    $sheet->setCellValue('C51', round($context['results']['graph']['art5_NR']['pe'])); 
     
     //previous
     $sheet->setCellValue('D43', uwwtd_register_get_cell_value($previoussheet, 'B43'));
@@ -1871,40 +1881,58 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E47', uwwtd_register_get_cell_value($previoussheet, 'C47'));
     $sheet->setCellValue('D48', uwwtd_register_get_cell_value($previoussheet, 'B48'));
     $sheet->setCellValue('E48', uwwtd_register_get_cell_value($previoussheet, 'C48'));
+    $sheet->setCellValue('D49', uwwtd_register_get_cell_value($previoussheet, 'B49'));
+    $sheet->setCellValue('E49', uwwtd_register_get_cell_value($previoussheet, 'C49'));
+    $sheet->setCellValue('D50', uwwtd_register_get_cell_value($previoussheet, 'B50'));
+    $sheet->setCellValue('E50', uwwtd_register_get_cell_value($previoussheet, 'C50'));
+    $sheet->setCellValue('D51', uwwtd_register_get_cell_value($previoussheet, 'B51'));
+    $sheet->setCellValue('E51', uwwtd_register_get_cell_value($previoussheet, 'C51'));
     
         
     //array 6
-    $sheet->setCellValue('D53', $context['results']['graph']['art3_C']['pe']);  
-    $sheet->setCellValue('E53', $context['results']['graph']['art3_NC']['pe']);
-    $sheet->setCellValue('D56', $context['results']['graph']['art4_C']['pe']);   
-    $sheet->setCellValue('E56', $context['results']['graph']['art4_NC']['pe']);  
-    $sheet->setCellValue('D59', $context['results']['graph']['art5_C']['pe']);
-    $sheet->setCellValue('E59', $context['results']['graph']['art5_NC']['pe']);
+    $sheet->setCellValue('E55', round($context['results']['graph']['art3_C']['pe']));  
+    $sheet->setCellValue('F55', round($context['results']['graph']['art3_NC']['pe']));
+    $sheet->setCellValue('G55', round($context['results']['graph']['art3_NR']['pe']));
+    $sheet->setCellValue('E58', round($context['results']['graph']['art4_C']['pe']));   
+    $sheet->setCellValue('F58', round($context['results']['graph']['art4_NC']['pe']));  
+    $sheet->setCellValue('G58', round($context['results']['graph']['art4_NR']['pe']));  
+    $sheet->setCellValue('E61', round($context['results']['graph']['art5_C']['pe']));
+    $sheet->setCellValue('F61', round($context['results']['graph']['art5_NC']['pe']));
+    $sheet->setCellValue('G61', round($context['results']['graph']['art5_NR']['pe']));
     
     //previous
-    $sheet->setCellValue('B52', uwwtd_register_get_cell_value($previoussheet, 'D53')); 
-    $sheet->setCellValue('C52', uwwtd_register_get_cell_value($previoussheet, 'E53')); 
-    $sheet->setCellValue('B55', uwwtd_register_get_cell_value($previoussheet, 'D56')); 
-    $sheet->setCellValue('C55', uwwtd_register_get_cell_value($previoussheet, 'E56')); 
-    $sheet->setCellValue('B58', uwwtd_register_get_cell_value($previoussheet, 'D59')); 
-    $sheet->setCellValue('C58', uwwtd_register_get_cell_value($previoussheet, 'E59')); 
+    $sheet->setCellValue('B54', uwwtd_register_get_cell_value($previoussheet, 'E55')); 
+    $sheet->setCellValue('C54', uwwtd_register_get_cell_value($previoussheet, 'F55')); 
+    $sheet->setCellValue('D54', uwwtd_register_get_cell_value($previoussheet, 'G55')); 
+    $sheet->setCellValue('B57', uwwtd_register_get_cell_value($previoussheet, 'E58')); 
+    $sheet->setCellValue('C57', uwwtd_register_get_cell_value($previoussheet, 'F58')); 
+    $sheet->setCellValue('D57', uwwtd_register_get_cell_value($previoussheet, 'G58')); 
+    $sheet->setCellValue('B60', uwwtd_register_get_cell_value($previoussheet, 'E61')); 
+    $sheet->setCellValue('C60', uwwtd_register_get_cell_value($previoussheet, 'F61')); 
+    $sheet->setCellValue('D60', uwwtd_register_get_cell_value($previoussheet, 'G61')); 
     
         
     //array 7
-    $sheet->setCellValue('D63', $context['results']['graph']['art3_C']['number']);     
-    $sheet->setCellValue('E63', $context['results']['graph']['art3_NC']['number']);    
-    $sheet->setCellValue('D66', $context['results']['graph']['art4_C']['number']);    
-    $sheet->setCellValue('E66', $context['results']['graph']['art4_NC']['number']);    
-    $sheet->setCellValue('D69', $context['results']['graph']['art5_C']['number']);    
-    $sheet->setCellValue('E69', $context['results']['graph']['art5_NC']['number']); 
+    $sheet->setCellValue('E65', $context['results']['graph']['art3_C']['number']);     
+    $sheet->setCellValue('F65', $context['results']['graph']['art3_NC']['number']);    
+    $sheet->setCellValue('G65', $context['results']['graph']['art3_NR']['number']);    
+    $sheet->setCellValue('E68', $context['results']['graph']['art4_C']['number']);    
+    $sheet->setCellValue('F68', $context['results']['graph']['art4_NC']['number']);    
+    $sheet->setCellValue('G68', $context['results']['graph']['art4_NR']['number']);    
+    $sheet->setCellValue('E71', $context['results']['graph']['art5_C']['number']);    
+    $sheet->setCellValue('F71', $context['results']['graph']['art5_NC']['number']); 
+    $sheet->setCellValue('G71', $context['results']['graph']['art5_NR']['number']); 
     
     //previous
-    $sheet->setCellValue('B62', uwwtd_register_get_cell_value($previoussheet, 'D63')); 
-    $sheet->setCellValue('C62', uwwtd_register_get_cell_value($previoussheet, 'E63'));
-    $sheet->setCellValue('B65', uwwtd_register_get_cell_value($previoussheet, 'D66')); 
-    $sheet->setCellValue('C65', uwwtd_register_get_cell_value($previoussheet, 'E66'));  
-    $sheet->setCellValue('B68', uwwtd_register_get_cell_value($previoussheet, 'D69')); 
-    $sheet->setCellValue('C68', uwwtd_register_get_cell_value($previoussheet, 'E69'));                          
+    $sheet->setCellValue('B64', uwwtd_register_get_cell_value($previoussheet, 'E65')); 
+    $sheet->setCellValue('C64', uwwtd_register_get_cell_value($previoussheet, 'F65'));
+    $sheet->setCellValue('D64', uwwtd_register_get_cell_value($previoussheet, 'G65'));
+    $sheet->setCellValue('B67', uwwtd_register_get_cell_value($previoussheet, 'E68')); 
+    $sheet->setCellValue('C67', uwwtd_register_get_cell_value($previoussheet, 'F68'));  
+    $sheet->setCellValue('D67', uwwtd_register_get_cell_value($previoussheet, 'G68'));  
+    $sheet->setCellValue('B70', uwwtd_register_get_cell_value($previoussheet, 'E71')); 
+    $sheet->setCellValue('C70', uwwtd_register_get_cell_value($previoussheet, 'F71'));                          
+    $sheet->setCellValue('D70', uwwtd_register_get_cell_value($previoussheet, 'G71'));                          
     
     
     //array 3
@@ -1914,6 +1942,12 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         
         //Yearly production of sludge
         $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : ''; 
+        // Discharged into surface waters : Pipelines
+        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : ''; 
+        // Discharged into surface waters : Ships
+        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : ''; 
+        // Discharged into surface waters : Others
+        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : ''; 
         //Of which: re-used: Soil and agriculture
         $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : ''; 
         //Of which: re-used: Others 
@@ -1928,28 +1962,40 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $field_mslwwreuseperc = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : '';
         unset($node);
         
-        $sheet->setCellValue('B24', $field_mslsludgeproduction);
-        $sheet->setCellValue('B25', $field_mslreusesoilagriculture);
-        $sheet->setCellValue('B26', $field_mslreuseothers);
-        $sheet->setCellValue('B27', $field_msldisposallandfill);
-        $sheet->setCellValue('B28', $field_msldisposalincineration);
-        $sheet->setCellValue('B29', $field_msldisposalothers);
+        $sheet->setCellValue('B24', round($field_mslsludgeproduction));
+        $sheet->setCellValue('B25', round($field_msldischargepipelines));
+        $sheet->setCellValue('B26', round($field_msldischargeships));
+        $sheet->setCellValue('B27', round($field_msldischargeothers));
+        $sheet->setCellValue('B28', round($field_mslreusesoilagriculture));
+        $sheet->setCellValue('B29', round($field_mslreuseothers));
+        $sheet->setCellValue('B30', round($field_msldisposallandfill));
+        $sheet->setCellValue('B31', round($field_msldisposalincineration));
+        $sheet->setCellValue('B32', round($field_msldisposalothers));
         
         if (!empty($field_mslsludgeproduction)) {
+            if (!empty($field_msldischargepipelines)) {
+                $sheet->setCellValue('C25', round($field_msldischargepipelines * 100 / $field_mslsludgeproduction, 1));    
+            } 
+            if (!empty($field_msldischargeships)) {
+                $sheet->setCellValue('C26', round($field_msldischargeships * 100 / $field_mslsludgeproduction, 1));    
+            } 
+            if (!empty($field_msldischargeothers)) {
+                $sheet->setCellValue('C27', round($field_msldischargeothers * 100 / $field_mslsludgeproduction, 1));    
+            } 
             if (!empty($field_mslreusesoilagriculture)) {
-                $sheet->setCellValue('C25', $field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction);    
+                $sheet->setCellValue('C28', round($field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_mslreuseothers)) {
-                $sheet->setCellValue('C26', $field_mslreuseothers * 100 / $field_mslsludgeproduction);    
+                $sheet->setCellValue('C29', round($field_mslreuseothers * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_msldisposallandfill)) {
-                $sheet->setCellValue('C27', $field_msldisposallandfill * 100 / $field_mslsludgeproduction);    
+                $sheet->setCellValue('C30', round($field_msldisposallandfill * 100 / $field_mslsludgeproduction, 1));    
             }  
             if (!empty($field_msldisposalincineration)) {
-                $sheet->setCellValue('C28', $field_msldisposalincineration * 100 / $field_mslsludgeproduction);    
+                $sheet->setCellValue('C31', round($field_msldisposalincineration * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_msldisposalothers)) {
-                $sheet->setCellValue('C29', $field_msldisposalothers * 100 / $field_mslsludgeproduction);    
+                $sheet->setCellValue('C32', round($field_msldisposalothers * 100 / $field_mslsludgeproduction, 1));    
             }                                                        
         }
         
@@ -2016,55 +2062,44 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 // $sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
              
 
-                 
-    $cell = $sheet->getCell('A73');
+    $cell = $sheet->getCell('A75');
     $cell->setValue(str_replace(array('[#COUNTRY#]', '[#current_year#]'), array($country_name, $annee), $cell->getValue()));
                                  
-    $sheet->getCell('B75')->setValue($context['results']['graph']['summary_installation']['total']['number']);
-    $sheet->getCell('C75')->setValue($context['results']['graph']['summary_installation']['total']['percentage']);
-    $sheet->getCell('D75')->setValue($context['results']['graph']['summary_installation']['total']['waste_pe']);
-    $sheet->getCell('E75')->setValue($context['results']['graph']['summary_installation']['total']['waste_percent']);
+    $sheet->getCell('B77')->setValue($context['results']['graph']['summary_installation']['total']['number']);
+    $sheet->getCell('C77')->setValue(round($context['results']['graph']['summary_installation']['total']['percent'], 1));
+    $sheet->getCell('D77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_pe']));
+    $sheet->getCell('E77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_percent'], 1));
     
-    $sheet->getCell('B76')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['number']);
-    $sheet->getCell('C76')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['percentage']);
-    $sheet->getCell('D76')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe']);
-    $sheet->getCell('E76')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent']);
+    $sheet->getCell('B78')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['number']);
+    $sheet->getCell('C78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['percent'], 1));
+    $sheet->getCell('D78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe']));
+    $sheet->getCell('E78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent'], 1));
     
-    $sheet->getCell('B77')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['number']);
-    $sheet->getCell('C77')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['percentage']);
-    $sheet->getCell('D77')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_pe']);
-    $sheet->getCell('E77')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_percent']);
+    $sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['number']);
+    $sheet->getCell('C79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['percent'], 1));
+    $sheet->getCell('D79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_pe']));
+    $sheet->getCell('E79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_percent'], 1));
     
-    $sheet->getCell('B78')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number']);
-    $sheet->getCell('C78')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percentage']);
-    $sheet->getCell('D78')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_pe']);
-    $sheet->getCell('E78')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_percent']);
+    $sheet->getCell('B80')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number']);
+    $sheet->getCell('C80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percent'], 1));
+    $sheet->getCell('D80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_pe']));
+    $sheet->getCell('E80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_percent'], 1));
     
-    $sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['number']);
-    $sheet->getCell('C79')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['percentage']);
-    $sheet->getCell('D79')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_pe']);
-    $sheet->getCell('E79')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_percent']);
+    $sheet->getCell('B81')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['number']);
+    $sheet->getCell('C81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['percent'], 1));
+    $sheet->getCell('D81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_pe']));
+    $sheet->getCell('E81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_percent'], 1));
     
-    $sheet->getCell('B80')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['number']);
-    $sheet->getCell('C80')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['percentage']);
-    $sheet->getCell('D80')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_pe']);
-    $sheet->getCell('E80')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent']);
+    $sheet->getCell('B82')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['number']);
+    $sheet->getCell('C82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['percent'], 1));
+    $sheet->getCell('D82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_pe']));
+    $sheet->getCell('E82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'], 1));
     
     //previous   
-    $sheet->setCellValue('F75', uwwtd_register_get_cell_value($previoussheet, 'B75'));
-    $sheet->setCellValue('G75', uwwtd_register_get_cell_value($previoussheet, 'C75'));
-    $sheet->setCellValue('H75', uwwtd_register_get_cell_value($previoussheet, 'D75'));
-    $sheet->setCellValue('I75', uwwtd_register_get_cell_value($previoussheet, 'E75'));     
-                                                                                  
-    $sheet->setCellValue('F76', uwwtd_register_get_cell_value($previoussheet, 'B76'));
-    $sheet->setCellValue('G76', uwwtd_register_get_cell_value($previoussheet, 'C76'));
-    $sheet->setCellValue('H76', uwwtd_register_get_cell_value($previoussheet, 'D76'));
-    $sheet->setCellValue('I76', uwwtd_register_get_cell_value($previoussheet, 'E76'));
-                                                                                  
     $sheet->setCellValue('F77', uwwtd_register_get_cell_value($previoussheet, 'B77'));
     $sheet->setCellValue('G77', uwwtd_register_get_cell_value($previoussheet, 'C77'));
     $sheet->setCellValue('H77', uwwtd_register_get_cell_value($previoussheet, 'D77'));
-    $sheet->setCellValue('I77', uwwtd_register_get_cell_value($previoussheet, 'E77'));
+    $sheet->setCellValue('I77', uwwtd_register_get_cell_value($previoussheet, 'E77'));     
                                                                                   
     $sheet->setCellValue('F78', uwwtd_register_get_cell_value($previoussheet, 'B78'));
     $sheet->setCellValue('G78', uwwtd_register_get_cell_value($previoussheet, 'C78'));
@@ -2079,30 +2114,40 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('F80', uwwtd_register_get_cell_value($previoussheet, 'B80'));
     $sheet->setCellValue('G80', uwwtd_register_get_cell_value($previoussheet, 'C80'));
     $sheet->setCellValue('H80', uwwtd_register_get_cell_value($previoussheet, 'D80'));
-    $sheet->setCellValue('I80', uwwtd_register_get_cell_value($previoussheet, 'E80'));                
+    $sheet->setCellValue('I80', uwwtd_register_get_cell_value($previoussheet, 'E80'));
+                                                                                  
+    $sheet->setCellValue('F81', uwwtd_register_get_cell_value($previoussheet, 'B81'));
+    $sheet->setCellValue('G81', uwwtd_register_get_cell_value($previoussheet, 'C81'));
+    $sheet->setCellValue('H81', uwwtd_register_get_cell_value($previoussheet, 'D81'));
+    $sheet->setCellValue('I81', uwwtd_register_get_cell_value($previoussheet, 'E81'));
+                                                                                  
+    $sheet->setCellValue('F82', uwwtd_register_get_cell_value($previoussheet, 'B82'));
+    $sheet->setCellValue('G82', uwwtd_register_get_cell_value($previoussheet, 'C82'));
+    $sheet->setCellValue('H82', uwwtd_register_get_cell_value($previoussheet, 'D82'));
+    $sheet->setCellValue('I82', uwwtd_register_get_cell_value($previoussheet, 'E82'));                
                                                             
     //array 9 Summary distance to compliance expired deadline
     //Target connection pe
-    $sheet->getCell('C88')->setValue($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe']);
+    $sheet->getCell('C88')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe']));
     //not connected
-    $sheet->getCell('B89')->setValue($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%']);
-    $sheet->getCell('C89')->setValue($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe']);
+    $sheet->getCell('B89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'], 1));
+    $sheet->getCell('C89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe']));
     //2nd treatment target
-    $sheet->getCell('C90')->setValue($context['results']['distance_to_compliance']['expired']['secondary_target']['total_load_pe']);
+    $sheet->getCell('C90')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['total_load_pe']));
     //2nd treatment not in place
-    $sheet->getCell('B91')->setValue($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%']);
-    $sheet->getCell('C91')->setValue($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe']);
+    $sheet->getCell('B91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
+    $sheet->getCell('C91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe']));
     //2nd treatment performance not met
-    $sheet->getCell('B92')->setValue($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C92')->setValue($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe']));
     //Tertiary treatment target
-    $sheet->getCell('C93')->setValue($context['results']['distance_to_compliance']['expired']['morestringent_target']['total_load_pe']);
+    $sheet->getCell('C93')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['total_load_pe']));
     //Tertiary treatment not in place
-    $sheet->getCell('B94')->setValue($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%']);
-    $sheet->getCell('C94')->setValue($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe']);
+    $sheet->getCell('B94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
+    $sheet->getCell('C94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe']));
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B95')->setValue($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C95')->setValue($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']));
     
     //previous
     $sheet->setCellValue('E88', uwwtd_register_get_cell_value($previoussheet, 'C88'));
@@ -2128,26 +2173,26 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     
     //array 10 summary distance to compliance pending deadlines
-    $sheet->getCell('C104')->setValue($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe']);
+    $sheet->getCell('C104')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe']));
     //not connected
-    $sheet->getCell('B105')->setValue($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%']);
-    $sheet->getCell('C105')->setValue($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe']);
+    $sheet->getCell('B105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'], 1));
+    $sheet->getCell('C105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe']));
     //2nd treatment target
-    $sheet->getCell('C106')->setValue($context['results']['distance_to_compliance']['pending']['secondary_target']['total_load_pe']);
+    $sheet->getCell('C106')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['total_load_pe']));
     //2nd treatment not in place
-    $sheet->getCell('B107')->setValue($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%']);
-    $sheet->getCell('C107')->setValue($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe']);
+    $sheet->getCell('B107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
+    $sheet->getCell('C107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe']));
     //2nd treatment performance not met
-    $sheet->getCell('B108')->setValue($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C108')->setValue($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe']));
     //Tertiary treatment target
-    $sheet->getCell('C109')->setValue($context['results']['distance_to_compliance']['pending']['morestringent_target']['total_load_pe']);
+    $sheet->getCell('C109')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['total_load_pe']));
     //Tertiary treatment not in place
-    $sheet->getCell('B110')->setValue($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%']);
-    $sheet->getCell('C110')->setValue($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe']);
+    $sheet->getCell('B110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
+    $sheet->getCell('C110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe']));
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B111')->setValue($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C111')->setValue($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']));
     
     //previous
     $sheet->setCellValue('E104', uwwtd_register_get_cell_value($previoussheet, 'C104'));    
@@ -2172,26 +2217,26 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E111', uwwtd_register_get_cell_value($previoussheet, 'C111'));    
     
     //array 11 summary distance to compliance total
-    $sheet->getCell('C119')->setValue($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe']);
+    $sheet->getCell('C119')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe']));
     //not connected
-    $sheet->getCell('B120')->setValue($context['results']['distance_to_compliance']['total']['target_connection']['distance_%']);
-    $sheet->getCell('C120')->setValue($context['results']['distance_to_compliance']['total']['target_connection']['distance_pe']);
+    $sheet->getCell('B120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_%'], 1));
+    $sheet->getCell('C120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_pe']));
     //2nd treatment target
-    $sheet->getCell('C121')->setValue($context['results']['distance_to_compliance']['total']['secondary_target']['total_load_pe']);
+    $sheet->getCell('C121')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['total_load_pe']));
     //2nd treatment not in place
-    $sheet->getCell('B122')->setValue($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_%']);
-    $sheet->getCell('C122')->setValue($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_pe']);
+    $sheet->getCell('B122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
+    $sheet->getCell('C122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_pe']));
     //2nd treatment performance not met
-    $sheet->getCell('B123')->setValue($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C123')->setValue($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_pe']));
     //Tertiary treatment target
-    $sheet->getCell('C124')->setValue($context['results']['distance_to_compliance']['total']['morestringent_target']['total_load_pe']);
+    $sheet->getCell('C124')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['total_load_pe']));
     //Tertiary treatment not in place
-    $sheet->getCell('B125')->setValue($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_%']);
-    $sheet->getCell('C125')->setValue($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_pe']);
+    $sheet->getCell('B125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
+    $sheet->getCell('C125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_pe']));
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B126')->setValue($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_%']);
-    $sheet->getCell('C126')->setValue($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe']);
+    $sheet->getCell('B126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
+    $sheet->getCell('C126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe']));
     
     //previous
     $sheet->setCellValue('E119', uwwtd_register_get_cell_value($previoussheet, 'C119'));
@@ -2239,42 +2284,42 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 //         $context['results']['uwwtp_other_morestringent_pe'] = 0; 
             
     $sheet->setCellValue('B131', '100.00');
-    $sheet->setCellValue('C131', $context['results']['uwwtp_total_load_generated_pe']);
+    $sheet->setCellValue('C131', round($context['results']['uwwtp_total_load_generated_pe']));
     $sheet->setCellValue('D131', $context['results']['uwwtp_total_load_generated_nb']);
-    $sheet->setCellValue('B132', $context['results']['uwwtp_notreatment_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C132', $context['results']['uwwtp_notreatment_pe']);
+    $sheet->setCellValue('B132', round($context['results']['uwwtp_notreatment_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C132', round($context['results']['uwwtp_notreatment_pe']));
     $sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
-    $sheet->setCellValue('B133', $context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C133', $context['results']['uwwtp_ias_pe']);
+    $sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C133', round($context['results']['uwwtp_ias_pe']));
     $sheet->setCellValue('D133', $context['results']['uwwtp_ias_nb']);
-    $sheet->setCellValue('B134', $context['results']['uwwtp_p_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C134', $context['results']['uwwtp_p_as_max_pe']);
+    $sheet->setCellValue('B134', round($context['results']['uwwtp_p_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C134', round($context['results']['uwwtp_p_as_max_pe']));
     $sheet->setCellValue('D134', $context['results']['uwwtp_p_as_max_nb']);
-    $sheet->setCellValue('B135', $context['results']['uwwtp_s_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C135', $context['results']['uwwtp_s_as_max_pe']);
+    $sheet->setCellValue('B135', round($context['results']['uwwtp_s_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C135', round($context['results']['uwwtp_s_as_max_pe']));
     $sheet->setCellValue('D135', $context['results']['uwwtp_s_as_max_nb']);
-    $sheet->setCellValue('B136', $context['results']['uwwtp_n_removal_without_p_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C136', $context['results']['uwwtp_n_removal_without_p_pe']);
+    $sheet->setCellValue('B136', round($context['results']['uwwtp_n_removal_without_p_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C136', round($context['results']['uwwtp_n_removal_without_p_pe']));
     $sheet->setCellValue('D136', $context['results']['uwwtp_n_removal_without_p_nb']);
-    $sheet->setCellValue('B137', $context['results']['uwwtp_p_removal_without_n_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C137', $context['results']['uwwtp_p_removal_without_n_pe']);
+    $sheet->setCellValue('B137', round($context['results']['uwwtp_p_removal_without_n_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C137', round($context['results']['uwwtp_p_removal_without_n_pe']));
     $sheet->setCellValue('D137', $context['results']['uwwtp_p_removal_without_n_nb']);
-    $sheet->setCellValue('B138', $context['results']['uwwtp_np_removal_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C138', $context['results']['uwwtp_np_removal_pe']);
+    $sheet->setCellValue('B138', round($context['results']['uwwtp_np_removal_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C138', round($context['results']['uwwtp_np_removal_pe']));
     $sheet->setCellValue('D138', $context['results']['uwwtp_np_removal_nb']);
-    $sheet->setCellValue('B139', $context['results']['uwwtp_other_morestringent_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe']);
-    $sheet->setCellValue('C139', $context['results']['uwwtp_other_morestringent_pe']);
+    $sheet->setCellValue('B139', round($context['results']['uwwtp_other_morestringent_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    $sheet->setCellValue('C139', round($context['results']['uwwtp_other_morestringent_pe']));
     $sheet->setCellValue('D139', $context['results']['uwwtp_other_morestringent_nb']);  
       
     //array 13    incoming/discharged        
-    $sheet->getCell('C148')->setValue($context['results']['graph']['incoming_load_bod']);
-    $sheet->getCell('C149')->setValue($context['results']['graph']['discharge_load_bod']);
-    $sheet->getCell('C150')->setValue($context['results']['graph']['incoming_load_cod']);
-    $sheet->getCell('C151')->setValue($context['results']['graph']['discharge_load_cod']);
-    $sheet->getCell('C152')->setValue($context['results']['graph']['incoming_load_n']);
-    $sheet->getCell('C153')->setValue($context['results']['graph']['discharge_load_n']);
-    $sheet->getCell('C154')->setValue($context['results']['graph']['incoming_load_p']);
-    $sheet->getCell('C155')->setValue($context['results']['graph']['discharge_load_p']);
+    $sheet->getCell('C148')->setValue(round($context['results']['graph']['incoming_load_bod']));
+    $sheet->getCell('C149')->setValue(round($context['results']['graph']['discharge_load_bod']));
+    $sheet->getCell('C150')->setValue(round($context['results']['graph']['incoming_load_cod']));
+    $sheet->getCell('C151')->setValue(round($context['results']['graph']['discharge_load_cod']));
+    $sheet->getCell('C152')->setValue(round($context['results']['graph']['incoming_load_n']));
+    $sheet->getCell('C153')->setValue(round($context['results']['graph']['discharge_load_n']));
+    $sheet->getCell('C154')->setValue(round($context['results']['graph']['incoming_load_p']));
+    $sheet->getCell('C155')->setValue(round($context['results']['graph']['discharge_load_p']));
     
     //previous
     $sheet->getCell('D148')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C148'));
@@ -2287,10 +2332,10 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D155')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C155'));        
        
     //array 14    rate
-    $sheet->getCell('C159')->setValue((1-($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod'])) *100);
-    $sheet->getCell('C160')->setValue((1-($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod'])) *100);
-    $sheet->getCell('C161')->setValue((1-($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n'])) *100);
-    $sheet->getCell('C162')->setValue((1-($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p'])) *100);
+    $sheet->getCell('C159')->setValue(round((1-($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod'])) *100, 1));
+    $sheet->getCell('C160')->setValue(round((1-($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod'])) *100, 1));
+    $sheet->getCell('C161')->setValue(round((1-($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n'])) *100, 1));
+    $sheet->getCell('C162')->setValue(round((1-($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p'])) *100, 1));
     //previous
     $sheet->getCell('D159')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C159'));
     $sheet->getCell('D160')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C160'));
@@ -2298,19 +2343,19 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));    
     
     //array 15   totla volume
-    $sheet->getCell('C166')->setValue($context['results']['country_volume_waste_water']);
+    $sheet->getCell('C166')->setValue(round($context['results']['country_volume_waste_water']));
     //previous
     $sheet->getCell('D166')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C166'));
     
     //array 16  average  
-    $sheet->getCell('C169')->setValue(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C170')->setValue(($context['results']['graph']['discharge_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C171')->setValue(($context['results']['graph']['incoming_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C172')->setValue(($context['results']['graph']['discharge_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C173')->setValue(($context['results']['graph']['incoming_load_n'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C174')->setValue(($context['results']['graph']['discharge_load_n'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C175')->setValue(($context['results']['graph']['incoming_load_p'] / $context['results']['country_volume_waste_water']) * 1000000);
-    $sheet->getCell('C176')->setValue(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000);
+    $sheet->getCell('C169')->setValue(round(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C170')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C171')->setValue(round(($context['results']['graph']['incoming_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C172')->setValue(round(($context['results']['graph']['discharge_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C173')->setValue(round(($context['results']['graph']['incoming_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C174')->setValue(round(($context['results']['graph']['discharge_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C175')->setValue(round(($context['results']['graph']['incoming_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    $sheet->getCell('C176')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
     
     //previous
     $sheet->getCell('D169')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C169'));
@@ -3468,13 +3513,13 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         
         //more stringent treatment
         if ($agglo[$ind['more_str._treatment_installed_(p._e.)']] > 0) {
-            $context['sandbox']['summary']['secondary']['installation_in_place']['number']++;
-            $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
+            $context['sandbox']['summary']['more_stringent']['installation_in_place']['number']++;
+            $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
         }
 
         if ($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']] > 0) {
-            $context['sandbox']['summary']['secondary']['meet_requirement']['number']++;
-            $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
+            $context['sandbox']['summary']['more_stringent']['meet_requirement']['number']++;
+            $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
         }
         $j++;        
         $context['sandbox']['file_position'] = ftell($ragglofile);
@@ -6025,12 +6070,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['generated_load_p.e.']] >= 2000 && $line[$ind['generated_load_p.e.']] < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $line[$ind['generated_load_p.e.']];
             $context['results']['graph']['0_10000']['number']++;        
-        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 100001) {
-            $context['results']['graph']['10000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['10000_100000']['number']++;             
-        } elseif ($line[$ind['generated_load_p.e.']] >= 100001) {
-            $context['results']['graph']['100000_n']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['100000_n']['number']++;             
+        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 15001) {
+            $context['results']['graph']['10000_15000']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['10000_15000']['number']++;             
+        } elseif ($line[$ind['generated_load_p.e.']] >= 15001 && $line[$ind['generated_load_p.e.']] < 100001) {
+            $context['results']['graph']['15000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['15000_100000']['number']++;             
+        } elseif ($line[$ind['generated_load_p.e.']] >= 100001 && $line[$ind['generated_load_p.e.']] < 150001) {
+            $context['results']['graph']['100000_150000']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['100000_150000']['number']++;             
+        } elseif ($line[$ind['generated_load_p.e.']] >= 150001) {
+            $context['results']['graph']['150000_n']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['150000_n']['number']++;             
         }
         
         //array2
@@ -6049,6 +6100,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $context['results']['graph']['art3_NC']['number']++;
             $context['results']['graph']['art3_NC']['pe'] += $line[$ind['generated_load_p.e.']];
         }
+        if ($line[$ind['art3_compliance']] == 'NR') {
+            $context['results']['graph']['art3_NR']['number']++;
+            $context['results']['graph']['art3_NR']['pe'] += $line[$ind['generated_load_p.e.']];
+        }
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {     
             $context['results']['graph']['art4_C']['number']++;
             $context['results']['graph']['art4_C']['pe'] += $line[$ind['generated_load_p.e.']];
@@ -6057,6 +6112,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $context['results']['graph']['art4_NC']['number']++;
             $context['results']['graph']['art4_NC']['pe'] += $line[$ind['generated_load_p.e.']];
         }
+        if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {
+            $context['results']['graph']['art4_NR']['number']++;
+            $context['results']['graph']['art4_NR']['pe'] += $line[$ind['generated_load_p.e.']];
+        }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {    
             $context['results']['graph']['art5_C']['number']++;
             $context['results']['graph']['art5_C']['pe'] += $line[$ind['generated_load_p.e.']];
@@ -6064,7 +6123,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $context['results']['graph']['art5_NC']['number']++;
             $context['results']['graph']['art5_NC']['pe'] += $line[$ind['generated_load_p.e.']];        
-        }       
+        }
+        if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR') {
+            $context['results']['graph']['art5_NR']['number']++;
+            $context['results']['graph']['art5_NR']['pe'] += $line[$ind['generated_load_p.e.']];        
+        }        
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
                       
@@ -8675,7 +8738,7 @@ function uwwtd_register_get_cell_value($sheet, $coord)
 
 function uwwtd_registre_create_html_link($annee)
 {
-    return '<a href="'.file_create_url(uwwtd_getregister_finalfile_path($annee)).'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
+    return '<a href="'.file_create_url(uwwtd_getregister_finalfile_path($annee)).'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
 }
 
 //'Compliance Art. 5a (hierarchical approach)',

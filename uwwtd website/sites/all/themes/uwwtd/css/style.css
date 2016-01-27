@@ -6589,7 +6589,7 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .ms-wrapper{
   position: relative;
-  width: 150px;
+  /*width: 150px;*/
   vertical-align: middle;
 }
 
@@ -6652,26 +6652,23 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 
 .station-dcp-connections{
   width: 75px;
-  height: 50px;
-  margin: 45px 0px;
+  margin: 35px 0px;
   position: relative;
   white-space: nowrap;
   font: 0/0 a;
 }
 
-.station-dcp-connections:before {
+/*.station-dcp-connections:before {
   content: ' ';
   display: inline-block;
   vertical-align: middle;
   height: 100%;
-}
+}*/
 
 .station-dcp-connections > div{
   width: 100%;
-  display: inline-block;
+  display: block;
   vertical-align: middle;
-  position: absolute;
-  top: 24px;
 }
 
 .station-dcp-connections img{
@@ -6760,6 +6757,29 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
 .graphic-container .more{
   position: relative;
   display: inline-block;
+}
+
+.graphic-container .moreAgg {
+  position: relative;
+  display: block;
+  margin: 35px 0;
+  background-image: url("../images/graphic/singleagg.png");
+  background-repeat: repeat-x;
+}
+
+.moreAgg .msbox {
+  display: inline-block;
+  position: relative;
+  background: #fff;
+}
+
+.moreAgg .msbox .more-text{
+  position: absolute;
+  text-align: center;
+  font-size: 8px;
+  top: 22px;
+  width: 100%;
+  left: 5px;
 }
 
 .more-text{
