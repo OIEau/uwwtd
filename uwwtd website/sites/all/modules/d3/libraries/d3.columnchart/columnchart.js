@@ -25,6 +25,7 @@
       // bar width is calculated based on chart width, and amount of data
       // items - will resize if there is more or less
       barWidth = ((.90 * chart.w) / (rows.length * key.length)),
+      if(barWidth>100)barWidth=100;
       // each cluster of bars - makes coding later easier
       barGroupWidth = (key.length * barWidth),
       // space in between each set

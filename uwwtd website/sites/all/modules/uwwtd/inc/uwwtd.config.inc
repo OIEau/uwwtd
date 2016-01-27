@@ -401,6 +401,13 @@ $GLOBALS['uwwtd']['treatment_type_color']  = array(
     'MS' => '#5ddfff',
     'NI' => '#d93c3c',
 );
+$GLOBALS['uwwtd']['uwwtp_size_color']  = array(
+    '< 10000 pe' => '#005572',
+    '10000 to 100000 pe' => '#006573',
+    '> 100000 pe' => '#008B8D',
+    //#81BEAA
+    //#F4D4AD
+);
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',

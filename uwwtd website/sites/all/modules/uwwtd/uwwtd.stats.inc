@@ -122,8 +122,13 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 				$row['type'] = 'NI';
 			}
 			$networkTypeName = $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'];
-			$out[$networkTypeName]['data'][$row['year']] = uwwtd_format_number((integer)$row['sn_sum']) .' pe, '.
-				uwwtd_format_number((integer)$row['sn_count']);
+			$out[$networkTypeName]['data'][$row['year']] = array(
+				'equValue' => $row['sn_sum'],
+				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']). ' pe',
+				'aggValue' => $row['sn_count'],
+				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']),
+				'color' => $GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
+			);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());
@@ -222,18 +227,25 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
     		$data[$complianceState]['data']['Compliance state'] = $complianceState;
     		if (is_null($row['generated_sum']) || is_null($row['total_count'])) {
     										// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
-    			$data[$complianceState]['data'][$row['year']] = array(0, '0', 0, '0');
+    			$data[$complianceState]['data'][(string)$row['year']] = array('pe'=>0, 'pe_format'=>'0', 'nb'=>0, 'nb_format'=>'0', 'color'=>$GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']]);
     		} else {
-    			$data[$complianceState]['data'][$row['year']] = array($row['generated_sum'], 
-    				uwwtd_format_number($row['generated_sum'], 0) .' pe', 
-    				$row['total_count'],
-    				uwwtd_format_number($row['total_count'], 0),
+    			$data[$complianceState]['data'][(string)$row['year']] = array(
+                    'pe'=>$row['generated_sum'], 
+    				'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' pe', 
+    				'nb'=>$row['total_count'],
+    				'nb_format'=>uwwtd_format_number($row['total_count'], 0),
+                    'color'=>$GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']]
     			);
     		}
     	}
     } catch(Exception $e) {
     	dsm($e->getMessage());
     }
+    if(!empty($data)){
+        $keys_order = $GLOBALS['uwwtd']['all_compliance'];    
+        $data = array_replace(array_flip($keys_order), $data);
+    }
+    
     return $data;
 }
 
@@ -351,9 +363,11 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     		switch ($groupBy){
     			case 'compliance' :
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
+                    $color = $GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']];
     				break;
     			case 'treatmenttype' :
     				$complianceState = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
+                    $color = $GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']];
     				break;
     			default:
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
@@ -361,19 +375,31 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     		$data[$complianceState]['data']['Compliance state'] = $complianceState;
     		if (is_null($row['loadentering_sum']) || is_null($row['total_count'])) {
     			// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
-    			$data[$complianceState]['data'][$row['year']] = array(0, '0', 0, '0');
+    			$data[$complianceState]['data'][(string)$row['year']] = array('pe'=>0, 'pe_format'=>'0', 'nb'=>0, 'nb_format'=>'0', 'color'=>$color);
     		} else {
-    			$data[$complianceState]['data'][$row['year']] = array($row['loadentering_sum'],
-    				uwwtd_format_number($row['loadentering_sum'], 0) .' pe',
-    				$row['total_count'],
-    				uwwtd_format_number($row['total_count'], 0),
+    			$data[$complianceState]['data'][(string)$row['year']] = array(
+                    'pe'=>$row['loadentering_sum'], 
+    				'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' pe', 
+    				'nb'=>$row['total_count'],
+    				'nb_format'=>uwwtd_format_number($row['total_count'], 0),
+                    'color'=>$color
     			);
     		}
     	}
     }catch(Exception $e) {
     	dsm($e->getMessage());
     }
-
+    if(!empty($data)){
+        switch ($groupBy){
+            case 'compliance' :
+                $keys_order = $GLOBALS['uwwtd']['all_compliance'];
+              break;
+            case 'treatmenttype' :
+                $keys_order = array_reverse($GLOBALS['uwwtd']['ui']['treatment_type_in_place']);
+              break;
+        }      
+        $data = array_replace(array_flip($keys_order), $data);
+    }
     return $data;
 }
 
@@ -435,12 +461,14 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
 			while ($row = $result->fetchAssoc()) {
 				if (is_null($row['number']) || is_null($row['generated_sum'])) {
 												// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
-					$data[$libelle]['data'][$row['year']] = array(0, '0', 0, '0');
+					$data[$libelle]['data'][(string)$row['year']] = array('pe'=>0, 'pe_format'=>'0', 'nb'=>0, 'nb_format'=>'0', 'color'=>"#aaa");
 				} else {
-					$data[$libelle]['data'][$row['year']] = array($row['generated_sum'],
-						uwwtd_format_number($row['generated_sum'], 0) .' pe',
-						$row['number'],
-						uwwtd_format_number($row['number'], 0),
+					$data[$libelle]['data'][(string)$row['year']] = array(
+                        'pe'=>$row['generated_sum'],
+						'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' pe',
+						'nb'=>$row['number'],
+						'nb_format'=>uwwtd_format_number($row['number'], 0),
+                        'color'=>$GLOBALS['uwwtd']['uwwtp_size_color'][$libelle]
 					);
 				}
 			}
