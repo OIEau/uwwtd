@@ -1282,64 +1282,57 @@ function uwwtd_get_agglo_graphic($node){
 
         //$totale = floor(($totalout / 100) * $perce);
         $total_entering = $node->field_agggenerated['und'][0]['value'] / 100 * $perce_entering;
-        $msType = false;
-        if ($uww->field_uwwnremoval['und'][0]['value'] == '1') {
-            $msType = 'N';
-            if ($uww->field_uwwpremoval['und'][0]['value'] == '1') {
-                $msType = 'NP';
-                if (
-                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
-                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
-                ) {
-                    $msType = 'NPO';
-                }
-            } else {
-                if (
-                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
-                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
-                ) {
-                    $msType = 'NO';
-                }
-            }
-        } else {
-            if ($uww->field_uwwpremoval['und'][0]['value'] == '1') {
-                $msType = 'P';
-                if (
-                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
-                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
-                ) {
-                    $msType = 'PO';
-                }
-            } else {
-                if (
-                    $uww->field_uwwuv['und'][0]['value'] == '1' ||
-                    $uww->field_uwwchlorination['und'][0]['value'] == '1' ||
-                    $uww->field_uwwozonation['und'][0]['value'] == '1' ||
-                    $uww->field_uwwsandfiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwmicrofiltration['und'][0]['value'] == '1' ||
-                    $uww->field_uwwothertreat['und'][0]['value'] == '1'
-                ) {
-                    $msType = 'O';
-                }
-            }
-        }
+
+        $msType = array();
+
+        $msType['N'] = array(
+            'treatment' => (isset($uww->field_uwwnremoval['und'][0]['value']) ? $uww->field_uwwnremoval['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwntotperf['und'][0]['value']) ? $uww->field_uwwntotperf['und'][0]['value'] : '')
+        );
+
+        $msType['P'] = array(
+            'treatment' => (isset($uww->field_uwwpremoval['und'][0]['value']) ? $uww->field_uwwpremoval['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwptotperf['und'][0]['value']) ? $uww->field_uwwptotperf['und'][0]['value'] : '')
+        );
+
+        $msType['UV'] = array(
+            'treatment' => (isset($uww->field_uwwuv['und'][0]['value']) ? $uww->field_uwwuv['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value'] : '')
+        );
+
+        $msType['MICRO'] = array(
+            'treatment' => (isset($uww->uwwmicrofiltration['und'][0]['value']) ? $uww->uwwmicrofiltration['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value'] : '')
+        );
+    
+        $msType['CHLOR'] = array(
+            'treatment' => (isset($uww->field_uwwchlorination['und'][0]['value']) ? $uww->field_uwwchlorination['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value']  : '')
+        );
+    
+        $msType['OZONE'] = array(
+            'treatment' => (isset($uww->field_uwwozonation['und'][0]['value']) ? $uww->field_uwwozonation['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value'] : '')
+        );
+    
+        $msType['SAND'] = array(
+            'treatment' => (isset($uww->field_uwwsandfiltration['und'][0]['value']) ? $uww->field_uwwsandfiltration['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value'] : '')
+        );
+
+        $msType['Other'] = array(
+            'treatment' => (isset($uww->field_uwwothertreat['und'][0]['value']) ? $uww->field_uwwothertreat['und'][0]['value'] : ''),
+            'performance' => (isset($uww->field_uwwotherperf['und'][0]['value']) ? $uww->field_uwwotherperf['und'][0]['value'] : '')
+        );
+
+        // Remove values like 0, '', null, false
+        $msType = array_filter($msType);
 
         $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
         $reseau[$uwws['nid']]['loadEntering'] = $total_entering;
         $reseau[$uwws['nid']]['percEntering'] = $perce_entering;
         $reseau[$uwws['nid']]['mstype'] = $msType;
+        $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
         $reseau[$uwws['nid']]['title'] = $uww->title;
         $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
@@ -1428,39 +1421,44 @@ function uwwtd_get_agglo_graphic($node){
         $output .= '<div class="graphic-title">
                 '.l($station['title'], "node/".$station['nid']).'
             </div>
-            <div class="station-load">Load entering :<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
+            <div class="station-load">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
             </div>';
     }
 
     $output .= '</div>';
 
-    $topMarge = 0;
-    if ($nbPlants % 2 == 0) {
-        $topMarge = 48;
-    }
-
-    $output .= '<div class="ms-wrapper" style="top: -'. $topMarge .'px">';
+    $output .= '<div class="ms-wrapper">';
     foreach ($reseau as $station) {
-        if ($station['mstype'] != false) {
-            $output .= '<div class="ms">
-                <img src="'.$src.'/images/graphic/ms.png" alt="reseau" title="More stringent treatment: Type">
-                <div class="ms-type">
-                    '.$station['mstype'].'
-                </div>
-            </div>';
+        $output .= '<div class="moreAgg" style="top: -'.($offset - 2).'px;">';
+        if ($station['hasMoreStringent'] === true) {
+            foreach ($station['mstype'] as $nameMS => $moreStringentStatus) {
+                if ($moreStringentStatus['treatment'] === '1') {
+                    $output .= '<div class="msbox" >';
+                    if ($moreStringentStatus['performance'] == 'P') {
+                        $output .= '<img src="'.$src.'/images/graphic/msagg-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+                    } elseif ($moreStringentStatus['performance'] == 'F') {
+                        $output .= '<img src="'.$src.'/images/graphic/msagg-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+                    } else {
+                        $output .= '<img src="'.$src.'/images/graphic/msagg-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+                    }
+                    $output .= '<div class="more-text">'.t($nameMS).'</div>';
+                    $output .= '</div>';
+                }
+            }
         } else {
-            $output .= '<div class="ms"><img class="single" width="150px" src="'.$src.'/images/graphic/single.png" alt="reseau"></div>';
+            $output .= '<div style="top: -'.($offset - 2).'px"><img class="single" width="150px" src="'.$src.'/images/graphic/singleagg.png" alt="reseau"></div>';
         }
+        $output .= '</div>';
     }
 
     $output .= '</div>';
 
-    $offset = $nbPlants * 16;
+    //$offset = $nbPlants * 16;
     $totalDcps = 0;
     $totalDcpsT = 0;
     $totalDcpsB = 0;
 
-    $output .= '<div class="dcp-connections" style="top: -'.$topMarge.'px">';
+    $output .= '<div class="dcp-connections">';
     foreach ($reseau as $station) {
         $nbDcps = count($station['dcps']);
         $totalDcps = $totalDcps + $nbDcps;
@@ -1478,15 +1476,15 @@ function uwwtd_get_agglo_graphic($node){
             }
         }
 
-        $output .= '<div class="station-dcp-connections">';
-        $output .= '<div>';
+        $output .= '<div class="station-dcp-connections" style="top: -'.($offset - 2).'px">';
+        $output .= '<div style="top: -'.($offset - 2).'px">';
 
         // for ($i=0; $i < $nbDcpsT; $i++) {
         //   $output .= '<img width="75px" src="'.$src.'/images/graphic/topcapsmall.png" alt="reseau">';
         // }
 
         // if($nbDcps > 0){
-        $output .= '<img width="75px" src="'.$src.'/images/graphic/singlesmall.png" alt="reseau">';
+        $output .= '<img src="'.$src.'/images/graphic/singlesmallagg.png" alt="reseau">';
         // }
 
         // for ($i=0; $i < $nbDcpsB; $i++) {
@@ -1498,10 +1496,10 @@ function uwwtd_get_agglo_graphic($node){
     }
 
     $output .= '</div>
-            <div class="dcps-wrapper" style="top:-'. $topMarge .'px">';
+            <div class="dcps-wrapper">';
 
     foreach ($reseau as $station) {
-        $output .= '<div class="station-dcp" style="top: 0px;">
+        $output .= '<div class="station-dcp" style="top: -'.($offset - 2).'px;">
                 <div>
                     <img width="80px" src="'.$src.'/images/graphic/dcp.png" alt="reseau" title="Discharge point">';
                     $output .= '<div class="graphic-title">';
@@ -1537,7 +1535,15 @@ function uwwtd_get_agglo_graphic($node){
                     <ul><b>More stringent treatment : <br>Type : </b>
                         <li><span>N</span> : Nitrogen removal</li>
                         <li><span>P</span> : Phosphorus removal</li>
-                        <li><span>O</span> : Other more stringent</li>
+                        <li><span>Other</span> : Other more stringent</li>
+                        <li><span>UV</span> : UV treatment</li>
+                    </ul>
+                    <ul>
+                        <b><br>Type :</b>
+                        <li><span>OZONE</span> : Ozonation</li>
+                        <li><span>SAND</span> : Sand filtration</li>
+                        <li><span>MICRO</span> : Micro Filtration</li>
+                        <li><span>CHLOR</span> : Chlorination</li>
                     </ul>
                     <ul><b>Discharge point :</b>
                         <li><img src="'.$src.'/images/graphic/dcp.png" alt="reseau"> : Discharge point</li>
