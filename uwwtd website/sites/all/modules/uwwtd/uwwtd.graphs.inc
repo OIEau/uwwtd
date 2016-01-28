@@ -127,7 +127,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
 		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
 		false);
-    
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
     //==============================================
@@ -184,40 +183,72 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     if($yearSelected!=ALL_YEARS){
         $frontAndBackGraph1And2 = getRow6Graph1And2($results);
         // Création du code html pour ces graphs :
-        $legend =  array(t('incoming'), t('discharged')); //ne sert plus à rien
-        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
-            array(
-                'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], false,
-                'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], false
-            )
-          )
-        );
+        if($frontAndBackGraph1And2){
+            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
+                array(
+                    'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], false,
+                    'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], false
+                )
+              )
+            );
+        }
     }
     else{
-        //======================= TODO display a ROW with 4 charts ==> one per parameter
+        //dsm($results);
         $frontAndBackGraphs = getRow6Graphs($results);
+        $rows = array();
+        dsm($frontAndBackGraphs);
+        if(isset($frontAndBackGraphs['BOD'])){
+            $sum = 0;
+            foreach($frontAndBackGraphs['BOD'][0]['data'] as $line){
+                $sum = $sum+$line[1]+$line[2];
+            }
+            if($sum>0){
+                $rows[] = array(
+                    'uwwtd_load_ent_and_dis_bod', t("Total BOD load entering and discharged"), $frontAndBackGraphs['BOD'][0],  $frontAndBackGraphs['BOD'][1], false,
+                    'per_ent_and_dis_bod', t("BOD concentration"), $frontAndBackGraphs['BOD'][2], $frontAndBackGraphs['BOD'][3], false
+                );
+            }
+        }
+        if(isset($frontAndBackGraphs['COD'])){
+            $sum = 0;
+            foreach($frontAndBackGraphs['COD'][0]['data'] as $line){
+                $sum = $sum+$line[1]+$line[2];
+            }
+            if($sum>0){
+                $rows[] = array(
+                    'uwwtd_load_ent_and_dis_cod', t("Total COD load entering and discharged"), $frontAndBackGraphs['COD'][0],  $frontAndBackGraphs['COD'][1], false,
+                    'per_ent_and_dis_cod', t("COD concentration"), $frontAndBackGraphs['COD'][2], $frontAndBackGraphs['COD'][3], false
+                );
+            }
+        }
+        if(isset($frontAndBackGraphs['N'])){
+            $sum = 0;
+            foreach($frontAndBackGraphs['N'][0]['data'] as $line){
+                $sum = $sum+$line[1]+$line[2];
+            }
+            if($sum>0){
+                $rows[] = array(
+                    'uwwtd_load_ent_and_dis_n', t("Total Nitrogen load entering and discharged"), $frontAndBackGraphs['N'][0],  $frontAndBackGraphs['N'][1], false,
+                    'per_ent_and_dis_n', t("Nitrogen concentration"), $frontAndBackGraphs['N'][2], $frontAndBackGraphs['N'][3], false
+                );
+            }
+        }
+        if(isset($frontAndBackGraphs['P'])){
+            $sum = 0;
+            foreach($frontAndBackGraphs['P'][0]['data'] as $line){
+                $sum = $sum+$line[1]+$line[2];
+            }
+            if($sum>0){
+                $rows[] = array(
+                    'uwwtd_load_ent_and_dis_p', t("Total phosphorus load entering and discharged"), $frontAndBackGraphs['P'][0],  $frontAndBackGraphs['P'][1], false,
+                    'per_ent_and_dis_p', t("phosphorus concentration"), $frontAndBackGraphs['P'][2], $frontAndBackGraphs['P'][3], false
+                );
+            }
+        }
+        
         // Création du code html pour ces graphs :
-        $legend =  array(t('incoming'), t('discharged')); //ne sert plus à rien
-        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
-            array(
-                'uwwtd_load_ent_and_dis_bod', t("Total BOD load entering and discharged"), $frontAndBackGraphs['BOD'][0],  $frontAndBackGraphs['BOD'][1], false,
-                'per_ent_and_dis_bod', t("BOD concentration"), $frontAndBackGraphs['BOD'][2], $frontAndBackGraphs['BOD'][3], false
-            ),
-            array(
-                'uwwtd_load_ent_and_dis_cod', t("Total COD load entering and discharged"), $frontAndBackGraphs['COD'][0],  $frontAndBackGraphs['COD'][1], false,
-                'per_ent_and_dis_cod', t("COD concentration"), $frontAndBackGraphs['COD'][2], $frontAndBackGraphs['COD'][3], false
-            ),
-            array(
-                'uwwtd_load_ent_and_dis_n', t("Total Nitrogen load entering and discharged"), $frontAndBackGraphs['N'][0],  $frontAndBackGraphs['N'][1], false,
-                'per_ent_and_dis_n', t("Nitrogen concentration"), $frontAndBackGraphs['N'][2], $frontAndBackGraphs['N'][3], false
-            ),
-            array(
-                'uwwtd_load_ent_and_dis_p', t("Total phosphorus load entering and discharged"), $frontAndBackGraphs['P'][0],  $frontAndBackGraphs['P'][1], false,
-                'per_ent_and_dis_p', t("phosphorus concentration"), $frontAndBackGraphs['P'][2], $frontAndBackGraphs['P'][3], false
-            ),
-            
-          )
-        );
+        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), $rows);
     }
     
 	
@@ -240,6 +271,10 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     
     //================ TODO =================================
+    //idée : pour obtenir cette info, il faudrait qu'a la fin du clacul du registre,
+    //les valeurs pour les distances to compliance par article soient conservées au niveau du noeud "MS_LEVEL" de l'année concernée.
+    //Les graphs ne seraient affichés que si l'info est présente dans le MS LEVEL ===> voir fonction "uwwtd_stat_national_ms_level_data"
+    
     
     
 	return  $formResult;
@@ -518,6 +553,10 @@ function getRow2Graph1and2($results, $yearSelected) {
                     
                 }
             }
+            //tri par année
+            ksort($graph1Front['data'], SORT_NUMERIC);
+            ksort($graph2Front['data'], SORT_NUMERIC);
+            
             //Bouche trou 
             foreach($graph1Front['data'] as $key=>$values){
                 $item = array($values[0]);
@@ -675,6 +714,8 @@ function getRow6Graph1And2($results) {
 	$graph2Front = array();
 	$graph2Back = '';
 	$graph2Rows = $results;
+    $sum =0;
+    
 	if (!empty($results)) {
 		foreach ($results as $rowName => $row) {
 			if (array_key_exists('data', $row)) {
@@ -697,6 +738,7 @@ function getRow6Graph1And2($results) {
                                 'Entering' => $element['in']['q'] , 
                                 'Discharged'=>$element['out']['q']
                             );
+                            $sum+=$element['in']['q'];
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
                                 'Entering'=>round(($element['in']['c'])*1000 , 3),
@@ -711,7 +753,7 @@ function getRow6Graph1And2($results) {
 			}
 		}
 	}
-    
+    if($sum==0) return false;
     
     $colors=array(
         'Entering'=>'#5B3349', 
@@ -822,6 +864,8 @@ function getRow6Graphs($results){
         foreach($results as $rowName=>$data){
             $graph1Front = array();
             $graph2Front = array();
+            $$graph1FrontRows = array();
+            $$graph2FrontRows = array();
             $graph1Back = "";
             $graph2Back = "";
             
@@ -830,13 +874,26 @@ function getRow6Graphs($results){
                     if(is_array($item)){
                         $graph1Front['data'][] = array(
                             (string)$key,
-                            10, //$item['in'];
-                            3, //$item['out'];
+                            $item['in'],
+                            $item['out'],
                         );
+                        $graph1FrontRows[] = array(
+                            (string)$key,
+                            uwwtd_format_number($item['in'],2),
+                            uwwtd_format_number($item['out'],2),
+                            uwwtd_format_number($item['out']*100/$item['in'] ,1) .'%'
+                        );
+                        
                         $graph2Front['data'][] = array(
                             (string)$key,
                             $item['vol']>0 ?round($item['in']*1000/$item['vol'],3):0,
                             $item['vol']>0 ?round($item['out']*1000/$item['vol'],3):0,
+                        );
+                        $graph2FrontRows[] = array(
+                            (string)$key,
+                            $item['vol']>0 ?round($item['in']*1000/$item['vol'],3):0,
+                            $item['vol']>0 ?round($item['out']*1000/$item['vol'],3):0,
+                            uwwtd_format_number($item['out']*100/$item['in'] ,1) .'%'
                         );
                         
                     }
@@ -845,21 +902,19 @@ function getRow6Graphs($results){
                 $graph1Front['legend'] = $legends;
                 $graph1Front['color'] = $colors[$rowName];
                 $graph1Back = theme('table', array(
-                    'rows'=>$graph1Front['data'], 
-                    'header'=>array(t("Year"),t("Entering"),t("Discharged"))
+                    'rows'=>$graph1FrontRows, 
+                    'header'=>array(t("Year"),t("Entering (Tons)"),t("Discharged (Tons)"),t("Rate"))
                 ));
                 
                 $graph2Front['legend'] = $legends;
                 $graph2Front['color'] = $colors[$rowName];
                 $graph2Back = theme('table', array(
-                    'rows'=>$graph1Front['data'], 
-                    'header'=>array(t("Year"),t("Entering"),t("Discharged"))
+                    'rows'=>$graph2FrontRows, 
+                    'header'=>array(t("Year"),t("Entering (mg/l)"),t("Discharged (mg/l)"),t("Rate"))
                 ));
             }
-            
             $rows[$rowName] = array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
-        }
-        
+        }  
     }
     
     return $rows;
@@ -879,7 +934,6 @@ function getRow7Graph1($yearSelected, $results) {
         if($yearSelected == ALL_YEARS){
             $legend = array();
             $color = array();
-            
             foreach ($results as $year => $row) {
                 $columns[0][$year]['data'] = $year;
                 $item = array();
@@ -900,13 +954,24 @@ function getRow7Graph1($yearSelected, $results) {
                 }
                 $front['data'][]=$item;
             }
-            $front['legend'] = array_values($legend);
-            $front['color'] = array_values($color);
+            //Fix the order in legend
+            $order = array_keys($GLOBALS['ms_level']['sludge']);
+            $legend_ord = array();
+            $color_ord = array();
+            foreach($order as $val){
+                if(isset($legend[$val])){
+                    $legend_ord[$val] = $legend[$val];
+                    $color_ord[$val] = $color[$val];
+                    
+                }
+            }
+            $front['legend'] = array_values($legend_ord);
+            $front['color'] = array_values($color_ord);
             //ON bouche les trous
             foreach($front['data'] as $key=>$values){
                 $item = array();
                 $item[]=$values[0];
-                foreach($legend as $l=>$lab){
+                foreach($legend_ord as $l=>$lab){
                     $item[] = (isset($values[$l])?$values[$l]:0);
                 }
                 $front['data'][$key] = $item;
