@@ -3306,6 +3306,13 @@ function uwwtd_update_7129(&$context = null){
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
+
+
+    if (false === module_disable(array('Datatables' => 'datatables'))) {
+        $msg = "Error, the module ".implode(',', array('Datatables' => 'datatables'))." can't be disabled.";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
     
     //==========DEBUG : permet de relancer la mise à jour si besoin.
     throw new DrupalUpdateException(__FUNCTION__);

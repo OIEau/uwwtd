@@ -316,29 +316,24 @@ function uwwtd_statistics_form_submit(&$form, &$form_state) {
     $max = $max_ordered;
     $average = $average_ordered;
     $rate = $rate_ordered;
+    $header = array_values($header);
+    $rows = array_merge($rows, array($footer), array($rate), array($min), array($max), array($average));
 
     // Build table
     $table = array(
         'header' => $header,
         'rows' => $rows,
-        'attributes' => array('class' => 'table', 'id' => 'statsTable', 'datatable_options' => array('bTableTools' => TRUE)),
         'caption' => '',
         'colgroups' => array(),
+        'attributes' => array('class' => 'table', 'id' => 'table_stats'),
         'sticky' => '',
         'empty' => '',
       );
 
-    $footer_table = array(
-        'header' => array(),
-        'rows' => array($footer, $rate, $min, $max, $average),
-        'attributes' => array('class' => 'table', 'id' => 'footerTable'),
-        'caption' => '',
-        'colgroups' => array(),
-        'sticky' => '',
-        'empty' => '',
-      );
-
-    $form_state['storage']['result'] = theme_datatable($table) . theme_table($footer_table);
+    // Export button.
+    drupal_add_js(drupal_get_path('module', 'uwwtd_statistics') . '/js/export.js');
+    $button = '<div>Download results : <a href="#" id="btnExport">csv</a></div>';
+    $form_state['storage']['result'] = $button . theme_table($table);
   }
 }
 

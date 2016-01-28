@@ -606,27 +606,27 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
 			// Récupération de la somme :
-			$sum = is_null($row['uwwt_sum']) ? '0' : uwwtd_format_number($row['uwwt_sum'], 2);
+			$sum = is_null($row['uwwt_sum']) ? 1 : $row['uwwt_sum'];
 			
 			// Récupération du BOD :
-			$in = is_null($row['bodin_sum']) ? '0' : array($row['bodin_sum'], uwwtd_format_number($row['bodin_sum'], 2));
-			$out = is_null($row['bodout_sum']) ? '0' : array($row['bodout_sum'], uwwtd_format_number($row['bodout_sum'], 2));
-			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'sum' => $sum);
+			$in = is_null($row['bodin_sum']) ? 0 : array('q'=>$row['bodin_sum'], 'c'=>$row['bodin_sum']/$sum);
+			$out = is_null($row['bodout_sum']) ? 0 : array('q'=>$row['bodout_sum'], 'c'=>$row['bodout_sum']/$sum);
+			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
 			
 			// Récupération du COD :
-			$in = is_null($row['codin_sum']) ? '0' : array($row['codin_sum'], uwwtd_format_number($row['codin_sum'], 2));
-			$out = is_null($row['codout_sum']) ? '0' : array($row['codout_sum'], uwwtd_format_number($row['codout_sum'], 2));
-			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'sum' => $sum);
+			$in = is_null($row['codin_sum']) ? 0 : array('q'=>$row['codin_sum'], 'c'=>$row['codin_sum']/$sum);
+			$out = is_null($row['codout_sum']) ? 0 : array('q'=>$row['codout_sum'], 'c'=>$row['codout_sum']/$sum);
+			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
 			
 			// Récupération du N :
-			$in = is_null($row['nin_sum']) ? '0' : array($row['nin_sum'], uwwtd_format_number($row['nin_sum'], 2) );
-			$out = is_null($row['nout_sum']) ? '0' : array($row['nout_sum'], uwwtd_format_number($row['nout_sum'], 2));
-			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'sum' => $sum);
+			$in = is_null($row['nin_sum']) ? 0 : array('q'=>$row['nin_sum'], 'c'=>$row['nin_sum']/$sum );
+			$out = is_null($row['nout_sum']) ? 0 : array('q'=>$row['nout_sum'], 'c'=>$row['nout_sum']/$sum);
+			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
 			
 			// Récupération du P :
-			$in = is_null($row['pin_sum']) ? '0' : array($row['pin_sum'], uwwtd_format_number($row['pin_sum'], 2));
-			$out = is_null($row['pout_sum']) ? '0' : array($row['pout_sum'], uwwtd_format_number($row['pout_sum'], 2));
-			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'sum' => $sum);
+			$in = is_null($row['pin_sum']) ? 0 : array('q'=>$row['pin_sum'], 'c'=>$row['pin_sum']/$sum);
+			$out = is_null($row['pout_sum']) ? 0 : array('q'=>$row['pout_sum'], 'c'=>$row['pout_sum']/$sum);
+			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());
