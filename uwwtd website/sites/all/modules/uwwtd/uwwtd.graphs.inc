@@ -99,8 +99,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 	if ($yearSelected != ALL_YEARS) {
 		$formResult.='<br /><p class="national-stat-str" align="justify">'.uwwtd_get_national_stat_str($yearSelected).'</p>';
 	}
-	
-	
+        
 	//==============================================
     //=============== ROW 1: Agglomeration : Generated load by collection
     //==============================================
@@ -165,29 +164,61 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPossibles);
     $frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
-    //dsm($frontAndBackGraph1And2);
     // Création du code html pour ces graphs :
-    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"),
-    	array(), 'graph_generatedByAgglomeration', t("Total generated load by agglomeration size"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
-    	array(), 'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
+    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"), array(
+            array(
+                'graph_generatedByAgglomeration', t("Total generated load by agglomeration size"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
+                'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
+            )
+        )
+    );
     
     
     
     //==============================================
     //=============== ROW 6 : Waste water treatement plant : Total load entering and discharged
     //==============================================
-    //========================== TODO=============================
+    //Display only for annual stats and not for interannual
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles);
-    $frontAndBackGraph1And2 = getRow6Graph1And2($results);
-    //dsm($results);
-    //dsm($frontAndBackGraph1And2);
-    // Création du code html pour ces graphs :
-    $legend =  array(t('incoming'), t('discharged'));
-    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"),
-    	$legend, 'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
-    	$legend, 'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3]);
-    
+    if($yearSelected!=ALL_YEARS){
+        $frontAndBackGraph1And2 = getRow6Graph1And2($results);
+        // Création du code html pour ces graphs :
+        $legend =  array(t('incoming'), t('discharged')); //ne sert plus à rien
+        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
+            array(
+                'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], false,
+                'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], false
+            )
+          )
+        );
+    }
+    else{
+        //======================= TODO display a ROW with 4 charts ==> one per parameter
+        $frontAndBackGraphs = getRow6Graphs($results);
+        // Création du code html pour ces graphs :
+        $legend =  array(t('incoming'), t('discharged')); //ne sert plus à rien
+        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
+            array(
+                'uwwtd_load_ent_and_dis_bod', t("Total BOD load entering and discharged"), $frontAndBackGraphs['BOD'][0],  $frontAndBackGraphs['BOD'][1], false,
+                'per_ent_and_dis_bod', t("BOD concentration"), $frontAndBackGraphs['BOD'][2], $frontAndBackGraphs['BOD'][3], false
+            ),
+            array(
+                'uwwtd_load_ent_and_dis_cod', t("Total COD load entering and discharged"), $frontAndBackGraphs['COD'][0],  $frontAndBackGraphs['COD'][1], false,
+                'per_ent_and_dis_cod', t("COD concentration"), $frontAndBackGraphs['COD'][2], $frontAndBackGraphs['COD'][3], false
+            ),
+            array(
+                'uwwtd_load_ent_and_dis_n', t("Total Nitrogen load entering and discharged"), $frontAndBackGraphs['N'][0],  $frontAndBackGraphs['N'][1], false,
+                'per_ent_and_dis_n', t("Nitrogen concentration"), $frontAndBackGraphs['N'][2], $frontAndBackGraphs['N'][3], false
+            ),
+            array(
+                'uwwtd_load_ent_and_dis_p', t("Total phosphorus load entering and discharged"), $frontAndBackGraphs['P'][0],  $frontAndBackGraphs['P'][1], false,
+                'per_ent_and_dis_p', t("phosphorus concentration"), $frontAndBackGraphs['P'][2], $frontAndBackGraphs['P'][3], false
+            ),
+            
+          )
+        );
+    }
     
 	
 	//==============================================
@@ -204,6 +235,13 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	t("Sludge destination"), 'graph_sludge_dest', $results,  $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Water re-use"), $frontGraph2, $yearSelected, $yearsPossibles);
 	
+    //==============================================
+    //=============== ROW 8 : Distance to compliance art 3, 4, 5
+    //==============================================
+    
+    //================ TODO =================================
+    
+    
 	return  $formResult;
 }
 
@@ -642,35 +680,45 @@ function getRow6Graph1And2($results) {
 			if (array_key_exists('data', $row)) {
 				foreach ($row['data'] as $keyElement => $element) {
 					// Définition des entete de colonnes :
-					$columns[0][$keyElement]['data'] = $keyElement;
+                    $columns[0][$keyElement] = array(
+                        'data' => $keyElement,
+                    );
+                    
 						
 					// Si c'est une valeur pour une année :
 					if (is_array($element)) {
 						if (array_key_exists('in', $element) && 
-							array_key_exists(0, $element['in']) && 
-							array_key_exists(1, $element['in']) &&
+							array_key_exists('q', $element['in']) && 
 							array_key_exists('out', $element) && 
-							array_key_exists(0, $element['out']) && 
-							array_key_exists(1, $element['out']) &&
-							array_key_exists('sum', $element)) {
+							array_key_exists('q', $element['out']) && 
+							array_key_exists('vol', $element)) {
 							// Redéfinition de la valeur de l'année :
-							$graph1Rows[$rowName]['data'][$keyElement] = $element['in'][1] .' el, '. $element['out'][1] .' dl';
-							
-							// Vincent Godé 20/01/2016, Attention : à revoir, résultats étranges :
-							$graph2Rows[$rowName]['data'][$keyElement] = 
-								round(($element['in'][0] / $element['sum']) , 1). ', '.
-								round(($element['out'][0] / $element['sum']) , 1). ', '.
-								round(((1 - ($element['out'][0] / $element['sum']))*100) / 1000, 1) . ' %';
+							$graph1Rows[$rowName]['data'][$keyElement] = array(
+                                'Entering' => $element['in']['q'] , 
+                                'Discharged'=>$element['out']['q']
+                            );
+							//Convert to mg/l
+							$graph2Rows[$rowName]['data'][$keyElement] = array(
+                                'Entering'=>round(($element['in']['c'])*1000 , 3),
+                                'Discharged'=>round(($element['out']['c'])*1000 , 3),
+                            );
 						} else {
-							$graph1Rows[$rowName]['data'][$keyElement] = ' - ';
-							$graph2Rows[$rowName]['data'][$keyElement] = ' - ';
+							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
+							$graph2Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
 						}
 					}
 				}
 			}
 		}
 	}
-	
+    
+    
+    $colors=array(
+        'Entering'=>'#5B3349', 
+        'Discharged'=>'#F28030'
+    );
+    //=====================Graph 1
+    
 	// Pour chaque ligne :
 	foreach ($graph1Rows as $rowName => $row) {
 		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
@@ -678,47 +726,143 @@ function getRow6Graph1And2($results) {
 			foreach (array_keys($columns[0]) as $columsName) {
 				if (!array_key_exists($columsName, $row['data']) || empty($graph1Rows[$rowName]['data'][$columsName])) {
 					// Remplissage des trous :
-					$graph1Rows[$rowName]['data'][$columsName] = ' - ';
+					$graph1Rows[$rowName]['data'][$columsName] = array('Entering'=>0, 'Discharged'=>0);
 				}
 			}
 		}
 	}
-	
+    $header1 = array();
+	foreach ($graph1Rows as $rowName => $row) {
+        $line = array();
+        
+        foreach($row['data'] as $key=>$item){
+            
+            if(is_array($item)){
+                $header1[0][$key]=array('data'=>$key, 'colspan'=>count($item));
+                
+                foreach($item as $k=>$v){
+                    $header1[1][$key.'_'.$k]=$k;
+                    $line[$k] = uwwtd_format_number($v,2);
+                    $graph1Front[$rowName][]=array(
+                        'value'=>(float)$v,
+                        'valueformat'=>uwwtd_format_number($v,2),
+                        'label'=>$k,
+                        'color'=>$colors[$k]
+                    );
+                }
+            }else{
+                $header1[0][$key]='';
+                $header1[1][$key]=$key;
+                $line[$key]=$item;
+            }
+        }
+        $graph1Rows[$rowName]['data'] = $line;
+	}
+    
+    
+    //=====================Graph 2
+	// Pour chaque ligne :
 	foreach ($graph2Rows as $rowName => $row) {
 		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
 			// Pour toutes les colonnes existantes :
 			foreach (array_keys($columns[0]) as $columsName) {
 				if (!array_key_exists($columsName, $row['data']) || empty($graph2Rows[$rowName]['data'][$columsName])) {
 					// Remplissage des trous :
-					$graph2Rows[$rowName]['data'][$columsName] = ' - ';
+					$graph2Rows[$rowName]['data'][$columsName] = array('Entering'=>0, 'Discharged'=>0);
 				}
 			}
 		}
 	}
-
-	// Récupération du DOM des tableau :
-	$graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
-	$graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
-	
-	// Ajout des légendes :
-	$graph1Back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead>
-				<tr>
-					<th><i>*el: Entering load (t/year), *dl: Discharged load (t/year)</i></th>
-				</tr>
-			</thead>
-		</table>';
-	$graph2Back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead>
-				<tr>
-					<th><i>*e: Entering (mg/l), *d: Discharged (mg/l), *%: Rate (%)</i></th>
-				</tr>
-			</thead>
-		</table>';
+    $header2 = array();
+	foreach ($graph2Rows as $rowName => $row) {
+        $line = array();
+        
+        foreach($row['data'] as $key=>$item){
+            
+            if(is_array($item)){
+                $header2[0][$key]=array('data'=>$key, 'colspan'=>count($item));
+                
+                foreach($item as $k=>$v){
+                    $header2[1][$key.'_'.$k]=$k;
+                    $line[$k] = uwwtd_format_number($v,2);
+                    $graph2Front[$rowName][]=array(
+                        'value'=>(float)$v,
+                        'valueformat'=>uwwtd_format_number($v,2),
+                        'label'=>$k,
+                        'color'=>$colors[$k]
+                    );
+                }
+            }else{
+                $header2[0][$key]='';
+                $header2[1][$key]=$key;
+                $line[$key]=$item;
+            }
+        }
+        $graph2Rows[$rowName]['data'] = $line;
+	}
+    
+	$graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $header1, 'rows_multiple' => true, 'attributes' => array('class' => 'customTable')));
+	$graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $header2, 'rows_multiple' => true, 'attributes' => array('class' => 'customTable')));
 	
 	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
+}
+
+
+function getRow6Graphs($results){
+    if(!empty($results)){
+        $legends = array(t("Entering"),t("Discharged"));
+        $colors = array(
+            'N'=>array('#87ceeb', '#c8e8f5'),
+            'P'=>array('#ff9900', '#ffcf95'),
+            'COD'=>array('#d87600', '#ffcf95'),
+            'BOD'=>array('#5B3349', '#dcc1d0'),
+            
+        );
+                
+        foreach($results as $rowName=>$data){
+            $graph1Front = array();
+            $graph2Front = array();
+            $graph1Back = "";
+            $graph2Back = "";
+            
+            if(isset($data['data'])){
+                foreach($data['data'] as $key=>$item){
+                    if(is_array($item)){
+                        $graph1Front['data'][] = array(
+                            (string)$key,
+                            10, //$item['in'];
+                            3, //$item['out'];
+                        );
+                        $graph2Front['data'][] = array(
+                            (string)$key,
+                            $item['vol']>0 ?round($item['in']*1000/$item['vol'],3):0,
+                            $item['vol']>0 ?round($item['out']*1000/$item['vol'],3):0,
+                        );
+                        
+                    }
+                }
+                
+                $graph1Front['legend'] = $legends;
+                $graph1Front['color'] = $colors[$rowName];
+                $graph1Back = theme('table', array(
+                    'rows'=>$graph1Front['data'], 
+                    'header'=>array(t("Year"),t("Entering"),t("Discharged"))
+                ));
+                
+                $graph2Front['legend'] = $legends;
+                $graph2Front['color'] = $colors[$rowName];
+                $graph2Back = theme('table', array(
+                    'rows'=>$graph1Front['data'], 
+                    'header'=>array(t("Year"),t("Entering"),t("Discharged"))
+                ));
+            }
+            
+            $rows[$rowName] = array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
+        }
+        
+    }
+    
+    return $rows;
 }
 
 /**
@@ -732,29 +876,68 @@ function getRow7Graph1($yearSelected, $results) {
 	
 	$columns[0]['Destination']['data'] = 'Destination';
 	if (!empty($results)) {
-		foreach ($results as $year => $row) {
-			// Définition des entete de colonnes :
-			$columns[0][$year]['data'] = $year;
-			
-			if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
-				foreach ($row['sludge']['destination'] as $keyElement => $element) {
-					if (!empty($element)) {
-						$rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
-						
-						// Ajout de la ligne :
-						$rows[$keyElement]['data'][$year] = $element;
-                        
-                        $front[$year][] =array(
-                            'value'=>$element,
-                            'label'=>$GLOBALS['ms_level']['sludge'][$keyElement]['label'],
-                            'valueformat'=>uwwtd_format_number($element).' T DS/year',
-                            'color'=>$GLOBALS['ms_level']['sludge'][$keyElement]['color'],
-                        );
-                        
-					}
-				}
-			}
-		}
+        if($yearSelected == ALL_YEARS){
+            $legend = array();
+            $color = array();
+            
+            foreach ($results as $year => $row) {
+                $columns[0][$year]['data'] = $year;
+                $item = array();
+                $item[0] = (string)$year;   
+                if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
+                    foreach ($row['sludge']['destination'] as $keyElement => $element) {
+                        if (!empty($element)) {
+                            $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
+                            
+                            // Ajout de la ligne :
+                            $rows[$keyElement]['data'][$year] = $element;
+                            $item[$keyElement] =$element;
+                            $legend[$keyElement] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
+                            $color[$keyElement] = $GLOBALS['ms_level']['sludge'][$keyElement]['color'];
+                            
+                        }
+                    }
+                }
+                $front['data'][]=$item;
+            }
+            $front['legend'] = array_values($legend);
+            $front['color'] = array_values($color);
+            //ON bouche les trous
+            foreach($front['data'] as $key=>$values){
+                $item = array();
+                $item[]=$values[0];
+                foreach($legend as $l=>$lab){
+                    $item[] = (isset($values[$l])?$values[$l]:0);
+                }
+                $front['data'][$key] = $item;
+            }
+        }
+        else{
+            foreach ($results as $year => $row) {
+                // Définition des entete de colonnes :
+                $columns[0][$year]['data'] = $year;
+                
+                if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
+                    foreach ($row['sludge']['destination'] as $keyElement => $element) {
+                        if (!empty($element)) {
+                            $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
+                            
+                            // Ajout de la ligne :
+                            $rows[$keyElement]['data'][$year] = $element;
+                            
+                            $front[$year][] =array(
+                                'value'=>$element,
+                                'label'=>$GLOBALS['ms_level']['sludge'][$keyElement]['label'],
+                                'valueformat'=>uwwtd_format_number($element).' T DS/year',
+                                'color'=>$GLOBALS['ms_level']['sludge'][$keyElement]['color'],
+                            );
+                            
+                        }
+                    }
+                }
+            }
+        }
+		
 	}
 	
 	// Pour chaque ligne :
@@ -886,62 +1069,66 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 /**
  * Ajoute au code html donné le code html pour afficher deux graphs en barres verticales.
  */
-function getHtmlPlusHtmlChartsBars($html, $rowTitle, 
-		$graph1Legend, $graph1Id, $graph1Title, $graph1Front, $graph1Back, 
-		$graph2Legend, $graph2Id, $graph2Title, $graph2Front, $graph2Back) {
+function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows) {    
 	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
-	$html.='<div class="rows charts-row">';
-		// Création du code html pour le graph1 :
-		if (!empty($graph1Front)){
-            if(!isset($graph1Front['data'])){
-                $graph1Front_rows =array();
-                $graph1FrontLegend = array();
-                $graph1FrontColor = array();
-                foreach($graph1Front as $key=>$val){
-                    $item = array((string)$key);
-                    foreach($val as $k=>$v){
-                        $item[] =$v['value'];
-                        $graph1FrontLegend[$v['label']] =$v['label']; 
-                        $graph1FrontColor[$v['label']] =$v['color']; 
+    foreach($rows as $i=>$row){
+        list(
+            $graph1Id, $graph1Title, $graph1Front, $graph1Back, $graph1Stack, 
+            $graph2Id, $graph2Title, $graph2Front, $graph2Back, $graph2Stack
+        ) = $row;
+        $html.='<div class="rows charts-row">';
+            // Création du code html pour le graph1 :
+            if (!empty($graph1Front)){
+                if(!isset($graph1Front['data'])){
+                    $graph1Front_rows =array();
+                    $graph1FrontLegend = array();
+                    $graph1FrontColor = array();
+                    foreach($graph1Front as $key=>$val){
+                        $item = array((string)$key);
+                        foreach($val as $k=>$v){
+                            $item[] =$v['value'];
+                            $graph1FrontLegend[$v['label']] =$v['label']; 
+                            $graph1FrontColor[$v['label']] =$v['color']; 
+                        }
+                        $graph1Front_rows[] = $item;
                     }
-                    $graph1Front_rows[] = $item;
+                    $front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, $graph1Stack);
                 }
-                $front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, true);
+                else{
+                    $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], $graph1Stack);
+                }
+            } 
+            else {
+                $front = t("No information");
             }
-            else{
-                $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
-            }
-		} 
-        else {
-			$front = t("No information");
-		}
-		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
-		
-		// Création du code html pour le graph2 :
-		if (!empty($graph2Front)){
-            if(!isset($graph1Front['data'])){
-                $graph2Front_rows =array();
-                $graph2FrontLegend = array();
-                $graph2FrontColor = array();
-                foreach($graph2Front as $key=>$val){
-                    $item = array((string)$key);
-                    foreach($val as $k=>$v){
-                        $item[] =$v['value'];
-                        $graph2FrontLegend[$v['label']] =$v['label']; 
-                        $graph2FrontColor[$v['label']] =$v['color']; 
+            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
+            
+            // Création du code html pour le graph2 :
+            if (!empty($graph2Front)){
+                if(!isset($graph1Front['data'])){
+                    $graph2Front_rows =array();
+                    $graph2FrontLegend = array();
+                    $graph2FrontColor = array();
+                    foreach($graph2Front as $key=>$val){
+                        $item = array((string)$key);
+                        foreach($val as $k=>$v){
+                            $item[] =$v['value'];
+                            $graph2FrontLegend[$v['label']] =$v['label']; 
+                            $graph2FrontColor[$v['label']] =$v['color']; 
+                        }
+                        $graph2Front_rows[] = $item;
                     }
-                    $graph2Front_rows[] = $item;
+                    $front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, $graph2Stack);
                 }
-                $front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, true);
+                else{
+                    $front = uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], $graph2Stack);
+                }
+            } else {
+                $front = t("No information");
             }
-            else{
-                $front = uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
-            }
-		} else {
-			$front = t("No information");
-		}
-		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
-	$html.='</div>';
+            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
+        $html.='</div>';
+    }
 	return $html;
 }
 
@@ -959,15 +1146,12 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 		//$msg_sludge = 'Production : ';
 		
 		// Gestion des productions par années :
+        
 		switch ($yearSelected){
 			case ALL_YEARS :
 				if (!empty($yearsPossibles)) {
-					foreach ($yearsPossibles as $yearPossible) {
-						if ($results[$yearPossible]['sludge']['production'] > 0) {
-							$msg_sludge .= '<i>'. $yearPossible .': </i>'. $results[$yearPossible]['sludge']['production'] .', ';
-						}
-					}
 					$msg_sludge .= " (T DS/year)";
+                    $front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
 				}
 				break;
 			default :

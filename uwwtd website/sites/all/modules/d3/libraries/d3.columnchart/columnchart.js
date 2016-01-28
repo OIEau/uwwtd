@@ -25,7 +25,7 @@
       // bar width is calculated based on chart width, and amount of data
       // items - will resize if there is more or less
       barWidth = ((.90 * chart.w) / (rows.length * key.length)),
-      if(barWidth>100)barWidth=100;
+      
       // each cluster of bars - makes coding later easier
       barGroupWidth = (key.length * barWidth),
       // space in between each set
@@ -34,7 +34,7 @@
       y = d3.scale.linear().domain([0,max]).range([chart.h, 0]),
       z = d3.scale.ordinal().range(["blue", "red", "orange", "green"]),
       div = (settings.id) ? settings.id : 'visualization';
-      
+      if(barWidth>100)barWidth=100;
     var colors = (typeof settings.color!= 'undefined'?settings.color:null);
       
       
@@ -87,7 +87,11 @@
       .attr("x", -5)
       .attr("dy", ".35em")
       .attr("text-anchor", "end")
-      .text(d3.format(",d"));
+      .text(function(d,i){
+            if(d>999) return d3.format(",d")(d);
+            else return d3.format("")(d);  
+        }
+       );
 
     var bar = graph.selectAll('g.bars')
       .data(rows)

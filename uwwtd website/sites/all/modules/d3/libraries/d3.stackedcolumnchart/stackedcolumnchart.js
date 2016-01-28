@@ -106,7 +106,11 @@
       .attr("x", -3)
       .attr("dy", ".3em")
       .attr("text-anchor", "end")
-      .text(d3.format(",d"));
+      .text(function(d,i){
+            if(d>999) return d3.format(",d")(d);
+            else return d3.format("")(d);  
+        }
+       );
       
     // Add a group for each row of data
     var groups = graph.selectAll("g.bars")

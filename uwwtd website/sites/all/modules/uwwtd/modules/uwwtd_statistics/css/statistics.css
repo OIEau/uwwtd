@@ -1,3 +1,13 @@
 #statistics-uwwtd-form {
   margin-bottom: 40px;
 }
+
+#table_stats thead tr {
+  background: #dddddd;
+}
+
+#btnExport {
+  padding: 1px 6px;
+  background-color: orange;
+  color: #fff;
+}
