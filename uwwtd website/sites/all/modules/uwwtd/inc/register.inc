@@ -1783,7 +1783,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     //size of agglo/pe per class
     //array1
-//     dsm($graph_slice_size);
     $sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
     $sheet->setCellValue('C5', round($context['results']['graph']['0_10000']['pe'], 0));
     $sheet->setCellValue('B6', $context['results']['graph']['10000_15000']['number']);
@@ -2075,10 +2074,10 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe']));
     $sheet->getCell('E78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent'], 1));
     
-    $sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['number']);
-    $sheet->getCell('C79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['percent'], 1));
-    $sheet->getCell('D79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_pe']));
-    $sheet->getCell('E79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_plac']['waste_percent'], 1));
+    $sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['number']);
+    $sheet->getCell('C79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['percent'], 1));
+    $sheet->getCell('D79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_pe']));
+    $sheet->getCell('E79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_percent'], 1));
     
     $sheet->getCell('B80')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number']);
     $sheet->getCell('C80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percent'], 1));

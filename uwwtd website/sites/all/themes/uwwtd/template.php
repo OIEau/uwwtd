@@ -932,6 +932,7 @@ function uwwtd_get_uww_graphic($node){
     $reseau['title'] = $node->title;
     $reseau['id'] = $node->field_siteid['und'][0]['value'];
     $reseau['compliance'] = $node->field_uwwcompliance['und'][0]['value'];
+    $reseau['collectingSystem'] = $node->field_uwwcollectingsystem['und'][0]['value'];
     $reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
     $reseau['required'] = $node->field_uwwtreatmentrequired['und'][0]['value'];
 
@@ -1040,12 +1041,22 @@ function uwwtd_get_uww_graphic($node){
     $offset = 0;
     $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
 
-    if ($reseau['compliance'] == 'C') { 
-        $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
-    } elseif ($reseau['compliance'] == 'NC') { 
-        $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"  title="Main treatment">';
+    if ($reseau['collectingSystem'] == 'ISCON') {
+        if ($reseau['compliance'] == 'C') { 
+            $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
+        } elseif ($reseau['compliance'] == 'NC') { 
+            $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau"  title="Main treatment">';
+        } else {
+            $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
+        }
     } else {
-        $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
+        if ($reseau['compliance'] == 'C') { 
+            $output .= '<img src="'.$src.'/images/graphic/station-notcon-c.png" alt="reseau" title="Main treatment">';
+        } elseif ($reseau['compliance'] == 'NC') { 
+            $output .= '<img src="'.$src.'/images/graphic/station-notcon-nc.png" alt="reseau"  title="Main treatment">';
+        } else {
+            $output .= '<img src="'.$src.'/images/graphic/station-notcon.png" alt="reseau" title="Main treatment">';
+        }
     }
 
     $output .= '<div class="graphic-title">
@@ -1335,6 +1346,8 @@ function uwwtd_get_agglo_graphic($node){
         $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
         $reseau[$uwws['nid']]['title'] = $uww->title;
         $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
+        $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
+
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
             $loadedDcp = node_load($dcps['nid']);
             $dcpNid = $loadedDcp->nid;
@@ -1347,7 +1360,7 @@ function uwwtd_get_agglo_graphic($node){
             $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
     }
-
+    dsm($reseau);
     $nbPlantsT = 0;
     $nbPlantsB = 0;
     for ($i=0; $i <= $nbPlants; $i++) {
@@ -1410,12 +1423,22 @@ function uwwtd_get_agglo_graphic($node){
     foreach ($reseau as $station) {
         $output .= '<div class="station" style="position: relative; top: -'.$offset.'px">';
 
-        if ($station['compStation'] == 'C') {
-            $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
-        } elseif ($station['compStation'] == 'NC') { 
-            $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau" title="Main treatment">';
+        if ($station['collectingSystem'] == 'ISCON') {
+            if ($station['compStation'] == 'C') {
+                $output .= '<img src="'.$src.'/images/graphic/station-c.png" alt="reseau" title="Main treatment">';
+            } elseif ($station['compStation'] == 'NC') { 
+                $output .= '<img src="'.$src.'/images/graphic/station-nc.png" alt="reseau" title="Main treatment">';
+            } else {
+                $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
+            }
         } else {
-            $output .= '<img src="'.$src.'/images/graphic/station.png" alt="reseau" title="Main treatment">';
+            if ($station['compStation'] == 'C') {
+                $output .= '<img src="'.$src.'/images/graphic/station-notcon-c.png" alt="reseau" title="Main treatment">';
+            } elseif ($station['compStation'] == 'NC') { 
+                $output .= '<img src="'.$src.'/images/graphic/station-notcon-nc.png" alt="reseau" title="Main treatment">';
+            } else {
+                $output .= '<img src="'.$src.'/images/graphic/station-notcon.png" alt="reseau" title="Main treatment">';
+            }
         }
 
         $output .= '<div class="graphic-title">

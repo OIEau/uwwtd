@@ -6,9 +6,9 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 ################################ DATA CENTER PAGE ################################
 function uwwtd_data_form($form, &$form_state){
 
-	if(isset($_SESSION['uwwtd_annee']))unset($_SESSION['uwwtd_annee']);
+    if(isset($_SESSION['uwwtd_annee']))unset($_SESSION['uwwtd_annee']);
 
-	$uwwtd_year = date("Y");
+    $uwwtd_year = date("Y");
 
     $options = $GLOBALS['uwwtd']['uwwtd_years'];
     $all_years = uwwtd_get_all_year();
@@ -17,121 +17,121 @@ function uwwtd_data_form($form, &$form_state){
             $options[$key] = "$value *";               
         }
     }
-	// definition du champ input de type select pour l'annee
-	$form['uwwtd_year'] = array(     
-		'#type' => 'select',
-		'#title' => t('Year'),
-		'#default_value' => $uwwtd_year,        
-		'#options' => $options,
-		'#weight' => 0,
-		'#required' => TRUE,
-	);
-	
-	// Bouton envoyer
-	$form['submit_button'] = array(
-		'#type' => 'submit',
-		'#value' => t('Submit'),
-	);
+    // definition du champ input de type select pour l'annee
+    $form['uwwtd_year'] = array(     
+        '#type' => 'select',
+        '#title' => t('Year'),
+        '#default_value' => $uwwtd_year,        
+        '#options' => $options,
+        '#weight' => 0,
+        '#required' => TRUE,
+    );
+    
+    // Bouton envoyer
+    $form['submit_button'] = array(
+        '#type' => 'submit',
+        '#value' => t('Submit'),
+    );
 
-	return $form;
+    return $form;
 }
 
 function uwwtd_data_form_submit($form, &$form_state){
-	
-	$annee = $form['uwwtd_year']['#value'];
-	$_SESSION['uwwtd_annee'] = $annee;
-	
-	$form_state['redirect'] = 'data/import';	
+    
+    $annee = $form['uwwtd_year']['#value'];
+    $_SESSION['uwwtd_annee'] = $annee;
+    
+    $form_state['redirect'] = 'data/import';    
 }
 
 
 ################################ DATA INPUT ################################
 function uwwtd_import_form($form, &$form_state){
 
-	if(!isset($_SESSION['uwwtd_annee'])){
-		drupal_goto('data');
-	} else {		
-		// Definition des variables pour le formulaire
-		$annee = $_SESSION['uwwtd_annee'];
-		
-		$form['uwwtd_text'] = array(
-			'#markup' => '<h4>'.t('Data import for the year').' : '.$annee.'</h4><p>'.t('To import your dataset please either upload an xml with all the data or a compressed (zipped) file with all the csv files correctly formatted. All the files must be encoded in UTF-8 to avoid confusion with special characters').'.</p>'
-		);
-		
-		// definition du champ input de type file
-		$form['uwwtd_file'] = array(
-			'#type' => 'managed_file',
-			'#title' => t('Data file'),
-			'#upload_validators' => array('file_validate_extensions' => array('xml zip')),
-			'#required' => TRUE,
-		);
-		
-		// Bouton envoyer
-		$form['submit_button'] = array(
-			'#type' => 'submit',
-			'#value' => t('Submit'),
-		);
-		
-		$form['uwwtd_text2'] = array(
-			'#markup' => '<br><br><p>'.t('Once finished uploading or to skip this step, please click the continue link below').'.</p>'
-		);
-		
-		$form['continue_button'] = array(
-			'#markup' => ''.l(t('Continue'), 'data/shapes').''
-		);
-		
-		// Fonction a appeller quand on clique sur envoyer
-		$form['#submit'][] = 'uwwtd_import_submit_handler';
-		return $form;
-	}
+    if(!isset($_SESSION['uwwtd_annee'])){
+        drupal_goto('data');
+    } else {        
+        // Definition des variables pour le formulaire
+        $annee = $_SESSION['uwwtd_annee'];
+        
+        $form['uwwtd_text'] = array(
+            '#markup' => '<h4>'.t('Data import for the year').' : '.$annee.'</h4><p>'.t('To import your dataset please either upload an xml with all the data or a compressed (zipped) file with all the csv files correctly formatted. All the files must be encoded in UTF-8 to avoid confusion with special characters').'.</p>'
+        );
+        
+        // definition du champ input de type file
+        $form['uwwtd_file'] = array(
+            '#type' => 'managed_file',
+            '#title' => t('Data file'),
+            '#upload_validators' => array('file_validate_extensions' => array('xml zip')),
+            '#required' => TRUE,
+        );
+        
+        // Bouton envoyer
+        $form['submit_button'] = array(
+            '#type' => 'submit',
+            '#value' => t('Submit'),
+        );
+        
+        $form['uwwtd_text2'] = array(
+            '#markup' => '<br><br><p>'.t('Once finished uploading or to skip this step, please click the continue link below').'.</p>'
+        );
+        
+        $form['continue_button'] = array(
+            '#markup' => ''.l(t('Continue'), 'data/shapes').''
+        );
+        
+        // Fonction a appeller quand on clique sur envoyer
+        $form['#submit'][] = 'uwwtd_import_submit_handler';
+        return $form;
+    }
 }
 
 function uwwtd_import_submit_handler($form, &$form_state) {
-	
-	// Definition et recup des variables
-// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
-	$annee = $_SESSION['uwwtd_annee'];
-	$file = file_load($form_state['values']['uwwtd_file']);
-	$uri = $file->uri;
+    
+    // Definition et recup des variables
+//  if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+//  if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+    $annee = $_SESSION['uwwtd_annee'];
+    $file = file_load($form_state['values']['uwwtd_file']);
+    $uri = $file->uri;
 
-	// reset session values
-	$_SESSION['newRca'] = 0;
-	$_SESSION['upRca'] = 0;
+    // reset session values
+    $_SESSION['newRca'] = 0;
+    $_SESSION['upRca'] = 0;
     $_SESSION['totRca'] = 0;
-	$_SESSION['newAgg'] = 0;
-	$_SESSION['upAgg'] = 0;
+    $_SESSION['newAgg'] = 0;
+    $_SESSION['upAgg'] = 0;
     $_SESSION['totAgg'] = 0;
-	$_SESSION['newUww'] = 0;
-	$_SESSION['upUww'] = 0;
+    $_SESSION['newUww'] = 0;
+    $_SESSION['upUww'] = 0;
     $_SESSION['totUww'] = 0;
-	$_SESSION['newDcp'] = 0;
-	$_SESSION['upDcp'] = 0;
+    $_SESSION['newDcp'] = 0;
+    $_SESSION['upDcp'] = 0;
     $_SESSION['totDcp'] = 0;
-	$_SESSION['newBc'] = 0;
-	$_SESSION['upBc'] = 0;
+    $_SESSION['newBc'] = 0;
+    $_SESSION['upBc'] = 0;
     $_SESSION['totBc'] = 0;
     $_SESSION['newAggloUww'] = 0;
     $_SESSION['upAggloUww'] = 0;
     $_SESSION['totAggloUww'] = 0;
 
-	switch($file->filemime){
-		case 'application/zip':
-			$newFile = uwwtd_file_upload($file, '.zip');
-			$files = uwwtd_unzip_files($newFile, 'public://data_sources/');
-			$datas = uwwtd_zipped_csvs_to_array($files);            
-		break;
+    switch($file->filemime){
+        case 'application/zip':
+            $newFile = uwwtd_file_upload($file, '.zip');
+            $files = uwwtd_unzip_files($newFile, 'public://data_sources/');
+            $datas = uwwtd_zipped_csvs_to_array($files);            
+        break;
 
-		case 'application/xml':
-			$newFile = uwwtd_file_upload($file, '.xml');
-			$datas = uwwtd_xml_to_array($newFile->uri);
-		break;
-	}
-	$timestamp = strtotime('now');
+        case 'application/xml':
+            $newFile = uwwtd_file_upload($file, '.xml');
+            $datas = uwwtd_xml_to_array($newFile->uri);
+        break;
+    }
+    $timestamp = strtotime('now');
 
-	//dsm($timestamp);
+    //dsm($timestamp);
 
-	//dsm($datas);
+    //dsm($datas);
     if(isset($datas['UWWTD_Report']['ReportPeriod']['repCode'])){
         $repCode =  uwwtd_check_text($datas['UWWTD_Report']['ReportPeriod']['repCode']);
     }
@@ -143,8 +143,8 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     //On profite de l'occasion pour creer le noued sur le MSLevel
     if(!empty($datas['UWWTD_Report']['MSLevel'])){
         uwwtd_update_mslevel($newFile, $annee, $datas['UWWTD_Report']['MSLevel'], $repCode, $timestamp);
-	}
-	uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);	
+    }
+    uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);  
 }
 
 function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
@@ -210,7 +210,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
 
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;
-		//text
+        //text
         if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
         //numeric
         //if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_numeric($datas['mslSludgeProduction'], $timestamp, 0 , $node);
@@ -422,12 +422,12 @@ function uwwtd_update_reporter($newFile, $annee, $datas, $repCode, $timestamp){
         $node->field_repcode['und'][0]['value'] = $repCode;
         //text
         if(isset($datas['rptMStateKey'])) $node->field_rptmstatekey['und'][0]['value'] = uwwtd_check_text($datas['rptMStateKey']);
-		//text
+        //text
         if(isset($datas['rptMStateValue'])) $node->field_rptmstatevalue['und'][0]['value'] = uwwtd_check_text($datas['rptMStateValue']);
-		//text
+        //text
         if(isset($datas['rptCulture'])) $node->field_rptculture['und'][0]['value'] = uwwtd_check_text($datas['rptCulture']);
-		//numeric
-		if(isset($datas['rptFormRA'])) {
+        //numeric
+        if(isset($datas['rptFormRA'])) {
             $check = uwwtd_check_numeric($datas['rptFormRA']);
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, 0 , $node);
@@ -435,7 +435,7 @@ function uwwtd_update_reporter($newFile, $annee, $datas, $repCode, $timestamp){
                 $node->field_rptformra['und'][0]['value'] = $check;
             }
         } 
-		
+        
         // save node
         node_save($node);
         
@@ -515,9 +515,9 @@ function uwwtd_update_reportPeriod($newFile, $annee, $datas, $repCode, $timestam
         $node->field_repcode['und'][0]['value'] = $repCode;
         //text
         if(isset($datas['rptMStateKey'])) $node->field_rptmstatekey['und'][0]['value'] = uwwtd_check_text($datas['rptMStateKey']);
-		//text
+        //text
         if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
-		//date
+        //date
         if(isset($data['repVersion'])){
             $check = uwwtd_check_date($data['repVersion'], $message);
             if ($message != '') {
@@ -526,7 +526,7 @@ function uwwtd_update_reportPeriod($newFile, $annee, $datas, $repCode, $timestam
             if($check !== false){
                 $node->field_repversion['und'][0]['value'] = $check;
             }            
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Report period version date found.', $timestamp, $i, $node);
         //date
         if(isset($data['repSituationAt'])){
@@ -537,11 +537,11 @@ function uwwtd_update_reportPeriod($newFile, $annee, $datas, $repCode, $timestam
             if($check !== false){
                 $node->field_repsituationat['und'][0]['value'] = $check;
             }            
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Report period situation date found.', $timestamp, $i, $node);
         //text
         if(isset($datas['repReportedPeriod'])) $node->field_repreportedperiod['und'][0]['value'] = uwwtd_check_text($datas['repReportedPeriod']);
-		
+        
         // save node
         node_save($node);
         
@@ -558,99 +558,99 @@ function uwwtd_update_reportPeriod($newFile, $annee, $datas, $repCode, $timestam
 function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     uwwtd_trace('uwwtd_setup_batch all file');
     uwwtd_trace(var_export($datas, true));
-	$batch = array(
-		'title' => t('Data import'),
-		'operations' => array(),
-		'error_message' => t('Error!'),
-		'finished' => 'uwwtd_finished',
-		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
-	);
+    $batch = array(
+        'title' => t('Data import'),
+        'operations' => array(),
+        'error_message' => t('Error!'),
+        'finished' => 'uwwtd_finished',
+        'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
+    );
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
     
-	/*DG 15/12/2015 Add type RCA*/
+    /*DG 15/12/2015 Add type RCA*/
     //ReceivingAreas
     $imports  = array();
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-		if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-			if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-				$imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-			}
-			else{
-				$imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-			}		
-		}
-	}elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
-		//ReceivingAreasSAMain
-		if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
-			foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca_main){
-				$rcacode_SAMain= $rca_main['rcaCode'];
-				$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter']=array();
-				$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54']=array();
-				$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA']= array();
-				$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor']= array();
-				//ReceivingAreasSAParameter
-				if(isset($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'])){
-					foreach($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'] as $rca_parameter){
-						if($rca_parameter['rcaCode'] == $rcacode_SAMain){
-							$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter'][]=$rca_parameter;
-						}
-					}
-				}
-				//ReceivingAreasSA54
-				if(isset($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'])){
-					foreach($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'] as $rca_sa54){
-						if($rca_sa54['rcaCode'] == $rcacode_SAMain){
-							$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54'][]=$rca_sa54;
-						}
-					}
-				}
-				//ReceivingAreasSASA
-				if(isset($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'])){
-					foreach($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'] as $rca_sasa){
-						if($rca_sasa['rcaCode'] == $rcacode_SAMain){
-							$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA'][]=$rca_sasa;
-						}
-					}
-				}
-				//ReceivingAreasSALSAPredecessor
-				if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
-					foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_salsapre){
-						if($rca_salsapre['rcaCode'] == $rcacode_SAMain){
-							$datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor'][]=$rca_salsapre;
-						}
-					}
-				}
-				
-			}
-			$imports += $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'];		
-		}
-	}
-	/*DG 15/12/2015 Add type ReceivingAreasLSA*/
-	if(isset($datas['UWWTD_Report']['ReceivingAreasLSA'])){
-		if(isset($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['rcaCode'])){
-			foreach($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'] as $rca_lsa){
-				$rcacode_lsa= $rca_lsa['rcaCode'];
-				//ReceivingAreasSALSAPredecessor
-				if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
-					foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_lsapre){
-						if($rca_lsapre['rcaCode'] == $rcacode_lsa){
-							$datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['ReceivingAreaSALSAPredecessor'][]=$rca_lsapre;
-						}
-					}
-				}
-				$imports += $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
-			}
-		}else{
-			$imports = $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
-		} 
+        if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
+            if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
+                $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+            }
+            else{
+                $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+            }       
+        }
+    }elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
+        //ReceivingAreasSAMain
+        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
+            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca_main){
+                $rcacode_SAMain= $rca_main['rcaCode'];
+                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter']=array();
+                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54']=array();
+                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA']= array();
+                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor']= array();
+                //ReceivingAreasSAParameter
+                if(isset($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'])){
+                    foreach($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'] as $rca_parameter){
+                        if($rca_parameter['rcaCode'] == $rcacode_SAMain){
+                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter'][]=$rca_parameter;
+                        }
+                    }
+                }
+                //ReceivingAreasSA54
+                if(isset($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'])){
+                    foreach($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'] as $rca_sa54){
+                        if($rca_sa54['rcaCode'] == $rcacode_SAMain){
+                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54'][]=$rca_sa54;
+                        }
+                    }
+                }
+                //ReceivingAreasSASA
+                if(isset($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'])){
+                    foreach($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'] as $rca_sasa){
+                        if($rca_sasa['rcaCode'] == $rcacode_SAMain){
+                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA'][]=$rca_sasa;
+                        }
+                    }
+                }
+                //ReceivingAreasSALSAPredecessor
+                if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
+                    foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_salsapre){
+                        if($rca_salsapre['rcaCode'] == $rcacode_SAMain){
+                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor'][]=$rca_salsapre;
+                        }
+                    }
+                }
+                
+            }
+            $imports += $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'];      
+        }
+    }
+    /*DG 15/12/2015 Add type ReceivingAreasLSA*/
+    if(isset($datas['UWWTD_Report']['ReceivingAreasLSA'])){
+        if(isset($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['rcaCode'])){
+            foreach($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'] as $rca_lsa){
+                $rcacode_lsa= $rca_lsa['rcaCode'];
+                //ReceivingAreasSALSAPredecessor
+                if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
+                    foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_lsapre){
+                        if($rca_lsapre['rcaCode'] == $rcacode_lsa){
+                            $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['ReceivingAreaSALSAPredecessor'][]=$rca_lsapre;
+                        }
+                    }
+                }
+                $imports += $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
+            }
+        }else{
+            $imports = $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
+        } 
         uwwtd_trace('$imports ReceivingAreas');
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
-		}
-	
-		
+        }
+    
+        
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -749,8 +749,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));        
         $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
-	
-	/*DG 15/12/2015 Contact*/
+    
+    /*DG 15/12/2015 Contact*/
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Contacts'])){
         if(isset($datas['UWWTD_Report']['Contacts']['Contact']['repCode'])){
@@ -763,8 +763,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-	
-	/*DG 15/12/2015 Industry*/
+    
+    /*DG 15/12/2015 Industry*/
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Industries'])){
         if(isset($datas['UWWTD_Report']['Industries']['Industry']['repCode'])){
@@ -777,7 +777,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-	
+    
    //bc_position
    $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
    //mega_links
@@ -787,21 +787,21 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
    $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
    $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
     
-	batch_set($batch);
-	batch_process('data/import');
+    batch_set($batch);
+    batch_process('data/import');
 }
 
 function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-		
-			//Get all receiving areas from data
-			
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+    if(!empty($datas)){
+        if (!isset($context['sandbox']['progress'])) {
+        
+            //Get all receiving areas from data
+            
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totRca'] = $context['sandbox']['max'];
-		}
+        }
         $i = $context['sandbox']['progress'];
         $j=0;
         while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
@@ -818,19 +818,19 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
             $j++;
         }
         uwwtd_flush_errors();
-		if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing receiving area').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import a receiving area.');
-		}
-		
-		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
-	}
+        if($node){
+            $context['message'] = '(' .$annee . ') ' . t('Processing receiving area').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import a receiving area.');
+        }
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
+    }
 }
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
@@ -915,8 +915,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;
         
-		/* DG 15/12/2015 add rcaEnvDom for RCA LSA, RCA SA MAIN*/
-		//text
+        /* DG 15/12/2015 add rcaEnvDom for RCA LSA, RCA SA MAIN*/
+        //text
         if(isset($data['rcaEnvDom'])){
             $node->field_rcaenvdom['und'][0]['value'] = uwwtd_check_text($data['rcaEnvDom']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa environmental domain found.', $timestamp, $i, $node);
@@ -929,27 +929,27 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
 
-		/* DG 15/12/2015 add rcaSpZTyp for RCA LSA, RCA SA MAIN*/
+        /* DG 15/12/2015 add rcaSpZTyp for RCA LSA, RCA SA MAIN*/
         //text
         if(isset($data['rcaType']) || isset($data['rcaSpZTyp'])){
-			if(isset($data['rcaType'])){
-				 $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaType']);
-			}elseif(isset($data['rcaSpZTyp'])){
-					 $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaSpZTyp']);
-			}
-		}
+            if(isset($data['rcaType'])){
+                 $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaType']);
+            }elseif(isset($data['rcaSpZTyp'])){
+                     $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaSpZTyp']);
+            }
+        }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area specialised zone type found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaZtype for RCA SA MAIN, RCA LSA*/
+        /* DG 15/12/2015 add rcaZtype for RCA SA MAIN, RCA LSA*/
         //text
         if(isset($data['rcaZtype'])){
-			$node->field_zonetype['und'][0]['value'] = uwwtd_check_text($data['rcaZtype']);
-		}
+            $node->field_zonetype['und'][0]['value'] = uwwtd_check_text($data['rcaZtype']);
+        }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area zone type found.', $timestamp, $i, $node);
         
-		
-		/* DG 15/12/2015 add rca61DateDesignation for RCA LSA*/
-		//date
+        
+        /* DG 15/12/2015 add rca61DateDesignation for RCA LSA*/
+        //date
         if(isset($data['rca61DateDesignation'])){
             $check = uwwtd_check_date($data['rca61DateDesignation'], $message);
             if ($message != '') {
@@ -958,10 +958,10 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rca61datedesignation['und'][0]['value'] = $check;
             }            
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa article 61 date found.', $timestamp, $i, $node);
         
-		
+        
         //text
         if(isset($data['rcaSensitiveArea'])){
             $node->field_rca_sensitive_area['und'][0]['value'] = uwwtd_check_text($data['rcaSensitiveArea']);}
@@ -979,7 +979,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rcadateart5854['und'][0]['value'] = $check;
             }            
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 58 date found.', $timestamp, $i, $node);
         
         //bool
@@ -1004,8 +1004,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area phosphorus parameter found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaParameterM for RCA main*/
-		//bool
+        /* DG 15/12/2015 add rcaParameterM for RCA main*/
+        //bool
         if(isset($data['rcaParameterM'])){
             $check = uwwtd_check_bool($data['rcaParameterM']);
             if (false === $check) {
@@ -1027,8 +1027,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other parameter found.', $timestamp, $i, $node);
 
-		/* DG 15/12/2015 add rcaArt58DateDesign for RCA LSA*/
-		 //date
+        /* DG 15/12/2015 add rcaArt58DateDesign for RCA LSA*/
+         //date
         if(isset($data['rcaArt58DateDesign'])){
 
             $check = uwwtd_check_date($data['rcaArt58DateDesign'], $message);
@@ -1118,24 +1118,24 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area morphology information found.', $timestamp, $i, $node);
 
-		/* DG 15/12/2015 add rcaHydrology for RCA LSA*/
+        /* DG 15/12/2015 add rcaHydrology for RCA LSA*/
         //bool
         if(isset($data['rcaHydrologie'])|| (isset($data['rcaHydrology']))){
-			if(isset($data['rcaHydrologie'])){
-				$check = uwwtd_check_bool($data['rcaHydrologie']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcahydrologie['und'][0]['value'] = $check;
-				}
-			}elseif(isset($data['rcaHydrology'])){
-				$check = uwwtd_check_bool($data['rcaHydrology']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcahydrologie['und'][0]['value'] = $check;
-				}
-			}
+            if(isset($data['rcaHydrologie'])){
+                $check = uwwtd_check_bool($data['rcaHydrologie']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcahydrologie['und'][0]['value'] = $check;
+                }
+            }elseif(isset($data['rcaHydrology'])){
+                $check = uwwtd_check_bool($data['rcaHydrology']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcahydrologie['und'][0]['value'] = $check;
+                }
+            }
             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area hydrology information found.', $timestamp, $i, $node);
@@ -1174,49 +1174,49 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rcadateart54['und'][0]['value'] = $check;
             }              
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 date found.', $timestamp, $i, $node);
         
-		/*DG 15/12/2015 Add rcaPlants54 for RCA SA 54*/
+        /*DG 15/12/2015 Add rcaPlants54 for RCA SA 54*/
         //numeric
         if(isset($data['rcaPlants']) || isset($data['rcaPlants54'])){
-			if(isset($data['rcaPlants'])){
-				$check = uwwtd_check_numeric($data['rcaPlants']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcaPlants['und'][0]['value'] = $check;
-				}      
-			}elseif(isset($data['rcaPlants54'])){
-				$check = uwwtd_check_numeric($data['rcaPlants54']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcaPlants['und'][0]['value'] = $check;
-				}     
-			}
-        }	
+            if(isset($data['rcaPlants'])){
+                $check = uwwtd_check_numeric($data['rcaPlants']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                }      
+            }elseif(isset($data['rcaPlants54'])){
+                $check = uwwtd_check_numeric($data['rcaPlants54']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                }     
+            }
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants information found.', $timestamp, $i, $node);
         
-		/*DG 15/12/2015 Add rcaPlantsCapacity54 for RCA SA 54*/
+        /*DG 15/12/2015 Add rcaPlantsCapacity54 for RCA SA 54*/
         //numeric
         if(isset($data['rcaPlantsCapacity']) || isset($data['rcaPlantsCapacity54'])){
-			if(isset($data['rcaPlantsCapacity'])){
-				$check = uwwtd_check_numeric($data['rcaPlantsCapacity']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcaplantscapacity['und'][0]['value'] = $check;
-				}      
-			}elseif(isset($data['rcaPlantsCapacity54'])){
-				$check = uwwtd_check_numeric($data['rcaPlantsCapacity54']);
-				if (false === $check) {
-					uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
-				} else {
-					$node->field_rcaPlants['und'][0]['value'] = $check;
-				}     
-			}
-        }	
+            if(isset($data['rcaPlantsCapacity'])){
+                $check = uwwtd_check_numeric($data['rcaPlantsCapacity']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcaplantscapacity['und'][0]['value'] = $check;
+                }      
+            }elseif(isset($data['rcaPlantsCapacity54'])){
+                $check = uwwtd_check_numeric($data['rcaPlantsCapacity54']);
+                if (false === $check) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                } else {
+                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                }     
+            }
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants capacity information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1230,7 +1230,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcanincomingmeasured['und'][0]['value'] = $check;
             }          
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot measured information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1244,7 +1244,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcanincomingcalculated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1258,7 +1258,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcanincomingestimated['und'][0]['value'] = $check;
             }              
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1272,7 +1272,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapincomingmeasured['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot measured information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1286,7 +1286,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapincomingcalculated['und'][0]['value'] = $check;
             }              
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1300,7 +1300,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapincomingestimated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1314,7 +1314,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcandischargedmeasured['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot measured information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1328,7 +1328,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcandischargedcalculated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1342,7 +1342,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcandischargedestimated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1356,7 +1356,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapdischargedmeasured['und'][0]['value'] = $check;
             }              
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot measured information found.', $timestamp, $i, $node);
     
         //decimal
@@ -1370,7 +1370,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapdischargedcalculated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
@@ -1384,7 +1384,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             } else {
                 $node->field_rcapdischargedestimated['und'][0]['value'] = $check;
             }             
-        }	
+        }   
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot estimated information found.', $timestamp, $i, $node);
         
         //text
@@ -1412,15 +1412,15 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other directive information date found.', $timestamp, $i, $node);
 
-		/* DG 15/12/2015 add rcalsaRemarks for RCA LSA*/
+        /* DG 15/12/2015 add rcalsaRemarks for RCA LSA*/
         //memo ? text ?
         if(isset($data['rcaRemarks'])|| isset($data['rcalsaRemarks'])){
-			if(isset($data['rcaRemarks'])){
-				$node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcaRemarks']);
-			}elseif(isset($data['rcalsaRemarks'])){
-				$node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcalsaRemarks']);
-			}
-		}  
+            if(isset($data['rcaRemarks'])){
+                $node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcaRemarks']);
+            }elseif(isset($data['rcalsaRemarks'])){
+                $node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcalsaRemarks']);
+            }
+        }  
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area root of correspo GIS-data file found.', $timestamp, $i, $node);
         
         //bool
@@ -1443,13 +1443,13 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->field_rca58applied['und'][0]['value'] = '0';
         }
         
-		/* DG 15/12/2015 add rcaParameter for RCA SA PARAMETER*/
-		//text
+        /* DG 15/12/2015 add rcaParameter for RCA SA PARAMETER*/
+        //text
         if(isset($data['rcaParameter'])){
             $node->field_rcaparameter['und'][0]['value'] = uwwtd_check_text($data['rcaParameter']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area name parameter found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaStartDate for RCA SA PARAMETER*/
+        /* DG 15/12/2015 add rcaStartDate for RCA SA PARAMETER*/
         //date
         if(isset($data['rcaStartDate'])){
             $check = uwwtd_check_date($data['rcaStartDate'], $message);
@@ -1462,13 +1462,13 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area starting date of application found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaHyperlink for RCA LSA*/
-		//text
+        /* DG 15/12/2015 add rcaHyperlink for RCA LSA*/
+        //text
         if(isset($data['rcaHyperlink'])){
             $node->field_rcahyperlink['und'][0]['value'] = uwwtd_check_text($data['rcaHyperlink']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa hyperlink found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaBeginLife for RCA LSA*/
+        /* DG 15/12/2015 add rcaBeginLife for RCA LSA*/
         //date
         if(isset($data['rcaBeginLife'])){
             $check = uwwtd_check_date($data['rcaBeginLife'], $message);
@@ -1481,8 +1481,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa begin life date found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaEndLife for RCA LSA*/
-		//date
+        /* DG 15/12/2015 add rcaEndLife for RCA LSA*/
+        //date
         if(isset($data['rcaEndLife'])){
             $check = uwwtd_check_date($data['rcaEndLife'], $message);
             if ($message != '') {
@@ -1494,182 +1494,182 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa end life date found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaMethod54 for RCA SA54*/
-		//text
+        /* DG 15/12/2015 add rcaMethod54 for RCA SA54*/
+        //text
         if(isset($data['rcaMethod54'])){
             $node->field_rcamethod54['und'][0]['value'] = uwwtd_check_text($data['rcaMethod54']);
-			if($node->field_rcamethod54['und'][0]['value'] == "Measured"){
-				//rcaNIncoming54
-				 if(isset($data['rcaNIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaNIncoming54']);
-					if (false === $check){
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					}else{
-						$node->field_rcanincomingmeasured['und'][0]['value'] = $check;
-					}         
-				}
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot measured information found.', $timestamp, $i, $node);
-				//rcaNDischarged54
-				 //decimal
-				if(isset($data['rcaNDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaNDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcandischargedmeasured['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot measured information found.', $timestamp, $i, $node);
-				
-				//rcaPIncoming54
-				//decimal
-				if(isset($data['rcaPIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaPIncoming54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapincomingmeasured['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot measured information found.', $timestamp, $i, $node);
-				
-				//rcaPDischarged54
-				 //decimal
-				if(isset($data['rcaPDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaPDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapdischargedmeasured['und'][0]['value'] = $check;
-					}              
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot measured information found.', $timestamp, $i, $node);
-			
-			}elseif($node->field_rcamethod54['und'][0]['value'] == "Calculated"){
-				//decimal
-				if(isset($data['rcaNIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaNIncoming54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcanincomingcalculated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot calculated information found.', $timestamp, $i, $node);
-				
-				//decimal
-				if(isset($data['rcaPIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaPIncoming54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapincomingcalculated['und'][0]['value'] = $check;
-					}              
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot calculated information found.', $timestamp, $i, $node);
-				
-				 //decimal
-				if(isset($data['rcaNDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaNDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcandischargedcalculated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot calculated information found.', $timestamp, $i, $node);
-				
-				//decimal
-				if(isset($data['rcaPDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaPDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapdischargedcalculated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot calculated information found.', $timestamp, $i, $node);
-			}elseif($node->field_rcamethod54['und'][0]['value'] == "Estimated"){
-				//decimal
-				if(isset($data['rcaNIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaNIncoming54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcanincomingestimated['und'][0]['value'] = $check;
-					}              
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot estimated information found.', $timestamp, $i, $node);
-				
-				//decimal
-				if(isset($data['rcaPIncoming54'])){
-					$check = uwwtd_check_decimal($data['rcaPIncoming54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapincomingestimated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot estimated information found.', $timestamp, $i, $node);
-				
-				 //decimal
-				if(isset($data['rcaNDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaNDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcandischargedestimated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot estimated information found.', $timestamp, $i, $node);
-				
-				//decimal
-				if(isset($data['rcaPDischarged54'])){
-					$check = uwwtd_check_decimal($data['rcaPDischarged54']);
-					if (false === $check) {
-						uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
-					} else {
-						$node->field_rcapdischargedestimated['und'][0]['value'] = $check;
-					}             
-				}	
-				else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot estimated information found.', $timestamp, $i, $node);
-				
-				
-			}
-		}
+            if($node->field_rcamethod54['und'][0]['value'] == "Measured"){
+                //rcaNIncoming54
+                 if(isset($data['rcaNIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaNIncoming54']);
+                    if (false === $check){
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    }else{
+                        $node->field_rcanincomingmeasured['und'][0]['value'] = $check;
+                    }         
+                }
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot measured information found.', $timestamp, $i, $node);
+                //rcaNDischarged54
+                 //decimal
+                if(isset($data['rcaNDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaNDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcandischargedmeasured['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot measured information found.', $timestamp, $i, $node);
+                
+                //rcaPIncoming54
+                //decimal
+                if(isset($data['rcaPIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaPIncoming54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapincomingmeasured['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot measured information found.', $timestamp, $i, $node);
+                
+                //rcaPDischarged54
+                 //decimal
+                if(isset($data['rcaPDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaPDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapdischargedmeasured['und'][0]['value'] = $check;
+                    }              
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot measured information found.', $timestamp, $i, $node);
+            
+            }elseif($node->field_rcamethod54['und'][0]['value'] == "Calculated"){
+                //decimal
+                if(isset($data['rcaNIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaNIncoming54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcanincomingcalculated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot calculated information found.', $timestamp, $i, $node);
+                
+                //decimal
+                if(isset($data['rcaPIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaPIncoming54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapincomingcalculated['und'][0]['value'] = $check;
+                    }              
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot calculated information found.', $timestamp, $i, $node);
+                
+                 //decimal
+                if(isset($data['rcaNDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaNDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcandischargedcalculated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot calculated information found.', $timestamp, $i, $node);
+                
+                //decimal
+                if(isset($data['rcaPDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaPDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapdischargedcalculated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot calculated information found.', $timestamp, $i, $node);
+            }elseif($node->field_rcamethod54['und'][0]['value'] == "Estimated"){
+                //decimal
+                if(isset($data['rcaNIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaNIncoming54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcanincomingestimated['und'][0]['value'] = $check;
+                    }              
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming N-tot estimated information found.', $timestamp, $i, $node);
+                
+                //decimal
+                if(isset($data['rcaPIncoming54'])){
+                    $check = uwwtd_check_decimal($data['rcaPIncoming54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapincomingestimated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area incoming P-tot estimated information found.', $timestamp, $i, $node);
+                
+                 //decimal
+                if(isset($data['rcaNDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaNDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcandischargedestimated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged N-tot estimated information found.', $timestamp, $i, $node);
+                
+                //decimal
+                if(isset($data['rcaPDischarged54'])){
+                    $check = uwwtd_check_decimal($data['rcaPDischarged54']);
+                    if (false === $check) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                    } else {
+                        $node->field_rcapdischargedestimated['und'][0]['value'] = $check;
+                    }             
+                }   
+                else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area discharged P-tot estimated information found.', $timestamp, $i, $node);
+                
+                
+            }
+        }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area method found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaParameter for RCA SASA*/
-		//text
+        /* DG 15/12/2015 add rcaParameter for RCA SASA*/
+        //text
         if(isset($data['rcaRelatedSA'])){
             $node->field_rcarelatedsa['und'][0]['value'] = uwwtd_check_text($data['rcaRelatedSA']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area Id of the related sensitive area found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaRelatedSARemark for RCA SASA*/
-		//text
+        /* DG 15/12/2015 add rcaRelatedSARemark for RCA SASA*/
+        //text
         if(isset($data['rcaRelatedSARemark'])){
             $node->field_rcarelatedsaremark['und'][0]['value'] = uwwtd_check_text($data['rcaRelatedSARemark']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA remarks area found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaCodePredecessor for RCA SALSAPredecessor*/
-		//text
+        /* DG 15/12/2015 add rcaCodePredecessor for RCA SALSAPredecessor*/
+        //text
         if(isset($data['rcaCodePredecessor'])){
             $node->field_rcacodepredecessor['und'][0]['value'] = uwwtd_check_text($data['rcaCodePredecessor']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA id code area found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcaEvolutionType for RCA SALSAPredecessor*/
-		//text
+        /* DG 15/12/2015 add rcaEvolutionType for RCA SALSAPredecessor*/
+        //text
         if(isset($data['rcaEvolutionType'])){
             $node->field_rcaevolutiontype['und'][0]['value'] = uwwtd_check_text($data['rcaEvolutionType']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA reason area found.', $timestamp, $i, $node);
         
-		/* DG 15/12/2015 add rcasalsaRemark for RCA SALSAPredecessor*/
-		//text
+        /* DG 15/12/2015 add rcasalsaRemark for RCA SALSAPredecessor*/
+        //text
         if(isset($data['rcasalsaRemark'])){
             $node->field_rcasalsaremark['und'][0]['value'] = uwwtd_check_text($data['rcasalsaRemark']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA remarks area found.', $timestamp, $i, $node);
         
-		
+        
         // save node
         node_save($node);
 
@@ -1685,49 +1685,49 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 }
 
 function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	global $language;
+    global $language;
     if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-		
+        if (!isset($context['sandbox']['progress'])) {
+        
 
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totBc'] = $context['sandbox']['max'];
-		}
-		$i = $context['sandbox']['progress'];
+        }
+        $i = $context['sandbox']['progress'];
         $data = $context['sandbox']['ids'][$i];
 
-		// Check basic elements exist
-		// errors
-		$e = 0;
-		if($data['bigCity'] == '' || !isset($data['bigCity'])){
-			$e = 1;
-			$emes = t('The big city does not have \'title\' information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
-		if($data['bigCityID'] == '' || !isset($data['bigCityID'])){
-			$e = 1;
-			$emes = t('The big city does not have \'identification\' information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
-		if($data['bigCountryCode'] == '' || !isset($data['bigCountryCode'])){
-			$e = 1;
-			$emes = t('The big city does not have \'code\' information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
+        // Check basic elements exist
+        // errors
+        $e = 0;
+        if($data['bigCity'] == '' || !isset($data['bigCity'])){
+            $e = 1;
+            $emes = t('The big city does not have \'title\' information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
+        if($data['bigCityID'] == '' || !isset($data['bigCityID'])){
+            $e = 1;
+            $emes = t('The big city does not have \'identification\' information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
+        if($data['bigCountryCode'] == '' || !isset($data['bigCountryCode'])){
+            $e = 1;
+            $emes = t('The big city does not have \'code\' information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
         uwwtd_trace('import big_city : ' . $annee.'_big_'.uwwtd_check_text($data['bigCityID']));
-		// Check if no errors were found
-		if($e == 0){
+        // Check if no errors were found
+        if($e == 0){
 
-			// Variables  //text
-			$siteId = $annee.'_big_'.uwwtd_check_text($data['bigCityID']);
+            // Variables  //text
+            $siteId = $annee.'_big_'.uwwtd_check_text($data['bigCityID']);
 
-			// Check if id exists
-			$exists = uwwtd_check_exist($siteId);
+            // Check if id exists
+            $exists = uwwtd_check_exist($siteId);
             uwwtd_trace('big_city ' . $siteId . ' exists ? "' . $exists . '".');
             // If the element exists
-			if(!$exists){
+            if(!$exists){
                 $node = new stdClass();
                 $node->type = 'big_city';
                 $node->uid = 1;
@@ -1748,8 +1748,8 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
             }
             else{
                 // load the node
-				$node = node_load($exists);
-				$node->type = 'big_city';
+                $node = node_load($exists);
+                $node->type = 'big_city';
                 $_SESSION['upBc']++;
                 
                 if (empty($node->nid)) {
@@ -1793,37 +1793,37 @@ function uwwtd_import_bigcity_batch_process($newFile, $annee, $datas, $repCode, 
             if (empty($node->nid)) {
                 uwwtd_trace('big_city ' . $siteId . ' node_save() error2');
             }             
-		} else {
+        } else {
             uwwtd_trace('import big_city error ' . var_export($data, true));
         }
 
-		$context['sandbox']['progress']++;
+        $context['sandbox']['progress']++;
         uwwtd_flush_errors();
-		if(isset($node)){
-			$context['message'] = '(' .$annee . ') ' . t('Processing big city').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-			$context['results'][] = $node->nid . ' : ' . check_plain($node->title);
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import a big city.');
-			$context['results'][] = t('Failed to import a big city.');
-		}
-		
-		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	} else {
-	   uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No big cities found in the dataset ' . $annee, $timestamp);
+        if(isset($node)){
+            $context['message'] = '(' .$annee . ') ' . t('Processing big city').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+            $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import a big city.');
+            $context['results'][] = t('Failed to import a big city.');
+        }
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    } else {
+       uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No big cities found in the dataset ' . $annee, $timestamp);
     }
 }
 
 function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+    if(!empty($datas)){
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totAgg'] = $context['sandbox']['max'];
-		}
+        }
         
         $i = $context['sandbox']['progress'];
         $j=0;
@@ -1840,21 +1840,21 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
             $context['sandbox']['progress']++;
             $j++;
         }
-// 		$context['sandbox']['progress']++;
+//      $context['sandbox']['progress']++;
         uwwtd_flush_errors();
-		if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing agglomeration').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import an agglomeration.');
-		}
-		
-		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Agglomerations found in the dataset ' . $annee, $timestamp);
-	}
+        if($node){
+            $context['message'] = '(' .$annee . ') ' . t('Processing agglomeration').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import an agglomeration.');
+        }
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Agglomerations found in the dataset ' . $annee, $timestamp);
+    }
 }
 
 function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i){
@@ -1882,7 +1882,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
     
     $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
     if ($message != '') {
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
     }
     if($checkLatitude === false){
         $e = 1;
@@ -1899,7 +1899,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
     
     $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
     if ($message != '') {
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
     }    
     if($checkLongitude === false){
         $e = 1;
@@ -1962,11 +1962,11 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_aggart3addcompliance['und'][0]['value'] = '';
         $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
         }        
         $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
         }         
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
@@ -2055,17 +2055,17 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         //add check for benoit 2015/11/17  
-		/*DG 15/12/2015 add bigCityID*/		
+        /*DG 15/12/2015 add bigCityID*/     
         if(isset($data['bigID']) || isset($data['aggBigID']) || isset($data['bigCityID'])){
             if(isset($data['bigID'])){
-				$node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigID']);
-			}
+                $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigID']);
+            }
             if(isset($data['aggBigID'])){
-				$node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['aggBigID']);
-			}
-			if(isset($data['bigCityID'])){
-				$node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigCityID']);
-			}
+                $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['aggBigID']);
+            }
+            if(isset($data['bigCityID'])){
+                $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigCityID']);
+            }
         }
         else {
             if (isset($data['aggGenerated']) && $data['aggGenerated'] > 150000) {
@@ -2122,7 +2122,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                     'timezone_bd'=>'Europe/Berlin',
                     'date_type'=>'date'
                 );
-            }	
+            }   
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration period over information found.', $timestamp, $i, $node);
 
@@ -2365,7 +2365,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);
         /*DG 15/12/2015 add aggBeginLife*/
-		//date
+        //date
         if(isset($data['aggBeginLife'])){
             $check = uwwtd_check_date($data['aggBeginLife'], $message);
             if ($message != '') {
@@ -2376,8 +2376,8 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add aggEndLife*/		
-		//date
+        /*DG 15/12/2015 add aggEndLife*/        
+        //date
         if(isset($data['aggEndLife'])){
             $check = uwwtd_check_date($data['aggEndLife'], $message);
             if ($message != '') {
@@ -2404,14 +2404,14 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
 }
 
 function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+    if(!empty($datas)){
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totUww'] = $context['sandbox']['max'];
-		}
-		$i = $context['sandbox']['progress'];
+        }
+        $i = $context['sandbox']['progress'];
         $j=0;
         while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
@@ -2428,18 +2428,18 @@ function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $tim
         }
         uwwtd_flush_errors();
         if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing waste water treatment plant').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import an UWWTP.');
-		}
+            $context['message'] = '(' .$annee . ') ' . t('Processing waste water treatment plant').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import an UWWTP.');
+        }
         
-		if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTPs found in the dataset ' . $annee, $timestamp);
-	}
+        if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTPs found in the dataset ' . $annee, $timestamp);
+    }
 }
 
 function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i){
@@ -2463,7 +2463,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
     }
     $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
     if ($message != '') {
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
     }     
     if($checkLatitude === false){
         $e = 1;
@@ -2479,7 +2479,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
    
     $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
     if ($message != '') {
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
     }     
     if($checkLongitude === false){
         $e = 1;
@@ -2642,11 +2642,11 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //$node->field_uwwcompliance['und'][0]['value'] = 'NI';
         $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
         }         
         $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
         }         
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
@@ -2706,18 +2706,18 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //                 $node->field_status['und'][0]['value'] = 1;
 //             }            
         }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTP status information found.', $timestamp, $i, $node);
-		
-		//text
+        
+        //text
         if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
         
-		/*DG 15/12/2015 add aggCode*/	
+        /*DG 15/12/2015 add aggCode*/   
         //text
         if(isset($data['aggID']) || isset($data['aggCode'])){
-			if(isset($data['aggID'])){
-				$node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggID']);
-			}elseif(isset($data['aggCode'])){
-				$node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggCode']);
-			}
+            if(isset($data['aggID'])){
+                $node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggID']);
+            }elseif(isset($data['aggCode'])){
+                $node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggCode']);
+            }
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs ID of agglomeration information found.', $timestamp, $i, $node);
         
@@ -2760,7 +2760,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
             } else {
                 $node->field_uwwloadenteringuwwtp['und'][0]['value'] = $check;
-            }             	
+            }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs load entering found.', $timestamp, $i, $node);
         
@@ -3342,8 +3342,8 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs remarks information found.', $timestamp, $i, $node);
 
-		 /*DG 15/12/2015 add uwwBeginLife*/
-		//date
+         /*DG 15/12/2015 add uwwBeginLife*/
+        //date
         if(isset($data['uwwBeginLife'])){
             $check = uwwtd_check_date($data['uwwBeginLife'], $message);
             if ($message != '') {
@@ -3354,8 +3354,8 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add uwwEndLife*/		
-		//date
+        /*DG 15/12/2015 add uwwEndLife*/        
+        //date
         if(isset($data['uwwEndLife'])){
             $check = uwwtd_check_date($data['uwwEndLife'], $message);
             if ($message != '') {
@@ -3383,76 +3383,76 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 }
 
 function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	global $language;
+    global $language;
     if(isset($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totDcp'] = $context['sandbox']['max'];
-		}
-		$i = $context['sandbox']['progress'];
-		$data = $context['sandbox']['ids'][$i];
+        }
+        $i = $context['sandbox']['progress'];
+        $data = $context['sandbox']['ids'][$i];
 
-		// Check basic elements exist
-		// errors
-		$e = 0;
-		if(!isset($data['dcpName']) || empty($data['dcpName'])){
-			$e = 1;
-			$emes = t('The discharge point does not have \'title\' information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
-		if(!isset($data['dcpCode']) || empty($data['dcpCode'])){
-			$e = 1;
-			$emes = t('The discharge point does not have \'identification\' information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
+        // Check basic elements exist
+        // errors
+        $e = 0;
+        if(!isset($data['dcpName']) || empty($data['dcpName'])){
+            $e = 1;
+            $emes = t('The discharge point does not have \'title\' information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
+        if(!isset($data['dcpCode']) || empty($data['dcpCode'])){
+            $e = 1;
+            $emes = t('The discharge point does not have \'identification\' information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
 
-		if(!isset($data['dcpLatitude']) || empty($data['dcpLatitude'])){
-			$e = 1;
-			$emes = t('The discharge point does not have latitude information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
-		
+        if(!isset($data['dcpLatitude']) || empty($data['dcpLatitude'])){
+            $e = 1;
+            $emes = t('The discharge point does not have latitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
+        
         $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
         }         
         if($checkLatitude === false){
-			$e = 1;
-			$emes = t('The latitude for this discharge point is invalid');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
+            $e = 1;
+            $emes = t('The latitude for this discharge point is invalid');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
 
-		if(!isset($data['dcpLongitude']) || empty($data['dcpLongitude'])){
-			// if check_coord == false e=1
-			$e = 1;
-			$emes = t('The discharge point does not have longitude information');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
-		
+        if(!isset($data['dcpLongitude']) || empty($data['dcpLongitude'])){
+            // if check_coord == false e=1
+            $e = 1;
+            $emes = t('The discharge point does not have longitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
+        
         $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
         if ($message != '') {
-    		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
         }         
         if($checkLongitude === false){
-			$e = 1;
-			$emes = t('The longitude for this discharge point is invalid');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-		}
+            $e = 1;
+            $emes = t('The longitude for this discharge point is invalid');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        }
 
-		// Check if no errors were found
+        // Check if no errors were found
         uwwtd_trace('import discharge_point : ' . $annee.'_dcp_'.uwwtd_check_text($data['dcpCode']));
-		if($e == 0){
+        if($e == 0){
 
-			// Variables
-			$siteId = $annee.'_dcp_'.uwwtd_check_text($data['dcpCode']);
+            // Variables
+            $siteId = $annee.'_dcp_'.uwwtd_check_text($data['dcpCode']);
 
-			// Check if id exists
-			$exists = uwwtd_check_exist($siteId);
+            // Check if id exists
+            $exists = uwwtd_check_exist($siteId);
             uwwtd_trace('discharge_point ' . $siteId . ' exists ? "' . $exists . '".');
             // If the element exists
-			if(!$exists){
+            if(!$exists){
                 $node = new stdClass();
                 $node->type = 'discharge_point';
                 $node->uid = 1;
@@ -3473,8 +3473,8 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else{
                 // load the node
-				$node = node_load($exists);
-				$node->type = 'discharge_point';
+                $node = node_load($exists);
+                $node->type = 'discharge_point';
                 $_SESSION['upDcp']++;
                 
                 if (empty($node->nid)) {
@@ -3488,13 +3488,13 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             $node->field_siteid['und'][0]['value'] = $siteId;
             $node->field_valid['und'][0]['value'] = 0;
             $node->field_anneedata['und'][0]['value'] = $annee;
-    		$checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
+            $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
             if ($message != '') {
-        		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
             }             
             $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
             if ($message != '') {
-        		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
             }             
             $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
             if($geoData != false){
@@ -3538,7 +3538,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     $node->field_regionnuts['und'][0]['value'] = 'PL112';
                 }
             //text
-			if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
+            if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
         
             //text
             $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['dcpCode']);
@@ -3554,12 +3554,12 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             /*DG 15/12/2015 add uwwCode*/
             //text
             if(isset($data['uwwID']) || isset($data['uwwCode'])){
-				if(isset($data['uwwID'])){
-					$node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwID']);
-				}elseif(isset($data['uwwCode'])){
-					$node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwCode']);
-				}
-		}else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point waste water treatment plant connexion information found.', $timestamp, $i, $node);
+                if(isset($data['uwwID'])){
+                    $node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwID']);
+                }elseif(isset($data['uwwCode'])){
+                    $node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwCode']);
+                }
+        }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point waste water treatment plant connexion information found.', $timestamp, $i, $node);
 
             //text
             if(isset($data['dcpNUTS'])){
@@ -3587,15 +3587,15 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 $node->field_rcatype['und'][0]['value'] = uwwtd_check_text($data['dcpTypeOfReceivingArea']);}
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point type of receiving area information found.', $timestamp, $i, $node);
 
-			/*DG 15/12/2015 add rcaCode*/
+            /*DG 15/12/2015 add rcaCode*/
             //text
             if(isset($data['rcaID']) || isset($data['rcaCode'])){
-				if(isset($date['rcaID'])){
-					 $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaID']);
-				}elseif(isset($date['rcaCode'])){
-					 $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
-				}
-			}
+                if(isset($date['rcaID'])){
+                     $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaID']);
+                }elseif(isset($date['rcaCode'])){
+                     $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
+                }
+            }
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point receiving area connexion information found.', $timestamp, $i, $node);
             
             //text
@@ -3733,8 +3733,8 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD reference date information found.', $timestamp, $i, $node);
 
-			 /*DG 15/12/2015 add dcpBeginLife*/
-		//date
+             /*DG 15/12/2015 add dcpBeginLife*/
+        //date
         if(isset($data['dcpBeginLife'])){
             $check = uwwtd_check_date($data['dcpBeginLife'], $message);
             if ($message != '') {
@@ -3745,8 +3745,8 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add dcpEndLife*/		
-		//date
+        /*DG 15/12/2015 add dcpEndLife*/        
+        //date
         if(isset($data['dcpEndLife'])){
             $check = uwwtd_check_date($data['dcpEndLife'], $message);
             if ($message != '') {
@@ -3764,34 +3764,34 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             if (empty($node->nid)) {
                 uwwtd_trace('discharge_point ' . $siteId . ' node_save() error2');
             }             
-		} else {
+        } else {
             uwwtd_trace('import discharge_point error ' . var_export($data, true));
         }
         uwwtd_flush_errors();
-		$context['sandbox']['progress']++;
-		$context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		$context['results'][] = $node->nid . ' : ' . check_plain($node->title);
-		
-		if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	} else {
-    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
+        $context['sandbox']['progress']++;
+        $context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+        
+        if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    } else {
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
     }
 }
 
 /*DG 15/12/2015 import Contact*/
 function uwwtd_import_contact_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-		
-			//Get all receiving areas from data
-			
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+    if(!empty($datas)){
+        if (!isset($context['sandbox']['progress'])) {
+        
+            //Get all receiving areas from data
+            
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totcontact'] = $context['sandbox']['max'];
-		}
+        }
         $i = $context['sandbox']['progress'];
         $j=0;
         while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
@@ -3808,24 +3808,24 @@ function uwwtd_import_contact_batch_process($newFile, $annee, $datas, $repCode, 
             $j++;
         }
         uwwtd_flush_errors();
-		if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing contact').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import a contact.');
-		}
-		
-		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No contacts found in the dataset ' . $annee, $timestamp, $i);
-	}
+        if($node){
+            $context['message'] = '(' .$annee . ') ' . t('Processing contact').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import a contact.');
+        }
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No contacts found in the dataset ' . $annee, $timestamp, $i);
+    }
 }
 
 /*DG 15/12/2015 Update Contact*/
 function uwwtd_update_contact_node($data, $newFile, $repCode, $annee, $timestamp, $i){
-	global $language;
+    global $language;
     // Check basic elements exist
     // errors
     $e = 0;
@@ -3905,23 +3905,23 @@ function uwwtd_update_contact_node($data, $newFile, $repCode, $annee, $timestamp
         if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
         //text
         if(isset($datas['conName'])) $node->field_conname['und'][0]['value'] = uwwtd_check_text($datas['conName']);
-		//text
+        //text
         if(isset($datas['conInstitution'])) $node->field_coninstitution['und'][0]['value'] = uwwtd_check_text($datas['conInstitution']);
-		//text
+        //text
         if(isset($datas['conStreet'])) $node->field_constreet['und'][0]['value'] = uwwtd_check_text($datas['conStreet']);
-		//text
+        //text
         if(isset($datas['conZIP'])) $node->field_conzip['und'][0]['value'] = uwwtd_check_text($datas['conZIP']);
-		//text
+        //text
         if(isset($datas['conCity'])) $node->field_concity['und'][0]['value'] = uwwtd_check_text($datas['conCity']);
-		//text
+        //text
         if(isset($datas['conPhone'])) $node->field_conphone['und'][0]['value'] = uwwtd_check_text($datas['conPhone']);
-		//text
+        //text
         if(isset($datas['conFax'])) $node->field_confax['und'][0]['value'] = uwwtd_check_text($datas['conFax']);
-		//text
+        //text
         if(isset($datas['conEmail'])) $node->field_conemail['und'][0]['value'] = uwwtd_check_text($datas['conEmail']);
-		//text
+        //text
         if(isset($datas['conRemarks'])) $node->field_conremarks['und'][0]['value'] = uwwtd_check_text($datas['conRemarks']);
-		
+        
         
         // save node
         node_save($node);
@@ -3935,21 +3935,21 @@ function uwwtd_update_contact_node($data, $newFile, $repCode, $annee, $timestamp
     
     uwwtd_trace('import contact error ' . var_export($data, true));
     return false;
-	
+    
 }
 
 /*DG 15/12/2015 import Industry*/
 function uwwtd_import_industry_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
-	if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-		
-			//Get all receiving areas from data
-			
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+    if(!empty($datas)){
+        if (!isset($context['sandbox']['progress'])) {
+        
+            //Get all receiving areas from data
+            
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totcontact'] = $context['sandbox']['max'];
-		}
+        }
         $i = $context['sandbox']['progress'];
         $j=0;
         while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
@@ -3966,24 +3966,24 @@ function uwwtd_import_industry_batch_process($newFile, $annee, $datas, $repCode,
             $j++;
         }
         uwwtd_flush_errors();
-		if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing industry').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		}
-		else{
-			$context['message'] = '(' .$annee . ') ' . t('Failed to import a industry.');
-		}
-		
-		if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries found in the dataset ' . $annee, $timestamp, $i);
-	}
+        if($node){
+            $context['message'] = '(' .$annee . ') ' . t('Processing industry').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import a industry.');
+        }
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries found in the dataset ' . $annee, $timestamp, $i);
+    }
 }
 
 /*DG 15/12/2015 Update Industry*/
 function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestamp, $i){
-	global $language;
+    global $language;
     // Check basic elements exist
     // errors
     $e = 0;
@@ -4073,11 +4073,11 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs physical capacity found.', $timestamp, $i, $node);
         //text
         if(isset($datas['indCodePlant'])) $node->field_indcodeplant['und'][0]['value'] = uwwtd_check_text($datas['indCodePlant']);
-		//text
+        //text
         if(isset($datas['indNamePlant'])) $node->field_indnameplant['und'][0]['value'] = uwwtd_check_text($datas['indNamePlant']);
-		//text
+        //text
         if(isset($datas['indBranch'])) $node->field_indbranch['und'][0]['value'] = uwwtd_check_text($datas['indBranch']);
-		//numeric
+        //numeric
         if(isset($data['indOrganicLoad'])){
             $check = uwwtd_check_numeric($data['indOrganicLoad']);
             if (false === $check) {
@@ -4086,7 +4086,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
                 $node->field_indorganicload['und'][0]['value'] = $check;
             }             
         }
-		 //bool
+         //bool
         if(isset($data['indConditions'])){
             $check = uwwtd_check_bool($data['indConditions']);
             if (false === $check) {
@@ -4108,7 +4108,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries date compliance found.', $timestamp, $i, $node);
         
-		
+        
         
         // save node
         node_save($node);
@@ -4122,7 +4122,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
     
     uwwtd_trace('import industry error ' . var_export($data, true));
     return false;
-	
+    
 }
 
 //Modif nd@oieau.fr, le but est de faire plusieurs traitement pdt la même boucle
@@ -4133,7 +4133,7 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
         $query = db_select('node', 'n');
         $query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
         $dcps = $query
-            ->fields('n', array('nid', 'title'))			
+            ->fields('n', array('nid', 'title'))            
             ->condition('n.type', 'discharge_point', '=')
             ->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE')
             ->execute();
@@ -4198,16 +4198,16 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
 }
 
 function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp, &$context){
-	global $language;
+    global $language;
     if(!empty($datas)){
-		if (!isset($context['sandbox']['progress'])) {
-			$context['sandbox']['max'] = count($datas);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $datas;
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($datas);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $datas;
             $_SESSION['totAggloUww'] = $context['sandbox']['max'];
-		}
+        }
         
-		$i = $context['sandbox']['progress'];
+        $i = $context['sandbox']['progress'];
         $j=0;
         while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
@@ -4333,9 +4333,9 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 $node->field_agglo_uww_agglo['und'][0]['nid'] = $agg->nid;
                 $node->field_agglo_uww_uww['und'][0]['nid'] = $uww->nid;
                 //text
-				if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
+                if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
         
-				//decimal
+                //decimal
                 if (isset($data['aucPercEnteringUWWTP'])) {
                     $check = uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $message);
                     if ($message != '') {
@@ -4368,46 +4368,46 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
             $j++;
         }
         
-		$context['message'] = '(' .$annee . ') ' . t('Processing link between agglomeration').' : '.'\''.$aggId.'\''.' '.t('and waste water treatment plant').' '.'\''.$uwwId.'\'' . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		
-		uwwtd_flush_errors();
-		if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-			$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-		}
-	}else{
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and waste water treatment plant because no found agglomerations in the dataset', $timestamp);
-	}
+        $context['message'] = '(' .$annee . ') ' . t('Processing link between agglomeration').' : '.'\''.$aggId.'\''.' '.t('and waste water treatment plant').' '.'\''.$uwwId.'\'' . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        
+        uwwtd_flush_errors();
+        if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    }else{
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and waste water treatment plant because no found agglomerations in the dataset', $timestamp);
+    }
 }
 
 function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp, &$context){
-	if(!empty($datas)){
-		if(!isset($context['sandbox']['progress'])){
-			$ids = array();
-			
-			//Get all the agglomerations
-			$query = db_select('node', 'n');
-			$query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
-			$query->join('field_data_field_aggbigid', 'b', 'b.entity_id = n.nid');
-			$aggs = $query
-				->fields('n', array('nid', 'title'))
-				->fields('b', array('field_aggbigid_value'))			
-				->condition('n.type', 'agglomeration', '=')
-				->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE')
-				->execute();
-			foreach($aggs as $agg){
-				$ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
-			}
-			
-			$context['sandbox']['max'] = count($ids);
-			$context['sandbox']['progress'] = 0;
-			$context['sandbox']['ids'] = $ids;
-		}
-		if($context['sandbox']['max'] === 0){
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and big cities because no found <bigID> in the dataset ' . $annee, $timestamp);
-	
-		}
+    if(!empty($datas)){
+        if(!isset($context['sandbox']['progress'])){
+            $ids = array();
+            
+            //Get all the agglomerations
+            $query = db_select('node', 'n');
+            $query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+            $query->join('field_data_field_aggbigid', 'b', 'b.entity_id = n.nid');
+            $aggs = $query
+                ->fields('n', array('nid', 'title'))
+                ->fields('b', array('field_aggbigid_value'))            
+                ->condition('n.type', 'agglomeration', '=')
+                ->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE')
+                ->execute();
+            foreach($aggs as $agg){
+                $ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
+            }
+            
+            $context['sandbox']['max'] = count($ids);
+            $context['sandbox']['progress'] = 0;
+            $context['sandbox']['ids'] = $ids;
+        }
+        if($context['sandbox']['max'] === 0){
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and big cities because no found <bigID> in the dataset ' . $annee, $timestamp);
+    
+        }
         else{
-			$i = $context['sandbox']['progress'];
+            $i = $context['sandbox']['progress'];
             $j=0;
             while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
                 $k=$i+$j;
@@ -4433,44 +4433,44 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
                 $j++;
                 $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
             }
-			uwwtd_flush_errors();
+            uwwtd_flush_errors();
             $context['message'] = '(' .$annee . ') ' . t('Processing links from big cities').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
                 
-			if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-				$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-			}
-		}
-	}else{
-		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and big cities because no found big cities in the dataset ' . $annee, $timestamp);
-	}
+            if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+                $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+            }
+        }
+    }else{
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and big cities because no found big cities in the dataset ' . $annee, $timestamp);
+    }
 }
 
 function uwwtd_bc_position_batch_process($newFile, $annee, $timestamp, &$context){
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
+    if (!isset($context['sandbox']['progress'])) {
+    
+        $ids = array();
 
-		//Get all the agglomerations
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
-		$aggs = $query
-			->fields('n', array('nid', 'title'))		
-			->condition('n.type', 'big_city', '=')
-			->condition('r.field_siteid_value', db_like($annee.'_big_').'%', 'LIKE')
-			->execute();
-		foreach($aggs as $agg){
-			$ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
-		}
+        //Get all the agglomerations
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $aggs = $query
+            ->fields('n', array('nid', 'title'))        
+            ->condition('n.type', 'big_city', '=')
+            ->condition('r.field_siteid_value', db_like($annee.'_big_').'%', 'LIKE')
+            ->execute();
+        foreach($aggs as $agg){
+            $ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
+        }
 
 
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
+        $context['sandbox']['max'] = count($ids);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $ids;
 
-	}
+    }
 
-	if($context['sandbox']['max'] > 0){
-		$i = $context['sandbox']['progress'];
+    if($context['sandbox']['max'] > 0){
+        $i = $context['sandbox']['progress'];
         $j=0;
         while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
             $k=$i+$j;
@@ -4516,41 +4516,41 @@ function uwwtd_bc_position_batch_process($newFile, $annee, $timestamp, &$context
             $context['sandbox']['progress']++;
             $j++;
             
-		}
+        }
         $context['message'] = '(' .$annee . ') ' . t('Processing position of big city').' : '.'\''.$node->title.'\''.' '.t('with drupal id').' '.'\''.$node->nid.'\'' . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-		
-	}
+        
+    }
     uwwtd_flush_errors();
-	if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context){
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
+    if (!isset($context['sandbox']['progress'])) {
+    
+        $ids = array();
 
-		//Get all the agglomerations
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
-		$aggs = $query
-			->fields('n', array('nid', 'title'))		
-			->condition('n.type', 'discharge_point', '=')
-			->condition('r.field_siteid_value', db_like($annee.'_dcp_').'%', 'LIKE')
-			->execute();
-		foreach($aggs as $agg){
-			$ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
-		}
+        //Get all the agglomerations
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $aggs = $query
+            ->fields('n', array('nid', 'title'))        
+            ->condition('n.type', 'discharge_point', '=')
+            ->condition('r.field_siteid_value', db_like($annee.'_dcp_').'%', 'LIKE')
+            ->execute();
+        foreach($aggs as $agg){
+            $ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
+        }
 
 
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
+        $context['sandbox']['max'] = count($ids);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $ids;
 
-	}
-	$i = $context['sandbox']['progress'];
-	$j=0;
+    }
+    $i = $context['sandbox']['progress'];
+    $j=0;
     while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
         $k=$i+$j;
         $data = $context['sandbox']['ids'][$k];
@@ -4647,38 +4647,38 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
         $j++;
         $context['results'][] = $dcp->nid . ' : ' . check_plain($dcp->title);
     }
-	$context['message'] = '(' .$annee . ') ' . t('Processing the links between all elements...') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
-	
-	uwwtd_flush_errors();
-	if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    $context['message'] = '(' .$annee . ') ' . t('Processing the links between all elements...') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
+    
+    uwwtd_flush_errors();
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 function uwwtd_rca_extra_batch_process($newFile, $annee, $timestamp, &$context){
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
+    if (!isset($context['sandbox']['progress'])) {
+    
+        $ids = array();
 
-		//Get all the agglomerations
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
-		$aggs = $query
-			->fields('n', array('nid', 'title'))		
-			->condition('n.type', 'receiving_area', '=')
-			->condition('r.field_siteid_value', db_like($annee.'_rca_').'%', 'LIKE')
-			->execute();
-		foreach($aggs as $agg){
-			$ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
-		}
+        //Get all the agglomerations
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $aggs = $query
+            ->fields('n', array('nid', 'title'))        
+            ->condition('n.type', 'receiving_area', '=')
+            ->condition('r.field_siteid_value', db_like($annee.'_rca_').'%', 'LIKE')
+            ->execute();
+        foreach($aggs as $agg){
+            $ids[] = array('nid'=>$agg->nid, 'title'=>$agg->title);
+        }
 
 
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
+        $context['sandbox']['max'] = count($ids);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $ids;
 
-	}
-	$i = $context['sandbox']['progress'];
+    }
+    $i = $context['sandbox']['progress'];
     $j=0;
     while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
         $k=$i+$j;
@@ -4728,234 +4728,234 @@ function uwwtd_rca_extra_batch_process($newFile, $annee, $timestamp, &$context){
         $j++;
         $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
     }
-	$context['message'] = '(' .$annee . ') ' . t('Processing Receiving area extra data...') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
-	
-	uwwtd_flush_errors();
-	if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    $context['message'] = '(' .$annee . ') ' . t('Processing Receiving area extra data...') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
+    
+    uwwtd_flush_errors();
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 function uwwtd_finished($success, $results, $operations){
-	
+    
     if ($success) {
-		drupal_set_message(t('Receiving areas').': '.$_SESSION['newRca'].' '.t('new elements added').', '.$_SESSION['upRca'].' '.t('elements updated').' ( '.$_SESSION['totRca'].' '.t('total elements').')');
-		drupal_set_message(t('Big cities').': '.$_SESSION['newBc'].' '.t('new elements added').', '.$_SESSION['upBc'].' '.t('elements updated').' ( '.$_SESSION['totBc'].' '.t('total elements').')');
-		drupal_set_message(t('Agglomerations').': '.$_SESSION['newAgg'].' '.t('new elements added').', '.$_SESSION['upAgg'].' '.t('elements updated').' ( '.$_SESSION['totAgg'].' '.t('total elements').')');
-		drupal_set_message(t('Treatment plants').': '.$_SESSION['newUww'].' '.t('new elements added').', '.$_SESSION['upUww'].' '.t('elements updated').' ( '.$_SESSION['totUww'].' '.t('total elements').')');
-		drupal_set_message(t('Discharge points').': '.$_SESSION['newDcp'].' '.t('new elements added').', '.$_SESSION['upDcp'].' '.t('elements updated').' ( '.$_SESSION['totDcp'].' '.t('total elements').')');
-		drupal_set_message(t('Links created between \'discharge points\', \'waste water treatment plants\' and \'receiving areas\'.'));
-		drupal_set_message(t('Links created between \'agglomerations\' and \'waste water treatment plants\'') . ' : '.$_SESSION['newAggloUww'].' '.t('new elements added').', '.$_SESSION['upAggloUww'].' '.t('elements updated').' ( '.$_SESSION['totAggloUww'].' '.t('total elements').')');
-		drupal_set_message(t('Links created between \'big cities\' and \'agglomerations\'.'));
-		drupal_set_message(t('\'big cities\' and their coordinates have been set.'));
-// 		if(isset($_SESSION['uwwtd_errors'])){
-// 			//uwwtd_add_error($annee, $_SESSION['uwwtd_errors']);
-// 			foreach($_SESSION['uwwtd_errors'] as $error){
-// 				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'error');
-// 			}
-// 		}
-		/*if(isset($_SESSION['uwwtd_warnings'])){
-			uwwtd_add_error($annee, $_SESSION['uwwtd_warnings']);
-			foreach($_SESSION['uwwtd_warnings'] as $warning){
-				drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file. This element was added but please check your input file.'), 'warning');
-			}
-		}*/
-	}
-	else {
-		// An error occurred.
-		// $operations contains the operations that remained unprocessed.
-		$error_operation = reset($operations);
-		drupal_set_message(
-			t('An error occurred while processing @operation with arguments : @args',
-				array(
-					'@operation' => $error_operation[0],
-					'@args' => print_r($error_operation[0], TRUE),
-				)
-			)
-		);
-	}
+        drupal_set_message(t('Receiving areas').': '.$_SESSION['newRca'].' '.t('new elements added').', '.$_SESSION['upRca'].' '.t('elements updated').' ( '.$_SESSION['totRca'].' '.t('total elements').')');
+        drupal_set_message(t('Big cities').': '.$_SESSION['newBc'].' '.t('new elements added').', '.$_SESSION['upBc'].' '.t('elements updated').' ( '.$_SESSION['totBc'].' '.t('total elements').')');
+        drupal_set_message(t('Agglomerations').': '.$_SESSION['newAgg'].' '.t('new elements added').', '.$_SESSION['upAgg'].' '.t('elements updated').' ( '.$_SESSION['totAgg'].' '.t('total elements').')');
+        drupal_set_message(t('Treatment plants').': '.$_SESSION['newUww'].' '.t('new elements added').', '.$_SESSION['upUww'].' '.t('elements updated').' ( '.$_SESSION['totUww'].' '.t('total elements').')');
+        drupal_set_message(t('Discharge points').': '.$_SESSION['newDcp'].' '.t('new elements added').', '.$_SESSION['upDcp'].' '.t('elements updated').' ( '.$_SESSION['totDcp'].' '.t('total elements').')');
+        drupal_set_message(t('Links created between \'discharge points\', \'waste water treatment plants\' and \'receiving areas\'.'));
+        drupal_set_message(t('Links created between \'agglomerations\' and \'waste water treatment plants\'') . ' : '.$_SESSION['newAggloUww'].' '.t('new elements added').', '.$_SESSION['upAggloUww'].' '.t('elements updated').' ( '.$_SESSION['totAggloUww'].' '.t('total elements').')');
+        drupal_set_message(t('Links created between \'big cities\' and \'agglomerations\'.'));
+        drupal_set_message(t('\'big cities\' and their coordinates have been set.'));
+//      if(isset($_SESSION['uwwtd_errors'])){
+//          //uwwtd_add_error($annee, $_SESSION['uwwtd_errors']);
+//          foreach($_SESSION['uwwtd_errors'] as $error){
+//              drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file. This element was not added, please check your input file.'), 'error');
+//          }
+//      }
+        /*if(isset($_SESSION['uwwtd_warnings'])){
+            uwwtd_add_error($annee, $_SESSION['uwwtd_warnings']);
+            foreach($_SESSION['uwwtd_warnings'] as $warning){
+                drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file. This element was added but please check your input file.'), 'warning');
+            }
+        }*/
+    }
+    else {
+        // An error occurred.
+        // $operations contains the operations that remained unprocessed.
+        $error_operation = reset($operations);
+        drupal_set_message(
+            t('An error occurred while processing @operation with arguments : @args',
+                array(
+                    '@operation' => $error_operation[0],
+                    '@args' => print_r($error_operation[0], TRUE),
+                )
+            )
+        );
+    }
 }
 
 
 ################################ SHAPES ZIP MANAGEMENT ################################
 function uwwtd_shapes_form($form, &$form_state){
-	
-	if(!isset($_SESSION['uwwtd_annee'])){
-		drupal_goto('data');
-	}
-	else{
-		// Definition des variables pour le formulaire
-		$annee = $_SESSION['uwwtd_annee'];
-		
-		// definition du champ input de type file
-		$form['uwwtd_text'] = array(
-			'#markup' => '<h4>'.t('Receiving areas shapes upload for the year').' : '.$annee.'</h4><p>'.t('Please upload the files that contain the information on the sensitive areas').'.</p>'
-		);
-		
-		$form['uwwtd_file'] = array(
-			'#type' => 'managed_file',
-			'#title' => t('Data file'),
-			'#upload_validators' => array('file_validate_extensions' => array('zip')),
-			'#required' => TRUE,
-		);
-		
-		// Bouton envoyer
-		$form['submit_button'] = array(
-			'#type' => 'submit',
-			'#value' => t('Submit'),
-		);
-		
-		$form['uwwtd_text2'] = array(
-			'#markup' => '<br><br><p>'.t('Once finished uploading your shapes files or to skip this step, please click the continue link below').'.</p>'
-		);
-		
-		$form['continue_button'] = array(
-			'#markup' => ''.l(t('Continue'), 'data/conformity').''
-		);
-		
-		// Fonction a appeller quand on clique sur envoyer
-		$form['#submit'][] = 'uwwtd_shapes_submit_handler';
-		return $form;
-	}
+    
+    if(!isset($_SESSION['uwwtd_annee'])){
+        drupal_goto('data');
+    }
+    else{
+        // Definition des variables pour le formulaire
+        $annee = $_SESSION['uwwtd_annee'];
+        
+        // definition du champ input de type file
+        $form['uwwtd_text'] = array(
+            '#markup' => '<h4>'.t('Receiving areas shapes upload for the year').' : '.$annee.'</h4><p>'.t('Please upload the files that contain the information on the sensitive areas').'.</p>'
+        );
+        
+        $form['uwwtd_file'] = array(
+            '#type' => 'managed_file',
+            '#title' => t('Data file'),
+            '#upload_validators' => array('file_validate_extensions' => array('zip')),
+            '#required' => TRUE,
+        );
+        
+        // Bouton envoyer
+        $form['submit_button'] = array(
+            '#type' => 'submit',
+            '#value' => t('Submit'),
+        );
+        
+        $form['uwwtd_text2'] = array(
+            '#markup' => '<br><br><p>'.t('Once finished uploading your shapes files or to skip this step, please click the continue link below').'.</p>'
+        );
+        
+        $form['continue_button'] = array(
+            '#markup' => ''.l(t('Continue'), 'data/conformity').''
+        );
+        
+        // Fonction a appeller quand on clique sur envoyer
+        $form['#submit'][] = 'uwwtd_shapes_submit_handler';
+        return $form;
+    }
 }
 
 function uwwtd_shapes_submit_handler($form, &$form_state) {
-	
-	// Definition et recup des variables
-// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
-	$annee = $_SESSION['uwwtd_annee'];
-	$file = file_load($form_state['values']['uwwtd_file']);
-	
-	// dezip the zipped file
-	$files = uwwtd_unzip_files($file, 'public://data_shapes/');
-	
-	uwwtd_shapes_setup_batch($files, $annee);	
+    
+    // Definition et recup des variables
+//  if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+//  if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+    $annee = $_SESSION['uwwtd_annee'];
+    $file = file_load($form_state['values']['uwwtd_file']);
+    
+    // dezip the zipped file
+    $files = uwwtd_unzip_files($file, 'public://data_shapes/');
+    
+    uwwtd_shapes_setup_batch($files, $annee);   
 }
 
 function uwwtd_shapes_setup_batch($files, $annee){
-	$batch = array(
-		'title' => t('Data processing for the shapes files'),
-		'operations' => array(),
-		'error_message' => t('Error!'),
-		'finished' => 'uwwtd_shapes_finished',
-		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
-	);
+    $batch = array(
+        'title' => t('Data processing for the shapes files'),
+        'operations' => array(),
+        'error_message' => t('Error!'),
+        'finished' => 'uwwtd_shapes_finished',
+        'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
+    );
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'shape'));
     $batch['operations'][]=array('uwwtd_shapes_batch_process', array($files, $annee));
 
-	batch_set($batch);
-	batch_process('data/shapes');
+    batch_set($batch);
+    batch_process('data/shapes');
 }
 
 function uwwtd_shapes_batch_process($files, $annee, &$context){
 //     uwwtd_debug_trace(__FUNCTION__);
-	if (!isset($context['sandbox']['progress'])) {
-		$shpsFiles = array();
-		foreach($files['extracted'] as $file){
-			$exploFile = explode('.', $file);
-			if(end($exploFile) == 'shp') $shpsFiles[] = $file;
-		}
-		$context['sandbox']['max'] = count($shpsFiles);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $shpsFiles;        
+    if (!isset($context['sandbox']['progress'])) {
+        $shpsFiles = array();
+        foreach($files['extracted'] as $file){
+            $exploFile = explode('.', $file);
+            if(end($exploFile) == 'shp') $shpsFiles[] = $file;
+        }
+        $context['sandbox']['max'] = count($shpsFiles);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $shpsFiles;        
         
         $context['results']['nbrecord'] = 0;
         $context['results']['nbrecorderror'] = 0;
         $context['results']['nbrecordok'] = 0;        
 //         uwwtd_debug_trace('max = ' . $context['sandbox']['max']);
 //         uwwtd_debug_trace('$shpsFiles = ' . var_export($shpsFiles, true));
-	}
-	$i = $context['sandbox']['progress'];
+    }
+    $i = $context['sandbox']['progress'];
 //     uwwtd_debug_trace('progress = ' . $context['sandbox']['progress']);
-	$chosen = $context['sandbox']['ids'][$i];
+    $chosen = $context['sandbox']['ids'][$i];
 
-	//dsm($context['sandbox']['ids']);
-	//dsm($chosen);
+    //dsm($context['sandbox']['ids']);
+    //dsm($chosen);
 
-	// including the shapefile reader class
-	//require_once 'ShapeFile.inc.php';
+    // including the shapefile reader class
+    //require_once 'ShapeFile.inc.php';
     
     module_load_include('php','uwwtd','inc/ShapeFile.inc');
-// 	uwwtd_debug_trace('new ShapeFile'); 
-	// importing the downloaded shapefile
-	$shp = new ShapeFile(drupal_realpath($chosen));
+//  uwwtd_debug_trace('new ShapeFile'); 
+    // importing the downloaded shapefile
+    $shp = new ShapeFile(drupal_realpath($chosen));
 //     uwwtd_debug_trace('end new ShapeFile');
-// 	dsm($shp);
+//  dsm($shp);
 
 
-	foreach($shp->records as $record){
+    foreach($shp->records as $record){
         $context['results']['nbrecord']++;
-		// id of shape
-		//dsm($record);
+        // id of shape
+        //dsm($record);
 //         uwwtd_debug_trace('$record->dbf_data = ' .var_export($record->dbf_data, true));
-		$id = '';
-		$shptype = '1';
+        $id = '';
+        $shptype = '1';
         
         
         //FIX ME  : $shptype & $geoType are not used ? can we remove these vars ?
-		if(isset($record->dbf_data['EUCD_SA_CM'])){
-			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_CM']);
-			$shptype = '1';
-			$geoType = 'CSA';
-		}
-		if(isset($record->dbf_data['eucd_sa_cm'])){
-			$id = uwwtd_check_text($record->dbf_data['eucd_sa_cm']);
-			$shptype = '1';
-			$geoType = 'CSA';
-		}        
-		if(isset($record->dbf_data['EUCD_SA_RV'])){
-			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_RV']);
-			$shptype = '1';
-			$geoType = 'RW';
-		}
-		if(isset($record->dbf_data['eucd_sa_rv'])){
-			$id = uwwtd_check_text($record->dbf_data['eucd_sa_rv']);
-			$shptype = '1';
-			$geoType = 'RW';
-		}        
-		if(isset($record->dbf_data['EUCD_SA_LK'])){
-			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_LK']);
-			$shptype = '1';
-			$geoType = 'LW';
-		}
-		if(isset($record->dbf_data['eucd_sa_lk'])){
-			$id = uwwtd_check_text($record->dbf_data['eucd_sa_lk']);
-			$shptype = '1';
-			$geoType = 'LW';
-		}        
-		if(isset($record->dbf_data['EUCD_SA_TW'])){
-			$id = uwwtd_check_text($record->dbf_data['EUCD_SA_TW']);
-			$shptype = '1';
-			$geoType = 'ES';
-		}
-		if(isset($record->dbf_data['eucd_sa_tw'])){
-			$id = uwwtd_check_text($record->dbf_data['eucd_sa_tw']);
-			$shptype = '1';
-			$geoType = 'ES';
-		}        
-		if(isset($record->dbf_data['EUCD_LSACL'])){
-			$id = uwwtd_check_text($record->dbf_data['EUCD_LSACL']);
-			$shptype = '1';
-			$geoType = 'LSA';
-		}
-		if(isset($record->dbf_data['eucd_lsacl'])){
-			$id = uwwtd_check_text($record->dbf_data['eucd_lsacl']);
-			$shptype = '1';
-			$geoType = 'LSA';
-		}        
+        if(isset($record->dbf_data['EUCD_SA_CM'])){
+            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_CM']);
+            $shptype = '1';
+            $geoType = 'CSA';
+        }
+        if(isset($record->dbf_data['eucd_sa_cm'])){
+            $id = uwwtd_check_text($record->dbf_data['eucd_sa_cm']);
+            $shptype = '1';
+            $geoType = 'CSA';
+        }        
+        if(isset($record->dbf_data['EUCD_SA_RV'])){
+            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_RV']);
+            $shptype = '1';
+            $geoType = 'RW';
+        }
+        if(isset($record->dbf_data['eucd_sa_rv'])){
+            $id = uwwtd_check_text($record->dbf_data['eucd_sa_rv']);
+            $shptype = '1';
+            $geoType = 'RW';
+        }        
+        if(isset($record->dbf_data['EUCD_SA_LK'])){
+            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_LK']);
+            $shptype = '1';
+            $geoType = 'LW';
+        }
+        if(isset($record->dbf_data['eucd_sa_lk'])){
+            $id = uwwtd_check_text($record->dbf_data['eucd_sa_lk']);
+            $shptype = '1';
+            $geoType = 'LW';
+        }        
+        if(isset($record->dbf_data['EUCD_SA_TW'])){
+            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_TW']);
+            $shptype = '1';
+            $geoType = 'ES';
+        }
+        if(isset($record->dbf_data['eucd_sa_tw'])){
+            $id = uwwtd_check_text($record->dbf_data['eucd_sa_tw']);
+            $shptype = '1';
+            $geoType = 'ES';
+        }        
+        if(isset($record->dbf_data['EUCD_LSACL'])){
+            $id = uwwtd_check_text($record->dbf_data['EUCD_LSACL']);
+            $shptype = '1';
+            $geoType = 'LSA';
+        }
+        if(isset($record->dbf_data['eucd_lsacl'])){
+            $id = uwwtd_check_text($record->dbf_data['eucd_lsacl']);
+            $shptype = '1';
+            $geoType = 'LSA';
+        }        
         //for IE missing  type EUCD_SA_CA here
 
-		if(isset($record->dbf_data['ISO2'])){
-			$shptype = '2';
-			$id = uwwtd_check_text($record->dbf_data['ISO2']);
-		}
-		if(isset($record->dbf_data['iso2'])){
-			$shptype = '2';
-			$id = uwwtd_check_text($record->dbf_data['iso2']);
-		}
+        if(isset($record->dbf_data['ISO2'])){
+            $shptype = '2';
+            $id = uwwtd_check_text($record->dbf_data['ISO2']);
+        }
+        if(isset($record->dbf_data['iso2'])){
+            $shptype = '2';
+            $id = uwwtd_check_text($record->dbf_data['iso2']);
+        }
         
         if ($id == '') {
             $context['results']['nbrecorderror']++;
@@ -4965,50 +4965,50 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
             continue;
         }        
 
-		 // check multipolygon
-		$type = 'polygon';
-		
+         // check multipolygon
+        $type = 'polygon';
+        
 
-		if($record->shp_data['numparts'] > 1){
-			$type = 'multipolygon';
-			$shpdata = $record->shp_data['parts'];
-		}
-		else{
-			$shpdata = $record->shp_data['parts'][0]['points'];
-		}
+        if($record->shp_data['numparts'] > 1){
+            $type = 'multipolygon';
+            $shpdata = $record->shp_data['parts'];
+        }
+        else{
+            $shpdata = $record->shp_data['parts'][0]['points'];
+        }
         
         
 
-		//dsm($shpdata);
+        //dsm($shpdata);
 
-		// Other possible type
+        // Other possible type
 
-		// find receiving area
+        // find receiving area
 //         uwwtd_debug_trace('field_siteid_value = ' . $annee.'_rca_'.$id);
-		$ids = array();
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-		$query->fields('n', array('nid', 'title'));
-		$query->fields('s', array('field_siteid_value'));
-		$query->condition('n.type', 'receiving_area', '=');
-		$query->condition('s.field_siteid_value', $annee.'_rca_'.$id, '=');
-		$rcas = $query->execute();
-		foreach($rcas as $rca){
-			$ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
-		}
+        $ids = array();
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->fields('s', array('field_siteid_value'));
+        $query->condition('n.type', 'receiving_area', '=');
+        $query->condition('s.field_siteid_value', $annee.'_rca_'.$id, '=');
+        $rcas = $query->execute();
+        foreach($rcas as $rca){
+            $ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
+        }
 
-// 		dsm($ids);
+//      dsm($ids);
 //         $ids[]['nid'] = 173356;
 
-		if(count($ids) > 0){
-			// get node
-			$nid = $ids[0]['nid'];
-			$node = node_load($nid);
+        if(count($ids) > 0){
+            // get node
+            $nid = $ids[0]['nid'];
+            $node = node_load($nid);
 
-			// get polgon geo data
+            // get polgon geo data
             try {
-    			if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
-    			if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
+                if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
+                if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
                 
 //                 dsm($type);
 //                 dsm($geodata);
@@ -5021,301 +5021,301 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
             }
 
             
-			$node->field_rca_geotype['und'][0]['value'] = $geoType;
+            $node->field_rca_geotype['und'][0]['value'] = $geoType;
 
-			$node->field_position_geo['und'][0] = array(
-				'geom'=>$geodata['bin'],
-				'geo_type'=>$geodata['polygon'],
-				'geohash'=>$geodata['geohash']
-			);
+            $node->field_position_geo['und'][0] = array(
+                'geom'=>$geodata['bin'],
+                'geo_type'=>$geodata['polygon'],
+                'geohash'=>$geodata['geohash']
+            );
 
-			node_save($node);
-			//dsm($node);
+            node_save($node);
+            //dsm($node);
             $context['results']['nbrecordok']++;
-		} else {
+        } else {
             $context['results']['nbrecorderror']++;
         }
 
-	}
+    }
     
     uwwtd_flush_errors();
 
-	unset($shp);
+    unset($shp);
 
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . t('Processing shape files') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
-// 	$context['results'][] = '';	
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('Processing shape files') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';;
+//  $context['results'][] = ''; 
 
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {
 //     dsm($success);
 //     dsm($results);
 //     dsm($operations);
-	if ($success) {
+    if ($success) {
         if ($results['nbrecordok'] != $results['nbrecorderror']) {
             drupal_set_message(t('Some shapes record were not imported. Check on "List Error" page, the error of category "shape format".') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
         } else {
-		  drupal_set_message(t('All the shapes were successfully added to their receiving areas.') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
+          drupal_set_message(t('All the shapes were successfully added to their receiving areas.') . ' (' . $results['nbrecordok'] . '/' .$results['nbrecord'] . ')');
         }
-	}
-	else {
-		// An error occurred.
-		// $operations contains the operations that remained unprocessed.
-		$error_operation = reset($operations);
-		drupal_set_message(
-			t('An error occurred while processing @operation with arguments : @args',
-				array(
-					'@operation' => $error_operation[0],
-					'@args' => print_r($error_operation[0], TRUE),
-				)
-			)
-		);
-	}
+    }
+    else {
+        // An error occurred.
+        // $operations contains the operations that remained unprocessed.
+        $error_operation = reset($operations);
+        drupal_set_message(
+            t('An error occurred while processing @operation with arguments : @args',
+                array(
+                    '@operation' => $error_operation[0],
+                    '@args' => print_r($error_operation[0], TRUE),
+                )
+            )
+        );
+    }
 }
 
 
 ################################ DATA CONFORMITY ################################
 function uwwtd_conformity_form($form, &$form_state){
 
-	if(!isset($_SESSION['uwwtd_annee'])){
-		drupal_goto('data');
-	}
-	else {
-		// Definition des variables pour le formulaire
-		$annee = $_SESSION['uwwtd_annee'];
-// 		$sas = array();
-// 		$csas = array();
+    if(!isset($_SESSION['uwwtd_annee'])){
+        drupal_goto('data');
+    }
+    else {
+        // Definition des variables pour le formulaire
+        $annee = $_SESSION['uwwtd_annee'];
+//      $sas = array();
+//      $csas = array();
 // 
-// 		//Get all allos for the year that are in a SA
-// 		$query = db_select('node', 'n');
-// 		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-// 		$query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-// 		$query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
-// 		$query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
-// 		$query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
-// 		$query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
-// 		$query->fields('n', array('nid', 'title'));
-// 		$query->fields('s', array('field_siteid_value'));
-// 		$query->fields('g', array('field_agggenerated_value'));
-// 		$query->fields('u', array('field_agguwwliste_nid'));
-// 		$query->fields('d', array('field_uwwdcpliste_nid'));
-// 		$query->fields('t', array('field_rcatype_value'));
-// 		$query->fields('a', array('field_inspireidlocalid_value'));
-// 		$query->condition('n.type', 'agglomeration', '=');
-// 		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-// 		$query->condition('g.field_agggenerated_value', 10000, '>');
-// 		$query->condition('t.field_rcatype_value', 'SA', '=');
-// 		$query->orderBy('t.field_rcatype_value', 'DESC');
-// 		$query->orderBy('g.field_agggenerated_value', 'DESC');
-// 		$aggs = $query->execute();
-// 		foreach($aggs as $agg){
-// 			$sas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
-// 		}
+//      //Get all allos for the year that are in a SA
+//      $query = db_select('node', 'n');
+//      $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+//      $query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
+//      $query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
+//      $query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
+//      $query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
+//      $query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+//      $query->fields('n', array('nid', 'title'));
+//      $query->fields('s', array('field_siteid_value'));
+//      $query->fields('g', array('field_agggenerated_value'));
+//      $query->fields('u', array('field_agguwwliste_nid'));
+//      $query->fields('d', array('field_uwwdcpliste_nid'));
+//      $query->fields('t', array('field_rcatype_value'));
+//      $query->fields('a', array('field_inspireidlocalid_value'));
+//      $query->condition('n.type', 'agglomeration', '=');
+//      $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+//      $query->condition('g.field_agggenerated_value', 10000, '>');
+//      $query->condition('t.field_rcatype_value', 'SA', '=');
+//      $query->orderBy('t.field_rcatype_value', 'DESC');
+//      $query->orderBy('g.field_agggenerated_value', 'DESC');
+//      $aggs = $query->execute();
+//      foreach($aggs as $agg){
+//          $sas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
+//      }
 // 
-// 		//Get all allos for the year that are in a CSA
-// 		$query = db_select('node', 'n');
-// 		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-// 		$query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-// 		$query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
-// 		$query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
-// 		$query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
-// 		$query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
-// 		$query->fields('n', array('nid', 'title'));
-// 		$query->fields('s', array('field_siteid_value'));
-// 		$query->fields('g', array('field_agggenerated_value'));
-// 		$query->fields('u', array('field_agguwwliste_nid'));
-// 		$query->fields('d', array('field_uwwdcpliste_nid'));
-// 		$query->fields('t', array('field_rcatype_value'));
-// 		$query->fields('a', array('field_inspireidlocalid_value'));
-// 		$query->condition('n.type', 'agglomeration', '=');
-// 		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-// 		$query->condition('g.field_agggenerated_value', 10000, '>');
-// 		$query->condition('t.field_rcatype_value', 'CSA', '=');
-// 		$query->orderBy('t.field_rcatype_value', 'DESC');
-// 		$query->orderBy('g.field_agggenerated_value', 'DESC');
-// 		$aggs = $query->execute();
-// 		foreach($aggs as $agg){
-// 			$csas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
-// 		}
+//      //Get all allos for the year that are in a CSA
+//      $query = db_select('node', 'n');
+//      $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+//      $query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
+//      $query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
+//      $query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
+//      $query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
+//      $query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+//      $query->fields('n', array('nid', 'title'));
+//      $query->fields('s', array('field_siteid_value'));
+//      $query->fields('g', array('field_agggenerated_value'));
+//      $query->fields('u', array('field_agguwwliste_nid'));
+//      $query->fields('d', array('field_uwwdcpliste_nid'));
+//      $query->fields('t', array('field_rcatype_value'));
+//      $query->fields('a', array('field_inspireidlocalid_value'));
+//      $query->condition('n.type', 'agglomeration', '=');
+//      $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+//      $query->condition('g.field_agggenerated_value', 10000, '>');
+//      $query->condition('t.field_rcatype_value', 'CSA', '=');
+//      $query->orderBy('t.field_rcatype_value', 'DESC');
+//      $query->orderBy('g.field_agggenerated_value', 'DESC');
+//      $aggs = $query->execute();
+//      foreach($aggs as $agg){
+//          $csas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
+//      }
 // 
-// 		$sas = array_filter($sas);
-// 		$csas = array_filter($csas);
-// 		if (!empty($sas) || !(empty($csas))){
+//      $sas = array_filter($sas);
+//      $csas = array_filter($csas);
+//      if (!empty($sas) || !(empty($csas))){
 // 
-// 			$form['help'] = array(
-// 				'name' => array(
-// 				'#type' => 'item',
-// 				'#markup' => t('The following agglomerations are eligable for criterion b, ca and cb for the article 5 a element for the calculation of conformity for the agglomerations.').'<br>'.t('If any of the criterions apply to the agglomerations below, please tick the boxes and press the send button.'),
-// 				'#weight' => 0
-// 			));
+//          $form['help'] = array(
+//              'name' => array(
+//              '#type' => 'item',
+//              '#markup' => t('The following agglomerations are eligable for criterion b, ca and cb for the article 5 a element for the calculation of conformity for the agglomerations.').'<br>'.t('If any of the criterions apply to the agglomerations below, please tick the boxes and press the send button.'),
+//              '#weight' => 0
+//          ));
 // 
-// 			$form['Agglo'] = array(
-// 				'name' => array(
-// 				'#type' => 'item',
-// 				'#markup' => '<strong>'.t('Agglomeration').'</strong>',
-// 				'#weight' => 0
-// 			));
-// 			$form['critb'] = array(
-// 				'name' => array(
-// 				'#type' => 'item',
-// 				'#markup' => '<strong>'.t('Criterion b applied').'</strong>',
-// 				'#weight' => 0
-// 			));
-// 			$form['critca'] = array(
-// 				'name' => array(
-// 				'#type' => 'item',
-// 				'#markup' => '<strong>'.t('Criterion ca applied').'</strong>',
-// 				'#weight' => 0
-// 			));
-// 			$form['critcb'] = array(
-// 				'name' => array(
-// 				'#type' => 'item',
-// 				'#markup' => '<strong>'.t('Criterion cb applied').'</strong>',
-// 				'#weight' => 0
-// 			));
+//          $form['Agglo'] = array(
+//              'name' => array(
+//              '#type' => 'item',
+//              '#markup' => '<strong>'.t('Agglomeration').'</strong>',
+//              '#weight' => 0
+//          ));
+//          $form['critb'] = array(
+//              'name' => array(
+//              '#type' => 'item',
+//              '#markup' => '<strong>'.t('Criterion b applied').'</strong>',
+//              '#weight' => 0
+//          ));
+//          $form['critca'] = array(
+//              'name' => array(
+//              '#type' => 'item',
+//              '#markup' => '<strong>'.t('Criterion ca applied').'</strong>',
+//              '#weight' => 0
+//          ));
+//          $form['critcb'] = array(
+//              'name' => array(
+//              '#type' => 'item',
+//              '#markup' => '<strong>'.t('Criterion cb applied').'</strong>',
+//              '#weight' => 0
+//          ));
 // 
-// 			foreach ($sas as $sa){
+//          foreach ($sas as $sa){
 // 
-// 				$node = node_load($sa['nid']);
+//              $node = node_load($sa['nid']);
 // 
-// 				$form['SA']['#tree'] = TRUE;
+//              $form['SA']['#tree'] = TRUE;
 // 
-// 				$form['SA'][] = array(
-// 					'nid' => array(
-// 						'#type' => 'hidden',
-// 						'#value' => $sa['nid'],
-// 					),
-// 					'name' => array(
-// 						'#type' => 'item',
-// 						'#markup' => check_plain($sa['title']).' : '.$sa['aggId'],
-// 					),
-// 					'art5b' => array(
-// 						'#type' => 'checkbox',
-// 						'#default_value' => $node->field_aggcritb['und'][0]['value'],
-// 					),
-// 					'art5ca' => array(
-// 						'#type' => 'checkbox',
-// 						'#default_value' => $node->field_aggcritca['und'][0]['value'],
-// 					),
-// 					'art5cb' => array(
-// 						'#type' => 'checkbox',
-// 						'#default_value' => $node->field_aggcritcb['und'][0]['value'],
-// 					)
-// 				);
-// 			}
+//              $form['SA'][] = array(
+//                  'nid' => array(
+//                      '#type' => 'hidden',
+//                      '#value' => $sa['nid'],
+//                  ),
+//                  'name' => array(
+//                      '#type' => 'item',
+//                      '#markup' => check_plain($sa['title']).' : '.$sa['aggId'],
+//                  ),
+//                  'art5b' => array(
+//                      '#type' => 'checkbox',
+//                      '#default_value' => $node->field_aggcritb['und'][0]['value'],
+//                  ),
+//                  'art5ca' => array(
+//                      '#type' => 'checkbox',
+//                      '#default_value' => $node->field_aggcritca['und'][0]['value'],
+//                  ),
+//                  'art5cb' => array(
+//                      '#type' => 'checkbox',
+//                      '#default_value' => $node->field_aggcritcb['und'][0]['value'],
+//                  )
+//              );
+//          }
 // 
-// 			foreach ($csas as $csa){
+//          foreach ($csas as $csa){
 // 
-// 				$node = node_load($csa['nid']);
+//              $node = node_load($csa['nid']);
 // 
-// 				$form['CSA']['#tree'] = TRUE;
+//              $form['CSA']['#tree'] = TRUE;
 // 
-// 				$form['CSA'][] = array(
-// 					'nid' => array(
-// 						'#type' => 'hidden',
-// 						'#value' => $csa['nid'],
-// 					),
-// 					'name' => array(
-// 						'#type' => 'item',
-// 						'#markup' => check_plain($csa['title']).' : '.$csa['aggId'],
-// 					),
-// 					'art5b' => array(
-// 						'#type' => 'checkbox',
-// 						'#default_value' => $node->field_aggcritb['und'][0]['value'],
-// 					),
-// 					'art5ca' => array(
-// 						'#type' => 'item',
-// 					),
-// 					'art5cb' => array(
-// 						'#type' => 'item',
-// 					),
-// 				);
-// 			}
-// 		}
-// 		else{
-// 			$form['uwwtd_text'] = array(
-// 				'#markup' => '<h3>'.t('No agglomerations that could be concerned with article 5 criterion b, ca or cb could be found. You can continue to the next step').'</h3>'
-// 			);
-// 		}
+//              $form['CSA'][] = array(
+//                  'nid' => array(
+//                      '#type' => 'hidden',
+//                      '#value' => $csa['nid'],
+//                  ),
+//                  'name' => array(
+//                      '#type' => 'item',
+//                      '#markup' => check_plain($csa['title']).' : '.$csa['aggId'],
+//                  ),
+//                  'art5b' => array(
+//                      '#type' => 'checkbox',
+//                      '#default_value' => $node->field_aggcritb['und'][0]['value'],
+//                  ),
+//                  'art5ca' => array(
+//                      '#type' => 'item',
+//                  ),
+//                  'art5cb' => array(
+//                      '#type' => 'item',
+//                  ),
+//              );
+//          }
+//      }
+//      else{
+//          $form['uwwtd_text'] = array(
+//              '#markup' => '<h3>'.t('No agglomerations that could be concerned with article 5 criterion b, ca or cb could be found. You can continue to the next step').'</h3>'
+//          );
+//      }
 
 
-		
-		// definition du champ input de type file
-		$form['uwwtd_text'] = array(
-			'#markup' => '<h4>'.t('Data verification for the year').' : '.$annee.'</h4><p>'.t('Be sure that your data is correctly uploaded then to proceed press the send button below').'.</p>'
-		);
-		
-		// Bouton envoyer
-		$form['submit_button'] = array(
-			'#type' => 'submit',
-			'#value' => t('Submit'),
-		);
-		
-		// Fonction a appeller quand on clique sur envoyer
-		$form['#submit'][] = 'uwwtd_conformity_submit_handler';
-		
-		return $form;
-	}
+        
+        // definition du champ input de type file
+        $form['uwwtd_text'] = array(
+            '#markup' => '<h4>'.t('Data verification for the year').' : '.$annee.'</h4><p>'.t('Be sure that your data is correctly uploaded then to proceed press the send button below').'.</p>'
+        );
+        
+        // Bouton envoyer
+        $form['submit_button'] = array(
+            '#type' => 'submit',
+            '#value' => t('Submit'),
+        );
+        
+        // Fonction a appeller quand on clique sur envoyer
+        $form['#submit'][] = 'uwwtd_conformity_submit_handler';
+        
+        return $form;
+    }
 }
 
 function uwwtd_conformity_submit_handler($form, &$form_state){
 
-	// Definition et recup des variables
-// 	if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
-// 	if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
-	$annee = $_SESSION['uwwtd_annee'];
+    // Definition et recup des variables
+//  if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
+//  if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
+    $annee = $_SESSION['uwwtd_annee'];
 
-// 	if(isset($form_state['values']['SA'])) $sas = $form_state['values']['SA'];
-// 	else $sas = array();
+//  if(isset($form_state['values']['SA'])) $sas = $form_state['values']['SA'];
+//  else $sas = array();
 // 
-// 	if(isset($form_state['values']['CSA'])) $csas = $form_state['values']['CSA'];
-// 	else $csas = array();
+//  if(isset($form_state['values']['CSA'])) $csas = $form_state['values']['CSA'];
+//  else $csas = array();
 
-	$timestamp = strtotime('now');
+    $timestamp = strtotime('now');
 
-	//Init the batch process
-// 	uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp);
+    //Init the batch process
+//  uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp);
     uwwtd_conformity_setup_batch($annee, $timestamp);
 }
 
 // function uwwtd_conformity_setup_batch($sas, $csas, $annee, $timestamp){
 function uwwtd_conformity_setup_batch($annee, $timestamp){
-	$batch = array(
-		'title' => t('Data processing for setting the conformity'),
-		'operations' => array(
+    $batch = array(
+        'title' => t('Data processing for setting the conformity'),
+        'operations' => array(
             array('uwwtd_delete_error', array($annee, 'conformity')),
-// 			array('uwwtd_add_sa_criterions_batch_process', array($sas, $timestamp)),
-// 			array('uwwtd_add_csa_criterions_batch_process', array($csas, $timestamp)),
-			array('uwwtd_station_conformity_batch_process', array($annee, $timestamp)),
-			array('uwwtd_agglo_conformity_batch_process', array($annee, $timestamp)),
+//          array('uwwtd_add_sa_criterions_batch_process', array($sas, $timestamp)),
+//          array('uwwtd_add_csa_criterions_batch_process', array($csas, $timestamp)),
+            array('uwwtd_station_conformity_batch_process', array($annee, $timestamp)),
+            array('uwwtd_agglo_conformity_batch_process', array($annee, $timestamp)),
             array('uwwtd_update_cache_data', array(array($annee))),
             //replace by new algo in uwwtd_agglo_conformity_batch_process
-			//array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
+            //array('uwwtd_agglo_reconformity_batch_process', array($annee, $timestamp))
             array('uwwtd_conformity_var', array(array($annee))),
-		),
-		'error_message' => t('Error!'),
-		'finished' => 'uwwtd_conformity_finished',
-		'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
-	);
+        ),
+        'error_message' => t('Error!'),
+        'finished' => 'uwwtd_conformity_finished',
+        'file' => drupal_get_path('module','uwwtd').'/inc/data_center.inc'
+    );
     //calculate the register file
 //     uwwtd_register_set_operation($batch, $annee);
 //     uwwtd_art17_set_export_operation($batch, $annee);
 
-	batch_set($batch);
-	batch_process('data/conformity');
+    batch_set($batch);
+    batch_process('data/conformity');
 }
 
 function uwwtd_delete_error($annee, $type, &$context)
 {
 //     dsm(__FUNCTION__ . $annee . $type);
-	if (!isset($context['sandbox']['progress'])) {		
-		$context['sandbox']['max'] = 1;
-		$context['sandbox']['progress'] = 0;
-	}
+    if (!isset($context['sandbox']['progress'])) {      
+        $context['sandbox']['max'] = 1;
+        $context['sandbox']['progress'] = 0;
+    }
 // $GLOBALS['uwwtd_errors_type']['category'] = array(
 //     'import data input' => 0,
 //     'import data linking' => 1,
@@ -5371,78 +5371,78 @@ function uwwtd_delete_error($annee, $type, &$context)
             break;                                     
     }
     
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . t('previous error deleted.');
-	$context['results']['delete_error'] = 'previous error deleted';	
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('previous error deleted.');
+    $context['results']['delete_error'] = 'previous error deleted'; 
 
-	$context['finished'] = 1;
+    $context['finished'] = 1;
 }
 
 function uwwtd_add_sa_criterions_batch_process($sas, $timestamp, &$context){
 
-	if (!isset($context['sandbox']['progress'])) {
-		
-		$context['sandbox']['max'] = count($sas);
-		if(count($sas) == 0) $context['sandbox']['progress'] = -1;
-		else $context['sandbox']['progress'] = 0;
-	}
-	$i = $context['sandbox']['progress'];
+    if (!isset($context['sandbox']['progress'])) {
+        
+        $context['sandbox']['max'] = count($sas);
+        if(count($sas) == 0) $context['sandbox']['progress'] = -1;
+        else $context['sandbox']['progress'] = 0;
+    }
+    $i = $context['sandbox']['progress'];
 
-	if(isset($sas[$i])){
-		$data = $sas[$i];
-		$node = node_load($data['nid']);
+    if(isset($sas[$i])){
+        $data = $sas[$i];
+        $node = node_load($data['nid']);
 
-		$node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
-		$node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
-		$node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
-		
-		node_save($node);
+        $node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
+        $node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
+        $node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
+        
+        node_save($node);
         $message = t('Processing criterion for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid);
-	} else {
+    } else {
         $message = t('Nothing to Process');
     }
 
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . $message . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);	
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . $message . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
 
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 function uwwtd_add_csa_criterions_batch_process($csas, $timestamp, &$context){
 
-	if (!isset($context['sandbox']['progress'])) {
-		
-		$context['sandbox']['max'] = count($csas);
-		if(count($csas) == 0) $context['sandbox']['progress'] = -1;
-		else $context['sandbox']['progress'] = 0;
-	}
-	$i = $context['sandbox']['progress'];
+    if (!isset($context['sandbox']['progress'])) {
+        
+        $context['sandbox']['max'] = count($csas);
+        if(count($csas) == 0) $context['sandbox']['progress'] = -1;
+        else $context['sandbox']['progress'] = 0;
+    }
+    $i = $context['sandbox']['progress'];
 
-	if(isset($csas[$i])){
-		$data = $csas[$i];
-		$node = node_load($data['nid']);
+    if(isset($csas[$i])){
+        $data = $csas[$i];
+        $node = node_load($data['nid']);
 
-		$node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
-		$node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
-		$node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
-		
-		node_save($node);
+        $node->field_aggcritb['und'][0]['value'] = (true === isset($data['art5b']) ? $data['art5b'] : null);
+        $node->field_aggcritca['und'][0]['value'] = (true === isset($data['art5ca']) ? $data['art5ca'] : null);
+        $node->field_aggcritcb['und'][0]['value'] = (true === isset($data['art5cb']) ? $data['art5cb'] : null);
+        
+        node_save($node);
         
         $message = t('Processing criterion for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid);
-	} else {
+    } else {
         $message = t('Nothing to Process');
     } 
 
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . $message . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);	
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . $message . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
 
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 /**
@@ -5451,32 +5451,32 @@ function uwwtd_add_csa_criterions_batch_process($csas, $timestamp, &$context){
 function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 
     uwwtd_trace(__FUNCTION__);
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
-	
-		//Get the uwwtps
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-		$query->fields('n', array('nid', 'title'));
-		$query->condition('n.type', 'uwwtp', '=');
-		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-		$uwwtps = $query->execute();
-		foreach($uwwtps as $uwwtp){
-			$ids[] = array('nid'=>$uwwtp->nid, 'title'=>$uwwtp->title);
-		}
-		
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
-	}
-	$i = $context['sandbox']['progress'];
-	
-	$data = $context['sandbox']['ids'][$i];
-	$node = node_load($data['nid']);
+    if (!isset($context['sandbox']['progress'])) {
+    
+        $ids = array();
+    
+        //Get the uwwtps
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'uwwtp', '=');
+        $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $uwwtps = $query->execute();
+        foreach($uwwtps as $uwwtp){
+            $ids[] = array('nid'=>$uwwtp->nid, 'title'=>$uwwtp->title);
+        }
+        
+        $context['sandbox']['max'] = count($ids);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $ids;
+    }
+    $i = $context['sandbox']['progress'];
+    
+    $data = $context['sandbox']['ids'][$i];
+    $node = node_load($data['nid']);
 
     uwwtd_trace('calculate compliance uwwtp ' . $node->field_inspireidlocalid['und'][0]['value']);
-	// Function that checks the required treatment, the compliance and the reason for the compliance in the following form array(requiredTreatment, compliance, reason)
+    // Function that checks the required treatment, the compliance and the reason for the compliance in the following form array(requiredTreatment, compliance, reason)
 //     $compliance_info = new stdClass();
 //     $compliance_info->required = '';
 //     $compliance_info->required_rcaan = '';
@@ -5497,16 +5497,16 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     $node->field_uwww_required_rcab['und'][0]['value'] = $compliance_info->required_rcab;
     $node->field_uwww_required_rcac['und'][0]['value'] = $compliance_info->required_rcac;
     
-	$node->field_uwwtreatment_met['und'][0]['value'] =  $compliance_info->treatment_met;
-	$node->field_uwwperformance_met['und'][0]['value'] =  $compliance_info->performance_met;
-	
+    $node->field_uwwtreatment_met['und'][0]['value'] =  $compliance_info->treatment_met;
+    $node->field_uwwperformance_met['und'][0]['value'] =  $compliance_info->performance_met;
+    
     $dateReportingReference = $node->field_anneedata['und'][0]['value'].'-12'.'-31';
     $deadLineBeforeReference = false;
-	// Station compliance , step B, on of the agglo has at least one date before reference date
+    // Station compliance , step B, on of the agglo has at least one date before reference date
     //ALGO3
     if (true === isset($node->field_uwwaggliste['und'])) {
-    	foreach($node->field_uwwaggliste['und'] as $agg){
-    		$dateaggl = node_load($agg['nid']);
+        foreach($node->field_uwwaggliste['und'] as $agg){
+            $dateaggl = node_load($agg['nid']);
 
 //             if ($dateaggl->field_aggperiodover4['und'][0]['value'] < $dateReportingReference
 //                 ||$dateaggl->field_aggperiodover5['und'][0]['value'] < $dateReportingReference
@@ -5521,27 +5521,27 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
                 $deadLineBeforeReference = true;
                 break;
             }                    
-    	}
+        }
     }
     uwwtd_trace('$deadLineBeforeReference = ' . $deadLineBeforeReference);
     if (false === $deadLineBeforeReference) {
-		if($compliance_info->compliance != 'C'){
-			$compliance_info->compliance = 'PD';  
-		}
-	}
+        if($compliance_info->compliance != 'C'){
+            $compliance_info->compliance = 'PD';  
+        }
+    }
 
-	$node->field_uwwcompliance['und'][0]['value'] = $compliance_info->compliance;
-	$node->field_compliance_explication['und'][0]['value'] = $compliance_info->reason;
-	
-	node_save($node);
+    $node->field_uwwcompliance['und'][0]['value'] = $compliance_info->compliance;
+    $node->field_compliance_explication['und'][0]['value'] = $compliance_info->reason;
+    
+    node_save($node);
 
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
 
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 //Function change by nd@oieau.fr in order to fix errors on not provided data : Collective system + IAS + D without treatement = 100
@@ -5549,32 +5549,32 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
 function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     
     uwwtd_trace(__FUNCTION__);        
-	if (!isset($context['sandbox']['progress'])) {
-	
-		$ids = array();
-	
-		//Get the agglos
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-		$query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-		$query->fields('n', array('nid', 'title'));
-		$query->condition('n.type', 'agglomeration', '=');
-		$query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-		$query->orderBy('field_agggenerated_value', 'DESC');
-		$agglos = $query->execute();
-		foreach($agglos as $agglo){
-			$ids[] = array('nid'=>$agglo->nid, 'title'=>$agglo->title);
-		}
-		
-		$context['sandbox']['max'] = count($ids);
-		$context['sandbox']['progress'] = 0;
-		$context['sandbox']['ids'] = $ids;
-	}
-	$i = $context['sandbox']['progress'];
-	
-	$data = $context['sandbox']['ids'][$i];
-	$node = node_load($data['nid']);
-	
+    if (!isset($context['sandbox']['progress'])) {
+    
+        $ids = array();
+    
+        //Get the agglos
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+        $query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'agglomeration', '=');
+        $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $query->orderBy('field_agggenerated_value', 'DESC');
+        $agglos = $query->execute();
+        foreach($agglos as $agglo){
+            $ids[] = array('nid'=>$agglo->nid, 'title'=>$agglo->title);
+        }
+        
+        $context['sandbox']['max'] = count($ids);
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['ids'] = $ids;
+    }
+    $i = $context['sandbox']['progress'];
+    
+    $data = $context['sandbox']['ids'][$i];
+    $node = node_load($data['nid']);
+    
     
     //We need to fix error due to not provided data : Collective system + IAS + D without treatement = 100
     if(!isset($node->field_aggc1['und']) || !isset($node->field_aggc2['und']) || !isset($node->field_aggpercwithouttreatment['und'])){
@@ -5627,13 +5627,13 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     
     uwwtd_trace('calculate compliance for agglo : ' . $node->field_inspireidlocalid['und'][0]['value']);        
     
-	$yearReporting = $node->field_anneedata['und'][0]['value'];
+    $yearReporting = $node->field_anneedata['und'][0]['value'];
     //ALGO4
     list($art3comp, $art3compAdditionnal, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
-	
+    
     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
     
-    $bDone = false;	
+    $bDone = false; 
     if($art3comp == 'NI'){ //ALGO4 too
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
         $node->field_aggart4compliance['und'][0]['value'] = 'NI';
@@ -5670,36 +5670,36 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
                  
         if (false === empty($aArtCompliance)) {
 
-			$node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
-			$node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
-			$node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
+            $node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
+            $node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
+            $node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
         } else {  
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
             //ALGO6-algo7-algo8-algo9
 
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
 
-			$node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
-			$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
-			$node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
+            $node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
+            $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
+            $node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
         }
-	}
+    }
     
     //ALGO10    
     $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);            
 
     unset($infoAllAggUww);    
 
-	node_save($node);
+    node_save($node);
 
-	$context['sandbox']['progress']++;
-	$context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-	$context['results'][] = $node->nid . ' : ' . check_plain($node->title);	
-	
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
+    
 
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
 }
 
 /**
@@ -5820,7 +5820,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     }    
     
     $listStationArticleAndUwwtpCompliance = array();
-	foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
+    foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
         //ALGO6
         //$agg->field_aggart3compliance['und'][0]['value']
         
@@ -5873,11 +5873,11 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
 
 
     foreach($listUwwtpCompliance as $uwwtp) {
-        // BB - 12/01/2016 - Draft 10 of algo
-
+        $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+        $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
-            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
+            $totalLoadenteringPE_P_NI += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+            $totalLoadenteringPercent_P_NI += $uwwtp['agglo_uww_perc_ent_uw'];
         }
 
     }
@@ -5890,7 +5890,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         return $GLOBALS['uwwtd_value']['compliance']['no_information'];
     }
             
-    if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
+    if (false === ($totalLoadenteringPE_P_NI < 2000 && $totalLoadenteringPercent_P_NI <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
         } else {
@@ -6253,40 +6253,40 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
 
 
 function uwwtd_conformity_finished($success, $results, $operations) {
-	if ($success) {
-// 		drupal_set_message(t('All the criterions were added to the agglomerations concerned.'));
-		drupal_set_message(t('All the waste water treatment plants\' conformity was calculated.'));
-		drupal_set_message(t('All the agglomerations\' conformity was calculated.'));
+    if ($success) {
+//      drupal_set_message(t('All the criterions were added to the agglomerations concerned.'));
+        drupal_set_message(t('All the waste water treatment plants\' conformity was calculated.'));
+        drupal_set_message(t('All the agglomerations\' conformity was calculated.'));
 //         drupal_set_message(t('Register calculated.'));
 //         drupal_set_message(t('Article17 calculated.'));
-		drupal_set_message(t('Congratulations! Your data has been successfully imported to the site you can now view your data on the interactive maps accessible from the home page.'));
-// 		if(isset($_SESSION['uwwtd_errors'])){
-// 			uwwtd_add_error($annee, $_SESSION['uwwtd_errors']);
-// 			foreach($_SESSION['uwwtd_errors'] as $error){
-// 				drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file . This element was not added, please check your input file.'), 'error');
-// 			}
-// 		}
-// 		if(isset($_SESSION['uwwtd_warnings'])){
-// 			uwwtd_add_error($annee, $_SESSION['uwwtd_warnings']);
-// 			foreach($_SESSION['uwwtd_warnings'] as $warning){
-// 				drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file . This element was added but please check your input file.'), 
-// 					'warning');
-// 			}
-// 		}
-	}
-	else {
-		// An error occurred.
-		// $operations contains the operations that remained unprocessed.
-		$error_operation = reset($operations);
-		drupal_set_message(
-			t('An error occurred while processing @operation with arguments : @args',
-				array(
-					'@operation' => $error_operation[0],
-					'@args' => print_r($error_operation[0], TRUE),
-				)
-			)
-		);
-	}
+        drupal_set_message(t('Congratulations! Your data has been successfully imported to the site you can now view your data on the interactive maps accessible from the home page.'));
+//      if(isset($_SESSION['uwwtd_errors'])){
+//          uwwtd_add_error($annee, $_SESSION['uwwtd_errors']);
+//          foreach($_SESSION['uwwtd_errors'] as $error){
+//              drupal_set_message(t('Error occured on row index : ').$error[0].' (" '.$error[1].' ") '.t(' of your file . This element was not added, please check your input file.'), 'error');
+//          }
+//      }
+//      if(isset($_SESSION['uwwtd_warnings'])){
+//          uwwtd_add_error($annee, $_SESSION['uwwtd_warnings']);
+//          foreach($_SESSION['uwwtd_warnings'] as $warning){
+//              drupal_set_message(t('Warning occured on row index : ').$warning[0].' (" '.$warning[1].' ") '.t(' of your file . This element was added but please check your input file.'), 
+//                  'warning');
+//          }
+//      }
+    }
+    else {
+        // An error occurred.
+        // $operations contains the operations that remained unprocessed.
+        $error_operation = reset($operations);
+        drupal_set_message(
+            t('An error occurred while processing @operation with arguments : @args',
+                array(
+                    '@operation' => $error_operation[0],
+                    '@args' => print_r($error_operation[0], TRUE),
+                )
+            )
+        );
+    }
     
 }
 
@@ -6304,23 +6304,23 @@ function uwwtd_import_data_var($annee) {
 
 ################################ FUNCTIONS ################################
 function uwwtd_XYToDrupalPoint($x, $y, $epsg_orig, $epsg_dest = 4326){
-	//Define the WKT
-	$wkt = 'POINT('.$x.' '.$y.')';
-	//Transform to the right projection ==> we need PostGIS function
-	$wkt_wgs84 = db_query(
-		"SELECT ST_AsText(ST_Transform(ST_GeomFromText('".$wkt."', ".$epsg_orig."), ".$epsg_dest.")) as wkt"
-	)->fetchField();
-	
-	return $wkt_wgs84;
+    //Define the WKT
+    $wkt = 'POINT('.$x.' '.$y.')';
+    //Transform to the right projection ==> we need PostGIS function
+    $wkt_wgs84 = db_query(
+        "SELECT ST_AsText(ST_Transform(ST_GeomFromText('".$wkt."', ".$epsg_orig."), ".$epsg_dest.")) as wkt"
+    )->fetchField();
+    
+    return $wkt_wgs84;
 }
 
 function uwwtd_csv_to_array($filename='', $delimiter=','){
-	
-	// Remove bom
-	$string = file_get_contents($filename);
-	$string = uwwtd_removeBOM($string);
+    
+    // Remove bom
+    $string = file_get_contents($filename);
+    $string = uwwtd_removeBOM($string);
 
-	file_put_contents($filename, $string);
+    file_put_contents($filename, $string);
 
     if(!file_exists($filename) || !is_readable($filename)) return FALSE;
 
@@ -6341,8 +6341,8 @@ function uwwtd_csv_to_array($filename='', $delimiter=','){
 }
 
 function uwwtd_xml_to_array($link){
-	$string = file_get_contents($link);
-	$deXml = simplexml_load_string($string);
+    $string = file_get_contents($link);
+    $deXml = simplexml_load_string($string);
     $deJson = json_encode($deXml);
     $xml_array = json_decode($deJson,TRUE);
     return $xml_array;
@@ -6356,339 +6356,339 @@ function uwwtd_removeBOM($str=""){
 }
 
 // function uwwtd_getCodeLov($code, $i){
-// 	$ref = array(
-// 		"1"=>'fail',
-// 		"2"=>'pass',
-// 		"3"=>'Production of alcohol and alcoholic beverages',
-// 		"4"=>'Breweries',
-// 		"5"=>'Manufacture and bottling of soft drinks',
-// 		"6"=>'Manufacture of aninmal feed from plant products',
-// 		"7"=>'Fish-processing industry',
-// 		"8"=>'Manufacture of fruit and vegetable products',
-// 		"9"=>'Manufacture of gelatine and glue from hides, skin and bones',
-// 		"10"=>'Malt-houses',
-// 		"11"=>'Meat industry',
-// 		"12"=>'Milk-processing',
-// 		"13"=>'Potato-processing',
-// 		"14"=>'calculated',
-// 		"15"=>'estimated',
-// 		"16"=>'Document (*.doc)',
-// 		"17"=>'GIS-data',
-// 		"18"=>'Document (*.pdf)',
-// 		"19"=>'Missing Culture Info',
-// 		"20"=>'Data type is not clear',
-// 		"21"=>'Please fill-in at least one value',
-// 		"22"=>'Set to deault value',
-// 		"23"=>'Different Report Period ID (between manual data input and data i',
-// 		"24"=>'Field has to have a value',
-// 		"25"=>'Error whilst inserting normal area',
-// 		"26"=>'Value > 100%',
-// 		"27"=>'Invalid code',
-// 		"28"=>'Invalid data format in the import file.',
-// 		"29"=>'ID  is not correct',
-// 		"30"=>'Invalid link',
-// 		"31"=>'Invalid status',
-// 		"32"=>'No valid value',
-// 		"33"=>'Value is master data',
-// 		"34"=>'No Sensitive Area is linked to this Catchment Area of Sensitive',
-// 		"35"=>'Value is not Y (yes) or N (no)',
-// 		"36"=>'No Catchment Area. Indication of Sensitive Area is not foreseen',
-// 		"37"=>'Field not numeric',
-// 		"38"=>'%-values do not add up to 100%',
-// 		"39"=>'Table does not contain data sets',
-// 		"40"=>'Value is not a valid date',
-// 		"41"=>'No discharge point is linked to this UWWTP',
-// 		"42"=>'Data set is not available',
-// 		"43"=>'The selected Sensitive Area does not exist in the inventory of',
-// 		"44"=>'No UWWTP is linked to this agglomeration',
-// 		"45"=>'ID is not distinct',
-// 		"46"=>'Not a valid date',
-// 		"47"=>'Reference is not valid',
-// 		"48"=>'%-value is out of range 0-100',
-// 		"49"=>'Report period does not correspond to the selected report period',
-// 		"50"=>'Value is required',
-// 		"51"=>'Please select one value',
-// 		"52"=>'Error message of the system',
-// 		"53"=>'Text too long',
-// 		"54"=>'File comprises too many data sets',
-// 		"55"=>'Text too short',
-// 		"56"=>'Infiltration',
-// 		"57"=>'Irrigation',
-// 		"58"=>'other',
-// 		"59"=>'No',
-// 		"60"=>'Yes',
-// 		"61"=>'National Regulation in place',
-// 		"62"=>'calculated',
-// 		"63"=>'estimated',
-// 		"64"=>'measured',
-// 		"65"=>'Austria',
-// 		"66"=>'Belgium',
-// 		"67"=>'Bulgaria',
-// 		"68"=>'Cyprus',
-// 		"69"=>'Czech Republic',
-// 		"70"=>'Germany',
-// 		"71"=>'Denmark',
-// 		"72"=>'Estonia',
-// 		"73"=>'Spain',
-// 		"74"=>'Finland',
-// 		"75"=>'France',
-// 		"76"=>'Greece',
-// 		"77"=>'Hungary',
-// 		"78"=>'Ireland',
-// 		"79"=>'Italy',
-// 		"80"=>'Lithuania',
-// 		"81"=>'Luxembourg',
-// 		"82"=>'Latvia',
-// 		"83"=>'Malta',
-// 		"84"=>'Netherlands',
-// 		"85"=>'Norway',
-// 		"86"=>'Poland',
-// 		"87"=>'Portugal',
-// 		"88"=>'Romania',
-// 		"89"=>'Sweden',
-// 		"90"=>'Slovenia',
-// 		"91"=>'Slovakia',
-// 		"92"=>'United Kingdom',
-// 		"93"=>'fail',
-// 		"94"=>'not relevant',
-// 		"95"=>'pass',
-// 		"96"=>'Art. 5(4) area',
-// 		"97"=>'Art. 5(8) area (entire Member State)',
-// 		"98"=>'Catchment in the sense of Art. 5(5)',
-// 		"99"=>'Less sensitive area',
-// 		"100"=>'Normal area',
-// 		"101"=>'Sensitive area',
-// 		"102"=>'c) both a&b',
-// 		"103"=>'a) combined',
-// 		"104"=>'b) separeted',
-// 		"105"=>'inactive',
-// 		"106"=>'active',
-// 		"107"=>'No',
-// 		"108"=>'Yes',
-// 		"109"=>'No combined system',
-// 		"110"=>'National Regulation in place',
-// 		"111"=>'Collecting system is connected to UWWTP',
-// 		"112"=>'Collecting system is not connected to UWWTP',
-// 		"113"=>'to coastal water',
-// 		"114"=>'to estuary',
-// 		"115"=>'to freshwater',
-// 		"116"=>'on land (catchment of coastal water)',
-// 		"117"=>'on land (catchment of freshwater and / or estuary)',
-// 		"118"=>'to coastal water',
-// 		"119"=>'to estuary',
-// 		"120"=>'on land (catchment of coastal water)',
-// 		"121"=>'on land (catchment of freshwater and / or estuary)',
-// 		"122"=>'No',
-// 		"123"=>'Yes',
-// 		"124"=>'No',
-// 		"125"=>'Yes',
-// 		"126"=>'Not relevant',
-// 		"127"=>'fully treated effluent- dry and wet weather, partially treated s',
-// 		"128"=>'fully treated effluent- dry and wet weather',
-// 		"129"=>'fully treated effluent- dry weather;',
-// 		"130"=>'tempinactive',
-// 		"131"=>''
-// 	);
-// 	if(array_key_exists($code, $ref)){
-// 		return $ref[$code];
-// 	}
-// 	else if($code == ''){
-// 		$wmes = t('WARNING : Lov code not found');
-// 		uwwtd_set_warning($i, $wmes);
-// 		return '';
-// 	}
-// 	else{
-// 		$wmes = t('WARNING : Lov code not found ').': '.$code;
-// 		uwwtd_set_warning($i, $wmes);
-// 		return '';
-// 	}	
+//  $ref = array(
+//      "1"=>'fail',
+//      "2"=>'pass',
+//      "3"=>'Production of alcohol and alcoholic beverages',
+//      "4"=>'Breweries',
+//      "5"=>'Manufacture and bottling of soft drinks',
+//      "6"=>'Manufacture of aninmal feed from plant products',
+//      "7"=>'Fish-processing industry',
+//      "8"=>'Manufacture of fruit and vegetable products',
+//      "9"=>'Manufacture of gelatine and glue from hides, skin and bones',
+//      "10"=>'Malt-houses',
+//      "11"=>'Meat industry',
+//      "12"=>'Milk-processing',
+//      "13"=>'Potato-processing',
+//      "14"=>'calculated',
+//      "15"=>'estimated',
+//      "16"=>'Document (*.doc)',
+//      "17"=>'GIS-data',
+//      "18"=>'Document (*.pdf)',
+//      "19"=>'Missing Culture Info',
+//      "20"=>'Data type is not clear',
+//      "21"=>'Please fill-in at least one value',
+//      "22"=>'Set to deault value',
+//      "23"=>'Different Report Period ID (between manual data input and data i',
+//      "24"=>'Field has to have a value',
+//      "25"=>'Error whilst inserting normal area',
+//      "26"=>'Value > 100%',
+//      "27"=>'Invalid code',
+//      "28"=>'Invalid data format in the import file.',
+//      "29"=>'ID  is not correct',
+//      "30"=>'Invalid link',
+//      "31"=>'Invalid status',
+//      "32"=>'No valid value',
+//      "33"=>'Value is master data',
+//      "34"=>'No Sensitive Area is linked to this Catchment Area of Sensitive',
+//      "35"=>'Value is not Y (yes) or N (no)',
+//      "36"=>'No Catchment Area. Indication of Sensitive Area is not foreseen',
+//      "37"=>'Field not numeric',
+//      "38"=>'%-values do not add up to 100%',
+//      "39"=>'Table does not contain data sets',
+//      "40"=>'Value is not a valid date',
+//      "41"=>'No discharge point is linked to this UWWTP',
+//      "42"=>'Data set is not available',
+//      "43"=>'The selected Sensitive Area does not exist in the inventory of',
+//      "44"=>'No UWWTP is linked to this agglomeration',
+//      "45"=>'ID is not distinct',
+//      "46"=>'Not a valid date',
+//      "47"=>'Reference is not valid',
+//      "48"=>'%-value is out of range 0-100',
+//      "49"=>'Report period does not correspond to the selected report period',
+//      "50"=>'Value is required',
+//      "51"=>'Please select one value',
+//      "52"=>'Error message of the system',
+//      "53"=>'Text too long',
+//      "54"=>'File comprises too many data sets',
+//      "55"=>'Text too short',
+//      "56"=>'Infiltration',
+//      "57"=>'Irrigation',
+//      "58"=>'other',
+//      "59"=>'No',
+//      "60"=>'Yes',
+//      "61"=>'National Regulation in place',
+//      "62"=>'calculated',
+//      "63"=>'estimated',
+//      "64"=>'measured',
+//      "65"=>'Austria',
+//      "66"=>'Belgium',
+//      "67"=>'Bulgaria',
+//      "68"=>'Cyprus',
+//      "69"=>'Czech Republic',
+//      "70"=>'Germany',
+//      "71"=>'Denmark',
+//      "72"=>'Estonia',
+//      "73"=>'Spain',
+//      "74"=>'Finland',
+//      "75"=>'France',
+//      "76"=>'Greece',
+//      "77"=>'Hungary',
+//      "78"=>'Ireland',
+//      "79"=>'Italy',
+//      "80"=>'Lithuania',
+//      "81"=>'Luxembourg',
+//      "82"=>'Latvia',
+//      "83"=>'Malta',
+//      "84"=>'Netherlands',
+//      "85"=>'Norway',
+//      "86"=>'Poland',
+//      "87"=>'Portugal',
+//      "88"=>'Romania',
+//      "89"=>'Sweden',
+//      "90"=>'Slovenia',
+//      "91"=>'Slovakia',
+//      "92"=>'United Kingdom',
+//      "93"=>'fail',
+//      "94"=>'not relevant',
+//      "95"=>'pass',
+//      "96"=>'Art. 5(4) area',
+//      "97"=>'Art. 5(8) area (entire Member State)',
+//      "98"=>'Catchment in the sense of Art. 5(5)',
+//      "99"=>'Less sensitive area',
+//      "100"=>'Normal area',
+//      "101"=>'Sensitive area',
+//      "102"=>'c) both a&b',
+//      "103"=>'a) combined',
+//      "104"=>'b) separeted',
+//      "105"=>'inactive',
+//      "106"=>'active',
+//      "107"=>'No',
+//      "108"=>'Yes',
+//      "109"=>'No combined system',
+//      "110"=>'National Regulation in place',
+//      "111"=>'Collecting system is connected to UWWTP',
+//      "112"=>'Collecting system is not connected to UWWTP',
+//      "113"=>'to coastal water',
+//      "114"=>'to estuary',
+//      "115"=>'to freshwater',
+//      "116"=>'on land (catchment of coastal water)',
+//      "117"=>'on land (catchment of freshwater and / or estuary)',
+//      "118"=>'to coastal water',
+//      "119"=>'to estuary',
+//      "120"=>'on land (catchment of coastal water)',
+//      "121"=>'on land (catchment of freshwater and / or estuary)',
+//      "122"=>'No',
+//      "123"=>'Yes',
+//      "124"=>'No',
+//      "125"=>'Yes',
+//      "126"=>'Not relevant',
+//      "127"=>'fully treated effluent- dry and wet weather, partially treated s',
+//      "128"=>'fully treated effluent- dry and wet weather',
+//      "129"=>'fully treated effluent- dry weather;',
+//      "130"=>'tempinactive',
+//      "131"=>''
+//  );
+//  if(array_key_exists($code, $ref)){
+//      return $ref[$code];
+//  }
+//  else if($code == ''){
+//      $wmes = t('WARNING : Lov code not found');
+//      uwwtd_set_warning($i, $wmes);
+//      return '';
+//  }
+//  else{
+//      $wmes = t('WARNING : Lov code not found ').': '.$code;
+//      uwwtd_set_warning($i, $wmes);
+//      return '';
+//  }   
 // }
 
 function uwwtd_coord_transform($lat, $long){
 
-	$lat = str_replace(",",".",$lat);
-	$long = str_replace(",",".",$long);
+    $lat = str_replace(",",".",$lat);
+    $long = str_replace(",",".",$long);
 
-	if($lat == '' || $long == '') return false;
+    if($lat == '' || $long == '') return false;
 
-	$sql = "SELECT ST_Transform(ST_GeomFromText('POINT(".$long." ".$lat.")', 4258),4326) AS geo";
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$geo = $record->geo;
-	}
+    $sql = "SELECT ST_Transform(ST_GeomFromText('POINT(".$long." ".$lat.")', 4258),4326) AS geo";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $geo = $record->geo;
+    }
 
-	// create array
-	$table = array();
-	$sql = "SELECT ST_AsBinary('".$geo."') as bin, 'point' as pt, ST_Y('".$geo."') as geoy, ST_X('".$geo."') as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$table['bin'] = $record->bin;
-  		$table['point'] = $record->pt;
-  		$table['geoy'] = $record->geoy;
-  		$table['geox'] = $record->geox;
-  		$table['geohash'] = $record->geohash;
-	}
+    // create array
+    $table = array();
+    $sql = "SELECT ST_AsBinary('".$geo."') as bin, 'point' as pt, ST_Y('".$geo."') as geoy, ST_X('".$geo."') as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $table['bin'] = $record->bin;
+        $table['point'] = $record->pt;
+        $table['geoy'] = $record->geoy;
+        $table['geox'] = $record->geox;
+        $table['geohash'] = $record->geohash;
+    }
 
-	return $table;
-	//dsm($table);
+    return $table;
+    //dsm($table);
 }
 
 function  uwwtd_coord_transform_line($parts){
     
-	$sql = "SELECT ST_Transform(ST_GeomFromText('LINE((";
+    $sql = "SELECT ST_Transform(ST_GeomFromText('LINE((";
 
-	$numParts = count($parts);
-	$count = 0;
+    $numParts = count($parts);
+    $count = 0;
 
-	foreach($parts as $k=>$part){
+    foreach($parts as $k=>$part){
 
-		$count++;
+        $count++;
 
-		$lat = str_replace(",",".",$part['x']);
-		$long = str_replace(",",".",$part['y']);
+        $lat = str_replace(",",".",$part['x']);
+        $long = str_replace(",",".",$part['y']);
 
-		$sql .= $lat.' '.$long;
-		if($count < $numParts) $sql .= ',';
-	}
+        $sql .= $lat.' '.$long;
+        if($count < $numParts) $sql .= ',';
+    }
 
-	$sql .= "))', 4258),4326) AS geo";
+    $sql .= "))', 4258),4326) AS geo";
 
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$geo = $record->geo;
-  		//dsm($geo);
-	}
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $geo = $record->geo;
+        //dsm($geo);
+    }
 
-	// create array
-	$table = array();
-	$sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$table['bin'] = $record->bin;
-  		$table['polygon'] = 'line';
-  		//$table['geoy'] = $record->geoy;
-  		//$table['geox'] = $record->geox;
-  		$table['geohash'] = $record->geohash;
-	}
-	return $table;
+    // create array
+    $table = array();
+    $sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $table['bin'] = $record->bin;
+        $table['polygon'] = 'line';
+        //$table['geoy'] = $record->geoy;
+        //$table['geox'] = $record->geox;
+        $table['geohash'] = $record->geohash;
+    }
+    return $table;
 }
 
 function uwwtd_coord_transform_polygon($parts){
     $type  = 'POLYGON';
-	
+    
 
-	$numParts = count($parts);
-	$count = 0;
+    $numParts = count($parts);
+    $count = 0;
     $def = '';
-	foreach($parts as $k=>$part){
-		if($k == 0){
-			$firstLat = $part['x'];
-			$firstLong = $part['y'];
-		}
+    foreach($parts as $k=>$part){
+        if($k == 0){
+            $firstLat = $part['x'];
+            $firstLong = $part['y'];
+        }
 
-		$count++;
+        $count++;
 
-		$lat = str_replace(",",".",$part['x']);
-		$long = str_replace(",",".",$part['y']);
+        $lat = str_replace(",",".",$part['x']);
+        $long = str_replace(",",".",$part['y']);
 
-		$def .= $lat.' '.$long;
-		if($count < $numParts) $def .= ',';
-		else{
-			$lastLat = $part['x'];
-			$lastLong = $part['y'];
-		}
-	}
+        $def .= $lat.' '.$long;
+        if($count < $numParts) $def .= ',';
+        else{
+            $lastLat = $part['x'];
+            $lastLong = $part['y'];
+        }
+    }
 
-	if($lastLat != $firstLat || $lastLong != $firstLong){
-		$type  = 'LINESTRING';
+    if($lastLat != $firstLat || $lastLong != $firstLong){
+        $type  = 'LINESTRING';
         
         //$sql .= ','.$firstLat.' '.$firstLong;
-	}
+    }
     if($type  == 'LINESTRING') $sql = "SELECT ST_Transform(ST_GeomFromText('".$type."(".$def.")', 4258),4326) AS geo";
     else $sql = "SELECT ST_Transform(ST_GeomFromText('".$type."((".$def."))', 4258),4326) AS geo";
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$geo = $record->geo;
-  		//dsm($geo);
-	}
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $geo = $record->geo;
+        //dsm($geo);
+    }
 
-	// create array
-	$table = array();
-	$sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$table['bin'] = $record->bin;
-  		$table['polygon'] = strtolower($type);
-  		$table['geohash'] = $record->geohash;
-	}
-	return $table;
+    // create array
+    $table = array();
+    $sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $table['bin'] = $record->bin;
+        $table['polygon'] = strtolower($type);
+        $table['geohash'] = $record->geohash;
+    }
+    return $table;
 }
 
 //TODO check if multipolygon is not a multline
 function uwwtd_coord_transform_multipolygon($parts){
-	$sql = "SELECT ST_Transform(ST_GeomFromText('MULTIPOLYGON(";
+    $sql = "SELECT ST_Transform(ST_GeomFromText('MULTIPOLYGON(";
 
-	$numParts = count($parts);
-	$count = 0;
+    $numParts = count($parts);
+    $count = 0;
 
-	foreach($parts as $part){
+    foreach($parts as $part){
 
-		$count++;
+        $count++;
 
-		$sql .= "((";
-		$innerParts = count($part['points']);
-		$innerCount = 0;
-		foreach($part['points'] as $k=>$inner){
-			if($k == 0){
-				$firstLat = $inner['x'];
-				$firstLong = $inner['y'];
-			}
+        $sql .= "((";
+        $innerParts = count($part['points']);
+        $innerCount = 0;
+        foreach($part['points'] as $k=>$inner){
+            if($k == 0){
+                $firstLat = $inner['x'];
+                $firstLong = $inner['y'];
+            }
 
-			$innerCount++;
-			$lat = str_replace(",",".",$inner['x']);
-			$long = str_replace(",",".",$inner['y']);
+            $innerCount++;
+            $lat = str_replace(",",".",$inner['x']);
+            $long = str_replace(",",".",$inner['y']);
 
-			$sql .= $lat.' '.$long;
-			if($innerCount < $innerParts) $sql .= ',';
-			else{
-				$lastLat = $inner['x'];
-				$lastLong = $inner['y'];
-			}
-		}
-		if($lastLat != $firstLat || $lastLong != $firstLong){
-			$sql .= ','.$firstLat.' '.$firstLong;
-		}
-		$sql .= ")";
-		if($count < $numParts) $sql .= "), ";
-		else $sql .= ")";
+            $sql .= $lat.' '.$long;
+            if($innerCount < $innerParts) $sql .= ',';
+            else{
+                $lastLat = $inner['x'];
+                $lastLong = $inner['y'];
+            }
+        }
+        if($lastLat != $firstLat || $lastLong != $firstLong){
+            $sql .= ','.$firstLat.' '.$firstLong;
+        }
+        $sql .= ")";
+        if($count < $numParts) $sql .= "), ";
+        else $sql .= ")";
 
-	}
+    }
 
-	$sql .= ")', 4258),4326) AS geo";
+    $sql .= ")', 4258),4326) AS geo";
 
-	$result = db_query($sql);
-	foreach ($result as $record) {
-  		$geo = $record->geo;
-	}
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        $geo = $record->geo;
+    }
     
-	// create array
-	$table = array();
-// 	$sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    // create array
+    $table = array();
+//  $sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
     
     $sql = "SELECT ST_AsBinary(:thegeom) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
     $aParam = array(
                 ':thegeom' => $geo,
                     );
-	$result = db_query($sql, $aParam);
+    $result = db_query($sql, $aParam);
 
-	foreach ($result as $record) {
-  		$table['bin'] = $record->bin;
-  		$table['polygon'] = 'multipolygon';
-  		//$table['geoy'] = $record->geoy;
-  		//$table['geox'] = $record->geox;
-  		$table['geohash'] = $record->geohash;
-	}
-	return $table;
+    foreach ($result as $record) {
+        $table['bin'] = $record->bin;
+        $table['polygon'] = 'multipolygon';
+        //$table['geoy'] = $record->geoy;
+        //$table['geox'] = $record->geox;
+        $table['geohash'] = $record->geohash;
+    }
+    return $table;
 }
 
 /**
@@ -6700,25 +6700,25 @@ function uwwtd_coord_transform_multipolygon($parts){
  */ 
 function uwwtd_article3_compliance($node, $yearReporting){
     uwwtd_trace(__FUNCTION__);
-	// only send nodes of type 'agglomeration' here
-	//check if aggGenerated exists
-	if(!isset($node->field_agggenerated['und'][0]['value'])){
-		return array('NI', null, null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
-	}
+    // only send nodes of type 'agglomeration' here
+    //check if aggGenerated exists
+    if(!isset($node->field_agggenerated['und'][0]['value'])){
+        return array('NI', null, null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
+    }
 
-	// check if aggGenerated over 2000
-	if($node->field_agggenerated['und'][0]['value'] < 2000){
-		$art3comp = 'NR';
-		$art4comp = 'NR';
-		$art5comp = 'NR';
-		$art6comp = 'NR';
-		$reason = 'Article 3 compliance found to be non relevant because the agglomeration has a population of less than 2 000.';
+    // check if aggGenerated over 2000
+    if($node->field_agggenerated['und'][0]['value'] < 2000){
+        $art3comp = 'NR';
+        $art4comp = 'NR';
+        $art5comp = 'NR';
+        $art6comp = 'NR';
+        $reason = 'Article 3 compliance found to be non relevant because the agglomeration has a population of less than 2 000.';
         return array($art3comp, null, $art4comp, $art5comp, $art6comp, $reason);
-	}
+    }
     
-	if(!isset($node->field_aggpercwithouttreatment['und'][0]['value'])){
-		return array('NI', null, null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment".');
-	}
+    if(!isset($node->field_aggpercwithouttreatment['und'][0]['value'])){
+        return array('NI', null, null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "percentage of waste dischaged without treatment".');
+    }
         
     $aggpercwithouttreatment_pe = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggpercwithouttreatment['und'][0]['value'];
     $aggc2_pe = ($node->field_agggenerated['und'][0]['value'] / 100) * $node->field_aggc2['und'][0]['value'];
@@ -6726,35 +6726,35 @@ function uwwtd_article3_compliance($node, $yearReporting){
     $aggpercwithouttreatment_percent = $node->field_aggpercwithouttreatment['und'][0]['value'];
     $aggc2_percent = $node->field_aggc2['und'][0]['value'];
     
-	// start calculations
-	if (($aggpercwithouttreatment_pe + $aggc2_pe) <= 2000 && ($aggpercwithouttreatment_percent + $aggc2_percent) <= 2){
-		$art3comp = 'C';
-		$reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
-		return array($art3comp, null, null, null, null, $reason);
-	}
+    // start calculations
+    if (($aggpercwithouttreatment_pe + $aggc2_pe) <= 2000 && ($aggpercwithouttreatment_percent + $aggc2_percent) <= 2){
+        $art3comp = 'C';
+        $reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
+        return array($art3comp, null, null, null, null, $reason);
+    }
     
     
     if ( ! ($aggpercwithouttreatment_pe > 2000 || $aggpercwithouttreatment_percent > 2)) {
-		$art3comp = $GLOBALS['uwwtd_value']['compliance']['compliantQC'];
-		$reason = 'Article 3 compliance found to be compliantQC because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" is equal or less than 2% of total waste.';
+        $art3comp = $GLOBALS['uwwtd_value']['compliance']['compliantQC'];
+        $reason = 'Article 3 compliance found to be compliantQC because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" is equal or less than 2% of total waste.';
         uwwtd_trace('field_aggart3compliance QC for agglo nid ' . $node->nid);
-		return array($art3comp, null, null, null, null, $reason);
-	}
+        return array($art3comp, null, null, null, null, $reason);
+    }
 
     if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
-		$art3comp = 'NC';
-		$reason = 'Not compliant with article 3 because the deadline has been reached';
+        $art3comp = 'NC';
+        $reason = 'Not compliant with article 3 because the deadline has been reached';
         $art3compAddictionnal = null;
         if ($aggc2_pe > 1000 || $aggc2_percent > 2) {
             $art3compAddictionnal = $GLOBALS['uwwtd_value']['compliance']['not_compliantQC'];
             uwwtd_trace('field_aggart3addcompliance AddQC for agglo nid ' . $node->nid);
         }
         
-		return array($art3comp, $art3compAddictionnal, null, null, null, $reason);
-	}
+        return array($art3comp, $art3compAddictionnal, null, null, null, $reason);
+    }
 
-	$art3comp = 'PD';
-	$reason = 'Article 3 compliance found to be pending deadline deadline has not been reached';
+    $art3comp = 'PD';
+    $reason = 'Article 3 compliance found to be pending deadline deadline has not been reached';
     return array($art3comp, null, null, null, null, $reason);
 }
 
@@ -6771,10 +6771,10 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww)
     $aResult = array();
 //     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
     if (count($infoAllAggUww['listUww']) == 0) {
-// 		$aResult['compArt3'] = $art3comp;
-		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+//      $aResult['compArt3'] = $art3comp;
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }elseif (true === uwwtd_atleastone_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown']),
                                                      $infoAllAggUww)
         && true === uwwtd_all_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown'],
@@ -6782,10 +6782,10 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww)
                                                 $GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                                                 $GLOBALS['uwwtd_value']['compliance']['pending_deadline'],
                                                 ), $infoAllAggUww)) {
-// 		$aResult['compArt3'] = $art3comp;
-		$aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		$aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		$aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];                                                    
+//      $aResult['compArt3'] = $art3comp;
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];                                                    
     }
 //     unset($infoAllAggUww); 
     
@@ -6794,8 +6794,8 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww)
 
 function uwwtd_station_compliance_algo($node, $timestamp){
     uwwtd_trace(__FUNCTION__);
-	// Get all data needed to calculate compliance
-	// Get aglo data first
+    // Get all data needed to calculate compliance
+    // Get aglo data first
     $compliance_info = new stdClass();
     $compliance_info->required = '';
     $compliance_info->required_rcaan = 0;
@@ -6807,47 +6807,47 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $compliance_info->treatment_met = 0;
     $compliance_info->performance_met = 0;
     
-	$agglos = array();
-	if(isset($node->field_uwwaggliste['und'])){
-		$maxgen = 0;
-		foreach($node->field_uwwaggliste['und'] as $agglist){
-			$agg = node_load($agglist['nid']);
-			if($agg->field_agggenerated['und'][0]['value'] > $maxgen) $maxgen = $agg->field_agggenerated['und'][0]['value'];
-			$agglos[] = array(
-				'nid' => $agg->nid,
-				'title' => $agg->title,
-				'generated' => $agg->field_agggenerated['und'][0]['value']
-			);
-		}
-	}
-	if(count($agglos) == 0){
-		$compliance_info->compliance = 'NI';
-		$compliance_info->reason = 'Station found to have no information on agglomerations';
-		uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station found to have no information on agglomerations.', $timestamp, null, $node);
-		$compliance_info->required = 'NI';
-		$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-		$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+    $agglos = array();
+    if(isset($node->field_uwwaggliste['und'])){
+        $maxgen = 0;
+        foreach($node->field_uwwaggliste['und'] as $agglist){
+            $agg = node_load($agglist['nid']);
+            if($agg->field_agggenerated['und'][0]['value'] > $maxgen) $maxgen = $agg->field_agggenerated['und'][0]['value'];
+            $agglos[] = array(
+                'nid' => $agg->nid,
+                'title' => $agg->title,
+                'generated' => $agg->field_agggenerated['und'][0]['value']
+            );
+        }
+    }
+    if(count($agglos) == 0){
+        $compliance_info->compliance = 'NI';
+        $compliance_info->reason = 'Station found to have no information on agglomerations';
+        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station found to have no information on agglomerations.', $timestamp, null, $node);
+        $compliance_info->required = 'NI';
+        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
         return $compliance_info;
-	}
+    }
 
-	// Get dcp data
-	$dcps = array();
-	if(isset($node->field_uwwdcpliste['und'])){
-		foreach($node->field_uwwdcpliste['und'] as $dcplist){
-			$dcp = node_load($dcplist['nid']);
+    // Get dcp data
+    $dcps = array();
+    if(isset($node->field_uwwdcpliste['und'])){
+        foreach($node->field_uwwdcpliste['und'] as $dcplist){
+            $dcp = node_load($dcplist['nid']);
             $rca54applied = false;
             $rcaANitro = false;
             $rcaAPhos = false;
             $rcab = false;
             $rcac = false;
                             
-			/* Cas des pays avec l'ensemble du pays en zone sensible */
-			$rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-			if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-				$rcaTypeid = 'SA';
-			}            
-			foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-				$rca = node_load($rcalist['nid']);
+            /* Cas des pays avec l'ensemble du pays en zone sensible */
+            $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
+            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+                $rcaTypeid = 'SA';
+            }            
+            foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                $rca = node_load($rcalist['nid']);
                 
                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
                 $isrcaANitro = (isset($rca->field_rcaanitro['und'][0]['value']) ? $rca->field_rcaanitro['und'][0]['value'] == 1: false);
@@ -6861,33 +6861,33 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 if($isrcaAPhos) $rcaAPhos = true;
                 if($isrcab) $rcab = true;
                 if($isrcac) $rcac = true;
-			}
+            }
             
-			$dcps[] = array(
-				'nid' => $dcp->nid,
-				'title' => $dcp->title,
-				'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
-				'rcatype' => $rcaTypeid,
+            $dcps[] = array(
+                'nid' => $dcp->nid,
+                'title' => $dcp->title,
+                'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
+                'rcatype' => $rcaTypeid,
                 'rca54applied' => $rca54applied,
                 'rcaan' => $rcaANitro,
                 'rcaap' => $rcaAPhos,
                 'rcab' => $rcab,
                 'rcac' => $rcac,
-			);
-		}
-	}
-	
+            );
+        }
+    }
+    
     uwwtd_trace('dcp and rca info use : ' . var_export($dcps, true));
-	// If we cant find any discharge points attached to this station then we return no information to the user
-	if(count($dcps) == 0){
-		$compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		$compliance_info->reason = 'Station found to have no information on discharge points';
-		uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station found to have no information on discharge points.', $timestamp, null, $node);
-		$compliance_info->required = 'NI';
-		$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-		$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+    // If we cant find any discharge points attached to this station then we return no information to the user
+    if(count($dcps) == 0){
+        $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        $compliance_info->reason = 'Station found to have no information on discharge points';
+        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station found to have no information on discharge points.', $timestamp, null, $node);
+        $compliance_info->required = 'NI';
+        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
         return $compliance_info;
-	}
+    }
 
     //$dcps MUST not be empty
     //ALGO1
@@ -6916,83 +6916,83 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     
     //same case as below for count($dcp), missing information on dcp    
     if($compliance_info->required == 'NI'){        
-		$compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-		uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $compliance_info->reason, $timestamp, null, $node);
-		$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-		$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+        $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $compliance_info->reason, $timestamp, null, $node);
+        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
         return $compliance_info;        
-	}
+    }
     
-	if($compliance_info->required == 'Appropriate' || $compliance_info->required == 'NR'){    
+    if($compliance_info->required == 'Appropriate' || $compliance_info->required == 'NR'){    
         //e.vincent / 2015/08/27 / ask from b.fribourg-blanc
         $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['not_calculable'];
         $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['not_calculable'];
         $compliance_info->compliance = 'NR';
         $compliance_info->reason = 'Treatment found to be appropriate, treatment to implement and performance can therefore not be calculated';
-	}         
+    }         
 
-	if($compliance_info->required == 'P'){
+    if($compliance_info->required == 'P'){
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('primary'))) {
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('tssperf', 'bod5perf'))) {
-				$compliance_info->compliance = 'C';                            
-				$compliance_info->reason = 'Station found to be compliant because primary treatment is in place and performance is met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{   
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';                            
+                $compliance_info->reason = 'Station found to be compliant because primary treatment is in place and performance is met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{   
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because primary treatment is in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('tssperf', 'bod5perf'))) {            
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because primary performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{                                    
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because primary performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{                                    
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because primary treatment is not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+    }
 
-	if($compliance_info->required == 'S'){		
+    if($compliance_info->required == 'S'){      
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))) {
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{                            
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because secondary treatment is in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{                            
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because secondary treatment is in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because secondary performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{                                     
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-	}
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because secondary performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{                                     
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because secondary treatment is not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+    }
 
     //////////////////////////////////////////////
     //More stringent treatment
@@ -7005,25 +7005,25 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
         
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {            
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];            
-			$compliance_info->compliance = 'NC';
-			$compliance_info->reason = 'Station found to be not compliant because nitrogen treatment is not in place';
-			$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['false'];
-		}  
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];            
+            $compliance_info->compliance = 'NC';
+            $compliance_info->reason = 'Station found to be not compliant because nitrogen treatment is not in place';
+            $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['false'];
+        }  
     }
     
     //more stringent nitrogen rcaanitro   
@@ -7034,33 +7034,33 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
         
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {            
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because nitrogen treatment is in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because nitrogen treatment is not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because nitrogen treatment is not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent phosphorus rcaaPhos   
@@ -7071,33 +7071,33 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'premoval'))) {
         
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {            
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus treatment is in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus treatment is in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus treatment is in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                 
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus treatment is not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus treatment is not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus treatment is not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent nitrogen and phosphorus rcaanitro + rcaapos   
@@ -7108,33 +7108,33 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'premoval', 'nremoval'))) {
               
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                         
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                            
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent other rcac   
@@ -7147,33 +7147,33 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
                         )) {                   
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {             
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because other treatment is in place and phosphorus and nitrogen performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because other treatment is in place but phosphorus and nitrogen performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because other treatment is in place and phosphorus and nitrogen performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because other treatment is in place but phosphorus and nitrogen performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {               
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be not compliant because other treatment is not in place but phosphorus and nitrogen performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because other treatment is not in place and phosphorus and nitrogen performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be not compliant because other treatment is not in place but phosphorus and nitrogen performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because other treatment is not in place and phosphorus and nitrogen performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent nitrogen and other rcab + rcac
@@ -7186,26 +7186,26 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
                         )) {                   
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {             
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because other treatment is in place and phosphorus and nitrogen performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because other treatment is in place but phosphorus and nitrogen performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}
-		else{
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because other treatment is in place and phosphorus and nitrogen performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because other treatment is in place but phosphorus and nitrogen performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }
+        else{
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
-			$compliance_info->compliance = 'NC';
-			$compliance_info->reason = 'Station found to be non compliant because other treatment is not in place and phosphorus and nitrogen performance is not met';
-			$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-		}        
+            $compliance_info->compliance = 'NC';
+            $compliance_info->reason = 'Station found to be non compliant because other treatment is not in place and phosphorus and nitrogen performance is not met';
+            $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+        }        
     }
     
     //more stringent phophorus and other rcaaphos + rcac
@@ -7218,32 +7218,32 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
                         )) {                   
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                         
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		} else {
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        } else {
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ptotperf'))) {                           
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent nitrogen an dother rcaanitro +rcac   
@@ -7256,32 +7256,32 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
                         )) {                   
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                         
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		} else {
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        } else {
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf'))) {                            
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }
     
     //more stringent nitrogen and phosphorus and other rcaanitro = rcaPhos + rcac   
@@ -7294,68 +7294,68 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
                         )) {                   
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                         
-				$compliance_info->compliance = 'C';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		} else {
-			$compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+                $compliance_info->compliance = 'C';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are in place and performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        } else {
+            $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
 
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf', 'ntotperf', 'ptotperf'))) {                           
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
-				$compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
-			}
-			else{
-				$compliance_info->compliance = 'NC';
-				$compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
-				$compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-			}
-		}        
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
+                $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+            }
+            else{
+                $compliance_info->compliance = 'NC';
+                $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
+                $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+            }
+        }        
     }                                
     
-	return $compliance_info;
+    return $compliance_info;
 }
 
 function uwwtd_unzip_files($file, $target){
-	$main_dir = 'public://data_sources';
-	file_prepare_directory($main_dir, FILE_CREATE_DIRECTORY);
+    $main_dir = 'public://data_sources';
+    file_prepare_directory($main_dir, FILE_CREATE_DIRECTORY);
 
-	// export array
-	$newfileslist = array();
+    // export array
+    $newfileslist = array();
 
-	$zip = new ZipArchive;
-	$newFile = uwwtd_file_upload($file, '.zip');
-	$path = file_create_url($newFile->uri);
-	$newfileslist['source'] = $newFile->uri;
-	$filename = $newFile->filename;
-	$url = drupal_parse_url($file->uri);
-	$mydir = $main_dir;
-	file_prepare_directory($mydir, FILE_CREATE_DIRECTORY);
-	$destination = $mydir.'/'.$filename;
+    $zip = new ZipArchive;
+    $newFile = uwwtd_file_upload($file, '.zip');
+    $path = file_create_url($newFile->uri);
+    $newfileslist['source'] = $newFile->uri;
+    $filename = $newFile->filename;
+    $url = drupal_parse_url($file->uri);
+    $mydir = $main_dir;
+    file_prepare_directory($mydir, FILE_CREATE_DIRECTORY);
+    $destination = $mydir.'/'.$filename;
 
-	$opened = $zip->open(drupal_realpath($destination));
-	if( $opened !== true ){
+    $opened = $zip->open(drupal_realpath($destination));
+    if( $opened !== true ){
        drupal_set_message(t('Cannot open this file'), 'error');
        return false;
     }
     else{
-    	$dir = file_create_url("sites/default/data_shapes");
-    	for($i = 0; $i < $zip->numFiles; $i++){
-    		$zippedfilename = $zip->getNameIndex($i);
-    		$newfileslist['extracted'][] = $target.$zippedfilename;
-    		$zip->extractTo($target, array($zip->getNameIndex($i)));
-    	}
-		$zip->extractTo($dir);
-		$zip->close();
+        $dir = file_create_url("sites/default/data_shapes");
+        for($i = 0; $i < $zip->numFiles; $i++){
+            $zippedfilename = $zip->getNameIndex($i);
+            $newfileslist['extracted'][] = $target.$zippedfilename;
+            $zip->extractTo($target, array($zip->getNameIndex($i)));
+        }
+        $zip->extractTo($dir);
+        $zip->close();
     }
 
     if(empty($newfileslist)) return false;
@@ -7368,92 +7368,92 @@ function uwwtd_unzip_files($file, $target){
 //Il faudrait encore améliorer en envoyant un lot de message au lieu d'un à la fois
 
 function uwwtd_check_sensitive($nid){
-	$result = false;
+    $result = false;
 
-	$node = node_load($nid);
+    $node = node_load($nid);
 
-	// get node type
-	$type = $node->type;
+    // get node type
+    $type = $node->type;
 
-	if($type == 'agglomeration'){
-		foreach($node->field_agguwwliste['und'] as $uwwnid){
-			$uww = node_load($uwwnid['nid']);
-			foreach($uww->field_uwwdcpliste['und'] as $dcpnid){
-				$dcp = node_load($dcpnid['nid']);
-				if(isset($dcp->field_rcatype['und'][0]['value'])){
-					if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
-				}
-			}
-		}
-	}
+    if($type == 'agglomeration'){
+        foreach($node->field_agguwwliste['und'] as $uwwnid){
+            $uww = node_load($uwwnid['nid']);
+            foreach($uww->field_uwwdcpliste['und'] as $dcpnid){
+                $dcp = node_load($dcpnid['nid']);
+                if(isset($dcp->field_rcatype['und'][0]['value'])){
+                    if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
+                }
+            }
+        }
+    }
 
-	if($type == 'uwwtp'){
-		foreach($node->field_uwwdcpliste['und'] as $dcpnid){
-			$dcp = node_load($dcpnid['nid']);
-			if(isset($dcp->field_rcatype['und'][0]['value'])){
-				if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
-			}
-		}
-	}
+    if($type == 'uwwtp'){
+        foreach($node->field_uwwdcpliste['und'] as $dcpnid){
+            $dcp = node_load($dcpnid['nid']);
+            if(isset($dcp->field_rcatype['und'][0]['value'])){
+                if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
+            }
+        }
+    }
 
-	if($type == 'discharge_point'){
-		if(isset($dcp->field_rcatype['und'][0]['value'])){
-			if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
-		}
-	}
+    if($type == 'discharge_point'){
+        if(isset($dcp->field_rcatype['und'][0]['value'])){
+            if($dcp->field_rcatype['und'][0]['value'] == 'CSA' || $dcp->field_rcatype['und'][0]['value'] == 'SA') return $dcp->field_rcatype['und'][0]['value'];
+        }
+    }
 }
 
 function uwwtd_country_cases($node){
-// 	$repcode = $node->field_repcode['und'][0]['value'];
-// 	$repcode = str_replace('_', '-', $repcode);
-// 	$boom = explode('-', $repcode);
-// 	$boom = explode(' ', $boom[0]);
-// 	$rep = $boom[0];
+//  $repcode = $node->field_repcode['und'][0]['value'];
+//  $repcode = str_replace('_', '-', $repcode);
+//  $boom = explode('-', $repcode);
+//  $boom = explode(' ', $boom[0]);
+//  $rep = $boom[0];
     $rep = uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value']);
-	if($rep == 'SI' || $rep == 'si'){
-		$sens = uwwtd_check_sensitive($node->nid);
-		if(new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31') <= new DateTime('2008-12-31')){
-			if($node->field_agggenerated['und'][0]['value'] <= 10000){
-				$art4comp = 'NR';
-				$reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2008 and the agglomeration has a population equal or less than 10 000.';
-				return array($art4comp, $reason);
-			}
-		}elseif(new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31') <= new DateTime('2010-12-31')){
-			if(($sens != 'CSA' && $sens != 'SA') && $node->field_agggenerated['und'][0]['value'] <= 15000){
-				$art4comp = 'NR';
-				$reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2010, the agglomeration is situation in a CSA or SA and the population is equal or less than 15 000.';
-				return array($art4comp, $reason);
-			}
-		}else{
-			$art4comp = 'NR';
-			$reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2015.';
-			return array($art4comp, $reason);
-		}
-	}
+    if($rep == 'SI' || $rep == 'si'){
+        $sens = uwwtd_check_sensitive($node->nid);
+        if(new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31') <= new DateTime('2008-12-31')){
+            if($node->field_agggenerated['und'][0]['value'] <= 10000){
+                $art4comp = 'NR';
+                $reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2008 and the agglomeration has a population equal or less than 10 000.';
+                return array($art4comp, $reason);
+            }
+        }elseif(new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31') <= new DateTime('2010-12-31')){
+            if(($sens != 'CSA' && $sens != 'SA') && $node->field_agggenerated['und'][0]['value'] <= 15000){
+                $art4comp = 'NR';
+                $reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2010, the agglomeration is situation in a CSA or SA and the population is equal or less than 15 000.';
+                return array($art4comp, $reason);
+            }
+        }else{
+            $art4comp = 'NR';
+            $reason = 'Article 4 compliance found to be non relevant because the slovenian agglomeration data is before the 31/12/2015.';
+            return array($art4comp, $reason);
+        }
+    }
 
-	if($rep == 'CY' || $rep == 'CYC' || $rep == 'cy' || $rep == 'cyc'){
-		$nom = $node->title;
-		$curDate = new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31');
-		if($curDate <= new DateTime('2012-12-31')){
-			if($curDate <= new DateTime('2008-12-31') && ($nom == 'Paralimni' || $nom == 'Limassol') && $node->field_agggenerated['und'][0]['value'] <= 15000){
-				$art4comp = 'NR';
-				$reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2008, the agglomeration is named "Paralimni" or "Limassol" and the population is equal or less than 15 000.';
-				return array($art4comp, $reason);
-			}
-			if($curDate <= new DateTime('2009-12-31') && $nom == 'Nicosia' && $node->field_agggenerated['und'][0]['value'] <= 15000){
-				$art4comp = 'NR';
-				$reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2009, the agglomeration is named "Nicosia" and the population is equal or less than 15 000.';
-				return array($art4comp, $reason);
-			}
-			if($curDate <= new DateTime('2011-12-31')){
-				if($nom != 'Paralimni' && $nom != 'Limassol' && $nom != 'Nicosia'){
-					$art4comp = 'NR';
-					$reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2011 and the agglomeration is not named "Paralimni", "Limassol" or "Nicosia".';
-					return array($art4comp, $reason);
-				}
-			}
-		}
-	}
+    if($rep == 'CY' || $rep == 'CYC' || $rep == 'cy' || $rep == 'cyc'){
+        $nom = $node->title;
+        $curDate = new DateTime($node->field_anneedata['und'][0]['value'].'-12'.'-31');
+        if($curDate <= new DateTime('2012-12-31')){
+            if($curDate <= new DateTime('2008-12-31') && ($nom == 'Paralimni' || $nom == 'Limassol') && $node->field_agggenerated['und'][0]['value'] <= 15000){
+                $art4comp = 'NR';
+                $reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2008, the agglomeration is named "Paralimni" or "Limassol" and the population is equal or less than 15 000.';
+                return array($art4comp, $reason);
+            }
+            if($curDate <= new DateTime('2009-12-31') && $nom == 'Nicosia' && $node->field_agggenerated['und'][0]['value'] <= 15000){
+                $art4comp = 'NR';
+                $reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2009, the agglomeration is named "Nicosia" and the population is equal or less than 15 000.';
+                return array($art4comp, $reason);
+            }
+            if($curDate <= new DateTime('2011-12-31')){
+                if($nom != 'Paralimni' && $nom != 'Limassol' && $nom != 'Nicosia'){
+                    $art4comp = 'NR';
+                    $reason = 'Article 4 compliance found to be non relevant because the cyprian agglomeration data is before the 31/12/2011 and the agglomeration is not named "Paralimni", "Limassol" or "Nicosia".';
+                    return array($art4comp, $reason);
+                }
+            }
+        }
+    }
 }
 
 function uwwtd_in_array_r($needle, $haystack, $strict = false){
@@ -7467,31 +7467,31 @@ function uwwtd_in_array_r($needle, $haystack, $strict = false){
 
 function uwwtd_zipped_csvs_to_array($files){
     uwwtd_trace(__FUNCTION__);
-	$combined = array('UWWTD_Report' => array());
+    $combined = array('UWWTD_Report' => array());
 
-	if(in_array('public://data_sources/t_reporter.csv', $files['extracted'])) $combined['UWWTD_Report']['Reporter'] = uwwtd_csv_to_array('public://data_sources/t_reporter.csv', ';');
+    if(in_array('public://data_sources/t_reporter.csv', $files['extracted'])) $combined['UWWTD_Report']['Reporter'] = uwwtd_csv_to_array('public://data_sources/t_reporter.csv', ';');
 
-	if(in_array('public://data_sources/t_reportperiod.csv', $files['extracted'])) $combined['UWWTD_Report']['ReportPeriod'] = uwwtd_csv_to_array('public://data_sources/t_reportperiod.csv', ';');
+    if(in_array('public://data_sources/t_reportperiod.csv', $files['extracted'])) $combined['UWWTD_Report']['ReportPeriod'] = uwwtd_csv_to_array('public://data_sources/t_reportperiod.csv', ';');
 
-	if(in_array('public://data_sources/t_contact.csv', $files['extracted'])) $combined['UWWTD_Report']['Contacts']['Contact'] = uwwtd_csv_to_array('public://data_sources/t_contact.csv', ';');
+    if(in_array('public://data_sources/t_contact.csv', $files['extracted'])) $combined['UWWTD_Report']['Contacts']['Contact'] = uwwtd_csv_to_array('public://data_sources/t_contact.csv', ';');
 
-	if(in_array('public://data_sources/t_receivingAreas.csv', $files['extracted'])){
-		$rcas = uwwtd_csv_to_array('public://data_sources/t_receivingAreas.csv', ';');
-		if(count($rcas) === 1) $combined['UWWTD_Report']['ReceivingAreas']['ReceivingArea'] = $rcas[0];
-		else $combined['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['ReceivingArea'] = $rcas;
-	}
+    if(in_array('public://data_sources/t_receivingAreas.csv', $files['extracted'])){
+        $rcas = uwwtd_csv_to_array('public://data_sources/t_receivingAreas.csv', ';');
+        if(count($rcas) === 1) $combined['UWWTD_Report']['ReceivingAreas']['ReceivingArea'] = $rcas[0];
+        else $combined['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['ReceivingArea'] = $rcas;
+    }
 
-	if(in_array('public://data_sources/t_agglomerations.csv', $files['extracted'])) $combined['UWWTD_Report']['Agglomerations']['Agglomeration'] = uwwtd_csv_to_array('public://data_sources/t_agglomerations.csv', ';');
+    if(in_array('public://data_sources/t_agglomerations.csv', $files['extracted'])) $combined['UWWTD_Report']['Agglomerations']['Agglomeration'] = uwwtd_csv_to_array('public://data_sources/t_agglomerations.csv', ';');
 
-	if(in_array('public://data_sources/t_uwwtps.csv', $files['extracted'])) $combined['UWWTD_Report']['UWWTPs']['UWWTP'] = uwwtd_csv_to_array('public://data_sources/t_uwwtps.csv', ';');
+    if(in_array('public://data_sources/t_uwwtps.csv', $files['extracted'])) $combined['UWWTD_Report']['UWWTPs']['UWWTP'] = uwwtd_csv_to_array('public://data_sources/t_uwwtps.csv', ';');
 
-	if(in_array('public://data_sources/t_dischargePoints.csv', $files['extracted'])) $combined['UWWTD_Report']['DischargePoints']['DischargePoint'] = uwwtd_csv_to_array('public://data_sources/t_dischargePoints.csv', ';');
+    if(in_array('public://data_sources/t_dischargePoints.csv', $files['extracted'])) $combined['UWWTD_Report']['DischargePoints']['DischargePoint'] = uwwtd_csv_to_array('public://data_sources/t_dischargePoints.csv', ';');
 
-	if(in_array('public://data_sources/t_uwwtpagglo.csv', $files['extracted'])) $combined['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'] = uwwtd_csv_to_array('public://data_sources/t_uwwtpagglo.csv', ';');
+    if(in_array('public://data_sources/t_uwwtpagglo.csv', $files['extracted'])) $combined['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'] = uwwtd_csv_to_array('public://data_sources/t_uwwtpagglo.csv', ';');
 
-	if(in_array('public://data_sources/t_mslevel.csv', $files['extracted'])) $combined['UWWTD_Report']['MSLevel'] = uwwtd_csv_to_array('public://data_sources/t_mslevel.csv', ';');
+    if(in_array('public://data_sources/t_mslevel.csv', $files['extracted'])) $combined['UWWTD_Report']['MSLevel'] = uwwtd_csv_to_array('public://data_sources/t_mslevel.csv', ';');
 
-	return $combined;
+    return $combined;
 }
 
 /**
@@ -7505,11 +7505,11 @@ function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     $required_treatment->reason = '';
-	if($maxgen < 2000){
+    if($maxgen < 2000){
         $required_treatment->required = 'Appropriate';
 //         $required_treatment->reason = $reason;
         return $required_treatment;
-	}    
+    }    
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
@@ -7532,79 +7532,79 @@ function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
     }            
 
 
-		// If the discharge point is in a Less Sensitive Area
+        // If the discharge point is in a Less Sensitive Area
     switch($dcp['rcatype']) {
-	   //if($dcp['rcatype'] == 'LSA'){
+       //if($dcp['rcatype'] == 'LSA'){
        case 'LSA':
-    		// For dcps in a LSA with water body type LC or CW
-    		if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+            // For dcps in a LSA with water body type LC or CW
+            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
    
-    			// For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
-    			if($maxgen > 150000){
-    				// secondary treatment must be present
-    				$required_treatment->required = 'S';
+                // For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
+                if($maxgen > 150000){
+                    // secondary treatment must be present
+                    $required_treatment->required = 'S';
                 // For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-    			} else {
+                } else {
                     $required_treatment->required = 'P';
                 }
             // For stations in a LSA with water body type ES
-    		}elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
+            }elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
     
-    			// For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
-    			if($maxgen >= 2000 && $maxgen <= 10000){
-    				// primary treatment must be present
-    				$required_treatment->required = 'P';
-    			}else{
-    				// secondary treatment must be present
-    				$required_treatment->required = 'S';
-    			}
-    		} else {
+                // For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
+                if($maxgen >= 2000 && $maxgen <= 10000){
+                    // primary treatment must be present
+                    $required_treatment->required = 'P';
+                }else{
+                    // secondary treatment must be present
+                    $required_treatment->required = 'S';
+                }
+            } else {
                 //problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
-	// If the discharge point is in a Normal Area
+    // If the discharge point is in a Normal Area
         case 'NA':    
-    		// For stations in a NA with water body type LC or CW
-    		if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+            // For stations in a NA with water body type LC or CW
+            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
     
-    			// For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-    			if($maxgen <= 10000){
-    				$required_treatment->required = 'Appropriate';
+                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+                if($maxgen <= 10000){
+                    $required_treatment->required = 'Appropriate';
                 // For stations in a NA with water body type LC or CW and having an agg population (p.e) of > 10000
-    			} else {
-    				// secondary treatment must be present
-    				// LG pas la bonne variable mise à jour :  $typeTreat = 'S';
-    				$required_treatment->required = 'S';					
-    			}
+                } else {
+                    // secondary treatment must be present
+                    // LG pas la bonne variable mise à jour :  $typeTreat = 'S';
+                    $required_treatment->required = 'S';                    
+                }
             // For stations in a NA with water body type ES or FW
-    		} elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
+            } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
     
-    			// secondary treatment must be present
-    			$required_treatment->required = 'S';
-    		} else {
+                // secondary treatment must be present
+                $required_treatment->required = 'S';
+            } else {
                 //problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
-    	// If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
+        // If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
         case 'SA':
         case 'CSA':
         case 'A58':
         case 'A54':
             if (true === uwwtd_rca_art54_applies($dcp)) {
-        		if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-        			if($maxgen <= 10000){
-        				$required_treatment->required = 'Appropriate';
-        			} else {
-        				$required_treatment->required = 'S';					
-        			}
-        		} elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
+                if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
+                    if($maxgen <= 10000){
+                        $required_treatment->required = 'Appropriate';
+                    } else {
+                        $required_treatment->required = 'S';                    
+                    }
+                } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
         
-        			$required_treatment->required = 'S';
-        		} else {
+                    $required_treatment->required = 'S';
+                } else {
                     $required_treatment->required = 'NI';
                     $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
                 }                              
@@ -7649,38 +7649,38 @@ function uwwtd_get_all_info_agguwww($node)
 
     $aResult['listUww'] = array();
     
-	foreach($node->field_agguwwliste['und'] as $agguwwlist){
-		$uww = node_load($agguwwlist['nid']);
+    foreach($node->field_agguwwliste['und'] as $agguwwlist){
+        $uww = node_load($agguwwlist['nid']);
         
-		$aResult['listUww'][$uww->nid] = array(
-// 			'node' => $uww,
-			'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
-			'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
-			'cod' => $uww->field_uwwcodperf['und'][0]['value'],
-			'collecting' => $uww->field_uwwloadenteringuwwtp['und'][0]['value'],
+        $aResult['listUww'][$uww->nid] = array(
+//          'node' => $uww,
+            'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
+            'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
+            'cod' => $uww->field_uwwcodperf['und'][0]['value'],
+            'collecting' => $uww->field_uwwloadenteringuwwtp['und'][0]['value'],
             'compB' => $uww->field_uwwcompliance['und'][0]['value'],
             'secondary' => $uww->field_uwwsecondarytreatment['und'][0]['value'],
             'treatmenttype' => $uww->field_uwwtreatmenttype['und'][0]['value'],
-		);        
+        );        
 
-		// get reste of information from node that collected joint information
-		$query = db_select('node', 'n');
-		$query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
-		$query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
-		$query->fields('n',array('title','created'))
-		->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=')
-		->condition('u.field_agglo_uww_uww_nid', $uww->nid, '=')        
-		->fields('n',array('nid'));
+        // get reste of information from node that collected joint information
+        $query = db_select('node', 'n');
+        $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+        $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+        $query->fields('n',array('title','created'))
+        ->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=')
+        ->condition('u.field_agglo_uww_uww_nid', $uww->nid, '=')        
+        ->fields('n',array('nid'));
 
-		$result = $query->execute();
+        $result = $query->execute();
         $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = 0;
-		while($record = $result->fetchAssoc()){
-			$agguww = node_load($record['nid']);
-			$uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-			//$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
-			$aResult['total'] += $uwwperccollec;
+        while($record = $result->fetchAssoc()){
+            $agguww = node_load($record['nid']);
+            $uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+            //$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+            $aResult['total'] += $uwwperccollec;
             $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-		}
+        }
         
         $aResult['rca']['art54applies'] = false;
         $aResult['rca']['rca_n_incoming_measured']     = 0;
@@ -7696,15 +7696,15 @@ function uwwtd_get_all_info_agguwww($node)
         $aResult['rca']['rca_p_discharged_measured']   = 0;
         $aResult['rca']['rca_p_discharged_calculated'] = 0;
         $aResult['rca']['rca_p_discharged_estimated']  = 0;        
-		foreach($uww->field_uwwdcpliste['und'] as $dcplist){
-			$dcp = node_load($dcplist['nid']);
-			/* Cas des pays avec l'ensemble du pays en zone sensible */
-			$rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-			if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-				$rcaTypeid = 'SA';
-			}            
-			foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-				$rca = node_load($rcalist['nid']);
+        foreach($uww->field_uwwdcpliste['und'] as $dcplist){
+            $dcp = node_load($dcplist['nid']);
+            /* Cas des pays avec l'ensemble du pays en zone sensible */
+            $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
+            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+                $rcaTypeid = 'SA';
+            }            
+            foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                $rca = node_load($rcalist['nid']);
                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
                 if (true === uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
                     $aResult['rca']['art54applies'] = true;
@@ -7731,7 +7731,7 @@ function uwwtd_get_all_info_agguwww($node)
         $aResult['listUww'][$uww->nid]['node'] = $uww;
         
         unset($uww);        
-	}
+    }
     
     return $aResult;
 }
@@ -7899,68 +7899,68 @@ function uwwtd_atleastone_uwwtp_required_in($authorizeValue, &$infoAllAggUww)
 
 // No longer needed but could be useful
 /*function uwwtd_FindSensitiveArea($wkt){
-	//On boucle sur la liste des tables de zones sensibles afin de determiner laquelle est la bonne
-	
-	$tables = array(
-		'data.eu_sa_catchm',
-		'data.eu_sa_coasta',
-		'data.eu_sa_coastl',
-		'data.eu_sa_lake',
-		'data.eu_sa_tw'
-	);
-	
-	$results = array();
-	
-	foreach($tables as $table){
-		
-		$nbRows = 0;
-	
-		if($table == 'data.eu_sa_catchm'){
-			$query = "
-				WITH geo AS (SELECT ST_Transform(ST_GeomFromText('".$wkt."', 4326), 3035) as the_geom)
-				SELECT eucd_sa_cm, name, type
-				FROM ".$table." c, geo
-				WHERE geo.the_geom && c.the_geom
-					AND ST_intersects(geo.the_geom, c.the_geom)
-			";
-			$rs = db_query($query)->fetchAll();
-			$nbRows = count($rs);
-			if($nbRows > 0){
-				foreach($rs as $r){
-					$s = 'NON';
-					if($r->type == 'S') $s = 'SA';
-					elseif($r->type == 'N') $s = 'NA';
-					$results[] = array('id'=>$r->eucd_sa_cm, 'name'=>$r->name, 'type'=>$s);
-				}
-			}
-		}
-		else{
-			$query = "
-				WITH geo AS (SELECT ST_Transform(ST_GeomFromText('".$wkt."', 4326), 3035) as the_geom)
-				SELECT eucd_sa_cm, name
-				FROM ".$table." c, geo
-				WHERE geo.the_geom && c.the_geom
-					AND ST_intersects(geo.the_geom, c.the_geom)
-			";
-			$rs = db_query($query)->fetchAll();
-			$nbRows = count($rs);
-			if($nbRows > 0){
-				$s = 'SA';
-				foreach($rs as $r){
-					$results[] = array('id'=>$r->eucd_sa_cm, 'name'=>$r->name, 'type'=>$s);
-				}
-			}
-		}
-		
-		if(count($results) > 0){
-			return $results;
-		}
-		else return false;
-	}
-	//La louse, nos données sont en LAEA 3035, il faut don refaire une reprojection
-	$nbRows = count($r);
-	if($nbRows == 0) return 0;
-	else return array($r[0]);
+    //On boucle sur la liste des tables de zones sensibles afin de determiner laquelle est la bonne
+    
+    $tables = array(
+        'data.eu_sa_catchm',
+        'data.eu_sa_coasta',
+        'data.eu_sa_coastl',
+        'data.eu_sa_lake',
+        'data.eu_sa_tw'
+    );
+    
+    $results = array();
+    
+    foreach($tables as $table){
+        
+        $nbRows = 0;
+    
+        if($table == 'data.eu_sa_catchm'){
+            $query = "
+                WITH geo AS (SELECT ST_Transform(ST_GeomFromText('".$wkt."', 4326), 3035) as the_geom)
+                SELECT eucd_sa_cm, name, type
+                FROM ".$table." c, geo
+                WHERE geo.the_geom && c.the_geom
+                    AND ST_intersects(geo.the_geom, c.the_geom)
+            ";
+            $rs = db_query($query)->fetchAll();
+            $nbRows = count($rs);
+            if($nbRows > 0){
+                foreach($rs as $r){
+                    $s = 'NON';
+                    if($r->type == 'S') $s = 'SA';
+                    elseif($r->type == 'N') $s = 'NA';
+                    $results[] = array('id'=>$r->eucd_sa_cm, 'name'=>$r->name, 'type'=>$s);
+                }
+            }
+        }
+        else{
+            $query = "
+                WITH geo AS (SELECT ST_Transform(ST_GeomFromText('".$wkt."', 4326), 3035) as the_geom)
+                SELECT eucd_sa_cm, name
+                FROM ".$table." c, geo
+                WHERE geo.the_geom && c.the_geom
+                    AND ST_intersects(geo.the_geom, c.the_geom)
+            ";
+            $rs = db_query($query)->fetchAll();
+            $nbRows = count($rs);
+            if($nbRows > 0){
+                $s = 'SA';
+                foreach($rs as $r){
+                    $results[] = array('id'=>$r->eucd_sa_cm, 'name'=>$r->name, 'type'=>$s);
+                }
+            }
+        }
+        
+        if(count($results) > 0){
+            return $results;
+        }
+        else return false;
+    }
+    //La louse, nos données sont en LAEA 3035, il faut don refaire une reprojection
+    $nbRows = count($r);
+    if($nbRows == 0) return 0;
+    else return array($r[0]);
 }*/
 
 /**
@@ -7969,10 +7969,10 @@ function uwwtd_atleastone_uwwtp_required_in($authorizeValue, &$infoAllAggUww)
 function uwwtd_get_countrycode_from_repcode($repcode)
 {
     uwwtd_trace(__FUNCTION__);
-	$repcode = str_replace('_', '-', $repcode);
-	$boom = explode('-', $repcode);
-	$boom = explode(' ', $boom[0]);
-	$rep = $boom[0];
+    $repcode = str_replace('_', '-', $repcode);
+    $boom = explode('-', $repcode);
+    $boom = explode(' ', $boom[0]);
+    $rep = $boom[0];
     return $rep; 
 }  
 
