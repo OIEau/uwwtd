@@ -641,9 +641,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_agglomeration($filter['filter']);
-	   // dsm($art);
-    //===== FIX ME nd@oieau.fr : add a function for test if we have some data about article 17
-    if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
+    if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
+    //if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
         $list_field = array(
             'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -744,7 +743,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $graph[$row['field_aggcompliance_value_format']]['nb']++;
         $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
 
-		if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
+		if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
 			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
@@ -925,7 +924,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     }
 
 	$data = uwwtd_get_data_agglomeration($filter['filter']);
-	if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
+	if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
        $list_field = array(
             'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -962,32 +961,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         $filter_force['filter']['field_status_value'] = '1';
     }    
     uwwtd_filter_data($filter, $data, $filter_force);
-//     uwwtd_filter_data($filter, $data);
-
-    
-    
-    
-    /* ================ FIX ME
-	foreach($data as $art17){
-		if(isset($art17['field_article17_agglo_value_format']) && ($art17['field_article17_agglo_value_format']== 'Yes')){
-			$exists[] = array('Yes' => $art17['field_article17_agglo_nid']);
-			break;
-		}else{
-			$exists[] = array('No' => "");
-		}
-	}
-	foreach($exists as $exist){
-		 if(array_key_exists('Yes', $exist)){
-			$art17 = "Yes";
-			break;
-		}elseif(!isset($filter['filter']['field_article17_agglo_value_art'])){
-			$art17 = "No";
-		}
-	 }
-	  if($art17 == "No"){
-		  unset($header[7]);
-	  }
-    */
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'], $data);
 
     $optionstyle = array();
@@ -1019,7 +992,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         $graph['field_aggc2_value']['value'] += $row['field_aggc2_value'] / 100  * $row['field_agggenerated_value'];
         $graph['field_aggpercwithouttreatment_value']['value'] += $row['field_aggpercwithouttreatment_value'] / 100  * $row['field_agggenerated_value'];
 
-		if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
+		if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
 			$rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
@@ -1178,9 +1151,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         return $cache->data['page'];
     }
 //     dsm('not in cache');    
-	$data = uwwtd_get_data_uwwtp($filter['filter']);
-
-	if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+	$data = uwwtd_get_data_uwwtp($filter['filter']);    
+	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
             'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1194,7 +1166,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
             'field_uwwptotperf_value'       => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwptotperf_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['test_pass']),
             'field_article17_uwwtp_value'  	=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
             
-        );break;
+        );
    }else{
         $list_field = array(
             'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -1217,34 +1189,9 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }
+    //Process data
     uwwtd_filter_data($filter, $data, $filter_force); 
-//     dsm($data);
-
-    
-
-    /*==============================FIX ME
-	foreach($data as $art17){
-		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
-				$exists[] = array('Yes' => $art17['field_article17_uwwtp_nid']);
-				break;
-		}else{
-			$exists[] = array('No' => "");
-		}
-	}
-	 foreach($exists as $exist){
-		 if(array_key_exists('Yes', $exist)){
-			 $art17 = "Yes";
-			 break;
-		}elseif(!isset($filter['filter']['field_article17_uwwtp_value_art'])){
-			 $art17 = "No";
-		}
-	 }
-	  if($art17 == "No"){
-		  unset($header[11]);
-	  }
-*/
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp'], $data);
-    // dsm($data);
 
     $optionstyle = array();
     //get the color for the point
@@ -1280,7 +1227,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 
         //format data
 //         $row['field_uwwloadenteringuwwtp_value'] = uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
-		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 			$rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
@@ -1483,7 +1430,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     // dsm($listyear);
     //     return '';
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
-	if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
         $list_field = array(
             'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1494,7 +1441,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             'field_article17_uwwtp_value'  			=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
             'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['n3nm']['label'], 'type' => 'selectregion', 'data' => $option['allnuts']),
             'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
-        );break;
+        );
    }else{
        $list_field = array(
             'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -1513,30 +1460,8 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }
+    //Process data
     uwwtd_filter_data($filter, $data, $filter_force); 
-//     dsm($data);
-    /* =================FIX ME
-	foreach($data as $art17){
-		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
-				$exists[] = array('Yes' => $art17['field_article17_uwwtp_nid']);
-				break;
-		}else{
-			$exists[] = array('No' => "");
-		}
-	}
-//     dsm($header);
-	foreach($exists as $exist){
-		 if(array_key_exists('Yes', $exist)){
-			 $art17 = "Yes";
-			 break;
-		}elseif(!isset($filter['filter']['field_article17_uwwtp_value_art'])){
-			 $art17 = "No";
-		}
-	 }
-	  if($art17 == "No"){
-		  unset($header[10]);
-	  }
-    */
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment'], $data);
 
 
@@ -1570,7 +1495,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         $graph[$row['field_uwwtreatmenttype_value_format']]['nb']++;
         $graph[$row['field_uwwtreatmenttype_value_format']]['field_uwwloadenteringuwwtp_value'] += $row['field_uwwloadenteringuwwtp_value'];
 
-		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 			$rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
@@ -1712,6 +1637,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 }
 
 
+//=======================================TODO : manage style for scale point and color with E-PRT range
 function uwwtd_page_uwwtps_pressure($type_export = ''){
     $title = 'UWWTD Treatment Plants- Pressure map';
     drupal_set_title($title);  //todo
@@ -1727,9 +1653,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
 //     dsm($option);
     $filter = uwwtd_get_form_filter($option);
-//     dsm($filter);
-                                     //uwwtp_treatment_map   uwwtps_pressure_map
-    //$preset_name = 'clone_of_uwwtp_treatment_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
+
     $preset_name = 'uwwtp_pressure_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
     $preset = openlayers_preset_load($preset_name);
     $map    = openlayers_build_map($preset->data);
@@ -1749,7 +1673,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 
 
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
-	if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
             'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
             'field_regionnuts_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['n3nm']['label'], 'type' => 'selectregion', 'data' => $option['allnuts']),
@@ -1761,7 +1685,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
             'field_uwwpdischarge_value'           => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwpdischarge_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_article17_uwwtp_value'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_article17_uwwtp_value_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
             'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
-        );break;
+        );
    }else{
        $list_field = array(
         'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -1784,38 +1708,12 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }
+    //Process data
     uwwtd_filter_data($filter, $data, $filter_force);
-//     dsm($data);
-//     dsm($data);
-    
-    // dsm($header);
-    /*=========================FIX ME
-	foreach($data as $art17){
-		if(isset($art17['field_article17_uwwtp_value_format']) && ($art17['field_article17_uwwtp_value_format']== 'Yes')){
-			$exists[] = array('Yes' => $art17['field_article17_uwwtp_nid']);
-			break;
-		}else{
-			$exists[] = array('No' => "");
-		}
-	}
-	foreach($exists as $exist){
-		 if(array_key_exists('Yes', $exist)){
-			 $art17 = "Yes";
-			 break;
-		}elseif(!isset($filter['filter']['field_article17_uwwtp_value_art'])){
-			 $art17 = "No";
-		}
-	}
-	if($art17 == "No"){
-		unset($header[8]);
-	}
-    */
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'], $data);
-
 
     $optionstyle = array();
     //get the size of the point
-
 
     $optionstyle['popup_title_type'] = 'treatment-plant';
     $optionstyle['popup'] = array(
@@ -1839,7 +1737,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     //todo format data in table
 //     $graph = array();
     foreach($data as $row) {
-		if(isset($data[0]['field_article17_uwwtp_nid']) || ($data[0]['field_article17_uwwtp_nid']!= '')){
+		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 		   $rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
@@ -2725,7 +2623,13 @@ function uwwtd_build_map($map, $features) {
   return $output;
 }
 
-
+function uwwtd_data_contain_art17($data, $field){
+    if(!empty($data)){
+        $d = array_unique(array_column($data, 'field_article17_uwwtp_nid'));
+        if(count($d)>1) return true;
+    }
+    return false;
+}
 
 function uwwtd_filter_form($list_field, $filter)
 {
@@ -2857,8 +2761,7 @@ foreach($list_field as $field_name => $data) {
 </div>';
 }
 
-function uwwtd_get_form_filter($option)
-{
+function uwwtd_get_form_filter($option){
     //check if we must reset
     if (isset($_GET['op']) && $_GET['op'] == 'Reset') {
         drupal_goto(request_path());
@@ -3041,10 +2944,11 @@ function uwwtd_get_form_filter($option)
     
     
     
-
 	if (isset($_GET['field_article17_uwwtp_value_art']) && in_array($_GET['field_article17_uwwtp_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
         && $_GET['field_article17_uwwtp_value_art'] != 'All') {
         $filter['filter']['field_article17_uwwtp_value_art']['value'] = $_GET['field_article17_uwwtp_value_art'];
+        $filter['filter']['field_article17_uwwtp_value_format'] = $_GET['field_article17_uwwtp_value_art']==1?'Yes':'No';
+        
     }
 
 	if (isset($_GET['field_article17_agglo_value_art']) && in_array($_GET['field_article17_agglo_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
@@ -3254,8 +3158,7 @@ function uwwtd_sort_data($filter, $order, &$data){
     }
 }
 
-function uwwtd_is_filter_default($filter, $option)
-{
+function uwwtd_is_filter_default($filter, $option){
     $result = false;
     if (count($filter['filter']) == 1 && isset($filter['filter']['field_anneedata_value'])
         && $filter['order'] == $option['default']['order']

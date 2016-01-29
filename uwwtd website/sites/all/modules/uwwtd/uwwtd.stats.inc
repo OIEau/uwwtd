@@ -596,7 +596,7 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
     $conditions .
 	' group by f_annee.field_anneedata_value order by f_annee.field_anneedata_value';
 	$param = array(
-					':typenode' => 'uwwtp',
+        ':typenode' => 'uwwtp',
 	);
 	try {
 		$data['BOD']['data']['Parameter'] = 'BOD';

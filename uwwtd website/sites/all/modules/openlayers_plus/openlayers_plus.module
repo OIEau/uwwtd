@@ -10,6 +10,7 @@
  */
 function openlayers_plus_block_info() {
   $blocks = array(
+    'blockswitcher_plus' => array('info' => t('OL+ Blockswitcher Plus')),
     'blockswitcher' => array('info' => t('OL+ Blockswitcher')),
     'blocktoggle' => array('info' => t('OL+ BlockToggle')),
   );
@@ -28,6 +29,16 @@ function openlayers_plus_block_view($delta) {
         'subject' => t('Map layers'),
         'content' => array(
           '#theme' => 'openlayers_plus_blockswitcher',
+          '#title' => t('Map layers'),
+        ),
+      );
+    case 'blockswitcher_plus':
+      // TODO Please change this theme call to use an associative array
+      // for the $variables parameter.
+      return array(
+        'subject' => t('Map layers'),
+        'content' => array(
+          '#theme' => 'openlayers_plus_blockswitcher_plus',
           '#title' => t('Map layers'),
         ),
       );
@@ -55,6 +66,12 @@ function openlayers_plus_theme() {
       'variables' => array(),
       'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
       'template' => 'openlayers-plus-blockswitcher',
+      'file' => 'theme.inc',
+    ),
+    'openlayers_plus_blockswitcher_plus' => array(
+      'variables' => array(),
+      'path' => drupal_get_path('module', 'openlayers_plus') . '/theme',
+      'template' => 'openlayers-plus-blockswitcher-plus',
       'file' => 'theme.inc',
     ),
     'openlayers_plus_blocktoggle' => array(
@@ -215,6 +232,17 @@ function openlayers_plus_openlayers_behaviors() {
         'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
         'file' => 'openlayers_plus_behavior_blockswitcher.inc',
         'class' => 'openlayers_plus_behavior_blockswitcher',
+        'parent' => 'openlayers_behavior',
+      ),
+    ),
+    'openlayers_plus_behavior_blockswitcher_plus' => array(
+      'type' => 'layer',
+      'title' => t('OL+: Blockswitcher Plus'),
+      'description' => t('A clone of BlockSwitcher, with ability to sort layers by group.'),
+      'behavior' => array(
+        'path' => drupal_get_path('module', 'openlayers_plus') . '/behaviors',
+        'file' => 'openlayers_plus_behavior_blockswitcher_plus.inc',
+        'class' => 'openlayers_plus_behavior_blockswitcher_plus',
         'parent' => 'openlayers_behavior',
       ),
     ),

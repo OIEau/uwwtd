@@ -1703,7 +1703,8 @@ function uwwtd_art17_import_article17_agglo($newFile, $annee, &$context)
 				////////
                 $check = uwwtd_check_numeric($field_art17_flaggeufund );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);
+                    $art->field_art17_flaggeufund['und'][0]['value'] = 0;
                 } else {                
                     $art->field_art17_flaggeufund['und'][0]['value'] = $check;
                 }
@@ -1815,103 +1816,103 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 	
 	if($context['sandbox']['existsUwwtp'] == 1){
 		// article 17 Station
-		if(isset($data[0]) &&($data[0] == '' || empty($data[0]))){
+		if(isset($data[0]) &&($data[0] == '' || is_null($data[0]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "uwwCode" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[1]) &&($data[1] == '' || empty($data[1]))){
+		if(isset($data[1]) &&($data[1] == '' || is_null($data[1]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "uwwName" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[2]) && ($data[2] == '' || empty($data[2]))){
+		if(isset($data[2]) && ($data[2] == '' || is_null($data[2]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggCode" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[3]) &&($data[3] == '' || empty($data[3]))){
+		if(isset($data[3]) &&($data[3] == '' || is_null($data[3]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggName" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[4]) && ($data[4] == '' || empty($data[4]))){
+		if(isset($data[4]) && ($data[4] == '' || is_null($data[4]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpStatus" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $fata);
 		}
-		if(isset($data[5]) && ($data[5] == '' || empty($data[5]))){
+		if(isset($data[5]) && ($data[5] == '' || is_null($data[5]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpreasons" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[6]) && ($data[6] == '' || empty($data[6]))){
+		if(isset($data[6]) && ($data[6] == '' || is_null($data[6]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpMeasures" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[7]) && ($data[7] == '' || empty($data[7]))){
+		if(isset($data[7]) && ($data[7] == '' || is_null($data[7]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpload" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[8]) && ($data[8] == '' || empty($data[8]))){
+		if(isset($data[8]) && ($data[8] == '' || is_null($data[8]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpCapacity" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[9]) && ($data[9] == '' || empty($data[9]))){
+		if(isset($data[9]) && ($data[9] == '' || is_null($data[9]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpecTreatment" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[10]) && ($data[10] == '' || empty($data[10]))){
+		if(isset($data[10]) && ($data[10] == '' || is_null($data[10]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpecDateStart" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[11]) && ($data[11] == '' || empty($data[11]))){
+		if(isset($data[11]) && ($data[11] == '' || is_null($data[11]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpecDateStartWork" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[12]) && ($data[12] == '' || empty($data[12]))){
+		if(isset($data[12]) && ($data[12] == '' || is_null($data[12]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpecDateCompletion" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[13]) && ($data[13] == '' || empty($data[13]))){
+		if(isset($data[13]) && ($data[13] == '' || is_null($data[13]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpExpecDateperformance" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[14]) && ($data[14] == '' || empty($data[14]))){
+		if(isset($data[14]) && ($data[14] == '' || is_null($data[14]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpInv" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[15]) && ($data[15] == '' || empty($data[15]))){
+		if(isset($data[15]) && ($data[15] == '' || is_null($data[15]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpEUfundname" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[16]) && ($data[16] == '' || empty($data[16]))){
+		if(isset($data[16]) && ($data[16] == '' || is_null($data[16]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpEUfund" column in the Uwwtps article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
@@ -1921,67 +1922,67 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 	}
 	//Agglo
 	if($context['sandbox']['existsUwwtp'] == 0){
-		if(isset($data[0]) && ($data[0] == '' || empty($data[0]))){
+		if(isset($data[0]) && ($data[0] == '' || is_null($data[0]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[1]) && ($data[1] == '' || empty($data[1]))){
+		if(isset($data[1]) && ($data[1] == '' || is_null($data[1]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggName" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[2]) && ($data[2] == '' || empty($data[2]))){
+		if(isset($data[2]) && ($data[2] == '' || is_null($data[2]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[3]) && ($data[3] == '' || empty($data[3]))){
+		if(isset($data[3]) && ($data[3] == '' || is_null($data[3]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggreasons" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[4]) && ($data[4] == '' || empty($data[4]))){
+		if(isset($data[4]) && ($data[4] == '' || is_null($data[4]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggMeasures" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[5]) && ($data[5] == '' || empty($data[5]))){
+		if(isset($data[5]) && ($data[5] == '' || is_null($data[5]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggExpecDateStart" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[6]) && ($data[6] == '' || empty($data[6]))){
+		if(isset($data[6]) && ($data[6] == '' || is_null($data[6]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggExpecDateStartWork" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[7]) && ($data[7] == '' || empty($data[7]))){
+		if(isset($data[7]) && ($data[7] == '' || is_null($data[7]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggExpecDateCompletion" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[8]) && ($data[8] == '' || empty($data[8]))){
+		if(isset($data[8]) && ($data[8] == '' || is_null($data[8]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggInv" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[9]) && ($data[9] == '' || empty($data[9]))){
+		if(isset($data[9]) && ($data[9] == '' || is_null($data[9]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggEUfundname" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
-		if(isset($data[10]) && ($data[10] == '' || empty($data[10]))){
+		if(isset($data[10]) && ($data[10] == '' || is_null($data[10]))){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "FlaggEUfund" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($i, $emes);

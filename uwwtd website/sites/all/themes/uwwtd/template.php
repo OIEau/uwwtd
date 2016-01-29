@@ -320,17 +320,17 @@ function uwwtd_render_article17_aglo($nid){
   }
 
   if(isset($art17->field_art17_flaggexpecdatestart['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestart', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestart', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
   if(isset($art17->field_art17_flaggexpecdatestartw['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestartw', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatestartw', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
   if(isset($art17->field_art17_flaggexpecdatecomple['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatecomple', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flaggexpecdatecomple', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
@@ -372,12 +372,12 @@ function uwwtd_render_article17_uwwtp($nid){
   }
 
   if(isset($art17->field_art17_flatpexpecdatestartw['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
   if(isset($art17->field_art17_flatpexpecdatecomple['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
@@ -417,12 +417,12 @@ function uwwtd_render_article17_uwwtp($nid){
   }
 
   if(isset($art17->field_art17_flatpexpecdateperfor['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
   if(isset($art17->field_art17_flatpexpecdatestart['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array('display' => 'inline'));
+    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
     $output .= render($champ);
   }
 
