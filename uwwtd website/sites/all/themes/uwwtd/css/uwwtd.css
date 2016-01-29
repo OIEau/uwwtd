@@ -990,3 +990,48 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     padding:3px;
 }
 
+/* Blockswitcher */
+.openlayers_plus-blockswitcher {
+	width: 250px;
+	height: 400px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background: #ffffff;
+  position: absolute;
+  right: 0;
+  top: -700px;
+  z-index: 600;
+  box-shadow: -3px 0px 20px #888888!important;
+  border-radius: 5px 0 0 5px!important;
+  padding: 10px!important;
+}
+.openlayers_plus-blockswitcher .group {
+	font-weight: bold;
+}
+.openlayers_plus-blockswitcher legend {
+	margin: 0;
+}
+.openlayers_plus-blockswitcher .layers-content .option {
+	font-size: 12px;
+}
+.openlayers_plus-blockswitcher .fieldset-legend {
+	font-size: 15px;
+	padding: 2px;
+	margin: 5px 0;
+}
+.openlayers-legends {
+  box-shadow: -3px 0px 20px #888888!important;
+  bottom: 16px;
+  right: 0px;
+}
+
+/* Toggle Elements */
+.toggle-button-layerswitcher:hover {
+  cursor: pointer;
+}
+.layer-switcher fieldset legend:hover {
+  cursor: pointer;
+}
+.toggleLegend:hover {
+  cursor: pointer;
+}

@@ -1360,7 +1360,6 @@ function uwwtd_get_agglo_graphic($node){
             $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
     }
-    dsm($reseau);
     $nbPlantsT = 0;
     $nbPlantsB = 0;
     for ($i=0; $i <= $nbPlants; $i++) {
