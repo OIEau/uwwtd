@@ -4736,9 +4736,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         from {node} n    
             left join
                 {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    ON n.nid = f_annee.entity_id
+            left join
+                {field_data_field_agggenerated} f_agggenerated
+                    ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                           
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
+            and f_agggenerated.field_data_field_agggenerated > 2000
         ';
         
 //         dsm($query);
@@ -7893,9 +7897,13 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
         from {node} n    
             left join
                 {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    ON n.nid = f_annee.entity_id
+            left join
+            {field_data_field_agggenerated} f_agggenerated
+                ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                    
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
+            and f_agggenerated.field_data_field_agggenerated > 2000
             and not EXISTS (select 1 from {field_data_field_agglo_uww_agglo} where field_agglo_uww_agglo_nid = n.nid)
         ';
         
