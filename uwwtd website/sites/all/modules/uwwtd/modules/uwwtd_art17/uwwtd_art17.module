@@ -1540,7 +1540,7 @@ function uwwtd_art17_import_article17_agglo($newFile, $annee, &$context)
             empty($field_art17_flaggexpecdatecomple ) &&
             empty($field_art17_flagginv ) &&
             empty($field_art17_flaggeufundname ) &&
-            empty($field_art17_flaggeufund ) &&
+            //empty($field_art17_flaggeufund ) &&
             empty($field_art17_flaggcomments ) &&
             empty($field_art17_flaggexpload ) &&
             empty($field_art17_flaggexploadcoll ) &&
@@ -1637,12 +1637,13 @@ function uwwtd_art17_import_article17_agglo($newFile, $annee, &$context)
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
+        /*
 		if(empty($field_art17_flaggeufund)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "FlaggEUfund" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
+		}*/
 
     	if($e == 0) {    
             $siteId = $annee.'_agg_'.uwwtd_check_text($field_art17agg_aggcode);
@@ -1701,12 +1702,14 @@ function uwwtd_art17_import_article17_agglo($newFile, $annee, &$context)
                 ////////
                 $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
 				////////
-                $check = uwwtd_check_numeric($field_art17_flaggeufund );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);
-                    $art->field_art17_flaggeufund['und'][0]['value'] = 0;
-                } else {                
-                    $art->field_art17_flaggeufund['und'][0]['value'] = $check;
+                if(!empty($field_art17_flaggeufund)) {
+                    $check = uwwtd_check_numeric($field_art17_flaggeufund );
+                    if ($check === false) {
+                        //uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);
+                        $art->field_art17_flaggeufund['und'][0]['value'] = 0;
+                    } else {                
+                        $art->field_art17_flaggeufund['und'][0]['value'] = $check;
+                    }
                 }
                 /////////////////////////////////////////////
                 //optionnal
@@ -1982,12 +1985,14 @@ function uwwtd_art17_import_article17_process($newFile, $annee, $datas, &$contex
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
+        /*
 		if(isset($data[10]) && ($data[10] == '' || is_null($data[10]))){
 			$e = 1;
-			$emes = t('The data you are trying to add for the "FlaggEUfund" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			$emes = t('The data you are trying to add for the "FlaggEUfund" column in the Agglomerations article 17 doesn\'t contain an identifier')." : '".$data[10]."'";
 			uwwtd_set_error($i, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $emes, $timestamp, null, $data);
 		}
+        */
 	}
 
 	// Check if no errors were found
