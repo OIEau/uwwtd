@@ -2625,7 +2625,7 @@ function uwwtd_build_map($map, $features) {
 
 function uwwtd_data_contain_art17($data, $field){
     if(!empty($data)){
-        $d = array_unique(array_column($data, 'field_article17_uwwtp_nid'));
+        $d = array_unique(array_column($data, $field));
         if(count($d)>1) return true;
     }
     return false;
@@ -2954,6 +2954,7 @@ function uwwtd_get_form_filter($option){
 	if (isset($_GET['field_article17_agglo_value_art']) && in_array($_GET['field_article17_agglo_value_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
         && $_GET['field_article17_agglo_value_art'] != 'All') {
         $filter['filter']['field_article17_agglo_value_art']['value'] = $_GET['field_article17_agglo_value_art'];
+        $filter['filter']['field_article17_agglo_value_format'] = $_GET['field_article17_agglo_value_art']==1?'Yes':'No';
     }
 
 	if (isset($_GET['field_regionnuts_value']) && array_key_exists($_GET['field_regionnuts_value'], $option['allnuts'])  && $_GET['field_regionnuts_value'] != 'All') {
