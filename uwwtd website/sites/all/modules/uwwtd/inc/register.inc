@@ -1785,14 +1785,10 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     //array1
     $sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
     $sheet->setCellValue('C5', round($context['results']['graph']['0_10000']['pe'], 0));
-    $sheet->setCellValue('B6', $context['results']['graph']['10000_15000']['number']);
-    $sheet->setCellValue('C6', round($context['results']['graph']['10000_15000']['pe'], 0));
-    $sheet->setCellValue('B7', $context['results']['graph']['15000_100000']['number']);
-    $sheet->setCellValue('C7', round($context['results']['graph']['15000_100000']['pe'], 0));
-    $sheet->setCellValue('B8', $context['results']['graph']['100000_150000']['number']);
-    $sheet->setCellValue('C8', round($context['results']['graph']['100000_150000']['pe'], 0));
-    $sheet->setCellValue('B9', $context['results']['graph']['150000_n']['number']);
-    $sheet->setCellValue('C9', round($context['results']['graph']['150000_n']['pe'], 0));
+    $sheet->setCellValue('B6', $context['results']['graph']['10000_100000']['number']);
+    $sheet->setCellValue('C6', round($context['results']['graph']['10000_100000']['pe'], 0));
+    $sheet->setCellValue('B7', $context['results']['graph']['100000_n']['number']);
+    $sheet->setCellValue('C7', round($context['results']['graph']['100000_n']['pe'], 0));
     
     //previous
     $sheet->setCellValue('D5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
@@ -1940,62 +1936,56 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $node = node_load($nidms);
         
         //Yearly production of sludge
-        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : ''; 
+        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : 0; 
         // Discharged into surface waters : Pipelines
-        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : ''; 
+        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : 0; 
         // Discharged into surface waters : Ships
-        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : ''; 
+        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : 0; 
         // Discharged into surface waters : Others
-        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : ''; 
+        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : 0; 
         //Of which: re-used: Soil and agriculture
-        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : ''; 
+        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : 0; 
         //Of which: re-used: Others 
-        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : ''; 
+        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : 0; 
         //Of which: disposed: Landfill
-        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : ''; 
+        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : 0; 
         //Of which: disposed: Incineration
-        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : ''; 
+        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : 0; 
         //Of which: disposed: Others 
-        $field_msldisposalothers = isset($node->field_msldisposalothers['und'][0]['value']) ? $node->field_msldisposalothers['und'][0]['value'] : '';
+        $field_msldisposalothers = isset($node->field_msldisposalothers['und'][0]['value']) ? $node->field_msldisposalothers['und'][0]['value'] : 0;
         //reuse percent
-        $field_mslwwreuseperc = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : '';
+        $field_mslwwreuseperc = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : 0;
         unset($node);
+
+        $field_others = $field_msldischargepipelines + $field_msldischargeships + $field_msldischargeothers;
         
         $sheet->setCellValue('B24', round($field_mslsludgeproduction));
-        $sheet->setCellValue('B25', round($field_msldischargepipelines));
-        $sheet->setCellValue('B26', round($field_msldischargeships));
-        $sheet->setCellValue('B27', round($field_msldischargeothers));
-        $sheet->setCellValue('B28', round($field_mslreusesoilagriculture));
-        $sheet->setCellValue('B29', round($field_mslreuseothers));
-        $sheet->setCellValue('B30', round($field_msldisposallandfill));
-        $sheet->setCellValue('B31', round($field_msldisposalincineration));
-        $sheet->setCellValue('B32', round($field_msldisposalothers));
+        $sheet->setCellValue('B25', round($field_mslreusesoilagriculture));
+        $sheet->setCellValue('B26', round($field_mslreuseothers));
+        $sheet->setCellValue('B27', round($field_msldisposallandfill));
+        $sheet->setCellValue('B28', round($field_msldisposalincineration));
+        $sheet->setCellValue('B29', round($field_msldisposalothers));
+        $sheet->setCellValue('B30', round($field_others));
         
         if (!empty($field_mslsludgeproduction)) {
-            if (!empty($field_msldischargepipelines)) {
-                $sheet->setCellValue('C25', round($field_msldischargepipelines * 100 / $field_mslsludgeproduction, 1));    
-            } 
-            if (!empty($field_msldischargeships)) {
-                $sheet->setCellValue('C26', round($field_msldischargeships * 100 / $field_mslsludgeproduction, 1));    
-            } 
-            if (!empty($field_msldischargeothers)) {
-                $sheet->setCellValue('C27', round($field_msldischargeothers * 100 / $field_mslsludgeproduction, 1));    
-            } 
             if (!empty($field_mslreusesoilagriculture)) {
-                $sheet->setCellValue('C28', round($field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction, 1));    
+                $sheet->setCellValue('C25', round($field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_mslreuseothers)) {
-                $sheet->setCellValue('C29', round($field_mslreuseothers * 100 / $field_mslsludgeproduction, 1));    
+                $sheet->setCellValue('C26', round($field_mslreuseothers * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_msldisposallandfill)) {
-                $sheet->setCellValue('C30', round($field_msldisposallandfill * 100 / $field_mslsludgeproduction, 1));    
+                $sheet->setCellValue('C27', round($field_msldisposallandfill * 100 / $field_mslsludgeproduction, 1));    
             }  
             if (!empty($field_msldisposalincineration)) {
-                $sheet->setCellValue('C31', round($field_msldisposalincineration * 100 / $field_mslsludgeproduction, 1));    
+                $sheet->setCellValue('C28', round($field_msldisposalincineration * 100 / $field_mslsludgeproduction, 1));    
             } 
             if (!empty($field_msldisposalothers)) {
-                $sheet->setCellValue('C32', round($field_msldisposalothers * 100 / $field_mslsludgeproduction, 1));    
-            }                                                        
+                $sheet->setCellValue('C29', round($field_msldisposalothers * 100 / $field_mslsludgeproduction, 1));    
+            }
+            if (!empty($field_others)) {
+                $sheet->setCellValue('C30', round($field_others * 100 / $field_mslsludgeproduction, 1));    
+            }                                                         
         }
         
         //previous
@@ -6069,18 +6059,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['generated_load_p.e.']] >= 2000 && $line[$ind['generated_load_p.e.']] < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $line[$ind['generated_load_p.e.']];
             $context['results']['graph']['0_10000']['number']++;        
-        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 15001) {
-            $context['results']['graph']['10000_15000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['10000_15000']['number']++;             
-        } elseif ($line[$ind['generated_load_p.e.']] >= 15001 && $line[$ind['generated_load_p.e.']] < 100001) {
-            $context['results']['graph']['15000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['15000_100000']['number']++;             
-        } elseif ($line[$ind['generated_load_p.e.']] >= 100001 && $line[$ind['generated_load_p.e.']] < 150001) {
-            $context['results']['graph']['100000_150000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['100000_150000']['number']++;             
-        } elseif ($line[$ind['generated_load_p.e.']] >= 150001) {
-            $context['results']['graph']['150000_n']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['150000_n']['number']++;             
+        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 100001) {
+            $context['results']['graph']['10000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['10000_100000']['number']++;                                    
+        } elseif ($line[$ind['generated_load_p.e.']] >= 100001) {
+            $context['results']['graph']['100000_n']['pe']  += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['100000_n']['number']++;             
         }
         
         //array2
