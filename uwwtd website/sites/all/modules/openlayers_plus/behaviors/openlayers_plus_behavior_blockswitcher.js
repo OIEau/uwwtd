@@ -238,6 +238,7 @@
         /**
          * Now we implement the actual behaviour
          */
+         
         this.layerStates = [];
 
         var data = $(context).data('openlayers');
@@ -254,7 +255,9 @@
               data.map.behaviors.openlayers_plus_behavior_blockswitcher.overlay_style : 'checkbox';
 
           this.blockswitcher = $('div.openlayers_plus-blockswitcher');
-
+            
+            
+            
           // Don't propagate click events to the map
           // this doesn't catch events that are below the layer list
           $('div.openlayers_plus-blockswitcher').mousedown(function(evt) {

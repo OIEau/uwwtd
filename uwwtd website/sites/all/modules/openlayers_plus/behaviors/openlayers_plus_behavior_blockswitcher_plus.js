@@ -3,6 +3,7 @@
  */
 
 (function($) {
+   
   $(document).ready(function() {
     // Init.
     if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && $(".toggle-button-layerswitcher").html() == "[ + ] Show") {
@@ -309,8 +310,10 @@
           this.overlay_style = (data.map.behaviors.openlayers_plus_behavior_blockswitcher_plus.overlay_style) ?
               data.map.behaviors.openlayers_plus_behavior_blockswitcher_plus.overlay_style : 'checkbox';
 
-          this.blockswitcher = $('div.openlayers_plus-blockswitcher');
-
+          
+         this.blockswitcher = $('div.openlayers_plus-blockswitcher');
+         
+         
           // Don't propagate click events to the map
           // this doesn't catch events that are below the layer list
           $('div.openlayers_plus-blockswitcher').mousedown(function(evt) {
@@ -327,6 +330,9 @@
           // Get the original layerstates from the cookie
           this.getLayers();
           this.redraw();
+          
+          $('#openlayers-map').append(this.blockswitcher);
+          
         }
       }
   };

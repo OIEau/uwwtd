@@ -3316,18 +3316,32 @@ function uwwtd_update_7129(&$context = null){
     
     //Manage OL layers for RBD && NUTS
     //Activate custom OL layers switcher behavior 
+     db_update('block')
+        ->fields(array(
+          'region' => 'content',
+          'status' => 1,
+          'weight' => -15,
+          'pages' => '',
+          'title' => '<none>',
+          'visibility' => 0,
+        ))
+          ->condition('theme', 'uwwtd')
+          ->condition('delta', 'blockswitcher_plus')
+          ->condition('module', 'openlayers_plus')        
+        ->execute();  
+    
     $maps = openlayers_maps(true);
     foreach($maps as $name=>$old_map){
         $map = clone $old_map;
         if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
-            if($map->data['layers']['oieau_nuts']!=0){
+            //if($map->data['layers']['oieau_nuts']!=0){
                 
-                $map->data['behaviors']['openlayers_behavior_layerswitcher'] = array(
-                    'enabled' => 1,
-                    'open' => 1,
-                );
+                //$map->data['behaviors']['openlayers_behavior_layerswitcher']['enabled'] = 0 ;
+                
+                //Add main layer
+                
                 $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus'] = array(
-                  'enabled' => 1,
+                  'enabled' => 0,
                   'open' => 1,
                   'overlay_style' => 'checkbox',
                   'sort_layers' => 1,
@@ -3354,9 +3368,9 @@ function uwwtd_update_7129(&$context = null){
                   'layers_oieau_nuts_1' => 1,
                   'layers_oieau_nuts_1_groupname' => 'Regions (NUTS)',
                   'layers_oieau_nuts_2' => 1,
-                  'layers_oieau_nuts_groupname_2' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_2_groupname' => 'Regions (NUTS)',
                   'layers_oieau_nuts_3' => 1,
-                  'layers_oieau_nuts_groupname_3' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_3_groupname' => 'Regions (NUTS)',
 
                   //Others
                   'layers_bathing_water' => 1,
@@ -3366,6 +3380,15 @@ function uwwtd_update_7129(&$context = null){
                   'layers_natura_2000' => 1,
                   'layers_natura_2000_groupname' => 'Others',
                 );
+                
+                foreach($map->data['layer_activated'] as $layer_name=>$activated){
+                    if($activated){
+                        if(!isset($map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name])){
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name] = 1;
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name.'_groupname'] = 'UWWTD';
+                        }
+                    }
+                }
                 
                 //Reactivate layers 
                 $new_layers = array(
@@ -3395,7 +3418,7 @@ function uwwtd_update_7129(&$context = null){
                 $map->data['layer_switcher']['oieau_nuts'] = 0;
                 
                 openlayers_map_save($map); 
-            }
+            //}
             
             
         }
