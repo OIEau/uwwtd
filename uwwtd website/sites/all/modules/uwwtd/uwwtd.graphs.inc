@@ -197,7 +197,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         //dsm($results);
         $frontAndBackGraphs = getRow6Graphs($results);
         $rows = array();
-        dsm($frontAndBackGraphs);
         if(isset($frontAndBackGraphs['BOD'])){
             $sum = 0;
             foreach($frontAndBackGraphs['BOD'][0]['data'] as $line){
@@ -248,7 +247,9 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         }
         
         // Création du code html pour ces graphs :
-        $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), $rows);
+        if(!empty($rows)){
+            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), $rows);
+        }
     }
     
 	
@@ -317,7 +318,25 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 			$front['data'] = array_values($front['data']);
 			$front['legend'] = array_values($front['legend']);
 			$front['color'] = array_values($front['color']);
-		} else {
+            
+            foreach($front['data'] as $k=>$line){
+                //$rows[$k] = $line;
+                //Remove cell of year
+                $year = array_shift($line);
+                $line[] = array_sum($line);
+                $rows[$k][0] = '<b>'.$year.'</b>';
+                foreach($line as $i=>$c){
+                    $rows[$k][$i+1] = uwwtd_format_number($c);
+                }
+            }
+            $header = $front['legend'];
+            array_unshift( $header, t("Year"));
+            array_push( $header, t("Total"));
+            $back =theme('table', array('rows' => $rows, 'header' => $header));
+            
+            
+		} 
+        else {
 			$front = $frontTmp;
 			
 			// Pour chaque année :
@@ -335,87 +354,87 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 					}
 				}
 			}
-		}
 			
-		$rows = array();
-	
-		// Transforme les clefs en 0, 1, 2, ...
-		$dataByYears = array_values($frontTmp);
+            $rows = array();
+        
+            // Transforme les clefs en 0, 1, 2, ...
+            $dataByYears = array_values($frontTmp);
+            
+            // Pour chaque groupe d'éléments de la première année :
+            $destinations = array();
+            if (array_key_exists('0', $dataByYears) && !empty($dataByYears[0])) {
+                // Pour chaque groupe d'éléments :
+                $isFirst = true;
+                foreach ($dataByYears[0] as $elements) {
+                    // Discard le premier groupe d'éléments :
+                    if ($isFirst) {
+                        $isFirst = false;
+                    } else {
+                        // Récupération de l'intitulé de la destination :
+                        if (array_key_exists('label', $elements) && !empty($elements['label'])) {
+                            $destinations[] = $elements['label'];
+                        }
+                    }
+                }
+                    
+                // Ajout du Total :
+                $destinations[] = t('Total');
+            }
+            
+            // Pour les entetes du tableau :
+            $columns = array();
+            $columns[0][]['data'] = 'Destination';
+            
+            // Pour chaque destinations possibles :
+            foreach ($destinations as $destination) {
+                // Ecriture des intitulés de destination :
+                $rows[$destination]['data']['Destination'] = $destination;
+            }
+            
+            // Pour chaque année :
+            foreach ($frontTmp as $year => $groupElements) {
+                // Récupération du total :
+                $all = array_shift($groupElements);
+                    
+                // Pour les entetes du tableau :
+                $columns[0][]['data'] = $year;
+                    
+                // Remise à zéro du Total :
+                $sum = 0;
+                $sum_rate = 0;
+                    
+                // Pour chaque groupe d'éléments :
+                foreach ($groupElements as $elements) {
+                    // Pour chaque destinations :
+                    foreach ($destinations as $destination) {
+                        // Si la destination correspond au label :
+                        if (array_key_exists('label', $elements) && ($destination == $elements['label'] || $destination == t('Total'))) {
+                            // Si c'est la ligne Total :
+                            if ($destination == t('Total')) {
+                                $rows[$destination]['data'][$year] = uwwtd_format_number($sum).' pe, '.  uwwtd_format_number($sum_rate).' %';
+                            } else {
+                                $rows[$destination]['data'][$year] = $elements['valueformat'] .', '. round($elements['value'] / $all['value']*100 ,1) .' %';
+                                $sum += $elements['value'];
+                                $sum_rate += round($elements['value'] / $all['value']*100);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Récupération du DOM du tableau :
+            $back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
+            // Ajout des légendes :
+            $back .= '
+            <table class="stats-graphs table table-hover table-striped sticky-enabled">
+                <thead> 
+                    <tr>
+                        <th><i>*pe: Population equivalent, *%: Rate</i></th>
+                    </tr>
+                </thead>
+            </table>';
+        }
 		
-		// Pour chaque groupe d'éléments de la première année :
-		$destinations = array();
-		if (array_key_exists('0', $dataByYears) && !empty($dataByYears[0])) {
-			// Pour chaque groupe d'éléments :
-			$isFirst = true;
-			foreach ($dataByYears[0] as $elements) {
-				// Discard le premier groupe d'éléments :
-				if ($isFirst) {
-					$isFirst = false;
-				} else {
-					// Récupération de l'intitulé de la destination :
-					if (array_key_exists('label', $elements) && !empty($elements['label'])) {
-						$destinations[] = $elements['label'];
-					}
-				}
-			}
-				
-			// Ajout du Total :
-			$destinations[] = t('Total');
-		}
-		
-		// Pour les entetes du tableau :
-		$columns = array();
-		$columns[0][]['data'] = 'Destination';
-		
-		// Pour chaque destinations possibles :
-		foreach ($destinations as $destination) {
-			// Ecriture des intitulés de destination :
-			$rows[$destination]['data']['Destination'] = $destination;
-		}
-		
-		// Pour chaque année :
-		foreach ($frontTmp as $year => $groupElements) {
-			// Récupération du total :
-			$all = array_shift($groupElements);
-				
-			// Pour les entetes du tableau :
-			$columns[0][]['data'] = $year;
-				
-			// Remise à zéro du Total :
-			$sum = 0;
-			$sum_rate = 0;
-				
-			// Pour chaque groupe d'éléments :
-			foreach ($groupElements as $elements) {
-				// Pour chaque destinations :
-				foreach ($destinations as $destination) {
-					// Si la destination correspond au label :
-					if (array_key_exists('label', $elements) && ($destination == $elements['label'] || $destination == t('Total'))) {
-						// Si c'est la ligne Total :
-						if ($destination == t('Total')) {
-							$rows[$destination]['data'][$year] = uwwtd_format_number($sum).' pe, '.  uwwtd_format_number($sum_rate).' %';
-						} else {
-							$rows[$destination]['data'][$year] = $elements['valueformat'] .', '. round($elements['value'] / $all['value']*100 ,1) .' %';
-							$sum += $elements['value'];
-							$sum_rate += round($elements['value'] / $all['value']*100);
-						}
-					}
-				}
-			}
-		}
-		
-		// Récupération du DOM du tableau :
-		$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
-		
-		// Ajout des légendes :
-		$back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead> 
-				<tr>
-					<th><i>*pe: Population equivalent, *%: Rate</i></th>
-				</tr>
-			</thead>
-		</table>';
 	}
 	
 	return array($front, $back);
@@ -582,8 +601,39 @@ function getRow2Graph1and2($results, $yearSelected) {
 			$graph2Front['legend'] = array_values($graph2Front['legend']);
 			$graph2Front['color'] = array_values($graph2Front['color']);
             
+            $rows = array();
+            foreach($graph1Front['data'] as $k=>$line){
+                //Remove cell of year
+                $year = array_shift($line);
+                $line[] = array_sum($line);
+                $rows[$k][0] = '<b>'.$year.'</b>';
+                foreach($line as $i=>$c){
+                    $rows[$k][$i+1] = uwwtd_format_number($c);
+                }
+            }
+            $header = $graph1Front['legend'];
+            array_unshift( $header, t("Year"));
+            array_push( $header, t("Total"));
+            $graph1Back =theme('table', array('rows' => $rows, 'header' => $header));
+            
+            $rows = array();
+            foreach($graph2Front['data'] as $k=>$line){
+                //Remove cell of year
+                $year = array_shift($line);
+                $line[] = array_sum($line);
+                $rows[$k][0] = '<b>'.$year.'</b>';
+                foreach($line as $i=>$c){
+                    $rows[$k][$i+1] = uwwtd_format_number($c);
+                }
+            }
+            $header = $graph2Front['legend'];
+            array_unshift( $header, t("Year"));
+            array_push( $header, t("Total"));
+            $graph2Back =theme('table', array('rows' => $rows, 'header' => $header));
+            
 
-		} else {
+		} 
+        else {
 			foreach($results as $state=>$v){
                 $data = $v['data'];
                 reset( $data );
@@ -608,94 +658,96 @@ function getRow2Graph1and2($results, $yearSelected) {
                     
                 }
             }
-		}
-		// Création du tableau pour le back :
-		foreach ($results as $complianceStateName => $complianceState) {
-			if (array_key_exists('data', $complianceState)) {
-				foreach ($complianceState['data'] as $keyElement => $element) {
-					// Définition des entete de colonnes :
-					$columns[0][$keyElement]['data'] = $keyElement;
-					
-					// Si c'est une valeur pour une année :
-					if (is_array($element) && 
-						array_key_exists('pe', $element) && 
-						array_key_exists('pe_format', $element) &&
-						array_key_exists('nb', $element) &&
-						array_key_exists('nb_format', $element)) {
-						// Redéfinition de la valeur de l'année :
-						$graph1Rows[$complianceStateName]['data'][$keyElement] = $element['pe_format'];
-						$graph2Rows[$complianceStateName]['data'][$keyElement] = $element['nb_format'];
-						
-						// Calcul de la somme :
-						if (!array_key_exists($keyElement, $graph1Sums)) {
-							$graph1Sums[$keyElement] = 0;
-						}
-						$graph1Sums[$keyElement] += $element['pe'];
-						if (!array_key_exists($keyElement, $graph2Sums)) {
-							$graph2Sums[$keyElement] = 0;
-						}
-						$graph2Sums[$keyElement] += $element['nb'];
-					}
-				}
-			}
-		}
+
+            // Création du tableau pour le back :
+            foreach ($results as $complianceStateName => $complianceState) {
+                if (array_key_exists('data', $complianceState)) {
+                    foreach ($complianceState['data'] as $keyElement => $element) {
+                        // Définition des entete de colonnes :
+                        $columns[0][$keyElement]['data'] = $keyElement;
+                        
+                        // Si c'est une valeur pour une année :
+                        if (is_array($element) && 
+                            array_key_exists('pe', $element) && 
+                            array_key_exists('pe_format', $element) &&
+                            array_key_exists('nb', $element) &&
+                            array_key_exists('nb_format', $element)) {
+                            // Redéfinition de la valeur de l'année :
+                            $graph1Rows[$complianceStateName]['data'][$keyElement] = $element['pe_format'];
+                            $graph2Rows[$complianceStateName]['data'][$keyElement] = $element['nb_format'];
+                            
+                            // Calcul de la somme :
+                            if (!array_key_exists($keyElement, $graph1Sums)) {
+                                $graph1Sums[$keyElement] = 0;
+                            }
+                            $graph1Sums[$keyElement] += $element['pe'];
+                            if (!array_key_exists($keyElement, $graph2Sums)) {
+                                $graph2Sums[$keyElement] = 0;
+                            }
+                            $graph2Sums[$keyElement] += $element['nb'];
+                        }
+                    }
+                }
+            }
+            
+            // Pour chaque ligne :
+        foreach ($graph1Rows as $complianceStateName => $complianceState) {
+            if (array_key_exists('data', $complianceState) && array_key_exists('pe', $columns)) {
+                // Pour toutes les colonnes existantes :
+                foreach (array_keys($columns['pe']) as $columsName) {
+                    if (!array_key_exists($columsName, $complianceState['data'])) {
+                        // Remplissage des trous :
+                        $graph1Rows[$complianceStateName]['data'][$columsName] = ' - ';
+                    }
+                }
+            }
+        }
+        foreach ($graph2Rows as $complianceStateName => $complianceState) {
+            if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
+                // Pour toutes les colonnes existantes :
+                foreach (array_keys($columns[0]) as $columsName) {
+                    if (!array_key_exists($columsName, $complianceState['data'])) {
+                        // Remplissage des trous :
+                        $graph2Rows[$complianceStateName]['data'][$columsName] = ' - ';
+                    }
+                }
+            }
+        }
+	
+        // Ajout des Totaux :
+        $graph1Rows['Total']['data']['Compliant state'] = 'Total';
+        foreach ($graph1Sums as $year => $sum) {
+            $graph1Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0) .' pe';
+        }
+        $graph2Rows['Total']['data']['Compliant state'] = 'Total';
+        foreach ($graph2Sums as $year => $sum) {
+            $graph2Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0);
+        }
+        
+        // Récupération du DOM des tableau :
+        $graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
+        $graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
+        
+        // Ajout des légendes :
+        $graph1Back .= '
+            <table class="stats-graphs table table-hover table-striped sticky-enabled">
+                <thead>
+                    <tr>
+                        <th><i>*pe: Population equivalent</i></th>
+                    </tr>
+                </thead>
+            </table>';
+        $graph2Back .= '
+            <table class="stats-graphs table table-hover table-striped sticky-enabled">
+                <thead>
+                    <tr>
+                        <th><i>*: Number of agglomerations</i></th>
+                    </tr>
+                </thead>
+            </table>';
+	}
 	}
 	
-	// Pour chaque ligne :
-	foreach ($graph1Rows as $complianceStateName => $complianceState) {
-		if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
-			// Pour toutes les colonnes existantes :
-			foreach (array_keys($columns[0]) as $columsName) {
-				if (!array_key_exists($columsName, $complianceState['data'])) {
-					// Remplissage des trous :
-					$graph1Rows[$complianceStateName]['data'][$columsName] = ' - ';
-				}
-			}
-		}
-	}
-	foreach ($graph2Rows as $complianceStateName => $complianceState) {
-		if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
-			// Pour toutes les colonnes existantes :
-			foreach (array_keys($columns[0]) as $columsName) {
-				if (!array_key_exists($columsName, $complianceState['data'])) {
-					// Remplissage des trous :
-					$graph2Rows[$complianceStateName]['data'][$columsName] = ' - ';
-				}
-			}
-		}
-	}
-	
-	// Ajout des Total :
-	$graph1Rows['Total']['data']['Compliant state'] = 'Total';
-	foreach ($graph1Sums as $year => $sum) {
-		$graph1Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0) .' pe';
-	}
-	$graph2Rows['Total']['data']['Compliant state'] = 'Total';
-	foreach ($graph2Sums as $year => $sum) {
-		$graph2Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0);
-	}
-	
-	// Récupération du DOM des tableau :
-	$graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
-	$graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
-	
-	// Ajout des légendes :
-	$graph1Back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead>
-				<tr>
-					<th><i>*pe: Population equivalent</i></th>
-				</tr>
-			</thead>
-		</table>';
-	$graph2Back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead>
-				<tr>
-					<th><i>*: Number of agglomerations</i></th>
-				</tr>
-			</thead>
-		</table>';
 	
 	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
 }

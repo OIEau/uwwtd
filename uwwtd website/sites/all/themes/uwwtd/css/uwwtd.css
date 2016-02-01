@@ -792,67 +792,30 @@ table.dispo-annee tr td.dispo-annee{
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477',GradientType=0);
 	background-color:#fb9e25;
 }
-#popup_content .close{
-	opacity: 1;
-}
 
 .btnHomePage{
 	margin: 0 auto;
 	width: 500px;
 }
 
-.popup_content_block{
-	display: none; /*--masqué par défaut--*/
-	background: #fff;
-	padding: 20px;
-	border: 20px solid #ddd;
-	float: left;
-	position: fixed;
-	top: 50%; 
-	z-index: 22222;
-	/*--Les différentes définitions de Box Shadow en CSS3--*/
-	-webkit-box-shadow: 0px 0px 20px #000;
-	-moz-box-shadow: 0px 0px 20px #000;
-	box-shadow: 0px 0px 20px #000;
-	/*--Coins arrondis en CSS3--*/
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	font-size:14px;
-	min-width: 81%;
-	max-height: 94%;
-	overflow-y: auto;
-	margin-top:-12%;
-}
 
+#popup_content {
+	font-size:13px;
+}
 .popup_project_block{
-	display: none; /*--masqué par défaut--*/
-	background: #fff;
-	padding: 20px;
-	border: 20px solid #ddd;
-	float: left;
-	position: fixed;
-	top: 50%; 
-	/*left: 50%;*/
-	z-index: 22222;
-	/*Les différentes définitions de Box Shadow en CSS3*/
-	-webkit-box-shadow: 0px 0px 20px #000;
-	-moz-box-shadow: 0px 0px 20px #000;
-	box-shadow: 0px 0px 20px #000;
-	/*--Coins arrondis en CSS3s*/
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	font-size:14px;
-	min-width: 70%;
-	max-height: 94%;
+	font-size:13px;
+}
+#popup_project {
+	max-height: 620px!important;
 	overflow-y: auto;
-	margin-top: -23%!important;
 }
 
 
-.popup_project_block #imgProjectA img{
-	width: 30%;
+.popup_project_block #imgProjectA {
+	text-align: center;
+}
+.popup_project_block #imgProjectA img {
+	width: 500px;
 }
 .popup_project_block .legend span{
 	font-size:11px;
@@ -1000,7 +963,7 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
   position: absolute;
   right: 0;
   top: -700px;
-  z-index: 600;
+  z-index: 30;
   box-shadow: -3px 0px 20px #888888!important;
   border-radius: 5px 0 0 5px!important;
   padding: 10px!important;

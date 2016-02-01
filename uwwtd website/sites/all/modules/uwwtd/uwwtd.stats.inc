@@ -242,8 +242,15 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
     	dsm($e->getMessage());
     }
     if(!empty($data)){
-        $keys_order = $GLOBALS['uwwtd']['all_compliance'];    
-        $data = array_replace(array_flip($keys_order), $data);
+        $keys_order = $GLOBALS['uwwtd']['all_compliance'];
+        $odata;
+        foreach($keys_order as $k=>$v){
+            if(isset($data[$v])){
+                $odata[$v] = $data[$v];
+            }
+        }
+        //$data = array_replace(array_flip($keys_order), $data);
+        return $odata;
     }
     
     return $data;
@@ -252,6 +259,8 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
 /**
  * Récupère en base les données pour Graph 1 et 2 de la ligne 3 et 4.
  */
+//====FIX ME nd@oieau.fr : In Ireland for year = 2010, the dataset contain all uwwtp (agggeneratedload > 2000 )
+// We need to exclude all uwwtp link to agglomeration < 2000 pe but not with double count
 function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 	$conditions = '';
 	switch($yearSelected){
@@ -278,6 +287,32 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 			$group_by = 'f_comp.field_uwwcompliance_value';
 	}
 	$data = array();
+    
+    //Filter uwwtp with "min_aggenerated_display" parameter
+    
+    $with = '
+        SELECT n.nid 
+        FROM node n
+            LEFT join
+              {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+            LEFT join
+            {field_data_field_agguwwliste} f_uwwtp_agglo
+                ON n.nid = f_uwwtp_agglo.entity_id
+            LEFT join
+            {field_data_field_agggenerated} f_agggenerated
+                ON n.nid = f_agggenerated.entity_id
+                
+                
+                
+            LEFT JOIN
+                {field_data_field_physicalcapacityactivity} uwwtp_capa
+                    ON f_uwwtp_agglo.field_agguwwliste_nid=uwwtp_capa.entity_id
+        WHERE n.type = :typenode
+            AND f_annee.field_anneedata_value = :annee
+            AND f_agggenerated.field_agggenerated_value >= :min_agg
+    ';
+    
 	$query = 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
 	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
 			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
@@ -355,10 +390,12 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 		group by f_annee.field_anneedata_value,' . $group_by;
 
     $param = array(
-    				':typenode' => 'uwwtp',
+        ':typenode' => 'uwwtp',
+        //'min_agg' => variable_get('min_aggenerated_display', '2000'),
     );
     try {
-    	$result = db_query($query,$param);
+    	//dsm($query);
+        $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
     			case 'compliance' :
@@ -389,6 +426,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     }catch(Exception $e) {
     	dsm($e->getMessage());
     }
+    /*
     if(!empty($data)){
         switch ($groupBy){
             case 'compliance' :
@@ -399,7 +437,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
               break;
         }      
         $data = array_replace(array_flip($keys_order), $data);
-    }
+    }*/
     return $data;
 }
 
