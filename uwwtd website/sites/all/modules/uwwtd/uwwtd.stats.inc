@@ -290,33 +290,34 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     
     //Filter uwwtp with "min_aggenerated_display" parameter
     
-    $with = '
-        SELECT n.nid 
-        FROM node n
+    $with = 'WITH uwwtp_min_agg AS(
+        SELECT n.nid, n.type, n.title 
+        FROM {node} n
             LEFT join
               {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
+            left join
+              {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
             LEFT join
-            {field_data_field_agguwwliste} f_uwwtp_agglo
-                ON n.nid = f_uwwtp_agglo.entity_id
+              {field_data_field_agguwwliste} f_uwwtp_agglo
+                ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
             LEFT join
             {field_data_field_agggenerated} f_agggenerated
-                ON n.nid = f_agggenerated.entity_id
-                
-                
-                
-            LEFT JOIN
-                {field_data_field_physicalcapacityactivity} uwwtp_capa
-                    ON f_uwwtp_agglo.field_agguwwliste_nid=uwwtp_capa.entity_id
+                ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
         WHERE n.type = :typenode
-            AND f_annee.field_anneedata_value = :annee
             AND f_agggenerated.field_agggenerated_value >= :min_agg
+            '.$conditions.'
+        GROUP BY n.nid
+        )
     ';
     
-	$query = 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
+	$query = $with. 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
 	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
 			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
     from {node} n
+        join uwwtp_min_agg
+            ON n.nid = uwwtp_min_agg.nid 
         left join
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
@@ -391,10 +392,10 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 
     $param = array(
         ':typenode' => 'uwwtp',
-        //'min_agg' => variable_get('min_aggenerated_display', '2000'),
+        ':min_agg' => variable_get('min_aggenerated_display', '2000'),
     );
     try {
-    	//dsm($query);
+    	dsm($query);
         $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
