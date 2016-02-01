@@ -284,7 +284,7 @@ echo uwwtd_insert_errors_tab($node);
 						   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
 						)
 						{
-							  print ' <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">';
+							  print '<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram"></div>';
 						  $output = '<p style="font-weight:bold;">Load and concentration per parameter :</p>';						  
 						$output .='<table id="UwwtpDescription">
 								 <tr>
@@ -346,7 +346,7 @@ echo uwwtd_insert_errors_tab($node);
 			   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
 			)
 			{
-				  print' <img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">';
+				  print'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>';
 					echo uwwtd_stackedbar_uwwtpnode($node);
              } 
 			 print'   </div> ';
