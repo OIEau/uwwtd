@@ -172,6 +172,8 @@ echo uwwtd_insert_errors_tab($node);
                     $colorart3 = '#4f91e1';
                 } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
                     $colorart3 = '#d93c3c';
+                } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'PD' && $node->field_aggpercwithouttreatment['und'][0]['value'] > 0) {
+                    $colorart3 = '#FF5200';
                 } else {
                     $colorart3 = '#a2a2a2';
                 }
@@ -207,9 +209,17 @@ echo uwwtd_insert_errors_tab($node);
                     $colorart5P = '#4f91e1';
                 }
 
-                if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->field_aggart5compliance['und'][0]['value'] == 'PD') {
+                if ($node->field_aggart5compliance['und'][0]['value'] == 'NR') {
                     $colorart5T = '#a2a2a2';
                     $colorart5P = '#a2a2a2';
+                }
+
+                if ($node->field_aggart5compliance['und'][0]['value'] == 'PD' && $distanceToCompliance['art5_perf_pe'] > 0) {
+                    $colorart5P = '#FF5200';
+                }
+
+                if ($node->field_aggart5compliance['und'][0]['value'] == 'PD' && $distanceToCompliance['art5_treat_pe'] > 0) {
+                    $colorart5T = '#FF5200';
                 }
 
                 if ($distanceToCompliance['art5_perf_pe'] === '-') {
