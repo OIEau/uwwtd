@@ -96,6 +96,7 @@ function uwwtd_debug(){
     
 //dsm(array_keys(openlayers_styles()));
     //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
+    /*
     module_load_include('php','uwwtd','inc/ShapeFile.inc');
     module_load_include('inc','uwwtd','inc/data_center');
     $shp = new ShapeFile(drupal_realpath('sites/default/files/data_shapes/SI_SA_river.shp'));
@@ -106,6 +107,89 @@ function uwwtd_debug(){
         dsm($geodata);
         break;
     }
+    */
+    
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            if($map->data['layers']['oieau_nuts']!=0){
+                $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus'] = array(
+                  'enabled' => 0,
+                  'open' => 1,
+                  'overlay_style' => 'checkbox',
+                  'sort_layers' => 1,
+                  'layers_agglomerations' => 1,
+                  'layers_agglomerations_groupname' => 'UWWTD',
+                  'layers_uwwtp' => 1,
+                  'layers_uwwtp_groupname' => 'UWWTD',
+                  'layers_dcp' => 1,
+                  'layers_dcp_groupname' => 'UWWTD',
+                  
+                  //RBD
+                  'layers_oieau_rbd_rbdsu' => 0,
+                  'layers_oieau_rbd_rbdsu_groupname' => 'Basins',
+                  'layers_oieau_rbd' => 1,
+                  'layers_oieau_rbd_groupname' => 'Basins',
+                  'layers_oieau_rbdsu' => 1,
+                  'layers_oieau_rbdsu_groupname' => 'Basins',
+                  
+                  //NUTS
+                  'layers_oieau_nuts' => 0,
+                  'layers_oieau_nuts_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_0' => 1,
+                  'layers_oieau_nuts_0_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_1' => 1,
+                  'layers_oieau_nuts_1_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_2' => 1,
+                  'layers_oieau_nuts_groupname_2' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_3' => 1,
+                  'layers_oieau_nuts_groupname_3' => 'Regions (NUTS)',
+
+                  //Others
+                  'layers_bathing_water' => 1,
+                  'layers_bathing_water_groupname' => 'Others',
+                  'layers_soe_monitoring_stations' => 1,
+                  'layers_soe_monitoring_stations_groupname' => 'Others',
+                  'layers_natura_2000' => 1,
+                  'layers_natura_2000_groupname' => 'Others',
+                );
+                
+                //Reactivate layers 
+                $new_layers = array(
+                    'oieau_rbd'=> 5,
+                    'oieau_rbdsu'=> 5,
+                    'oieau_nuts_0'=>6,
+                    'oieau_nuts_1'=>6,
+                    'oieau_nuts_2'=>6,
+                    'oieau_nuts_3'=>6,
+                );
+                
+                foreach($new_layers as $layer=>$weight){
+                    $map->data['layers'][$layer] = $layer;
+                    $map->data['layer_weight'][$layer] = $weight;
+                    $map->data['layer_styles'][$layer] = 0;
+                    $map->data['layer_styles_select'][$layer] = 0;
+                    $map->data['layer_styles_temporary'][$layer] = 0;
+                    $map->data['layer_activated'][$layer] = 0;
+                    $map->data['layer_switcher'][$layer] = $layer;
+                    $update = true;
+                }
+                
+                $map->data['layers']['oieau_rbd_rbdsu'] =   0;
+                $map->data['layers']['oieau_nuts'] =  0;
+                
+                $map->data['layer_switcher']['oieau_rbd_rbdsu'] = 0;
+                $map->data['layer_switcher']['oieau_nuts'] = 0;
+                
+                openlayers_map_save($map); 
+            }
+            
+            
+        }
+    }
+    
+    
     
     return 'debug';
 }
