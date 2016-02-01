@@ -3321,8 +3321,13 @@ function uwwtd_update_7129(&$context = null){
         $map = clone $old_map;
         if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
             if($map->data['layers']['oieau_nuts']!=0){
+                
+                $map->data['behaviors']['openlayers_behavior_layerswitcher'] = array(
+                    'enabled' => 1,
+                    'open' => 1,
+                );
                 $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus'] = array(
-                  'enabled' => 0,
+                  'enabled' => 1,
                   'open' => 1,
                   'overlay_style' => 'checkbox',
                   'sort_layers' => 1,
