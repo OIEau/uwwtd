@@ -2358,49 +2358,31 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
     $arrayInPe = array();
-//     $arrayInPe['Compliant']['Article 3 previous year'] = $sheet->getCell('B54')->getValue();
-    $arrayInPe['Compliant']['Article 3 current year'] = $sheet->getCell('E55')->getValue();
-//     $arrayInPe['Compliant']['Article 4 previous year'] = $sheet->getCell('B57')->getValue();
-    $arrayInPe['Compliant']['Article 4 current year'] = $sheet->getCell('E58')->getValue();
-//     $arrayInPe['Compliant']['Article 5 previous year'] = $sheet->getCell('B60')->getValue();
-    $arrayInPe['Compliant']['Article 5 current year'] = $sheet->getCell('E61')->getValue();
+    $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('E55')->getValue();
+    $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('E58')->getValue();
+    $arrayInPe['Compliant']['Article 5'] = $sheet->getCell('E61')->getValue();
     
-//     $arrayInPe['Not compliant']['Article 3 previous year'] = $sheet->getCell('C54')->getValue();
-    $arrayInPe['Not compliant']['Article 3 current year'] = $sheet->getCell('F55')->getValue();
-//     $arrayInPe['Not compliant']['Article 4 previous year'] = $sheet->getCell('C57')->getValue();
-    $arrayInPe['Not compliant']['Article 4 current year'] = $sheet->getCell('F58')->getValue();
-//     $arrayInPe['Not compliant']['Article 5 previous year'] = $sheet->getCell('C60')->getValue();
-    $arrayInPe['Not compliant']['Article 5 current year'] = $sheet->getCell('F61')->getValue();
+    $arrayInPe['Not compliant']['Article 3'] = $sheet->getCell('F55')->getValue();
+    $arrayInPe['Not compliant']['Article 4'] = $sheet->getCell('F58')->getValue();
+    $arrayInPe['Not compliant']['Article 5'] = $sheet->getCell('F61')->getValue();
 
-//     $arrayInPe['Not relevant']['Article 3 previous year'] = $sheet->getCell('D54')->getValue();
-    $arrayInPe['Not relevant']['Article 3 current year'] = $sheet->getCell('G55')->getValue();
-//     $arrayInPe['Not relevant']['Article 4 previous year'] = $sheet->getCell('D57')->getValue();
-    $arrayInPe['Not relevant']['Article 4 current year'] = $sheet->getCell('G58')->getValue();
-//     $arrayInPe['Not relevant']['Article 5 previous year'] = $sheet->getCell('D60')->getValue();
-    $arrayInPe['Not relevant']['Article 5 current year'] = $sheet->getCell('G61')->getValue();
+    $arrayInPe['Not relevant']['Article 3'] = $sheet->getCell('G55')->getValue();
+    $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('G58')->getValue();
+    $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('G61')->getValue();
     
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
     $arrayInNumOfAgg = array();
-//     $arrayInNumOfAgg['Compliant']['Article 3 previous year'] = $sheet->getCell('D43')->getValue();
-    $arrayInNumOfAgg['Compliant']['Article 3 current year'] = $sheet->getCell('B43')->getValue();
-//     $arrayInNumOfAgg['Compliant']['Article 4 previous year'] = $sheet->getCell('D46')->getValue();
-    $arrayInNumOfAgg['Compliant']['Article 4 current year'] = $sheet->getCell('B46')->getValue();
-//     $arrayInNumOfAgg['Compliant']['Article 5 previous year'] = $sheet->getCell('D49')->getValue();
-    $arrayInNumOfAgg['Compliant']['Article 5 current year'] = $sheet->getCell('B49')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B43')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B46')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 5'] = $sheet->getCell('B49')->getValue();
     
-//     $arrayInNumOfAgg['Not compliant']['Article 3 previous year'] = $sheet->getCell('D44')->getValue();
-    $arrayInNumOfAgg['Not compliant']['Article 3 current year'] = $sheet->getCell('B44')->getValue();
-//     $arrayInNumOfAgg['Not compliant']['Article 4 previous year'] = $sheet->getCell('D47')->getValue();
-    $arrayInNumOfAgg['Not compliant']['Article 4 current year'] = $sheet->getCell('B47')->getValue();
-//     $arrayInNumOfAgg['Not compliant']['Article 5 previous year'] = $sheet->getCell('D50')->getValue();
-    $arrayInNumOfAgg['Not compliant']['Article 5 current year'] = $sheet->getCell('B50')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 3'] = $sheet->getCell('B44')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 4'] = $sheet->getCell('B47')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 5'] = $sheet->getCell('B50')->getValue();
     
-//     $arrayInNumOfAgg['Not relevant']['Article 3 previous year'] = $sheet->getCell('D45')->getValue();
-    $arrayInNumOfAgg['Not relevant']['Article 3 current year'] = $sheet->getCell('B45')->getValue();
-//     $arrayInNumOfAgg['Not relevant']['Article 4 previous year'] = $sheet->getCell('D48')->getValue();
-    $arrayInNumOfAgg['Not relevant']['Article 4 current year'] = $sheet->getCell('B48')->getValue();
-//     $arrayInNumOfAgg['Not relevant']['Article 5 previous year'] = $sheet->getCell('D51')->getValue();
-    $arrayInNumOfAgg['Not relevant']['Article 5 current year'] = $sheet->getCell('B51')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('B45')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
     
     // Récupération du nid du node MS_LEVEL de cette année :
     $query = db_select('node', 'n');

@@ -778,6 +778,11 @@ function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibl
 			}
 		}
 	}
+	
+	// Tri selon les clés (année) :
+	ksort($comparisonsCompliancesByPe);
+	ksort($comparisonsCompliancesByAgg);
+	
 	return array('comparisonsCompliancesByPe' => $comparisonsCompliancesByPe, 
 				 'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg);
 }

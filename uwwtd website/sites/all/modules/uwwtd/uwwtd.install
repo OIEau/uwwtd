@@ -3328,7 +3328,7 @@ function uwwtd_update_7129(&$context = null){
  * Ajoute les champs field_comparison_of_compliance_p et field_comparison_of_compliance_a au type
  * de contenu MS_LEVEL.
  */
-function uwwtd_update_7131(&$context = null){
+function uwwtd_update_7131(&$context = null) {
 	uwwtd_install_trace(__FUNCTION__);
 	
 	// Ajout de deux champs au type de contenu ms_level :

@@ -279,15 +279,23 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibles);
-    $frontAndBackGraph1 = getRow8Graph1and2($results);
+    $frontAndBackGraphs = getRow8Graphs($results);
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Distance to Compliance"), 
 	    array(
 	    	array(
-	    		'graph_art3_pe', t("Article 3 by p.e."), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
-	    		'graph_art3_agg', t("Article 3 by number of agglomerations"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
+	    		'graph_art3_pe', t("Article 3 by p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
+	    		'graph_art3_agg', t("Article 3 by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
 	    	),
+    		array(
+    			'graph_art4_pe', t("Article 4 by p.e."), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
+    			'graph_art4_agg', t("Article 4 by number of agglomerations"), $frontAndBackGraphs['graph4Front'],  $frontAndBackGraphs['graph4Back'], true
+    		),
+    		array(
+    			'graph_art5_pe', t("Article 5 by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
+    			'graph_art5_agg', t("Article 5 by number of agglomerations"), $frontAndBackGraphs['graph46Front'],  $frontAndBackGraphs['graph6Back'], true
+    		),
 	    )
     );
     
@@ -1156,24 +1164,73 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
 /**
  * Retourne les données pour le graph1 et 2 de la ligne 8, à propos des Comparison of compliance.
  */
-function getRow8Graph1and2($results) {
-	// Variables du graph 1 :
-	$graph1Front = array();
-	$graph1Back = '';
-	$columns = array();
-	$graph1Rows = $results;
-	$graph1Sums = array();
+function getRow8Graphs($results) {
+	$colors = array(
+		'Compliant' => '#4F81BD',
+		'Not compliant' => '#C0504D',
+		'Not relevant' => '#9BBB59',
+	);
 	
 	dsm($results);
+	$graph1Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 3', $colors);
+	$graph1Back = '';
 	
-	// Variables du graph 2 :
-	$graph2Front = array();
+	$graph2Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 3', $colors);
 	$graph2Back = '';
-	$graph2Rows = $results;
-	$graph2Sums = array();
 	
+	$graph3Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 4', $colors);
+	$graph3Back = '';
 	
-	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
+	$graph4Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 4', $colors);
+	$graph4Back = '';
+	
+	$graph5Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 5', $colors);
+	$graph5Back = '';
+	
+	$graph6Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 5', $colors);
+	$graph6Back = '';
+	
+	return array('graph1Front' => $graph1Front, 'graph1Back' => $graph1Back, 
+				 'graph2Front' => $graph2Front, 'graph2Back' => $graph2Back,
+				 'graph3Front' => $graph3Front, 'graph3Back' => $graph3Back,
+				 'graph4Front' => $graph4Front, 'graph4Back' => $graph4Back,
+				 'graph5Front' => $graph5Front, 'graph5Back' => $graph5Back,
+				 'graph6Front' => $graph6Front, 'graph6Back' => $graph6Back);
+}
+
+/**
+ * Retourne le tableau avec les donnés pour l'unité et l'article donné, au format attendu pour afficher le graph.
+ */
+function getFrontFormated($arraySource, $articleName, $colors) {
+	$graphFront = array();
+	
+	// Pour le graph en p.e. :
+	if (!empty($arraySource)) {
+		// Pour chaque année :
+		foreach ($arraySource as $year => $yearRow) {
+			// Pour chaque données d'année :
+			foreach ($yearRow as $complianceName => $compliance) {
+				// Pour chaque article :
+				foreach ($compliance as $name => $article) {
+					if ($name === $articleName) {
+						$graphFront[$year][$complianceName]['value'] = $article;
+						$graphFront[$year][$complianceName]['valueformat'] = $article .' pe';
+						$graphFront[$year][$complianceName]['label'] = $complianceName;
+						
+						// Définition de la couleur :
+						$color = '#005572';
+						if (array_key_exists($complianceName, $colors)) {
+							$color = $colors[$complianceName];
+						}
+						
+						$graphFront[$year][$complianceName]['color'] = $color;
+					}
+				}
+			}
+		}
+	}
+	
+	return $graphFront;
 }
 
 /**
