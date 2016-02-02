@@ -294,7 +294,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     		),
     		array(
     			'graph_art5_pe', t("Article 5 by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
-    			'graph_art5_agg', t("Article 5 by number of agglomerations"), $frontAndBackGraphs['graph46Front'],  $frontAndBackGraphs['graph6Back'], true
+    			'graph_art5_agg', t("Article 5 by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
     		),
 	    )
     );
