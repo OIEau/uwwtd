@@ -962,12 +962,16 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 	background: #ffffff;
   position: absolute;
   right: 0;
-  top: -700px;
+  top:35px;
   z-index: 30;
   box-shadow: -3px 0px 20px #888888!important;
   border-radius: 5px 0 0 5px!important;
   padding: 10px!important;
 }
+#block-openlayers-plus-blockswitcher-plus{
+    display:none;
+}
+
 .openlayers_plus-blockswitcher .group {
 	font-weight: bold;
 }

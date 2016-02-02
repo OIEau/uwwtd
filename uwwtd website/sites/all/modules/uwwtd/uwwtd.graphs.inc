@@ -931,13 +931,12 @@ function getRow6Graphs($results){
             'COD'=>array('#d87600', '#ffcf95'),
             'BOD'=>array('#5B3349', '#dcc1d0'),
             
-        );
-                
+        );       
         foreach($results as $rowName=>$data){
             $graph1Front = array();
             $graph2Front = array();
-            $$graph1FrontRows = array();
-            $$graph2FrontRows = array();
+            $graph1FrontRows = array();
+            $graph2FrontRows = array();
             $graph1Back = "";
             $graph2Back = "";
             
@@ -946,26 +945,27 @@ function getRow6Graphs($results){
                     if(is_array($item)){
                         $graph1Front['data'][] = array(
                             (string)$key,
-                            $item['in'],
-                            $item['out'],
+                            $item['in']['q'],
+                            $item['out']['q'],
                         );
                         $graph1FrontRows[] = array(
                             (string)$key,
-                            uwwtd_format_number($item['in'],2),
-                            uwwtd_format_number($item['out'],2),
-                            uwwtd_format_number($item['out']*100/$item['in'] ,1) .'%'
+                            uwwtd_format_number($item['in']['q']),
+                            uwwtd_format_number($item['out']['q']),
+                            uwwtd_format_number($item['out']['q']*100/$item['in']['q'] ,1) .'%'
                         );
                         
                         $graph2Front['data'][] = array(
                             (string)$key,
-                            $item['vol']>0 ?round($item['in']*1000/$item['vol'],3):0,
-                            $item['vol']>0 ?round($item['out']*1000/$item['vol'],3):0,
+                            $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):0,
+                            $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):0,
                         );
                         $graph2FrontRows[] = array(
                             (string)$key,
-                            $item['vol']>0 ?round($item['in']*1000/$item['vol'],3):0,
-                            $item['vol']>0 ?round($item['out']*1000/$item['vol'],3):0,
-                            uwwtd_format_number($item['out']*100/$item['in'] ,1) .'%'
+                            $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):'-',
+                            $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):'-',
+                            $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
+
                         );
                         
                     }
@@ -1039,15 +1039,21 @@ function getRow7Graph1($yearSelected, $results) {
             }
             $front['legend'] = array_values($legend_ord);
             $front['color'] = array_values($color_ord);
-            //ON bouche les trous
+            //ON bouche les trous et on fait le tableau de données
+            $header = array(t("Destination"));
             foreach($front['data'] as $key=>$values){
                 $item = array();
-                $item[]=$values[0];
+                $year = $values[0];
+                $header[$year] = $year;
+                $item[]=$year;
                 foreach($legend_ord as $l=>$lab){
                     $item[] = (isset($values[$l])?$values[$l]:0);
+                    if(!isset($table[$l])) $table[$l][0]= $lab;
+                    $table[$l][$year] =  (isset($values[$l])? uwwtd_format_number($values[$l], 1):0);
                 }
                 $front['data'][$key] = $item;
             }
+            $back = theme('table', array('rows' => $table, 'header' =>$header)); // 'header' => $columns, 'rows_multiple' => true
         }
         else{
             foreach ($results as $year => $row) {
@@ -1073,35 +1079,37 @@ function getRow7Graph1($yearSelected, $results) {
                     }
                 }
             }
+            // Pour chaque ligne :
+            foreach ($rows as $rowName => $row) {
+                if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
+                    // Pour toutes les colonnes existantes :
+                    foreach (array_keys($columns[0]) as $columsName) {
+                        if (!array_key_exists($columsName, $row['data'])) {
+                            // Remplissage des trous :
+                            $rows[$rowName]['data'][$columsName] = ' - ';
+                        }
+                    }
+                }
+            }
+            
+            // Récupération du DOM du tableau :
+            $back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
+            
+            // Ajout des légendes :
+            $back .= '
+                <table class="stats-graphs table table-hover table-striped sticky-enabled">
+                    <thead>
+                        <tr>
+                            <th><i>*: DS/year</i></th>
+                        </tr>
+                    </thead>
+                </table>';
+            
         }
 		
 	}
 	
-	// Pour chaque ligne :
-	foreach ($rows as $rowName => $row) {
-		if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
-			// Pour toutes les colonnes existantes :
-			foreach (array_keys($columns[0]) as $columsName) {
-				if (!array_key_exists($columsName, $row['data'])) {
-					// Remplissage des trous :
-					$rows[$rowName]['data'][$columsName] = ' - ';
-				}
-			}
-		}
-	}
 	
-	// Récupération du DOM du tableau :
-	$back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
-	
-	// Ajout des légendes :
-	$back .= '
-		<table class="stats-graphs table table-hover table-striped sticky-enabled">
- 			<thead>
-				<tr>
-					<th><i>*: DS/year</i></th>
-				</tr>
-			</thead>
-		</table>';
 	
 	return array($front, $back);
 }

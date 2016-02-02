@@ -2974,7 +2974,9 @@ function uwwtd_update_7125(&$context = null)
     }     
 }
 
-//Update for WMS && stat : 21/12/2105
+/**
+ * Update for WMS && stat : 21/12/2105
+**/
 function uwwtd_update_7126(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3165,7 +3167,9 @@ function uwwtd_update_7126(&$context = null){
     }  
 }
 
-//Change content of ressources & regulation pages
+/**
+ * Change content of ressources & regulation pages
+*/ 
 function uwwtd_update_7127(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3217,7 +3221,9 @@ function uwwtd_update_7127(&$context = null){
     
 }
 
-//Manage RCA, DCP pages
+/**
+ * Manage RCA, DCP pages
+**/
 function uwwtd_update_7128(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3274,6 +3280,10 @@ function uwwtd_update_7128(&$context = null){
     
 }
 
+
+/**
+ * Resource page + OL layers switcher behavior + datatables module
+**/
 function uwwtd_update_7129(&$context = null){
     uwwtd_install_trace(__FUNCTION__);
     
@@ -3304,11 +3314,129 @@ function uwwtd_update_7129(&$context = null){
         throw new DrupalUpdateException($msg);    
     }
     
-    //TODO Change "long" date format definition
+    //Manage OL layers for RBD && NUTS
+    //Activate custom OL layers switcher behavior 
+     db_update('block')
+        ->fields(array(
+          'region' => 'content',
+          'status' => 1,
+          'weight' => -15,
+          'pages' => '',
+          'title' => '<none>',
+          'visibility' => 0,
+        ))
+          ->condition('theme', 'uwwtd')
+          ->condition('delta', 'blockswitcher_plus')
+          ->condition('module', 'openlayers_plus')        
+        ->execute();  
     
-    //TODO Manage OL layers for RBD && NUTS
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            //if($map->data['layers']['oieau_nuts']!=0){
+                
+                //$map->data['behaviors']['openlayers_behavior_layerswitcher']['enabled'] = 0 ;
+                
+                //Add main layer
+                
+                $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus'] = array(
+                  'enabled' => 0,
+                  'open' => 1,
+                  'overlay_style' => 'checkbox',
+                  'sort_layers' => 1,
+                  'layers_agglomerations' => 1,
+                  'layers_agglomerations_groupname' => 'UWWTD',
+                  'layers_uwwtp' => 1,
+                  'layers_uwwtp_groupname' => 'UWWTD',
+                  'layers_dcp' => 1,
+                  'layers_dcp_groupname' => 'UWWTD',
+                  
+                  //RBD
+                  'layers_oieau_rbd_rbdsu' => 0,
+                  'layers_oieau_rbd_rbdsu_groupname' => 'Basins',
+                  'layers_oieau_rbd' => 1,
+                  'layers_oieau_rbd_groupname' => 'Basins',
+                  'layers_oieau_rbdsu' => 1,
+                  'layers_oieau_rbdsu_groupname' => 'Basins',
+                  
+                  //NUTS
+                  'layers_oieau_nuts' => 0,
+                  'layers_oieau_nuts_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_0' => 1,
+                  'layers_oieau_nuts_0_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_1' => 1,
+                  'layers_oieau_nuts_1_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_2' => 1,
+                  'layers_oieau_nuts_2_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_3' => 1,
+                  'layers_oieau_nuts_3_groupname' => 'Regions (NUTS)',
+
+                  //Others
+                  'layers_bathing_water' => 1,
+                  'layers_bathing_water_groupname' => 'Others',
+                  'layers_soe_monitoring_stations' => 1,
+                  'layers_soe_monitoring_stations_groupname' => 'Others',
+                  'layers_natura_2000' => 1,
+                  'layers_natura_2000_groupname' => 'Others',
+                );
+                
+                foreach($map->data['layer_activated'] as $layer_name=>$activated){
+                    if($activated){
+                        if(!isset($map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name])){
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name] = 1;
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name.'_groupname'] = 'UWWTD';
+                        }
+                    }
+                }
+                
+                //Reactivate layers 
+                $new_layers = array(
+                    'oieau_rbd'=> 5,
+                    'oieau_rbdsu'=> 5,
+                    'oieau_nuts_0'=>6,
+                    'oieau_nuts_1'=>6,
+                    'oieau_nuts_2'=>6,
+                    'oieau_nuts_3'=>6,
+                );
+                
+                foreach($new_layers as $layer=>$weight){
+                    $map->data['layers'][$layer] = $layer;
+                    $map->data['layer_weight'][$layer] = $weight;
+                    $map->data['layer_styles'][$layer] = 0;
+                    $map->data['layer_styles_select'][$layer] = 0;
+                    $map->data['layer_styles_temporary'][$layer] = 0;
+                    $map->data['layer_activated'][$layer] = 0;
+                    $map->data['layer_switcher'][$layer] = $layer;
+                    $update = true;
+                }
+                
+                $map->data['layers']['oieau_rbd_rbdsu'] =   0;
+                $map->data['layers']['oieau_nuts'] =  0;
+                
+                $map->data['layer_switcher']['oieau_rbd_rbdsu'] = 0;
+                $map->data['layer_switcher']['oieau_nuts'] = 0;
+                
+                openlayers_map_save($map); 
+            //}
+            
+            
+        }
+    }
     
-    //TODO activate custom OL layers switcher behavior 
+    //=== Install new main menu
+    drupal_flush_all_caches();
+    
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7129.json');
+    
+    menu_cache_clear_all();
     
      ////////////////////////////////////////////////////////////////
     //end update
@@ -3322,49 +3450,70 @@ function uwwtd_update_7129(&$context = null){
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    //throw new DrupalUpdateException(__FUNCTION__);
 }
 
-/**
- * Ajoute les champs field_comparison_of_compliance_p et field_comparison_of_compliance_a au type
- * de contenu MS_LEVEL.
- */
-function uwwtd_update_7131(&$context = null) {
-	uwwtd_install_trace(__FUNCTION__);
-	
-	// Ajout de deux champs au type de contenu ms_level :
-  	addFieldToContentType('Comparison of compliance by p.e.', 'field_comparison_of_compliance_p', 'ms_level');
-  	addFieldToContentType('Comparison of compliance by agg', 'field_comparison_of_compliance_a', 'ms_level');
-  	
-  	//==========DEBUG : permet de relancer la mise à jour si besoin.
-  	throw new DrupalUpdateException(__FUNCTION__);
-}
 
 /**
- * Ajout le champs donné au content type donné.
- */
-function addFieldToContentType($fieldLabel, $fieldName, $nodeType) {
-	if (!field_info_field($fieldName)) {
-		// Création du champs :
-		$field = array(
-			'field_name' => $fieldName,
-			'type' => 'text_long',
-		);
-		field_create_field($field);
-		 
-		// Ajout du champs au type de contenu :
-		$instance = array( 'field_name' => $fieldName,
-			'entity_type' => 'node',
-			'bundle' => $nodeType,
-			'label' => $fieldLabel,
-		);
-		field_create_instance($instance);
-		watchdog('uwwtd', t('!fieldName was added successfully.', array('!fieldName' => $fieldName)));
-	} else {
-		watchdog('uwwtd', t('!fieldName already exists.', array('!fieldName' => $fieldName)));
+ * Resource menu and new sub section
+ * MS_LEVEL Content type
+**/
+function uwwtd_update_7130(&$context = null){
+    uwwtd_install_trace(__FUNCTION__);
+    
+    
+    drupal_flush_all_caches();
+    
+    //Update the resource page ==> to usefull links
+    /*
+    $ressource_content = '<h2>European Commission - Directorate General Environment</h2><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h2>European Environment Agency</h2><h3><strong>Reporting Obligation Database (ROD):</strong></h3><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><h3><strong>Access to data and visualisation</strong></h3><ul><li>European Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU data viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3>&nbsp;</h3><h2>European funds and loans</h2><ul><li>DG Regio :&nbsp; <a href="http://ec.europa.eu/regional_policy/" target="_blank">http:://ec.europa.eu/regional_policy/</a></li><li>Funding LIFE projects : <a href="http://ec.europa.eu/environment/life/funding/life.htm" target="_blank">http://ec.europa.eu/environment/life/funding/life.htm</a></li><li>Water life project : <a href="http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75" target="_blank">http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75</a></li><li>European Investment Bank : <a href="http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en" target="_blank">http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en</a></li></ul><p>&nbsp;</p><h2>SIIF European and national platform</h2><ul><li>Generic open-source platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p><h2>Other national data viewers</h2><ul><li>French urban waste water website: <a href="http://assainissement.developpement-durable.gouv.fr/" target="_blank">http://assainissement.developpement-durable.gouv.fr/</a></li><li>Greek urban waste water website: <a href="http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx">http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx</a></li><li type="_moz">Luxembourg water geoportail: <a href="http://eau.geoportail.lu/">http://eau.geoportail.lu/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p><h2>Good practices</h2><ul><li>Natural Water Retention Measures: <a href="http://nwrm.eu/" target="_blank">http://nwrm.eu/</a></li></ul>';
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Ressources', '=');
+    $query->condition('n.language', 'en', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->title = "Resource";
+        $node->body['und'][0]['value'] = $ressource_content;
+        $node->body['und'][0]['format'] = 'full_html';
+        node_save($node);
+        break;
 	}
+    */
+    /*
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7130.json');
+    
+    menu_cache_clear_all();
+    */
+    
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+    //keep this for further update
+    //     throw new DrupalUpdateException(__FUNCTION__);
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+    
 }
-
-
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
