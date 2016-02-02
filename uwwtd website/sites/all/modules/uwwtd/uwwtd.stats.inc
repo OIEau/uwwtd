@@ -395,7 +395,6 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         ':min_agg' => variable_get('min_aggenerated_display', '2000'),
     );
     try {
-    	dsm($query);
         $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
