@@ -1,4 +1,4 @@
-<div class='openlayers_plus-blockswitcher clear-block'>
+<div class="openlayers_plus-blockswitcher">
   <a onclick="Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();" class="toggle-button-layerswitcher">[ - ] Hide</a>
   <div class='layer-switcher'>
     <div class='layers base'>

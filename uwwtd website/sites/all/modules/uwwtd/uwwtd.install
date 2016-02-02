@@ -2974,7 +2974,9 @@ function uwwtd_update_7125(&$context = null)
     }     
 }
 
-//Update for WMS && stat : 21/12/2105
+/**
+ * Update for WMS && stat : 21/12/2105
+**/
 function uwwtd_update_7126(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3165,7 +3167,9 @@ function uwwtd_update_7126(&$context = null){
     }  
 }
 
-//Change content of ressources & regulation pages
+/**
+ * Change content of ressources & regulation pages
+*/ 
 function uwwtd_update_7127(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3217,7 +3221,9 @@ function uwwtd_update_7127(&$context = null){
     
 }
 
-//Manage RCA, DCP pages
+/**
+ * Manage RCA, DCP pages
+**/
 function uwwtd_update_7128(&$context = null){
     uwwtd_install_trace(__FUNCTION__); 
     
@@ -3274,6 +3280,10 @@ function uwwtd_update_7128(&$context = null){
     
 }
 
+
+/**
+ * Resource page + OL layers switcher behavior + datatables module
+**/
 function uwwtd_update_7129(&$context = null){
     uwwtd_install_trace(__FUNCTION__);
     
@@ -3304,11 +3314,117 @@ function uwwtd_update_7129(&$context = null){
         throw new DrupalUpdateException($msg);    
     }
     
-    //TODO Change "long" date format definition
+    //Manage OL layers for RBD && NUTS
+    //Activate custom OL layers switcher behavior 
+     db_update('block')
+        ->fields(array(
+          'region' => 'content',
+          'status' => 1,
+          'weight' => -15,
+          'pages' => '',
+          'title' => '<none>',
+          'visibility' => 0,
+        ))
+          ->condition('theme', 'uwwtd')
+          ->condition('delta', 'blockswitcher_plus')
+          ->condition('module', 'openlayers_plus')        
+        ->execute();  
     
-    //TODO Manage OL layers for RBD && NUTS
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            //if($map->data['layers']['oieau_nuts']!=0){
+                
+                //$map->data['behaviors']['openlayers_behavior_layerswitcher']['enabled'] = 0 ;
+                
+                //Add main layer
+                
+                $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus'] = array(
+                  'enabled' => 0,
+                  'open' => 1,
+                  'overlay_style' => 'checkbox',
+                  'sort_layers' => 1,
+                  'layers_agglomerations' => 1,
+                  'layers_agglomerations_groupname' => 'UWWTD',
+                  'layers_uwwtp' => 1,
+                  'layers_uwwtp_groupname' => 'UWWTD',
+                  'layers_dcp' => 1,
+                  'layers_dcp_groupname' => 'UWWTD',
+                  
+                  //RBD
+                  'layers_oieau_rbd_rbdsu' => 0,
+                  'layers_oieau_rbd_rbdsu_groupname' => 'Basins',
+                  'layers_oieau_rbd' => 1,
+                  'layers_oieau_rbd_groupname' => 'Basins',
+                  'layers_oieau_rbdsu' => 1,
+                  'layers_oieau_rbdsu_groupname' => 'Basins',
+                  
+                  //NUTS
+                  'layers_oieau_nuts' => 0,
+                  'layers_oieau_nuts_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_0' => 1,
+                  'layers_oieau_nuts_0_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_1' => 1,
+                  'layers_oieau_nuts_1_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_2' => 1,
+                  'layers_oieau_nuts_2_groupname' => 'Regions (NUTS)',
+                  'layers_oieau_nuts_3' => 1,
+                  'layers_oieau_nuts_3_groupname' => 'Regions (NUTS)',
+
+                  //Others
+                  'layers_bathing_water' => 1,
+                  'layers_bathing_water_groupname' => 'Others',
+                  'layers_soe_monitoring_stations' => 1,
+                  'layers_soe_monitoring_stations_groupname' => 'Others',
+                  'layers_natura_2000' => 1,
+                  'layers_natura_2000_groupname' => 'Others',
+                );
+                
+                foreach($map->data['layer_activated'] as $layer_name=>$activated){
+                    if($activated){
+                        if(!isset($map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name])){
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name] = 1;
+                            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name.'_groupname'] = 'UWWTD';
+                        }
+                    }
+                }
+                
+                //Reactivate layers 
+                $new_layers = array(
+                    'oieau_rbd'=> 5,
+                    'oieau_rbdsu'=> 5,
+                    'oieau_nuts_0'=>6,
+                    'oieau_nuts_1'=>6,
+                    'oieau_nuts_2'=>6,
+                    'oieau_nuts_3'=>6,
+                );
+                
+                foreach($new_layers as $layer=>$weight){
+                    $map->data['layers'][$layer] = $layer;
+                    $map->data['layer_weight'][$layer] = $weight;
+                    $map->data['layer_styles'][$layer] = 0;
+                    $map->data['layer_styles_select'][$layer] = 0;
+                    $map->data['layer_styles_temporary'][$layer] = 0;
+                    $map->data['layer_activated'][$layer] = 0;
+                    $map->data['layer_switcher'][$layer] = $layer;
+                    $update = true;
+                }
+                
+                $map->data['layers']['oieau_rbd_rbdsu'] =   0;
+                $map->data['layers']['oieau_nuts'] =  0;
+                
+                $map->data['layer_switcher']['oieau_rbd_rbdsu'] = 0;
+                $map->data['layer_switcher']['oieau_nuts'] = 0;
+                
+                openlayers_map_save($map); 
+            //}
+            
+            
+        }
+    }
     
-    //TODO activate custom OL layers switcher behavior 
+    
     
      ////////////////////////////////////////////////////////////////
     //end update

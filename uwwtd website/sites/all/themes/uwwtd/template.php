@@ -1705,6 +1705,10 @@ function uwwtd_stackedbar_uwwtpnode($node){
     'rows' => $aData,
     'width'=>280,
     'height'=>300,
+    'color'=> array(
+        '#5B3349', 
+        '#F28030'
+    )
   );
   return d3_draw($chart);
 

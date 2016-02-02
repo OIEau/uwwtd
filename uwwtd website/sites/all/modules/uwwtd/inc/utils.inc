@@ -96,6 +96,7 @@ function uwwtd_debug(){
     
 //dsm(array_keys(openlayers_styles()));
     //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
+    /*
     module_load_include('php','uwwtd','inc/ShapeFile.inc');
     module_load_include('inc','uwwtd','inc/data_center');
     $shp = new ShapeFile(drupal_realpath('sites/default/files/data_shapes/SI_SA_river.shp'));
@@ -106,6 +107,24 @@ function uwwtd_debug(){
         dsm($geodata);
         break;
     }
+    */
+    
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            foreach($map->data['layer_activated'] as $layer_name=>$activated){
+                if($activated){
+                    if(!isset($map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name])){
+                        $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name] = 1;
+                        $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_'.$layer_name.'_groupname'] = 'UWWTD';
+                    }
+                }
+            }
+        }
+    }
+    
+    
     
     return 'debug';
 }
