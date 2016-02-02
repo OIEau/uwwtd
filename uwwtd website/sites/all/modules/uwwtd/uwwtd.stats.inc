@@ -259,8 +259,6 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
 /**
  * Récupère en base les données pour Graph 1 et 2 de la ligne 3 et 4.
  */
-//====FIX ME nd@oieau.fr : In Ireland for year = 2010, the dataset contain all uwwtp (agggeneratedload > 2000 )
-// We need to exclude all uwwtp link to agglomeration < 2000 pe but not with double count
 function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 	$conditions = '';
 	switch($yearSelected){
