@@ -163,7 +163,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPossibles);
     $frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
-    dsm($frontAndBackGraph1And2[0]);
+
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"), array(
             array(
@@ -712,60 +712,60 @@ function getRow2Graph1and2($results, $yearSelected) {
             }
             
             // Pour chaque ligne :
-        foreach ($graph1Rows as $complianceStateName => $complianceState) {
-            if (array_key_exists('data', $complianceState) && array_key_exists('pe', $columns)) {
-                // Pour toutes les colonnes existantes :
-                foreach (array_keys($columns['pe']) as $columsName) {
-                    if (!array_key_exists($columsName, $complianceState['data'])) {
-                        // Remplissage des trous :
-                        $graph1Rows[$complianceStateName]['data'][$columsName] = ' - ';
-                    }
-                }
-            }
-        }
-        foreach ($graph2Rows as $complianceStateName => $complianceState) {
-            if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
-                // Pour toutes les colonnes existantes :
-                foreach (array_keys($columns[0]) as $columsName) {
-                    if (!array_key_exists($columsName, $complianceState['data'])) {
-                        // Remplissage des trous :
-                        $graph2Rows[$complianceStateName]['data'][$columsName] = ' - ';
-                    }
-                }
-            }
-        }
-	
-        // Ajout des Totaux :
-        $graph1Rows['Total']['data']['Compliant state'] = 'Total';
-        foreach ($graph1Sums as $year => $sum) {
-            $graph1Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0) .' pe';
-        }
-        $graph2Rows['Total']['data']['Compliant state'] = 'Total';
-        foreach ($graph2Sums as $year => $sum) {
-            $graph2Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0);
-        }
-        
-        // Récupération du DOM des tableau :
-        $graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
-        $graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
-        
-        // Ajout des légendes :
-        $graph1Back .= '
-            <table class="stats-graphs table table-hover table-striped sticky-enabled">
-                <thead>
-                    <tr>
-                        <th><i>*pe: Population equivalent</i></th>
-                    </tr>
-                </thead>
-            </table>';
-        $graph2Back .= '
-            <table class="stats-graphs table table-hover table-striped sticky-enabled">
-                <thead>
-                    <tr>
-                        <th><i>*: Number of agglomerations</i></th>
-                    </tr>
-                </thead>
-            </table>';
+	        foreach ($graph1Rows as $complianceStateName => $complianceState) {
+	            if (array_key_exists('data', $complianceState) && array_key_exists('pe', $columns)) {
+	                // Pour toutes les colonnes existantes :
+	                foreach (array_keys($columns['pe']) as $columsName) {
+	                    if (!array_key_exists($columsName, $complianceState['data'])) {
+	                        // Remplissage des trous :
+	                        $graph1Rows[$complianceStateName]['data'][$columsName] = ' - ';
+	                    }
+	                }
+	            }
+	        }
+	        foreach ($graph2Rows as $complianceStateName => $complianceState) {
+	            if (array_key_exists('data', $complianceState) && array_key_exists(0, $columns)) {
+	                // Pour toutes les colonnes existantes :
+	                foreach (array_keys($columns[0]) as $columsName) {
+	                    if (!array_key_exists($columsName, $complianceState['data'])) {
+	                        // Remplissage des trous :
+	                        $graph2Rows[$complianceStateName]['data'][$columsName] = ' - ';
+	                    }
+	                }
+	            }
+	        }
+		
+	        // Ajout des Totaux :
+	        $graph1Rows['Total']['data']['Compliant state'] = 'Total';
+	        foreach ($graph1Sums as $year => $sum) {
+	            $graph1Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0) .' pe';
+	        }
+	        $graph2Rows['Total']['data']['Compliant state'] = 'Total';
+	        foreach ($graph2Sums as $year => $sum) {
+	            $graph2Rows['Total']['data'][$year] = uwwtd_format_number($sum, 0);
+	        }
+	        
+	        // Récupération du DOM des tableau :
+	        $graph1Back = theme('table', array('rows' => $graph1Rows, 'header' => $columns, 'rows_multiple' => true));
+	        $graph2Back = theme('table', array('rows' => $graph2Rows, 'header' => $columns, 'rows_multiple' => true));
+	        
+	        // Ajout des légendes :
+	        $graph1Back .= '
+	            <table class="stats-graphs table table-hover table-striped sticky-enabled">
+	                <thead>
+	                    <tr>
+	                        <th><i>*pe: Population equivalent</i></th>
+	                    </tr>
+	                </thead>
+	            </table>';
+	        $graph2Back .= '
+	            <table class="stats-graphs table table-hover table-striped sticky-enabled">
+	                <thead>
+	                    <tr>
+	                        <th><i>*: Number of agglomerations</i></th>
+	                    </tr>
+	                </thead>
+	            </table>';
 		}
 	}
 	
@@ -1166,43 +1166,37 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
  */
 function getRow8Graphs($results) {
 	$colors = array(
-		'Compliant' => '#4F81BD',
-		'Not compliant' => '#C0504D',
-		'Not relevant' => '#9BBB59',
+		'Compliant' => '#4F91E1',
+		'Not compliant' => '#8FBC8F',
+		'Not relevant' => '#D93C3C',
 	);
 	
-	dsm($results);
-	$graph1Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 3', $colors);
-	$graph1Back = '';
+	$graph1FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByPe'], 'Article 3', $colors);
+	$graph2FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByAgg'], 'Article 3', $colors);
+	$graph3FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByPe'], 'Article 4', $colors);
+	$graph4FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByAgg'], 'Article 4', $colors);
+	$graph5FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByPe'], 'Article 5', $colors);
+	$graph6FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByAgg'], 'Article 5', $colors);
 	
-	$graph2Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 3', $colors);
-	$graph2Back = '';
-	
-	$graph3Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 4', $colors);
-	$graph3Back = '';
-	
-	$graph4Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 4', $colors);
-	$graph4Back = '';
-	
-	$graph5Front = getFrontFormated($results['comparisonsCompliancesByPe'], 'Article 5', $colors);
-	$graph5Back = '';
-	
-	$graph6Front = getFrontFormated($results['comparisonsCompliancesByAgg'], 'Article 5', $colors);
-	$graph6Back = '';
-	
-	return array('graph1Front' => $graph1Front, 'graph1Back' => $graph1Back, 
-				 'graph2Front' => $graph2Front, 'graph2Back' => $graph2Back,
-				 'graph3Front' => $graph3Front, 'graph3Back' => $graph3Back,
-				 'graph4Front' => $graph4Front, 'graph4Back' => $graph4Back,
-				 'graph5Front' => $graph5Front, 'graph5Back' => $graph5Back,
-				 'graph6Front' => $graph6Front, 'graph6Back' => $graph6Back);
+	return array(
+		'graph1Front' => $graph1FrontAndBack['front'], 'graph1Back' => $graph1FrontAndBack['back'], 
+		'graph2Front' => $graph2FrontAndBack['front'], 'graph2Back' => $graph2FrontAndBack['back'],
+		'graph3Front' => $graph3FrontAndBack['front'], 'graph3Back' => $graph3FrontAndBack['back'],
+		'graph4Front' => $graph4FrontAndBack['front'], 'graph4Back' => $graph4FrontAndBack['back'],
+		'graph5Front' => $graph5FrontAndBack['front'], 'graph5Back' => $graph5FrontAndBack['back'],
+		'graph6Front' => $graph6FrontAndBack['front'], 'graph6Back' => $graph6FrontAndBack['back']);
 }
 
 /**
- * Retourne le tableau avec les donnés pour l'unité et l'article donné, au format attendu pour afficher le graph.
+ * Retourne le tableau avec les donnés pour l'unité et l'article donné, au format attendu pour afficher le graph,
+ * ainsi que le html pour affiche le tableau en back.
  */
-function getFrontFormated($arraySource, $articleName, $colors) {
-	$graphFront = array();
+function getFrontAndBackFormated($arraySource, $articleName, $colors) {
+	$front = array();
+	$columns = array();
+	$columns['year'] = 'Year';
+	$backRows = array();
+	$back = '';
 	
 	// Pour le graph en p.e. :
 	if (!empty($arraySource)) {
@@ -1210,27 +1204,45 @@ function getFrontFormated($arraySource, $articleName, $colors) {
 		foreach ($arraySource as $year => $yearRow) {
 			// Pour chaque données d'année :
 			foreach ($yearRow as $complianceName => $compliance) {
+				$columns[$complianceName] = $complianceName;
+				
 				// Pour chaque article :
 				foreach ($compliance as $name => $article) {
 					if ($name === $articleName) {
-						$graphFront[$year][$complianceName]['value'] = $article;
-						$graphFront[$year][$complianceName]['valueformat'] = $article .' pe';
-						$graphFront[$year][$complianceName]['label'] = $complianceName;
-						
 						// Définition de la couleur :
 						$color = '#005572';
 						if (array_key_exists($complianceName, $colors)) {
 							$color = $colors[$complianceName];
 						}
 						
-						$graphFront[$year][$complianceName]['color'] = $color;
+						// Création ligne front :
+						$front[$year][$complianceName]['value'] = $article;
+						$front[$year][$complianceName]['valueformat'] = $article .' pe';
+						$front[$year][$complianceName]['label'] = $complianceName;
+						$front[$year][$complianceName]['color'] = $color;
+						
+						// Création ligne back :
+						$backRows[$year]['year'] = '<b>'. $year .'</b>';
+						$backRows[$year][$complianceName] = $article;
 					}
 				}
 			}
 		}
 	}
+
+	// Remplissage des trous :
+	foreach ($backRows as $year => $yearRow) {
+		foreach ($yearRow as $complianceName => $compliance) {
+			if (empty($compliance)) {
+				$backRows[$year][$complianceName] = ' - ';
+			}
+		}
+	}
+
+	// Récupération du DOM des tableau :
+	$back = theme('table', array('rows' => $backRows, 'header' => $columns, 'rows_multiple' => false));
 	
-	return $graphFront;
+	return array('front' => $front, 'back' => $back);
 }
 
 /**
