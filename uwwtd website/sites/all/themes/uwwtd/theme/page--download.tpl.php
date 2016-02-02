@@ -101,20 +101,22 @@
 			$typeName = "UWWTD:UWWTD_".$pays;
 			$name = "UWWTD:<br>UWWTD_".$pays;
 		}
-
-		print render($page['content']); 
-		print '<div class="data">';
-		print '<div class="title">';
-			print '<h1>Data</h1>';
-			print '<p>'.t('In this section you can access to the data used on the platform and download them.').'</p>';
-		print '</div>';
+        
+        print render($page['content']); 
+?>
+		
+		<div class="data">
+		<div class="title">
+			<h1><?php print t('Data'); ?></h1>
+			<p><?php print t('In this section you can access to the data used on the platform and download them.'); ?></p>
+		</div>
 			
 			
-    print '<div class="view-filters">
+    <div class="view-filters">
 			<form accept-charset="UTF-8" id="views-exposed-form-download-page" method="get" action="">
 				<div>
 					<div class="views-exposed-form">
-						<div class="views-exposed-widgets clearfix">'. $render_field . '
+						<div class="views-exposed-widgets clearfix"><?php print $render_field; ?>
 							<div class="views-exposed-widget views-submit-button">
 								<button class="btn btn-info form-submit" type="submit" value="Apply" name="" id="edit-submit-agglomeration-conformity">Apply</button>
 							</div>
@@ -125,188 +127,192 @@
 					</div>
 				</div>
 			</form>
-		</div>';
+		</div>
 
- print '<table class="download">';		
-	print '<tr>
+ <table class="download">	
+	<tr>
 			<td style="text-align:center;"><b>Title</b></td>
 			<td style="text-align:center;"><b>Coverage</b></td>
 			<td style="text-align:center;"><b>Files available</b></td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Full UWWTD reported data</td>
 			<td>Country</td>
-			<td><a href="'.$fileXml.'" target="_blank"> xml</a></td>
-		</tr>';
-		print '<tr>
+			<td><a href="<?php print $fileXml;?>" target="_blank"> xml</a></td>
+		</tr>
+		<tr>
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_Agglomeration&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a></td>
-		</tr>';
-		print '<tr>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a></td>
+		</tr>
+		<tr>
 			<td>Urban Waste Water Treatment plants</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Discharge points</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_DischargePoint&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_DischargePoint&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_DischargePoint&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_DischargePoint&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Sensitive areas</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_ReceivingArea&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_ReceivingArea&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_ReceivingArea&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=UWWTD:'.$typeName.'_ReceivingArea&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
-		</tr>';
- print '</table>';
-print '</div>'; 
+		</tr>
+    </table>
+</div>
 
-print '<div class="metadata">';
 
-		print '<div class="title">';
-			print '<h1>Metadata</h1>';
-			print '<p>'.t('In this section you can access the metadata fiches for each of the four geographical layers covered by UWWTD (91/271/EEC).').'</p>';
-		print '</div>';
+<div class="metadata">
+
+		<div class="title">
+			<h1>Metadata</h1>
+			<p><?php print t('In this section you can access the metadata fiches for each of the four geographical layers covered by UWWTD (91/271/EEC).'); ?></p>
+		</div>
 		
- print '<table class="download">';		
-	print '<tr>
+<table class="download">		
+	<tr>
 			<td style="text-align:center;"><b>Title</b></td>
 			<td style="text-align:center;"><b>Coverage</b></td>
 			<td style="text-align:center;"><b>Download</b></td>
 			<td style="text-align:center;"><b>View</b></td>
-		</tr>';
-		print '<tr>
+		</tr>
+
+		<tr>
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
-				<a href="'.variable_get('metadataAgglo').'/ows/xml.metadata.get?uuid='.variable_get('metadataAggloUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataAgglo').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataAggloUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">pdf</a>
 			</td>
 			<td>
-				<a href="'.variable_get('metadataAgglo').'/ows/catalog.search#/metadata/'.variable_get('metadataAggloUid').'" target="_blank">html</a>,
-				<a href="'.variable_get('metadataAgglo').'/ows/xml.metadata.get?uuid='.variable_get('metadataAggloUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataAgglo').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataAggloUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataAggloUid');?>" target="_blank">html</a>,
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">pdf</a>
 			</td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Urban Waste Water Treatment plants</td>
 			<td>Country</td>
 			<td>
-				<a href="'.variable_get('metadataUwwtp').'/ows/xml.metadata.get?uuid='.variable_get('metadataUwwtpUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataUwwtp').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataUwwtpUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">pdf</a>
 			</td>
 			<td>
-				<a href="'.variable_get('metadataUwwtp').'/ows/catalog.search#/metadata/'.variable_get('metadataUwwtpUid').'" target="_blank">html</a>,
-				<a href="'.variable_get('metadataUwwtp').'/ows/xml.metadata.get?uuid='.variable_get('metadataUwwtpUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataUwwtp').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataUwwtpUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataUwwtpUid');?>" target="_blank">html</a>,
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">pdf</a>
 			</td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Discharge points</td>
 			<td>Country</td>
 			<td>
-				<a href="'.variable_get('metadataDp').'/ows/xml.metadata.get?uuid='.variable_get('metadataDpUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataDp').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataDpUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataDp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">pdf</a>
 			</td>
 			<td>
-				<a href="'.variable_get('metadataDp').'/ows/catalog.search#/metadata/'.variable_get('metadataDpUid').'" target="_blank">html</a>,
-				<a href="'.variable_get('metadataDp').'/ows/xml.metadata.get?uuid='.variable_get('metadataDpUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataDp').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataDpUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataDp');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataDpUid');?>" target="_blank">html</a>,
+				<a href="<?php print variable_get('metadataDp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">pdf</a>
 			</td>
-		</tr>';
-		print '<tr>
+		</tr>
+		<tr>
 			<td>Sensitive areas</td>
 			<td>Country</td>
 			<td>
-				<a href="'.variable_get('metadataRca').'/ows/xml.metadata.get?uuid='.variable_get('metadataRcaUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataRca').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataRcaUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataRca');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">pdf</a>
 			</td>
 			<td>
-				<a href="'.variable_get('metadataRca').'/ows/catalog.search#/metadata/'.variable_get('metadataRcaUid').'" target="_blank">html</a>,
-				<a href="'.variable_get('metadataRca').'/ows/xml.metadata.get?uuid='.variable_get('metadataRcaUid').'" target="_blank">xml</a>, 
-				<a href="'.variable_get('metadataRca').'/ows/md.format.pdf?xsl=full_view&uuid='.variable_get('metadataRcaUid').'" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataRca');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataRcaUid');?>" target="_blank">html</a>,
+				<a href="<?php print variable_get('metadataRca');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">pdf</a>
 			</td>
-		</tr>';
- print '</table>';	
-print '</div>';
+		</tr>
+ </table>
+</div>
 
-print '<div class="services">';
 
-		print '<div class="title">';
-			print '<h1>Services</h1>';
-			print '<p>'.t('In this section you can access the webservices for each of the four geographical layers covered by UWWTD (91/271/EEC).').'</p>';
-		print '</div>';
+<div class="services">
+
+		<div class="title">
+			<h1>Services</h1>
+			<p><?php print t('In this section you can access the webservices for each of the four geographical layers covered by UWWTD (91/271/EEC).');?></p>
+		</div>
 			
- print '<table class="download">';		
-	print '<tr>
+ <table class="download">		
+	<tr>
 			<td style="text-align:center;"><b>Webservice</b></td>
-			<td style="text-align:center;"><b>'.t('DescribeFeatureType</b>: description of the information layers, name and type of fields.').'</td>
-			<td style="text-align:center;"><b>'.t('GetFeature</b>: access to data in GML format').'</td>
-		</tr>';
-		print '<tr>
+			<td style="text-align:center;"><b><?php print t('DescribeFeatureType</b>: description of the information layers, name and type of fields.');?></td>
+			<td style="text-align:center;"><b><?php print t('GetFeature</b>: access to data in GML format');?></td>
+		</tr>
+		<tr>
 			<td style="text-align:center;"><b>Agglomeration</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$typeName.'_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$name.'_Agglomeration</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$name.'_Agglomeration</a></td>
-		</tr>';
-		print '<tr>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_Agglomeration</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_Agglomeration</a></td>
+		</tr>
+		<tr>
 			<td style="text-align:center;"><b>Treatment plant</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$name.'_UrbanWasteWaterTreatmentPlant</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$name.'_UrbanWasteWaterTreatmentPlant</a></td>
-		</tr>';
-		print '<tr>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_UrbanWasteWaterTreatmentPlant</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_UrbanWasteWaterTreatmentPlant</a></td>
+		</tr>
+		<tr>
 			<td style="text-align:center;"><b>Discharge point</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$typeName.'_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$name.'_DischargePoint</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$name.'_DischargePoint</a></td>
-		</tr>';
-		print '<tr>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_DischargePoint</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_DischargePoint</a></td>
+		</tr>
+		<tr>
 			<td style="text-align:center;"><b>Receiving area</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$typeName.'_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName='.$name.'_ReceivingArea</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$typeName.'_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName='.$name.'_ReceivingArea</a></td>
-		</tr>';
- print '</table>';	
-print '</div>';
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_ReceivingArea</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_ReceivingArea</a></td>
+		</tr>
+ </table>	
+</div>
 
-print '<div class="references">';
+
+<div class="references">
  
-		print '<div class="title">';
-			print '<h1>How to make references to this website?</h1>';
-			print '<p>'.t('All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.').'</p>';
-			print '<p>'.t('This can be done by using the following URL pattern: <br>
-			http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]<br>For instance:').'</p>';
-		print '</div>';
-		print '<ul>';
-			print '<li><a href="'.$GLOBALS['base_url'].'/agglomeration/'.$codeAgglo.'" target="_blank">'.$GLOBALS['base_url'].'/agglomeration/'.$codeAgglo.'</a></li>';
-			print '<li><a href="'.$GLOBALS['base_url'].'/treatment-plant/'.$codeUwwtp.'" target="_blank">'.$GLOBALS['base_url'].'/treatment-plant/'.$codeUwwtp.'</a></li>';
-			print '<li><a href="'.$GLOBALS['base_url'].'/discharge-point/'.$codeDcp.'" target="_blank">'.$GLOBALS['base_url'].'/discharge-point/'.$codeDcp.'</a></li>';
-		print '</ul>';
-		print '<p>'.t('If you want to reference to a specific year, you simply need to add the year in the URL as follows: ').'</p>';
-		print '<p>'.t('http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]/[year]<br>For instance:').'</p>';
-		print '<ul>';
-			print '<li><a href="'.$GLOBALS['base_url'].'/agglomeration/'.$codeAgglo.'/'.$anneeRef.'" target="_blank">'.$GLOBALS['base_url'].'/agglomeration/si16481/'.$anneeRef.'</a></li>';
-			print '<li><a href="'.$GLOBALS['base_url'].'/treatment-plant/'.$codeUwwtp.'/'.$anneeRef.'" target="_blank">'.$GLOBALS['base_url'].'/treatment-plant/'.$codeUwwtp.'/'.$anneeRef.'</a></li>';
-		print '</ul>';
+		<div class="title">
+			<h1>How to make references to this website?</h1>
+			<p><?php print t('All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.'); ?></p>
+			<p><?php print t('This can be done by using the following URL pattern: <br>
+			http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]<br>For instance:'); ?></p>
+		</div>
+		<ul>
+			<li><a href="<?php print url('agglomeration/'.$codeAgglo);?>" target="_blank"><?php print url('agglomeration/'.$codeAgglo);?></a></li>
+			<li><a href="<?php print url('treatment-plant/'.$codeUwwtp);?>" target="_blank"><?php print url('treatment-plant/'.$codeUwwtp);?></a></li>
+			<li><a href="<?php print url('discharge-point/'.$codeDcp);?>" target="_blank"><?php print url('discharge-point/'.$codeDcp);?></a></li>
+		</ul>
+		<p><?php print .t('If you want to reference to a specific year, you simply need to add the year in the URL as follows: '); ?></p>
+		<p><?php print t('http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]/[year]<br>For instance:'); ?></p>
+		<ul>
+			<li><a href="<?php print url('agglomeration/'.$codeAgglo.'/'.$anneeRef);?>" target="_blank"><?php print url('agglomeration/'.$codeAgglo.'/'.$anneeRef);?></a></li>
+			<li><a href="<?php print url('treatment-plant/'.$codeUwwtp.'/'.$anneeRef);?>" target="_blank"><?php print url('treatment-plant/'.$codeUwwtp.'/'.$anneeRef);?></a></li>
+		</ul>
 	
-print '</div>';
-?>
+</div>
+
     </div>
     <?php /* region--sidebar.tpl.php */ ?>
     <?php if ($page['sidebar_second']): ?>
