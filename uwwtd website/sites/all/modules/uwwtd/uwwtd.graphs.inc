@@ -163,6 +163,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPossibles);
     $frontAndBackGraph1And2 = getRow2Graph1and2($results, $yearSelected);
+    dsm($frontAndBackGraph1And2[0]);
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"), array(
             array(
@@ -276,7 +277,19 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //les valeurs pour les distances to compliance par article soient conservées au niveau du noeud "MS_LEVEL" de l'année concernée.
     //Les graphs ne seraient affichés que si l'info est présente dans le MS LEVEL ===> voir fonction "uwwtd_stat_national_ms_level_data"
     
+    // Récupération des données des graphs :
+    $results = uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibles);
+    $frontAndBackGraph1 = getRow8Graph1and2($results);
     
+    // Création du code html pour ces graphs :
+    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Distance to Compliance"), 
+	    array(
+	    	array(
+	    		'graph_art3_pe', t("Article 3 by p.e."), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
+	    		'graph_art3_agg', t("Article 3 by number of agglomerations"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
+	    	),
+	    )
+    );
     
 	return  $formResult;
 }
@@ -745,9 +758,8 @@ function getRow2Graph1and2($results, $yearSelected) {
                     </tr>
                 </thead>
             </table>';
+		}
 	}
-	}
-	
 	
 	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
 }
@@ -1139,6 +1151,29 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
 		$ww_reuse .= '</div>';
 	}
 	return $ww_reuse;
+}
+
+/**
+ * Retourne les données pour le graph1 et 2 de la ligne 8, à propos des Comparison of compliance.
+ */
+function getRow8Graph1and2($results) {
+	// Variables du graph 1 :
+	$graph1Front = array();
+	$graph1Back = '';
+	$columns = array();
+	$graph1Rows = $results;
+	$graph1Sums = array();
+	
+	dsm($results);
+	
+	// Variables du graph 2 :
+	$graph2Front = array();
+	$graph2Back = '';
+	$graph2Rows = $results;
+	$graph2Sums = array();
+	
+	
+	return array($graph1Front, $graph1Back, $graph2Front, $graph2Back);
 }
 
 /**
