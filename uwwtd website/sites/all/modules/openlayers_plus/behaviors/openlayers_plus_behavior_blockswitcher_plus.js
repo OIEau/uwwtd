@@ -51,7 +51,8 @@
               }
             }
           }
-          $.cookie('blockswitcher', cookie_string);
+          //Disable this function for debug
+          //$.cookie('blockswitcher', cookie_string);
         }
 
         Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher = function() {
@@ -71,7 +72,7 @@
         /**
          * Retrieves layer visibility from cookie
          */
-        Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.getLayers  = function() {
+        Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.getLayers  = function() { 
           if ($.cookie('blockswitcher') == null) {
             return;
           }
@@ -328,10 +329,12 @@
             scope: this
           });
           // Get the original layerstates from the cookie
-          this.getLayers();
+          //disbale cookie
+          //this.getLayers();
           this.redraw();
           
           $('#openlayers-map').append(this.blockswitcher);
+          //this.blockswitcher.show()
           
         }
       }
