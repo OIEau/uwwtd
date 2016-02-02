@@ -3424,7 +3424,19 @@ function uwwtd_update_7129(&$context = null){
         }
     }
     
+    //=== Install new main menu
+    drupal_flush_all_caches();
     
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7129.json');
+    
+    menu_cache_clear_all();
     
      ////////////////////////////////////////////////////////////////
     //end update
@@ -3439,11 +3451,8 @@ function uwwtd_update_7129(&$context = null){
         $context['finished'] = 1;
     }  
 
-
-    
-    
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+    //throw new DrupalUpdateException(__FUNCTION__);
 }
 /***************************************************************************/
 // Function utils
