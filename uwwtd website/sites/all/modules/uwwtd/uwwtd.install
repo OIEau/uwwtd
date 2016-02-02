@@ -3511,9 +3511,51 @@ function uwwtd_update_7130(&$context = null){
     }  
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+//     throw new DrupalUpdateException(__FUNCTION__);
     
 }
+
+/**
+ * Ajoute les champs field_comparison_of_compliance_p et field_comparison_of_compliance_a au type
+ * de contenu MS_LEVEL.
+ */
+function uwwtd_update_7131(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+	// Ajout de deux champs au type de contenu ms_level :
+	addFieldToContentType('Comparison of compliance by p.e.', 'field_comparison_of_compliance_p', 'ms_level');
+	addFieldToContentType('Comparison of compliance by agg', 'field_comparison_of_compliance_a', 'ms_level');
+	 
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Ajout le champs donné au content type donné.
+ */
+function addFieldToContentType($fieldLabel, $fieldName, $nodeType) {
+	if (!field_info_field($fieldName)) {
+		// Création du champs :
+		$field = array(
+						'field_name' => $fieldName,
+						'type' => 'text_long',
+		);
+		field_create_field($field);
+			
+		// Ajout du champs au type de contenu :
+		$instance = array( 'field_name' => $fieldName,
+						'entity_type' => 'node',
+						'bundle' => $nodeType,
+						'label' => $fieldLabel,
+		);
+		field_create_instance($instance);
+		watchdog('uwwtd', t('!fieldName was added successfully.', array('!fieldName' => $fieldName)));
+	} else {
+		watchdog('uwwtd', t('!fieldName already exists.', array('!fieldName' => $fieldName)));
+	}
+}
+
+
 /***************************************************************************/
 // Function utils
 /***************************************************************************/

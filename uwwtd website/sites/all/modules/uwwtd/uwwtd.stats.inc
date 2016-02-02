@@ -393,6 +393,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         ':min_agg' => variable_get('min_aggenerated_display', '2000'),
     );
     try {
+//     	dsm($query);
         $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
@@ -734,6 +735,54 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 		return $data;
 	}
 	return false;
+}
+
+/**
+ * Récupère les données pour le graph 1 de la ligne 8.
+ */
+function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibles) {
+	// Récupération du nid du node MS_LEVEL de l'année demandée :
+	$query = db_select('node', 'n');
+	$query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+	$query->leftJoin('field_data_field_comparison_of_compliance_p', 'cp', 'n.nid = cp.entity_id AND cp.entity_type = \'node\'');
+	$query->leftJoin('field_data_field_comparison_of_compliance_a', 'ca', 'n.nid = ca.entity_id AND ca.entity_type = \'node\'');
+	$query->fields('n');
+	$query->fields('a', array('field_anneedata_value'));
+	$query->fields('cp', array('field_comparison_of_compliance_p_value'));
+	$query->fields('ca', array('field_comparison_of_compliance_a_value'));
+	switch ($yearSelected) {
+		case ALL_YEARS :
+			$query->condition('a.field_anneedata_value', $yearsPossibles, 'IN');
+			break;
+		default :
+			$query->condition('a.field_anneedata_value', $yearSelected, '=');
+			break;
+	}
+	$query->condition('n.type', 'ms_level', '=');
+	$query->condition('n.status', 1, '=');
+	$nodes = $query->execute()->fetchAllAssoc('nid');
+	
+	// Pour chaque node :
+	$comparisonsCompliancesByPe = array();
+	$comparisonsCompliancesByAgg = array();
+	foreach ($nodes as $node) {
+		if (!empty($node->field_anneedata_value)) {
+			// Récupération des tableaux "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
+			if (!empty($node->field_comparison_of_compliance_p_value)) {
+				$comparisonsCompliancesByPe[$node->field_anneedata_value] = json_decode($node->field_comparison_of_compliance_p_value);
+			}
+			if (!empty($node->field_comparison_of_compliance_a_value)) {
+				$comparisonsCompliancesByAgg[$node->field_anneedata_value] = json_decode($node->field_comparison_of_compliance_a_value);
+			}
+		}
+	}
+	
+	// Tri selon les clés (année) :
+	ksort($comparisonsCompliancesByPe);
+	ksort($comparisonsCompliancesByAgg);
+	
+	return array('comparisonsCompliancesByPe' => $comparisonsCompliancesByPe, 
+				 'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg);
 }
 
 function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){

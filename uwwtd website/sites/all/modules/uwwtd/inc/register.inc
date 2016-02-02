@@ -2356,6 +2356,51 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D175')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C175'));
     $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));          
     
+    // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
+    $arrayInPe = array();
+    $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('E55')->getValue();
+    $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('E58')->getValue();
+    $arrayInPe['Compliant']['Article 5'] = $sheet->getCell('E61')->getValue();
+    
+    $arrayInPe['Not compliant']['Article 3'] = $sheet->getCell('F55')->getValue();
+    $arrayInPe['Not compliant']['Article 4'] = $sheet->getCell('F58')->getValue();
+    $arrayInPe['Not compliant']['Article 5'] = $sheet->getCell('F61')->getValue();
+
+    $arrayInPe['Not relevant']['Article 3'] = $sheet->getCell('G55')->getValue();
+    $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('G58')->getValue();
+    $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('G61')->getValue();
+    
+    // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
+    $arrayInNumOfAgg = array();
+    $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B43')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B46')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 5'] = $sheet->getCell('B49')->getValue();
+    
+    $arrayInNumOfAgg['Not compliant']['Article 3'] = $sheet->getCell('B44')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 4'] = $sheet->getCell('B47')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 5'] = $sheet->getCell('B50')->getValue();
+    
+    $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('B45')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
+    
+    // Récupération du nid du node MS_LEVEL de cette année :
+    $query = db_select('node', 'n');
+    $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+    $query->fields('n');
+    $query->fields('a', array('field_anneedata_value'));
+    $query->condition('a.field_anneedata_value', $annee, '=');
+    $query->condition('n.type', 'ms_level', '=');
+    $query->condition('n.status', 1, '=');
+    $nid = $query->execute()->fetchField();
+    
+    // Renseignement des champs "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
+    $node = node_load($nid);
+    if (!empty($node)) {
+    	$node->field_comparison_of_compliance_p[LANGUAGE_NONE][0]['value'] = json_encode($arrayInPe);
+    	$node->field_comparison_of_compliance_a[LANGUAGE_NONE][0]['value'] = json_encode($arrayInNumOfAgg);
+    }
+    node_save($node);
     
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
