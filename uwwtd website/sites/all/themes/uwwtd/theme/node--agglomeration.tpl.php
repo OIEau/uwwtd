@@ -240,7 +240,21 @@ echo uwwtd_insert_errors_tab($node);
             
             <div class="uwwrealthird">
                 <div class="distance">
-                <p><b>Distance to compliance:</b></p>
+                    <div class="field custom_tooltip_wrapper">
+                        <div class="field-label">Distance to compliance:</div>
+                            <span class="custom_tooltip">The distance to compliance concept present the rate of waste water load that is:
+                            <ul>
+                                <li>adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)</li>
+                            </ul>
+                            and then when collected:
+                            <ul>
+                                <li>treated at an adequate level (secondary or more stringent treatment) as required by the directive,</li>
+                                <li>and with the performance requirements under tables 1 or 2 of the annex I of Directive 91/271/EEC, (UWWTD).</li>
+                            </ul>
+                            When countries joined the EU, they have obtained a delay to implement the Directive. 
+                            In such case the deadline for implementing the above (see in section characteristics) may be different, 
+                            and if the above is not already implemented for the agglomeration it is identified with orange colour in the table.</span>
+                    </div>
 
                     <table id="UwwtpDescription">
                         <tr>

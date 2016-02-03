@@ -704,7 +704,7 @@ table.dispo-annee tr td.dispo-annee{
 .treatmentPerformance .field-name-field-uwwbod5perf.clearfix::after, .treatmentPerformance .field-name-field-uwwbod5perf.clearfix::before{display:block!important;}
 .clearfix::before, .clearfix::after{display:block!important;}
 
-#UwwtpDescription {border: 1px solid #000;}
+#UwwtpDescription {border: 1px solid #000; margin-top: 3px;}
 #UwwtpDescription tr td{padding: 5px;height: 29px;}
 #UwwtpDescription tr .light{border-left: 1px solid #ddd;border-right: 1px solid #ddd;}
 #UwwtpDescription tr .black{border-top: 1px solid #000;border-left: 1px solid #000;}
@@ -903,6 +903,7 @@ figure:focus{
 
 .node-agglomeration .uwwcontainer .flip .front, .node-agglomeration .uwwcontainer .flip .back{width:345px!important;}
 .uwwrealthird .distance p{margin:0;line-height:2;}
+.uwwrealthird .distance .custom_tooltip{width: 400px; max-width: 400px;}
 
 #OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
 

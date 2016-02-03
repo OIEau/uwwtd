@@ -358,32 +358,32 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 //             dsm($ind['generated_load_p.e.'] . ',' .$line_to_fill . ','. $agglo[$ind['generated_load_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $line_to_fill, $agglo[$ind['generated_load_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $line_to_fill, $agglo[$ind['previous_gen._load_p.e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $line_to_fill, $agglo[$ind['total_%_(2)']]);
-            $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $line_to_fill, $agglo[$ind['connected_to_collecting_system']]);
+            $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $line_to_fill, round($agglo[$ind['total_%_(2)']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $line_to_fill, round($agglo[$ind['connected_to_collecting_system']], 1));
             $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $line_to_fill, $agglo[$ind['connected_to_collecting_system_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $line_to_fill, $agglo[$ind['addressed_through_ias_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $line_to_fill, round($agglo[$ind['addressed_through_ias_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_p._e.'], $line_to_fill, $agglo[$ind['addressed_through_ias_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $line_to_fill, $agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $line_to_fill, round($agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_p._e.'], $line_to_fill, $agglo[$ind['neither_collecting_system_nor_ias_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $line_to_fill, $agglo[$ind['dist_art3_%_of_gen._load_(3)']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $line_to_fill, round($agglo[$ind['dist_art3_%_of_gen._load_(3)']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art3_in_p.e.'], $line_to_fill, $agglo[$ind['dist_art3_in_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['total_entering_load_p._e.'], $line_to_fill, $agglo[$ind['total_entering_load_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $line_to_fill, $agglo[$ind['ratio_connected/enentering_%']]);
+            $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $line_to_fill, round($agglo[$ind['ratio_connected/enentering_%']], 1));
             $sheet->setCellValueByColumnAndRow($ind['total_treatment_plant_design_capacity_p._e.'], $line_to_fill, $agglo[$ind['total_treatment_plant_design_capacity_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $line_to_fill, $agglo[$ind['ratio_total_entering_load/total_design_capacity_%']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_compliant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $line_to_fill, round($agglo[$ind['ratio_total_entering_load/total_design_capacity_%']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_compliant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_compliant_p._e.'], $line_to_fill, $agglo[$ind['art4_compliant_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_not_compliant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_not_compliant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant'], $line_to_fill, $agglo[$ind['art4_not_compliant']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_not_relevant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_not_relevant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant'], $line_to_fill, $agglo[$ind['art4_not_relevant']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $line_to_fill, $agglo[$ind['dist_art4_treat__%_of_connected_load']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $line_to_fill, round($agglo[$ind['dist_art4_treat__%_of_connected_load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat_in_p.e._(4)'], $line_to_fill, $agglo[$ind['dist_art4_treat_in_p.e._(4)']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $line_to_fill, $agglo[$ind['dist_art4_perf_%_of_connected_load']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $line_to_fill, round($agglo[$ind['dist_art4_perf_%_of_connected_load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_in_p.e._(5)'], $line_to_fill, $agglo[$ind['dist_art4_perf_in_p.e._(5)']]);
-            $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $line_to_fill, $agglo[$ind['distance_art5_treat_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $line_to_fill, round($agglo[$ind['distance_art5_treat_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_in_p.e._(6)'], $line_to_fill, $agglo[$ind['distance_art5_treat_in_p.e._(6)']]);
-            $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $line_to_fill, $agglo[$ind['distance_art5_perf_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $line_to_fill, round($agglo[$ind['distance_art5_perf_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_in_p.e._(7)'], $line_to_fill, $agglo[$ind['distance_art5_perf_in_p.e._(7)']]);
             $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $line_to_fill, $agglo[$ind['secondary_treatment_installed_(p._e.)']]);
             $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $line_to_fill, $agglo[$ind['monitoring_results_f._secondary_ok']]);
@@ -3894,102 +3894,102 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         //target connection
         $sheet->getCell('C12')->setValue($context['sandbox']['data']['expired']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_%']);
+        $sheet->getCell('E12')->setValue(round($context['sandbox']['data']['expired']['target_connection']['distance_%'], 1));
         $sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);            
                     
         $sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
-        $sheet->getCell('D14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias_%']);
+        $sheet->getCell('D14')->setValue(round($context['sandbox']['data']['expired']['target_connection']['ias_%'], 1));
                                              
         //secondary treatement               
         $sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
         $sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);                
                                          
         //more stringent treatment
         $sheet->getCell('C20')->setValue($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%']);  
+        $sheet->getCell('D22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));  
         $sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);  
                                          
         //pending
         //target connection
         $sheet->getCell('C32')->setValue($context['sandbox']['data']['pending']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_%']);
+        $sheet->getCell('E32')->setValue(round($context['sandbox']['data']['pending']['target_connection']['distance_%'], 1));
         $sheet->getCell('F32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_pe']);
                 
         $sheet->getCell('C33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D33')->setValue(round($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias']);
-        $sheet->getCell('D34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias_%']);
+        $sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
         $sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
         $sheet->getCell('C37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
         $sheet->getCell('C40')->setValue($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']); 
                                          
         //total
         //target connection
         $sheet->getCell('C51')->setValue($context['sandbox']['data']['total']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_%']);
+        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
         $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
                 
         $sheet->getCell('C52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D52')->setValue(round($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C53')->setValue($context['sandbox']['data']['total']['target_connection']['ias']);
-        $sheet->getCell('D53')->setValue($context['sandbox']['data']['total']['target_connection']['ias_%']);
+        $sheet->getCell('D53')->setValue(round($context['sandbox']['data']['total']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
         $sheet->getCell('C55')->setValue($context['sandbox']['data']['total']['secondary_target']['total_load_pe']);
         $sheet->getCell('C56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
         $sheet->getCell('C59')->setValue($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
         
         $context['results']['distance_to_compliance'] = $context['sandbox']['data'];                          
