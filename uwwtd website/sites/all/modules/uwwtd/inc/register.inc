@@ -2394,6 +2394,33 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $query->condition('n.status', 1, '=');
     $nid = $query->execute()->fetchField();
     
+    // Si il n'y a pas encore de node ms_level pour cette année :
+    global $language;
+	$siteId = $annee.'_mslevel';
+    if (empty($nid)) {
+		// Création du node pour cette année :    	
+        $node = new stdClass();
+    	$node->type = 'ms_level';
+    	$node->uid = 1;
+     	$node->translate = 0;
+        $node->tnid = 0;
+        $node->sticky = 0;
+        $node->promote = 0;
+        $node->comment = 0;
+        $node->language = $language->language;
+        $node->title = 'Data on MS level - '. $annee;
+        $node->field_siteid['und'][0]['value'] = $siteId;
+        $node->field_anneedata['und'][0]['value'] = $annee;
+        node_save($node);
+        
+        // Récupération du nid :
+        $query = db_select('node', 'n');
+        $query->fields('n');
+        $query->condition('n.type', 'ms_level', '=');
+        $query->condition('n.title', 'Data on MS level - '. $annee, '=');
+        $nid = $query->execute()->fetchField();
+    }
+    
     // Renseignement des champs "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
     $node = node_load($nid);
     if (!empty($node)) {

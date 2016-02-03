@@ -3609,7 +3609,43 @@ function uwwtd_update_7132(&$context = null) {
 	}
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Mets au max la précision des champs de type décimal pour le content type "article-17-agglomeration"
+ *  et 
+ */
+function uwwtd_update_7133(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+	
+	// Mise au max de la précision des champs de type Décimal :
+	setDecimalMaxAccuracy('article-17-agglomeration');
+	
+	// Redéfinition du defau
+	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Mets au max la précision des champs de type Décimal du content type donné.
+ */
+function setDecimalMaxAccuracy($contentType) {
+	// Récupération des champs du type de contenu donné :
+// 	$fields = field_info_instances("node", $contentType);
+	
+	// Pour chaque champs :
+// 	foreach ($fields as $field) {
+		// Si ce champs est de type Décimal :
+			
+		
+			// Définition de la précision à 32 :
+			
+		
+			// Mise au max de la valeur par defaut de ce champs dans le content type :
+// 			field_update_field($field);
+// 	}
 }
 
 /**
