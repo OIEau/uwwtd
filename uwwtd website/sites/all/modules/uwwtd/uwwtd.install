@@ -3492,7 +3492,7 @@ function uwwtd_update_7130(&$context = null){
     );
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
-    uwwtd_install_menu($menu, 'main-menu7130.json');
+//     uwwtd_install_menu($menu, 'main-menu7130.json');
     
     menu_cache_clear_all();
     */
@@ -3525,9 +3525,150 @@ function uwwtd_update_7131(&$context = null) {
 	// Ajout de deux champs au type de contenu ms_level :
 	addFieldToContentType('Comparison of compliance by p.e.', 'field_comparison_of_compliance_p', 'ms_level');
 	addFieldToContentType('Comparison of compliance by agg', 'field_comparison_of_compliance_a', 'ms_level');
-	 
+}
+
+/**
+ * Ajoute les pages ressources/useful-links, ressources/about-uwwwtd-siif et ressources/siif-for-developpers. 
+ */
+function uwwtd_update_7132(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+	
+	// Pour utiliser la méthode habituel avec le json => false :
+	$isMethod1 = false;
+	
+	if ($isMethod1) {
+		// Ajout des nouvelles pages :
+		$nodeUseful = addNodeIfDoesntExist('page', 'Useful links', 'resources/useful-links');
+		$nodeAbout = addNodeIfDoesntExist('page', 'About the UWWTD SIIF', 'resources/about-uwwtd-siif');
+		$nodeSiif = addNodeIfDoesntExist('page', 'SIIF for developers', 'resources/siif-developers');
+		
+		// Mise à jour du menu :
+		if (!empty($nodeUseful)) {
+			updateMainMenuWith('Useful links', $nodeUseful->nid);
+		}
+		if (!empty($nodeAbout)) {
+			updateMainMenuWith('About the UWWTD SIIF', $nodeAbout->nid);
+		}
+		if (!empty($nodeSiif)) {
+			updateMainMenuWith('SIIF for developers', $nodeSiif->nid);
+		}
+	} else {
+		// Ajout des nouvelles pages :
+		$nodeUseful = addNodeIfDoesntExist('page', 'Useful links', 'content/resources/useful-links');
+		$nodeAbout = addNodeIfDoesntExist('page', 'About the UWWTD SIIF', 'content/resources/about-uwwtd-siif');
+		$nodeSiif = addNodeIfDoesntExist('page', 'SIIF for developers', 'content/resources/siif-developers');
+		$menu = array(
+			'menu_name' => 'main-menu', 
+			'title' => 'Main menu', 
+			'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+		);
+		menu_delete(array('menu_name' => $menu['menu_name']));
+		menu_save($menu);
+		uwwtd_install_menu($menu, 'main-menu7132.json');
+		menu_cache_clear_all();
+	}
+	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Crée un nouveau node avec le type, titre et path donné, s'il n'existe pas déjà.
+ */
+function addNodeIfDoesntExist($nodeType, $nodeTitle, $nodePath) {
+	// Test si le node n'existe pas déjà :
+	$query = db_select('node', 'n');
+	$query->fields('n');
+	$query->condition('n.type', $nodeType, '=');
+	$query->condition('n.status', 1, '=');
+	$query->condition('n.title', $nodeTitle, '=');
+	$nodeFound = $query->execute()->fetchAssoc();
+	if (empty($nodeFound)) {
+		// Créatino du node :
+		$node = new stdClass();
+		$node->type = $nodeType;
+		$node->title = $nodeTitle;
+		$node->language = LANGUAGE_NONE;
+		$node->path = array('alias' => $nodePath);
+		$path = array('source' => 'node/'. $node->nid, 'alias' => $nodePath);
+		path_save($path);
+		node_object_prepare($node);
+		$node->uid = 1;
+		
+		// Création de son contenu :
+		$node->body[LANGUAGE_NONE][0]['value'] = 'test';
+		$node->body[LANGUAGE_NONE][0]['summary'] = '';
+		$node->body[LANGUAGE_NONE][0]['format'] = 'full_html';
+	
+		// Enregistrement du node :
+		$node = node_submit($node);
+		node_save($node);
+		
+		return node_load($node->nid);
+	} else {
+		return node_load($nodeFound['nid']);
+	}
+}
+
+/**
+ * Mets à jour le main avec le node donné.
+ */
+function updateMainMenuWith($title, $nid) {
+	if (!empty($title) && !empty($nid)) {
+		// Cherche si le main-menu contient déjà ce node :
+		$found = false;
+		$links = menu_load_links('main-menu');
+		foreach ($links as $link) {
+			if (!empty($link['link_path']) && $link['link_path'] === 'node/'. $nid) {
+				$found = true;
+				break;
+			}
+		}
+		
+		// S'il ne le contient pas déjà :
+		if (!$found) {
+			$item = array(
+				'link_title' => $title,
+				'router_path' => 'node/'. $nid,
+				'link_path' => 'node/'. $nid,
+				'menu_name' => 'main-menu');
+		
+			// Ajout au menu :
+			menu_link_save($item);
+		}
+		
+		// Récupération du menu link ID (mlid) du node Resources :
+		$mlidResources = '';
+		$result = db_select('menu_links', 'm')
+			->fields('m', array('mlid'))
+			->condition('m.link_title', 'Ressources', '=')
+			->execute()
+			->fetchAssoc();
+		if (!empty($result['mlid'])) {
+			$mlidResources = $result['mlid'];
+			
+			// Mise à "Show as Expanded" :
+			db_update('menu_links')
+				->fields(array('expanded' => 1,))
+				->condition('mlid', $mlidResources, '=')
+				->execute();   
+		}
+		
+		// Récupèration du mlid du node donné :
+		$mlid = db_select('menu_links', 'm')
+			->fields('m', array('mlid'))
+			->condition('m.link_path', 'node/'. $nid)
+			->execute()
+			->fetchField();
+
+		// Redéfinit le parent link ID (plid) du node donné :
+		if ($mlid) {
+			$item = menu_link_load($mlid);
+			$item['customized'] = 1;
+			$item['plid'] = $mlidResources;
+			menu_link_save($item);
+		}
+	}
 }
 
 /**
@@ -3536,17 +3677,16 @@ function uwwtd_update_7131(&$context = null) {
 function addFieldToContentType($fieldLabel, $fieldName, $nodeType) {
 	if (!field_info_field($fieldName)) {
 		// Création du champs :
-		$field = array(
-						'field_name' => $fieldName,
-						'type' => 'text_long',
+		$field = array('field_name' => $fieldName,
+			'type' => 'text_long',
 		);
 		field_create_field($field);
 			
 		// Ajout du champs au type de contenu :
-		$instance = array( 'field_name' => $fieldName,
-						'entity_type' => 'node',
-						'bundle' => $nodeType,
-						'label' => $fieldLabel,
+		$instance = array('field_name' => $fieldName,
+			'entity_type' => 'node',
+			'bundle' => $nodeType,
+			'label' => $fieldLabel,
 		);
 		field_create_instance($instance);
 		watchdog('uwwtd', t('!fieldName was added successfully.', array('!fieldName' => $fieldName)));
