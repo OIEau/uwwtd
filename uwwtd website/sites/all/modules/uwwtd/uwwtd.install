@@ -3533,16 +3533,61 @@ function uwwtd_update_7131(&$context = null) {
 function uwwtd_update_7132(&$context = null) {
 	uwwtd_install_trace(__FUNCTION__);
 	
-	// Pour utiliser la méthode habituel avec le json => false :
-	$isMethod1 = false;
+	// Ajout des nouvelles pages :
+	$nodeUseful = addNodeIfDoesntExist('page', 'Useful links', 'content/resources/useful-links', '<h2>European Commission - Directorate General Environment</h2><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h2>European Environment Agency</h2><h3><strong>Reporting Obligation Database (ROD):</strong></h3><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><h3><strong>Access to data and visualisation</strong></h3><ul><li>European Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU data viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3>&nbsp;</h3><h2>European funds and loans</h2><ul><li>DG Regio :&nbsp; <a href="http://ec.europa.eu/regional_policy/" target="_blank">http:://ec.europa.eu/regional_policy/</a></li><li>Funding LIFE projects : <a href="http://ec.europa.eu/environment/life/funding/life.htm" target="_blank">http://ec.europa.eu/environment/life/funding/life.htm</a></li><li>Water life project : <a href="http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75" target="_blank">http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75</a></li><li>European Investment Bank : <a href="http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en" target="_blank">http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en</a></li></ul><p>&nbsp;</p><h2>SIIF European and national platform</h2><ul><li>Generic open-source platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p><h2>Other national data viewers</h2><ul><li>French urban waste water website: <a href="http://assainissement.developpement-durable.gouv.fr/" target="_blank">http://assainissement.developpement-durable.gouv.fr/</a></li><li>Greek urban waste water website: <a href="http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx">http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx</a></li><li type="_moz">Luxembourg water geoportail: <a href="http://eau.geoportail.lu/">http://eau.geoportail.lu/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p><h2>Good practices</h2><ul><li>Natural Water Retention Measures: <a href="http://nwrm.eu/" target="_blank">http://nwrm.eu/</a></li></ul>');
+	$nodeAbout = addNodeIfDoesntExist('page', 'About the UWWTD SIIF', 'content/resources/about-uwwtd-siif', 
+	'<div>
+	<h1>About the Urban Waste Water Treatment Directive Structured Information and Implementation Framework (UWWTD SIIF)</h1>
+	<h2>I. Content of this website</h2>
+	<p>This website provides detailed information about the urban waste water agglomerations, treatment plants, discharged points and sensitive areas. It also provides information about the compliance of each agglomeration and treatment plant, the connection to collecting systems or individual and appropriate systems, the treatment in place and pressure on the environment.</p>
+	<p>Through view and discovery services it allows to select data and display them depending from the criteria chosen. Download and invoke service are also implemented to ease the access to the databases or to ease the reuse of this information by other IT systems.</p>
+	<p>It provides an overview of the urban waste water regulation at EU and national level.</p>
+	<p>Statistic can be created or are automatically generated in the statistic webpage giving aggregated result of the database reported.</p>
+	<p>Through a useful links web page you can also have access to other information related to this policy.</p>
+	<p>From the Home webpage you can also have access to different layers and you can click on and off on these layers to make them appear or disappear.</p>
+
+	<h2>II.	About the SIIF project at the origin of this IT development</h2>
+	<p>The Structured Implementation and Information Framework (SIIF) concept is a ongoing European Commission (Environment Directorate General) pilot project essentially focused on the organisation and management of data in order to enhance the generation of information for policy makers, interested parties and the public at all levels on how legislation is practically implemented. The concept developed is in line with the provisions of the Public Access to Environmental Information and INSPIRE Directives.</p>
+	<p>The SIIF concept is composed of a governance approach and an IT system.</p>
+	<p>The SIIF implies a governance focused on compliance, good environmental status, environmental pressure and impact, economic activities and jobs creation. It has also an objective to reduce administrative burden, provide more up-to-date data, increase efficiency to all potential users. The existence of an implementation programme on how to reach or maintain the compliance for a policy is also part of the SIIF governance approach.</p>
+	<p>As regards the IT components of the SIIF it has three components: (1) the content for data community (information needs and how it is organised); (2) the process for data providers (who does what and how); (3) the dissemination for data users (how to display) All these components have a national and a European dimension.</p>
+	<p id="imgProjectA"><img src="/vg_uwwtd_si/sites/all/themes/uwwtd/images/pageaccueil.png" alt="" /></p>
+	<p>This IT development is related to the process and the dissemination of the existing content of the European urban waste water data model.</p>
+	<p>The SIIF project opted for the implementation of an open source dissemination IT toolbox. The tool was designed to disseminate environmental data and information at national level but also to facilitate the reporting process. It provides EU MS a cheap way to implement the Article 11 of the INSPIRE directive and thus to develop their national waste water website. The framework of this website can also be adapted to the use of other European Policies.</p>
 	
+	<h2>III. Background of the SIIF</h2>
+	<p>SIIF is also a way to implement two European directives, one Decision and at least six communications:</p>
+	<p>European Directives</p>
+	<p>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32003L0004&qid=1416830399380" target="_blank" title="2003/4/EC - on public access to environmental information">2003/4/EC - on public access to environmental information</a>
+	<a href="http://inspire.ec.europa.eu/" target="_blank" title="2007/2/CE - establishing an Infrastructure for Spatial Information in the European Community (INSPIRE)">2007/2/CE - establishing an Infrastructure for Spatial Information in the European Community (INSPIRE)</a>
+	</p>
+	<p>European Decision</p>
+	<p>
+	<a href="http://ec.europa.eu/environment/action-programme/" target="_blank" title="Decision 1386/2013/EU on a General Union Environment Action Programme to 2020 "Living well, within the limits of our planet"">Decision 1386/2013/EU on a General Union Environment Action Programme to 2020 ">Living well, within the limits of our planet"</a>
+	</p>
+	<p>European Communications</p>
+	<p>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:52008DC0046" target="_blank" title="COM (2008) 46 - Towards a Shared Environmental Information System (SEIS)">COM (2008) 46 - Towards a Shared Environmental Information System (SEIS)</a>
+	<a href="http://ec.europa.eu/environment/legal/law/pdf/com_2008_773_en.pdf" target="_blank" title="COM (2008) 773 - on implementing European Community Environmental Law">COM (2008) 773 - on implementing European Community Environmental Law</a>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1417082394583&uri=CELEX:52010DC2020" target="_blank" title="COM (2010) 2020 - A strategy for smart, sustainable and inclusive growth">COM (2010) 2020 - A strategy for smart, sustainable and inclusive growth</a>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1417082468133&uri=CELEX:52012DC0095" target="_blank" title="COM (2012) 95 - Improving the delivery of benefits from EU environment measures : building confidence through better knowledge and responsiveness">COM (2012) 95 - Improving the delivery of benefits from EU environment measures : building confidence through better knowledge and responsiveness</a>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1417082589797&uri=CELEX:52012DC0673" target="_blank" title="COM (2012) 673 - A Blueprint to Safeguard Europe s Water Resources">COM (2012) 673 - A Blueprint to Safeguard Europe s Water Resources</a>
+	<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1417082637412&uri=CELEX:52013DC0695" target="_blank" title="COM (2013) 685 - Regulatory Fitness and Performance (REFIT) : Results and Next">COM (2013) 685 - Regulatory Fitness and Performance (REFIT) : Results and Next</a>
+	</p>
+	</div>');
+	$nodeSiif = addNodeIfDoesntExist('page', 'SIIF for developers', 'content/resources/siif-developers', 
+	'<div>
+		<ul>
+			<li><a href="https://github.com/OIEau/uwwtd" target="_blank" title="https://github.com/OIEau/uwwtd">The development platform with the toolbox and its documentation</a></li>
+			<li><a href="https://github.com/OIEau/uwwtd/issues" target="_blank" title="https://github.com/OIEau/uwwtd/issues">The bug tracker section</a></li>
+		</ul>
+	</div>');
+	
+	// Mise à jour du menu, pour utiliser la méthode habituel avec le json => false :
+	$isMethod1 = false;
+	 
 	if ($isMethod1) {
-		// Ajout des nouvelles pages :
-		$nodeUseful = addNodeIfDoesntExist('page', 'Useful links', 'resources/useful-links');
-		$nodeAbout = addNodeIfDoesntExist('page', 'About the UWWTD SIIF', 'resources/about-uwwtd-siif');
-		$nodeSiif = addNodeIfDoesntExist('page', 'SIIF for developers', 'resources/siif-developers');
-		
-		// Mise à jour du menu :
 		if (!empty($nodeUseful)) {
 			updateMainMenuWith('Useful links', $nodeUseful->nid);
 		}
@@ -3553,10 +3598,6 @@ function uwwtd_update_7132(&$context = null) {
 			updateMainMenuWith('SIIF for developers', $nodeSiif->nid);
 		}
 	} else {
-		// Ajout des nouvelles pages :
-		$nodeUseful = addNodeIfDoesntExist('page', 'Useful links', 'content/resources/useful-links');
-		$nodeAbout = addNodeIfDoesntExist('page', 'About the UWWTD SIIF', 'content/resources/about-uwwtd-siif');
-		$nodeSiif = addNodeIfDoesntExist('page', 'SIIF for developers', 'content/resources/siif-developers');
 		$menu = array(
 			'menu_name' => 'main-menu', 
 			'title' => 'Main menu', 
@@ -3575,7 +3616,7 @@ function uwwtd_update_7132(&$context = null) {
 /**
  * Crée un nouveau node avec le type, titre et path donné, s'il n'existe pas déjà.
  */
-function addNodeIfDoesntExist($nodeType, $nodeTitle, $nodePath) {
+function addNodeIfDoesntExist($nodeType, $nodeTitle, $nodePath, $body) {
 	// Test si le node n'existe pas déjà :
 	$query = db_select('node', 'n');
 	$query->fields('n');
@@ -3596,7 +3637,7 @@ function addNodeIfDoesntExist($nodeType, $nodeTitle, $nodePath) {
 		$node->uid = 1;
 		
 		// Création de son contenu :
-		$node->body[LANGUAGE_NONE][0]['value'] = 'test';
+		$node->body[LANGUAGE_NONE][0]['value'] = $body;
 		$node->body[LANGUAGE_NONE][0]['summary'] = '';
 		$node->body[LANGUAGE_NONE][0]['format'] = 'full_html';
 	
