@@ -3523,8 +3523,8 @@ function uwwtd_update_7131(&$context = null) {
 	uwwtd_install_trace(__FUNCTION__);
 
 	// Ajout de deux champs au type de contenu ms_level :
-	addFieldToContentType('Comparison of compliance by p.e.', 'field_comparison_of_compliance_p', 'ms_level');
-	addFieldToContentType('Comparison of compliance by agg', 'field_comparison_of_compliance_a', 'ms_level');
+	addFieldToContentType('field_comparison_of_compliance_p', 'text_long', 'Comparison of compliance by p.e.', 'ms_level');
+	addFieldToContentType('field_comparison_of_compliance_a', 'text_long', 'Comparison of compliance by agg', 'ms_level');
 }
 
 /**
@@ -3632,6 +3632,45 @@ function uwwtd_update_7133(&$context = null) {
 			}
 		}
 	}
+	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Ajoute des nouveaux champs pour être en adequation avec le nouveau format de fichier xml.
+ */
+function uwwtd_update_7134(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+	// Ajout de nouveaux champs :
+	addFieldToContentType('field_aggbeginlife', 'date', 'Agglomeration begin life', 'agglomeration');
+	addFieldToContentType('field_aggendlife', 'date', 'Agglomeration end life', 'agglomeration');
+	
+	addFieldToContentType('field_repcode', 'text', 'repcode', 'uwwtp');
+	addFieldToContentType('field_uwwbeginlife', 'date', 'uwwbeginlife', 'uwwtp');
+	addFieldToContentType('field_uwwendlife', 'date', 'uwwendlife', 'uwwtp');
+
+	addFieldToContentType('field_repcode', 'text', 'repcode', 'discharge_point');
+	addFieldToContentType('field_dcpbeginlife', 'date', 'dcpbeginlife', 'discharge_point');
+	addFieldToContentType('field_dcpendlife', 'date', 'dcpendlife', 'discharge_point');
+
+	addFieldToContentType('field_rcaenvdom', 'text', 'rcaenvdom', 'receiving_area');
+	addFieldToContentType('field_rca61datedesignation', 'date', 'rca61datedesignation', 'receiving_area');
+	addFieldToContentType('field_rcahyperlink', 'text', 'rcahyperlink', 'receiving_area');
+	addFieldToContentType('field_rcabeginlife', 'date', 'rcabeginlife', 'receiving_area');
+	addFieldToContentType('field_rcaendlife', 'date', 'rcaendlife', 'receiving_area');
+	addFieldToContentType('field_zonetype', 'text', 'zonetype', 'receiving_area');
+	addFieldToContentType('field_rca_parameter_m', 'text', 'rca_parameter_m', 'receiving_area');
+	addFieldToContentType('field_rcaart58datedesign', 'date', 'rcaart58datedesign', 'receiving_area');
+	addFieldToContentType('field_rcaparameter', 'text', 'rcaparameter', 'receiving_area');
+	addFieldToContentType('field_rcastartdate', 'date', 'rcastartdate', 'receiving_area');
+	addFieldToContentType('field_rcamethod54', 'text', 'rcamethod54', 'receiving_area');
+	addFieldToContentType('field_rcarelatedsa', 'text', 'rcarelatedsa', 'receiving_area');
+	addFieldToContentType('field_rcarelatedsaremark', 'text', 'rcarelatedsaremark', 'receiving_area');
+	addFieldToContentType('field_rcacodepredecessor', 'text', 'rcacodepredecessor', 'receiving_area');
+	addFieldToContentType('field_rcaevolutiontype', 'text', 'rcaevolutiontype', 'receiving_area');
+	addFieldToContentType('field_rcasalsaremark', 'text', 'rcasalsaremark', 'receiving_area');
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
@@ -3774,20 +3813,34 @@ function updateMainMenuWith($title, $nid) {
 /**
  * Ajout le champs donné au content type donné.
  */
-function addFieldToContentType($fieldLabel, $fieldName, $nodeType) {
-	if (!field_info_field($fieldName)) {
+function addFieldToContentType($fieldName, $fieldType, $fieldLabel, $contentType) {
+	// Si le champs n'existe pas encore et que le content type existe :
+	$contentTypeInfos = node_type_load($contentType);
+	if (!empty($contentTypeInfos) && !field_info_field($fieldName)) {
 		// Création du champs :
-		$field = array('field_name' => $fieldName,
-			'type' => 'text_long',
+		$field = array(
+			'field_name' => $fieldName,
+			'type' => $fieldType,
 		);
 		field_create_field($field);
 			
 		// Ajout du champs au type de contenu :
-		$instance = array('field_name' => $fieldName,
-			'entity_type' => 'node',
-			'bundle' => $nodeType,
-			'label' => $fieldLabel,
-		);
+		if ($fieldType === 'date') {
+			$instance = array(
+				'field_name' => $fieldName,
+				'entity_type' => 'node',
+				'bundle' => $contentType,
+				'label' => $fieldLabel,
+				'widget' => array('type'=> 'text_textfield')
+			);
+		} else {
+			$instance = array(
+				'field_name' => $fieldName,
+				'entity_type' => 'node',
+				'bundle' => $contentType,
+				'label' => $fieldLabel,
+			);
+		}
 		field_create_instance($instance);
 		watchdog('uwwtd', t('!fieldName was added successfully.', array('!fieldName' => $fieldName)));
 	} else {
