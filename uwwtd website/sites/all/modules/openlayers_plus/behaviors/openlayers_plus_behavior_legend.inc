@@ -44,14 +44,13 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
    * Render.
    */
   public function render(&$map) {
-	
+	//dsm($map);
     $legend_title = null;
     drupal_add_js(drupal_get_path('module', 'openlayers_plus') . '/behaviors/openlayers_plus_behavior_legend.js');
     drupal_add_css(drupal_get_path('module', 'openlayers_plus') . '/css/openlayers_plus.css');
     $options = array();
     $styles = openlayers_styles();
     uasort($map['layers'], 'openlayers_plus_layer_compare');
-    //dsm($map);
     foreach ($map['layers'] as $layer => $layer_data) {
       if (isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && $map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) {
         $selected_layer_style = $map['layer_styles'][$layer];
@@ -77,9 +76,11 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
               'layer' => $layer_data,
               'layer_id' => $layer,
             ));
+        //dsm($layer);
+            
         /*
         dsm($legend_title);
-        dsm($layer);
+        
         dsm($layer_data);
         dsm($legend[$layer]['data']);
         */
@@ -117,6 +118,17 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
 			$additional_legend.='<div>'.$series_legend.'</div>';
 			if($additional_legend!='') $options[$layer] = substr(trim($options[$layer]), 0, -6) .$additional_legend.'</div>';
 		}
+        
+        //Gestion des couches avec un style Openlayers
+        if(is_array($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['styles'])){
+            $additional_legend = '';            
+            foreach($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['styles'] as $style){
+                if(isset($styles[$style]) && !empty($styles[$style]->data)){
+                    $additional_legend .= '<div><div style="background-color:'.$styles[$style]->data['fillColor'].';border:1px solid #222222;width:20px;height:12px;float:left;margin-right:7px;">&nbsp;</div><div>'.t($styles[$style]->title) .'</div></div>';
+                }
+            }
+            if($additional_legend!='') $options[$layer] = substr(trim($options[$layer]), 0, -6) .$additional_legend.'</div>';
+        }
       }
     }
     return $options;

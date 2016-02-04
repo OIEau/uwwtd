@@ -1865,9 +1865,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    $preset_name = 'rca_map';
-    $preset = openlayers_preset_load($preset_name);
-    $map    = openlayers_build_map($preset->data);
+    
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_sensitive_area($filter['filter']);
@@ -1981,7 +1979,24 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
     //dsm($map);
     $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    if(!empty($features['rca'])){
+    $styles = array_unique(array_column($features['rca'], 'style_name'));
+    //$map; 
+    
+    $preset_name = 'rca_map';
+    $preset = openlayers_preset_load($preset_name);
+    $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['rca']=array(
+        'layer'=>'rca',
+        'styles'=>$styles
+    );
+    $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
+    }else{
+        $rendermap = '';
+    }
+    
+    
+    
     unset($features);
     unset($data);
 
@@ -2558,7 +2573,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
             if($i>20) exit();
             */
             $chart = array();
-            //Pie chart def ===> FIX ME : is it really use ?
+            //Pie chart def ===> FIX ME : is it really used ?
             if (isset($option['piechart'])) {
                 foreach($option['piechart'] as $field => $detail) {
                     $chart[] = array(
@@ -2583,7 +2598,9 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                     'data' => $chart,
                     'piechartid' => 'pie_' .$i,
                 ),
-                'style' => ($style?$styles[$style]->data:null), //TODO to find the style name
+                'style' => ($style?$styles[$style]->data:null),
+                'style_name' => $style,
+                
                 'wkt' => $row['wkt'],
             );
         }
