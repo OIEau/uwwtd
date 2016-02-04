@@ -3613,16 +3613,25 @@ function uwwtd_update_7132(&$context = null) {
 }
 
 /**
- * Mets au max la précision des champs "field_art17_flagginv" de type décimal.
+ * Mets à 32 la précision et à 2 le scale des champs de type décimal.
  */
 function uwwtd_update_7133(&$context = null) {
 	uwwtd_install_trace(__FUNCTION__);
 	
-	// Mise au max de la précision des champs de type Décimal :
-	setDecimalAccuracy('field_art17_flagginv', 32, 'article_17_agglomeration');
-	setDecimalAccuracy('field_art17_flaggexploadcoll', 32, 'article_17_agglomeration');
-	setDecimalAccuracy('field_art17_flaggexploadias', 32, 'article_17_agglomeration');
-	setDecimalAccuracy('field_art17_flatpexploadtruck', 32, 'article_17_uwwtp');
+	// Récupération de tous les champs existants :
+	$query = db_select('field_config_instance', 'c');
+	$query->fields('c');
+	$fields = $query->execute()->fetchAllAssoc('id');
+	
+	// Pour chaque champs :
+	if (!empty($fields)) {
+		foreach ($fields as $field) {
+			if (!empty($field->field_name)) {
+				// Redéfinition de la précision et du scale des champs de type Décimal :
+				setDecimalAccuracy($field->field_name, 32, 2);
+			}
+		}
+	}
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
@@ -3631,33 +3640,34 @@ function uwwtd_update_7133(&$context = null) {
 /**
  * Mets au max la précision des champs de type Décimal du content type donné.
  */
-function setDecimalAccuracy($fieldName, $accuracy, $contentType) {
-	// Si ce champs existe :
-	$fieldInstance = field_info_instance('node', $fieldName, $contentType);
-	if (!empty($fieldInstance)) {
-		// Récupération du paramétrage de champs :
-		$query = db_select('field_config', 'c');
-		$query->fields('c');
-		$query->condition('c.field_name', $fieldName, '=');
-		$node = $query->execute()->fetchAssoc();
-		if (!empty($node['data'])) {
-			// Décodage :
-			$settings = unserialize($node['data']);
-			
-			// Modification de la précision :
-			if (!empty($settings['settings']['precision'])) {
-				$settings['settings']['precision'] = $accuracy;
-			}
-			
-			// Encodage :
-			$settings = serialize($settings);
-			
-			// Mise à jour de la base avec cette nouvelle précision :
-			db_update('field_config') 
-				->fields(array('data' => $settings))
-				->condition('field_name', $fieldName, '=')
-				->execute();
+function setDecimalAccuracy($fieldName, $accuracy, $scale) {
+	// Récupération du paramétrage de champs :
+	$query = db_select('field_config', 'c');
+	$query->fields('c');
+	$query->condition('c.field_name', $fieldName, '=');
+	$node = $query->execute()->fetchAssoc();
+	if (!empty($node['data'])) {
+		// Décodage :
+		$settings = unserialize($node['data']);
+		
+		// Modification de la précision :
+		if (!empty($settings['settings']['precision'])) {
+			$settings['settings']['precision'] = $accuracy;
 		}
+		
+		// Modification du scale :
+		if (!empty($settings['settings']['scale'])) {
+			$settings['settings']['scale'] = $scale;
+		}
+		
+		// Encodage :
+		$settings = serialize($settings);		
+		
+		// Mise à jour de la base avec cette nouvelle précision :
+		db_update('field_config') 
+			->fields(array('data' => $settings))
+			->condition('field_name', $fieldName, '=')
+			->execute();
 	}
 }
 
