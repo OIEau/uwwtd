@@ -203,7 +203,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 //         } else {
         $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $agglo[$ind['aggcode']]);
         $sheet->setCellValueByColumnAndRow($ind['aggname'], $context['sandbox']['line'], $agglo[$ind['aggname']]);
-        $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $context['sandbox']['line'], $agglo[$ind['generated_load_p.e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $context['sandbox']['line'], round($agglo[$ind['generated_load_p.e.']]));
         $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._3_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._3_compliance']]);
         $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._4_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._4_compliance']]);
         $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._5_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._5_compliance']]);
@@ -216,8 +216,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['number_of_uwwtps/_collecting_systems_without_treatment_serving_the_agglomeration'], $context['sandbox']['line'], $agglo[$ind['number_of_uwwtps/_collecting_systems_without_treatment_serving_the_agglomeration']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_reported_?'], $context['sandbox']['line'], $agglo[$ind['previous_reported_?']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_aggcode'], $context['sandbox']['line'], $agglo[$ind['previous_aggcode']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $context['sandbox']['line'], $agglo[$ind['previous_gen._load_p.e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'], $agglo[$ind['previous_percentage_of_change_of_size_(1)']]);
+        $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $context['sandbox']['line'], round($agglo[$ind['previous_gen._load_p.e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'], round($agglo[$ind['previous_percentage_of_change_of_size_(1)']], 1));
         
         if (abs((float)$agglo[$ind['previous_percentage_of_change_of_size_(1)']]) > 20) {
             $sheet->getStyleByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'])
@@ -226,7 +226,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                 ->getStartColor()->setARGB('FFFFC000');        
         }  
                 
-        $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'], $agglo[$ind['total_%_(2)']]);
+        $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'], round($agglo[$ind['total_%_(2)']], 1));
         
         if ($agglo[$ind['total_%_(2)']] < 100) {
             $sheet->getStyleByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'])
@@ -235,67 +235,67 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                 ->getStartColor()->setARGB('FFFFC000');        
         }  
                 
-        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $context['sandbox']['line'], $agglo[$ind['connected_to_collecting_system']]);
-        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $context['sandbox']['line'], $agglo[$ind['connected_to_collecting_system_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['addressed_through_ias_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_p._e.'], $context['sandbox']['line'], $agglo[$ind['addressed_through_ias_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_p._e.'], $context['sandbox']['line'], $agglo[$ind['neither_collecting_system_nor_ias_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $context['sandbox']['line'], $agglo[$ind['dist_art3_%_of_gen._load_(3)']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art3_in_p.e.'], $context['sandbox']['line'], $agglo[$ind['dist_art3_in_p.e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['addressed_through_ias_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_p._e.'], $context['sandbox']['line'], round($agglo[$ind['addressed_through_ias_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_p._e.'], $context['sandbox']['line'], round($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $context['sandbox']['line'], round($agglo[$ind['dist_art3_%_of_gen._load_(3)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['dist_art3_in_p.e.'], $context['sandbox']['line'], round($agglo[$ind['dist_art3_in_p.e.']]));
         $sheet->setCellValueByColumnAndRow($ind['art3_compliance'], $context['sandbox']['line'], $agglo[$ind['art3_compliance']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_art3_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art3_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['total_entering_load_p._e.'], $context['sandbox']['line'], $agglo[$ind['total_entering_load_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $context['sandbox']['line'], $agglo[$ind['ratio_connected/enentering_%']]);
-        $sheet->setCellValueByColumnAndRow($ind['total_treatment_plant_design_capacity_p._e.'], $context['sandbox']['line'], $agglo[$ind['total_treatment_plant_design_capacity_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $context['sandbox']['line'], $agglo[$ind['ratio_total_entering_load/total_design_capacity_%']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['art4_compliant_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_p._e.'], $context['sandbox']['line'], $agglo[$ind['art4_compliant_p._e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['art4_not_compliant_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant'], $context['sandbox']['line'], $agglo[$ind['art4_not_compliant']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['art4_not_relevant_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant'], $context['sandbox']['line'], $agglo[$ind['art4_not_relevant']]);
+        $sheet->setCellValueByColumnAndRow($ind['total_entering_load_p._e.'], $context['sandbox']['line'], round($agglo[$ind['total_entering_load_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $context['sandbox']['line'], round($agglo[$ind['ratio_connected/enentering_%']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['total_treatment_plant_design_capacity_p._e.'], $context['sandbox']['line'], round($agglo[$ind['total_treatment_plant_design_capacity_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $context['sandbox']['line'], round($agglo[$ind['ratio_total_entering_load/total_design_capacity_%']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_compliant_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_p._e.'], $context['sandbox']['line'], round($agglo[$ind['art4_compliant_p._e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_not_compliant_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant'], $context['sandbox']['line'], round($agglo[$ind['art4_not_compliant']]));
+        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_not_relevant_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant'], $context['sandbox']['line'], round($agglo[$ind['art4_not_relevant']]));
         $sheet->setCellValueByColumnAndRow($ind['art4_compliance_art._4_(only)'], $context['sandbox']['line'], $agglo[$ind['art4_compliance_art._4_(only)']]);
         $sheet->setCellValueByColumnAndRow($ind['art4_compliance_art._4_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_art4_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art4_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $context['sandbox']['line'], $agglo[$ind['dist_art4_treat__%_of_connected_load']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat_in_p.e._(4)'], $context['sandbox']['line'], $agglo[$ind['dist_art4_treat_in_p.e._(4)']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $context['sandbox']['line'], $agglo[$ind['dist_art4_perf_%_of_connected_load']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_in_p.e._(5)'], $context['sandbox']['line'], $agglo[$ind['dist_art4_perf_in_p.e._(5)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_a_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_a_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_a_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_a_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_a_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_a_(p._e.)']]);
+        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_treat__%_of_connected_load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat_in_p.e._(4)'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_treat_in_p.e._(4)']]));
+        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_perf_%_of_connected_load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_in_p.e._(5)'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_perf_in_p.e._(5)']]));
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_a_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_a_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_a_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_a_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_a_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_a_(p._e.)']]));
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5a_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5a_(only)']]);
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5a_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5a_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_b_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_b_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_b_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_b_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_b_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_b_(p._e.)']]);
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_b_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_b_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_b_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_b_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_b_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_b_(p._e.)']]));
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5b_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5b_(only)']]);
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5b_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5b_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_c_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c__(p._e.)'], $context['sandbox']['line'], $agglo[$ind['compliant_5_c__(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_c_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_5_c_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_c_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_relevant_5_c_(p._e.)']]);
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_c_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c__(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_c__(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_c_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_c_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_c_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_c_(p._e.)']]));
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5c_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5c_(only)']]);
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5c_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5c_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_art._5_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['compliant_art._5_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_art._5_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['not_compliant_art._5_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['art._5_not_relevant_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['art._5_not_relevant_(p._e.)']]);
+        $sheet->setCellValueByColumnAndRow($ind['compliant_art._5_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_art._5_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['not_compliant_art._5_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_art._5_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['art._5_not_relevant_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['art._5_not_relevant_(p._e.)']]));
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5_(whole_agglo)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5_(whole_agglo)']]);
         $sheet->setCellValueByColumnAndRow($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_art5_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art5_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['distance_art5_treat_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_in_p.e._(6)'], $context['sandbox']['line'], $agglo[$ind['distance_art5_treat_in_p.e._(6)']]);
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $context['sandbox']['line'], $agglo[$ind['distance_art5_perf_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_in_p.e._(7)'], $context['sandbox']['line'], $agglo[$ind['distance_art5_perf_in_p.e._(7)']]);
+        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_treat_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_in_p.e._(6)'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_treat_in_p.e._(6)']]));
+        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_perf_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_in_p.e._(7)'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_perf_in_p.e._(7)']]));
         $sheet->setCellValueByColumnAndRow($ind['water_body_type'], $context['sandbox']['line'], $agglo[$ind['water_body_type']]);
         $sheet->setCellValueByColumnAndRow($ind['id_code_of_the_water_body_wfd'], $context['sandbox']['line'], $agglo[$ind['id_code_of_the_water_body_wfd']]);
         $sheet->setCellValueByColumnAndRow($ind['id_of_wfd_river_basin_district'], $context['sandbox']['line'], $agglo[$ind['id_of_wfd_river_basin_district']]);
@@ -309,14 +309,14 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_a_p'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_a_p']]);
         $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_b'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_b']]);
         $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_c'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_c']]);
-        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['secondary_treatment_installed_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['secondary_treatment_installed_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._secondary_ok_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._secondary_ok']]);
-        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['more_str._treatment_installed_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['more_str._treatment_installed_(p._e.)']]);
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']]);
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
+        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['secondary_treatment_installed_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['secondary_treatment_installed_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._secondary_ok_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._secondary_ok']]));
+        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['more_str._treatment_installed_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['more_str._treatment_installed_(p._e.)']]));
+        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]));
              
         //debug data info
         $sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
@@ -358,32 +358,32 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 //             dsm($ind['generated_load_p.e.'] . ',' .$line_to_fill . ','. $agglo[$ind['generated_load_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $line_to_fill, $agglo[$ind['generated_load_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $line_to_fill, $agglo[$ind['previous_gen._load_p.e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $line_to_fill, $agglo[$ind['total_%_(2)']]);
-            $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $line_to_fill, $agglo[$ind['connected_to_collecting_system']]);
+            $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $line_to_fill, round($agglo[$ind['total_%_(2)']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $line_to_fill, round($agglo[$ind['connected_to_collecting_system']], 1));
             $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $line_to_fill, $agglo[$ind['connected_to_collecting_system_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $line_to_fill, $agglo[$ind['addressed_through_ias_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $line_to_fill, round($agglo[$ind['addressed_through_ias_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_p._e.'], $line_to_fill, $agglo[$ind['addressed_through_ias_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $line_to_fill, $agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $line_to_fill, round($agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_p._e.'], $line_to_fill, $agglo[$ind['neither_collecting_system_nor_ias_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $line_to_fill, $agglo[$ind['dist_art3_%_of_gen._load_(3)']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $line_to_fill, round($agglo[$ind['dist_art3_%_of_gen._load_(3)']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art3_in_p.e.'], $line_to_fill, $agglo[$ind['dist_art3_in_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['total_entering_load_p._e.'], $line_to_fill, $agglo[$ind['total_entering_load_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $line_to_fill, $agglo[$ind['ratio_connected/enentering_%']]);
+            $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $line_to_fill, round($agglo[$ind['ratio_connected/enentering_%']], 1));
             $sheet->setCellValueByColumnAndRow($ind['total_treatment_plant_design_capacity_p._e.'], $line_to_fill, $agglo[$ind['total_treatment_plant_design_capacity_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $line_to_fill, $agglo[$ind['ratio_total_entering_load/total_design_capacity_%']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_compliant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $line_to_fill, round($agglo[$ind['ratio_total_entering_load/total_design_capacity_%']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_compliant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_compliant_p._e.'], $line_to_fill, $agglo[$ind['art4_compliant_p._e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_not_compliant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_not_compliant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant'], $line_to_fill, $agglo[$ind['art4_not_compliant']]);
-            $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $line_to_fill, $agglo[$ind['art4_not_relevant_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $line_to_fill, round($agglo[$ind['art4_not_relevant_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant'], $line_to_fill, $agglo[$ind['art4_not_relevant']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $line_to_fill, $agglo[$ind['dist_art4_treat__%_of_connected_load']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $line_to_fill, round($agglo[$ind['dist_art4_treat__%_of_connected_load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat_in_p.e._(4)'], $line_to_fill, $agglo[$ind['dist_art4_treat_in_p.e._(4)']]);
-            $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $line_to_fill, $agglo[$ind['dist_art4_perf_%_of_connected_load']]);
+            $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $line_to_fill, round($agglo[$ind['dist_art4_perf_%_of_connected_load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_in_p.e._(5)'], $line_to_fill, $agglo[$ind['dist_art4_perf_in_p.e._(5)']]);
-            $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $line_to_fill, $agglo[$ind['distance_art5_treat_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $line_to_fill, round($agglo[$ind['distance_art5_treat_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_in_p.e._(6)'], $line_to_fill, $agglo[$ind['distance_art5_treat_in_p.e._(6)']]);
-            $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $line_to_fill, $agglo[$ind['distance_art5_perf_%_of_gen._load']]);
+            $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $line_to_fill, round($agglo[$ind['distance_art5_perf_%_of_gen._load']], 1));
             $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_in_p.e._(7)'], $line_to_fill, $agglo[$ind['distance_art5_perf_in_p.e._(7)']]);
             $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $line_to_fill, $agglo[$ind['secondary_treatment_installed_(p._e.)']]);
             $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $line_to_fill, $agglo[$ind['monitoring_results_f._secondary_ok']]);
@@ -563,33 +563,33 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $uwwtp[$ind['aggcode']]);
         $sheet->setCellValueByColumnAndRow($ind['aggname'], $context['sandbox']['line'], $uwwtp[$ind['aggname']]);
         $sheet->setCellValueByColumnAndRow($ind['aggstatus'], $context['sandbox']['line'], $uwwtp[$ind['aggstatus']]);
-        $sheet->setCellValueByColumnAndRow($ind['generated load  p. e.'], $context['sandbox']['line'], $uwwtp[$ind['generated load  p. e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['generated load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['generated load  p. e.']]));
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 3 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 3 compliance']]);
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 4 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 4 compliance']]);
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 5 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 5 compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system % of gen. load'], $context['sandbox']['line'], $uwwtp[$ind['collected in collecting system % of gen. load']]);
-        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system  p. e.'], $context['sandbox']['line'], $uwwtp[$ind['collected in collecting system  p. e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS % of gen. load'], $context['sandbox']['line'], $uwwtp[$ind['addressed through IAS % of gen. load']]);
-        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS p. e.'], $context['sandbox']['line'], $uwwtp[$ind['addressed through IAS p. e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS % of gen. load'], $context['sandbox']['line'], $uwwtp[$ind['neither collecting system nor IAS % of gen. load']]);
-        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS p. e.'], $context['sandbox']['line'], $uwwtp[$ind['neither collecting system nor IAS p. e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system % of gen. load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system  p. e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS % of gen. load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS p. e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS % of gen. load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS p. e.']]));
         $sheet->setCellValueByColumnAndRow($ind['uww_code'], $context['sandbox']['line'], $uwwtp[$ind['uww_code']]);
         $sheet->setCellValueByColumnAndRow($ind['uww_name'], $context['sandbox']['line'], $uwwtp[$ind['uww_name']]);
         $sheet->setCellValueByColumnAndRow($ind['uww_status'], $context['sandbox']['line'], $uwwtp[$ind['uww_status']]);
         
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]));
         
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]);
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_entering load  p. e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering load  p. e.']]));
         
-        $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], $uwwtp[$ind['uww_capacity p. e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_capacity p. e.']]));
 //         $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_reference year'], $context['sandbox']['line'], $uwwtp[$ind['previous_reference year']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], $uwwtp[$ind['previous_entering load p. e.']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], $uwwtp[$ind['previous_capacity p. e.']]);
+        $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_entering load p. e.']]));
+        $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_capacity p. e.']]));
         
-        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], $uwwtp[$ind['previous_Percentage of change of entering load (1) %']]);
+        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
         if (abs((float)$uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) > 20) {
             $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'])
                 ->getFill()
@@ -597,7 +597,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                 ->getStartColor()->setARGB('FFFFC000');
         }
 
-        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'],$context['sandbox']['line'], $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]);
+        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'],$context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
         if ($uwwtp[$ind['previous_Percentage of change of capacity (2) %']] != 'NI' && abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
             $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
                 ->getFill()
@@ -668,27 +668,27 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['More stringent:  installed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  installed?']]);
         $sheet->setCellValueByColumnAndRow($ind['More stringent: monitoring passed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent: monitoring passed?']]);
         $sheet->setCellValueByColumnAndRow($ind['More stringent:  FINAL'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  FINAL']]);
-        $sheet->setCellValueByColumnAndRow($ind['Volume of waste water treated m3/y'],$context['sandbox']['line'], $uwwtp[$ind['Volume of waste water treated m3/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['Incoming loads BOD-tot  t/y'],$context['sandbox']['line'], $uwwtp[$ind['Incoming loads BOD-tot  t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['Discharged loads BOD-tot  t/y'],$context['sandbox']['line'], $uwwtp[$ind['Discharged loads BOD-tot  t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['BOD rate of removal %'],$context['sandbox']['line'], $uwwtp[$ind['BOD rate of removal %']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration BOD mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Incoming concentration BOD mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration BOD mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Discharge concentration BOD mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration COD-tot   t/y'],$context['sandbox']['line'], $uwwtp[$ind['Incoming cocentration COD-tot   t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration COD-tot  t/y'],$context['sandbox']['line'], $uwwtp[$ind['Discharged concentration COD-tot  t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['COD rate of removal %'],$context['sandbox']['line'], $uwwtp[$ind['COD rate of removal %']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration COD mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Incoming concentration COD mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration COD mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Discharge concentration COD mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['Incoming loads N-tot   t/y'],$context['sandbox']['line'], $uwwtp[$ind['Incoming loads N-tot   t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['Discharged loads N-tot  t/y'],$context['sandbox']['line'], $uwwtp[$ind['Discharged loads N-tot  t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['N rate of removal %'],$context['sandbox']['line'], $uwwtp[$ind['N rate of removal %']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration N mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Incoming concentration N mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration N mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Discharge concentration N mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration P-tot   t/y'],$context['sandbox']['line'], $uwwtp[$ind['Incoming cocentration P-tot   t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration P-tot  t/y'],$context['sandbox']['line'], $uwwtp[$ind['Discharged concentration P-tot  t/y']]);
-        $sheet->setCellValueByColumnAndRow($ind['P rate of removal %'],$context['sandbox']['line'], $uwwtp[$ind['P rate of removal %']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration P mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Incoming concentration P mg/l']]);
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration P mg/l'],$context['sandbox']['line'], $uwwtp[$ind['average Discharge concentration P mg/l']]);
+        $sheet->setCellValueByColumnAndRow($ind['Volume of waste water treated m3/y'],$context['sandbox']['line'], round($uwwtp[$ind['Volume of waste water treated m3/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['Incoming loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads BOD-tot  t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['Discharged loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads BOD-tot  t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['BOD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['BOD rate of removal %']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration BOD mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration BOD mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration COD-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration COD-tot   t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration COD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration COD-tot  t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['COD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['COD rate of removal %']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration COD mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration COD mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['Incoming loads N-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads N-tot   t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['Discharged loads N-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads N-tot  t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['N rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['N rate of removal %']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration N mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration N mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration P-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration P-tot   t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration P-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration P-tot  t/y']]));
+        $sheet->setCellValueByColumnAndRow($ind['P rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['P rate of removal %']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration P mg/l']], 1));
+        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration P mg/l']], 1));
         
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
@@ -717,13 +717,13 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                      $line_to_fill = $context['sandbox']['line'] + 4;
                 break;                                 
             }
-            $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]);
-            $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, $uwwtp[$ind['uww_entering load  p. e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, $uwwtp[$ind['uww_capacity p. e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, $uwwtp[$ind['previous_entering load p. e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, $uwwtp[$ind['previous_capacity p. e.']]);
-            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of entering load (1) %']]);
-            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]);
+            $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, round($uwwtp[$ind['uww_entering load  p. e.']]));
+            $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['uww_capacity p. e.']]));
+            $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']]));
+            $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']]));
+            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
+            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
         }
         fclose($r);    
     }
@@ -2394,6 +2394,33 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $query->condition('n.status', 1, '=');
     $nid = $query->execute()->fetchField();
     
+    // Si il n'y a pas encore de node ms_level pour cette année :
+    global $language;
+	$siteId = $annee.'_mslevel';
+    if (empty($nid)) {
+		// Création du node pour cette année :    	
+        $node = new stdClass();
+    	$node->type = 'ms_level';
+    	$node->uid = 1;
+     	$node->translate = 0;
+        $node->tnid = 0;
+        $node->sticky = 0;
+        $node->promote = 0;
+        $node->comment = 0;
+        $node->language = $language->language;
+        $node->title = 'Data on MS level - '. $annee;
+        $node->field_siteid['und'][0]['value'] = $siteId;
+        $node->field_anneedata['und'][0]['value'] = $annee;
+        node_save($node);
+        
+        // Récupération du nid :
+        $query = db_select('node', 'n');
+        $query->fields('n');
+        $query->condition('n.type', 'ms_level', '=');
+        $query->condition('n.title', 'Data on MS level - '. $annee, '=');
+        $nid = $query->execute()->fetchField();
+    }
+    
     // Renseignement des champs "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
     $node = node_load($nid);
     if (!empty($node)) {
@@ -3894,102 +3921,102 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         //target connection
         $sheet->getCell('C12')->setValue($context['sandbox']['data']['expired']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_%']);
+        $sheet->getCell('E12')->setValue(round($context['sandbox']['data']['expired']['target_connection']['distance_%'], 1));
         $sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);            
                     
         $sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
-        $sheet->getCell('D14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias_%']);
+        $sheet->getCell('D14')->setValue(round($context['sandbox']['data']['expired']['target_connection']['ias_%'], 1));
                                              
         //secondary treatement               
         $sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
         $sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);                
                                          
         //more stringent treatment
         $sheet->getCell('C20')->setValue($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%']);  
+        $sheet->getCell('D22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));  
         $sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);  
                                          
         //pending
         //target connection
         $sheet->getCell('C32')->setValue($context['sandbox']['data']['pending']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_%']);
+        $sheet->getCell('E32')->setValue(round($context['sandbox']['data']['pending']['target_connection']['distance_%'], 1));
         $sheet->getCell('F32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_pe']);
                 
         $sheet->getCell('C33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D33')->setValue(round($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias']);
-        $sheet->getCell('D34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias_%']);
+        $sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
         $sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
         $sheet->getCell('C37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
         $sheet->getCell('C40')->setValue($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']); 
                                          
         //total
         //target connection
         $sheet->getCell('C51')->setValue($context['sandbox']['data']['total']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_%']);
+        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
         $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
                 
         $sheet->getCell('C52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%']);
+        $sheet->getCell('D52')->setValue(round($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%'], 1));
         $sheet->getCell('C53')->setValue($context['sandbox']['data']['total']['target_connection']['ias']);
-        $sheet->getCell('D53')->setValue($context['sandbox']['data']['total']['target_connection']['ias_%']);
+        $sheet->getCell('D53')->setValue(round($context['sandbox']['data']['total']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
         $sheet->getCell('C55')->setValue($context['sandbox']['data']['total']['secondary_target']['total_load_pe']);
         $sheet->getCell('C56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%']);
-        $sheet->getCell('E56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%']);
+        $sheet->getCell('D56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%'], 1));
+        $sheet->getCell('E56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
         $sheet->getCell('F56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_pe']);
         $sheet->getCell('C57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']);
-        $sheet->getCell('E57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
         $sheet->getCell('C59')->setValue($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']);
         $sheet->getCell('C60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%']);
-        $sheet->getCell('E60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%']);
+        $sheet->getCell('D60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%'], 1));
+        $sheet->getCell('E60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
         $sheet->getCell('F60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_pe']);
         $sheet->getCell('C61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%']);
-        $sheet->getCell('E61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']);
+        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
+        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
         $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
         
         $context['results']['distance_to_compliance'] = $context['sandbox']['data'];                          

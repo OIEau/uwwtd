@@ -1174,9 +1174,9 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
  */
 function getRow8Graphs($results) {
 	$colors = array(
-		'Compliant' => '#4F91E1',
-		'Not compliant' => '#8FBC8F',
-		'Not relevant' => '#D93C3C',
+		'Compliant' => $GLOBALS['uwwtd']['compliance_color']['C'],
+		'Not compliant' => $GLOBALS['uwwtd']['compliance_color']['NC'],
+		'Not relevant' => $GLOBALS['uwwtd']['compliance_color']['NR'],
 	);
 	
 	$graph1FrontAndBack = getFrontAndBackFormated($results['comparisonsCompliancesByPe'], 'Article 3', $colors);
