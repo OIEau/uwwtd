@@ -1,7 +1,7 @@
 <?php
-require_once 'uwwtd.stats.inc';
+define('ALL_YEARS', 'allyears');
 
-define(ALL_YEARS, 'allyears');
+require_once 'uwwtd.stats.inc';
 
 function uwwtd_stats_graphs_page(){
 
@@ -112,7 +112,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'), 
     	t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
-    	true);
+    	true, $yearsPossibles);
     
     //==============================================
     //=============== ROW 2 : Agglomeration : Generated load by compliance
@@ -126,7 +126,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
 		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
 		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
-		false);
+		false, $yearsPossibles);
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
     //==============================================
@@ -139,7 +139,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
     	t("Total load entering by compliance"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
     	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
-    	true);
+    	true, $yearsPossibles);
     
     
     //==============================================
@@ -153,7 +153,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
     	t("Total load entering by treatment type"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3]);
+    	t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
+    	false, $yearsPossibles);
     
 	
     //==============================================
@@ -170,7 +171,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
                 'graph_generatedByAgglomeration', t("Total generated load by agglomeration size"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
                 'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
             )
-        )
+        ), $yearsPossibles
     );
     
     
@@ -190,7 +191,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
                     'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], false,
                     'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], false
                 )
-              )
+              ), $yearsPossibles
             );
         }
     }
@@ -249,7 +250,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         
         // Création du code html pour ces graphs :
         if(!empty($rows)){
-            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), $rows);
+            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), 
+            		$rows, $yearsPossibles);
         }
     }
     
@@ -272,11 +274,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //=============== ROW 8 : Distance to compliance art 3, 4, 5
     //==============================================
     
-    //================ TODO =================================
-    //idée : pour obtenir cette info, il faudrait qu'a la fin du clacul du registre,
-    //les valeurs pour les distances to compliance par article soient conservées au niveau du noeud "MS_LEVEL" de l'année concernée.
-    //Les graphs ne seraient affichés que si l'info est présente dans le MS LEVEL ===> voir fonction "uwwtd_stat_national_ms_level_data"
-    
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibles);
     $frontAndBackGraphs = getRow8Graphs($results);
@@ -296,7 +293,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     			'graph_art5_pe', t("Article 5 by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
     			'graph_art5_agg', t("Article 5 by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
     		),
-	    )
+	    ), $yearsPossibles
     );
     
 	return  $formResult;
@@ -567,7 +564,6 @@ function getRow2Graph1and2($results, $yearSelected) {
 	$graph2Back = '';
 	$graph2Rows = $results;
 	$graph2Sums = array();
-	
 	//dsm($results);
 	if (!empty($results)) {
 		// Création du tableau pour le front :
@@ -1259,38 +1255,49 @@ function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		$graph1Title, $graph1Id, $graph1Front, $graph1Back, 
 		$graph2Title, $graph2Id, $graph2Front, $graph2Back,
-		$isBigTable) {
+		$isBigTable, $yearsPossibles) {
+	// Vérification qu'il y a des données :
+	$isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
+	$isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
+			
 	$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$classCustom = '';
 	if ($isBigTable) {
 		$classCustom = '-extended';
 	}
 	$html.='<div class="rows charts-row">';
-		// Création du code html pour le graph 1 :
-		if (count($graph1Front) <= 1) {
-			$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
-			$keys = array_keys($graph1Front);
-			$graph1Front = $graph1Front[$keys[0]];
-			$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
-		} elseif (array_key_exists('data', $graph1Front) && 
-			array_key_exists('color', $graph1Front) && 
-			array_key_exists('legend', $graph1Front)) {
-			$front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+		// Si le graph a des données :
+		if (!$isEmptyGraph1) {
+			// Création du code html pour le graph 1 :
+			if (count($graph1Front) <= 1) {
+				$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+				$keys = array_keys($graph1Front);
+				$graph1Front = $graph1Front[$keys[0]];
+				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
+			} elseif (array_key_exists('data', $graph1Front) && 
+				array_key_exists('color', $graph1Front) && 
+				array_key_exists('legend', $graph1Front)) {
+				$front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+			}
+			$html.= '<div class="cell charts-rows-cell"><div class="cell-content'. $classCustom .'">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		}
-		$html.= '<div class="cell charts-rows-cell"><div class="cell-content'. $classCustom .'">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		
-		// Création du code html pour le graph 2 :
-		if (count($graph2Front) <= 1) {
-			$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
-			$keys = array_keys($graph2Front);
-			$graph2Front = $graph2Front[$keys[0]];
-			$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
-		} elseif (array_key_exists('data', $graph2Front) &&
-			array_key_exists('color', $graph2Front) &&
-			array_key_exists('legend', $graph2Front)) {
-			$front .= uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
+
+		// Si le graph a des données :
+		if (!$isEmptyGraph2) {
+			// Création du code html pour le graph 2 :
+			if (count($graph2Front) <= 1) {
+				$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+				$keys = array_keys($graph2Front);
+				$graph2Front = $graph2Front[$keys[0]];
+				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
+			} elseif (array_key_exists('data', $graph2Front) &&
+				array_key_exists('color', $graph2Front) &&
+				array_key_exists('legend', $graph2Front)) {
+				$front .= uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
+			}
+			$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
 		}
-		$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
 	$html.='</div>';
 	return $html;
 }
@@ -1298,64 +1305,75 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 /**
  * Ajoute au code html donné le code html pour afficher deux graphs en barres verticales.
  */
-function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows) {    
+function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) {   
 	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
     foreach($rows as $i=>$row){
         list(
             $graph1Id, $graph1Title, $graph1Front, $graph1Back, $graph1Stack, 
             $graph2Id, $graph2Title, $graph2Front, $graph2Back, $graph2Stack
         ) = $row;
+        
+        // Vérification qu'il y a des données :
+        $isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
+        $isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
+        
         $html.='<div class="rows charts-row">';
-            // Création du code html pour le graph1 :
-            if (!empty($graph1Front)){
-                if(!isset($graph1Front['data'])){
-                    $graph1Front_rows =array();
-                    $graph1FrontLegend = array();
-                    $graph1FrontColor = array();
-                    foreach($graph1Front as $key=>$val){
-                        $item = array((string)$key);
-                        foreach($val as $k=>$v){
-                            $item[] =$v['value'];
-                            $graph1FrontLegend[$v['label']] =$v['label']; 
-                            $graph1FrontColor[$v['label']] =$v['color']; 
-                        }
-                        $graph1Front_rows[] = $item;
-                    }
-                    $front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, $graph1Stack);
-                }
-                else{
-                    $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], $graph1Stack);
-                }
-            } 
-            else {
-                $front = t("No information");
-            }
-            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
-            
-            // Création du code html pour le graph2 :
-            if (!empty($graph2Front)){
-                if(!isset($graph1Front['data'])){
-                    $graph2Front_rows =array();
-                    $graph2FrontLegend = array();
-                    $graph2FrontColor = array();
-                    foreach($graph2Front as $key=>$val){
-                        $item = array((string)$key);
-                        foreach($val as $k=>$v){
-                            $item[] =$v['value'];
-                            $graph2FrontLegend[$v['label']] =$v['label']; 
-                            $graph2FrontColor[$v['label']] =$v['color']; 
-                        }
-                        $graph2Front_rows[] = $item;
-                    }
-                    $front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, $graph2Stack);
-                }
-                else{
-                    $front = uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], $graph2Stack);
-                }
-            } else {
-                $front = t("No information");
-            }
-            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
+	        // Si le graph a des données :
+	        if (!$isEmptyGraph1) {
+	            // Création du code html pour le graph1 :
+	            if (!empty($graph1Front)){
+	                if(!isset($graph1Front['data'])){
+	                    $graph1Front_rows =array();
+	                    $graph1FrontLegend = array();
+	                    $graph1FrontColor = array();
+	                    foreach($graph1Front as $key=>$val){
+	                        $item = array((string)$key);
+	                        foreach($val as $k=>$v){
+	                            $item[] =$v['value'];
+	                            $graph1FrontLegend[$v['label']] =$v['label']; 
+	                            $graph1FrontColor[$v['label']] =$v['color']; 
+	                        }
+	                        $graph1Front_rows[] = $item;
+	                    }
+	                    $front = uwwtd_graph_render_column($graph1Id, array_values($graph1FrontLegend), array_values($graph1FrontColor), $graph1Front_rows, $graph1Stack);
+	                }
+	                else{
+	                    $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], $graph1Stack);
+	                }
+	            } 
+	            else {
+	                $front = t("No information");
+	            }
+	            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
+	        }
+	        
+	        // Si le graph a des données :
+	        if (!$isEmptyGraph2) {
+	            // Création du code html pour le graph2 :
+	            if (!empty($graph2Front)){
+	                if(!isset($graph1Front['data'])){
+	                    $graph2Front_rows =array();
+	                    $graph2FrontLegend = array();
+	                    $graph2FrontColor = array();
+	                    foreach($graph2Front as $key=>$val){
+	                        $item = array((string)$key);
+	                        foreach($val as $k=>$v){
+	                            $item[] =$v['value'];
+	                            $graph2FrontLegend[$v['label']] =$v['label']; 
+	                            $graph2FrontColor[$v['label']] =$v['color']; 
+	                        }
+	                        $graph2Front_rows[] = $item;
+	                    }
+	                    $front = uwwtd_graph_render_column($graph2Id, array_values($graph2FrontLegend), array_values($graph2FrontColor), $graph2Front_rows, $graph2Stack);
+	                }
+	                else{
+	                    $front = uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], $graph2Stack);
+	                }
+	            } else {
+	                $front = t("No information");
+	            }
+	            $html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
+	        }
         $html.='</div>';
     }
 	return $html;
@@ -1369,14 +1387,15 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 		$graph2Title, $graph2Text, $yearSelected, $yearsPossibles) {
 	$html .='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	$html .='<div class="rows charts-row">';
+
+	// Vérification qu'il y a des données :
+    $isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
+    $isEmptyText = isEmptyText($graph2Text, $yearsPossibles);
+    
+    // Si le graph a des données :
+    if (!$isEmptyGraph1) {
 		// Création du code html pour le graph1 :
-		//$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
-		//$front.= "<script>jQuery(document).ready(function(){display_piechart_custom(". json_encode($graph1Back) .", '". $graph1Id ."','middle');});</script>";
-		//$msg_sludge = 'Production : ';
-		
-		// Gestion des productions par années :
-        
-		switch ($yearSelected){
+		switch ($yearSelected) {
 			case ALL_YEARS :
 				if (!empty($yearsPossibles)) {
 					$msg_sludge .= " (T DS/year)";
@@ -1394,12 +1413,16 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 					$msg_sludge .= $results[$yearSelected]['sludge']['production']." T DS/year";
 				}
 		}
-		
 		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back, $msg_sludge).'</div></div>';
-	
+    }
+    
+    
+    // Si le graph a des données :
+    if (!$isEmptyText) {
 		// Création du code html pour le graph2 :
 		$html .= '<div class="cell charts-rows-cell"><div class="cell-content"><div class="flot-title">Water re-use</div><p>'. $graph2Text .'</p></div></div>';
-	
+    }
+    
 	$html.='</div>';
 	return $html;
 }
@@ -1442,4 +1465,47 @@ function uwwtd_graph_render_column($id, $legend, $color, $rows, $stacked=false){
 
 
 	return d3_draw($chart);
+}
+
+/**
+ * Vérifis si le graph contient des données.
+ */
+function isEmptyGraph($graphFront, $yearsPossibles) {
+	if (!empty($graphFront)) {
+		// Test si c'est un graph multi année :
+		if (array_key_exists('data', $graphFront) && array_key_exists('color', $graphFront) && array_key_exists('legend', $graphFront)) {
+			if (!empty($graphFront['data'])) {
+				foreach ($graphFront['data'] as $dataRow) {
+					foreach ($dataRow as $element) {
+						// Si ce n'est pas une année et que la valeur est différente de zéro :
+						if (!in_array($element, $yearsPossibles) && $element != 0) {
+							return false;
+						}
+					}
+				}
+			}
+		} else {
+			// Pour chaque année :
+			foreach ($graphFront as $yearData) {
+				foreach ($yearData as $groupElements) {
+					foreach ($groupElements as $elementName => $element) {
+						if ($elementName === 'value') {
+							// Si ce n'est pas une année et que la valeur est différente de zéro :
+							if (!in_array($element, $yearsPossibles) && $element != 0) {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+	} 
+	return true;
+}
+
+/**
+ * Vérifis si le text n'est pas "No information".
+ */
+function isEmptyText($text) {
+	return empty($text) || strstr($text, 'No information</div>');
 }
