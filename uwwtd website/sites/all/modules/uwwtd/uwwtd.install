@@ -3141,7 +3141,7 @@ function uwwtd_update_7126(&$context = null){
     if(!empty($GLOBALS['uwwtd_value']['rcatype_color'])){
         foreach($GLOBALS['uwwtd_value']['rcatype_color'] as $type=>$data){
             $row['name'] ='rca_'.strtolower($type);
-            $row['title'] ='RCA '.$type;
+            $row['title'] ='RCA '.$GLOBALS['uwwtd_value']['rcatype_labels'][$type];
             $row['description'] = date('Y-m-d H:i:s');
             $row['data'] = $data;
             $msgresult = 'ok';
@@ -3636,6 +3636,7 @@ function uwwtd_update_7133(&$context = null) {
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }
+
 
 /**
  * Redéfinit la précision et le scale du champs donné.
