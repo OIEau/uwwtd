@@ -3613,16 +3613,16 @@ function uwwtd_update_7132(&$context = null) {
 }
 
 /**
- * Mets au max la précision des champs de type décimal pour le content type "article-17-agglomeration"
- *  et 
+ * Mets au max la précision des champs "field_art17_flagginv" de type décimal.
  */
 function uwwtd_update_7133(&$context = null) {
 	uwwtd_install_trace(__FUNCTION__);
 	
 	// Mise au max de la précision des champs de type Décimal :
-	setDecimalMaxAccuracy('article-17-agglomeration');
-	
-	// Redéfinition du defau
+	setDecimalAccuracy('field_art17_flagginv', 32, 'article_17_agglomeration');
+	setDecimalAccuracy('field_art17_flaggexploadcoll', 32, 'article_17_agglomeration');
+	setDecimalAccuracy('field_art17_flaggexploadias', 32, 'article_17_agglomeration');
+	setDecimalAccuracy('field_art17_flatpexploadtruck', 32, 'article_17_uwwtp');
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
@@ -3631,21 +3631,34 @@ function uwwtd_update_7133(&$context = null) {
 /**
  * Mets au max la précision des champs de type Décimal du content type donné.
  */
-function setDecimalMaxAccuracy($contentType) {
-	// Récupération des champs du type de contenu donné :
-// 	$fields = field_info_instances("node", $contentType);
-	
-	// Pour chaque champs :
-// 	foreach ($fields as $field) {
-		// Si ce champs est de type Décimal :
+function setDecimalAccuracy($fieldName, $accuracy, $contentType) {
+	// Si ce champs existe :
+	$fieldInstance = field_info_instance('node', $fieldName, $contentType);
+	if (!empty($fieldInstance)) {
+		// Récupération du paramétrage de champs :
+		$query = db_select('field_config', 'c');
+		$query->fields('c');
+		$query->condition('c.field_name', $fieldName, '=');
+		$node = $query->execute()->fetchAssoc();
+		if (!empty($node['data'])) {
+			// Décodage :
+			$settings = unserialize($node['data']);
 			
-		
-			// Définition de la précision à 32 :
+			// Modification de la précision :
+			if (!empty($settings['settings']['precision'])) {
+				$settings['settings']['precision'] = $accuracy;
+			}
 			
-		
-			// Mise au max de la valeur par defaut de ce champs dans le content type :
-// 			field_update_field($field);
-// 	}
+			// Encodage :
+			$settings = serialize($settings);
+			
+			// Mise à jour de la base avec cette nouvelle précision :
+			db_update('field_config') 
+				->fields(array('data' => $settings))
+				->condition('field_name', $fieldName, '=')
+				->execute();
+		}
+	}
 }
 
 /**
