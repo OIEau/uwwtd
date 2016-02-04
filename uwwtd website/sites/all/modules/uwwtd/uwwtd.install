@@ -3672,11 +3672,16 @@ function uwwtd_update_7134(&$context = null) {
 	addFieldToContentType('field_rcaevolutiontype', 'text', 'rcaevolutiontype', 'receiving_area');
 	addFieldToContentType('field_rcasalsaremark', 'text', 'rcasalsaremark', 'receiving_area');
 	
+
     
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
+
+	// Note vgo : il faudra bien checker que le format des dates du fichier xml est compatible avec le format attendu par
+	// Drupal pour son champs Date.
+	// Si ce n'est pas le cas, ajouter une conversion d'un format à l'autre lors de l'import du fichier xml.
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	//throw new DrupalUpdateException(__FUNCTION__);
 }

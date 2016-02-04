@@ -1307,7 +1307,8 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 /**
  * Ajoute au code html donné le code html pour afficher deux graphs en barres verticales.
  */
-function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) {   
+function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) { 
+	$isFirst = true;
     foreach($rows as $i=>$row){
         list(
             $graph1Id, $graph1Title, $graph1Front, $graph1Back, $graph1Stack, 
@@ -1318,7 +1319,10 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) {
         $isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
         
         if (!$isEmptyGraph1 || !$isEmptyGraph2) {
-        	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
+        	if ($isFirst) {
+        		$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
+        		$isFirst = false;
+        	}
         }
         
         $html.='<div class="rows charts-row">';
