@@ -1260,7 +1260,9 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 	$isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
 	$isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
 			
-	$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
+	if (!$isEmptyGraph1 || !$isEmptyGraph2) {
+		$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
+	}
 	$classCustom = '';
 	if ($isBigTable) {
 		$classCustom = '-extended';
@@ -1306,16 +1308,18 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
  * Ajoute au code html donné le code html pour afficher deux graphs en barres verticales.
  */
 function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) {   
-	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
     foreach($rows as $i=>$row){
         list(
             $graph1Id, $graph1Title, $graph1Front, $graph1Back, $graph1Stack, 
             $graph2Id, $graph2Title, $graph2Front, $graph2Back, $graph2Stack
         ) = $row;
-        
         // Vérification qu'il y a des données :
         $isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
         $isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
+        
+        if (!$isEmptyGraph1 || !$isEmptyGraph2) {
+        	$html.='<h2 style="clear:both;">' .$rowTitle. '</h2>';
+        }
         
         $html.='<div class="rows charts-row">';
 	        // Si le graph a des données :
@@ -1385,12 +1389,14 @@ function getHtmlPlusHtmlChartsBars($html, $rowTitle, $rows, $yearsPossibles) {
 function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 		$graph1Title, $graph1Id, $results, $graph1Front, $graph1Back,
 		$graph2Title, $graph2Text, $yearSelected, $yearsPossibles) {
-	$html .='<h2 style="clear:both;">'. $rowTitle .'</h2>';
-	$html .='<div class="rows charts-row">';
-
 	// Vérification qu'il y a des données :
     $isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
     $isEmptyText = isEmptyText($graph2Text, $yearsPossibles);
+    
+    if (!$isEmptyGraph1 || !$isEmptyText) {
+    	$html .='<h2 style="clear:both;">'. $rowTitle .'</h2>';
+    }
+    $html .='<div class="rows charts-row">';
     
     // Si le graph a des données :
     if (!$isEmptyGraph1) {
