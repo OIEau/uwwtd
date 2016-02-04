@@ -1363,7 +1363,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard(t("Treatment type in place by Load entering (p.e.)"), $render_graph, $render_table_graph,'')
+                    .uwwtd_page_render_flipcard(t("Global compliance by load entering (p.e.)"), $render_graph, $render_table_graph,'')
                   .'</div>'
                 .'</div>'
             .'</div>'
