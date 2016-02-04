@@ -3638,10 +3638,10 @@ function uwwtd_update_7133(&$context = null) {
 }
 
 /**
- * Mets au max la précision des champs de type Décimal du content type donné.
+ * Redéfinit la précision et le scale du champs donné.
  */
 function setDecimalAccuracy($fieldName, $accuracy, $scale) {
-	// Récupération du paramétrage de champs :
+	// Récupération du paramétrage du champs :
 	$query = db_select('field_config', 'c');
 	$query->fields('c');
 	$query->condition('c.field_name', $fieldName, '=');
@@ -3663,7 +3663,7 @@ function setDecimalAccuracy($fieldName, $accuracy, $scale) {
 		// Encodage :
 		$settings = serialize($settings);		
 		
-		// Mise à jour de la base avec cette nouvelle précision :
+		// Mise à jour de la base :
 		db_update('field_config') 
 			->fields(array('data' => $settings))
 			->condition('field_name', $fieldName, '=')
