@@ -282,16 +282,16 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Distance to Compliance"), 
 	    array(
 	    	array(
-	    		'graph_art3_pe', t("Article 3 by p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
-	    		'graph_art3_agg', t("Article 3 by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
+	    		'graph_art3_pe', t("Connection compliance by p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
+	    		'graph_art3_agg', t("Connection compliance by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
 	    	),
     		array(
-    			'graph_art4_pe', t("Article 4 by p.e."), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
-    			'graph_art4_agg', t("Article 4 by number of agglomerations"), $frontAndBackGraphs['graph4Front'],  $frontAndBackGraphs['graph4Back'], true
+    			'graph_art4_pe', t("Secondary treatment compliance by p.e."), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
+    			'graph_art4_agg', t("Secondary  treatment compliance 4 by number of agglomerations"), $frontAndBackGraphs['graph4Front'],  $frontAndBackGraphs['graph4Back'], true
     		),
     		array(
-    			'graph_art5_pe', t("Article 5 by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
-    			'graph_art5_agg', t("Article 5 by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
+    			'graph_art5_pe', t("More stringent treatment compliance by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
+    			'graph_art5_agg', t("More stringent treatment compliance by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
     		),
 	    ), $yearsPossibles
     );
@@ -1096,7 +1096,7 @@ function getRow7Graph1($yearSelected, $results) {
                 <table class="stats-graphs table table-hover table-striped sticky-enabled">
                     <thead>
                         <tr>
-                            <th><i>*: DS/year</i></th>
+                            <th><i>*: Tons of Dry Substance per year T DS/year</i></th>
                         </tr>
                     </thead>
                 </table>';

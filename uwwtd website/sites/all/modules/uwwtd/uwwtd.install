@@ -3141,7 +3141,7 @@ function uwwtd_update_7126(&$context = null){
     if(!empty($GLOBALS['uwwtd_value']['rcatype_color'])){
         foreach($GLOBALS['uwwtd_value']['rcatype_color'] as $type=>$data){
             $row['name'] ='rca_'.strtolower($type);
-            $row['title'] ='RCA '.$type;
+            $row['title'] ='RCA '.$GLOBALS['uwwtd_value']['rcatype_labels'][$type];
             $row['description'] = date('Y-m-d H:i:s');
             $row['data'] = $data;
             $msgresult = 'ok';
@@ -3672,14 +3672,50 @@ function uwwtd_update_7134(&$context = null) {
 	addFieldToContentType('field_rcaevolutiontype', 'text', 'rcaevolutiontype', 'receiving_area');
 	addFieldToContentType('field_rcasalsaremark', 'text', 'rcasalsaremark', 'receiving_area');
 	
+
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
+
 	// Note vgo : il faudra bien checker que le format des dates du fichier xml est compatible avec le format attendu par
 	// Drupal pour son champs Date.
 	// Si ce n'est pas le cas, ajouter une conversion d'un format à l'autre lors de l'import du fichier xml.
-	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Change label in RCA layer styles
+**/
+function uwwtd_update_7135(&$context = null){
+    uwwtd_install_trace(__FUNCTION__);
+
+    if(!empty($GLOBALS['uwwtd_value']['rcatype_color'])){
+        foreach($GLOBALS['uwwtd_value']['rcatype_color'] as $type=>$data){
+            $row['name'] ='rca_'.strtolower($type);
+            $row['title'] =isset($GLOBALS['uwwtd_value']['rcatype_labels'][$type])? $GLOBALS['uwwtd_value']['rcatype_labels'][$type] : 'RCA '.$type;
+            $row['description'] = date('Y-m-d H:i:s');
+            $row['data'] = $data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_insert_openlayers('openlayers_styles', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers style ' . $row['title'] . '('.$msgresult.')'."\n";
+            }
+        }
+    }
+     if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }  
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }
-
+    
+    
 /**
  * Redéfinit la précision et le scale du champs donné.
  */
