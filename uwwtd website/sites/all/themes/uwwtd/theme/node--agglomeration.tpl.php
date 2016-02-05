@@ -415,7 +415,7 @@ echo uwwtd_insert_errors_tab($node);
         <?php if(isset($node->field_article17_agglo['und'][0]['nid'])): ?>
             <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
               <legend class="panel-heading">
-                <div class="panel-title fieldset-legend"><?php print t('Forward looking aspect'); ?></div>
+                <div class="panel-title fieldset-legend"><?php print t('Forward looking aspect UWWTP'); ?></div>
               </legend>
               <div class="panel-body">
                 <?php print uwwtd_render_article17_aglo($node->field_article17_agglo['und'][0]['nid']); ?>
