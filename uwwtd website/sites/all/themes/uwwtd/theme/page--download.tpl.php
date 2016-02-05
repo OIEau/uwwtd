@@ -304,7 +304,7 @@
 			<li><a href="<?php print url('treatment-plant/'.$codeUwwtp);?>" target="_blank"><?php print url('treatment-plant/'.$codeUwwtp);?></a></li>
 			<li><a href="<?php print url('discharge-point/'.$codeDcp);?>" target="_blank"><?php print url('discharge-point/'.$codeDcp);?></a></li>
 		</ul>
-		<p><?php print .t('If you want to reference to a specific year, you simply need to add the year in the URL as follows: '); ?></p>
+		<p><?php print t('If you want to reference to a specific year, you simply need to add the year in the URL as follows: '); ?></p>
 		<p><?php print t('http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]/[year]<br>For instance:'); ?></p>
 		<ul>
 			<li><a href="<?php print url('agglomeration/'.$codeAgglo.'/'.$anneeRef);?>" target="_blank"><?php print url('agglomeration/'.$codeAgglo.'/'.$anneeRef);?></a></li>

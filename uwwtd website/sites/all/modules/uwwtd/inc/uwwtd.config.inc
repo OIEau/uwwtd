@@ -10,6 +10,7 @@ if ( !defined('DEBUG_ALGO')) {
 // $GLOBALS['uwwtd']['message']['boolean_error']
 // $GLOBALS['uwwtd']['message']['boolean_error']
 $GLOBALS['uwwtd']['message'] = array(
+    'other_treatment_error' => 'More stringents detected while field set to false',
      'boolean_error' => 'The input data is not in boolean format (true or false).',
      'numeric_error' => 'The input data is not in numeric format.',
      'decimal_error' => 'The input data is not in numeric or decimal format.',
