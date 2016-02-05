@@ -4331,7 +4331,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
     
                 //            - due to a size of 2000p.e. - 10000 p.e.     …..and discharge into coastal water            
-                if ($agglo[$ind['generated_load_p.e.']] > 2000 && $agglo[$ind['generated_load_p.e.']] < 10000
+                if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
                     && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {   
                     $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
                     $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
@@ -4377,7 +4377,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 
                 //- due to a size of ≤ 10000 p.e.     …
-                if ($agglo[$ind['generated_load_p.e.']] > 2000 && $agglo[$ind['generated_load_p.e.']] < 10000) {
+                if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000) {
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']++;
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
@@ -4814,7 +4814,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                           
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
-            and f_agggenerated.field_agggenerated_value > 2000
+            and f_agggenerated.field_agggenerated_value >= 2000
         ';
         
 //         dsm($query);
@@ -7975,7 +7975,7 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
                 ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                    
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
-            and f_agggenerated.field_agggenerated_value > 2000
+            and f_agggenerated.field_agggenerated_value >= 2000
             and not EXISTS (select 1 from {field_data_field_agglo_uww_agglo} where field_agglo_uww_agglo_nid = n.nid)
         ';
         
