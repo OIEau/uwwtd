@@ -196,6 +196,11 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
 			$colors[$value[2]] = array('fillColor'=>$value[2]);
 		}
 	}
+    if(isset($this->options['addColors'])){
+        foreach($this->options['addColors'] as $value){
+			$colors[$value] = array('fillColor'=>$value);
+		}
+    }
     return $colors;
   }
   
@@ -286,6 +291,7 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
   protected function get_vector_layers($layers) {
     $vector_layers = array();
     foreach ($layers as $key => $layer) {
+        
       // Get type == Vector for backwards-compatibility.
       // TODO: After OpenLayers alpha8 it should be removed.
       if (((isset($layer['vector']) && $layer['vector'] == 1)) && !empty($layer['features'])) {
@@ -336,7 +342,7 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
   	}
     foreach ($layers as $k => $layer) {
       // Get the field we are going to use.
-      if ($field = $this->get_field($layer['features'])) {              
+      if ($field = $this->get_field($layer['features'])) {        
     		$fields_colors = $this->get_fields_colors($layer['features']);
     		if($fields_colors){
     			$fields_colors_values = $this->fields_colors_values();
@@ -375,7 +381,6 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
         if ($count_max < 1 && $count_min < 1) {
           $max = 1;
         }
-
         foreach ($layer['features'] as $j => $feature) {
           if ($field && isset($feature['attributes'][$field]) && $count = $feature['attributes'][$field]) {
             // For layers with only a single value always use the
@@ -414,10 +419,10 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
 					$map['layers'][$k]['features'][$j]['attributes']['weight'] = $weight;
 				  }
 				}
-      }
-			//==================================TODO : mettre ces champs en paramétre
+            }
 			$color_value = '';
 			if($fields_colors && !empty($fields_colors)){
+                
 				foreach($fields_colors as $field_color){
 					if(isset($feature['attributes'][$field_color])) $color_value.= (string)$this->get_field_value($feature['attributes'][$field_color]);
 				}
@@ -425,10 +430,11 @@ class openlayers_plus_behavior_scalepoints extends openlayers_behavior {
 			if(isset($fields_colors_values[$color_value])){
 				$col = $fields_colors_values[$color_value][2];
 			}
-			else{
-				$col='#000000';
+			elseif($this->options['default_color']){
+				$col=$this->options['default_color'];
+			}else{
+				$col='#888888';
 			}
- 
             $map['layers'][$k]['features'][$j]['attributes']['color'] = $col;
           }
         }

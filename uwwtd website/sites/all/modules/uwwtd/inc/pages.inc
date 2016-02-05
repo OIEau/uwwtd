@@ -1654,9 +1654,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 //     dsm($option);
     $filter = uwwtd_get_form_filter($option);
 
-    $preset_name = 'uwwtp_pressure_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
-    $preset = openlayers_preset_load($preset_name);
-    $map    = openlayers_build_map($preset->data);
+    
 //     dsm($map);
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_uwwtp_pressure($filter['filter']);
@@ -1724,7 +1722,6 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
         'field_uwwsecondarytreatment_value_format' => array('label' => 'Secondary treatment'),
         'field_uwwnremoval_value_format' => array('label' => 'N-removal'),
         'field_uwwpremoval_value_format' => array('label' => 'P-removal'),
-
         'field_uwwboddischarge_value_format' => array('label' => 'Discharged load BOD (t per year)'),
         'field_uwwcoddischarge_value_format' => array('label' => 'Discharged load COD (t per year)'),
         'field_uwwndischarge_value_format' => array('label' => 'Discharged load Ntot (t per year)'),
@@ -1786,28 +1783,91 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     if ($type_export != '') {
         uwwtd_export_data($type_export, 'uwwtp_pressure_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
     }
-        
-//     dsm($data);
-    $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
+    
+    //=============================Create the map
+    
+    $preset_name = 'uwwtp_pressure_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
+    $preset = openlayers_preset_load($preset_name);
+   
+    
+    /*
+        BOD: 100 and 10
+        COD 150 and 15
+        N: 50 and 5
+        P: 5 and 0.5
+    */
+    
+    //=== BOD
+    //$optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
+    $optionstyle['weight']['list'] = array("1"=>10,"2"=>100,"3"=>0);
+    $optionstyle['default_color'] = '#5B3349';
     $optionstyle['weight']['field'] = 'field_uwwboddischarge_value';
-//     dsm($optionstyle['weight']);
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addColors'][] = $optionstyle['default_color'];
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addArbitrary_classes'][] = "0|10\n10|100\n100|";
+    $behavior = $preset->data['behaviors']['openlayers_plus_behavior_scalepoints'];
+    $behavior['distinct'] = 3;
+    $behavior['arbitrary_classes'] = "0|10\n10|100\n100|";
+    $behavior['default_color'] =$optionstyle['default_color'];
     $features['uwwtp_bod_pressure_'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-
+    $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['uwwtp_bod_pressure_']=array(
+        'layer'=>'uwwtp_bod_pressure_',
+        'openlayers_plus_behavior_scalepoints'=>$behavior
+    );
+    
+    
+    
+    //=== COD
+    $optionstyle['weight']['list'] = array("1"=>15,"2"=>150,"3"=>0);
+    $optionstyle['default_color'] = '#d87600';
     $optionstyle['weight']['field'] = 'field_uwwcoddischarge_value';
-//     dsm($optionstyle['weight']);
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addColors'][] = $optionstyle['default_color'];
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addArbitrary_classes'][] = "0|15\n15|100\n100|";
+    $behavior = $preset->data['behaviors']['openlayers_plus_behavior_scalepoints'];
+    $behavior['distinct'] = 3;
+    $behavior['arbitrary_classes'] = "0|15\n15|150\n150|";
+    $behavior['default_color'] =$optionstyle['default_color'];
     $features['uwwtp_cod_pressure_'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-
+    $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['uwwtp_cod_pressure_']=array(
+        'layer'=>'uwwtp_cod_pressure_',
+        'openlayers_plus_behavior_scalepoints'=>$behavior
+    );
+    
+    
+    //=== Nitrates
+    $optionstyle['weight']['list'] = array("1"=>5,"2"=>50,"3"=>0);
+    $optionstyle['default_color'] = '#87ceeb';
     $optionstyle['weight']['field'] = 'field_uwwndischarge_value';
-//     dsm($optionstyle['weight']);
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addColors'][] = $optionstyle['default_color'];
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addArbitrary_classes'][] = "0|5\n5|50\n50|";
+    $behavior = $preset->data['behaviors']['openlayers_plus_behavior_scalepoints'];
+    $behavior['distinct'] = 3;
+    $behavior['arbitrary_classes'] = "0|5\n5|50\n50|";
+    $behavior['default_color'] =$optionstyle['default_color'];
     $features['uwwtp_n_pressure_'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-
+    $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['uwwtp_n_pressure_']=array(
+        'layer'=>'uwwtp_n_pressure_',
+        'openlayers_plus_behavior_scalepoints'=>$behavior
+    );
+    
+    //=== Phosphore
+    $optionstyle['weight']['list'] = array("1"=>0.5,"2"=>5,"3"=>0);
+    $optionstyle['default_color'] = '#ff9900';
     $optionstyle['weight']['field'] = 'field_uwwpdischarge_value';
-//     dsm($optionstyle['weight']);
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addColors'][] = $optionstyle['default_color'];
+    $preset->data['behaviors']['openlayers_plus_behavior_scalepoints']['addArbitrary_classes'][] =  "0|0.5\n0.5|5\n5|";
+    $behavior = $preset->data['behaviors']['openlayers_plus_behavior_scalepoints'];
+    $behavior['distinct'] = 3;
+    $behavior['arbitrary_classes'] = "0|0.5\n0.5|5\n5|";
+    $behavior['default_color'] =$optionstyle['default_color'];
     $features['uwwtp_p_pressure_'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['uwwtp_p_pressure_']=array(
+        'layer'=>'uwwtp_p_pressure_',
+        'openlayers_plus_behavior_scalepoints'=>$behavior
+    );
 //     $features = array();
 //     dsm($features);
 //     unset($data);
-
+    $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     unset($data);
@@ -2536,7 +2596,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
             $title = l($row['title'], uwwtd_get_url_path($option['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])), array('attributes'=>array('target'=>'_blank')));
             
             //Color of the feature
-            $color = '#000000';
+            $color = isset($option['default_color'])?$option['default_color']:'#000000';
             $style = null;
             if (isset($option['color']) && isset($row[ $option['color']['field']])) {
                 if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
@@ -2544,7 +2604,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                 }
                 
                 //Style of the feature 
-                //FIX ME make it more generic
                 $style_name = $option['style_prefix'].strtolower($row[ $option['color']['field'] ]);
                 if(isset($styles[$style_name])){
                     $style = $style_name;
@@ -2605,7 +2664,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
             );
         }
     }
-
+    //dsm($feature);
     return $feature;
 }
 
@@ -2617,7 +2676,6 @@ function uwwtd_build_map($map, $features) {
       }
     $map['layers'][$overlay]['features'] = $feature;
   }
-
   //FIX ME : manage overridens style in openlayer_plus_legend for layers if style is define on feature (renderinf is make before feature association)
   
   

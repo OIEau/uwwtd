@@ -50,7 +50,7 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
     drupal_add_css(drupal_get_path('module', 'openlayers_plus') . '/css/openlayers_plus.css');
     $options = array();
     $styles = openlayers_styles();
-    uasort($map['layers'], 'openlayers_plus_layer_compare');
+    uasort($map['layers'], 'openlayers_plus_layer_compare');    
     foreach ($map['layers'] as $layer => $layer_data) {
       if (isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && $map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) {
         $selected_layer_style = $map['layer_styles'][$layer];
@@ -87,21 +87,27 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
         //dsm($options[$layer]);
 		//Modif nd@oieau.fr prise en compte des légendes avec scale point
 		if(isset($map['behaviors']['openlayers_plus_behavior_scalepoints']) && !empty($map['behaviors']['openlayers_plus_behavior_scalepoints']) && $map['behaviors']['openlayers_plus_behavior_scalepoints']['layers'][$layer] != '0'){
-			$additional_legend = '';
-			$additional_legend.= $this->get_scale_point_legend($map['behaviors']['openlayers_plus_behavior_scalepoints']);
-			//Si on a des couleurs 
-			// dsm($map['behaviors']['openlayers_plus_behavior_scalepoints']);
-            $colors_legend = '';
-			if($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors'] !='' && $map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values'] !=''){
-				
-				$colors = $this->get_textarea_field_values($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values']);
-				$colors_legend='';
-				foreach($colors as $color){
-					$colors_legend.='<div><div style="background-color:'.$color[2].';border:1px solid #222222;width:20px;height:12px;float:left;margin-right:7px;">&nbsp;</div> <div>'.$color[1].'</div></div>';
-				}
+            $additional_legend = '';
+            
+            //Gestion des cas on l'on passe un style directement dans la def de la couche
+            if(is_array($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]) && isset($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['openlayers_plus_behavior_scalepoints'])){
+                $additional_legend.= $this->get_scale_point_legend($map['behaviors']['openlayers_plus_behavior_legend']['layers'][$layer]['openlayers_plus_behavior_scalepoints']); 
+            }
+            else{
+                $additional_legend.= $this->get_scale_point_legend($map['behaviors']['openlayers_plus_behavior_scalepoints']);
+                //Si on a des couleurs 
+                // dsm($map['behaviors']['openlayers_plus_behavior_scalepoints']);
+                $colors_legend = '';
+                if($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors'] !='' && $map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values'] !=''){
+                    
+                    $colors = $this->get_textarea_field_values($map['behaviors']['openlayers_plus_behavior_scalepoints']['fields_colors_values']);
+                    $colors_legend='';
+                    foreach($colors as $color){
+                        $colors_legend.='<div><div style="background-color:'.$color[2].';border:1px solid #222222;width:20px;height:12px;float:left;margin-right:7px;">&nbsp;</div> <div>'.$color[1].'</div></div>';
+                    }
+                }
+                $additional_legend.='<div>'.$colors_legend.'</div>';		
 			}
-			$additional_legend.='<div>'.$colors_legend.'</div>';		
-			
 			if($additional_legend!='') $options[$layer] = substr(trim($options[$layer]), 0, -6) .$additional_legend.'</div>';
 		}
 
@@ -167,7 +173,7 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
 			
 			$scalepoints_legend.='
 			<g>
-				<circle cx="'.$max_radius.'" cy="'.$cy.'" r="'.$r.'" stroke-width="1" fill-opacity="0.1" stroke="#222222" stroke-linecap="round" stroke-linejoin="round"/>
+				<circle cx="'.$max_radius.'" cy="'.$cy.'" r="'.$r.'" stroke-width="1" fill-opacity="0.6" fill="'.(isset($scalepoints['default_color'])?$scalepoints['default_color']:'#aaaaaa').'" stroke="#222222" stroke-linecap="round" stroke-linejoin="round"/>
 				<text dx="'.($max_radius*2 ).'" dy="'.( ($max_radius*2 +5) - ($r*2) ).'" font-size="7" alignment-baseline="baseline">'. $class .'</text>
 			</g>';
 		}

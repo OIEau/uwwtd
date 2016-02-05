@@ -1096,7 +1096,7 @@ function getRow7Graph1($yearSelected, $results) {
                 <table class="stats-graphs table table-hover table-striped sticky-enabled">
                     <thead>
                         <tr>
-                            <th><i>*: DS/year</i></th>
+                            <th><i>*: Tons of Dry Substance per year T DS/year</i></th>
                         </tr>
                     </thead>
                 </table>';
