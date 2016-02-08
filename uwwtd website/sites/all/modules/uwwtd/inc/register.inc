@@ -2802,6 +2802,39 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
     
+    // Récupération des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
+    $distancesExpired = array();
+    $distancesExpired['Target connection'] = $sheet->getCell('B88')->getValue();
+    $distancesExpired['Not connected'] = $sheet->getCell('B89')->getValue();
+    $distancesExpired['2nd treatment target'] = $sheet->getCell('B90')->getValue();
+    $distancesExpired['2nd treatment not in place'] = $sheet->getCell('B91')->getValue();
+    $distancesExpired['2nd treatment performance not met'] = $sheet->getCell('B92')->getValue();
+    $distancesExpired['Tertiary treatment target'] = $sheet->getCell('B93')->getValue();
+    $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('B94')->getValue();
+    $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('B95')->getValue();
+    
+    // Récupération des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
+    $distancesPending = array();
+    $distancesPending['Target connection'] = $sheet->getCell('B104')->getValue();
+    $distancesPending['Not connected'] = $sheet->getCell('B105')->getValue();
+    $distancesPending['2nd treatment target'] = $sheet->getCell('B106')->getValue();
+    $distancesPending['2nd treatment not in place'] = $sheet->getCell('B107')->getValue();
+    $distancesPending['2nd treatment performance not met'] = $sheet->getCell('B108')->getValue();
+    $distancesPending['Tertiary treatment target'] = $sheet->getCell('B109')->getValue();
+    $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('B110')->getValue();
+    $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('B111')->getValue();
+    
+    // Récupération des valeurs du tableau "Distance to compliance total" :
+    $distancesTotal = array();
+    $distancesTotal['Target connection'] = $sheet->getCell('C119')->getValue();
+    $distancesTotal['Not connected'] = $sheet->getCell('C120')->getValue();
+    $distancesTotal['2nd treatment target'] = $sheet->getCell('C121')->getValue();
+    $distancesTotal['2nd treatment not in place'] = $sheet->getCell('C122')->getValue();
+    $distancesTotal['2nd treatment performance not met'] = $sheet->getCell('C123')->getValue();
+    $distancesTotal['Tertiary treatment target'] = $sheet->getCell('C124')->getValue();
+    $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
+    $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
+    
     // Récupération du nid du node MS_LEVEL de cette année :
     $query = db_select('node', 'n');
     $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
@@ -2844,6 +2877,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (!empty($node)) {
     	$node->field_comparison_of_compliance_p[LANGUAGE_NONE][0]['value'] = json_encode($arrayInPe);
     	$node->field_comparison_of_compliance_a[LANGUAGE_NONE][0]['value'] = json_encode($arrayInNumOfAgg);
+    	$node->field_compliance_expired[LANGUAGE_NONE][0]['value'] = json_encode($distancesExpired);
+    	$node->field_compliance_pending[LANGUAGE_NONE][0]['value'] = json_encode($distancesPending);
+    	$node->field_compliance_total[LANGUAGE_NONE][0]['value'] = json_encode($distancesTotal);
     }
     node_save($node);
     
