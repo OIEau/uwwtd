@@ -3707,7 +3707,7 @@ function uwwtd_update_7135(&$context = null){
             }
         }
     }
-     if (isset($context)) {
+    if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
@@ -3736,7 +3736,10 @@ function uwwtd_update_7136(&$context = null) {
 			node_save($nodeFull);
 		}
 	}
-	
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 // 	throw new DrupalUpdateException(__FUNCTION__);
 }
@@ -3752,9 +3755,80 @@ function uwwtd_update_7137(&$context = null) {
 	addFieldToContentType('field_compliance_pending', 'text_long', 'Comparison of compliance pending', 'ms_level');
 	addFieldToContentType('field_compliance_total', 'text_long', 'Comparison of compliance total', 'ms_level');
 	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+	//throw new DrupalUpdateException(__FUNCTION__);
 }
+
+/**
+ * Ajout des couches SoE Nitrates et orthophosphates 
+ */
+function uwwtd_update_7138(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+        //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'soe_nitrates_2011.inc',
+        'soe_phosphate_2011.inc',
+        'oieau_rbd.inc',
+        'oieau_rbdsu.inc',
+        'oieau_nuts_0.inc',
+        'oieau_nuts_1.inc',
+        'oieau_nuts_2.inc',
+        'oieau_nuts_3.inc',
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
+
+    $maps = openlayers_maps(true);
+    foreach($maps as $name=>$old_map){
+        $map = clone $old_map;
+        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
+            
+            
+            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_monitoring_stations_groupname'] = 'WISE SoE';
+            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_nitrates_2011'] = 1;
+            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_nitrates_2011_groupname'] = 'WISE SoE';
+            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_phosphate_2011'] = 1;
+            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_phosphate_2011_groupname'] = 'WISE SoE';
+            
+            //Reactivate layers 
+            $new_layers = array(
+                'soe_nitrates_2011'=> 9,
+                'soe_phosphate_2011'=> 9,
+            );
+            
+            foreach($new_layers as $layer=>$weight){
+                $map->data['layers'][$layer] = $layer;
+                $map->data['layer_weight'][$layer] = $weight;
+                $map->data['layer_styles'][$layer] = 0;
+                $map->data['layer_styles_select'][$layer] = 0;
+                $map->data['layer_styles_temporary'][$layer] = 0;
+                $map->data['layer_activated'][$layer] = 0;
+                $map->data['layer_switcher'][$layer] = $layer;
+            }
+            
+            openlayers_map_save($map); 
+        }
+    }    
+            
+    
+	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
+
     
     
 /**
@@ -4068,7 +4142,9 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts.inc',
         'oieau_rbd_rbdsu.inc',
         'natura2000.inc',
-        'soe_monitoring_stations.inc'
+        'soe_monitoring_stations.inc',
+        'soe_nitrates_2011.inc',
+        'soe_phosphate_2011.inc',
         
     ); 
     $list_style = array(
