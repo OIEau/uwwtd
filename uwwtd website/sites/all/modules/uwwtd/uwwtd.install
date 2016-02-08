@@ -1,5 +1,4 @@
 <?php 
-
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
@@ -3784,41 +3783,26 @@ function uwwtd_update_7138(&$context = null) {
         'oieau_nuts_2.inc',
         'oieau_nuts_3.inc',
     );
-    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
-
-    $maps = openlayers_maps(true);
-    foreach($maps as $name=>$old_map){
-        $map = clone $old_map;
-        if($name!='default' && substr($name, 0, 7)!="example" && substr($name, 0, 8)!="geofield"){
-            
-            
-            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_monitoring_stations_groupname'] = 'WISE SoE';
-            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_nitrates_2011'] = 1;
-            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_nitrates_2011_groupname'] = 'WISE SoE';
-            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_phosphate_2011'] = 1;
-            $map->data['behaviors']['openlayers_plus_behavior_blockswitcher_plus']['layers_soe_phosphate_2011_groupname'] = 'WISE SoE';
-            
-            //Reactivate layers 
-            $new_layers = array(
-                'soe_nitrates_2011'=> 9,
-                'soe_phosphate_2011'=> 9,
-            );
-            
-            foreach($new_layers as $layer=>$weight){
-                $map->data['layers'][$layer] = $layer;
-                $map->data['layer_weight'][$layer] = $weight;
-                $map->data['layer_styles'][$layer] = 0;
-                $map->data['layer_styles_select'][$layer] = 0;
-                $map->data['layer_styles_temporary'][$layer] = 0;
-                $map->data['layer_activated'][$layer] = 0;
-                $map->data['layer_switcher'][$layer] = $layer;
-            }
-            
-            openlayers_map_save($map); 
-        }
-    }    
-            
+    $new_maps = array(
+        'agg_compliance_map.inc',
+        'agglomeration.inc',
+        'dcp_map.inc',
+        'rca_map.inc',
+        'uwwtd_network_map.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_pressure_map.inc',
+        'uwwtp_treatment_map.inc',
+        'waste_water_treatment_network_map.inc',
+        
+    );
     
+    uwwtd_update_map_overlay($country_config, $country_code, $new_maps, $new_overlays, array('-'));    
+            
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
 	
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
@@ -3826,7 +3810,7 @@ function uwwtd_update_7138(&$context = null) {
     } 
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	//throw new DrupalUpdateException(__FUNCTION__);
+	throw new DrupalUpdateException(__FUNCTION__);
 }
 
     
