@@ -3738,6 +3738,21 @@ function uwwtd_update_7136(&$context = null) {
 	}
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Ajoute au type de contenu MS_LEVEL les champs "field_compliance_expired", "field_compliance_pending" et "field_compliance_total". 
+ */
+function uwwtd_update_7137(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+	// Ajout de deux champs au type de contenu ms_level :
+	addFieldToContentType('field_compliance_expired', 'text_long', 'Comparison of compliance expired.', 'ms_level');
+	addFieldToContentType('field_compliance_pending', 'text_long', 'Comparison of compliance pending', 'ms_level');
+	addFieldToContentType('field_compliance_total', 'text_long', 'Comparison of compliance total', 'ms_level');
+	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }
     

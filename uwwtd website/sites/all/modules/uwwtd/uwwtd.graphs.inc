@@ -110,8 +110,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'), 
-    	t("Generated Load by collection type"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
-    	t("Generated Load by sewage network type"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
+    	t("Generated Load by collection type (population equivalent – p.e.)"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
+    	t("Generated Load by sewage network type (population equivalent – p.e.)"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
     	true, $yearsPossibles);
     
     //==============================================
@@ -124,8 +124,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
 	// Création du code html pour ces graphs :
 	$formResult = getHtmlPlusHtmlChartsPies($formResult, t("Agglomeration : Generated load by compliance"),
-		t("Total generated load by compliance"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
-		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
+		t("Total generated load by compliance (population equivalent – p.e.)"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
+		t("Number of agglomerations by compliance (number of agglomerations)"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
 		false, $yearsPossibles);
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
@@ -137,8 +137,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
-    	t("Total load entering by compliance"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
+    	t("Total load entering by compliance (population equivalent – p.e.)"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
+    	t("Number of treatment plant by compliance (number of agglomerations)"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	true, $yearsPossibles);
     
     
@@ -152,8 +152,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
-    	t("Total load entering by treatment type"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
-    	t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
+    	t("Total load entering by treatment type (population equivalent – p.e.)"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
+    	t("Number of treatment plant by treatment type (number of agglomerations)"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	false, $yearsPossibles);
     
 	
@@ -168,8 +168,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Agglomeration : generated load by agglomeration size"), array(
             array(
-                'graph_generatedByAgglomeration', t("Total generated load by agglomeration size"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
-                'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
+                'graph_generatedByAgglomeration', t("Total generated load by agglomeration size (population equivalent – p.e.)"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], true,
+                'graph_generatedByAgglomerationNumber', t("Number of agglomeration by size (number of agglomerations)"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], true
             )
         ), $yearsPossibles
     );
@@ -523,7 +523,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 					$columns[0][$year]['data'] = $year;
 					
 					// Réécriture de la ligne :
-					$rows[$newtworkTypeName]['data'][$year] = $values['equFormated'] .', '. $values['aggFormated'];
+					$rows[$newtworkTypeName]['data'][$year] = $values['equFormated'] .'<br />'. $values['aggFormated'];
 				}
 				
 				// Tri selon les clés :
@@ -539,7 +539,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 		<table class="stats-graphs table table-hover table-striped sticky-enabled">
  			<thead>
 				<tr>
-					<th><i>*pe: Population equivalent, *: Number of agglomeration</i></th>
+					<th><i>*pe: Population equivalent, *na: Number of agglomeration</i></th>
 				</tr>
 			</thead>
 		</table>';

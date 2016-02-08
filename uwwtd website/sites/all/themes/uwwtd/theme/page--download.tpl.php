@@ -86,12 +86,7 @@
 		$codeAgglo = $agglo->field_inspireidlocalid['und'][0]['value'];
 		$codeUwwtp = $uwwtp->field_inspireidlocalid['und'][0]['value'];
 		$codeDcp = $dcp->field_inspireidlocalid['und'][0]['value'];
-		$fileXml=$agglo->field_sourcefile['und'][0]['filename'];
 		$server = $_SERVER['HTTP_HOST'];
-		
-		$uri = $_SERVER['REQUEST_URI'];
-		$uri = str_replace("download", "",$uri);
-		$fileXml = $uri."sites/default/files/data_sources/".$fileXml;
 		$pays = variable_get('siif_eru_country_name');
 		$paysM = strtolower($pays);
 		if($server == "webnuxdev.rnde.tm.fr"){
@@ -138,16 +133,24 @@
 		<tr>
 			<td>Full UWWTD reported data</td>
 			<td>Country</td>
-			<td><a href="<?php print $fileXml;?>" target="_blank"> xml</a></td>
+			<td>
+				<?php 
+				if (!empty($agglo->field_sourcefile['und'][0]['uri'])) {
+					?>
+					<a href="<?php print file_create_url($agglo->field_sourcefile['und'][0]['uri']); ?>" target="_blank"> xml</a>
+					<?php 
+				} 
+				?>
+			</td>
 		</tr>
 		<tr>
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER='.$annee.'&outputFormat=KML" target="_blank">kml</a></td>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a></td>
 		</tr>
 		<tr>
 			<td>Urban Waste Water Treatment plants</td>
@@ -269,23 +272,23 @@
 		</tr>
 		<tr>
 			<td style="text-align:center;"><b>Agglomeration</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_Agglomeration</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_Agglomeration</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">Agglomeration</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">Agglomeration</a></td>
 		</tr>
 		<tr>
 			<td style="text-align:center;"><b>Treatment plant</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_UrbanWasteWaterTreatmentPlant</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_UrbanWasteWaterTreatmentPlant</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">Download UrbanWasteWaterTreatmentPlant</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">UrbanWasteWaterTreatmentPlant</a></td>
 		</tr>
 		<tr>
 			<td style="text-align:center;"><b>Discharge point</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_DischargePoint</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_DischargePoint</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">DischargePoint</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">DischargePoint</a></td>
 		</tr>
 		<tr>
 			<td style="text-align:center;"><b>Receiving area</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $name; ?>_ReceivingArea</a></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $name; ?>_ReceivingArea</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">ReceivingArea</a></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">ReceivingArea</a></td>
 		</tr>
  </table>	
 </div>

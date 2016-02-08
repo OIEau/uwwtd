@@ -126,7 +126,7 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 				'equValue' => $row['sn_sum'],
 				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']). ' pe',
 				'aggValue' => $row['sn_count'],
-				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']),
+				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']) . ' na',
 				'color' => $GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
 			);
 		}
