@@ -560,78 +560,132 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 //         } else {    
                    
     //     foreach($listuwwtp as $uwwtp) {  
+    if (isset($ind['aggcode']) && isset($context['sandbox']['line']) && isset($ind['aggcode'], $uwwtp[$ind['aggcode']]))
         $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $uwwtp[$ind['aggcode']]);
+    if (isset($ind['aggname']) && isset($context['sandbox']['line']) && isset($ind['aggname'], $uwwtp[$ind['aggname']]))
         $sheet->setCellValueByColumnAndRow($ind['aggname'], $context['sandbox']['line'], $uwwtp[$ind['aggname']]);
+    if (isset($ind['aggstatus']) && isset($context['sandbox']['line']) && isset($ind['aggstatus'], $uwwtp[$ind['aggstatus']]))
         $sheet->setCellValueByColumnAndRow($ind['aggstatus'], $context['sandbox']['line'], $uwwtp[$ind['aggstatus']]);
+    if (isset($ind['generated load  p. e.']) && isset($context['sandbox']['line']) && isset($ind['generated load  p. e.'], $uwwtp[$ind['generated load  p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['generated load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['generated load  p. e.']]));
+    if (isset($ind['deadline for Art. 3 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 3 compliance'], $uwwtp[$ind['deadline for Art. 3 compliance']]))
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 3 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 3 compliance']]);
+    if (isset($ind['deadline for Art. 4 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 4 compliance'], $uwwtp[$ind['deadline for Art. 4 compliance']]))
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 4 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 4 compliance']]);
+    if (isset($ind['deadline for Art. 5 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 5 compliance'], $uwwtp[$ind['deadline for Art. 5 compliance']]))
         $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 5 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 5 compliance']]);
+    if (isset($ind['collected in collecting system % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['collected in collecting system % of gen. load'], $uwwtp[$ind['collected in collecting system % of gen. load']]))
         $sheet->setCellValueByColumnAndRow($ind['collected in collecting system % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system % of gen. load']], 1));
+    if (isset($ind['collected in collecting system  p. e.']) && isset($context['sandbox']['line']) && isset($ind['collected in collecting system  p. e.'], $uwwtp[$ind['collected in collecting system  p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['collected in collecting system  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system  p. e.']]));
+    if (isset($ind['addressed through IAS % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['addressed through IAS % of gen. load'], $uwwtp[$ind['addressed through IAS % of gen. load']]))
         $sheet->setCellValueByColumnAndRow($ind['addressed through IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS % of gen. load']], 1));
+    if (isset($ind['addressed through IAS p. e.']) && isset($context['sandbox']['line']) && isset($ind['addressed through IAS p. e.'], $uwwtp[$ind['addressed through IAS p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['addressed through IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS p. e.']]));
+    if (isset($ind['neither collecting system nor IAS % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['neither collecting system nor IAS % of gen. load'], $uwwtp[$ind['neither collecting system nor IAS % of gen. load']]))
         $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS % of gen. load']], 1));
+    if (isset($ind['neither collecting system nor IAS p. e.']) && isset($context['sandbox']['line']) && isset($ind['neither collecting system nor IAS p. e.'], $uwwtp[$ind['neither collecting system nor IAS p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS p. e.']]));
+    if (isset($ind['uww_code']) && isset($context['sandbox']['line']) && isset($ind['uww_code'], $uwwtp[$ind['uww_code']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_code'], $context['sandbox']['line'], $uwwtp[$ind['uww_code']]);
+    if (isset($ind['uww_name']) && isset( $context['sandbox']['line']) && isset($ind['uww_name'], $uwwtp[$ind['uww_name']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_name'], $context['sandbox']['line'], $uwwtp[$ind['uww_name']]);
+    if (isset($ind['uww_status']) && isset($context['sandbox']['line']) && isset($ind['uww_status'], $uwwtp[$ind['uww_status']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_status'], $context['sandbox']['line'], $uwwtp[$ind['uww_status']]);
-        
+
+    if (isset($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']], 1));
+    if (isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]));
-        
+
+    if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['uww_entering this UWWTP % of gen. load'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))        
         $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
+    if (isset($ind['uww_entering load  p. e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering load  p. e.'], $uwwtp[$ind['uww_entering load  p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering load  p. e.']]));
-        
+
+    if (isset($ind['uww_capacity p. e.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['uww_capacity p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_capacity p. e.']]));
 //         $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
+    if (isset($ind['previous_reference year']) && isset($context['sandbox']['line']) && isset($ind['previous_reference year'], $uwwtp[$ind['previous_reference year']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_reference year'], $context['sandbox']['line'], $uwwtp[$ind['previous_reference year']]);
+    if (isset($ind['previous_entering load p. e.']) && isset($context['sandbox']['line']) && isset($ind['previous_entering load p. e.'], $uwwtp[$ind['previous_entering load p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_entering load p. e.']]));
+    if (isset($ind['previous_capacity p. e.']) && isset($context['sandbox']['line']) && isset($ind['previous_capacity p. e.'], $uwwtp[$ind['previous_capacity p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_capacity p. e.']]));
         
-        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
-        if (abs((float)$uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) > 20) {
-            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'])
-                ->getFill()
-                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
-                ->getStartColor()->setARGB('FFFFC000');
+    
+    if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]))
+    	$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
+        if (isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) && abs((float)$uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) > 20) {
+        	if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($context['sandbox']['line'])) {
+	            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'])
+	                ->getFill()
+	                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+	                ->getStartColor()->setARGB('FFFFC000');
+        	}
         }
 
+        if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($context['sandbox']['line']) && $uwwtp[$ind['previous_Percentage of change of capacity (2) %']])
         $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'],$context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
-        if ($uwwtp[$ind['previous_Percentage of change of capacity (2) %']] != 'NI' && abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
+        if (isset($ind['previous_Percentage of change of capacity (2) %'], $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) && $uwwtp[$ind['previous_Percentage of change of capacity (2) %']] != 'NI' && abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
             $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
                 ->getFill()
                 ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                 ->getStartColor()->setARGB('FFFFC000');        
         } else {
-            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
-                ->getFill()
-                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFFFFF');           
+        	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($context['sandbox']['line'])) {
+	            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
+	                ->getFill()
+	                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+	                ->getStartColor()->setARGB('FFFFFFFF');   
+        	}
         }  
-                  
+
+    if (isset($ind['water body type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['water body type']]))
         $sheet->setCellValueByColumnAndRow($ind['water body type'],$context['sandbox']['line'], $uwwtp[$ind['water body type']]);
+    if (isset($ind['In case of discharge on land please specify the purpose']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['In case of discharge on land please specify the purpose']]))
         $sheet->setCellValueByColumnAndRow($ind['In case of discharge on land please specify the purpose'],$context['sandbox']['line'], $uwwtp[$ind['In case of discharge on land please specify the purpose']]);
+    if (isset($ind['Id code of the water body WFD']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Id code of the water body WFD']]))
         $sheet->setCellValueByColumnAndRow($ind['Id code of the water body WFD'],$context['sandbox']['line'], $uwwtp[$ind['Id code of the water body WFD']]);
+    if (isset($ind['ID of WFD river basin district']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['ID of WFD river basin district']]))
         $sheet->setCellValueByColumnAndRow($ind['ID of WFD river basin district'],$context['sandbox']['line'], $uwwtp[$ind['ID of WFD river basin district']]);
+    if (isset($ind['entirely discharging into coastal waters?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['entirely discharging into coastal waters?']]))
         $sheet->setCellValueByColumnAndRow($ind['entirely discharging into coastal waters?'],$context['sandbox']['line'], $uwwtp[$ind['entirely discharging into coastal waters?']]);
+    if (isset($ind['type of receiving water']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['type of receiving water']]))
         $sheet->setCellValueByColumnAndRow($ind['type of receiving water'],$context['sandbox']['line'], $uwwtp[$ind['type of receiving water']]);
+    if (isset($ind['ID of the SA or LSA']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['ID of the SA or LSA']]))
         $sheet->setCellValueByColumnAndRow($ind['ID of the SA or LSA'],$context['sandbox']['line'], $uwwtp[$ind['ID of the SA or LSA']]);
+    if (isset($ind['rcaname']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['rcaname']]))
         $sheet->setCellValueByColumnAndRow($ind['rcaname'],$context['sandbox']['line'], $uwwtp[$ind['rcaname']]);
+    if (isset($ind['Starting date of application 5.8.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application 5.8.']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application 5.8.'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application 5.8.']]);
+    if (isset($ind['Starting date of application 5.4.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application 5.4.']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application 5.4.'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application 5.4.']]);
+    if (isset($ind['Starting date of application a N']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application a N']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application a N'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application a N']]);
+    if (isset($ind['Starting date of application a P']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application a P']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application a P'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application a P']]);
+    if (isset($ind['Starting date of application b']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application b']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application b'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application b']]);
+    if (isset($ind['Starting date of application c']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application c']]))
         $sheet->setCellValueByColumnAndRow($ind['Starting date of application c'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application c']]);
+    if (isset($ind['treatment required']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['treatment required']]))
         $sheet->setCellValueByColumnAndRow($ind['treatment required'],$context['sandbox']['line'], $uwwtp[$ind['treatment required']]);
+    if (isset($ind['treatment type in place (4)']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['treatment type in place (4)']]))
         $sheet->setCellValueByColumnAndRow($ind['treatment type in place (4)'],$context['sandbox']['line'], $uwwtp[$ind['treatment type in place (4)']]);
+    if (isset($ind['Monitoring results - BOD5']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results - BOD5']]))
         $sheet->setCellValueByColumnAndRow($ind['Monitoring results - BOD5'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results - BOD5']]);
+    if (isset($ind['Monitoring results -COD']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -COD']]))
         $sheet->setCellValueByColumnAndRow($ind['Monitoring results -COD'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -COD']]);
+    if (isset($ind['Monitoring results -Ntot']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -Ntot']]))
         $sheet->setCellValueByColumnAndRow($ind['Monitoring results -Ntot'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -Ntot']]);
+    if (isset($ind['Monitoring results -Ptot']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -Ptot']]))
         $sheet->setCellValueByColumnAndRow($ind['Monitoring results -Ptot'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -Ptot']]);
+    if (isset($ind['Monitoring results -other']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -other']]))
         $sheet->setCellValueByColumnAndRow($ind['Monitoring results -other'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -other']]);
+    if (isset($ind['In cause of failure (3)']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['In cause of failure (3)']]))
         $sheet->setCellValueByColumnAndRow($ind['In cause of failure (3)'],$context['sandbox']['line'], $uwwtp[$ind['In cause of failure (3)']]);
+    if (isset($ind['difference between monitoring result N and P and treatment in place']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['difference between monitoring result N and P and treatment in place']]))
         $sheet->setCellValueByColumnAndRow($ind['difference between monitoring result N and P and treatment in place'],$context['sandbox']['line'], $uwwtp[$ind['difference between monitoring result N and P and treatment in place']]);
         
 //         $sheet->setCellValueByColumnAndRow($ind['Number of discharge points for this UWWTP'],$context['sandbox']['line'], $uwwtp[$ind['Number of discharge points for this UWWTP']]);
@@ -642,56 +696,103 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 //         $sheet->setCellValueByColumnAndRow($ind['rcaname 2'],$context['sandbox']['line'], $uwwtp[$ind['rcaname 2']]);
 //         $sheet->setCellValueByColumnAndRow($ind['designation date 2'],$context['sandbox']['line'], $uwwtp[$ind['designation date 2']]);  
         
-        
+
+    if (isset($ind['art4_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art4_treatment type']]);
+    if (isset($ind['art4_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art4_monitoring']]);
+    if (isset($ind['art4_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_final']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_final'],$context['sandbox']['line'], $uwwtp[$ind['art4_final']]);
+    if (isset($ind['art5_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art5_treatment type']]);
+    if (isset($ind['art5_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art5_monitoring']]);
+    if (isset($ind['art5_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_final']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_final'],$context['sandbox']['line'], $uwwtp[$ind['art5_final']]);
+    if (isset($ind['art4_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_treatment type']]);
+    if (isset($ind['art4_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_monitoring']]);
+    if (isset($ind['art4_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_final']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_final']]);
+    if (isset($ind['art5_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_treatment type']]);
+    if (isset($ind['art5_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_monitoring']]);
+    if (isset($ind['art5_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_final']]))
         $sheet->setCellValueByColumnAndRow($ind['art5_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_final']]);
+    if (isset($ind['previous_art4_expired_treatment']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_treatment']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_treatment'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_treatment']]);
+    if (isset($ind['previous_art4_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_monitoring']]);
+    if (isset($ind['previous_art4_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_final']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_final']]);
+    if (isset($ind['previous_art5_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_treatment type']]);
+    if (isset($ind['previous_art5_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_monitoring']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_monitoring']]);
+    if (isset($ind['previous_art5_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_final']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_final']]);
+    if (isset($ind['previous_art5_expired_difference between the previous situation and now']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_difference between the previous situation and now']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_difference between the previous situation and now'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_difference between the previous situation and now']]);
+    if (isset($ind['Secondary: installed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary: installed?']]))
         $sheet->setCellValueByColumnAndRow($ind['Secondary: installed?'],$context['sandbox']['line'], $uwwtp[$ind['Secondary: installed?']]);
+    if (isset($ind['Secondary:  monitoring passed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary:  monitoring passed?']]))
         $sheet->setCellValueByColumnAndRow($ind['Secondary:  monitoring passed?'],$context['sandbox']['line'], $uwwtp[$ind['Secondary:  monitoring passed?']]);
+    if (isset($ind['Secondary:  FINAL']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary:  FINAL']]))
         $sheet->setCellValueByColumnAndRow($ind['Secondary:  FINAL'],$context['sandbox']['line'], $uwwtp[$ind['Secondary:  FINAL']]);
+    if (isset($ind['More stringent:  installed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent:  installed?']]))
         $sheet->setCellValueByColumnAndRow($ind['More stringent:  installed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  installed?']]);
+    if (isset($ind['More stringent: monitoring passed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent: monitoring passed?']]))
         $sheet->setCellValueByColumnAndRow($ind['More stringent: monitoring passed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent: monitoring passed?']]);
+    if (isset($ind['More stringent:  FINAL']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent:  FINAL']]))
         $sheet->setCellValueByColumnAndRow($ind['More stringent:  FINAL'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  FINAL']]);
+    if (isset($ind['Volume of waste water treated m3/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Volume of waste water treated m3/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Volume of waste water treated m3/y'],$context['sandbox']['line'], round($uwwtp[$ind['Volume of waste water treated m3/y']]));
+    if (isset($ind['Incoming loads BOD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming loads BOD-tot  t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Incoming loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads BOD-tot  t/y']]));
+    if (isset($ind['Discharged loads BOD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged loads BOD-tot  t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Discharged loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads BOD-tot  t/y']]));
+    if (isset($ind['BOD rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['BOD rate of removal %']]))
         $sheet->setCellValueByColumnAndRow($ind['BOD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['BOD rate of removal %']], 1));
+    if (isset($ind['average Incoming concentration BOD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration BOD mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration BOD mg/l']], 1));
+    if (isset($ind['average Discharge concentration BOD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration BOD mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration BOD mg/l']], 1));
+    if (isset($ind['Incoming cocentration COD-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming cocentration COD-tot   t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration COD-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration COD-tot   t/y']]));
+    if (isset($ind['Discharged concentration COD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged concentration COD-tot  t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Discharged concentration COD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration COD-tot  t/y']]));
+    if (isset($ind['COD rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['COD rate of removal %']]))
         $sheet->setCellValueByColumnAndRow($ind['COD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['COD rate of removal %']], 1));
+    if (isset($ind['average Incoming concentration COD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration COD mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration COD mg/l']], 1));
+    if (isset($ind['average Discharge concentration COD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration COD mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration COD mg/l']], 1));
+    if (isset($ind['Incoming loads N-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming loads N-tot   t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Incoming loads N-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads N-tot   t/y']]));
+    if (isset($ind['Discharged loads N-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged loads N-tot  t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Discharged loads N-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads N-tot  t/y']]));
+    if (isset($ind['N rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['N rate of removal %']]))
         $sheet->setCellValueByColumnAndRow($ind['N rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['N rate of removal %']], 1));
+    if (isset($ind['average Incoming concentration N mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration N mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration N mg/l']], 1));
+    if (isset($ind['average Discharge concentration N mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration N mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration N mg/l']], 1));
+    if (isset($ind['Incoming cocentration P-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming cocentration P-tot   t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration P-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration P-tot   t/y']]));
+    if (isset($ind['Discharged concentration P-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged concentration P-tot  t/y']]))
         $sheet->setCellValueByColumnAndRow($ind['Discharged concentration P-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration P-tot  t/y']]));
+    if (isset($ind['P rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['P rate of removal %']]))
         $sheet->setCellValueByColumnAndRow($ind['P rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['P rate of removal %']], 1));
+    if (isset($ind['average Incoming concentration P mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration P mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration P mg/l']], 1));
+    if (isset($ind['average Discharge concentration P mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration P mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration P mg/l']], 1));
         
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+    	if (isset($context['sandbox']['line']))
+        	$sheet->insertNewRowBefore($context['sandbox']['line'], 1);
 //         }
         $j++;        
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
@@ -717,13 +818,20 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                      $line_to_fill = $context['sandbox']['line'] + 4;
                 break;                                 
             }
-            $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
-            $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, round($uwwtp[$ind['uww_entering load  p. e.']]));
-            $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['uww_capacity p. e.']]));
-            $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']]));
-            $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']]));
-            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
-            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
+    		if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))
+            	$sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
+	   		if (isset($ind['uww_entering load  p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_entering load  p. e.']]))
+	            $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, round($uwwtp[$ind['uww_entering load  p. e.']]));
+	    	if (isset($ind['uww_capacity p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_capacity p. e.']]))
+	            $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['uww_capacity p. e.']]));
+	    	if (isset($ind['previous_entering load p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_entering load p. e.']]))
+	            $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']]));
+	    	if (isset($ind['previous_capacity p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_capacity p. e.']]))
+	            $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']]));
+	    	if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]))
+	            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
+	    	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_Percentage of change of capacity (2) %']]))
+	            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
         }
         fclose($r);    
     }
@@ -1459,7 +1567,6 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name']);
     
-    $i = $start_line;
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
     
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
@@ -1783,12 +1890,24 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     //size of agglo/pe per class
     //array1
-    $sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
-    $sheet->setCellValue('C5', round($context['results']['graph']['0_10000']['pe'], 0));
-    $sheet->setCellValue('B6', $context['results']['graph']['10000_100000']['number']);
-    $sheet->setCellValue('C6', round($context['results']['graph']['10000_100000']['pe'], 0));
-    $sheet->setCellValue('B7', $context['results']['graph']['100000_n']['number']);
-    $sheet->setCellValue('C7', round($context['results']['graph']['100000_n']['pe'], 0));
+    if (isset($context['results']['graph']['0_10000']['number'])) {
+    	$sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
+    }
+    if (isset($context['results']['graph']['0_10000']['pe'])) {
+    	$sheet->setCellValue('C5', round($context['results']['graph']['0_10000']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['10000_100000']['number'])) {
+    	$sheet->setCellValue('B6', $context['results']['graph']['10000_100000']['number']);
+    }
+    if (isset($context['results']['graph']['10000_100000']['pe'])) {
+    	$sheet->setCellValue('C6', round($context['results']['graph']['10000_100000']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['100000_n']['number'])) {
+    	$sheet->setCellValue('B7', $context['results']['graph']['100000_n']['number']);
+    }
+    if (isset($context['results']['graph']['100000_n']['pe'])) {
+	    $sheet->setCellValue('C7', round($context['results']['graph']['100000_n']['pe'], 0));
+    }
     
     //previous
     $sheet->setCellValue('D5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
@@ -1799,11 +1918,21 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E7', uwwtd_register_get_cell_value($previoussheet, 'C7')); 
     
     //array2
-    $sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
-    $sheet->setCellValue('B16', round($context['results']['graph']['total_collected']['pe'], 0));
-    $sheet->setCellValue('B17', round($context['results']['graph']['total_load_ias']['pe'], 0));
-    $sheet->setCellValue('B18', round($context['results']['graph']['total_entering']['pe'], 0));
-    $sheet->setCellValue('B19', round($context['results']['graph']['total_capacity']['pe'], 0));
+    if (isset($context['results']['graph']['total_generated']['pe'])) {
+    	$sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['total_collected']['pe'])) {
+    	$sheet->setCellValue('B16', round($context['results']['graph']['total_collected']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['total_load_ias']['pe'])) {
+    	$sheet->setCellValue('B17', round($context['results']['graph']['total_load_ias']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['total_entering']['pe'])) {
+    	$sheet->setCellValue('B18', round($context['results']['graph']['total_entering']['pe'], 0));
+    }
+    if (isset($context['results']['graph']['total_capacity']['pe'])) {
+    	$sheet->setCellValue('B19', round($context['results']['graph']['total_capacity']['pe'], 0));
+    }
     
     //previous
     $sheet->setCellValue('C15', uwwtd_register_get_cell_value($previoussheet, 'B15'));
@@ -1843,25 +1972,61 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A71');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-                                                        
-    $sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
-    $sheet->setCellValue('C43', round($context['results']['graph']['art3_C']['pe']));
-    $sheet->setCellValue('B44', $context['results']['graph']['art3_NC']['number']);
-    $sheet->setCellValue('C44', round($context['results']['graph']['art3_NC']['pe']));
-    $sheet->setCellValue('B45', $context['results']['graph']['art3_NR']['number']);
-    $sheet->setCellValue('C45', round($context['results']['graph']['art3_NR']['pe']));
-    $sheet->setCellValue('B46', $context['results']['graph']['art4_C']['number']);
-    $sheet->setCellValue('C46', round($context['results']['graph']['art4_C']['pe']));
-    $sheet->setCellValue('B47', $context['results']['graph']['art4_NC']['number']);
-    $sheet->setCellValue('C47', round($context['results']['graph']['art4_NC']['pe']));
-    $sheet->setCellValue('B48', $context['results']['graph']['art4_NR']['number']);
-    $sheet->setCellValue('C48', round($context['results']['graph']['art4_NR']['pe']));
-    $sheet->setCellValue('B49', $context['results']['graph']['art5_C']['number']);
-    $sheet->setCellValue('C49', round($context['results']['graph']['art5_C']['pe']));
-    $sheet->setCellValue('B50', $context['results']['graph']['art5_NC']['number']);
-    $sheet->setCellValue('C50', round($context['results']['graph']['art5_NC']['pe']));
-    $sheet->setCellValue('B51', $context['results']['graph']['art5_NR']['number']);
-    $sheet->setCellValue('C51', round($context['results']['graph']['art5_NR']['pe'])); 
+                                      
+	if (isset($context['results']['graph']['art3_C']['number'])) {  
+    	$sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
+	}
+	if (isset($context['results']['graph']['art3_C']['pe'])) {
+    	$sheet->setCellValue('C43', round($context['results']['graph']['art3_C']['pe']));
+	}
+	if (isset($context['results']['graph']['art3_NC']['number'])) {
+    	$sheet->setCellValue('B44', $context['results']['graph']['art3_NC']['number']);
+	}
+	if (isset($context['results']['graph']['art3_NC']['pe'])) {
+    	$sheet->setCellValue('C44', round($context['results']['graph']['art3_NC']['pe']));
+	}
+	if (isset($context['results']['graph']['art3_NR']['number'])) {
+    	$sheet->setCellValue('B45', $context['results']['graph']['art3_NR']['number']);
+	}
+	if (isset($context['results']['graph']['art3_NR']['pe'])) {
+    	$sheet->setCellValue('C45', round($context['results']['graph']['art3_NR']['pe']));
+	}
+	if (isset($context['results']['graph']['art4_C']['number'])) {
+    	$sheet->setCellValue('B46', $context['results']['graph']['art4_C']['number']);
+	}
+	if (isset($context['results']['graph']['art4_C']['pe'])) {
+    	$sheet->setCellValue('C46', round($context['results']['graph']['art4_C']['pe']));
+	}
+	if (isset($context['results']['graph']['art4_NC']['number'])) {
+    	$sheet->setCellValue('B47', $context['results']['graph']['art4_NC']['number']);
+	}
+	if (isset($context['results']['graph']['art4_NC']['pe'])) {
+    	$sheet->setCellValue('C47', round($context['results']['graph']['art4_NC']['pe']));
+	}
+	if (isset($context['results']['graph']['art4_NR']['number'])) {
+    	$sheet->setCellValue('B48', $context['results']['graph']['art4_NR']['number']);
+	}
+	if (isset($context['results']['graph']['art4_NR']['pe'])) {
+    	$sheet->setCellValue('C48', round($context['results']['graph']['art4_NR']['pe']));
+	}
+	if (isset($context['results']['graph']['art5_C']['number'])) {
+    	$sheet->setCellValue('B49', $context['results']['graph']['art5_C']['number']);
+	}
+	if (isset($context['results']['graph']['art5_C']['pe'])) {
+    	$sheet->setCellValue('C49', round($context['results']['graph']['art5_C']['pe']));
+	}
+	if (isset($context['results']['graph']['art5_NC']['number'])) {
+    	$sheet->setCellValue('B50', $context['results']['graph']['art5_NC']['number']);
+	}
+	if (isset($context['results']['graph']['art5_NC']['pe'])) {
+    	$sheet->setCellValue('C50', round($context['results']['graph']['art5_NC']['pe']));
+	}
+	if (isset($context['results']['graph']['art5_NR']['number'])) {
+    	$sheet->setCellValue('B51', $context['results']['graph']['art5_NR']['number']);
+	}
+	if (isset($context['results']['graph']['art5_NR']['pe'])) {
+    	$sheet->setCellValue('C51', round($context['results']['graph']['art5_NR']['pe']));
+	}
     
     //previous
     $sheet->setCellValue('D43', uwwtd_register_get_cell_value($previoussheet, 'B43'));
@@ -1885,15 +2050,33 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
         
     //array 6
-    $sheet->setCellValue('E55', round($context['results']['graph']['art3_C']['pe']));  
-    $sheet->setCellValue('F55', round($context['results']['graph']['art3_NC']['pe']));
-    $sheet->setCellValue('G55', round($context['results']['graph']['art3_NR']['pe']));
-    $sheet->setCellValue('E58', round($context['results']['graph']['art4_C']['pe']));   
-    $sheet->setCellValue('F58', round($context['results']['graph']['art4_NC']['pe']));  
-    $sheet->setCellValue('G58', round($context['results']['graph']['art4_NR']['pe']));  
-    $sheet->setCellValue('E61', round($context['results']['graph']['art5_C']['pe']));
-    $sheet->setCellValue('F61', round($context['results']['graph']['art5_NC']['pe']));
-    $sheet->setCellValue('G61', round($context['results']['graph']['art5_NR']['pe']));
+    if (isset($context['results']['graph']['art3_C']['pe'])) {
+    	$sheet->setCellValue('E55', round($context['results']['graph']['art3_C']['pe']));  
+    }
+    if (isset($context['results']['graph']['art3_NC']['pe'])) {
+    	$sheet->setCellValue('F55', round($context['results']['graph']['art3_NC']['pe']));
+    }
+    if (isset($context['results']['graph']['art3_NR']['pe'])) {
+    	$sheet->setCellValue('G55', round($context['results']['graph']['art3_NR']['pe']));
+    }
+    if (isset($context['results']['graph']['art4_C']['pe'])) {
+    	$sheet->setCellValue('E58', round($context['results']['graph']['art4_C']['pe']));
+    }
+    if (isset($context['results']['graph']['art4_NC']['pe'])) {
+    	$sheet->setCellValue('F58', round($context['results']['graph']['art4_NC']['pe']));
+    }
+    if (isset($context['results']['graph']['art4_NR']['pe'])) {
+    	$sheet->setCellValue('G58', round($context['results']['graph']['art4_NR']['pe']));
+    }
+    if (isset($context['results']['graph']['art5_C']['pe'])) {
+    	$sheet->setCellValue('E61', round($context['results']['graph']['art5_C']['pe']));
+    }
+    if (isset($context['results']['graph']['art5_NC']['pe'])) {
+    	$sheet->setCellValue('F61', round($context['results']['graph']['art5_NC']['pe']));
+    }
+    if (isset($context['results']['graph']['art5_NR']['pe'])) {
+    	$sheet->setCellValue('G61', round($context['results']['graph']['art5_NR']['pe']));
+    }
     
     //previous
     $sheet->setCellValue('B54', uwwtd_register_get_cell_value($previoussheet, 'E55')); 
@@ -1908,15 +2091,33 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
         
     //array 7
-    $sheet->setCellValue('E65', $context['results']['graph']['art3_C']['number']);     
-    $sheet->setCellValue('F65', $context['results']['graph']['art3_NC']['number']);    
-    $sheet->setCellValue('G65', $context['results']['graph']['art3_NR']['number']);    
-    $sheet->setCellValue('E68', $context['results']['graph']['art4_C']['number']);    
-    $sheet->setCellValue('F68', $context['results']['graph']['art4_NC']['number']);    
-    $sheet->setCellValue('G68', $context['results']['graph']['art4_NR']['number']);    
-    $sheet->setCellValue('E71', $context['results']['graph']['art5_C']['number']);    
-    $sheet->setCellValue('F71', $context['results']['graph']['art5_NC']['number']); 
-    $sheet->setCellValue('G71', $context['results']['graph']['art5_NR']['number']); 
+    if (isset($context['results']['graph']['art3_C']['number'])) {
+    	$sheet->setCellValue('E65', $context['results']['graph']['art3_C']['number']);
+    }
+    if (isset($context['results']['graph']['art3_NC']['number'])) {
+    	$sheet->setCellValue('F65', $context['results']['graph']['art3_NC']['number']);    
+	}
+	if (isset($context['results']['graph']['art3_NR']['number'])) {
+    	$sheet->setCellValue('G65', $context['results']['graph']['art3_NR']['number']);
+	}
+	if (isset($context['results']['graph']['art4_C']['number'])) {
+	    $sheet->setCellValue('E68', $context['results']['graph']['art4_C']['number']);
+	}
+	if (isset($context['results']['graph']['art4_NC']['number'])) {
+    	$sheet->setCellValue('F68', $context['results']['graph']['art4_NC']['number']);
+	}
+	if (isset($context['results']['graph']['art4_NR']['number'])) {
+    	$sheet->setCellValue('G68', $context['results']['graph']['art4_NR']['number']);
+	}
+	if (isset($context['results']['graph']['art5_C']['number'])) {
+    	$sheet->setCellValue('E71', $context['results']['graph']['art5_C']['number']);
+	}
+	if (isset($context['results']['graph']['art5_NC']['number'])) {
+    	$sheet->setCellValue('F71', $context['results']['graph']['art5_NC']['number']);
+	}
+	if (isset($context['results']['graph']['art5_NR']['number'])) {
+    	$sheet->setCellValue('G71', $context['results']['graph']['art5_NR']['number']);
+	}
     
     //previous
     $sheet->setCellValue('B64', uwwtd_register_get_cell_value($previoussheet, 'E65')); 
@@ -2003,7 +2204,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $sheet->setCellValue('E29', uwwtd_register_get_cell_value($previoussheet, 'C29'));            
         
         //array 4
-        $sheet->setCellValue('C36', $context['results']['country_volume_waste_water']);
+        if (isset($context['results']['country_volume_waste_water'])) {
+        	$sheet->setCellValue('C36', $context['results']['country_volume_waste_water']);
+        }
         $sheet->setCellValue('C37', $field_mslwwreuseperc);
         
         //previous
@@ -2054,35 +2257,78 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell = $sheet->getCell('A75');
     $cell->setValue(str_replace(array('[#COUNTRY#]', '[#current_year#]'), array($country_name, $annee), $cell->getValue()));
                                  
-    $sheet->getCell('B77')->setValue($context['results']['graph']['summary_installation']['total']['number']);
-    $sheet->getCell('C77')->setValue(round($context['results']['graph']['summary_installation']['total']['percent'], 1));
-    $sheet->getCell('D77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_pe']));
-    $sheet->getCell('E77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_percent'], 1));
-    
-    $sheet->getCell('B78')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['number']);
-    $sheet->getCell('C78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['percent'], 1));
-    $sheet->getCell('D78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe']));
-    $sheet->getCell('E78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent'], 1));
-    
-    $sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['number']);
-    $sheet->getCell('C79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['percent'], 1));
-    $sheet->getCell('D79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_pe']));
-    $sheet->getCell('E79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_percent'], 1));
-    
-    $sheet->getCell('B80')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number']);
-    $sheet->getCell('C80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percent'], 1));
-    $sheet->getCell('D80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_pe']));
-    $sheet->getCell('E80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_percent'], 1));
-    
-    $sheet->getCell('B81')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['number']);
-    $sheet->getCell('C81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['percent'], 1));
-    $sheet->getCell('D81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_pe']));
-    $sheet->getCell('E81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_percent'], 1));
-    
-    $sheet->getCell('B82')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['number']);
-    $sheet->getCell('C82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['percent'], 1));
-    $sheet->getCell('D82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_pe']));
-    $sheet->getCell('E82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'], 1));
+    if (isset($context['results']['graph']['summary_installation']['total']['number'])) {
+    	$sheet->getCell('B77')->setValue($context['results']['graph']['summary_installation']['total']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['percent'])) {
+    	$sheet->getCell('C77')->setValue(round($context['results']['graph']['summary_installation']['total']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['waste_pe'])) {
+    	$sheet->getCell('D77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['waste_percent'])) {
+    	$sheet->getCell('E77')->setValue(round($context['results']['graph']['summary_installation']['total']['waste_percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['collecting_system']['number'])) {
+    	$sheet->getCell('B78')->setValue($context['results']['graph']['summary_installation']['total']['collecting_system']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['collecting_system']['percent'])) {
+    	$sheet->getCell('C78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe'])) {
+    	$sheet->getCell('D78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent'])) {
+    	$sheet->getCell('E78')->setValue(round($context['results']['graph']['summary_installation']['total']['collecting_system']['waste_percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['number'])) {
+    	$sheet->getCell('B79')->setValue($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['percent'])) {
+    	$sheet->getCell('C79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_pe'])) {
+    	$sheet->getCell('D79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_percent'])) {
+    	$sheet->getCell('E79')->setValue(round($context['results']['graph']['summary_installation']['secondary']['installation_in_place']['waste_percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number'])) {
+    	$sheet->getCell('B80')->setValue($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percent'])) {
+    	$sheet->getCell('C80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_pe'])) {
+    	$sheet->getCell('D80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_percent'])) {
+    	$sheet->getCell('E80')->setValue(round($context['results']['graph']['summary_installation']['secondary']['meet_requirement']['waste_percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['number'])) {
+    	$sheet->getCell('B81')->setValue($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['percent'])) {
+    	$sheet->getCell('C81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_pe'])) {
+    	$sheet->getCell('D81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_percent'])) {
+    	$sheet->getCell('E81')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['installation_in_place']['waste_percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['number'])) {
+    	$sheet->getCell('B82')->setValue($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['number']);
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['percent'])) {
+    	$sheet->getCell('C82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['percent'], 1));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_pe'])) {
+    	$sheet->getCell('D82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_pe']));
+    }
+    if (isset($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'])) {
+    	$sheet->getCell('E82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'], 1));
+    }
     
     //previous   
     $sheet->setCellValue('F77', uwwtd_register_get_cell_value($previoussheet, 'B77'));
@@ -2117,26 +2363,52 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
                                                             
     //array 9 Summary distance to compliance expired deadline
     //Target connection pe
-    $sheet->getCell('C88')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe'])) {
+    	$sheet->getCell('C88')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe']));
+    }
     //not connected
-    $sheet->getCell('B89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'], 1));
-    $sheet->getCell('C89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'])) {
+    	$sheet->getCell('B89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe'])) {
+    	$sheet->getCell('C89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe']));
+    }
     //2nd treatment target
-    $sheet->getCell('C90')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['total_load_pe'])) {
+    	$sheet->getCell('C90')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['total_load_pe']));
+    }
     //2nd treatment not in place
-    $sheet->getCell('B91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
-    $sheet->getCell('C91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'])) {
+    	$sheet->getCell('B91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe'])) {
+    	$sheet->getCell('C91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe']));
+    }
     //2nd treatment performance not met
-    $sheet->getCell('B92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe']));
+    }
     //Tertiary treatment target
-    $sheet->getCell('C93')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['total_load_pe'])) {
+    	$sheet->getCell('C93')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['total_load_pe']));
+    }
     //Tertiary treatment not in place
-    $sheet->getCell('B94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
-    $sheet->getCell('C94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'])) {
+    	$sheet->getCell('B94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe'])) {
+    	$sheet->getCell('C94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe']));
+    }
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']));
+    }
     
     //previous
     $sheet->setCellValue('E88', uwwtd_register_get_cell_value($previoussheet, 'C88'));
@@ -2162,26 +2434,52 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     
     
     //array 10 summary distance to compliance pending deadlines
-    $sheet->getCell('C104')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe'])) {
+    	$sheet->getCell('C104')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe']));
+    }
     //not connected
-    $sheet->getCell('B105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'], 1));
-    $sheet->getCell('C105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'])) {
+    	$sheet->getCell('B105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe'])) {
+    	$sheet->getCell('C105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe']));
+    }
     //2nd treatment target
-    $sheet->getCell('C106')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['total_load_pe'])) {
+    	$sheet->getCell('C106')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['total_load_pe']));
+    }
     //2nd treatment not in place
-    $sheet->getCell('B107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
-    $sheet->getCell('C107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'])) {
+    	$sheet->getCell('B107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe'])) {
+    	$sheet->getCell('C107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe']));
+    }
     //2nd treatment performance not met
-    $sheet->getCell('B108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe']));
+    }
     //Tertiary treatment target
-    $sheet->getCell('C109')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['total_load_pe'])) {
+    	$sheet->getCell('C109')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['total_load_pe']));
+    }
     //Tertiary treatment not in place
-    $sheet->getCell('B110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
-    $sheet->getCell('C110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'])) {
+    	$sheet->getCell('B110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe'])) {
+    	$sheet->getCell('C110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe']));
+    }
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']));
+    }
     
     //previous
     $sheet->setCellValue('E104', uwwtd_register_get_cell_value($previoussheet, 'C104'));    
@@ -2206,26 +2504,52 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E111', uwwtd_register_get_cell_value($previoussheet, 'C111'));    
     
     //array 11 summary distance to compliance total
-    $sheet->getCell('C119')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe'])) {
+    	$sheet->getCell('C119')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe']));
+    }
     //not connected
-    $sheet->getCell('B120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_%'], 1));
-    $sheet->getCell('C120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['target_connection']['distance_%'])) {
+    	$sheet->getCell('B120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['total']['target_connection']['distance_pe'])) {
+    	$sheet->getCell('C120')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['distance_pe']));
+    }
     //2nd treatment target
-    $sheet->getCell('C121')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['secondary_target']['total_load_pe'])) {
+    	$sheet->getCell('C121')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['total_load_pe']));
+    }
     //2nd treatment not in place
-    $sheet->getCell('B122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
-    $sheet->getCell('C122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_%'])) {
+    	$sheet->getCell('B122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_pe'])) {
+    	$sheet->getCell('C122')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['treatement_inplace_distance_pe']));
+    }
     //2nd treatment performance not met
-    $sheet->getCell('B123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C123')->setValue(round($context['results']['distance_to_compliance']['total']['secondary_target']['monitoring_result_distance_pe']));
+    }
     //Tertiary treatment target
-    $sheet->getCell('C124')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['total_load_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['total_load_pe'])) {
+    	$sheet->getCell('C124')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['total_load_pe']));
+    }
     //Tertiary treatment not in place
-    $sheet->getCell('B125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
-    $sheet->getCell('C125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_%'])) {
+    	$sheet->getCell('B125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_pe'])) {
+    	$sheet->getCell('C125')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['installation_inplace_distance_pe']));
+    }
     //Tertiary stringent treatment performance not met
-    $sheet->getCell('B126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
-    $sheet->getCell('C126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe']));
+    if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_%'])) {
+    	$sheet->getCell('B126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
+    }
+    if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe'])) {
+    	$sheet->getCell('C126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe']));
+    }
     
     //previous
     $sheet->setCellValue('E119', uwwtd_register_get_cell_value($previoussheet, 'C119'));
@@ -2273,42 +2597,110 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 //         $context['results']['uwwtp_other_morestringent_pe'] = 0; 
             
     $sheet->setCellValue('B131', '100.00');
-    $sheet->setCellValue('C131', round($context['results']['uwwtp_total_load_generated_pe']));
-    $sheet->setCellValue('D131', $context['results']['uwwtp_total_load_generated_nb']);
-    $sheet->setCellValue('B132', round($context['results']['uwwtp_notreatment_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C132', round($context['results']['uwwtp_notreatment_pe']));
-    $sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
-    $sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C133', round($context['results']['uwwtp_ias_pe']));
-    $sheet->setCellValue('D133', $context['results']['uwwtp_ias_nb']);
-    $sheet->setCellValue('B134', round($context['results']['uwwtp_p_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C134', round($context['results']['uwwtp_p_as_max_pe']));
-    $sheet->setCellValue('D134', $context['results']['uwwtp_p_as_max_nb']);
-    $sheet->setCellValue('B135', round($context['results']['uwwtp_s_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C135', round($context['results']['uwwtp_s_as_max_pe']));
-    $sheet->setCellValue('D135', $context['results']['uwwtp_s_as_max_nb']);
-    $sheet->setCellValue('B136', round($context['results']['uwwtp_n_removal_without_p_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C136', round($context['results']['uwwtp_n_removal_without_p_pe']));
-    $sheet->setCellValue('D136', $context['results']['uwwtp_n_removal_without_p_nb']);
-    $sheet->setCellValue('B137', round($context['results']['uwwtp_p_removal_without_n_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C137', round($context['results']['uwwtp_p_removal_without_n_pe']));
-    $sheet->setCellValue('D137', $context['results']['uwwtp_p_removal_without_n_nb']);
-    $sheet->setCellValue('B138', round($context['results']['uwwtp_np_removal_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C138', round($context['results']['uwwtp_np_removal_pe']));
-    $sheet->setCellValue('D138', $context['results']['uwwtp_np_removal_nb']);
-    $sheet->setCellValue('B139', round($context['results']['uwwtp_other_morestringent_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
-    $sheet->setCellValue('C139', round($context['results']['uwwtp_other_morestringent_pe']));
-    $sheet->setCellValue('D139', $context['results']['uwwtp_other_morestringent_nb']);  
+    if (isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('C131', round($context['results']['uwwtp_total_load_generated_pe']));
+    }
+    if (isset($context['results']['uwwtp_total_load_generated_nb'])) {
+    	$sheet->setCellValue('D131', $context['results']['uwwtp_total_load_generated_nb']);
+    }
+    if (isset($context['results']['uwwtp_notreatment_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B132', round($context['results']['uwwtp_notreatment_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_notreatment_pe'])) {
+    	$sheet->setCellValue('C132', round($context['results']['uwwtp_notreatment_pe']));
+    }
+    if (isset($context['results']['uwwtp_notreatment_nb'])) {
+    	$sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
+    }
+    if (isset($context['results']['uwwtp_ias_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_ias_pe'])) {
+    	$sheet->setCellValue('C133', round($context['results']['uwwtp_ias_pe']));
+    }
+    if (isset($context['results']['uwwtp_ias_nb'])) {
+    	$sheet->setCellValue('D133', $context['results']['uwwtp_ias_nb']);
+    }
+    if (isset($context['results']['uwwtp_p_as_max_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B134', round($context['results']['uwwtp_p_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_p_as_max_pe'])) {
+    	$sheet->setCellValue('C134', round($context['results']['uwwtp_p_as_max_pe']));
+    }
+    if (isset($context['results']['uwwtp_p_as_max_nb'])) {
+    	$sheet->setCellValue('D134', $context['results']['uwwtp_p_as_max_nb']);
+    }
+    if (isset($context['results']['uwwtp_s_as_max_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B135', round($context['results']['uwwtp_s_as_max_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_s_as_max_pe'])) {
+    	$sheet->setCellValue('C135', round($context['results']['uwwtp_s_as_max_pe']));
+    }
+    if (isset($context['results']['uwwtp_s_as_max_nb'])) {
+    	$sheet->setCellValue('D135', $context['results']['uwwtp_s_as_max_nb']);
+    }
+    if (isset($context['results']['uwwtp_n_removal_without_p_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B136', round($context['results']['uwwtp_n_removal_without_p_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_n_removal_without_p_pe'])) {
+    	$sheet->setCellValue('C136', round($context['results']['uwwtp_n_removal_without_p_pe']));
+    }
+    if (isset($context['results']['uwwtp_n_removal_without_p_nb'])) {
+    	$sheet->setCellValue('D136', $context['results']['uwwtp_n_removal_without_p_nb']);
+    }
+    if (isset($context['results']['uwwtp_p_removal_without_n_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B137', round($context['results']['uwwtp_p_removal_without_n_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_p_removal_without_n_pe'])) {
+    	$sheet->setCellValue('C137', round($context['results']['uwwtp_p_removal_without_n_pe']));
+    }
+    if (isset($context['results']['uwwtp_p_removal_without_n_nb'])) {
+    	$sheet->setCellValue('D137', $context['results']['uwwtp_p_removal_without_n_nb']);
+    }
+    if (isset($context['results']['uwwtp_np_removal_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B138', round($context['results']['uwwtp_np_removal_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_np_removal_pe'])) {
+    	$sheet->setCellValue('C138', round($context['results']['uwwtp_np_removal_pe']));
+    }
+    if (isset($context['results']['uwwtp_np_removal_nb'])) {
+    	$sheet->setCellValue('D138', $context['results']['uwwtp_np_removal_nb']);
+    }
+    if (isset($context['results']['uwwtp_other_morestringent_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
+    	$sheet->setCellValue('B139', round($context['results']['uwwtp_other_morestringent_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
+    }
+    if (isset($context['results']['uwwtp_other_morestringent_pe'])) {
+    	$sheet->setCellValue('C139', round($context['results']['uwwtp_other_morestringent_pe']));
+    }
+    if (isset($context['results']['uwwtp_other_morestringent_nb'])) {
+    	$sheet->setCellValue('D139', $context['results']['uwwtp_other_morestringent_nb']);
+    }
       
     //array 13    incoming/discharged        
-    $sheet->getCell('C148')->setValue(round($context['results']['graph']['incoming_load_bod']));
-    $sheet->getCell('C149')->setValue(round($context['results']['graph']['discharge_load_bod']));
-    $sheet->getCell('C150')->setValue(round($context['results']['graph']['incoming_load_cod']));
-    $sheet->getCell('C151')->setValue(round($context['results']['graph']['discharge_load_cod']));
-    $sheet->getCell('C152')->setValue(round($context['results']['graph']['incoming_load_n']));
-    $sheet->getCell('C153')->setValue(round($context['results']['graph']['discharge_load_n']));
-    $sheet->getCell('C154')->setValue(round($context['results']['graph']['incoming_load_p']));
-    $sheet->getCell('C155')->setValue(round($context['results']['graph']['discharge_load_p']));
+    if (isset($context['results']['graph']['incoming_load_bod'])) {
+    	$sheet->getCell('C148')->setValue(round($context['results']['graph']['incoming_load_bod']));
+    }
+    if (isset($context['results']['graph']['discharge_load_bod'])) {
+    	$sheet->getCell('C149')->setValue(round($context['results']['graph']['discharge_load_bod']));
+    }
+    if (isset($context['results']['graph']['incoming_load_cod'])) {
+    	$sheet->getCell('C150')->setValue(round($context['results']['graph']['incoming_load_cod']));
+    }
+    if (isset($context['results']['graph']['discharge_load_cod'])) {
+    	$sheet->getCell('C151')->setValue(round($context['results']['graph']['discharge_load_cod']));
+    }
+    if (isset($context['results']['graph']['incoming_load_n'])) {
+    	$sheet->getCell('C152')->setValue(round($context['results']['graph']['incoming_load_n']));
+    }
+    if (isset($context['results']['graph']['discharge_load_n'])) {
+    	$sheet->getCell('C153')->setValue(round($context['results']['graph']['discharge_load_n']));
+    }
+    if (isset($context['results']['graph']['incoming_load_p'])) {
+    	$sheet->getCell('C154')->setValue(round($context['results']['graph']['incoming_load_p']));
+    }
+    if (isset($context['results']['graph']['discharge_load_p'])) {
+    	$sheet->getCell('C155')->setValue(round($context['results']['graph']['discharge_load_p']));
+    }
     
     //previous
     $sheet->getCell('D148')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C148'));
@@ -2321,10 +2713,18 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D155')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C155'));        
        
     //array 14    rate
-    $sheet->getCell('C159')->setValue(round((1-($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod'])) *100, 1));
-    $sheet->getCell('C160')->setValue(round((1-($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod'])) *100, 1));
-    $sheet->getCell('C161')->setValue(round((1-($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n'])) *100, 1));
-    $sheet->getCell('C162')->setValue(round((1-($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p'])) *100, 1));
+    if (isset($context['results']['graph']['discharge_load_bod']) && isset($context['results']['graph']['incoming_load_bod'])) {
+    	$sheet->getCell('C159')->setValue(round((1-($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod'])) *100, 1));
+    }
+    if (isset($context['results']['graph']['discharge_load_cod']) && isset($context['results']['graph']['incoming_load_cod'])) {
+    	$sheet->getCell('C160')->setValue(round((1-($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod'])) *100, 1));
+    }
+    if (isset($context['results']['graph']['discharge_load_n']) && isset($context['results']['graph']['incoming_load_n'])) {
+    	$sheet->getCell('C161')->setValue(round((1-($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n'])) *100, 1));
+    }
+    if (isset($context['results']['graph']['discharge_load_p']) && isset($context['results']['graph']['incoming_load_p'])) {
+    	$sheet->getCell('C162')->setValue(round((1-($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p'])) *100, 1));
+    }
     //previous
     $sheet->getCell('D159')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C159'));
     $sheet->getCell('D160')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C160'));
@@ -2332,19 +2732,37 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));    
     
     //array 15   totla volume
-    $sheet->getCell('C166')->setValue(round($context['results']['country_volume_waste_water']));
+    if (isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C166')->setValue(round($context['results']['country_volume_waste_water']));
+    }
     //previous
     $sheet->getCell('D166')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C166'));
     
     //array 16  average  
-    $sheet->getCell('C169')->setValue(round(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C170')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C171')->setValue(round(($context['results']['graph']['incoming_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C172')->setValue(round(($context['results']['graph']['discharge_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C173')->setValue(round(($context['results']['graph']['incoming_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C174')->setValue(round(($context['results']['graph']['discharge_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C175')->setValue(round(($context['results']['graph']['incoming_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
-    $sheet->getCell('C176')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['incoming_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C169')->setValue(round(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['discharge_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C170')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['incoming_load_cod']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C171')->setValue(round(($context['results']['graph']['incoming_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['discharge_load_cod']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C172')->setValue(round(($context['results']['graph']['discharge_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['incoming_load_n']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C173')->setValue(round(($context['results']['graph']['incoming_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['discharge_load_n']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C174')->setValue(round(($context['results']['graph']['discharge_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['incoming_load_p']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C175')->setValue(round(($context['results']['graph']['incoming_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
+    if (isset($context['results']['graph']['discharge_load_p']) && isset($context['results']['country_volume_waste_water'])) {
+    	$sheet->getCell('C176')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    }
     
     //previous
     $sheet->getCell('D169')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C169'));
@@ -2383,6 +2801,39 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('B45')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
+    
+    // Récupération des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
+    $distancesExpired = array();
+    $distancesExpired['Target connection'] = $sheet->getCell('B88')->getValue();
+    $distancesExpired['Not connected'] = $sheet->getCell('B89')->getValue();
+    $distancesExpired['2nd treatment target'] = $sheet->getCell('B90')->getValue();
+    $distancesExpired['2nd treatment not in place'] = $sheet->getCell('B91')->getValue();
+    $distancesExpired['2nd treatment performance not met'] = $sheet->getCell('B92')->getValue();
+    $distancesExpired['Tertiary treatment target'] = $sheet->getCell('B93')->getValue();
+    $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('B94')->getValue();
+    $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('B95')->getValue();
+    
+    // Récupération des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
+    $distancesPending = array();
+    $distancesPending['Target connection'] = $sheet->getCell('B104')->getValue();
+    $distancesPending['Not connected'] = $sheet->getCell('B105')->getValue();
+    $distancesPending['2nd treatment target'] = $sheet->getCell('B106')->getValue();
+    $distancesPending['2nd treatment not in place'] = $sheet->getCell('B107')->getValue();
+    $distancesPending['2nd treatment performance not met'] = $sheet->getCell('B108')->getValue();
+    $distancesPending['Tertiary treatment target'] = $sheet->getCell('B109')->getValue();
+    $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('B110')->getValue();
+    $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('B111')->getValue();
+    
+    // Récupération des valeurs du tableau "Distance to compliance total" :
+    $distancesTotal = array();
+    $distancesTotal['Target connection'] = $sheet->getCell('C119')->getValue();
+    $distancesTotal['Not connected'] = $sheet->getCell('C120')->getValue();
+    $distancesTotal['2nd treatment target'] = $sheet->getCell('C121')->getValue();
+    $distancesTotal['2nd treatment not in place'] = $sheet->getCell('C122')->getValue();
+    $distancesTotal['2nd treatment performance not met'] = $sheet->getCell('C123')->getValue();
+    $distancesTotal['Tertiary treatment target'] = $sheet->getCell('C124')->getValue();
+    $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
+    $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
     
     // Récupération du nid du node MS_LEVEL de cette année :
     $query = db_select('node', 'n');
@@ -2426,6 +2877,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (!empty($node)) {
     	$node->field_comparison_of_compliance_p[LANGUAGE_NONE][0]['value'] = json_encode($arrayInPe);
     	$node->field_comparison_of_compliance_a[LANGUAGE_NONE][0]['value'] = json_encode($arrayInNumOfAgg);
+    	$node->field_compliance_expired[LANGUAGE_NONE][0]['value'] = json_encode($distancesExpired);
+    	$node->field_compliance_pending[LANGUAGE_NONE][0]['value'] = json_encode($distancesPending);
+    	$node->field_compliance_total[LANGUAGE_NONE][0]['value'] = json_encode($distancesTotal);
     }
     node_save($node);
     
@@ -2443,7 +2897,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']));    
     
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+	if (isset($context['sandbox']['progress']) && isset($context['sandbox']['max'])) {
+    	$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+	}
 //     }     
 }
 
@@ -2707,11 +3163,16 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
 //             if no add a line 
         if ('' == uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp[$induwwtp['uww_code']])))) {
             $line = array();
-            $line[$ind['id_of_uwwtp']] = $uwwtp[$induwwtp['uww_code']];    
-            $line[$ind['name_of_uwwtp']] = $uwwtp[$induwwtp['uww_name']];    
-            $line[$ind['id_of_agglomeration']] = $uwwtp[$induwwtp['aggcode']];
-            $line[$ind['name_of_agglomeration']] = $uwwtp[$induwwtp['aggname']];
-            $line[$ind['size_of_uwwtp']] = $uwwtp[$induwwtp['uww_capacity p. e.']];    
+            if (isset($uwwtp[$induwwtp['uww_code']]))
+            	$line[$ind['id_of_uwwtp']] = $uwwtp[$induwwtp['uww_code']]; 
+            if (isset($uwwtp[$induwwtp['uww_name']]))
+            	$line[$ind['name_of_uwwtp']] = $uwwtp[$induwwtp['uww_name']]; 
+            if (isset($uwwtp[$induwwtp['aggcode']]))
+            	$line[$ind['id_of_agglomeration']] = $uwwtp[$induwwtp['aggcode']];
+            if (isset($uwwtp[$induwwtp['aggname']]))
+            	$line[$ind['name_of_agglomeration']] = $uwwtp[$induwwtp['aggname']];
+            if (isset($uwwtp[$induwwtp['uww_capacity p. e.']]))
+            	$line[$ind['size_of_uwwtp']] = $uwwtp[$induwwtp['uww_capacity p. e.']];    
             $line[$ind['reason']] = ''; 
             fputcsv($r, $line, ';');     
         }       
@@ -2902,10 +3363,14 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-        $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $agglo[$ind['reason']]);
+    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['id_of_agglomeration']])
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
+    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['name_of_agglomeration']])
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
+    	if (isset($ind['size_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['size_of_agglomeration']])
+        	$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
+    	if (isset($ind['reason']) && isset($context['sandbox']['line']) && $agglo[$ind['reason']])
+        	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $agglo[$ind['reason']]);
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
@@ -2933,9 +3398,11 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 // //     }
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
     
-    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }        
+    if (isset($context['sandbox']['progress']) && isset($context['sandbox']['max'])) {
+	    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+	        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+	    }  
+    }
 }
 
 /**
@@ -3005,10 +3472,14 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
-        $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $agglo[$ind['remarks']]);
+    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['id_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
+    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['name_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
+    	if (isset($ind['size_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['size_of_agglomeration']]))
+       		$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
+    	if (isset($ind['remarks']) && isset($context['sandbox']['line']) && isset($agglo[$ind['remarks']]))
+        	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $agglo[$ind['remarks']]);
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
@@ -3105,13 +3576,19 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {    
-        $sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $line[$ind['reason']]);
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {   
+    	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
+    	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
+    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
+    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
+    	if (isset($ind['size_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['size_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
+    	if (isset($ind['reason']) && isset($context['sandbox']['line']) && isset($line[$ind['reason']]))
+        	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $line[$ind['reason']]);
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
@@ -3209,13 +3686,19 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {        
-        $sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-        $sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $line[$ind['remarks']]);
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {     
+    	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
+    	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
+    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
+    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_agglomeration']]))
+        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
+    	if (isset($ind['size_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['size_of_uwwtp']]))
+        	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
+    	if (isset($ind['remarks']) && isset($context['sandbox']['line']) && isset($line[$ind['remarks']]))
+        	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $line[$ind['remarks']]);
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
@@ -3295,26 +3778,50 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     $i = 0;    
     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {       
 //     foreach ($listagglo as $agglo) {  
-        if ($agglo[$ind['art3_compliance']] != 'NC'
+		if (isset($ind['art3_compliance']) &&
+			isset($ind['art4_compliance_art._4_(hierarchical_approach)']) &&
+			isset($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']) &&
+			isset($agglo[$ind['art3_compliance']]) && 
+			isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
+			isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
+        	$agglo[$ind['art3_compliance']] != 'NC'
             && $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] != 'NC'
             && $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] != 'NC'
             ) {
             continue;
         }
         
-        if ($agglo[$ind['art3_compliance']] == 'NC') {
+        if (isset($ind['art3_compliance']) &&
+			isset($ind['generated_load_p.e.']) &&
+			isset($ind['connected_to_collecting_system_p._e.']) &&
+        	isset($agglo[$ind['art3_compliance']]) && 
+        	isset($agglo[$ind['generated_load_p.e.']]) &&
+        	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+        	$agglo[$ind['art3_compliance']] == 'NC') {
             $art3_count          ++;
             $art3_generated_load += $agglo[$ind['generated_load_p.e.']];
             $art3_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
         }
         
-        if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
+        if (isset($ind['hierarchical_approach']) &&
+			isset($ind['generated_load_p.e.']) &&
+			isset($ind['connected_to_collecting_system_p._e.']) &&
+        	isset($agglo[$ind['hierarchical_approach']]) && 
+        	isset($agglo[$ind['generated_load_p.e.']]) &&
+        	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+        	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
             $art4_count          ++;
             $art4_generated_load += $agglo[$ind['generated_load_p.e.']];
             $art4_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
         }
         
-        if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
+        if (isset($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']) &&
+			isset($ind['generated_load_p.e.']) &&
+			isset($ind['connected_to_collecting_system_p._e.']) &&
+        	isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) && 
+        	isset($agglo[$ind['generated_load_p.e.']]) &&
+        	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+        	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $art5_count          ++;
             $art5_generated_load += $agglo[$ind['generated_load_p.e.']];
             $art5_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
@@ -3545,14 +4052,15 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
 //     foreach ($listagglo as $agglo) {
     
         //MS total
-        $context['sandbox']['summary']['total']['number']++;                
-        $context['sandbox']['summary']['total']['waste_pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load
+        $context['sandbox']['summary']['total']['number']++;    
+        if (isset($agglo[$ind['generated_load_p.e.']]))
+        	$context['sandbox']['summary']['total']['waste_pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load
                                        
-        if ($agglo[$ind['addressed_through_ias_p._e.']] > 0) {
+        if (isset($agglo[$ind['addressed_through_ias_p._e.']]) && $agglo[$ind['addressed_through_ias_p._e.']] > 0) {
             $context['sandbox']['summary']['total']['ias_in_place']['number']++;         
             $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] += $agglo[$ind['addressed_through_ias_p._e.']];  //addressed through IAS pe 
         }                                                     
-        if ($agglo[$ind['connected_to_collecting_system_p._e.']] > 0) {                                  
+        if (isset($agglo[$ind['connected_to_collecting_system_p._e.']]) && $agglo[$ind['connected_to_collecting_system_p._e.']] > 0) {                                  
             $context['sandbox']['summary']['total']['collecting_system']['number']++;       
             $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']]; //connected to collecting system pe   
         }
@@ -3560,25 +4068,25 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         //secondary treatment
         //• Number summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, secondary treatment installed, p.e.’, where parameter is  >0. (Excel-function: COUNTIF(‘p.e. for which installation for secondary treatment is in place’;”>0”)
         //• p.e. summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, secondary treatment installed, p.e.’: sum of the entire column Excel-function: SUM (‘p.e. for which installation for secondary treatment is in place’)
-        if ($agglo[$ind['secondary_treatment_installed_(p._e.)']] > 0) {
+        if (isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) && $agglo[$ind['secondary_treatment_installed_(p._e.)']] > 0) {
             $context['sandbox']['summary']['secondary']['installation_in_place']['number']++;
             $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
         }
         
         //• Number summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.’, where parameter is  >0 (Excel-function: COUNTIF(‘p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment’;”>0”)
         //• p.e. summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.’: sum of the entire column Excel-function: SUM (‘p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment’)
-        if ($agglo[$ind['monitoring_results_f._secondary_ok']] > 0) {
+        if (isset($agglo[$ind['monitoring_results_f._secondary_ok']]) && $agglo[$ind['monitoring_results_f._secondary_ok']] > 0) {
             $context['sandbox']['summary']['secondary']['meet_requirement']['number']++;
             $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
         }        
         
         //more stringent treatment
-        if ($agglo[$ind['more_str._treatment_installed_(p._e.)']] > 0) {
+        if (isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) && $agglo[$ind['more_str._treatment_installed_(p._e.)']] > 0) {
             $context['sandbox']['summary']['more_stringent']['installation_in_place']['number']++;
             $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
         }
 
-        if ($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']] > 0) {
+        if (isset($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]) && $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']] > 0) {
             $context['sandbox']['summary']['more_stringent']['meet_requirement']['number']++;
             $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
         }
@@ -3591,24 +4099,45 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         //calculate percentage
         //MS total
-        $context['sandbox']['summary']['total']['ias_in_place']['percent'] = $context['sandbox']['summary']['total']['ias_in_place']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];    
-    
-        $context['sandbox']['summary']['total']['collecting_system']['percent'] = $context['sandbox']['summary']['total']['collecting_system']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];    
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
+        	$context['sandbox']['summary']['total']['ias_in_place']['percent'] = $context['sandbox']['summary']['total']['ias_in_place']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
+        }
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        }
+    	if (isset($context['sandbox']['summary']['total']['collecting_system']['number']) && isset( $context['sandbox']['summary']['total']['number'])) {
+        	$context['sandbox']['summary']['total']['collecting_system']['percent'] = $context['sandbox']['summary']['total']['collecting_system']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
+    	}
+    	if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+    	}
         
         //secondary treatment    
-        $context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
-            
-        $context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];    
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
+        	$context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        }
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {    
+        	$context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        }
         //more stringent treatment
-        $context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
-            
-        $context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
-        $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
+        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
+        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        }
         
     //     return $summary;
     //     dsm($summary);
@@ -3644,41 +4173,92 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         $cell = $sheet->getCell('B8');  
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         
-        
-        $sheet->getCell('C10')->setValue($context['sandbox']['summary']['total']['number']);
-        $sheet->getCell('D10')->setValue($context['sandbox']['summary']['total']['percentage']);
-        $sheet->getCell('E10')->setValue($context['sandbox']['summary']['total']['waste_pe']);
-        $sheet->getCell('F10')->setValue($context['sandbox']['summary']['total']['waste_percent']);
-        
-        $sheet->getCell('C11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['number']);
-        $sheet->getCell('D11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['percent']);
-        $sheet->getCell('E11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']);
-        $sheet->getCell('F11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_percent']);    
-        
-        $sheet->getCell('C12')->setValue($context['sandbox']['summary']['total']['collecting_system']['number']);
-        $sheet->getCell('D12')->setValue($context['sandbox']['summary']['total']['collecting_system']['percent']);
-        $sheet->getCell('E12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_pe']);
-        $sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
-        //secondary treatment    
-        $sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
-        $sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
-        $sheet->getCell('E15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']);
-        $sheet->getCell('F15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent']);
-            
-        $sheet->getCell('C16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['number']);
-        $sheet->getCell('D16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['percent']);
-        $sheet->getCell('E16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']);
-        $sheet->getCell('F16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent']);    
+        if (isset($context['sandbox']['summary']['total']['number'])) {
+        	$sheet->getCell('C10')->setValue($context['sandbox']['summary']['total']['number']);
+        }
+        if (isset($context['sandbox']['summary']['total']['percentage'])) {
+        	$sheet->getCell('D10')->setValue($context['sandbox']['summary']['total']['percentage']);
+        }
+        if (isset($context['sandbox']['summary']['total']['waste_pe'])) {
+        	$sheet->getCell('E10')->setValue($context['sandbox']['summary']['total']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['total']['waste_percent'])) {
+        	$sheet->getCell('F10')->setValue($context['sandbox']['summary']['total']['waste_percent']);
+        }
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['number'])) {
+        	$sheet->getCell('C11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['number']);
+        }
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['percent'])) {
+        	$sheet->getCell('D11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['waste_pe'])) {
+        	$sheet->getCell('E11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['total']['ias_in_place']['waste_percent'])) {
+        	$sheet->getCell('F11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_percent']);
+        }
+        if (isset($context['sandbox']['summary']['total']['collecting_system']['number'])) {
+        	$sheet->getCell('C12')->setValue($context['sandbox']['summary']['total']['collecting_system']['number']);
+        }
+        if (isset($context['sandbox']['summary']['total']['collecting_system']['percent'])) {
+        	$sheet->getCell('D12')->setValue($context['sandbox']['summary']['total']['collecting_system']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_pe'])) {
+        	$sheet->getCell('E12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_percent'])) {
+        	$sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
+        }
+        //secondary treatment  
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number'])) {
+        	$sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['percent'])) {
+        	$sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'])) {
+        	$sheet->getCell('E15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'])) {
+        	$sheet->getCell('F15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['number'])) {
+        	$sheet->getCell('C16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['number']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['percent'])) {
+        	$sheet->getCell('D16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'])) {
+        	$sheet->getCell('E16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'])) {
+        	$sheet->getCell('F16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent']);
+        }
         //more stringent treatment
-        $sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
-        $sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
-        $sheet->getCell('E19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']);
-        $sheet->getCell('F19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent']);
-            
-        $sheet->getCell('C20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']);
-        $sheet->getCell('D20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['percent']);
-        $sheet->getCell('E20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']);
-        $sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['number'])) {
+        	$sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'])) {
+        	$sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'])) {
+        	$sheet->getCell('E19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'])) {
+        	$sheet->getCell('F19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['number'])) {
+        	$sheet->getCell('C20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'])) {
+        	$sheet->getCell('D20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['percent']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'])) {
+        	$sheet->getCell('E20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']);
+        }
+        if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'])) {
+        	$sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
+        }
         
         $context['results']['graph']['summary_installation'] = $context['sandbox']['summary'];  
         
@@ -3797,34 +4377,52 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 //test            
                     
             //chekc if expired or pending
-            if ($typedeadline == 'expired' && $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'EXP' ) {
+            if ($typedeadline == 'expired' && isset($agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]) &&
+            	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'EXP' ) {
                 continue;
             }
-            if ($typedeadline == 'pending' && $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'PD') {
+            if ($typedeadline == 'pending' && isset($agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]) &&
+            	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'PD') {
                 continue;
             }
         
-            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {        
+            if (isset($agglo[$ind['art3_compliance']]) && 
+            	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+            	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
+            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {        
                 $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];            
             }
-            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
+            if (isset($agglo[$ind['art3_compliance']]) &&
+            	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+            	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
+            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
                 $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];        
             }
             
-            if (true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
+            	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+            	true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
             }        
-            if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {        
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
+            	isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) &&
+            	isset($agglo[$ind['monitoring_results_f._secondary_ok']]) &&
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {        
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];              
             }
             
-            if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
+            if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
+            	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
+            	true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
             }
             
-            if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
+            if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
+            	isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) &&
+            	isset($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]) &&
+            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];        
             }            
@@ -3841,47 +4439,95 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
     
         //calcul total
         foreach($listtypestat as $typedeadline) {            
-            $context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];            
-            $context['sandbox']['data']['total']['target_connection']['collected_system_inplace'] += $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'];
-            $context['sandbox']['data']['total']['target_connection']['ias'] += $context['sandbox']['data'][$typedeadline]['target_connection']['ias'];
-                    
-            $context['sandbox']['data']['total']['secondary_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
-            $context['sandbox']['data']['total']['secondary_target']['treatement_inplace'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
-            $context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
+            	$context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'])) {
+            	$context['sandbox']['data']['total']['target_connection']['collected_system_inplace'] += $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
+            	$context['sandbox']['data']['total']['target_connection']['ias'] += $context['sandbox']['data'][$typedeadline]['target_connection']['ias'];
+        	}
+                
+        	if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
+            	$context['sandbox']['data']['total']['secondary_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'])) {
+            	$context['sandbox']['data']['total']['secondary_target']['treatement_inplace'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
+            	$context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
+        	}
                           
-            $context['sandbox']['data']['total']['morestringent_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
-            $context['sandbox']['data']['total']['morestringent_target']['installation_inplace'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
-            $context['sandbox']['data']['total']['morestringent_target']['monitoring_result'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];     
+        	if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data']['total']['morestringent_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
+            	$context['sandbox']['data']['total']['morestringent_target']['installation_inplace'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
+            	$context['sandbox']['data']['total']['morestringent_target']['monitoring_result'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
+        	}
         }
         //calcul % and distance
         $listtypestattmp = $listtypestat;
         $listtypestattmp[] = 'total';        
-        foreach($listtypestattmp as $typedeadline) {            
-            $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
-            $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+        foreach($listtypestattmp as $typedeadline) {
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+        	}
             
-            $context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'];
-            $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'];
+        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
+        	}
         
             //more stringent % and distance
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            }
 
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
+            }
             
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'];
-            $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
+            }
                         
-            //more stringent % and distance                        
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];                    
-
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
-            
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];            
+            //more stringent % and distance             
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            }
+			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
+			}
+			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
+			}
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];
+            }
         }
     
         //build excel sheet
@@ -3919,107 +4565,182 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         
         //expired 
         //target connection
-        $sheet->getCell('C12')->setValue($context['sandbox']['data']['expired']['target_connection']['total_load_pe']);
-        
-        $sheet->getCell('E12')->setValue(round($context['sandbox']['data']['expired']['target_connection']['distance_%'], 1));
-        $sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);            
+        if (isset($context['sandbox']['data']['expired']['target_connection']['total_load_pe']))
+        	$sheet->getCell('C12')->setValue($context['sandbox']['data']['expired']['target_connection']['total_load_pe']);
+        if (isset($context['sandbox']['data']['expired']['target_connection']['distance_%'])) 
+        	$sheet->getCell('E12')->setValue(round($context['sandbox']['data']['expired']['target_connection']['distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['target_connection']['distance_pe']))
+        	$sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);            
                     
-        $sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%'], 1));
-        $sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
-        $sheet->getCell('D14')->setValue(round($context['sandbox']['data']['expired']['target_connection']['ias_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']))
+        	$sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
+        if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%']))
+        	$sheet->getCell('D13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['target_connection']['ias']))
+        	$sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
+        if (isset($context['sandbox']['data']['expired']['target_connection']['ias_%']))
+        	$sheet->getCell('D14')->setValue(round($context['sandbox']['data']['expired']['target_connection']['ias_%'], 1));
                                              
-        //secondary treatement               
-        $sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
-        $sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
-        $sheet->getCell('E17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
-        $sheet->getCell('F17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_pe']);
-        $sheet->getCell('C18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
-        $sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);                
+        //secondary treatement       
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']))
+        	$sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']))
+        	$sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%']))
+        	$sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%']))
+        	$sheet->getCell('E17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_pe']))
+        	$sheet->getCell('F17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result']))
+        	$sheet->getCell('C18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%']))
+        	$sheet->getCell('D18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%']))
+        	$sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']))
+        	$sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);                
                                          
         //more stringent treatment
-        $sheet->getCell('C20')->setValue($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']);
-        $sheet->getCell('C21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%'], 1));
-        $sheet->getCell('E21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
-        $sheet->getCell('F21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_pe']);
-        $sheet->getCell('C22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));  
-        $sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);  
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']))
+        	$sheet->getCell('C20')->setValue($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace']))
+        	$sheet->getCell('C21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace']);
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%']))
+        	$sheet->getCell('D21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%']))
+        	$sheet->getCell('E21')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_pe']))
+        	$sheet->getCell('F21')->setValue($context['sandbox']['data']['expired']['morestringent_target']['installation_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result']))
+        	$sheet->getCell('C22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']))
+        	$sheet->getCell('D22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']))
+        	$sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));  
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']))
+        	$sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);  
                                          
         //pending
         //target connection
-        $sheet->getCell('C32')->setValue($context['sandbox']['data']['pending']['target_connection']['total_load_pe']);
+        if (isset($context['sandbox']['data']['pending']['target_connection']['total_load_pe']))
+        	$sheet->getCell('C32')->setValue($context['sandbox']['data']['pending']['target_connection']['total_load_pe']);
         
-        $sheet->getCell('E32')->setValue(round($context['sandbox']['data']['pending']['target_connection']['distance_%'], 1));
-        $sheet->getCell('F32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_pe']);
+        if (isset($context['sandbox']['data']['pending']['target_connection']['distance_%']))
+        	$sheet->getCell('E32')->setValue(round($context['sandbox']['data']['pending']['target_connection']['distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['target_connection']['distance_pe']))
+        	$sheet->getCell('F32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_pe']);
                 
-        $sheet->getCell('C33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D33')->setValue(round($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%'], 1));
-        $sheet->getCell('C34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias']);
-        $sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']))
+        	$sheet->getCell('C33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']);
+        if (isset($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%']))
+        	$sheet->getCell('D33')->setValue(round($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%']))
+        	$sheet->getCell('C34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias']);
+        if (isset($context['sandbox']['data']['pending']['target_connection']['ias_%']))
+        	$sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
-        $sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
-        $sheet->getCell('C37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%'], 1));
-        $sheet->getCell('E37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
-        $sheet->getCell('F37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_pe']);
-        $sheet->getCell('C38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
-        $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);                
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']))
+        	$sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']))
+	        $sheet->getCell('C37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%']))
+	        $sheet->getCell('D37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%']))
+	        $sheet->getCell('E37')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_pe']))
+	        $sheet->getCell('F37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result']))
+	        $sheet->getCell('C38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%']))
+	        $sheet->getCell('D38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%']))
+	        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
-        $sheet->getCell('C40')->setValue($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']);
-        $sheet->getCell('C41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%'], 1));
-        $sheet->getCell('E41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
-        $sheet->getCell('F41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_pe']);
-        $sheet->getCell('C42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
-        $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']); 
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']))
+	        $sheet->getCell('C40')->setValue($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace']))
+	        $sheet->getCell('C41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace']);
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%']))
+	        $sheet->getCell('D41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%']))
+	        $sheet->getCell('E41')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_pe']))
+	        $sheet->getCell('F41')->setValue($context['sandbox']['data']['pending']['morestringent_target']['installation_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result']))
+	        $sheet->getCell('C42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%']))
+	        $sheet->getCell('D42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%']))
+	        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']); 
                                          
         //total
         //target connection
-        $sheet->getCell('C51')->setValue($context['sandbox']['data']['total']['target_connection']['total_load_pe']);
-        
-        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
-        $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
-                
-        $sheet->getCell('C52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']);
-        $sheet->getCell('D52')->setValue(round($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%'], 1));
-        $sheet->getCell('C53')->setValue($context['sandbox']['data']['total']['target_connection']['ias']);
-        $sheet->getCell('D53')->setValue(round($context['sandbox']['data']['total']['target_connection']['ias_%'], 1));
+        if (isset($context['sandbox']['data']['total']['target_connection']['total_load_pe']))
+	        $sheet->getCell('C51')->setValue($context['sandbox']['data']['total']['target_connection']['total_load_pe']);
+	        
+	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_%']))
+	        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
+	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_pe']))
+	        $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
+	                
+	    if (isset($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']))
+	        $sheet->getCell('C52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']);
+	    if (isset($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%']))
+	        $sheet->getCell('D52')->setValue(round($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%'], 1));
+	    if (isset($context['sandbox']['data']['total']['target_connection']['ias']))
+	        $sheet->getCell('C53')->setValue($context['sandbox']['data']['total']['target_connection']['ias']);
+	    if (isset($context['sandbox']['data']['total']['target_connection']['ias_%']))
+	        $sheet->getCell('D53')->setValue(round($context['sandbox']['data']['total']['target_connection']['ias_%'], 1));
                                           
         //secondary treatement
-        $sheet->getCell('C55')->setValue($context['sandbox']['data']['total']['secondary_target']['total_load_pe']);
-        $sheet->getCell('C56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace']);
-        $sheet->getCell('D56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%'], 1));
-        $sheet->getCell('E56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
-        $sheet->getCell('F56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_pe']);
-        $sheet->getCell('C57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result']);
-        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
-        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);                
+        if (isset($context['sandbox']['data']['total']['secondary_target']['total_load_pe']))
+	        $sheet->getCell('C55')->setValue($context['sandbox']['data']['total']['secondary_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['treatement_inplace']))
+	        $sheet->getCell('C56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%']))
+	        $sheet->getCell('D56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%']))
+	        $sheet->getCell('E56')->setValue(round($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_pe']))
+	        $sheet->getCell('F56')->setValue($context['sandbox']['data']['total']['secondary_target']['treatement_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result']))
+	        $sheet->getCell('C57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']))
+	        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']))
+	        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);                
         
         //more stringent treatment
-        $sheet->getCell('C59')->setValue($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']);
-        $sheet->getCell('C60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace']);
-        $sheet->getCell('D60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%'], 1));
-        $sheet->getCell('E60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
-        $sheet->getCell('F60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_pe']);
-        $sheet->getCell('C61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result']);
-        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
-        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
-        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']))
+	        $sheet->getCell('C59')->setValue($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['installation_inplace']))
+	        $sheet->getCell('C60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%']))
+	        $sheet->getCell('D60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%']))
+	        $sheet->getCell('E60')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_pe']))
+	        $sheet->getCell('F60')->setValue($context['sandbox']['data']['total']['morestringent_target']['installation_inplace_distance_pe']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result']))
+	        $sheet->getCell('C61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%']))
+	        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']))
+	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
         
-        $context['results']['distance_to_compliance'] = $context['sandbox']['data'];                          
+	    if (isset($context['sandbox']['data']))
+        	$context['results']['distance_to_compliance'] = $context['sandbox']['data'];                          
                                          
         //write
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
@@ -4267,41 +4988,50 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                                 //compliance art3   
             if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {    
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']++;      
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
+                if (isset($agglo[$ind['generated_load_p.e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
     
                                               
-                   
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] =
+              	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+              	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
+                	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100 
                             /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
-                       
+              	}
                       
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] += $agglo[$ind['addressed_through_ias_p._e.']];
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']  =
+              	if (isset($agglo[$ind['addressed_through_ias_p._e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] += $agglo[$ind['addressed_through_ias_p._e.']];
+              	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
+                	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']  =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100 
-                            /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe']; 
+                            /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
+              	}
                        
-                $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
-                $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']   =
+              	if (isset($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+              	if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
+                	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']   =
                          $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100 
                             /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
+              	}
             }                                
                                   //compliance art3
             if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {    
                 $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']++;              
-                $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
+                if (isset($agglo[$ind['generated_load_p.e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
             }  
                                   //compliance art3
             if (true === in_array($agglo[$ind['art3_compliance']], array('NR'))) {                
                 $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number']++;              
-                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-                
-                
+                if (isset($agglo[$ind['generated_load_p.e.']]))
+                	$context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
             } 
             
-            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;            
-            $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
+            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++; 
+            if (isset($agglo[$ind['generated_load_p.e.']]))
+            	$context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
            
             $NA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'NA'));
             $CSA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'CSA'));
@@ -4318,45 +5048,54 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 //Compliance Art. 4 (hierarchical approach)
             if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {                                              
                 $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number']++;      
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                	$context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
             
-            if (true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {      
-                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']++;         
-                $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {      
+                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']++;      
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))    
+                	$context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
             
-            if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {   
-                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;    
-                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {   
+                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;     
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
     
                 //            - due to a size of 2000p.e. - 10000 p.e.     …..and discharge into coastal water            
-                if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
+                if (isset($agglo[$ind['generated_load_p.e.']]) && $agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
                     && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++; 
+                	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                    	$context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 }
     //            - due to 0% collection in collecting …...system
-                if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {   
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++; 
+                	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                    	$context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 }    
     //            - due to discharge into LSA
-                $listrcatype = explode(';', $agglo[ $ind['type_of_receiving_water']]);
+    			if (isset($agglo[ $ind['type_of_receiving_water']])) 
+                	$listrcatype = explode(';', $agglo[ $ind['type_of_receiving_water']]);
                 if ($LSA && !$SA && !$CSA && !$A58) {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number']++; 
+                	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                    	$context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 } 
                 unset($listrcatype);    
     //            - due to transition period 
                 if ($annee < substr($agglo[ $ind['deadline_for_art._4_compliance']], 0, 4)) {  
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.                
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number']++; 
+	                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+	                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.                
                 }      
             }
             
-            $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number']++;    
-            $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+            $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number']++;     
+            if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+            	$context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             
             //art 5 
 //             dsm('art5');
@@ -4364,29 +5103,34 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 //Compliance Art. 5 (whole agglo) (hierarchical approach)
             if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {                                           
                 $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']++;      
-                $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];  //connected to collecting system p. e.
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                	$context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];  //connected to collecting system p. e.
             }
             
             if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {      
                 $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']++;      
-                $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                	$context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
             }
             
             if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR') {   
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']++;    
-                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                	$context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 
                 //- due to a size of ≤ 10000 p.e.     …
                 if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000) {
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - size > 10000 p.e., but discharge    …  …..into NA   
                 if ($agglo[$ind['generated_load_p.e.']] > 10000 
                     && $NA && !$LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - size > 10000 p.e. and discharge into …..CSA designated for criterion c
@@ -4394,27 +5138,31 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     && $CSA
                     && $rcac) {                
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - size > 10000 p.e., but discharge into …...Art. 5(4)- area
                 if ($agglo[$ind['generated_load_p.e.']] > 10000 
                     && $A54) {                  
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - due to 0% collection in collecting …...system
                 if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - size > 10000 p.e.  and discharge into   …...LSA
                 if ($agglo[$ind['generated_load_p.e.']] > 10000 
                     && !$LSA && !$SA && !$CSA && !$A58) {            
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
                 
                 //   - size > 10000 p.e. and discharge into …..SA/CSA, but transition period pending
@@ -4422,12 +5170,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     && ($SA  || $CSA)
                     &&  $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] == 'PD') {               
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']++;
-                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
             }
             
             $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']++;    
-            $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+            if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
         } 
         $j++;        
         $context['sandbox']['file_position'] = ftell($ragglofile);
@@ -5376,13 +6126,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         dsm($context['sandbox']['id'][$context['sandbox']['progress'] + $j]);
 //         dsm($context['sandbox']['id']);
 //         break;
-        $agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
+		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
+        	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
         
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
         
         //for next sheet
-        $context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
-        $context['results']['uwwtp_total_load_generated_nb']++;
+        if (isset($agg->field_agggenerated['und'][0]['value'])) {
+        	$context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
+        	$context['results']['uwwtp_total_load_generated_nb']++;
+        }
         
                 
 //         dsm($uwwtpinfo_for_agglo);
@@ -5390,17 +6143,22 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         break;
         //Agglomeration info',
         //'code',
-        $line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
+        if (isset($agg->field_inspireidlocalid['und'][0]['value']))
+        	$line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
         //'name',
         $line[$ind['aggname']] = $agg->title;
         //'generated load p.e.',
-        $line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value']; 
+        if (isset($agg->field_agggenerated['und'][0]['value']))
+        	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value']; 
         //'deadline for Art. 3 compliance',
-        $line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10); 
+        if (isset($agg->field_aggperiodover3['und'][0]['value']))
+        	$line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10); 
         //'deadline for Art. 4 compliance',
-        $line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10); 
+        if (isset($agg->field_aggperiodover4['und'][0]['value']))
+        	$line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10); 
         //'deadline for Art. 5 compliance',
-        $line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10); 
+        if (isset($agg->field_aggperiodover5['und'][0]['value']))
+        	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10); 
         //'Pending or expired deadline EXP/PD/EXP-PD',
         $pending_or_expired = '';
 //         dsm($annee);
@@ -5430,45 +6188,55 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
 //             )
-        
-        $deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
+        if (isset($ind['deadline_for_art._3_compliance'],
+        		$ind['deadline_for_art._4_compliance'],
+        		$ind['deadline_for_art._5_compliance'],
+        		$line[$ind['deadline_for_art._3_compliance']],
+        		$line[$ind['deadline_for_art._4_compliance']],
+        		$line[$ind['deadline_for_art._5_compliance']])) {
+        	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
             );
-                        
-        if ( true === $deadline_before
-             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
-            {
-            $pending_or_expired = 'EXP';
-        }  
+        }
+                  
+        if (isset($agg->field_aggcompliance['und'][0]['value'])) {
+	        if ( true === $deadline_before
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	            {
+	            $pending_or_expired = 'EXP';
+	        } 
+        }
          
 //         if (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
 //              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
 //             {
-            
-        if (false === $deadline_before
-             && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
-            {            
-            $pending_or_expired = 'PD';
-        }   
+        if (isset($agg->field_aggcompliance['und'][0]['value'])) {
+	        if (false === $deadline_before
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	            {            
+	            $pending_or_expired = 'PD';
+	        }   
+        }
 //         dsm($pending_or_expired);                  
-        $line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
+		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd']))
+        	$line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
         //'NUTS 1 code',
-        if (strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
+        if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
             $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
         } else {
             $line[$ind['nuts_1_code']] = '';
         }    
         //'NUTS 2 code',
-        if (strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
+        if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
             $line[$ind['nuts_2_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 4);
         } else {
             $line[$ind['nuts_2_code']] = '';
         }           
         //'NUTS 3 code',
-        if (strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
+        if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
             $line[$ind['nuts_3_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 5);
         } else {
             $line[$ind['nuts_3_code']] = '';
@@ -5477,16 +6245,19 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Big City info', 
         $bc_code = '';
         $bc_name = ''; 
-        foreach($agg->field_aggbcliste['und'] as $listnidbc) {
-//             dsm($listnidbc);
-            $bc = node_load($listnidbc['nid']);
-//             dsm($bc);
-            $bc_code .= ($bc_code == '' ? '' : ';') . $bc->field_inspireidlocalid['und'][0]['value'];
-            $bc_name .= ($bc_name == '' ? '' : ';') . $bc->title;
-//             dsm($bc_code);
-//             dsm($bc_name);
-            unset($bc);
-        }        
+        if (isset($agg->field_aggbcliste['und'])) {
+	        foreach ($agg->field_aggbcliste['und'] as $listnidbc) {
+	//             dsm($listnidbc);
+	            $bc = node_load($listnidbc['nid']);
+	//             dsm($bc);
+				if (isset($bc->field_inspireidlocalid['und'][0]['value'])) 
+	            	$bc_code .= ($bc_code == '' ? '' : ';') . $bc->field_inspireidlocalid['und'][0]['value'];
+	            $bc_name .= ($bc_name == '' ? '' : ';') . $bc->title;
+	//             dsm($bc_code);
+	//             dsm($bc_name);
+	            unset($bc);
+	        }
+        }
         //'code',
         $line[$ind['bccode']] = $bc_code;
         //'name',
@@ -5846,35 +6617,49 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $rcaDateArt54 = '';
         $rcaDateArt58 = '';
         $rcatreated = array();
-        foreach($agg->field_agguwwliste['und'] as $uwwtpnid) {
-            $uwwtp = node_load($uwwtpnid['nid']);
-            foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
-                $dcp = node_load($dcpnid['nid']);
-
-                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
-                    $rca = node_load($rcanid['nid']);
-                    
-                    if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
-                        continue;
-                    }
-                    $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
-                    
-                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
-                    $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
-                    $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
-                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];                    
-                                        
-                    $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
-                    $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
-                    $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
-                    $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
-                                        
-                    unset($rca);
-                }     
-                unset($dcp);           
-            }
-            unset($uwwtp);   
-        }  
+        if (isset($agg->field_agguwwliste['und'])) {
+	        foreach($agg->field_agguwwliste['und'] as $uwwtpnid) {
+	            $uwwtp = node_load($uwwtpnid['nid']);
+	            if (isset($uwwtp->field_uwwdcpliste['und'])) {
+		            foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
+		                $dcp = node_load($dcpnid['nid']);
+						if (isset($dcp->field_dcprcaliste['und'])) {
+			                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
+			                    $rca = node_load($rcanid['nid']);
+			                    
+			                    if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
+			                        continue;
+			                    }
+			                    $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
+			                    
+			                    if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'], 
+			                    		  $dcp->field_dcpwaterbodyid['und'][0]['value'],
+			                    		  $dcp->field_dcpwfdrbd['und'][0]['value'],
+			                    		  $dcp->field_rcatype['und'][0]['value'],
+			                    		  $rca->field_inspireidlocalid['und'][0]['value'],
+			                    		  $rca->title,
+			                    		  $rca->field_rcadateart54['und'][0]['value'],
+			                    		  $rca->field_rcadateart5854['und'][0]['value'])) {
+				                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+				                    $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
+				                    $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
+				                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];                    
+				                                        
+				                    $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+				                    $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
+				                    $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+				                    $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+				                                        
+				                    unset($rca);
+			                    }
+			                }     
+						}
+		                unset($dcp);           
+		            }
+	            }
+	            unset($uwwtp);   
+	        }  
+        }
         unset($rcatreated);   
         //'water body type',   ?dcpWaterBodyType
         $line[$ind['water_body_type']] = $dcpWaterBodyType;
