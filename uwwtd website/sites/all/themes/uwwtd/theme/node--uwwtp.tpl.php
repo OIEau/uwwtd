@@ -346,8 +346,9 @@ echo uwwtd_insert_errors_tab($node);
 			   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
 			)
 			{
-				  print'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>';
-					echo uwwtd_stackedbar_uwwtpnode($node);
+				print '<div class="flip-title">Incoming and discharged loads (t/year)</div>';
+                print'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>';
+				echo uwwtd_stackedbar_uwwtpnode($node);
              } 
 			 print'   </div> ';
 					

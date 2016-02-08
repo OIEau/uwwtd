@@ -1365,10 +1365,22 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
            //krumo($result); 
         }
         elseif($url['host']=='water.discomap.eea.europa.eu'){
-            if($params['LAYER']=='4'){
+            if($params['LAYER']=='4' && strpos($url['path'], 'BathingWater')>0){
                 $result = '<div class="legend-label">'.t('Bathing water').'</div><div  class="legend-img">'.$result.'</div>';
             }
+            elseif($params['LAYER']=='3' && strpos($url['path'], 'NitrateRivers') > 0){
+                $result = '<div class="legend-label">'.t('Mean annual nitrates in rivers by station 2011').'</div><div  class="legend-img">'.$result.'</div>';
+            }
+            elseif($params['LAYER']=='3' && strpos($url['path'], 'OrthophosphateRivers') > 0){
+                $result = '<div class="legend-label">'.t('Mean annual orthophosphate in rivers by station 2011').'</div><div  class="legend-img">'.$result.'</div>';
+            }
+            //TODO PO4, COD
+            
+            elseif($params['LAYER']=='3' && strpos($url['path'], 'MonitoringStations') > 0){
+                $result = '<div class="legend-label">'.t('SoE Monitoring Station').'</div><div  class="legend-img">'.$result.'</div>';
+            }
             else{
+                //krumo($url);
                 $result ='';
             }
         }
@@ -1398,10 +1410,8 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
         }
         
         elseif($url['host']=='water.discomap.eea.europa.eu'){
-            
-            
             //Bathing water : level 4
-            if($layer=='4'  && $url['path']=='/arcgis/services/BathingWater/BathingWater_Dyna_WM/MapServer/WMSServer'){
+            if($layer=='4'  && strpos($url['path'], 'BathingWater')>0){
                 $new_layer = t('Bathing water');
                 $data =array();
                 $keys = array('Bathingwatername','Country', 'Watertype', '2012', '2013', '2014', '2015', '2016', '2017', '2018','Linktobathingwaterprofile');
@@ -1415,7 +1425,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
                 $result[$new_layer] = $data;
                 unset($result[$layer]);
             }
-            elseif($layer=='3' && $url['path']=='/arcgis/services/RiversLakesSoE/WISE_SoE_RL_Quality_SoEMonitoringStations_Dyna_WM/MapServer/WMSServer'){
+            elseif($layer=='3' && strpos($url['path'], 'MonitoringStations')>0){
                 $new_layer =t("SoE Monitoring Stations");
                 $keys = array("WaterCategory","CountryCode","CountryName","Waterbase_StationID","NationalStationID","NationalStationName","WFD_EU_CD","River_Lake_SeaRegion_Name","Surface_Ground_WaterBodyID","Surface_Ground_WaterBodyName","RBDcode","RBDname","RecordReported","Remarks");
                 foreach($features as $feature){
@@ -1424,9 +1434,18 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
                 $result[$new_layer] = $data;
                 unset($result[$layer]);
             }
-            //Other bathing water levels
+            elseif($layer=='3' && strpos($url['path'], 'NitrateRivers') > 0){
+                $new_layer = t('Mean annual nitrates in rivers by station 2011');
+                $result[$new_layer] = $features;
+                unset($result[$layer]);
+            }
+            elseif($layer=='3' && strpos($url['path'], 'OrthophosphateRivers') > 0){
+                $new_layer = t('Mean annual orthophosphate in rivers by station 2011');
+                $result[$new_layer] = $features;
+                unset($result[$layer]);
+            }
+            //Other layers/levels
             elseif(is_numeric($layer)){
-                //krumo($url);
                 unset($result[$layer]);
             }
         }
