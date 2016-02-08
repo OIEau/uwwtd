@@ -135,7 +135,7 @@ echo uwwtd_insert_errors_tab($node);
             <div class="uwwrealthird">
               <div class="flip">
                <div class="front">
-                  <img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png');?>" class="button-flipper table-to-chart" title="See diagram" alt="See diagram">
+                  <div class="flip-image"><img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png');?>" class="button-flipper table-to-chart" title="See diagram" alt="See diagram"></div>
                   <?php 
                       print render($content['field_agggenerated']);
                       print uwwtd_render_field_with_pe($content['field_aggc1']);
@@ -144,7 +144,7 @@ echo uwwtd_insert_errors_tab($node);
                   ?>
                </div>
                <div class="back">
-                  <img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png'); ?>" class="button-flipper chart-to-table" title="See the data table" alt="See the data table">
+                  <div class="flip-image"><img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png'); ?>" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>
                   <svg id="agglo_piechart_back"></svg>
                   <?php print uwwtd_piechart_agglonode($node, $content); ?>
                </div>       
