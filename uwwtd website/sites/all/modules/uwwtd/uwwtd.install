@@ -3810,6 +3810,60 @@ function uwwtd_update_7138(&$context = null) {
     } 
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Mise à jour wording pour la page /content/agglomerations (View/Discover).
+ */
+function uwwtd_update_7139(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+	// Récupération du node de la page useful links :
+	$query = db_select('node', 'n');
+	$query->fields('n');
+	$query->condition('n.type', 'page', '=');
+	$query->condition('n.status', 1, '=');
+	$query->condition('n.title', 'Agglomerations', '=');
+	$node = $query->execute()->fetchAssoc();
+	if (!empty($node['nid'])) {
+		// Mise à jour du body :
+		$nodeFull = node_load($node['nid']);
+		if (!empty($nodeFull->body[LANGUAGE_NONE][0]['value'])) {
+			$nodeFull->body[LANGUAGE_NONE][0]['value'] = '
+				<p>Under chapter IV, the INSPIRE Directive requires to establish network services and the article 11 lists the 5 services to implement, namely discover, view, download, transform and invoke services.</p>
+				<p>NOTA: the platform refers to discover here as for non Inspire expert, discover means possibility to explore available data and the concept of metadata is not well known.</p>
+				
+				<p>On this section, you can access to pages providing discovery and view services , which means:</p>
+				<p>
+					<ul>
+						<li>You can access an information fiche for each key geographical component of the Urban Waste Water Treatment Directive (91/271/EEC) describing in details what can be found, when and who updates the data and many more.</li>
+						<li>You can visualise the data via maps, graphs and summary tables and individual fiches, navigate in the system, print, download and many more.</li>
+					</ul>
+					For the view part, you can access:
+					<ul>	
+						<li>The agglomerations with details on:
+							<ul>
+								<li><a href="'. base_path() .'agglomerations/compliance" title="compliance">compliance of the agglomerations</a>.</li>
+								<li><a href="'. base_path() .'agglomerations/connection" title="connection">collection of wastewater</a><br /><br /></li>
+							</ul>
+						</li>
+						<li>The waste water treatment plants with details on:
+							<ul>
+								<li><a href="'. base_path() .'uwwtps/compliance" title="compliance">compliance of the treatment plants</a></li>
+								<li><a href="'. base_path() .'uwwtps/treatment" title="treatment">Level of treatment of wastewater</a></li>
+								<li><a href="'. base_path() .'uwwtps/pressure" title="pressure">pollution pressures</a><br /><br /></li>
+							</ul>
+						</li>
+						<li>The discharge points with details on localisation of the discharge points</li>
+						<li>The <a href="'. base_path() .'sensitive-areas" title="http://uwwtd.oieau.fr/sensitive-areas">receiving areas</a> with details on delineation and localisation.</li>
+					</ul>
+				</p>';
+			node_save($nodeFull);
+		}
+	}
+	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }
 

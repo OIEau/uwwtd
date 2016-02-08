@@ -917,7 +917,14 @@ div#block-block-1{
 	font-size:14px;
 }
 
-.download, .download tr, .download tr td{border: 1px solid #000;padding: 10px;}
+.download, .download tr, .download tr td {
+    border: 1px solid #000;padding: 10px;
+}
+
+.download table {
+    max-width: 200px;
+}
+
 
 div.data-table-header{
 	margin-bottom:3px;

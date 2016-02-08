@@ -2714,16 +2714,16 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
        
     //array 14    rate
     if (isset($context['results']['graph']['discharge_load_bod']) && isset($context['results']['graph']['incoming_load_bod'])) {
-    	$sheet->getCell('C159')->setValue(round((1-($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod'])) *100, 1));
+    	$sheet->getCell('C159')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod']) *100, 1));
     }
     if (isset($context['results']['graph']['discharge_load_cod']) && isset($context['results']['graph']['incoming_load_cod'])) {
-    	$sheet->getCell('C160')->setValue(round((1-($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod'])) *100, 1));
+    	$sheet->getCell('C160')->setValue(round(($context['results']['graph']['discharge_load_cod'] / $context['results']['graph']['incoming_load_cod']) *100, 1));
     }
     if (isset($context['results']['graph']['discharge_load_n']) && isset($context['results']['graph']['incoming_load_n'])) {
-    	$sheet->getCell('C161')->setValue(round((1-($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n'])) *100, 1));
+    	$sheet->getCell('C161')->setValue(round(($context['results']['graph']['discharge_load_n'] / $context['results']['graph']['incoming_load_n']) *100, 1));
     }
     if (isset($context['results']['graph']['discharge_load_p']) && isset($context['results']['graph']['incoming_load_p'])) {
-    	$sheet->getCell('C162')->setValue(round((1-($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p'])) *100, 1));
+    	$sheet->getCell('C162')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['graph']['incoming_load_p']) *100, 1));
     }
     //previous
     $sheet->getCell('D159')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C159'));
@@ -6640,17 +6640,50 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 			                    		  $rca->title,
 			                    		  $rca->field_rcadateart54['und'][0]['value'],
 			                    		  $rca->field_rcadateart5854['und'][0]['value'])) {
-				                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
-				                    $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
-				                    $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
-				                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];                    
+
+                                                            switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
+                                                                case 'CW':
+                                                                    $field_dcpwaterbodytype = "To coastal water";
+                                                                    break;
+                                                                case 'ES':
+                                                                    $field_dcpwaterbodytype = "To estuary";
+                                                                    break;
+                                                                case 'FW':
+                                                                    $field_dcpwaterbodytype = "To freshwater";
+                                                                    break;
+                                                                case 'LC':
+                                                                    $field_dcpwaterbodytype = "On land (catchment of coastal water)";
+                                                                    break;
+                                                                case 'LF':
+                                                                    $field_dcpwaterbodytype = "On land (catchment of freshwater and/or estuary)";
+                                                                    break;
+                                                                default:
+                                                                    $field_dcpwaterbodytype = "";
+                                                                    break;
+                                                            }
+
+                                                            switch ($dcp->field_dcpirrigation['und'][0]['value']) {
+                                                                case 'IR':
+                                                                    $field_dcpirrigation = 'Irrigation';
+                                                                    break;
+                                                                case 'IN':
+                                                                    $field_dcpirrigation = 'Infiltration';
+                                                                    break;
+                                                                default:
+                                                                    $field_dcpirrigation = '';
+                                                                    break;
+                                                            }
+				            $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+				            $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
+				            $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
+				            $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];                    
 				                                        
-				                    $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
-				                    $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
-				                    $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
-				                    $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+				            $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+				            $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
+				            $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+				            $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
 				                                        
-				                    unset($rca);
+				            unset($rca);
 			                    }
 			                }     
 						}
@@ -7582,9 +7615,42 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         continue;
                     }
                     $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
+
+                    switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
+                        case 'CW':
+                            $field_dcpwaterbodytype = "To coastal water";
+                            break;
+                        case 'ES':
+                            $field_dcpwaterbodytype = "To estuary";
+                            break;
+                        case 'FW':
+                            $field_dcpwaterbodytype = "To freshwater";
+                            break;
+                        case 'LC':
+                            $field_dcpwaterbodytype = "On land (catchment of coastal water)";
+                            break;
+                        case 'LF':
+                            $field_dcpwaterbodytype = "On land (catchment of freshwater and/or estuary)";
+                            break;
+                        default:
+                            $field_dcpwaterbodytype = "";
+                            break;
+                    }
+
+                    switch ($dcp->field_dcpirrigation['und'][0]['value']) {
+                        case 'IR':
+                            $field_dcpirrigation = 'Irrigation';
+                            break;
+                        case 'IN':
+                            $field_dcpirrigation = 'Infiltration';
+                            break;
+                        default:
+                            $field_dcpirrigation = '';
+                            break;
+                    }
                     
-                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
-                    $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $dcp->field_dcpirrigation['und'][0]['value'];
+                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $field_dcpwaterbodytype;
+                    $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
                     $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
                     $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
                     $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];   
