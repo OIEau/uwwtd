@@ -10,8 +10,8 @@
 			
 			<div class="region col-sm-8">
 				<div class="uwwtd_footer_div uwwtd_credits">
-                                        <p><em>Service request funded by the European Commission (<a href="http://ec.europa.eu/dgs/environment/">Directorate General Environment</a>)</em></p>
-                                        <p><em>Expanding the Urban Wastewater Structured Information and Implementation Framework (SIIF)</em> – n°: 07.0201/2014/SFRA/698614/ENV.C.2 – date 02/01/2015 to 1/01/2016</p>
+                                        <p><em>Service request funded by the European Commission (<a href="http://ec.europa.eu/dgs/environment/" title="http://ec.europa.eu/dgs/environment/" target="_blank">Directorate General Environment</a>)</em></p>
+                                        <p><em>Expanding the Urban Wastewater Treatment Directive Structured Implementation and Information Framework (UWWTD SIIF)</em> – n°: 07.0201/2014/SFRA/698614/ENV.C.2 and n°07.0201/2014/SFRA/698614/ENV.C.2 – date 02/01/2015 to 1/01/2016</p>
                                         <p>This website is managed by Office International de l’Eau © Copyright DGENV 2013-2016</p>
 					<?php echo l(t('Credits'), 'content/credits', array('attributes' => array('class' => array('uwwtd_credits_link')))); ?> | 
                                         <?php echo l(t('Disclaimer'), 'content/disclaimer', array('attributes' => array('class' => array('uwwtd_credits_link')))); ?>
