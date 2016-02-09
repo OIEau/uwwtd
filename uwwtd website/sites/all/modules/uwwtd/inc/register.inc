@@ -6575,12 +6575,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $compart5hierarchical = $agg->field_aggart5compliance['und'][0]['value'];
         } elseif ($agg->field_agggenerated['und'][0]['value'] <= 10000) {
             $compart5hierarchical = 'NR';
-        } elseif ($agg->field_aggart4compliance['und'][0]['value'] == 'C'
-                  && $agg->field_aggart5compliance['und'][0]['value'] == 'C' 
+        } elseif (  $agg->field_aggart3compliance['und'][0]['value'] == 'C' &&
+                        $agg->field_aggart4compliance['und'][0]['value'] == 'C' &&
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'C' 
                   ) {
             $compart5hierarchical = 'C';
-        } elseif ($agg->field_aggart4compliance['und'][0]['value'] == 'NC'
-                  || $agg->field_aggart5compliance['und'][0]['value'] == 'NC' 
+        } elseif ( $agg->field_aggart3compliance['und'][0]['value'] == 'NC' ||
+                        $agg->field_aggart4compliance['und'][0]['value'] == 'NC' ||
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'NC' 
                   ) {
             $compart5hierarchical = 'NC';
         }                          
@@ -8067,11 +8069,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             
             //'monitoring',
-            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
             
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value']);
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value']);
             }
             
             //'final',
@@ -9601,10 +9603,14 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     return $art5_treatment;          
 }  
 
-function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $required_rcaB, $required_rcaC)
+function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC)
 {            
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
-    $art5_monitoring = '';            
+
+    $art5_monitoring = '';
+    // dsm($treatment_required);            
+    // dsm($required_rcaB);            
+    // dsm($required_rcaC);            
     switch($treatment_required) {
         case '3N':   
             if ($monitoring_Ntot == 'Pass' || $monitoring_Ntot == 'P') {
@@ -9626,7 +9632,14 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             } else {
                 $art5_monitoring = 'NC';
             }                 
-            break;                
+            break;  
+        case '3other':
+            if($monitoring_other == 'Pass' || $monitoring_other == 'P') {
+                $art5_monitoring = 'C';
+            } else {
+                $art5_monitoring = 'NC';
+            }
+            break;
         case 'Appropriate':  
         case 'NR':
             $art5_monitoring = 'NR';

@@ -3863,8 +3863,13 @@ function uwwtd_update_7139(&$context = null) {
 		}
 	}
 	
-	//==========DEBUG : permet de relancer la mise à jour si besoin.
-// 	throw new DrupalUpdateException(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
 }
 
 /**
@@ -3899,8 +3904,10 @@ function uwwtd_update_7140(&$context = null) {
       ->condition('bid', $bidfooter)
       ->execute();
       
-	//==========DEBUG : permet de relancer la mise à jour si besoin.
-// 	throw new DrupalUpdateException(__FUNCTION__);
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
 }
 
 /**
@@ -4000,11 +4007,46 @@ function uwwtd_update_7141(&$context = null) {
 		}
 	}
 
-	//==========DEBUG : permet de relancer la mise à jour si besoin.
-		throw new DrupalUpdateException(__FUNCTION__);
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+
 }
 
+
+/**
+ * Update maps
+ */    
+function uwwtd_update_7142(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
     
+    //force update for maps
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_maps = array(
+        'agg_compliance_map.inc',
+        'agglomeration.inc',
+        'waste_water_treatment_network_map.inc',
+        'dcp_map.inc',
+        'rca_map.inc',
+        'uwwtd_network_map.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_pressure_map.inc',
+        'uwwtp_treatment_map.inc',
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, $new_maps, array('-'), array('-'));
+    drupal_flush_all_caches();
+	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+	throw new DrupalUpdateException(__FUNCTION__);
+}    
     
 /**
  * Redéfinit la précision et le scale du champs donné.

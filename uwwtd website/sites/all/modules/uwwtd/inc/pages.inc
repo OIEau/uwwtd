@@ -162,10 +162,28 @@ function uwwtd_get_data_agglomeration($option){
             $row['field_agggenerated_value_format'] = is_null($row['field_agggenerated_value']) ? '' : uwwtd_format_number($row['field_agggenerated_value']);
             $row['sum_uwwtp_format'] = is_null($row['sum_uwwtp']) ? '' : uwwtd_format_number($row['sum_uwwtp']);
             $row['field_aggcompliance_value_format'] = is_null($row['field_aggcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggcompliance_value']];
+            
+            //Alter compliance value for display legal compliance (hierachical)
             $row['field_aggart3compliance_value_format'] = is_null($row['field_aggart3compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart3compliance_value']];
-            $row['field_aggart4compliance_value_format'] = is_null($row['field_aggart4compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']];
-            $row['field_aggart5compliance_value_format'] = is_null($row['field_aggart5compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']];
+            if($row['field_aggart3compliance_value'] == 'NC' && $row['field_aggart4compliance_value']== 'C'){
+                $row['field_aggart4compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label']['NC'];
+                $row['field_aggart4compliance_value'] = 'NC';
+            }
+            else{
+                $row['field_aggart4compliance_value_format'] = is_null($row['field_aggart4compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart4compliance_value']];
+            }
+            if($row['field_aggart4compliance_value'] == 'NC' && $row['field_aggart5compliance_value']== 'C'){
+                $row['field_aggart5compliance_value_format'] = $GLOBALS['uwwtd']['ui']['field']['compliance_label']['NC'];
+                $row['field_aggart5compliance_value'] = 'NC';
+            }
+            else{
+               $row['field_aggart5compliance_value_format'] = is_null($row['field_aggart5compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart5compliance_value']];
+            }
+            
+            //Only for Portugal case, not use for legal compliance.
             $row['field_aggart6compliance_value_format'] = is_null($row['field_aggart6compliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_aggart6compliance_value']];
+            
+            
             $row['field_aggc1_value_format'] = is_null($row['field_aggc1_value']) ? '' : uwwtd_format_number($row['field_aggc1_value'], 1);
             $row['field_aggc2_value_format'] = is_null($row['field_aggc2_value']) ? '' : uwwtd_format_number($row['field_aggc2_value'], 1);
             $row['field_aggpercwithouttreatment_value_format'] = is_null($row['field_aggpercwithouttreatment_value']) ? '' : uwwtd_format_number($row['field_aggpercwithouttreatment_value'], 1);
