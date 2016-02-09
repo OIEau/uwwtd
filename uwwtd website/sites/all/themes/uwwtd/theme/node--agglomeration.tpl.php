@@ -155,7 +155,9 @@ echo uwwtd_insert_errors_tab($node);
                   ?>
                </div>
                <div class="back">
+                  <div class="flip-title">Generated Load by collection type in population equivalent</div>
                   <div class="flip-image"><img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png'); ?>" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>
+                  
                   <svg id="agglo_piechart_back"></svg>
                   <?php print uwwtd_piechart_agglonode($node, $content); ?>
                </div>       
@@ -426,7 +428,7 @@ echo uwwtd_insert_errors_tab($node);
         <?php if(isset($node->field_article17_agglo['und'][0]['nid'])): ?>
             <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
               <legend class="panel-heading">
-                <div class="panel-title fieldset-legend"><?php print t('Forward looking aspect UWWTP'); ?></div>
+                <div class="panel-title fieldset-legend"><?php print t('Forward looking aspect'); ?></div>
               </legend>
               <div class="panel-body">
                 <?php print uwwtd_render_article17_aglo($node->field_article17_agglo['und'][0]['nid']); ?>

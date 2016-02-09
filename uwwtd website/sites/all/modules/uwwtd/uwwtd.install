@@ -1,5 +1,4 @@
 <?php 
-
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
@@ -3707,7 +3706,7 @@ function uwwtd_update_7135(&$context = null){
             }
         }
     }
-     if (isset($context)) {
+    if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     }  
@@ -3736,7 +3735,10 @@ function uwwtd_update_7136(&$context = null) {
 			node_save($nodeFull);
 		}
 	}
-	
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 // 	throw new DrupalUpdateException(__FUNCTION__);
 }
@@ -3752,6 +3754,61 @@ function uwwtd_update_7137(&$context = null) {
 	addFieldToContentType('field_compliance_pending', 'text_long', 'Comparison of compliance pending', 'ms_level');
 	addFieldToContentType('field_compliance_total', 'text_long', 'Comparison of compliance total', 'ms_level');
 	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Ajout des couches SoE Nitrates et orthophosphates 
+ */
+function uwwtd_update_7138(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+        //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'soe_nitrates_2011.inc',
+        'soe_phosphate_2011.inc',
+        'oieau_rbd.inc',
+        'oieau_rbdsu.inc',
+        'oieau_nuts_0.inc',
+        'oieau_nuts_1.inc',
+        'oieau_nuts_2.inc',
+        'oieau_nuts_3.inc',
+    );
+    $new_maps = array(
+        'agg_compliance_map.inc',
+        'agglomeration.inc',
+        'dcp_map.inc',
+        'rca_map.inc',
+        'uwwtd_network_map.inc',
+        'uwwtp_compliance_map.inc',
+        'uwwtp_pressure_map.inc',
+        'uwwtp_treatment_map.inc',
+        'waste_water_treatment_network_map.inc',
+        
+    );
+    
+    uwwtd_update_map_overlay($country_config, $country_code, $new_maps, $new_overlays, array('-'));    
+            
+     ////////////////////////////////////////////////////////////////
+    //end update
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    drupal_flush_all_caches();
+	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 // 	throw new DrupalUpdateException(__FUNCTION__);
 }
@@ -3809,6 +3866,7 @@ function uwwtd_update_7139(&$context = null) {
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }
+
     
     
 /**
@@ -4122,7 +4180,9 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts.inc',
         'oieau_rbd_rbdsu.inc',
         'natura2000.inc',
-        'soe_monitoring_stations.inc'
+        'soe_monitoring_stations.inc',
+        'soe_nitrates_2011.inc',
+        'soe_phosphate_2011.inc',
         
     ); 
     $list_style = array(

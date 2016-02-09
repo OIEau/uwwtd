@@ -1,13 +1,13 @@
-<?php
+<?php 
 
 $openlayers_layers = new stdClass();
 $openlayers_layers->disabled = FALSE; /* Edit this to true to make a default openlayers_layers disabled initially */
 $openlayers_layers->api_version = 1;
-$openlayers_layers->name = 'oieau_nuts_0';
-$openlayers_layers->title = 'Nomenclature of Territorial Units for Statistics level 0';
-$openlayers_layers->description = '';
+$openlayers_layers->name = 'soe_nitrates_2011';
+$openlayers_layers->title = 'Mean annual nitrates in rivers by station 2011';
+$openlayers_layers->description = 'The map shows the mean annual concentrations of Nitrate (NO3) as mg/L NO3-N measured at WISE SoE river monitoring stations.';
 $openlayers_layers->data = array(
-  'base_url' => 'http://maps.oieau.fr/services/background',
+  'base_url' => 'http://water.discomap.eea.europa.eu/arcgis/services/RiversLakesSoE/WISE_SoE_RL_Quality_NitrateRivers_Dyna_WM/MapServer/WMSServer',
   'params' => array(
     'buffer' => '2',
     'ratio' => '1.5',
@@ -18,14 +18,13 @@ $openlayers_layers->data = array(
     'exceptions' => 'application/vnd.ogc.se_inimage',
     'format' => 'image/png',
     'layers' => array(
-      0 => 'NUTS0',
+      0 => '1,2,3',
     ),
     'styles' => '',
   ),
   'projection' => array(
     0 => 'EPSG:3857',
     1 => 'EPSG:4326',
-    2 => 'EPSG:900913',
   ),
   'isBaseLayer' => 0,
   'layer_type' => 'openlayers_layer_type_wms',
@@ -81,4 +80,3 @@ $openlayers_layers->data = array(
     21 => 0.074645535424352,
   ),
 );
-
