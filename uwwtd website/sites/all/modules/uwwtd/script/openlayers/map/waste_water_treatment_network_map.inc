@@ -30,14 +30,6 @@ $openlayers_maps->data = array(
     'openlayers_behavior_attribution' => array(
       'separator' => '',
     ),
-    'openlayers_behavior_layerswitcher' => array(
-      'ascending' => 1,
-      'sortBaseLayer' => '0',
-      'roundedCorner' => 1,
-      'roundedCornerColor' => '#222222',
-      'maximizeDefault' => 1,
-      'div' => 'uwwtd-switcher',
-    ),
     'openlayers_behavior_gazetteer' => array(
       'restriction_query' => 'country=SI',
     ),

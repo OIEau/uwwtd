@@ -42,14 +42,6 @@ $openlayers_maps->data = array(
     'openlayers_behavior_attribution' => array(
       'separator' => '; ',
     ),
-    'openlayers_behavior_layerswitcher' => array(
-      'ascending' => 1,
-      'sortBaseLayer' => '0',
-      'roundedCorner' => 1,
-      'roundedCornerColor' => '#222222',
-      'maximizeDefault' => 0,
-      'div' => '',
-    ),
     'openlayers_behavior_gazetteer' => array(
       'restriction_query' => 'country=IE',
     ),
@@ -94,7 +86,6 @@ $openlayers_maps->data = array(
       'layers_oieau_nuts_3_groupname' => 'Regions (NUTS)',
       'layers_bathing_water' => 1,
       'layers_bathing_water_groupname' => 'Others',
-      
       'layers_soe_monitoring_stations' => 1,
       'layers_soe_monitoring_stations_groupname' => 'WISE Soe',
       'layers_soe_nitrates_2011' => 1,
@@ -378,7 +369,7 @@ Noinformation|No information|#6b6b6b',
     'oieau_nuts_2' => 0,
     'oieau_nuts_3' => 0,
     'bathing_water' => 0,
-    'natura_2000' => 0,
+    'natura_2000' => 'natura_2000',
     'soe_monitoring_stations' => 0,
     'soe_nitrates_2011' => 0,
     'soe_phosphate_2011' => 0,

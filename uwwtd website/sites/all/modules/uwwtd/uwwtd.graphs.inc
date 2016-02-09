@@ -282,16 +282,16 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Distance to Compliance"), 
 	    array(
 	    	array(
-	    		'graph_art3_pe', t("Connection compliance by p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
-	    		'graph_art3_agg', t("Connection compliance by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
+	    		'graph_art3_pe', t("Distance to compliance for connection by generated load (population equivalent - p.e.)"), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
+	    		'graph_art3_agg', t("Distance to compliance for connection by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
 	    	),
     		array(
-    			'graph_art4_pe', t("Secondary treatment compliance by p.e."), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
-    			'graph_art4_agg', t("Secondary  treatment compliance 4 by number of agglomerations"), $frontAndBackGraphs['graph4Front'],  $frontAndBackGraphs['graph4Back'], true
+    			'graph_art4_pe', t("Distance to compliance for secondary treatment by load entering (population equivalent - p.e.)"), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
+    			'graph_art4_agg', t("Distance to compliance for secondary  treatment by number of agglomerations"), $frontAndBackGraphs['graph4Front'],  $frontAndBackGraphs['graph4Back'], true
     		),
     		array(
-    			'graph_art5_pe', t("More stringent treatment compliance by p.e."), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
-    			'graph_art5_agg', t("More stringent treatment compliance by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
+    			'graph_art5_pe', t("Distance to compliance for more stringent treatment by load entering (population equivalent - p.e.)"), $frontAndBackGraphs['graph5Front'],  $frontAndBackGraphs['graph5Back'], true,
+    			'graph_art5_agg', t("Distance to compliance for more stringent treatment by number of agglomerations"), $frontAndBackGraphs['graph6Front'],  $frontAndBackGraphs['graph6Back'], true
     		),
 	    ), $yearsPossibles
     );
