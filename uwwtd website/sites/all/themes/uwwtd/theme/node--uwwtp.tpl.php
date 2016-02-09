@@ -145,18 +145,30 @@ echo uwwtd_insert_errors_tab($node);
    
     $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
 
-    print '<div class="uwwcontainer" style="margin-top:-50px">';
+    print '<div class="uwwcontainer">';
 		if ($view_mode == 'full' && !empty($title)){
 			$fieldstat = field_view_field('node', $node, 'field_status');
 			$fieldnuts = field_view_field('node', $node, 'field_regionnuts');
-			print '<h1 style="z-index: 4;top:200px;color:white;"><span class="white-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="white-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="white-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="white-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
-			if(isset($node->field_regionnuts['und'][0]['value'])) print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].'</small>';
-			if(isset($fieldnuts[0]['#markup'])) print '<small> - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small>';
-			print '<br>';
-			if((!isset($node->field_uwwcollectingsystem['und'][0]['value']) || $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON') || (!isset($node->field_physicalcapacityactivity['und'][0]['value']) || $node->field_physicalcapacityactivity['und'][0]['value'] == '0')){
-				print t('COLLECTING SYSTEM WITHOUT TREATMENT PLANT');
-			}
-			print '</h1>';
+			?>
+            <div class="google-map-banner">
+                <h1>
+                	<span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
+                	<span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
+                	<span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
+                	<span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+                	<br />
+                	<small>
+                		<?php 
+                		if (!empty($node->field_regionnuts['und'][0]['value'])) {
+                			?>
+                			Region (NUTS) Code : <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
+                			Region (NUTS) Name : <?php echo $fieldnuts[0]['#markup'];
+                		}
+                		?>
+                	</small>
+                </h1>
+            </div>
+            <?php 
 		}
 		echo render($printy);
 
@@ -174,19 +186,26 @@ echo uwwtd_insert_errors_tab($node);
               print render($content['field_uwwloadenteringuwwtp']);
               print render($content['field_physicalcapacityactivity']);
               print render($content['field_uwwwastewatertreated']);
-			 
 			  print '<div class="treatmentPerformance" style="clear:both;">';
-			  
 			   print '<div style="font-weight:bold";>'.t('Treatment performance :').'</div>';
-			  $list = array(
-				render($content['field_uwwbod5perf']),
-				render($content['field_uwwcodperf']),
-				render($content['field_uwwtssperf']),
-				render($content['field_uwwntotperf']),
-				render($content['field_uwwptotperf']),
-				render($content['field_uwwotherperf'])
-			  );
-			  print theme('item_list', array('items'=>$list));
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwbod5perf']);
+			   	  print '</div>';
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwcodperf']);
+			   	  print '</div>';
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwtssperf']);
+			   	  print '</div>';
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwntotperf']);
+			   	  print '</div>';
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwptotperf']);
+			   	  print '</div>';
+			   	  print '<div class="uwwtp-list">';
+				  print render($content['field_uwwotherperf']);
+			   	  print '</div>';
 			  print '</div>';
 			  print '<div class="dataOfClosing" style="clear:both;">';
 			  if(isset($content['field_validto']) && $content['field_validto']['#items'][0]['value'] != ""){

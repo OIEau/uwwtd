@@ -1010,3 +1010,19 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 .toggleLegend:hover {
   cursor: pointer;
 }
+
+.google-map-banner {
+    width: 100%;
+    padding-top: 147px;
+    margin-bottom: -200px;
+}
+
+.google-map-banner h1 {
+    color: white;
+    z-index: 4;
+}
+
+.uwwtp-list {
+    margin-top: 5px;
+}
+}
