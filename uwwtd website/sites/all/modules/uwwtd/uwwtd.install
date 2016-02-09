@@ -3864,7 +3864,144 @@ function uwwtd_update_7139(&$context = null) {
 	}
 	
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Mets à jour le texte du footer.
+ */
+function uwwtd_update_7140(&$context = null) {
+	$pathbock = drupal_get_path('module', 'uwwtd') . '/script/block/footer7117.inc';
+    uwwtd_install_trace($pathbock);
+    //update block
+    _block_rehash('uwwtd'); //theme name here
+    
+    //find the bid of the footer block
+	$query = db_select('block_custom', 'bc');
+    $query->fields('bc', array('bid'));             
+    $query->condition('bc.info', 'Footer content', '=');
+	$result = $query->execute();
+    $bidfooter = -1;
+	foreach($result as $row){
+        $bidfooter = $row->bid;
+        break;
+	}
+    
+    if ($bidfooter == -1) {
+        throw new DrupalUpdateException('Error, can\'t find bid id for footer block');
+    }        
+    uwwtd_install_trace('find bid footer in block_custom table : ' . $bidfooter);
+    //Change block settings old view
+      db_update('block_custom')
+      ->fields(array(
+          'body' => file_get_contents($pathbock),
+      ))
+      ->condition('bid', $bidfooter)
+      ->execute();
+      
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Mets à jour wording pour la page Credits et la page Disclaimer.
+ */
+function uwwtd_update_7141(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+
+	// Récupération du node de la page Credits :
+	$query = db_select('node', 'n');
+	$query->fields('n');
+	$query->condition('n.type', 'page', '=');
+	$query->condition('n.status', 1, '=');
+	$query->condition('n.title', 'Credits', '=');
+	$node = $query->execute()->fetchAssoc();
+	if (!empty($node['nid'])) {
+		// Mise à jour du body :
+		$nodeFull = node_load($node['nid']);
+		if (!empty($nodeFull->body[LANGUAGE_NONE][0]['value'])) {
+			$nodeFull->body[LANGUAGE_NONE][0]['value'] = '
+				<p>This UWWTD SIIF toolbox was developed by Office International de l’Eau (OIEau) for The European Commission Directorate General Environment under Specific contracts n°07.0307/2012/638595/D2 and further enhanced under specific contract n°07.0201/2014/SFRA/698614/ENV.C.2 implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013.
+				It is developed using open source softwares.</p>
+				<p>A generic version together with instruction for installation and use can be found here <a href="https://github.com/OIEau/uwwtd" title="https://github.com/OIEau/uwwtd" target="_blank">https://github.com/OIEau/uwwtd</a></p>
+				<p>Copyrights UWWTD-SIIF platform by Office International de l\'Eau is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>';
+			node_save($nodeFull);
+		}
+	}
+	
+	// Récupération du node de la page Disclaimer :
+	$query = db_select('node', 'n');
+	$query->fields('n');
+	$query->condition('n.type', 'page', '=');
+	$query->condition('n.status', 1, '=');
+	$query->condition('n.title', 'Disclaimer', '=');
+	$node = $query->execute()->fetchAssoc();
+	if (!empty($node['nid'])) {
+		// Mise à jour du body :
+		$nodeFull = node_load($node['nid']);
+		if (!empty($nodeFull->body[LANGUAGE_NONE][0]['value'])) {
+			$nodeFull->body[LANGUAGE_NONE][0]['value'] = '
+				<p><strong>The information on this site is subject to a disclaimer, a copyright notice and rules related to personal data protection.</strong></p>
+				<p><strong>Disclaimer</strong></p>
+				<p>This website is launched in the framework of Specific contracts n°07.0307/2012/638595/D2 and n°07.0201/2014/SFRA/698614/ENV.C.2 implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 for the European Commission, however it reflects the views only of the authors, and the Commission cannot be held responsible for any use which may be made of the information contained therein.
+				The Office International de l’Eau maintains this website to enhance public access to information:
+				<ul>
+					<li>reported to the European Commission for the implementation of Directive 91/271/EC by the country</li>
+					<li>or gathered at the national level in view of reporting between reporting periods,</li>
+					<li>or gathered or available at national level for use by national authorities.</li>
+				</ul>
+				Our goal is to keep this information timely and accurate. If errors are brought to our attention, we will try to correct them. However, the Office International de l’Eau accepts no responsibility or liability whatsoever with regard to the information on this site. </p>
+				<p>This information is: </p>
+				<p>
+				<ul>
+					<li>of a general nature only and is not intended to address the specific circumstances of any particular individual or entity; </li>
+					<li>not necessarily comprehensive, complete, accurate or up to date; </li>
+					<li>sometimes linked to external sites over which Office International de l’Eau and DG Environment have no control and for which Office International de l’Eau and DG Environment assume no responsibility;</li>
+					<li>not professional or legal advice (if you need specific advice, you should always consult a suitably qualified professional).</li>
+				</ul>
+				It is our goal to minimize disruption caused by technical errors. However some data or information on this site may have been created or structured in files or formats that are not error-free and we cannot guarantee that our service will not be interrupted or otherwise affected by such problems. Office International de l’Eau accepts no responsibility with regard to such problems incurred as a result of using this site or any linked external sites. </p>
+				<p>This disclaimer is not intended to limit the liability of Office International de l’Eau in contravention of any requirements laid down in applicable national law nor to exclude its liability for matters which may not be excluded under that law. </p>
+				<p><strong>Copyright notice</strong> <a href="http://creativecommons.org/licenses/by-nc/4.0/" title="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="license"><img style="border-width: 0;" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" alt="Creative Commons License" /></a></p>
+				<p><span>UWWTD-SIIF platform</span> by <a href="http://uwwtd.oieau.fr" title="uwwtd.oieau.fr" rel="cc:attributionURL">Office International de l\'Eau</a> is licensed under a <a href="http://creativecommons.org/licenses/by-nc/4.0/" rel="license">Creative Commons Attribution-NonCommercial 4.0 International License</a>.<br />Permissions beyond the scope of this license may be available at <a href="http://www.oieau.fr" title="www.oieau.fr" rel="cc:morePermissions">www.oieau.fr</a> </p>
+				<p>This website is the property of UWWTD-SIIF project, a DGENV project lead by the UmweltBundesamt Austria in consortium with Office International de l’Eau - 15 rue E. Chamberland - 87065 Limoges Cedex - France </p>
+				<p>Contact: <a href="mailto:contact@uwwtd.oieau.fr" title="contact@uwwtd.oieau.fr">contact@uwwtd.oieau.fr</a> – Project manager: Benoît Fribourg-blanc - Telephone: +33-(0)555 11 47 80 </p>
+				<p>The general reproduction structure of texts, animated images or otherwise and any other component of the Website are the sole property of DG Environment. Any total or partial representation of this Website by any process whatsoever without the express authorization of the Natural Water Retention Measures project is forbidden and shall constitute unauthorized reproduction penalized by articles L.335-2 et seq. of the Code of intellectual property under French law. </p>
+				<p>All of the rights of reproduction are reserved, including downloadable documents (logos, photos, catalogues, booklets, brochures, and any type of information whatsoever...). Downloadable documents are also protected by copyright.</p>
+				<p>Similarly, databases appearing on the Website, which is protected by the provisions of the Intellectual Property Code concerning incorporation of the European directive of March 11, 1996 regarding the legal protection of databases produced by Office International de l’Eau.</p>
+				<p> User or visitor of the Website are encouraged to install a hyperlink to this Website and inform Office International de l’Eau. </p>
+				<p>The reuse is subject to the reuse policy of the European Commission implemented by a <a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2011:330:0039:0042:EN:PDF" title="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=OJ:L:2011:330:0039:0042:EN:PDF" target="_blank">Decision of 12 December 2011</a>. </p>
+				<p><strong>Personal Data Protection</strong></p>
+				<p>As the user, you are informed, in accordance with French law of January 6. 1978 and its article 27 on the protection of data, files and civil liberties, that any optional data you may choose to provide when completing the forms located on the Website allowing us to respond to your request, are solely intended for the UWWTD SIIF project, which is responsible for the processing of the data, for administrative and business management purposes.</p>
+				<p>You are informed that you have a right to access and rectify all personal data regarding you by writing to the Office International de l’Eau - 15 rue E. Chamberland - 87065 Limoges Cedex - France</p>
+				<p> The UWWTD SIIF project is committed to European Union policy on user privacy.</p>
+				<p> The policy on "protection of individuals with regard to the processing of personal data by the Community institutions" is based on Regulation (EC) N° 45/2001 of the European Parliament and of the Council of 18 December 2000.</p>
+				<p> Although you can browse through most of the current website without giving any information about yourself, in some cases, personal information is required. Such information will be treated it according to the policy described in the Regulation mentioned above and the specific objective described on the website form, focussing mainly on providing interactive communication services and possibilities for a registered user to contribute to the project.</p>
+				<p> The specific privacy policy statement of this website is the following:
+				<ul>
+					<li>We collect via the contact form your contact details and fields of expertise and/or interest to allow us involve you in the improvement of the website. The information will not be re-used for an incompatible purpose; </li>
+					<li>Your information is solely disclosed to the partners of the UWWTD SIIF project and national authority of the country. We will only disclose information to third parties if that is necessary for the fulfilment of the purpose(s) identified above. We will not divulge your personal data for direct marketing purposes;</li>
+					<li>By clicking on the “Send message” you give your unambiguous consent to UWWTD SIIF project to use your data for the above purpose.</li>
+					<li>Your data will be kept by the UWWTD SIIF project for the duration of the project (December 2013-March 2015) and transferred to the public authority that will take over responsibility of the website.</li>
+					<li>If you have queries or complaints, please contact the webmaster at <a href="mailto:contact@uwwtd.oieau.fr" title="contact@uwwtd.oieau.fr">contact@uwwtd.oieau.fr</a></li>
+				</ul>
+					How do we treat e-mails you send us? </p>
+				<p>When using the "Contact" button, you activate a specific form that invites you to send your comments to a specific functional mailbox.</p>
+				<p> When you send such a message, your personal data is collected only to the extent necessary to reply. If the management team of the mailbox is unable to answer your question, it will forward your e-mail to another expert. You will be informed, via e-mail, about which expert your question has been forwarded to.</p>
+				<p> If you have any questions about the processing of your e-mail and related personal data, do not hesitate to include them in your message.</p>
+				<p> <strong>Creation, development, hosting and management of the website</strong></p>
+				<p> Office International de l’Eau (OIEau) for UWWTD SIIF project </p>
+				<p><strong>Copyrights</strong> </p>
+				<p>UWWTD-SIIF platform by Office International de l\'Eau is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License. Permissions beyond the scope of this license may be available at <a href="http://www.oieau.fr" title="www.oieau.fr" target="_blank">www.oieau.fr</a>.</p>
+				<p> <strong>Contact</strong> </p>
+				<p>Office International de l’Eau (OIEau) 15 rue Edouard Chamberland 87065 LIMOGES cedex</p>
+				<p> <strong>Webmaster</strong></p>
+				<p> b.fribourg-blanc[at]oieau.fr</p>';
+			node_save($nodeFull);
+		}
+	}
+
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+		throw new DrupalUpdateException(__FUNCTION__);
 }
 
     

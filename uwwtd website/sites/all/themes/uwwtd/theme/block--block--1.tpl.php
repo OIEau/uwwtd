@@ -31,7 +31,7 @@
     });
 
 		$( "#popup_project" ).dialog({
-      title: "About the content of this website",
+      title: "About the SIIF project at the origin of this IT development",
       autoOpen: false,
       width: 950,
   		modal: true,
@@ -90,15 +90,13 @@
 	<div id="popup_project" class="popup_project_block">
 		<div>
 			<span class="ui-helper-hidden-accessible"><input type="text"/></span>
-
-
 			<p>The Structured Implementation and Information Framework (SIIF) concept is a ongoing European Commission (Environment Directorate General) 
 			pilot project essentially focused on the organisation and management of data in order to enhance the generation of information for policy makers, 
 			interested parties and the public at all levels on how legislation is practically implemented. 
 			The concept developed is in line with the provisions of the Public Access to Environmental Information  and INSPIRE  Directives. </p>
 			<p>The SIIF concept is composed of a governance approach and an IT system.</p>
 			<p>The SIIF implies a governance focused on compliance, good environmental status, environmental pressure and impact, economic activities and jobs creation. 
-			It has also an objective to reduce administrative burden, provide more up-to-date data, increase efficiency to all potential users. 
+			It has also an objective to reduce administrative burden, provide more up-to-date data, and increase efficiency to all potential users. 
 			The existence of an implementation programme on how to reach or maintain the compliance for a policy is also part of the SIIF governance approach.</p>
 			<p>As regards the IT components of the SIIF it has three components: (1) the content for data community (information needs and how it is organised);
 			(2) the process for data providers (who does what and how); (3) the dissemination for data users (how to display) 
@@ -106,15 +104,8 @@
 			
 			<p id="imgProjectA"><img src="<?php print base_path(); ?>sites/all/themes/uwwtd/images/pageaccueil.png" contenteditable="false"/></p>
 
-			<p>This IT development is related to the process and the dissemination of the existing content of the European urban waste water data model.</p>
-			<p>The SIIF project opted for the implementation of an open source dissemination IT toolbox. 
-			The tool was designed to disseminate environmental data and information at national level but also to facilitate the reporting process. 
-			It provides EU MS a cheap way to implement the Article 11 of the INSPIRE directive and thus to develop their national waste water website. 
-			The framework of this website can also be adapted to the use of other European Policies.</p>
-			
-			<p class="legend"><span>1 </span>Directive 2003/4/CE</p>
-			<p class="legend"><span>2 </span>Directive 2007/2/CE</p>
-			<p class="legend"><span>3 </span><a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></p>
+			<p>This IT development is related to the process and the dissemination of the existing content of the European urban waste water data model (see <a href="http://rod.eionet.europa.eu/obligations/613" title="http://rod.eionet.europa.eu/obligations/613">http://rod.eionet.europa.eu/obligations/613</a>).</p>
+			<p>The SIIF project opted for the implementation of an open source dissemination IT toolbox. The tool was designed to disseminate environmental data and information at national level but also to facilitate the reporting process. It provides EU MS a cheap way to implement the Article 11 of the INSPIRE directive and thus to develop their national waste water website. The framework of this website can also be adapted to the use of other European Policies.</p>
 		</div>
 	</div>
 	

@@ -1343,7 +1343,7 @@ function uwwtd_get_national_stat_str($year){
 	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
 	
 	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population equivalent (p.e).
-			These agglomerations generated a total load of ".$nbGeneratedLoad." (p.e). ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
+			These agglomerations generated a total load of ".$nbGeneratedLoad." p.e. ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
 			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
 			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
 			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. " p.e. ";
@@ -1451,6 +1451,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
         }
         elseif($url['host']=='maps.oieau.fr'){
             //NUTS
+            
             if(substr($layer, 0,4)=='NUTS'){
                 $new_layer = t('Nomenclature des Unités Territoriales Statistiques (NUTS)').' '.t('level').' '.substr($layer, -1);
                 foreach($features as $feature){

@@ -114,9 +114,21 @@ echo uwwtd_insert_errors_tab($node);
     if ($view_mode == 'full' && !empty($title)){
         $fieldstat = field_view_field('node', $node, 'field_status');
         $fieldnuts = field_view_field('node', $node, 'field_regionnuts');
-        //print '<h1>'.$node->title.' <small><i>- '.$nodetype.', '.t('reporting year: ').$node->field_anneedata['und'][0]['value'].'</i></small>';
-        print '<h1><span class="black-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="black-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="black-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="black-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
-        print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].' - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small></h1><br>';
+        ?>
+        <div class="google-map-banner">
+        	<h1>
+            	<span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
+            	<span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
+            	<span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
+            	<span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+            	<br />
+            	<small>
+                	Region (NUTS) Code : <?php echo $node->field_regionnuts['und'][0]['value']; ?> - 
+                	Region (NUTS) Name : <?php echo $fieldnuts[0]['#markup'];?>
+             	</small>
+            	</h1>
+   		</div>
+        <?php 
     }
   ?>
     
