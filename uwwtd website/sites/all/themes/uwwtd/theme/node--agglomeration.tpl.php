@@ -107,20 +107,28 @@ echo uwwtd_insert_errors_tab($node);
   </header>
   <?php endif; ?>
   
-  <div class="uwwcontainer" style="margin-top:-50px">
+  <div class="uwwcontainer">
       <?php
-        hide($content['comments']);
-        hide($content['links']);
-        hide($content['field_tags']);
-        
         $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
         
             if ($view_mode == 'full' && !empty($title)){
                 $fieldstat = field_view_field('node', $node, 'field_status');
                 $fieldnuts = field_view_field('node', $node, 'field_regionnuts');
-                //print '<h1>'.$node->title.' <small><i>- '.$nodetype.', '.t('reporting year: ').$node->field_anneedata['und'][0]['value'].'</i></small>';
-                print '<h1 style="top:220px;color:white;z-index:4;"><span class="white-title">'.$nodetype.'</span>'.t(' : ').$node->title.'<span class="white-title">'.' - '.t('Identifier').t(' : ').'</span>'.$node->field_inspireidlocalid['und'][0]['value'].'<span class="white-title">'.' - '.t('Status').t(' : ').'</span>'.$fieldstat[0]['#markup'].'<span class="white-title">'.' - '.t('Reporting year').t(' : ').'</span>'.$node->field_anneedata['und'][0]['value'];
-                print '<br><small>'.t('Region (NUTS) Code : ').$node->field_regionnuts['und'][0]['value'].' - '.t('Region (NUTS) Name : ').$fieldnuts[0]['#markup'].'</small></h1><br>';
+                ?>
+                <div class="google-map-banner">
+                	<h1>
+                		<span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
+                		<span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
+                		<span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
+                		<span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+                		<br />
+                		<small>
+                			Region (NUTS) Code : <?php echo $node->field_regionnuts['und'][0]['value']; ?> - 
+                			Region (NUTS) Name : <?php echo $fieldnuts[0]['#markup'];?>
+                		</small>
+                	</h1>
+                </div>
+                <?php 
             }
         print render($printy);
       ?>
@@ -137,6 +145,9 @@ echo uwwtd_insert_errors_tab($node);
                <div class="front">
                   <div class="flip-image"><img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png');?>" class="button-flipper table-to-chart" title="See diagram" alt="See diagram"></div>
                   <?php 
+	                  hide($content['comments']);
+	                  hide($content['links']);
+	                  hide($content['field_tags']);
                       print render($content['field_agggenerated']);
                       print uwwtd_render_field_with_pe($content['field_aggc1']);
                       print uwwtd_render_field_with_pe($content['field_aggc2']);
