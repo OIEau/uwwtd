@@ -35,3 +35,11 @@
 .charts-rows-cell td:first-child {
     text-align: left;
 }
+
+.content-table, .content-table th {
+    text-align: center;
+}
+
+.content-table, .content-table td {
+    text-align: center;
+}

@@ -192,7 +192,7 @@ function uwwtd_get_data_agglomeration($option){
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
-// dsm($data);
+    
     return $data;
 }
 
@@ -880,7 +880,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 				.'</div>'
 			 .'</div>'
 				
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
             .'</div>'
@@ -1073,7 +1073,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     }
     $render_table_graph = theme('table', array('rows'=>$graph, 'header'=>array(t('Treatment'),t('Total in p.e.'),t('Rate in %'))));
 
-
     $build['tablesort_table'] = array(
         '#theme' => 'table',
         '#header' => $header,
@@ -1108,7 +1107,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 					.l('xls', 'agglomerations/connection/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->' //use for print wjhtmltopdf
             .'</div>'
      ;
@@ -1375,7 +1374,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 					.l('xls', 'uwwtps/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
-                . '<div class="view-content">'. $table . '</div>'
+                . '<div class="view-content content-table">'. $table . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
             .'</div>'
      ;
@@ -1625,7 +1624,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 					.l('xls', 'uwwtps/treatment/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'   //use for print wjhtmltopdf
             .'</div>';
 
@@ -1894,7 +1893,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 					.l('xls', 'uwwtps/pressure/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
 			 .'</div>'
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf              
             .'</div>'
      ;
@@ -2083,7 +2082,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 				.'</div>'
 			 .'</div>'
 				
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
             .'</div>'
@@ -2327,14 +2326,14 @@ function uwwtd_dcp_page($type_export = ''){
             
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
+                  .'<div class="cell-content-extended">'
                     
                     .uwwtd_page_render_flipcard(t("Compliance of the UWWTP linked to the discharge point by number and by receving area type"), $dcp_graph_nb, $dcp_table_nb, t("The compliance of the discharge point is based on the linked waste water treatment plant's compliance"))
                   
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
+                  .'<div class="cell-content-extended">'
                     .uwwtd_page_render_flipcard(t("Compliance of the UWWTP linked to the discharge point by load entering and by receving area type"), $dcp_graph, $dcp_table, t("The compliance and the load entering of the discharge point is based on linked the waste water treatment plant's compliance and load entering"))
                   .'</div>'
                 .'</div>'
@@ -2348,7 +2347,7 @@ function uwwtd_dcp_page($type_export = ''){
 				.'</div>'
 			 .'</div>'
 				
-                . '<div class="view-content">'. drupal_render($build) . '</div>'
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
             .'</div>'
