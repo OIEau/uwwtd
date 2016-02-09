@@ -170,8 +170,18 @@ echo uwwtd_insert_errors_tab($node);
               //print render($content['field_compliance_explication']);
               print render($content['field_aggart3compliance']);
               //print render($content['field_article_3_compliance_expli']);
+              
+              //Gestion de la "legal compliance" (hierarchical)
+              if($content['field_aggart3compliance']['#items'][0]['value']=='NC' && $content['field_aggart4compliance']['#items'][0]['value']=='C'){
+                $content['field_aggart4compliance']['#items'][0]['value']='NC';  
+              }
               print render($content['field_aggart4compliance']);
               //print render($content['field_article_4_compliance_expli']);
+              
+              //Gestion de la "legal compliance" (hierarchical)
+              if($content['field_aggart4compliance']['#items'][0]['value']=='NC' && $content['field_aggart5compliance']['#items'][0]['value']=='C'){
+                $content['field_aggart5compliance']['#items'][0]['value']='NC';  
+              }
               print render($content['field_aggart5compliance']);
               //print render($content['field_article_5_compliance_expli']);
                // print render($content['field_aggart6compliance']);
