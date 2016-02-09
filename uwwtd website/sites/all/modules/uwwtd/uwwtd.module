@@ -1451,6 +1451,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
         }
         elseif($url['host']=='maps.oieau.fr'){
             //NUTS
+            
             if(substr($layer, 0,4)=='NUTS'){
                 $new_layer = t('Nomenclature des Unités Territoriales Statistiques (NUTS)').' '.t('level').' '.substr($layer, -1);
                 foreach($features as $feature){
