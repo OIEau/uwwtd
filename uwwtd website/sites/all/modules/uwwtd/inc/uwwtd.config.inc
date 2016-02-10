@@ -314,7 +314,7 @@ $GLOBALS['uwwtd']['ui']['field']['uwwtp'] = array(
     'n3nm'          =>  array('label'=>t('Region (NUTS)')),
     'rbd'          =>  array('label'=>t('RBD')),
     'field_uwwtreatmenttype_value_format'   =>  array('label'=>t('Treatment in place')),
-    'field_uwwcompliance_value_format'       =>  array('label'=>t('Compliance')),
+    'field_uwwcompliance_value_format'       =>  array('label'=>t('Global compliance')),
     'field_uwwbod5perf_value_format'   =>  array('label'=>t('BOD5'), 'sort_field'=>'field_uwwbod5perf_value'),
     'field_uwwcodperf_value_format'   =>  array('label'=>t('COD'), 'sort_field'=>'field_uwwcodperf_value'),
     'field_uwwntotperf_value_format'   =>  array('label'=>t('Total nitrogen'), 'sort_field'=>'field_uwwntotperf_value'),
