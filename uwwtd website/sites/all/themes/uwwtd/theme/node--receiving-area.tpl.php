@@ -135,10 +135,11 @@ echo uwwtd_insert_errors_tab($node);
     hide($content['comments']);
     hide($content['links']);
     hide($content['field_tags']);
+    
     if ($view_mode == 'full' && !empty($title)){
         $fieldstat = field_view_field('node', $node, 'field_status');
         ?>
-        <div class="google-map-banner">
+        <div class="google-map-banner receiving-area">
         	<h1>
 	            <span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
 	            <span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
@@ -239,7 +240,50 @@ echo uwwtd_insert_errors_tab($node);
       print '</div>';
       }
       // END description
-
+	  if (!empty($node->field_rca54applied[LANGUAGE_NONE][0]) && 
+	  	  !empty($node->field_rca58applied[LANGUAGE_NONE][0]) &&
+	  	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||
+	  	   ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1'))) {
+	      print '<div class="uwwthird">';
+	        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
+	          print '<legend class="panel-heading">';
+	            print '<div class="panel-title fieldset-legend">'.t('Description').' '. $node->field_anneedata[LANGUAGE_NONE][0]['value'] .'</div>';
+	            print '</legend>';
+	            print '<div class="panel-body">';
+	            if (!empty($node->field_rcaplants)) {
+	            	print render($content['field_rcaplants']);
+	            }
+	            if (!empty($node->field_rca_total_capacity_uwwtps)) {
+	            	print render($content['field_rca_total_capacity_uwwtps']);
+	            }
+	            if (!empty($node->field_rca_total_p_entering)) {
+	            	print render($content['field_rca_total_p_entering']);
+	            }
+	            if (!empty($node->field_rca_total_p_discharged)) {
+	            	print render($content['field_rca_total_p_discharged']);
+	            }
+	            if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering)) {
+	            	$rate = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] - 
+	            			$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) / 
+	            	$node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
+	            	print '<strong>'. t('Rate of Phosphorus removal:'). '</strong> '. number_format($rate, 2, ',', ' ') .'%';
+	            }
+	            if (!empty($node->field_rca_total_n_entering)) {
+	            	print render($content['field_rca_total_n_entering']);
+	            }
+	            if (!empty($node->field_rca_total_n_discharged)) {
+	            	print render($content['field_rca_total_n_discharged']);
+	            }
+				if (!empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) {
+	            	$rate = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] - 
+	            			$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) / 
+	            	$node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
+	            	print '<strong>'. t('Rate of Nitrogen removal:'). '</strong> ' . number_format($rate, 2, ',', ' ').'%';
+	            }
+	          print '</div>';
+	        print '</fieldset>';
+	      print '</div>';
+	  }
       print '<div class="uwwthird">';
         print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
           print '<legend class="panel-heading">';
@@ -269,11 +313,23 @@ echo uwwtd_insert_errors_tab($node);
             print '<div class="panel-title fieldset-legend">'.t('Forward looking aspect').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
-
           print '</div>';
         print '</fieldset>';
         }
       print '</div>';
+      if (!empty($node->field_rca_sensitive_area[LANGUAGE_NONE][0]['value'])) {
+	      print '<div class="uwwthird">';
+	        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
+	          print '<legend class="panel-heading">';
+	            print '<div class="panel-title fieldset-legend">'.t('Related Sensitive area').'</div>';
+	            print '</legend>';
+	            print '<div class="panel-body">';
+	              print render($content['field_rca_sensitive_area']);
+	          print '</div>';
+	        print '</fieldset>';
+	      print '</div>';
+	  }
+      
     print '</div>';
 
 

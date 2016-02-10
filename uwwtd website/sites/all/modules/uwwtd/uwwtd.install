@@ -4045,8 +4045,47 @@ function uwwtd_update_7142(&$context = null) {
         $context['finished'] = 1;
     } 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
+// 	throw new DrupalUpdateException(__FUNCTION__);
+} 
+
+/**
+ * Mets à jour les tool tips des champs du content type RECEIVING AREA.
+ * Change le label des champs field_rca52applied, field_rca54applied et field_rca58applied.
+ */
+function uwwtd_update_7143(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);
+	
+	// Définition des tool tips :
+	setToolTips('field_rca52applied', 'When this Article of the urban waste water treatment directive 91/271/EC applies, Member States shall ensure that urban waste water entering collecting systems shall before discharge into this sensitive areas be subject to more stringent treatment for all discharges from agglomerations of more than 10 000 population equivalent. The starting date of application is the deadline that each agglomeration has to respect in this sensitive area.');
+	setToolTips('field_rca_parameter_n', 'Nitrogen Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC');
+	setToolTips('field_rcacdatedesignation', 'Official date of designation of the sensitive area.');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rca_parameter_p', 'Phosphorus Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC');
+	setToolTips('field_rcacdatedesignation', 'Official date of designation of the sensitive area.');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rca_parameter_n', 'Nitrogen Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC');
+	setToolTips('field_rcacdatedesignation', 'Official date of designation of the sensitive area.');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rca_parameter_other', 'When required agglomerations of more than 10 000 population equivalent that are discharging in this area have to implement a more stringent treatment adapted to the quality objectives of the directive that is related to designation criteria other');
+	setToolTips('field_rcacdatedesignation', 'Official date of designation of the sensitive area.');
+	setToolTips('field_rcaapstartdate', 'Date when the requirements of the sensitive area enter into force');
+	setToolTips('field_rca_sensitive_area', 'Mainly when this sensitive area is a catchment that includes other sensitive areas.');
+	setToolTips('field_rca_total_p_entering', 'Total Phosphorus incoming load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharges without treatment. For the smallest treatment plants and the discharged without treatment the calculation can include estimation. ');
+	setToolTips('field_rca_total_p_discharged', 'Total Phosphorus discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ');
+	setToolTips('field_rca_total_n_entering', 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ');
+	setToolTips('field_rca_total_n_discharged', 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ');
+	setToolTips('field_rcaplants', 'Total number of urban waste water treatment plants that are discharging in the sensitive area. The calculation includes treatment plants belonging to agglomerations less than 10 000 p.e. (also 2000 p.e. and below)');
+	
+	// Change les labels :
+	setFieldLabel('field_rca52applied', 'Article 5(2) applied');
+	setFieldLabel('field_rca54applied', 'Article 5(4) applied');
+	setFieldLabel('field_rca58applied', 'Article 5(8) applied');
+	
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
-}    
+}
     
 /**
  * Redéfinit la précision et le scale du champs donné.
@@ -4079,6 +4118,64 @@ function setDecimalAccuracy($fieldName, $accuracy, $scale) {
 			->fields(array('data' => $settings))
 			->condition('field_name', $fieldName, '=')
 			->execute();
+	}
+}
+
+/**
+ * Définit le tool tips (pour l'affichage d'une info bulle) du champs donné.
+ */
+function setToolTips($fieldName, $toolTipsText) {
+	// Récupération du paramétrage du champs :
+	$query = db_select('field_config', 'c');
+	$query->fields('c');
+	$query->condition('c.field_name', $fieldName, '=');
+	$fieldConfig = $query->execute()->fetchAssoc();
+	if (!empty($fieldConfig['data'])) {
+		// Décodage :
+		$settings = unserialize($fieldConfig['data']);
+
+		// Modification du tooltips :
+		if (array_key_exists('custom_tooltip', $settings)) {
+			$settings['custom_tooltip'] = $toolTipsText;
+		}
+		
+		// Encodage :
+		$settings = serialize($settings);
+
+		// Mise à jour de la base :
+		db_update('field_config')
+		->fields(array('data' => $settings))
+		->condition('field_name', $fieldName, '=')
+		->execute();
+	}
+}
+
+/**
+ * Redéfinit le label du champs donné.
+ */
+function setFieldLabel($fieldName, $label) {
+	// Récupération du paramétrage du champs :
+	$query = db_select('field_config_instance', 'c');
+	$query->fields('c');
+	$query->condition('c.field_name', $fieldName, '=');
+	$fieldConfig = $query->execute()->fetchAssoc();
+	if (!empty($fieldConfig['data'])) {
+		// Décodage :
+		$settings = unserialize($fieldConfig['data']);
+
+		// Modification du tooltips :
+		if (array_key_exists('label', $settings)) {
+			$settings['label'] = $label;
+		}
+
+		// Encodage :
+		$settings = serialize($settings);
+
+		// Mise à jour de la base :
+		db_update('field_config_instance')
+		->fields(array('data' => $settings))
+		->condition('field_name', $fieldName, '=')
+		->execute();
 	}
 }
 

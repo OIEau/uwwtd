@@ -1025,4 +1025,11 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 .uwwtp-list {
     margin-top: 5px;
 }
+
+.receiving-area h1 {
+    background: url(/vg_uwwtd_si/sites/all/themes/uwwtd/images/background-title-station.png) repeat-x scroll center center;
+    z-index: 4;
+    margin-left: 5px;
+    margin-bottom: 0;
+    padding: 0;
 }
