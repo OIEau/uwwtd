@@ -125,7 +125,15 @@
             var bounds = feature.get('bounds');
             google.maps.event.addListener(feature, 'click', function() {
               infowindow.setPosition(bounds.getCenter());
-              infowindow.setContent(properties.description);
+              
+              // Réutilisation du zoom définit pour cette carte :
+              var content = properties.description;
+              if (typeof map.zoom !== 'undefined') { 
+            	  content = content.replace('zoomValueToBeReplaced', map.zoom + 2);
+              } else {
+            	  content = content.replace('zoomValueToBeReplaced', '16');
+              }
+              infowindow.setContent(content);
               infowindow.open(map);
             });
           }
