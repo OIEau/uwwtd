@@ -242,7 +242,7 @@ function uwwtd_timeline_receiving_area_output($node){
 		$output .= '<div class="uwwtd-history">';
 		$output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
     <legend class="panel-heading">
-    <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
+    <div class="panel-title fieldset-legend">'.t('Timeline').'</div>
     </legend>';
 		foreach($histories as $history){
 			$other = node_load($history);
