@@ -5341,7 +5341,7 @@ function  uwwtd_install_enable_module(&$context)
         'Variable realm' => 'variable_realm',
         'Variable store' => 'variable_store',
         'Variable views' => 'variable_views',
-        'DataTables' => 'datatables',
+        //'DataTables' => 'datatables',
         'Views' => 'views',                
         'Views Aggregator Plus' => 'views_aggregator',
         'Views Bulk Operations' => 'views_bulk_operations',
