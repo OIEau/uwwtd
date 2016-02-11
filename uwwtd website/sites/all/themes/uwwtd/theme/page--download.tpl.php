@@ -1,9 +1,24 @@
+
+
 <?php if ($page['navigation']): ?>
   <?php print render($page['navigation']); ?>
 <?php endif; ?>
 
 <div class="main-container container">
+	<script type="text/javascript">
 
+		window.onload = function() {
+			function Download(url) {
+			    document.getElementById('my_iframe').src = url;
+			};
+			
+		    document.getElementById("fileToBeDownloaded").onclick = function fun() {
+			    console.log(document.getElementById("fileToBeDownloaded").href);
+		    	Download(document.getElementById("fileToBeDownloaded").href);
+		    }
+		    
+		}
+	</script>
   <?php /* region--header.tpl.php */ ?>
   <?php print render($page['header']); ?>
 <?php /* if ($tabs): ?><?php print render($tabs); ?><?php endif; */ ?>
@@ -123,7 +138,7 @@
 				</div>
 			</form>
 		</div>
-
+<iframe id="my_iframe" style="display:none;"></iframe>
  <table class="download">	
 	<tr>
 			<td style="text-align:center;"><b>Title</b></td>
@@ -207,6 +222,7 @@
 			<td>
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">xml</a>, 
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">pdf</a>
+				<a id="fileToBeDownloaded" href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>">Download</a>
 			</td>
 			<td>
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataAggloUid');?>" target="_blank">html</a>,
