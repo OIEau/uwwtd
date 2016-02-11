@@ -158,7 +158,7 @@ echo uwwtd_insert_errors_tab($node);
     print '<div class="uwwcontainer">';
       echo render($printy);  
       print '<div class="uwwhalf">';
-        echo uwwtd_timeline_output($node);
+        echo uwwtd_timeline_receiving_area_output($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer">';

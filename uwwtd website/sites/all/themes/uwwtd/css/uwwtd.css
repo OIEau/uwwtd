@@ -1045,3 +1045,7 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 .panel-body td {
     padding-right: 20px;
 }
+
+.dispo-annee.receiving-area {
+    margin-bottom: 15px;
+}
