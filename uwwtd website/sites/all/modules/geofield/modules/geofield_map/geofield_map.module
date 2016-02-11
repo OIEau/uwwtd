@@ -67,14 +67,22 @@ function geofield_map_field_formatter_view($entity_type, $entity, $field, $insta
   $map_settings = geofield_map_settings_do($settings);
   geophp_load();
   $data = array();
-
   foreach ($items as $item) {
     $geometry = geoPHP::load($item['geom']);
     if (!empty($geometry)) {
       $datum = json_decode($geometry->out('json'));
-      $datum->properties = array(
-        'description' => entity_label($entity_type, $entity),
-      );
+      
+      // S'il s'agit d'une receiving area :
+      if (!empty($entity->type) && $entity->type === 'receiving_area' && 
+      	  !empty($entity->field_position_geo[LANGUAGE_NONE][0]['lat']) && 
+      	  !empty($entity->field_position_geo[LANGUAGE_NONE][0]['lon']) &&
+      	  !empty($entity->title)) {
+      	  // Création du lien :
+      	  $homeLink = '#zoom=17&lat='. $entity->field_position_geo[LANGUAGE_NONE][0]['lat'] .'&lon='. $entity->field_position_geo[LANGUAGE_NONE][0]['lon'] .'&layers=Receiving areas&baseLayers=Google%20Maps%20Normal';
+      	  $datum->properties = array('description' => '<a href="'. base_path() . $homeLink. '" title=". $homeLink .">'. $entity->title .'</a>');
+      } else {
+	      $datum->properties = array('description' => entity_label($entity_type, $entity));
+      }
       $data[] = $datum;
     }
   }
