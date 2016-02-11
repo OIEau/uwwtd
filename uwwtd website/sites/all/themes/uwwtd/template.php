@@ -1830,11 +1830,16 @@ function uwwtd_menu_link__main_menu(&$variables)
 
 function uwwtd_wkhtmltopdf_tag($selector, $options)
 {
+	dsm($options);
     switch (arg(0)) {
         case 'agglomerations':
         case 'uwwtps':
-            return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
-            break;
+        	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+        	break;
+        case 'stats':
+        	$options['orientation'] = 'Landscape';
+        	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+        	break;
     }
     return '';
 }
