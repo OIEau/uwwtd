@@ -5,20 +5,6 @@
 <?php endif; ?>
 
 <div class="main-container container">
-	<script type="text/javascript">
-
-		window.onload = function() {
-			function Download(url) {
-			    document.getElementById('my_iframe').src = url;
-			};
-			
-		    document.getElementById("fileToBeDownloaded").onclick = function fun() {
-			    console.log(document.getElementById("fileToBeDownloaded").href);
-		    	Download(document.getElementById("fileToBeDownloaded").href);
-		    }
-		    
-		}
-	</script>
   <?php /* region--header.tpl.php */ ?>
   <?php print render($page['header']); ?>
 <?php /* if ($tabs): ?><?php print render($tabs); ?><?php endif; */ ?>
@@ -220,9 +206,8 @@
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
-				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">xml</a>, 
-				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">pdf</a>
-				<a id="fileToBeDownloaded" href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>">Download</a>
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" download target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" download target="_blank">pdf</a>
 			</td>
 			<td>
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataAggloUid');?>" target="_blank">html</a>,
@@ -234,8 +219,8 @@
 			<td>Urban Waste Water Treatment plants</td>
 			<td>Country</td>
 			<td>
-				<a href="<?php print variable_get('metadataUwwtp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">xml</a>, 
-				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataUwwtpUid');?>" download target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" download target="_blank">pdf</a>
 			</td>
 			<td>
 				<a href="<?php print variable_get('metadataUwwtp');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataUwwtpUid');?>" target="_blank">html</a>,
@@ -247,8 +232,8 @@
 			<td>Discharge points</td>
 			<td>Country</td>
 			<td>
-				<a href="<?php print variable_get('metadataDp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">xml</a>, 
-				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataDp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataDpUid');?>" download target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" download target="_blank">pdf</a>
 			</td>
 			<td>
 				<a href="<?php print variable_get('metadataDp');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataDpUid');?>" target="_blank">html</a>,
@@ -260,8 +245,8 @@
 			<td>Sensitive areas</td>
 			<td>Country</td>
 			<td>
-				<a href="<?php print variable_get('metadataRca');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">xml</a>, 
-				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">pdf</a>
+				<a href="<?php print variable_get('metadataRca');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataRcaUid');?>" download target="_blank">xml</a>, 
+				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" download target="_blank">pdf</a>
 			</td>
 			<td>
 				<a href="<?php print variable_get('metadataRca');?>/ows/catalog.search#/metadata/<?php print variable_get('metadataRcaUid');?>" target="_blank">html</a>,
