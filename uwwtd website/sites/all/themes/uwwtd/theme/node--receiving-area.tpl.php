@@ -137,9 +137,10 @@ echo uwwtd_insert_errors_tab($node);
     hide($content['field_tags']);
     
     if ($view_mode == 'full' && !empty($title)){
+   		$printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
         $fieldstat = field_view_field('node', $node, 'field_status');
         ?>
-        <div class="google-map-banner receiving-area">
+        <div class="google-map-banner receiving-area <?php print (empty($printy)) ? 'empty' : ''; ?>">
         	<h1>
 	            <span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
 	            <span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
@@ -149,12 +150,11 @@ echo uwwtd_insert_errors_tab($node);
         </div>
         <?php 
     }
+    $validImg = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
+    $noValidImg = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
 	
-    //print render($content);
-    $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-
     // characteristics
-    if($rcaType != 'LSA' && $rcaType != 'NA'){
+    if ($rcaType != 'LSA' && $rcaType != 'NA') {
     print '<div class="uwwcontainer">';
       echo render($printy);  
       print '<div class="uwwhalf">';
@@ -167,31 +167,90 @@ echo uwwtd_insert_errors_tab($node);
           print '<div class="panel-title fieldset-legend">'.t('Characteristics').' '.$node->field_anneedata['und'][0]['value'].'</div>';
         print '</legend>';
         print '<div class="panel-body">';
-          print '<div class="uwwrealquart">';
-            print render($content['field_rca52applied']);
-            print render($content['field_rca_parameter_n']);
-            print render($content['field_rcacdatedesignation']);
-            print render($content['field_rcaapstartdate']);
-          print '</div>';
-          print '<div class="uwwrealquart">';
-            print render($content['field_rca54applied']);
-            print render($content['field_rcaapstartdate']);
-            print render($content['field_rca_parameter_p']);
-            print render($content['field_rcacdatedesignation']);
-            print render($content['field_rcaapstartdate']);
-          print '</div>';
-          print '<div class="uwwrealquart">';
-            print render($content['field_rca58applied']);
-            print render($content['field_rcaapstartdate']);
-            print render($content['field_rca_parameter_n']);
-            print render($content['field_rcacdatedesignation']);
-            print render($content['field_rcaapstartdate']);
-	        print '</div>';
-          print '<div class="uwwrealquart">';
-            print render($content['field_rca_parameter_other']);;
-            print render($content['field_rcacdatedesignation']);
-            print render($content['field_rcaapstartdate']);
-          print '</div>';
+            print '<table>';
+ 			  print '<tr>';
+ 			    print '<td>';
+		          if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering) &&
+			          !empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) {
+			      	$ratePhosphorus = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
+			     		$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) /
+			            $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
+		            $rateNitrogen = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
+		            	$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) /
+		            	$node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
+			        print '<strong>'. t('75% removal Nitrogen and Phosphorus:'). '</strong>';
+			        print ($ratePhosphorus >= 75 && $rateNitrogen >= 75) ? $validImg : $noValidImg;
+			      }
+			    print '</td>';
+ 			    print '<td></td>';
+ 			    print '<td></td>';
+ 			  print '</tr>';
+ 			  print '<tr>';
+ 			    print '<td>';
+           	      print render($content['field_rca52applied']);
+			    print '</td>';
+ 			    print '<td></td>';
+ 			    print '<td></td>';
+ 			  print '</tr>';
+ 			  print '<tr>';
+ 			    print '<td>';
+                  print render($content['field_rcaanitro']);
+                print '</td>';
+ 			    print '<td>';
+           	      print render($content['field_rcaadatedesignation']);
+			    print '</td>';
+ 			    print '<td>';
+           	      print render($content['field_rcaanstartdate']);
+			    print '</td>';
+			  print '</tr>';
+			  print '<tr>';
+			    print '<td>';
+			  	    print render($content['field_rcaaphos']);
+			  	print '</td>';
+			    print '<td>';
+			      print render($content['field_rcaapdatedesignation']);
+			    print '</td>';
+			    print '<td>';
+			      print render($content['field_rcaapstartdate']);
+			    print '</td>';
+			  print '</tr>';
+			  print '<tr>';
+			    print '<td>';
+			      print render($content['field_rcab']);
+			    print '</td>';
+			    print '<td>';
+			      print render($content['field_rcabdatedesignation']);
+			    print '</td>';
+			    print '<td>';
+			      print render($content['field_rcabstartdate']);
+			    print '</td>';
+			  print '</tr>';
+			  print '<tr>';
+			    print '<td>';
+			      print render($content['field_rcac']);
+			    print '</td>';
+			    print '<td>';
+			      print render($content['field_rcacdatedesignation']);
+			    print '</td>';
+			    print '<td>';
+			      print render($content['field_rcacstardate']);
+			    print '</td>';
+			  print '</tr>';
+			  print '<tr>';
+			    print '<td>';
+			      print render($content['field_rca_parameter_other']);
+			    print '</td>';
+ 			    print '<td></td>';
+ 			    print '<td></td>';
+			  print '</tr>';
+			  print '<tr>';
+			    print '<td>';
+			      print render($content['field_rca54applied']);
+			    print '</td>';
+			    print '<td></td>';
+			    print '<td></td>';
+			  print '</tr>';
+			print '</table>';
         print '</div>';
       print '</fieldset>';
     print '</div>';
@@ -199,62 +258,23 @@ echo uwwtd_insert_errors_tab($node);
     // END characteristics
 
     print '<div class="uwwcontainer">';
-      // description
-      if($node->field_rca54applied == '1'){
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Description').' '.$node->field_anneedata['und'][0]['value'].'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
-            print render($content['field_rca_nb_uwwtps']);
-            print render($content['field_rca_total_capacity_uwwtps']);
-            print render($content['field_rca_total_p_entering']);
-            print render($content['field_rca_total_p_discharged']);
-            $rateP = ($node->field_rca_total_p_discharged['und'][0]['value'] / $node->field_rca_total_p_entering['und'][0]['value']) * 100;
-            print'<div class="field field-name-field-rca54applied field-type-list-boolean field-label-inline clearfix">
-              <div class="field-label">
-                '.t('Rate of P removal:').' 
-              </div>
-              <div class="field-items">
-                <div class="field-item even">
-                    '.$rateP.' %
-                </div>
-              </div>
-            </div>';
-            print render($content['field_rca_total_n_entering']);
-            print render($content['field_rca_total_n_discharged']);
-            $rateN = ($node->field_rca_total_n_discharged['und'][0]['value'] / $node->field_rca_total_n_entering['und'][0]['value']) * 100;
-            print'<div class="field field-name-field-rca54applied field-type-list-boolean field-label-inline clearfix">
-              <div class="field-label">
-                '.t('Rate of N removal:').' 
-              </div>
-              <div class="field-items">
-                <div class="field-item even">
-                    '.$rateN.' %
-                </div>
-              </div>
-            </div>';
-          print '</div>';
-        print '</fieldset>';
-      print '</div>';
-      }
       // END description
-	  if (!empty($node->field_rca54applied[LANGUAGE_NONE][0]) && 
-	  	  !empty($node->field_rca58applied[LANGUAGE_NONE][0]) &&
-	  	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||
-	  	   ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1'))) {
+	  if ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||
+	  	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1')) {
 	      print '<div class="uwwthird">';
 	        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
 	          print '<legend class="panel-heading">';
 	            print '<div class="panel-title fieldset-legend">'.t('Description').' '. $node->field_anneedata[LANGUAGE_NONE][0]['value'] .'</div>';
 	            print '</legend>';
 	            print '<div class="panel-body">';
-	            if (!empty($node->field_rcaplants)) {
-	            	print render($content['field_rcaplants']);
-	            }
+	            print render($content['field_rcaplants']);
 	            if (!empty($node->field_rca_total_capacity_uwwtps)) {
 	            	print render($content['field_rca_total_capacity_uwwtps']);
+	            }
+	            if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering)) {
+	            	print '<strong>'. t('Total Phosphorus removal (t/year):').'</strong> '.
+	            	($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
+	            	$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']);
 	            }
 	            if (!empty($node->field_rca_total_p_entering)) {
 	            	print render($content['field_rca_total_p_entering']);
@@ -266,7 +286,12 @@ echo uwwtd_insert_errors_tab($node);
 	            	$rate = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] - 
 	            			$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) / 
 	            	$node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
-	            	print '<strong>'. t('Rate of Phosphorus removal:'). '</strong> '. number_format($rate, 2, ',', ' ') .'%';
+	            	print '<strong>'. t('Rate of Phosphorus removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+	            }
+	            if (!empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) {
+	            	print '<strong>'. t('Total Nitrogen removal (t/year):').'</strong> '.
+	            	($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
+	            	$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']);
 	            }
 	            if (!empty($node->field_rca_total_n_entering)) {
 	            	print render($content['field_rca_total_n_entering']);
@@ -278,7 +303,7 @@ echo uwwtd_insert_errors_tab($node);
 	            	$rate = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] - 
 	            			$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) / 
 	            	$node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
-	            	print '<strong>'. t('Rate of Nitrogen removal:'). '</strong> ' . number_format($rate, 2, ',', ' ').'%';
+	            	print '<strong>'. t('Rate of Nitrogen removal (t/year):'). '</strong> ' . number_format($rate, 2, ',', ' ').'%';
 	            }
 	          print '</div>';
 	        print '</fieldset>';
