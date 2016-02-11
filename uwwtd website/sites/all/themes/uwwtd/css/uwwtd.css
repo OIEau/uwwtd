@@ -1020,6 +1020,7 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 .google-map-banner h1 {
     color: white;
     z-index: 4;
+    min-height: 40px;
 }
 
 .uwwtp-list {
@@ -1032,4 +1033,5 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     margin-left: 5px;
     margin-bottom: 0;
     padding: 0;
+    min-height: 40px;
 }
