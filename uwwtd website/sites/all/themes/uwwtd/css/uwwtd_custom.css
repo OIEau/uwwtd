@@ -70,8 +70,12 @@ div.charts-row div.container{
 
 .cell-content-extended {
     height:360px;
+    max-width : 540px;
 }
 
+.cell-content {
+    max-width : 540px;
+}
 
 
 /* ac 09/09/14 */
