@@ -4107,6 +4107,9 @@ function uwwtd_update_7143(&$context = null) {
 	setToolTips('field_rca_total_n_entering', 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ');
 	setToolTips('field_rca_total_n_discharged', 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ');
 	setToolTips('field_rcaplants', 'Total number of urban waste water treatment plants that are discharging in the sensitive area. The calculation includes treatment plants belonging to agglomerations less than 10 000 p.e. (also 2000 p.e. and below)');
+	setToolTips('field_rcaaphos', 'Phosphorus Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC');
+	setToolTips('field_rcab', 'Nitrogen Criteria that is defined to be reduced in this sensitive area due to nitrogen quality of drinking water when this receiving area is intended to be used for the asbtraction of drinking water. This criteria is related to the annex II.b of the urban waste water treatment directive 91/271/EC');
+	setToolTips('field_rcac', 'Other parameters related to further treatment than secondary treatment that are defined to fulfil other European directive objectives. This criteria is related to the annex II.c of the urban waste water treatment directive 91/271/EC');
 	
 	// Change les labels :
 	setFieldLabel('field_rca52applied', 'Article 5(2) applied');

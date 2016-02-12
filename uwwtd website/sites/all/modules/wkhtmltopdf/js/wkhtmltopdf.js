@@ -27,6 +27,8 @@ function wkhtmltopdf_print(selectors, origine, base_path, options){
                         .replace(/\s/g, "-")
 
         ); 
+        var orientation = '';
+        if (options['orientation']) {orientation = options['orientation']};
 		var filename = fichier.substr(0,50);
         var dialogContent = '<div class="formulaire-public">'+
                             '<form id="wkhtmltopdf_Form">'+
@@ -48,6 +50,10 @@ function wkhtmltopdf_print(selectors, origine, base_path, options){
                                     '<label for="wkhtmltopdf_filename"> Name the PDF file : </label>'+
                                     '<input type="text" name="wkhtmltopdf_filename" size="36" id="wkhtmltopdf_filename" value="'+filename+'"/>.pdf<br />'+
                                 '</li>'+
+                                '<li>'+
+	                                '<label for="wkhtmltopdf_orientation">Orientation : </label>'+
+	                                '<input type="text" name="wkhtmltopdf_orientation" size="36" id="wkhtmltopdf_orientation" value="'+orientation+'"/><br />'+
+	                            '</li>'+
                                 '<li>'+
                                     '<div style="text-align: center;">'+
                                         '<input type="submit" style="cursor: pointer;" value="Print" />'+
@@ -77,6 +83,7 @@ function wkhtmltopdf_print(selectors, origine, base_path, options){
                 var filename = jQuery( "#wkhtmltopdf_filename" ).val();
                 var comment = jQuery("#wkhtmltopdf_comment" ).val();
                 var identifier = jQuery("#wkhtmltopdf_identifier" ).val();
+                var orientation = jQuery("#wkhtmltopdf_orientation" ).val();
                  if(title!='' && filename!=''){
 //                     jQuery("#wkhtmltopdf_dialog").dialog("close");
                     // prevent normal submit
@@ -92,7 +99,8 @@ function wkhtmltopdf_print(selectors, origine, base_path, options){
                             wkhtmltopdf_subtitle: subtitle,
                             wkhtmltopdf_comment:comment,
                             wkhtmltopdf_filename:filename,
-                            wkhtmltopdf_identifier:identifier
+                            wkhtmltopdf_identifier:identifier,
+                            wkhtmltopdf_orientation:orientation
                         },
                         success: function(data) {
                                 jQuery('#wkhtmltopdf_wait').hide();

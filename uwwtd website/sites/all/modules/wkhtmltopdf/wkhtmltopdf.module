@@ -169,7 +169,12 @@ function wkhtmltopdf_print($params=array()){
             $options['toc']=true;
             if($conf['toc_depth']){$options['toc_depth']=$conf['toc_depth'];}
         }
-		
+        
+        // Gestion de l'orientation :
+        if (!empty($params['wkhtmltopdf_orientation'])) {
+        	$options['orientation'] = $params['wkhtmltopdf_orientation'];
+        }
+        
         $wkhtmltopdf = new Wkhtmltopdf($options);
 		//exit($wkhtmltopdf);
         $date = date("_Ymd_his");
@@ -429,7 +434,6 @@ function wkhtmltopdf_tag($selector=array('body'), $options=array()){
 $s = drupal_json_encode((array)$selector);
 //if(!isset($options['title'])) $options['title'] = variable_get('site_name', '');
 $options = drupal_json_encode($options);
-
 $tag ='
 <div class="wkhtmltopdf_printer">
     <div class="wkhtmltopdf_starter"><a name="wkhtmltopdf" rel="nofollow" onclick=\'wkhtmltopdf_print('.$s.', this, Drupal.settings.basePath, '.$options.');\'>'.t('Print').'</a></div>
