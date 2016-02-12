@@ -1830,7 +1830,6 @@ function uwwtd_menu_link__main_menu(&$variables)
 
 function uwwtd_wkhtmltopdf_tag($selector, $options)
 {
-	dsm($options);
     switch (arg(0)) {
         case 'agglomerations':
         case 'uwwtps':
