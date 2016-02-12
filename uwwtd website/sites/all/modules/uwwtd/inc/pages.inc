@@ -891,14 +891,35 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     );
 
    //============================Render the page ==> TODO use a true template/theme function 
+    require_once(drupal_get_path('module', 'uwwtd') . '/uwwtd.graphs.inc');
+    
+    // Récupération des années possibles :
+    $yearsPossibles = getYearsPossibles();
+    
+    // Récupération des données des graphs :
+    $results = uwwtd_stat_national_compliance(ALL_YEARS, $yearsPossibles);
+    $frontAndBackGraph1And2 = getRow2Graph1and2($results, ALL_YEARS);
+    
+    // Création du code html pour ces graphs :
+    $htmlGraphsMultiYears = '';
+    $htmlGraphsMultiYears = getHtmlPlusHtmlChartsPies($htmlGraphsMultiYears, t("Agglomeration : Generated load by compliance"),
+    	t("Total generated load by compliance (population equivalent – p.e.)"), 'graph_generatedByCompliance', $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1],
+    	t("Number of agglomerations by compliance (number of agglomerations)"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
+    	false, $yearsPossibles);
 
     $page = ''
             . '<h1>'.$title.'</h1>'
             . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
-            . '<div class="rows charts-row" >'
+            . '<div class="rows map-row" >'.$rendermap.'</div>';
+    
+    // Todo : affichage des graph multi ou single année :
+    $displayGraphsMultiYears = false;
+    if ($displayGraphsMultiYears) {
+        $page .= '<div class="rows charts-row" >'. $htmlGraphsMultiYears .'</div>';
+    } else {
+        $page .= '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
+                  .'<div class="cell-content">' 
                     .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
                   .'</div>'
                 .'</div>'
@@ -906,8 +927,9 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
                   .'<div class="cell-content">'
                     .uwwtd_page_render_flipcard(t("Global compliance by Generated load (p.e.)"), $render_graph, $render_table_graph,'')
                   .'</div>'
-                .'</div>'
-            .'</div>'
+                .'</div>';
+        }
+    $page .=  '</div>'
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
@@ -927,6 +949,26 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
      }
 
      return $page;
+}
+
+/**
+ * Retourne les années possibles pour ce pays.
+ */
+function getYearsPossibles() {
+	$year = uwwtd_get_max_annee();
+	
+	// Get available years for data
+	$query = db_select('field_data_field_anneedata', 'a');
+	$query->fields('a', array('field_anneedata_value'));
+	$query->orderBy('field_anneedata_value', 'DESC');
+	$results = $query->execute();
+	$years = array();
+	$count = 0;
+	while ($record = $results->fetchAssoc()) {
+		$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+		if ($record['field_anneedata_value']!=$year){$count++;}
+	}
+	return $years;
 }
 
 function uwwtd_page_agglomeration_connection($type_export = ''){
