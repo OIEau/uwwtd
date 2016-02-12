@@ -1831,28 +1831,26 @@ function uwwtd_menu_link__main_menu(&$variables)
 function uwwtd_wkhtmltopdf_tag($selector, $options, $nodeType = '')
 {
 	switch (arg(0)) {
+		case 'receiving_area':
 		case 'stats':
-			$nodeType = arg(0);
 		case 'agglomerations':
-			$nodeType = arg(0);
 		case 'agglomeration':
-			$nodeType = arg(0);
 		case 'uwwtp':
+		case 'discharge_point':
 			$nodeType = arg(0);
-	}
-	dsm(arg(0));
-	dsm($nodeType);
-    switch ($nodeType) {
-    	case 'page':
-    		return '';
     		break;
+	}
+    switch ($nodeType) {
+        case 'receiving_area':
         case 'uwwtp':
         case 'agglomeration':
         case 'agglomerations':
+        case 'discharge_point':
         case 'stats':
         	$options['orientation'] = 'Landscape';
         	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
         	break;
+        case 'page':
         default:
         	return '';
         	break;
