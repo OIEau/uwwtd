@@ -813,7 +813,24 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'agglomeration_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+	    	// Restructuration des tableaux :
+	    	$rowsToBeExported = array();
+	    	foreach ($header_export as $header) {
+	    		$rowsToBeExported[0][] = $header;
+	    	}
+	    	foreach ($rows as $row) {
+	    		if (!empty($row['data'])) {
+	    			$rowsToBeExported[] = $row['data'];
+	    		}
+	    	}
+	    	
+	    	// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+	    	$filename = 'agglomeration_compliance_'. $filter['filter']['field_anneedata_value']. '.xls';
+	    	uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+        	uwwtd_export_data($type_export, 'agglomeration_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
 
 
@@ -1064,7 +1081,24 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'agglomeration_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    	
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'agglomeration_connection_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'agglomeration_connection_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
     
     $features['agglomeration_treatment'] = uwwtd_build_feature($data, $optionstyle, $piechart);
@@ -1298,7 +1332,24 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'uwwtp_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'uwwtp_compliance_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'uwwtp_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
 
     $features['uwwtp_compliance_map'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
@@ -1564,7 +1615,24 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'uwwtp_treatment_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'uwwtp_treatment_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'uwwtp_treatment_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
     
     
@@ -1800,7 +1868,24 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     }
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'uwwtp_pressure_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'uwwtp_pressure_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'uwwtp_pressure_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
     
     //=============================Create the map
@@ -2053,7 +2138,24 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'rca_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
 
     //dsm($map);
@@ -2272,7 +2374,24 @@ function uwwtd_dcp_page($type_export = ''){
     
     //here export data and exit
     if ($type_export != '') {
-        uwwtd_export_data($type_export, 'dcp_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'dcp_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'dcp_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
     }
     $features['dcp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     $rendermap = uwwtd_build_map($map, $features);
