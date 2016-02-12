@@ -1828,16 +1828,33 @@ function uwwtd_menu_link__main_menu(&$variables)
 }
 
 
-function uwwtd_wkhtmltopdf_tag($selector, $options)
+function uwwtd_wkhtmltopdf_tag($selector, $options, $nodeType = '')
 {
-    switch (arg(0)) {
+	switch (arg(0)) {
+		case 'stats':
+			$nodeType = arg(0);
+		case 'agglomerations':
+			$nodeType = arg(0);
+		case 'agglomeration':
+			$nodeType = arg(0);
+		case 'uwwtp':
+			$nodeType = arg(0);
+	}
+	dsm(arg(0));
+	dsm($nodeType);
+    switch ($nodeType) {
+    	case 'page':
+    		return '';
+    		break;
+        case 'uwwtp':
+        case 'agglomeration':
         case 'agglomerations':
-        case 'uwwtps':
-        	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
-        	break;
         case 'stats':
         	$options['orientation'] = 'Landscape';
         	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+        	break;
+        default:
+        	return '';
         	break;
     }
     return '';

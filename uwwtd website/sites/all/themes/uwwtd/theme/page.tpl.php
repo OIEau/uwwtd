@@ -106,7 +106,15 @@
 			//Description de la page (en fait le titre)
 			//if($title!='') $options['comment'] = str_replace("'", "&#039;", $title);
 // 			print wkhtmltopdf_tag(array('.node', '.region-content', '.content', '#content', '#recherche'), $options);
-            print uwwtd_wkhtmltopdf_tag(array('.main-container'), $options);			
+			$nodeType = '';
+			if (!empty($page['content']['system_main']['nodes'])) {
+				foreach (array_keys($page['content']['system_main']['nodes']) as $key) {
+					if (!empty($page['content']['system_main']['nodes'][$key]['#bundle'])) {
+						$nodeType = $page['content']['system_main']['nodes'][$key]['#bundle'];
+					}
+				}
+			}
+            print uwwtd_wkhtmltopdf_tag(array('.main-container'), $options, $nodeType);
 		?>     
 		</div>    
         <?php print render($page['content']); ?>
