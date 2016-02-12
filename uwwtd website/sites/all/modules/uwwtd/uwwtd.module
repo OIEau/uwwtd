@@ -1499,7 +1499,7 @@ function uwwtd_create_xls($filename, $rows) {
 	$objPHPExcel->setActiveSheetIndex(0);
 	
 	// Création du contenu :
-	$objPHPExcel->getActiveSheet()->fromArray($rows, "", 'B2');
+	$objPHPExcel->getActiveSheet()->fromArray($rows, "", 'A1');
 	
 	// Resize :
 	foreach(range('A','Z') as $columnID) {
