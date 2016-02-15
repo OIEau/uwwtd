@@ -379,37 +379,35 @@ function uwwtd_menu(){
       'description' => 'Settings for the uwwtd application',
       'page callback' => 'system_admin_menu_block_page',
       'access arguments' => array('Data-management access'),
+      'type' => MENU_LOCAL_TASK,
       'file' => 'system.admin.inc',
       'file path' => drupal_get_path('module', 'system'),
   	);
 
-    $items['admin/configuration/uwwtd/extlinks'] = array(
-    //'page callback' => 'uwwtd_page_config_ext_links',
+    $items['admin/config/uwwtd/extlinks'] = array(
+    'title' => 'Set external links',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('construct_extlinks_form'),
-    'access callback' => true,
     'access arguments' => array('Data-management access'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'uwwtd.forms.inc'
     );
     
-    $items['admin/configuration/uwwtd/general'] = array(
-    //'page callback' => 'uwwtd_page_config_ext_links',
+    $items['admin/config/uwwtd/general'] = array(
+    'title' => 'General settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('uwwtd_general_config'),
-    'access callback' => true,
     'access arguments' => array('Data-management access'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'inc/uwwtd.admin.config.inc'
     );    
 
-	 $items['admin/configuration/uwwtd/download'] = array(
-    //'page callback' => 'uwwtd_page_config_ext_links',
+	$items['admin/config/uwwtd/download'] = array(
+    'title' => 'Metadata links',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('uwwtd_download_config'),
-    'access callback' => true,
     'access arguments' => array('Data-management access'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'inc/uwwtd.admin.config.inc'
     );  
 	
