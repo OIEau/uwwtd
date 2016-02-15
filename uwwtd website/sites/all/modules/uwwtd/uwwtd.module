@@ -1484,5 +1484,43 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
             }
         }
     }
-    
+}
+
+/**
+ * Crée un fichier xls avec le tableau de valeurs donnés et l'ouvre.
+ * Le tableau donné doit être un tableau à 2 dimensions, simple.
+ */
+function uwwtd_create_xls($filename, $rows) {
+	require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel.php');
+	
+	// Création du excel :
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->getProperties()->setCreator("Office International de l'Eau");
+	$objPHPExcel->setActiveSheetIndex(0);
+	
+	// Création du contenu :
+	$objPHPExcel->getActiveSheet()->fromArray($rows, "", 'A1');
+	
+	// Resize :
+	foreach(range('A','Z') as $columnID) {
+		$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+		->setAutoSize(true);
+	}
+	
+	// Sauvegarde du fichier :
+	$path = 'temporary://' . $filename;
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+	$objWriter->save(drupal_realpath($path));
+	unset($objWriter);
+	
+	// Header du fichier :
+	$headers = array(
+		'Content-Type' => 'application/octet-stream',
+		'Content-Transfer-Encoding' => 'binary',
+		'Content-Disposition' => 'attachment; filename="' . basename($path) . '";',
+		'Content-Length' => sprintf('%u', filesize($path)),
+	);
+		
+	// Envoie en téléchargement :
+	file_transfer($path, $headers);
 }

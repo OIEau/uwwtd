@@ -134,6 +134,12 @@ echo uwwtd_insert_errors_tab($node);
       ?>
       <div class="uwwhalf" style="clear:left;"><?php print uwwtd_timeline_output($node);?></div>
     </div>
+    <div>
+    	<?php
+    	// Affichage du graph inter année :
+    	print $variables['htmlGraph']; 
+    	?>
+    </div>
     <div class="uwwcontainer" style="overflow:hidden;">
       <fieldset class="uwwfull group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper" style="min-height:240px;">
         <legend class="panel-heading">

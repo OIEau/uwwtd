@@ -375,9 +375,17 @@ function uwwtd_field_attach_view_alter(&$output, $context){
 }
 
 function uwwtd_preprocess_node(&$vars){
-    
-    if($vars["is_front"]){
+    if ($vars["is_front"]){
        $vars["theme_hook_suggestions"][] = "node__front";
+    } elseif ($vars['node']->type === 'agglomeration') {
+    	// Récupérer les données de cette agglomeration :
+    	$data = array();
+    	
+    	// Produire le graph de comparaison inter année :
+    	$htmlGraph = '';
+    	
+    	// Envoie au template :
+    	$vars['htmlGraph'] = $htmlGraph;
     }
 }
 
