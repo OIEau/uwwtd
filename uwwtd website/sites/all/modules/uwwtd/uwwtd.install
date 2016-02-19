@@ -4200,7 +4200,7 @@ function uwwtd_update_7145(&$context = null) {
     } 
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+	//throw new DrupalUpdateException(__FUNCTION__);
 }   
     
     
