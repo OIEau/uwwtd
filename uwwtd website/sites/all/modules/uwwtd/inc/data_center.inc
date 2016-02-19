@@ -5920,7 +5920,11 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
 
 
     if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        } else {
+            return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+        }
     }
     
     if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
@@ -6051,7 +6055,11 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     }
     
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
-        return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        } else {
+            return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+        }
     }
     
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {

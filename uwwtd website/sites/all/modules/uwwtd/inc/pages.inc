@@ -754,6 +754,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 
     //todo format data in table
     $graph = array();
+    // dsm($data);
     foreach($data as $row) {
         if (false === isset($graph[$row['field_aggcompliance_value_format']])) {
             $graph[$row['field_aggcompliance_value_format']]['nb'] = 0;
@@ -768,8 +769,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 			$rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
-				'field_agggenerated_value_format'=> (empty($row['field_agggenerated_value_format']) ? '0' : $row['field_agggenerated_value_format']),
-                'sum_uwwtp_format'=> $row['sum_uwwtp_format'],
+				'field_agggenerated_value_format'=> (empty($row['field_agggenerated_value']) ? '0' : $row['field_agggenerated_value']),
+                        'sum_uwwtp_format'=> $row['sum_uwwtp'],
 				'n3nm'=>($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
                 'rbd'=>$row['rbd'].' '.$row['rbdname'],
 				'field_aggcompliance_value_format'=>$row['field_aggcompliance_value_format'],
@@ -782,8 +783,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 			 $rows[] = array('data' => array(
 				'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
-				'field_agggenerated_value_format'=> $row['field_agggenerated_value_format'],
-                'sum_uwwtp_format'=> $row['sum_uwwtp_format'],
+				'field_agggenerated_value_format'=> $row['field_agggenerated_value'],
+                'sum_uwwtp_format'=> $row['sum_uwwtp'],
 				'n3nm'=>($row['n3nm']!=''?$row['n3nm']:$row['field_regionnuts_value']),
                 'rbd'=>$row['rbd'].' '.$row['rbdname'],
 				'field_aggcompliance_value_format'=>$row['field_aggcompliance_value_format'],
@@ -827,6 +828,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 	    	
 	    	// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
 	    	$filename = 'agglomeration_compliance_'. $filter['filter']['field_anneedata_value']. '.xls';
+
 	    	uwwtd_create_xls($filename, $rowsToBeExported);
     	} else {
         	uwwtd_export_data($type_export, 'agglomeration_compliance_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);

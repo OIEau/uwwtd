@@ -1854,6 +1854,8 @@ function uwwtd_wkhtmltopdf_tag($selector, $options, $nodeType = '')
         case 'agglomeration':
         case 'agglomerations':
         case 'discharge_point':
+            return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+            break;
         case 'stats':
         	$options['orientation'] = 'Landscape';
         	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
