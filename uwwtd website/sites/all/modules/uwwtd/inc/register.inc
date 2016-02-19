@@ -7713,14 +7713,26 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             
             //UWWTP treatment and performance
             //'treatment required',
-            $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
+            $treatment_required = uwwtd_get_register_treatment_required_with_deadline(
+                $uwwtp->field_uwwtreatmentrequired['und'][0]['value'], 
+                substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10), 
+                substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10), 
+                substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
+                $annee
+            );
             
             
             $line[$ind['treatment required']] = $treatment_required;//$uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
             
             $previous_treatment_required = '';
             if (isset($previousuwwtp)) {
-                $previous_treatment_required = uwwtd_get_register_treatment_required($previousuwwtp->field_uwwtreatmentrequired['und'][0]['value']);
+                $previous_treatment_required = uwwtd_get_register_treatment_required_with_deadline(
+                    $previousuwwtp->field_uwwtreatmentrequired['und'][0]['value'], 
+                    substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10), 
+                    substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10), 
+                    substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
+                    $previous_reference_year
+                );
             }
             $previous_treatment_required = '';
 // if (isset($previousuwwtp)) {
@@ -9390,9 +9402,18 @@ function uwwtd_get_register_treatment_required($required_calculated) {
         case 'NP':
             $treatment_required = '3NP';
             break;
-        case 'P':
+        case 'MP':
             $treatment_required = '3P';
             break;
+        case 'NPO':
+            $treatment_required = '3NPother';
+            break;
+        case 'NO':
+            $treatment_required = '3Nother';
+            break;
+        case 'PO':
+            $treatment_required = '3Pother';
+            break;        
         case 'O':
             $treatment_required = '3other';
             break;
@@ -9405,6 +9426,66 @@ function uwwtd_get_register_treatment_required($required_calculated) {
         default:  
             $treatment_required = '';                                                                                                                                         
     }
+    return $treatment_required;
+}
+
+function uwwtd_get_register_treatment_required_with_deadline($required_calculated, $deadlineart3, $deadlineart4, $deadlineart5, $referenceyear) {
+    $deadline_over_art3 = deadline_beforeorequal_to_referenceyear($deadlineart3, $referenceyear);            
+    $deadline_over_art4 = deadline_beforeorequal_to_referenceyear($deadlineart4, $referenceyear);            
+    $deadline_over_art5 = deadline_beforeorequal_to_referenceyear($deadlineart5, $referenceyear);            
+    $treatment_required = '';
+
+    switch($required_calculated) {
+        case 'S':
+            $treatment_required = '2';
+            break;
+        case 'N':
+            if ($deadlineart5 == true) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3N';
+            }
+            break;
+        case 'NP':
+            if ($deadlineart5 == true) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3NP';
+            }
+            break;
+        case 'P':
+            if ($deadlineart5 == true) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3P';
+            }
+            break;
+        case 'O':
+            if ($deadlineart5 == true) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3other';
+            }
+            break;
+        case 'NI':
+            $treatment_required = '0';
+            break; 
+        default:  
+            $treatment_required = '';                                                                                                                                         
+    }
+
+    if ($deadlineart3 === true && $deadlineart4 === true && $deadlineart5 === true) {
+        $treatment_required = 'NR';
+    }
+
+    if ($required_calculated == 'P' ) {
+        $treatment_required = '1';
+    }
+
+    if ($required_calculated == 'Appropriate') {
+        $treatment_required = 'Appropriate';
+    }
+
     return $treatment_required;
 }
 
@@ -9563,6 +9644,8 @@ function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod
 
 function uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace)
 {            
+    // dsm($treatment_required);
+    // dsm($treatmenttypeinplace);
     //if treatment required is 3N, NP P Other (if not NR), check if treatment in place is the same 3N, NP, P Other if yes=C if no NC
     $art5_treatment = '';
     switch($treatment_required) {
@@ -9594,6 +9677,27 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
                 $art5_treatment = 'NC';
             }                
             break;
+        case '3NPother':
+            if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3NP')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;
+        case '3Nother':
+            if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3N')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;
+        case '3Pother':
+            if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3P')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }                
+            break;
         case 'Appropriate':  
         case 'NR':
             $art5_treatment = 'NR';
@@ -9606,7 +9710,6 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
 function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC)
 {            
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
-
     $art5_monitoring = '';
     // dsm($treatment_required);            
     // dsm($required_rcaB);            
@@ -9617,6 +9720,9 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
                 $art5_monitoring = 'C';
             } else {
                 $art5_monitoring = 'NC';
+            }
+            if (is_null($monitoring_Ntot)) {
+                $art5_monitoring = 'NC';
             }                
             break;                
         case '3P':
@@ -9624,12 +9730,18 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
                 $art5_monitoring = 'C';
             } else {
                 $art5_monitoring = 'NC';
+            }
+            if (is_null($monitoring_Ptot)) {
+                $art5_monitoring = 'NC';
             }                 
             break;                
         case '3NP':
             if (($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_Ptot == 'P')) {
                 $art5_monitoring = 'C';
             } else {
+                $art5_monitoring = 'NC';
+            }
+            if (is_null($monitoring_Ntot) || is_null($monitoring_Ptot)) {
                 $art5_monitoring = 'NC';
             }                 
             break;  
@@ -9639,6 +9751,39 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             } else {
                 $art5_monitoring = 'NC';
             }
+            if (is_null($monitoring_other)) {
+                $art5_monitoring = 'NC';
+            }
+            break;
+        case '3NPother':
+            if (($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass' && $monitoring_other == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_Ptot == 'P' && $monitoring_other == 'P')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }
+            if (is_null($monitoring_Ntot) || is_null($monitoring_Ptot) || is_null($monitoring_other)) {
+                $art5_monitoring = 'NC';
+            }                
+            break;
+        case '3Nother':
+            if (($monitoring_Ntot == 'Pass' && $monitoring_other == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_other == 'P')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }
+            if (is_null($monitoring_Ntot) || is_null($monitoring_other)) {
+                $art5_monitoring = 'NC';
+            }                
+            break;
+        case '3Pother':
+            if (($monitoring_other == 'Pass' && $monitoring_Ptot == 'Pass') || ($monitoring_other == 'P' && $monitoring_Ptot == 'P')) {
+                $art5_treatment = 'C';
+            } else {
+                $art5_treatment = 'NC';
+            }
+            if (is_null($monitoring_Ptot) || is_null($monitoring_other)) {
+                $art5_monitoring = 'NC';
+            }                
             break;
         case 'Appropriate':  
         case 'NR':
