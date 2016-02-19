@@ -121,9 +121,6 @@
             }
             
             if (wmslayers.length > 0) { 
-              //FIX ME ==> get all layers by WMS domain and not just only the first or the last one
-              //Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.beforegetfeatureinfo(layernames);
-               //console.log(url);
                $.ajax({ 
                  type: 'POST', 
                  url: Drupal.settings.basePath + 'openlayers/wms/wmsgetfeatureinfo',
@@ -132,13 +129,14 @@
                    url : wmslayers 
                  },
                  success: function(result) {
+                      //Test if we have just an html result or we have to start some js function
                       if(result!=''){
                           var pos = wms_layers[wms_layers.length-1].getExtent().getCenterLonLat();
                           wms_popup = new OpenLayers.Popup.FramedCloud(
                                "ol-wms-pop",
                                map.getLonLatFromViewPortPx(evt.xy),
                                new OpenLayers.Size(300,200),
-                               '<div class="ol-content-popup ol-wms-content-popup">'+result+'</div>',
+                               '<div class="ol-content-popup ol-wms-content-popup">'+$(result).html()+'</div>',
                                null,
                                true
                           );

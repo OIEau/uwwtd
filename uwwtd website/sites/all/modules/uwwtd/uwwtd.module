@@ -1366,13 +1366,18 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
             if($params['LAYER']=='4' && strpos($url['path'], 'BathingWater')>0){
                 $result = '<div class="legend-label">'.t('Bathing water').'</div><div  class="legend-img">'.$result.'</div>';
             }
-            elseif($params['LAYER']=='3' && strpos($url['path'], 'NitrateRivers') > 0){
-                $result = '<div class="legend-label">'.t('Mean annual nitrates in rivers by station 2011').'</div><div  class="legend-img">'.$result.'</div>';
+            elseif($params['LAYER']=='1' && strpos($url['path'], 'NitrateRivers') > 0){
+                $result = '<div class="legend-label">'.t('Mean annual nitrates in rivers by station').'</div><div  class="legend-img">'.$result.'</div>';
             }
             elseif($params['LAYER']=='3' && strpos($url['path'], 'OrthophosphateRivers') > 0){
-                $result = '<div class="legend-label">'.t('Mean annual orthophosphate in rivers by station 2011').'</div><div  class="legend-img">'.$result.'</div>';
+                $result = '<div class="legend-label">'.t('Mean annual orthophosphate in rivers by station').'</div><div  class="legend-img">'.$result.'</div>';
             }
-            //TODO PO4, COD
+            elseif($params['LAYER']=='1' && strpos($url['path'], 'BODRivers') > 0){
+                $result = '<div class="legend-label">'.t('Mean annual BOD in rivers by station').'</div><div  class="legend-img">'.$result.'</div>'; 
+            }
+            elseif($params['LAYER']=='1' && strpos($url['path'], 'AmmoniumRivers') > 0){
+                $result = '<div class="legend-label">'.t('Mean annual Ammonium in rivers by station').'</div><div  class="legend-img">'.$result.'</div>'; 
+            }
             
             elseif($params['LAYER']=='3' && strpos($url['path'], 'MonitoringStations') > 0){
                 $result = '<div class="legend-label">'.t('SoE Monitoring Station').'</div><div  class="legend-img">'.$result.'</div>';
@@ -1387,7 +1392,9 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
 }
 //hook_wms_getfeatureinfo_alter
 function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
-    
+    //Uncomment for debug
+    //krumo($url);
+    //krumo($result);
     foreach($result as $layer=>$features){
         //Natura 2000
         if($url['host']=='bio.discomap.eea.europa.eu'){
@@ -1432,14 +1439,24 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
                 $result[$new_layer] = $data;
                 unset($result[$layer]);
             }
-            elseif($layer=='3' && strpos($url['path'], 'NitrateRivers') > 0){
-                $new_layer = t('Mean annual nitrates in rivers by station 2011');
-                $result[$new_layer] = $features;
+            elseif($layer=='1' && strpos($url['path'], 'NitrateRivers') > 0){
+                $new_layer = t('Mean annual nitrates in rivers by station');
+                $result[$new_layer] = uwwtd_wms_preprocess_soe_data($features);
                 unset($result[$layer]);
             }
-            elseif($layer=='3' && strpos($url['path'], 'OrthophosphateRivers') > 0){
-                $new_layer = t('Mean annual orthophosphate in rivers by station 2011');
-                $result[$new_layer] = $features;
+            elseif($layer=='1' && strpos($url['path'], 'OrthophosphateRivers') > 0){
+                $new_layer = t('Mean annual orthophosphate in rivers by station');
+                $result[$new_layer] = uwwtd_wms_preprocess_soe_data($features);
+                unset($result[$layer]);
+            }
+            elseif($layer=='1' && strpos($url['path'], 'BODRivers') > 0){
+                $new_layer = t('Mean annual BOD in rivers by station');
+                $result[$new_layer] = uwwtd_wms_preprocess_soe_data($features);
+                unset($result[$layer]);
+            }
+            elseif($layer=='1' && strpos($url['path'], 'AmmoniumRivers') > 0){
+                $new_layer = t('Mean annual Ammonium in rivers by station');
+                $result[$new_layer] = uwwtd_wms_preprocess_soe_data($features);
                 unset($result[$layer]);
             }
             //Other layers/levels
@@ -1484,6 +1501,44 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     }
 }
 
+
+function uwwtd_wms_preprocess_soe_data($features){
+    $data = array();
+    if(!empty($features)){
+        foreach($features as $feature){
+            $WaterbasestationID = $feature['WaterbasestationID'];
+            $Year = (string)$feature['Year'];
+            $Meanannualconcentration = $feature['Meanannualconcentration'];
+            if(!isset($data[$WaterbasestationID])){
+                $keys = array('Country','Rivername','WaterbasestationID','Stationname', 'Longitude', 'Latitude', 'WaterBodyID','Waterbodyname','RBDcode','RBDname');
+                $data[$WaterbasestationID] = array_intersect_key($feature, array_flip($keys));;
+            }
+            $data[$WaterbasestationID]['Meanannualconcentration'][$Year] = $Year.' : '.$Meanannualconcentration.' '.$feature['Unit'];
+            /*
+            $data[$WaterbasestationID]['#data'][(integer)$Year] = array(
+                'value'=>(float)$Meanannualconcentration,
+                'valueformat'=>$Meanannualconcentration.' '.$feature['Unit'],
+                'label'=>(string)$Year
+            );
+            */
+        }
+        foreach($data as $k=>$v){
+            ksort($v['Meanannualconcentration'], SORT_NUMERIC);
+            $data[$k]['Meanannualconcentration'] = theme('item_list', array('items'=>$v['Meanannualconcentration']));
+            //ksort($data[$k]['#data'], SORT_NUMERIC);
+            
+            //Bad ==> change wms module for have a jsonp calling
+            /*
+            $data[$k]['#chart'] = '<script> 
+                var data = '.json_encode($data[$k]['#data']).';
+                console.log(data);
+            </script>';
+            */
+            
+        }
+    }
+    return $data;
+}
 /**
  * Crée un fichier xls avec le tableau de valeurs donnés et l'ouvre.
  * Le tableau donné doit être un tableau à 2 dimensions, simple.

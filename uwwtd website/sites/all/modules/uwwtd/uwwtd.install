@@ -3554,6 +3554,12 @@ function uwwtd_update_7131(&$context = null) {
 	// Ajout de deux champs au type de contenu ms_level :
 	addFieldToContentType('field_comparison_of_compliance_p', 'text_long', 'Comparison of compliance by p.e.', 'ms_level');
 	addFieldToContentType('field_comparison_of_compliance_a', 'text_long', 'Comparison of compliance by agg', 'ms_level');
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
 }
 
 /**
@@ -3636,7 +3642,10 @@ function uwwtd_update_7132(&$context = null) {
 		uwwtd_install_menu($menu, 'main-menu7132.json');
 		menu_cache_clear_all();
 	}
-	
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 // 	throw new DrupalUpdateException(__FUNCTION__);
 }
@@ -3661,7 +3670,10 @@ function uwwtd_update_7133(&$context = null) {
 			}
 		}
 	}
-	
+	if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 // 	throw new DrupalUpdateException(__FUNCTION__);
 }
@@ -4116,9 +4128,40 @@ function uwwtd_update_7143(&$context = null) {
 	setFieldLabel('field_rca54applied', 'Article 5(4) applied');
 	setFieldLabel('field_rca58applied', 'Article 5(8) applied');
 	
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+	//throw new DrupalUpdateException(__FUNCTION__);
 }
+    
+function uwwtd_update_7144(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);    
+    
+    //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'soe_bod.inc',
+        'soe_nh3.inc',
+        'soe_nitrate.inc',
+        'soe_phosphorus.inc'
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}   
+    
+    
     
 /**
  * Redéfinit la précision et le scale du champs donné.
@@ -4489,9 +4532,17 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts.inc',
         'oieau_rbd_rbdsu.inc',
         'natura2000.inc',
-        'soe_monitoring_stations.inc',
-        'soe_nitrates_2011.inc',
-        'soe_phosphate_2011.inc',
+        
+        'soe_monitoring_stations.inc',  //deprecated
+        'soe_nitrates_2011.inc',        //deprecated
+        'soe_phosphate_2011.inc',       //deprecated
+        
+        'soe_bod.inc',
+        'soe_nh3.inc',
+        'soe_nitrate.inc',
+        'soe_phosphorus.inc',
+        
+        
         
     ); 
     $list_style = array(
