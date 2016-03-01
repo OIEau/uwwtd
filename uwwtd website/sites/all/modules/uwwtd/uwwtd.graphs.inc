@@ -279,7 +279,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $frontAndBackGraphs = getRow8Graphs($results);
     
     // Création du code html pour ces graphs :
-    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Distance to Compliance"), 
+    $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Legal compliance"), 
 	    array(
 	    	array(
 	    		'graph_art3_pe', t("Legal compliance for connection in p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
