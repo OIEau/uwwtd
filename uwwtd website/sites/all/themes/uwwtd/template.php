@@ -1686,6 +1686,12 @@ function uwwtd_field_num($field)
 function uwwtd_field_pe($field, $format=true)
 {
 //     $field[0]['#markup'] = 'Not provided';
+
+    //check if string is html, if yes dont make transformation 
+    if($field[0]['#markup'] != strip_tags($field[0]['#markup'])){
+        return $field[0]['#markup'];
+    }
+
     $pe = '';
 	
     if (true === is_numeric($field[0]['#markup'])) {
