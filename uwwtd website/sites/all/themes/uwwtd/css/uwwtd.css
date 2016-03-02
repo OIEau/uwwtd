@@ -1028,7 +1028,7 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 }
 
 .receiving-area h1 {
-    background: url(/vg_uwwtd_si/sites/all/themes/uwwtd/images/background-title-station.png) repeat-x scroll center center;
+    background: url("../images/background-title-station.png") repeat-x scroll center center;
     z-index: 4;
     margin-left: 5px;
     margin-bottom: 0;
@@ -1048,4 +1048,8 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 
 .dispo-annee.receiving-area {
     margin-bottom: 15px;
+}
+
+table.wms-ol-table-result tr td{
+    vertical-align:top;
 }

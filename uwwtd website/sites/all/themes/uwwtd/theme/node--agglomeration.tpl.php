@@ -297,7 +297,9 @@ echo uwwtd_insert_errors_tab($node);
                             <td class="black"></td>
                         </tr>
                         <tr>
-                            <td class="light" style="background-color:<?php print $colorart3;?>;color:white;"><?php print uwwtd_field_pe($content['field_aggpercwithouttreatment']);?> p.e</td>
+                            <td class="light" style="background-color:<?php print $colorart3;?>;color:white;"><?php 
+                                print uwwtd_field_pe($content['field_aggpercwithouttreatment']);
+                            ?> p.e</td>
                         </tr>
                         <tr>
                             <td class="black" style="font-weight:bold;" rowspan="2">2nd treatment</td>

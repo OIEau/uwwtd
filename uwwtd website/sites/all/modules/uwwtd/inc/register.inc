@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
@@ -6971,7 +6972,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['results']['graph']['total_capacity']['pe'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
         
         //array 5 6 7
-        if ($line[$ind['art3_compliance']] == 'C') {
+        if ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') {
             $context['results']['graph']['art3_C']['number']++;
             $context['results']['graph']['art3_C']['pe'] += $line[$ind['generated_load_p.e.']];
         }
@@ -6979,11 +6980,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $context['results']['graph']['art3_NC']['number']++;
             $context['results']['graph']['art3_NC']['pe'] += $line[$ind['generated_load_p.e.']];
         }
-        if ($line[$ind['art3_compliance']] == 'NR') {
+        if ($line[$ind['art3_compliance']] == 'NR' || $line[$ind['art3_compliance']] == 'PD') {
             $context['results']['graph']['art3_NR']['number']++;
             $context['results']['graph']['art3_NR']['pe'] += $line[$ind['generated_load_p.e.']];
         }
-        if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {     
+        if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art4_C']['number']++;
             $context['results']['graph']['art4_C']['pe'] += $line[$ind['generated_load_p.e.']];
         }
@@ -6991,21 +6992,21 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $context['results']['graph']['art4_NC']['number']++;
             $context['results']['graph']['art4_NC']['pe'] += $line[$ind['generated_load_p.e.']];
         }
-        if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {
+        if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art4_NR']['number']++;
             $context['results']['graph']['art4_NR']['pe'] += $line[$ind['generated_load_p.e.']];
         }
-        if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {    
+        if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art5_C']['number']++;
             $context['results']['graph']['art5_C']['pe'] += $line[$ind['generated_load_p.e.']];
         }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $context['results']['graph']['art5_NC']['number']++;
-            $context['results']['graph']['art5_NC']['pe'] += $line[$ind['generated_load_p.e.']];        
+            $context['results']['graph']['art5_NC']['pe'] += $line[$ind['generated_load_p.e.']];
         }
-        if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR') {
+        if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' || $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art5_NR']['number']++;
-            $context['results']['graph']['art5_NR']['pe'] += $line[$ind['generated_load_p.e.']];        
+            $context['results']['graph']['art5_NR']['pe'] += $line[$ind['generated_load_p.e.']];
         }        
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
