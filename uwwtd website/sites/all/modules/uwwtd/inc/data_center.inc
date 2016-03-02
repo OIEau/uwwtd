@@ -6858,9 +6858,9 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                             
             /* Cas des pays avec l'ensemble du pays en zone sensible */
             $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-                $rcaTypeid = 'SA';
-            }            
+            // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+            //     $rcaTypeid = 'SA';
+            // }            
             foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                 $rca = node_load($rcalist['nid']);
                 
@@ -7724,9 +7724,9 @@ function uwwtd_get_all_info_agguwww($node)
             $dcp = node_load($dcplist['nid']);
             /* Cas des pays avec l'ensemble du pays en zone sensible */
             $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-                $rcaTypeid = 'SA';
-            }            
+            // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+            //     $rcaTypeid = 'SA';
+            // }            
             foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                 $rca = node_load($rcalist['nid']);
                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
@@ -8256,6 +8256,7 @@ function uwwtd_rca_art54_applies($dcp)
 function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
+    // dsm(func_get_args());
     
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
@@ -8362,27 +8363,27 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
                 if($dcp['paramP']) {
                     if ($dcp['paramO']) {
                         $required_treatment->required = 'NPO';  
-                        $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 0;
+                        $required_treatment->required_rcac = 1;
                     } else {
                         $required_treatment->required = 'NP';  
-                        $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
                         $required_treatment->required_rcac = 0;     
                     }
                 } else {
                     if ($dcp['paramO']) {
                         $required_treatment->required = 'NO';  
-                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaan = 1;
                         $required_treatment->required_rcaap = 0;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 0;
+                        $required_treatment->required_rcac = 1;
                     } else {
                         $required_treatment->required = 'N';  
-                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaan = 1;
                         $required_treatment->required_rcaap = 0;
                         $required_treatment->required_rcab = 0;
                         $required_treatment->required_rcac = 0;     
@@ -8393,13 +8394,13 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
                     if ($dcp['paramO']) {
                         $required_treatment->required = 'PO';  
                         $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 0;
+                        $required_treatment->required_rcac = 1;
                     } else {
                         $required_treatment->required = 'P';  
                         $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
                         $required_treatment->required_rcac = 0;     
                     }
@@ -8409,7 +8410,7 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
                         $required_treatment->required_rcaan = 0;
                         $required_treatment->required_rcaap = 0;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 0;
+                        $required_treatment->required_rcac = 1;
                     } else {
                         $required_treatment->required = '?';  
                         $required_treatment->required_rcaan = 0;
