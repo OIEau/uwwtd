@@ -9560,6 +9560,13 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
 //                 $art4_treatment_type = 'NR';   
 //             } else {
     switch($treatment_required) {
+        case '3other':
+        case '3NP':
+        case '3P':
+        case '3N':
+        case '3NPO':
+        case '3NO':
+        case '3PO':
         case '2':
             if (false !== strpos($treatmenttypeinplace, '2')) {
                 $art4_treatment_type = 'C';
@@ -9567,34 +9574,34 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
                 $art4_treatment_type = 'NC';
             }
             break;
-        case '3N':
-            if (false !== strpos($treatmenttypeinplace, '3N')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break; 
-        case '3P':
-            if (false !== strpos($treatmenttypeinplace, '3P')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;
-        case '3NP':
-            if (false !== strpos($treatmenttypeinplace, '3NP')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;  
-        case '3other':
-            if (false !== strpos($treatmenttypeinplace, '3other')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;
+        // case '3N':
+        //     if (false !== strpos($treatmenttypeinplace, '3N')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break; 
+        // case '3P':
+        //     if (false !== strpos($treatmenttypeinplace, '3P')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;
+        // case '3NP':
+        //     if (false !== strpos($treatmenttypeinplace, '3NP')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;  
+        // case '3other':
+        //     if (false !== strpos($treatmenttypeinplace, '3other')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;
         case 'Appropriate':  
         case 'NR':
             $art4_treatment_type = 'NR';
