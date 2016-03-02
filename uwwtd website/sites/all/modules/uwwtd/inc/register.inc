@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
