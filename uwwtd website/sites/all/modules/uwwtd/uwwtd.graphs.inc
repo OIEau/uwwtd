@@ -183,7 +183,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles);
     if($yearSelected!=ALL_YEARS){
-        dsm($results);
         $frontAndBackGraph1And2 = getRow6Graph1And2($results);
         // Création du code html pour ces graphs :
         if($frontAndBackGraph1And2){
