@@ -183,6 +183,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles);
     if($yearSelected!=ALL_YEARS){
+        dsm($results);
         $frontAndBackGraph1And2 = getRow6Graph1And2($results);
         // Création du code html pour ces graphs :
         if($frontAndBackGraph1And2){
@@ -809,8 +810,8 @@ function getRow6Graph1And2($results) {
                             $sum+=$element['in']['q'];
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering'=>round(($element['in']['c'])*1000 , 3),
-                                'Discharged'=>round(($element['out']['c'])*1000 , 3),
+                                'Entering'=>round(($element['in']['c']) , 3),
+                                'Discharged'=>round(($element['out']['c']) , 3),
                             );
 						} else {
 							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
@@ -852,10 +853,10 @@ function getRow6Graph1And2($results) {
                 
                 foreach($item as $k=>$v){
                     $header1[1][$key.'_'.$k]=$k;
-                    $line[$k] = uwwtd_format_number($v,2);
+                    $line[$k] = uwwtd_format_number($v,2).' '.t('tons/year');
                     $graph1Front[$rowName][]=array(
                         'value'=>(float)$v,
-                        'valueformat'=>uwwtd_format_number($v,2),
+                        'valueformat'=>uwwtd_format_number($v,2).' '.t('tons/year'),
                         'label'=>$k,
                         'color'=>$colors[$k]
                     );
@@ -894,10 +895,10 @@ function getRow6Graph1And2($results) {
                 
                 foreach($item as $k=>$v){
                     $header2[1][$key.'_'.$k]=$k;
-                    $line[$k] = uwwtd_format_number($v,2);
+                    $line[$k] = uwwtd_format_number($v,2).' '.t('mg/l');
                     $graph2Front[$rowName][]=array(
                         'value'=>(float)$v,
-                        'valueformat'=>uwwtd_format_number($v,2),
+                        'valueformat'=>uwwtd_format_number($v,2).' '.t('mg/l'),
                         'label'=>$k,
                         'color'=>$colors[$k]
                     );

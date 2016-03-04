@@ -534,9 +534,37 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	if (variable_get('display_only_active', '1') == 1) {
 		$conditions .= "  AND f_status.field_status_value = '1' ";
 	}
+    
+    //Filter uwwtp with "min_aggenerated_display" parameter
+    
+    $with = 'WITH uwwtp_min_agg AS(
+        SELECT n.nid, n.type, n.title 
+        FROM {node} n
+            LEFT join
+              {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+            left join
+              {field_data_field_status} f_status
+                ON n.nid = f_status.entity_id
+            LEFT join
+              {field_data_field_agguwwliste} f_uwwtp_agglo
+                ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
+            LEFT join
+            {field_data_field_agggenerated} f_agggenerated
+                ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
+        WHERE n.type = :typenode
+            AND f_agggenerated.field_agggenerated_value >= :min_agg
+            '.$conditions.'
+        GROUP BY n.nid
+        )
+    ';
+    
+    
+    
 	$data = array();
 	$param = array();
-	$query = 'select
+    //======= nd@oieau.fr ====================> In some case (like LT) values for BOD, N, COD, P are empty ==> should we exclude these line for the whole calculation ?
+	$query = $with.'select
 		f_annee.field_anneedata_value as year,
 		SUM(f_uwwbodincoming.field_uwwbodincoming_value) AS bodin_sum,
 		SUM(f_uwwboddischarge.field_uwwboddischarge_value) AS bodout_sum,
@@ -548,6 +576,8 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		SUM(f_uwwpdischarge.field_uwwpdischarge_value) AS pout_sum,
 		SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value) AS uwwt_sum
     from {node} n
+        join uwwtp_min_agg
+             ON n.nid = uwwtp_min_agg.nid 
         left join
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
@@ -634,7 +664,10 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	' group by f_annee.field_anneedata_value order by f_annee.field_anneedata_value';
 	$param = array(
         ':typenode' => 'uwwtp',
+        ':min_agg' => variable_get('min_aggenerated_display', '2000'),
 	);
+    //dsm($query);
+    
 	try {
 		$data['BOD']['data']['Parameter'] = 'BOD';
 		$data['COD']['data']['Parameter'] = 'COD';
@@ -643,27 +676,28 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
 			// Récupération de la somme :
-			$sum = is_null($row['uwwt_sum']) ? 1 : $row['uwwt_sum'];
+			$sum = (float)is_null($row['uwwt_sum']) ? 1 : $row['uwwt_sum']; // expresse in m3
+            //For concentration we want mg/l and we have Ton/year and m3/year so we have to apply a 1 000 000 factor
 			
 			// Récupération du BOD :
-			$in = is_null($row['bodin_sum']) ? 0 : array('q'=>$row['bodin_sum'], 'c'=>$row['bodin_sum']/$sum);
-			$out = is_null($row['bodout_sum']) ? 0 : array('q'=>$row['bodout_sum'], 'c'=>$row['bodout_sum']/$sum);
-			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
+			$in = is_null($row['bodin_sum']) ? 0 : array('q'=>$row['bodin_sum'], 'c'=>$row['bodin_sum']*1000000/(float)$sum);
+			$out = is_null($row['bodout_sum']) ? 0 : array('q'=>$row['bodout_sum'], 'c'=>$row['bodout_sum']*1000000/(float)$sum);
+			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
 			
 			// Récupération du COD :
-			$in = is_null($row['codin_sum']) ? 0 : array('q'=>$row['codin_sum'], 'c'=>$row['codin_sum']/$sum);
-			$out = is_null($row['codout_sum']) ? 0 : array('q'=>$row['codout_sum'], 'c'=>$row['codout_sum']/$sum);
-			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
+			$in = is_null($row['codin_sum']) ? 0 : array('q'=>$row['codin_sum'], 'c'=>$row['codin_sum']*1000000/(float)$sum);
+			$out = is_null($row['codout_sum']) ? 0 : array('q'=>$row['codout_sum'], 'c'=>$row['codout_sum']*1000000/(float)$sum);
+			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
 			
 			// Récupération du N :
-			$in = is_null($row['nin_sum']) ? 0 : array('q'=>$row['nin_sum'], 'c'=>$row['nin_sum']/$sum );
-			$out = is_null($row['nout_sum']) ? 0 : array('q'=>$row['nout_sum'], 'c'=>$row['nout_sum']/$sum);
-			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
+			$in = is_null($row['nin_sum']) ? 0 : array('q'=>$row['nin_sum'], 'c'=>$row['nin_sum']*1000000/(float)$sum );
+			$out = is_null($row['nout_sum']) ? 0 : array('q'=>$row['nout_sum'], 'c'=>$row['nout_sum']*1000000/(float)$sum);
+			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
 			
 			// Récupération du P :
-			$in = is_null($row['pin_sum']) ? 0 : array('q'=>$row['pin_sum'], 'c'=>$row['pin_sum']/$sum);
-			$out = is_null($row['pout_sum']) ? 0 : array('q'=>$row['pout_sum'], 'c'=>$row['pout_sum']/$sum);
-			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => $sum);
+			$in = is_null($row['pin_sum']) ? 0 : array('q'=>$row['pin_sum'], 'c'=>$row['pin_sum']*1000000/(float)$sum);
+			$out = is_null($row['pout_sum']) ? 0 : array('q'=>$row['pout_sum'], 'c'=>$row['pout_sum']*1000000/(float)$sum);
+			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());

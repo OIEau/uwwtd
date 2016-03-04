@@ -603,7 +603,9 @@ display: none;
 	color: #281c45;
 	text-align:center;
 }   
-
+.customTable th{
+    text-align:center;
+}
 .customTable .width_header_field_inspireidlocalid_value{
 width: 115px;
 }
