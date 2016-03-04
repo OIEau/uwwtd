@@ -1264,7 +1264,7 @@ function uuwtd_get_distance_compliance($agg){
         // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
             $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
             // dsm($art5_treatment_compliance);
-            $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $uwwtp->field_uwwntotperf['und'][0]['value'], $uwwtp->field_uwwptotperf['und'][0]['value'], $uwwtp->field_uwwotherperf['und'][0]['value'], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
+            $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $uwwtp->field_uwwntotperf['und'][0]['value'], $uwwtp->field_uwwptotperf['und'][0]['value'], $uwwtp->field_uwwotherperf['und'][0]['value'], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             //dsm($uwwtp->title);
             //dsm($art5_treatment_compliance);
             //dsm($art5_perf_compliance);

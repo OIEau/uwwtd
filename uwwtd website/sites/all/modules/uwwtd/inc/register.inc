@@ -8086,11 +8086,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             
             //'monitoring',
-            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value']);
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             }
             
             //'final',
@@ -8105,12 +8105,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['art5_monitoring']] = $art5_monitoring;
                 $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];                
             } else {
-                $line[$ind['art4_treatment type']] = '';
-                $line[$ind['art4_monitoring']] = '';            
-                $line[$ind['art4_final']] = '';            
-                $line[$ind['art5_treatment type']] = '';
-                $line[$ind['art5_monitoring']] = '';
-                $line[$ind['art5_final']] = '';                     
+                $line[$ind['art4_treatment type']] = $pending_or_expired;
+                $line[$ind['art4_monitoring']] = $pending_or_expired;            
+                $line[$ind['art4_final']] = $pending_or_expired;            
+                $line[$ind['art5_treatment type']] = $pending_or_expired;
+                $line[$ind['art5_monitoring']] = $pending_or_expired;
+                $line[$ind['art5_final']] = $pending_or_expired;                     
             } 
             
             
@@ -9564,9 +9564,10 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
     }
     
     //pending deadline    PD + les C avec date pas dépassée
+    // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
     if (
         false === $deadline_before
-        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
         ) {
         $pending_or_expired = 'PD';
     } 
@@ -9747,7 +9748,7 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     return $art5_treatment;          
 }  
 
-function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC)
+function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC, $required_rcaaP, $required_rcaaN)
 {            
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
     $art5_monitoring = '';
@@ -9831,7 +9832,7 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             break;                                                                                          
     }
 
-    if ($required_rcaB == '1' || $required_rcaC == '1') {
+    if (($required_rcaB == '1' || $required_rcaC == '1') && ($required_rcaaN != '1' || $required_rcaaP != '1')) {
         $art5_monitoring = 'NR';
     }
     
