@@ -319,7 +319,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]));
              
         //debug data info
-        $sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
+        //$sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
 //         }
 //         $i++;
 //         break;
@@ -6131,6 +6131,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
         
+        
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
@@ -6575,9 +6576,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $compart5hierarchical = $agg->field_aggart5compliance['und'][0]['value'];
         } elseif ($agg->field_agggenerated['und'][0]['value'] <= 10000) {
             $compart5hierarchical = 'NR';
-        } elseif (  $agg->field_aggart3compliance['und'][0]['value'] == 'C' &&
+        } elseif ( ($agg->field_aggart3compliance['und'][0]['value'] == 'C' || $agg->field_aggart3compliance['und'][0]['value'] == 'QC') &&
                         $agg->field_aggart4compliance['und'][0]['value'] == 'C' &&
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'C' 
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'C'
                   ) {
             $compart5hierarchical = 'C';
         } elseif ( $agg->field_aggart3compliance['und'][0]['value'] == 'NC' ||
@@ -6585,7 +6586,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                         $agg->field_aggart5compliance['und'][0]['value'] == 'NC' 
                   ) {
             $compart5hierarchical = 'NC';
-        }                          
+        }   elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' ||
+                        $agg->field_aggart4compliance['und'][0]['value'] == 'PD' ||
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'PD') {
+            $compart5hierarchical = 'PD';
+        }                     
         $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] = $compart5hierarchical;
         
         //Compliance Art. 5 previous reporting',
@@ -6792,7 +6797,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['required_rcac']]  = $uwwtpinfo_for_agglo['required_rcac'];  
                 
         //debug data info
-        $line[$ind['debug_compliance_agglo_from_algo']] = $agg->field_aggcompliance['und'][0]['value'];
+        //$line[$ind['debug_compliance_agglo_from_algo']] = $agg->field_aggcompliance['und'][0]['value'];
                    
         fputcsv($r, $line, ';');
         
@@ -7006,8 +7011,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' || $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art5_NR']['number']++;
             $context['results']['graph']['art5_NR']['pe'] += $line[$ind['generated_load_p.e.']];
-        }
-            
+        }        
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
                       
@@ -8082,11 +8086,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             
             //'monitoring',
-            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value']);
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value']);
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             }
             
             //'final',
@@ -8101,12 +8105,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['art5_monitoring']] = $art5_monitoring;
                 $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];                
             } else {
-                $line[$ind['art4_treatment type']] = '';
-                $line[$ind['art4_monitoring']] = '';            
-                $line[$ind['art4_final']] = '';            
-                $line[$ind['art5_treatment type']] = '';
-                $line[$ind['art5_monitoring']] = '';
-                $line[$ind['art5_final']] = '';                     
+                $line[$ind['art4_treatment type']] = $pending_or_expired;
+                $line[$ind['art4_monitoring']] = $pending_or_expired;            
+                $line[$ind['art4_final']] = $pending_or_expired;            
+                $line[$ind['art5_treatment type']] = $pending_or_expired;
+                $line[$ind['art5_monitoring']] = $pending_or_expired;
+                $line[$ind['art5_final']] = $pending_or_expired;                     
             } 
             
             
@@ -9441,28 +9445,56 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
             $treatment_required = '2';
             break;
         case 'N':
-            if ($deadlineart5 == true) {
+            if ($deadlineart5 == false) {
                 $treatment_required = '2';
             } else {
                 $treatment_required = '3N';
             }
             break;
         case 'NP':
-            if ($deadlineart5 == true) {
+            if ($deadlineart5 == false) {
                 $treatment_required = '2';
             } else {
                 $treatment_required = '3NP';
             }
             break;
         case 'P':
-            if ($deadlineart5 == true) {
+            if ($deadlineart5 == false) {
                 $treatment_required = '2';
             } else {
                 $treatment_required = '3P';
             }
             break;
+        case 'MP':
+            if ($deadlineart5 == false) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3P';
+            }
+            break;
+        case 'NPO':
+            if ($deadlineart5 == false) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3NPother';
+            }
+            break;
+        case 'NO':
+            if ($deadlineart5 == false) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3Nother';
+            }
+            break;
+        case 'PO':
+            if ($deadlineart5 == false) {
+                $treatment_required = '2';
+            } else {
+                $treatment_required = '3Pother';
+            }
+            break;  
         case 'O':
-            if ($deadlineart5 == true) {
+            if ($deadlineart5 == false) {
                 $treatment_required = '2';
             } else {
                 $treatment_required = '3other';
@@ -9532,9 +9564,10 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
     }
     
     //pending deadline    PD + les C avec date pas dépassée
+    // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
     if (
         false === $deadline_before
-        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
         ) {
         $pending_or_expired = 'PD';
     } 
@@ -9561,6 +9594,13 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
 //                 $art4_treatment_type = 'NR';   
 //             } else {
     switch($treatment_required) {
+        case '3other':
+        case '3NP':
+        case '3P':
+        case '3N':
+        case '3NPO':
+        case '3NO':
+        case '3PO':
         case '2':
             if (false !== strpos($treatmenttypeinplace, '2')) {
                 $art4_treatment_type = 'C';
@@ -9568,34 +9608,34 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
                 $art4_treatment_type = 'NC';
             }
             break;
-        case '3N':
-            if (false !== strpos($treatmenttypeinplace, '3N')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break; 
-        case '3P':
-            if (false !== strpos($treatmenttypeinplace, '3P')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;
-        case '3NP':
-            if (false !== strpos($treatmenttypeinplace, '3NP')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;  
-        case '3other':
-            if (false !== strpos($treatmenttypeinplace, '3other')) {
-                $art4_treatment_type = 'C';
-            } else {
-                $art4_treatment_type = 'NC';
-            }                
-            break;
+        // case '3N':
+        //     if (false !== strpos($treatmenttypeinplace, '3N')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break; 
+        // case '3P':
+        //     if (false !== strpos($treatmenttypeinplace, '3P')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;
+        // case '3NP':
+        //     if (false !== strpos($treatmenttypeinplace, '3NP')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;  
+        // case '3other':
+        //     if (false !== strpos($treatmenttypeinplace, '3other')) {
+        //         $art4_treatment_type = 'C';
+        //     } else {
+        //         $art4_treatment_type = 'NC';
+        //     }                
+        //     break;
         case 'Appropriate':  
         case 'NR':
             $art4_treatment_type = 'NR';
@@ -9708,7 +9748,7 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     return $art5_treatment;          
 }  
 
-function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC)
+function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC, $required_rcaaP, $required_rcaaN)
 {            
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
     $art5_monitoring = '';
@@ -9792,7 +9832,7 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             break;                                                                                          
     }
 
-    if ($required_rcaB == '1' || $required_rcaC == '1') {
+    if (($required_rcaB == '1' || $required_rcaC == '1') && ($required_rcaaN != '1' || $required_rcaaP != '1')) {
         $art5_monitoring = 'NR';
     }
     
@@ -9832,13 +9872,13 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 {
     switch($type) {
         case 'a':
-            $compart5x = $ind['compliance_art._5a_(only)'];
+            $compart5x = $line[$ind['compliance_art._5a_(only)']];
             break;
         case 'b':
-            $compart5x = $ind['compliance_art._5b_(only)'];
+            $compart5x = $line[$ind['compliance_art._5b_(only)']];
             break;
         case 'c':
-            $compart5x = $ind['compliance_art._5c_(only)'];
+            $compart5x = $line[$ind['compliance_art._5c_(only)']];
             break;                                        
     }
 
@@ -9849,20 +9889,25 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
             return $line[$ind['art4_compliance_art._4_(hierarchical_approach)']];
     }
 
-    if ($line[$compart5x] == 'PD') {
+    if ($compart5x == 'PD') {
         return 'PD';
     }
 
-    if ($line[$ind['generated_load_p.e.']] <= 10000 || $compart5x == 'NR') {
+    if ($line[$ind['generated_load_p.e.']] <= 10000) {
         return 'NR';
     }
+
+    if ($compart5x == 'NR') {
+        return 'NR';
+    }
+
     if ($line[$ind['art4_compliance_art._4_(only)']] == 'C'
-        && $line[$compart5x] == 'C') {
+        && $compart5x == 'C') {
         return 'C';
     } 
 
     if ($line[$ind['art4_compliance_art._4_(only)']] == 'NC'
-        || $line[$compart5x] == 'NC') {
+        || $compart5x == 'NC') {
         return 'NC';
     }   
     return '';                        
@@ -9893,22 +9938,22 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_collected, $reporting_year, $deadline_agglo) {
     switch($type) {
         case 'a':
-            $nr = $ind['not_relevant_5_a_(%_of_gen._load)'];
-            $c = $ind['compliant_5_a_(%_of_gen._load)'];
-            $nc = $ind['not_compliant_5_a_(%_of_gen._load)'];
-            $nc_pe = $ind['not_compliant_5_a_(p._e.)'];
+            $nr = $line[$ind['not_relevant_5_a_(%_of_gen._load)']];
+            $c = $line[$ind['compliant_5_a_(%_of_gen._load)']];
+            $nc = $line[$ind['not_compliant_5_a_(%_of_gen._load)']];
+            $nc_pe = $line[$ind['not_compliant_5_a_(p._e.)']];
             break;
         case 'b':
-            $nr = $ind['not_relevant_5_b_(%_of_gen._load)'];
-            $c = $ind['compliant_5_b_(%_of_gen._load)'];
-            $nc = $ind['not_compliant_5_b_(%_of_gen._load)'];
-            $nc_pe = $ind['not_compliant_5_b_(p._e.)'];
+            $nr = $line[$ind['not_relevant_5_b_(%_of_gen._load)']];
+            $c = $line[$ind['compliant_5_b_(%_of_gen._load)']];
+            $nc = $line[$ind['not_compliant_5_b_(%_of_gen._load)']];
+            $nc_pe = $line[$ind['not_compliant_5_b_(p._e.)']];
             break;
         case 'c':
-            $nr = $ind['not_relevant_5_c_(%_of_gen._load)'];
-            $c = $ind['compliant_5_c_(%_of_gen._load)'];
-            $nc = $ind['not_compliant_5_c_(%_of_gen._load)'];
-            $nc_pe = $ind['not_compliant_5_c_(p._e.)'];
+            $nr = $line[$ind['not_relevant_5_c_(%_of_gen._load)']];
+            $c = $line[$ind['compliant_5_c_(%_of_gen._load)']];
+            $nc = $line[$ind['not_compliant_5_c_(%_of_gen._load)']];
+            $nc_pe = $line[$ind['not_compliant_5_c_(p._e.)']];
             break;                                        
     }
 
@@ -9916,7 +9961,7 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
         return 'NR';
     }
 
-    if ($line[$nr] >= 0 && $line[$c] == 0 && $line[$nc] == 0) {
+    if ($nr >= 0 && $c == 0 && $nc == 0) {
         return 'NR';
     }
 
@@ -9924,21 +9969,21 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
         return 'PD';
     }
 
-    if ($line[$nc] == 0 && $line[$c] > 0) {
+    if ($nc == 0 && $c > 0) {
         return 'C';
     }
 
     if ($deadline_agglo < $reporting_year
-        && $line[$nc] > 0
+        && $nc > 0
         && $art5x_NC_collected <= 1 
-        && $line[$nc_pe] < 2000
+        && $nc_pe < 2000
         ) {
         return 'C';
     }
 
     if ($deadline_agglo < $reporting_year
         && 
-        ($line[$nc] > 1 || $line[$nc_pe] >= 2000)
+        ($nc > 1 || $nc_pe >= 2000)
         ) {
         return 'NC';
     } 

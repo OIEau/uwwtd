@@ -6852,12 +6852,15 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             $rcaAPhos = false;
             $rcab = false;
             $rcac = false;
+            $paramN = false;
+            $paramP = false;
+            $paramO = false;
                             
             /* Cas des pays avec l'ensemble du pays en zone sensible */
             $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-                $rcaTypeid = 'SA';
-            }            
+            // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+            //     $rcaTypeid = 'SA';
+            // }            
             foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                 $rca = node_load($rcalist['nid']);
                 
@@ -6866,6 +6869,9 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $isrcaAPhos  = (isset($rca->field_rcaaphos['und'][0]['value']) ? $rca->field_rcaaphos['und'][0]['value'] == 1: false);
                 $isrcab      = (isset($rca->field_rcab['und'][0]['value']) ? $rca->field_rcab['und'][0]['value'] == 1: false);
                 $isrcac      = (isset($rca->field_rcac['und'][0]['value']) ? $rca->field_rcac['und'][0]['value'] == 1: false);
+                $hasParamN      = (isset($rca->field_rca_parameter_n['und'][0]['value']) ? $rca->field_rca_parameter_n['und'][0]['value'] == 1: false);
+                $hasParamP      = (isset($rca->field_rca_parameter_p['und'][0]['value']) ? $rca->field_rca_parameter_p['und'][0]['value'] == 1: false);
+                $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
                 
                 if($isrca54applied) $rca54applied = true;
                 
@@ -6873,6 +6879,9 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 if($isrcaAPhos) $rcaAPhos = true;
                 if($isrcab) $rcab = true;
                 if($isrcac) $rcac = true;
+                if($hasParamN) $paramN = true;
+                if($hasParamP) $paramP = true;
+                if($hasParamO) $paramO = true;
             }
             
             $dcps[] = array(
@@ -6885,6 +6894,9 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 'rcaap' => $rcaAPhos,
                 'rcab' => $rcab,
                 'rcac' => $rcac,
+                'paramN' => $paramN,
+                'paramP' => $paramP,
+                'paramO' => $paramO
             );
         }
     }
@@ -7712,9 +7724,9 @@ function uwwtd_get_all_info_agguwww($node)
             $dcp = node_load($dcplist['nid']);
             /* Cas des pays avec l'ensemble du pays en zone sensible */
             $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-            if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-                $rcaTypeid = 'SA';
-            }            
+            // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+            //     $rcaTypeid = 'SA';
+            // }            
             foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                 $rca = node_load($rcalist['nid']);
                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
@@ -8244,98 +8256,171 @@ function uwwtd_rca_art54_applies($dcp)
 function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
+    // dsm(func_get_args());
     
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
     } elseif ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW' || $dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
-        //if rca demands nitrogen rcaANitro
-        if ($dcp['rcaan']) {
-            //if rca demands phosphorus rcaAPhos
-            if ($dcp['rcaap']) {
-                //if rca demands Other rcac
-                if ($dcp['rcac']) {
-                    $required_treatment->required = 'NPO';  
-                    $required_treatment->required_rcaan = 1;
-                    $required_treatment->required_rcaap = 1;
-                    $required_treatment->required_rcab = 0;
-                    $required_treatment->required_rcac = 1;                      
-                } else {
-                    $required_treatment->required = 'NP';
-                    $required_treatment->required_rcaan = 1;
-                    $required_treatment->required_rcaap = 1;
-                    $required_treatment->required_rcab = 0;
-                    $required_treatment->required_rcac = 0;                        
-                }                 
-            } else {
-                //if rca demands Other rcac
-                if ($dcp['rcac']) {
-                    $required_treatment->required = 'NO';   
-                    $required_treatment->required_rcaan = 1;
-                    $required_treatment->required_rcaap = 0;
-                    $required_treatment->required_rcab = 0;
-                    $required_treatment->required_rcac = 1;                         
-                } else {
-                    $required_treatment->required = 'N';
-                    $required_treatment->required_rcaan = 1;
-                    $required_treatment->required_rcaap = 0;
-                    $required_treatment->required_rcab = 0;
-                    $required_treatment->required_rcac = 0;                        
-                }             
-            }              
-        } else {
-            //if rca demands nitrogen rcab
-            if ($dcp['rcab']) {
-                //if rca demands Other rcac
-                if ($dcp['rcac']) {
-                    $required_treatment->required = 'NO';  
-                    $required_treatment->required_rcaan = 0;
-                    $required_treatment->required_rcaap = 0;
-                    $required_treatment->required_rcab = 1;
-                    $required_treatment->required_rcac = 1;                          
-                } else {
-                    //if rca demands phosphorus rcaAPhos
-                    if ($dcp['rcaap']) {
-                        $required_treatment->required = 'NP'; 
-                        $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 1;
-                        $required_treatment->required_rcab = 1;
-                        $required_treatment->required_rcac = 0;                               
-                    } else {
-                        $required_treatment->required = 'N';
-                        $required_treatment->required_rcaan = 0;
-                        $required_treatment->required_rcaap = 0;
-                        $required_treatment->required_rcab = 1;
-                        $required_treatment->required_rcac = 0;                            
-                    }              
-                }
-            } else {
+        if($dcp['rcatype'] == 'SA') {
+            //if rca demands nitrogen rcaANitro
+            if ($dcp['rcaan']) {
                 //if rca demands phosphorus rcaAPhos
                 if ($dcp['rcaap']) {
                     //if rca demands Other rcac
                     if ($dcp['rcac']) {
-                        $required_treatment->required = 'PO';
-                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required = 'NPO';  
+                        $required_treatment->required_rcaan = 1;
                         $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 1;                                
+                        $required_treatment->required_rcac = 1;                      
                     } else {
-                        $required_treatment->required = 'MP';
+                        $required_treatment->required = 'NP';
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 1;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;                        
+                    }                 
+                } else {
+                    //if rca demands Other rcac
+                    if ($dcp['rcac']) {
+                        $required_treatment->required = 'NO';   
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 1;                         
+                    } else {
+                        $required_treatment->required = 'N';
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;                        
+                    }             
+                }              
+            } else {
+                //if rca demands nitrogen rcab
+                if ($dcp['rcab']) {
+                    //if rca demands Other rcac
+                    if ($dcp['rcac']) {
+                        $required_treatment->required = 'NO';  
+                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 1;
+                        $required_treatment->required_rcac = 1;                          
+                    } else {
+                        //if rca demands phosphorus rcaAPhos
+                        if ($dcp['rcaap']) {
+                            $required_treatment->required = 'NP'; 
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 1;
+                            $required_treatment->required_rcab = 1;
+                            $required_treatment->required_rcac = 0;                               
+                        } else {
+                            $required_treatment->required = 'N';
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 0;
+                            $required_treatment->required_rcab = 1;
+                            $required_treatment->required_rcac = 0;                            
+                        }              
+                    }
+                } else {
+                    //if rca demands phosphorus rcaAPhos
+                    if ($dcp['rcaap']) {
+                        //if rca demands Other rcac
+                        if ($dcp['rcac']) {
+                            $required_treatment->required = 'PO';
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 1;
+                            $required_treatment->required_rcab = 0;
+                            $required_treatment->required_rcac = 1;                                
+                        } else {
+                            $required_treatment->required = 'MP';
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 1;
+                            $required_treatment->required_rcab = 0;
+                            $required_treatment->required_rcac = 0;                            
+                        }                       
+                    } else {
+                        if ($dcp['rcac']) {
+                            $required_treatment->required = 'O';
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 0;
+                            $required_treatment->required_rcab = 0;
+                            $required_treatment->required_rcac = 1;
+                        }  else {
+                            $required_treatment->required = '?';
+                            $required_treatment->required_rcaan = 0;
+                            $required_treatment->required_rcaap = 0;
+                            $required_treatment->required_rcab = 0;
+                            $required_treatment->required_rcac = 0;
+                        }                      
+                    }  
+                }            
+            }
+        } elseif($dcp['rcatype'] == 'A58') {
+            if($dcp['paramN']) {
+                if($dcp['paramP']) {
+                    if ($dcp['paramO']) {
+                        $required_treatment->required = 'NPO';  
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 1;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 1;
+                    } else {
+                        $required_treatment->required = 'NP';  
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 1;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;     
+                    }
+                } else {
+                    if ($dcp['paramO']) {
+                        $required_treatment->required = 'NO';  
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 1;
+                    } else {
+                        $required_treatment->required = 'N';  
+                        $required_treatment->required_rcaan = 1;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;     
+                    }
+                }
+            } else {
+                if($dcp['paramP']) {
+                    if ($dcp['paramO']) {
+                        $required_treatment->required = 'PO';  
                         $required_treatment->required_rcaan = 0;
                         $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
-                        $required_treatment->required_rcac = 0;                            
-                    }                       
+                        $required_treatment->required_rcac = 1;
+                    } else {
+                        $required_treatment->required = 'P';  
+                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaap = 1;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;     
+                    }
                 } else {
-                    $required_treatment->required = 'O';
-                    $required_treatment->required_rcaan = 0;
-                    $required_treatment->required_rcaap = 0;
-                    $required_treatment->required_rcab = 0;
-                    $required_treatment->required_rcac = 1;                        
-                }  
-            }            
-        }    
+                    if ($dcp['paramO']) {
+                        $required_treatment->required = 'O';  
+                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 1;
+                    } else {
+                        $required_treatment->required = '?';  
+                        $required_treatment->required_rcaan = 0;
+                        $required_treatment->required_rcaap = 0;
+                        $required_treatment->required_rcab = 0;
+                        $required_treatment->required_rcac = 0;     
+                    }
+                }
+            }
+        }   
     } else {
         $required_treatment->required = 'NI';
         $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';    
