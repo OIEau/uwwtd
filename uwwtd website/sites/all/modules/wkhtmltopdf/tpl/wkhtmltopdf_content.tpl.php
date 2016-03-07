@@ -44,7 +44,9 @@
     .olAlphaImg, .olAlphaImg {
         display:none;
     }
-        
+    div.charts-row{
+        page-break-after: always;
+    }
     </style>
     <!--
     <style>

@@ -997,7 +997,7 @@ function getRow7Graph1($yearSelected, $results) {
 	$columns = array();
 	$rows = array();
 	
-	$columns[0]['Destination']['data'] = 'Destination';
+	$columns[0]['Destination']['data'] = t('Destination');
 	if (!empty($results)) {
         if($yearSelected == ALL_YEARS){
             $legend = array();
@@ -1062,12 +1062,13 @@ function getRow7Graph1($yearSelected, $results) {
                             $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
                             
                             // Ajout de la ligne :
-                            $rows[$keyElement]['data'][$year] = $element;
+                            //$rows[$keyElement]['data'][$year] = $element;
+                            $rows[$keyElement]['data'][$year] = uwwtd_format_number($element).' '.t('T DS/year');
                             
                             $front[$year][] =array(
                                 'value'=>$element,
                                 'label'=>$GLOBALS['ms_level']['sludge'][$keyElement]['label'],
-                                'valueformat'=>uwwtd_format_number($element).' T DS/year',
+                                'valueformat'=>uwwtd_format_number($element).' '.t('T DS/year'),
                                 'color'=>$GLOBALS['ms_level']['sludge'][$keyElement]['color'],
                             );
                             
@@ -1096,7 +1097,7 @@ function getRow7Graph1($yearSelected, $results) {
                 <table class="stats-graphs table table-hover table-striped sticky-enabled">
                     <thead>
                         <tr>
-                            <th><i>*: Tons of Dry Substance per year T DS/year</i></th>
+                            <th><i>*: '.t('Tons of Dry Substance per year T DS/year').'</i></th>
                         </tr>
                     </thead>
                 </table>';
@@ -1128,37 +1129,26 @@ function getRow7Graph2($ms_level, $yearSelected, $yearsPossibles) {
 	// Pour chaque année :
 	foreach ($yearsToProcess as $yearToProcess) {
 		$ww_reuse .= '<div><b>'. $yearToProcess .' : </b>';
-		if (!empty($ms_level[$yearToProcess]['waste_water']['Re-used']) && $ms_level[$yearToProcess]['waste_water']['Re-used'] > 0) {
-			$ww_reuse .= $ms_level[$yearToProcess]['waste_water']['Re-used'].' m3 of treated waste water are re-used.';
+		if($ms_level[$yearToProcess]['waste_water']['rate of re-used']){
 			if ($ms_level[$yearToProcess]['waste_water']['rate of re-used']){
-				$ww_reuse .=' It represent '.$ms_level[$yearToProcess]['waste_water']['rate of re-used'].' % of the total volume treated';
+				$ww_reuse .=' '.t('@reuseRate % of treated waste water are re-used.', array('@reuseRate'=>$ms_level[$yearToProcess]['waste_water']['rate of re-used'])).' ';
 			}
 			$rep='';
 			if ($ms_level[$yearToProcess]['waste_water']['repartition']['agriculture']){
-				$rep = ' in agriculture';
+				$rep = ' '. t('in agriculture');
 			}
 			if ($ms_level[$yearToProcess]['waste_water']['repartition']['industry']){
-				$rep .= ($rep!=''?', ':'').' in industry';
+				$rep .= ($rep!=''?', ':'').t('in industry');
 			}
 			if ($ms_level[$yearToProcess]['waste_water']['repartition']['others']){
-				$rep .= ($rep!=''?', ':'').' in others use.';
+				$rep .= ($rep!=''?' '.t('and').' ':'').t('in others use.');
 			}
 			$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
-		} elseif($ms_level[$yearToProcess]['waste_water']['rate of re-used']){
-			$ww_reuse .=' It represent '.$ms_level[$yearToProcess]['waste_water']['rate of re-used'].' % of treated waste water are re-used.';
-			$rep='';
-			if ($ms_level[$yearToProcess]['waste_water']['repartition']['agriculture']){
-				$rep = ' in agriculture';
-			}
-			if ($ms_level[$yearToProcess]['waste_water']['repartition']['industry']){
-				$rep .= ($rep!=''?', ':'').' in industry';
-			}
-			if ($ms_level[$yearToProcess]['waste_water']['repartition']['others']){
-				$rep .= ($rep!=''?', ':'').' in others use.';
-			}
-			$ww_reuse .=($rep!=''?'This water is used ':'').$rep;
+            if ($ms_level[$yearToProcess]['waste_water']['Re-used']){
+                $ww_reuse .= '<div>'.t('Explanation').' : '.t($ms_level[$yearToProcess]['waste_water']['Re-used']).'</div>';
+            }
 		} else{
-			$ww_reuse .='No information';
+			$ww_reuse .=t('No information');
 		}
 		$ww_reuse .= '</div>';
 	}
@@ -1408,7 +1398,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 		switch ($yearSelected) {
 			case ALL_YEARS :
 				if (!empty($yearsPossibles)) {
-					$msg_sludge .= " (T DS/year)";
+					$msg_sludge .= ' '.t("(T DS/year)");
                     $front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
 				}
 				break;
@@ -1420,10 +1410,13 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
                         $graph1Front = $graph1Front[$keys[0]];
                         $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
                     }
-					$msg_sludge .= $results[$yearSelected]['sludge']['production']." T DS/year";
+					$msg_sludge .= t('Total production : ').$results[$yearSelected]['sludge']['production']." ".t("T DS/year");
+                    if($results[$yearSelected]['sludge']['remark']!=''){
+                        $msg_sludge_remark = t($results[$yearSelected]['sludge']['remark']);
+                    }
 				}
 		}
-		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back, $msg_sludge).'</div></div>';
+		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back, $msg_sludge, $msg_sludge_remark).'</div></div>';
     }
     
     
@@ -1437,7 +1430,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
 	return $html;
 }
 
-function uwwtd_graph_render_flipcard($title, $front, $back, $msg=''){
+function uwwtd_graph_render_flipcard($title, $front, $back, $msg='', $msgEnd=''){
     $content = 
         '<div class="container flip">'
           .'<div class="leftgraph front">'
@@ -1445,7 +1438,7 @@ function uwwtd_graph_render_flipcard($title, $front, $back, $msg=''){
                 .'<div class="flip-title">'.$title.'</div>'
                 .'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper to-table" title="See the data table" alt="See the data table"></div>'
             . '</div>'
-            . '<div class="flip-content"><b>'.$msg .'</b>'.$front.'</div>'
+            . '<div class="flip-content"><div class="flip-content-header">'.$msg .'</div>'.$front.'<div class="flip-content-footer">'.$msgEnd .'</div></div>'
           .'</div>'
 
           .'<div class="leftgraph back">'
@@ -1453,7 +1446,7 @@ function uwwtd_graph_render_flipcard($title, $front, $back, $msg=''){
                 .'<div class="flip-title">'.$title.'</div>'
                 .'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper to-chart" title="See diagram" alt="See diagram"></div>'
             . '</div>'
-            . '<div class="flip-content"><b>'.$msg .'</b>'. $back .'</div>'
+            . '<div class="flip-content"><div class="flip-content-header">'.$msg .'</div>'.$back.'<div class="flip-content-footer">'.$msgEnd .'</div></div>'
           .'</div>'
         .'</div>';
     return $content;

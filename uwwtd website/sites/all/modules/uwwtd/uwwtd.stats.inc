@@ -745,7 +745,7 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 						'remark'=>$node->field_mslremarks['und'][0]['value'],
 					),
 					"waste_water"=>array(
-						"Re-used"=>(float)$node->field_mslwwreuseexplain['und'][0]['value'],
+						"Re-used"=>$node->field_mslwwreuseexplain['und'][0]['value'],
 						"rate of re-used"=>(float)$node->field_mslwwreuseperc['und'][0]['value'],
 						"repartition"=>array(
 							'agriculture'=>(float)$node->field_mslwwreuseagri['und'][0]['value'],
@@ -761,7 +761,7 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 						if($delta>0){
 							$data[$year]['sludge']['destination']['missing']=$delta;
 						}
-						drupal_set_message("There are probably an error in sludge destination (delta = $delta t DS/y)","error");
+						drupal_set_message(t("There are probably an error in sludge destination (delta = @delta t DS/y)",array('@delta'=>$delta)),"error");
 					}
 				}
 			}
@@ -827,7 +827,7 @@ function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
                 $chart_data[]=array(
                     'label'=>$GLOBALS['ms_level']['sludge'][$k]['label'],
                     'value'=>(float)$v,
-                    'valueformat'=>uwwtd_format_number($v).' T DS/year',
+                    'valueformat'=>uwwtd_format_number($v).' '.t('T DS/year'),
                     'color'=>$GLOBALS['ms_level']['sludge'][$k]['color'], 
                 );
             }
@@ -844,7 +844,7 @@ function uwwtd_stat_national_ms_level_preprocess_ww_reuse_chart($data, $year){
                 $chart_data[]=array(
                     'label'=>$GLOBALS['ms_level']['waste_water'][$k]['label'],
                     'value'=>$v,
-                    'valueformat'=>$v.' T DS/year',
+                    'valueformat'=>$v.' '.t('T DS/year'),
                     'color'=>$GLOBALS['ms_level']['waste_water'][$k]['color'], 
                 );
             }

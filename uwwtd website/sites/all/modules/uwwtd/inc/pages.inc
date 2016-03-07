@@ -1757,7 +1757,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 				.'</div>'
 			 .'</div>'
                 . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
-                . '<!--markerprinttable-->'   //use for print wjhtmltopdf
+                . '<!--markerprinttable-->'   //use for print wkhtmltopdf
             .'</div>';
 
      if (true === $put_in_cache) {
