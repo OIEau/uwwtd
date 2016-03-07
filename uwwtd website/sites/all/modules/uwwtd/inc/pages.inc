@@ -1028,7 +1028,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
             );
     }
 
-    $form = uwwtd_filter_form($list_field, $filter);
+    $form = uwwtd_filter_form($list_field, $filter, 'views-exposed-form-agglomeration-connection-page');
 
 
 
@@ -1280,7 +1280,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         );
    }
 
-    $form = uwwtd_filter_form($list_field, $filter);
+    $form = uwwtd_filter_form($list_field, $filter, 'views-exposed-form-uwwtp-compliance-page');
 //     dsm($data);    
     $filter_force['filter'] = array();
     if (variable_get('display_only_active', '1') == 1) {
@@ -1568,7 +1568,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             'rbd' => array('title' => t('River Basin District'), 'type' => 'select', 'data' => $option['allrbd']),
         );
    }
-    $form = uwwtd_filter_form($list_field, $filter);
+    $form = uwwtd_filter_form($list_field, $filter, 'views-exposed-form-uwwtp-treatment-page');
               
     $filter_force['filter'] = array();
     if (variable_get('display_only_active', '1') == 1) {
@@ -1830,7 +1830,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     );
     }
 
-    $form = uwwtd_filter_form($list_field, $filter);
+    $form = uwwtd_filter_form($list_field, $filter, 'views-exposed-form-uwwtp-pressure-page');
 
 //     dsm($data);        
     $filter_force['filter'] = array();
@@ -2888,7 +2888,7 @@ function uwwtd_data_contain_art17($data, $field){
     return false;
 }
 
-function uwwtd_filter_form($list_field, $filter)
+function uwwtd_filter_form($list_field, $filter, $id = 'views-exposed-form-agglomeration-conformity-page')
 {
 $render_field = '';
 foreach($list_field as $field_name => $data) {
@@ -2997,7 +2997,7 @@ foreach($list_field as $field_name => $data) {
 }
 
     return '<div class="view-filters">
-<form accept-charset="UTF-8" id="views-exposed-form-agglomeration-conformity-page" method="get" action="">
+<form accept-charset="UTF-8" id="'.$id.'" method="get" action="">
 <div>
 <div class="views-exposed-form">
 <div class="views-exposed-widgets clearfix">
