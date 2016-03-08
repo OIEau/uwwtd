@@ -603,7 +603,9 @@ display: none;
 	color: #281c45;
 	text-align:center;
 }   
-
+.customTable th{
+    text-align:center;
+}
 .customTable .width_header_field_inspireidlocalid_value{
 width: 115px;
 }
@@ -1053,3 +1055,24 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 table.wms-ol-table-result tr td{
     vertical-align:top;
 }
+
+form#views-exposed-form-agglomeration-connection-page .views-exposed-form .views-exposed-widget{
+    max-width:138px;
+}
+form#views-exposed-form-agglomeration-connection-page .views-exposed-form label{
+    max-width:135px;
+}
+form#views-exposed-form-agglomeration-connection-page .views-exposed-form .form-control{
+    max-width:135px;
+}
+
+form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .views-exposed-widget{
+    max-width:108px;
+}
+form#views-exposed-form-uwwtp-pressure-page .views-exposed-form label{
+    max-width:105px;
+}
+form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .form-control{
+    max-width:105px;
+}
+

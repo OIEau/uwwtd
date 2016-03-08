@@ -730,6 +730,8 @@ return $this->_windowStatus;
         $command .= (mb_strlen($this->getFooterHtml()) > 0) ? " --footer-html \"" . $this->getFooterHtml() . "\"" : "";
         //$command .= ($this->getPdfCompression()) ?'':' --disable-pdf-compression';
         
+        $command .= " --print-media-type ";
+        
         $command .= ' "%input%"';
         
         

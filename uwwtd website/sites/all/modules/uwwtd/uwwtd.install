@@ -4203,6 +4203,54 @@ function uwwtd_update_7145(&$context = null) {
 	//throw new DrupalUpdateException(__FUNCTION__);
 }   
     
+
+
+ /**
+ * Update SoE layers in order to exclude piechart layer in small scale
+ * Add potx and l10n_client modules
+ */   
+function uwwtd_update_7146(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    //force update for maps
+    //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'soe_bod.inc',
+        'soe_nh3.inc',
+        'soe_nitrate.inc',
+        'soe_phosphorus.inc'
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
+    
+    
+    if (false === module_enable(array('potx'))) {
+        $msg = "Error, module potx can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    if (false === module_enable(array('l10n_client'))) {
+        $msg = "Error, module potx can\'t be enabled, see in module page if a dependency is needed or if this module is installed";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    
+    drupal_flush_all_caches();
+    
+    
+    
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
     
     
 /**
@@ -5477,6 +5525,9 @@ function  uwwtd_install_enable_module(&$context)
         'Views UI' => 'views_ui',
         'D3' => 'd3',
         'D3 Views' => 'd3_views',
+        'Translation template extractor'=>'potx',
+        'Localization client'=>'l10n_client',
+        
         // 'UWWTD' => 'uwwtd',
         'Statistics for UWWTD' => 'uwwtd_statistics',
         'Views for UWWTD' => 'uwwtd_views',

@@ -470,8 +470,8 @@ $GLOBALS['ms_level'] = array(
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
 	'sewage_network'=>array(
-		'B'=>array('color'=>'#4f91e1','label'=>t('Separative and combine system')),
-        'S'=>array('color'=>'#bd8842','label'=>t('Separative system')),
+		'B'=>array('color'=>'#459436','label'=>t('Separative and combine system')),
+        'S'=>array('color'=>'#4f91e1','label'=>t('Separative system')),
         'C'=>array('color'=>'#bd8842','label'=>t('Combine system')),
 		'NI'=>array('color'=>'#a2a2a2','label'=>t('No information')),
 	)

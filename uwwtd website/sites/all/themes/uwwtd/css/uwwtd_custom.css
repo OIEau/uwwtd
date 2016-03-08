@@ -42,6 +42,13 @@ div.flip-image{
 .flip-msg{
     padding:5px;
 }
+.flip-content-header{
+    font-weight:bold;
+}
+.flip-content-footer{
+    font-style:italic;
+}
+
 .button-flipper {
   /*float: right;*/
   margin-top: -1px;
@@ -66,6 +73,9 @@ div.charts-row .back table{
 div.charts-row div.container{
     height:320px;
     width:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    
 }
 
 .cell-content-extended {
