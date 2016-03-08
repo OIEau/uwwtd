@@ -4239,10 +4239,54 @@ function uwwtd_update_7146(&$context = null) {
     }
     
     drupal_flush_all_caches();
+   
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
     
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
     
+  /**
+ * Add tooltips on aggc1, aggc2 aggpercwithouttereatment
+ * forece reimport of map
+ */   
+function uwwtd_update_7147(&$context = null) {
+	uwwtd_install_trace(__FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
     
+    //force update for maps
+    //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+
+    uwwtd_update_map_overlay($country_config, $country_code, array('waste_water_treatment_network_map.inc'), array('-'), array('-'));
     
+    $list_field_to_update = array(
+        'field_aggc1' => "Rate of generated load of agglomeration collected through collecting system (% of p.e.)",
+        'field_aggc2' => "Rate of generated load of agglomeration addressed through IAS (% of p.e.)",
+        'field_aggpercwithouttreatment' => "Rate of generated load of agglomeration not collected through collecting systems and not addressed through IAS (% of p.e.)"
+    );
+    $msg_error = '';
+    foreach($list_field_to_update as $fieldname => $tooltip) {
+        $infofield = field_info_field($fieldname);
+        $infofield['custom_tooltip'] = $tooltip;
+        try {
+            field_update_field($infofield);
+        }
+        catch (Exception $e) {
+            $msg = "Error update field : ".$infofield['field_name']."\n";
+            $msg .= $e->getMessage() . "\n"; 
+            uwwtd_install_trace($msg);
+            $msg_error .= $msg . "\n";          
+        } 
+    }
+    
+    drupal_flush_all_caches();
+   
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;

@@ -1039,7 +1039,7 @@ $list_field = array (
   ),
   'field_aggc2' => 
   array (
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Rate of generated load of agglomeration addressed through IAS (% of p.e.)',
     'entity_types' => 
     array (
     ),
@@ -4811,7 +4811,7 @@ $list_field = array (
   ),
   'field_aggpercwithouttreatment' => 
   array (
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Rate of generated load of agglomeration not collected through collecting systems and not addressed through IAS (% of p.e.)',
     'entity_types' => 
     array (
     ),
@@ -5295,7 +5295,7 @@ $list_field = array (
   ),
   'field_aggc1' => 
   array (
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Rate of generated load of agglomeration collected through collecting system (% of p.e.)',
     'entity_types' => 
     array (
     ),
