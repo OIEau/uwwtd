@@ -1076,3 +1076,6 @@ form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .form-control{
     max-width:105px;
 }
 
+.openlayers_map_fullscreen{
+    position: fixed !important;
+}

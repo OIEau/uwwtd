@@ -353,7 +353,7 @@ echo uwwtd_insert_errors_tab($node);
 									<td class="light">'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
 								</tr>';		
 						$output .= '</table>';
-						$output .= '* Concentration calculated using the annual load and the annual volume of wastewater treated.';
+						$output .= t('* Concentration calculated using the annual load and the annual volume of wastewater treated.');
 						print $output;
 						}                     
               print'   </div>
