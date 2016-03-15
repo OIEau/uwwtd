@@ -10,25 +10,25 @@ require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/P
 function uwwtd_register_form($form, &$form_state){
 
 //  $uwwtd_year = date("Y");
- 
+
  // definition du champ input de type select pour l'annee
- $form['uwwtd_year'] = array(     
+ $form['uwwtd_year'] = array(
   '#type' => 'select',
   '#title' => t('Year'),
-  '#default_value' => uwwtd_get_max_annee(),        
+  '#default_value' => uwwtd_get_max_annee(),
   '#options' => uwwtd_get_all_year(),
   '#weight' => 0,
   '#required' => TRUE,
  );
- 
- $form['force'] = array(     
+
+ $form['force'] = array(
   '#type' => 'checkbox',
   '#title' => t('If register already exists, re-create the file.'),
-  '#default_value' => 0,        
+  '#default_value' => 0,
   '#weight' => 1,
   '#required' => false,
- ); 
- 
+ );
+
  // Bouton envoyer
  $form['submit_button'] = array(
   '#type' => 'submit',
@@ -49,7 +49,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 
     //if registre already calculated and no new conformity or new import_data processed since, we send the file
     $filepath = uwwtd_getregister_finalfile_path($annee);
-    if (file_exists($filepath) 
+    if (file_exists($filepath)
         && variable_get('registre_'.$annee, -2) > variable_get('conformity_'.$annee, -1)
         && variable_get('registre_'.$annee, -2) > variable_get('import_data_'.$annee, -1)
         && $force == 0) {
@@ -61,26 +61,26 @@ function uwwtd_register_form_submit($form, &$form_state){
 
 function uwwtd_register_set_operation(&$batch, $annee)
 {
-    //CSV 
+    //CSV
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
 
-    $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));           
+    $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
 
     $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));           
+    $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
-    //excel        
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));                      
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));                    
+    //excel
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));                    
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
@@ -91,9 +91,9 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));                    
- 
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));  
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+
+    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -104,10 +104,10 @@ function uwwtd_setup_register_batch($annee)
         'error_message' => t('Error!'),
         'finished' => 'uwwtd_register_finished',
         'file' => drupal_get_path('module','uwwtd').'/inc/register.inc'
-    );   
-    
+    );
+
     uwwtd_register_set_operation($batch, $annee);
-    
+
     batch_set($batch);
     batch_process('register');
 }
@@ -120,75 +120,75 @@ function uwwtd_register_finished($success, $results, $operations)
     else {
         drupal_set_message(
             t('An error occurred ')
-        );  
+        );
     }
 }
 
 function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
-{   
+{
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-    
+
     $ragglofile = fopen($filename, 'rb');
-    
+
     //pass header line
-    if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['line'] = 4; //start line
-        
+
         $path_xlsx = uwwtd_getregister_modelfile_path();
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);        
-    } else {        
+        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
+    } else {
 //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
-        $target_path = $path_xlsx;          
-    }     
-    
+        $target_path = $path_xlsx;
+    }
+
     fseek($ragglofile, $context['sandbox']['file_position']);
-        
-//      if (!isset($context['sandbox']['progress'])) {    
+
+//      if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
 //     }
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-                                                                                           
+
 //     $model_path = $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
 //     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
-    
+
 
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
- 
+
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'],
                                         ) );
-                                        
+
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
-           
+
 //     dsm(444);
-//     return '111';       
+//     return '111';
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
-    
+
 //     $start_line = 4;
 //     $sheet->insertNewRowBefore(5, count($listagglo));
-    
+
 //     $i = $start_line;
 //     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);//$path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
-//     dsm($filename);           
+//     dsm($filename);
 //     $ragglofile = fopen($filename, 'rb');
 //     dsm($ragglofile);
     //ignore header //decomment for debug on xls final file
@@ -196,9 +196,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {      
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //         dsm($agglo);
-//         break;        
+//         break;
 //     foreach($listagglo as $agglo) {
 //         } else {
         $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $agglo[$ind['aggcode']]);
@@ -218,23 +218,23 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['previous_aggcode'], $context['sandbox']['line'], $agglo[$ind['previous_aggcode']]);
         $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $context['sandbox']['line'], round($agglo[$ind['previous_gen._load_p.e.']]));
         $sheet->setCellValueByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'], round($agglo[$ind['previous_percentage_of_change_of_size_(1)']], 1));
-        
+
         if (abs((float)$agglo[$ind['previous_percentage_of_change_of_size_(1)']]) > 20) {
             $sheet->getStyleByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'])
                 ->getFill()
                 ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');        
-        }  
-                
+                ->getStartColor()->setARGB('FFFFC000');
+        }
+
         $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'], round($agglo[$ind['total_%_(2)']], 1));
-        
+
         if ($agglo[$ind['total_%_(2)']] < 100) {
             $sheet->getStyleByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'])
                 ->getFill()
                 ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');        
-        }  
-                
+                ->getStartColor()->setARGB('FFFFC000');
+        }
+
         $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system']], 1));
         $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system_p._e.']]));
         $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['addressed_through_ias_%_of_gen._load']], 1));
@@ -317,7 +317,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['more_str._treatment_installed_(p._e.)']]));
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']], 1));
         $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]));
-             
+
         //debug data info
         //$sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
 //         }
@@ -326,34 +326,34 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
 
-        $j++;        
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];           
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
     fclose($ragglofile);
-    
+
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
 //         dsm($context['sandbox']['line']);
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
         $r = fopen($filename, 'rb');
-        $line_to_fill = 0;  
-        for ($i = 0; $i <= 3; $i++) {            
+        $line_to_fill = 0;
+        for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
 //             dsm($agglo);
             switch($agglo[0]) {
                 case 'TOTAL':
                     $line_to_fill = $context['sandbox']['line'] + 2;
-                break; 
+                break;
                 case 'expired_deadline':
                      $line_to_fill = $context['sandbox']['line'] + 3;
-                break; 
+                break;
                 case 'pending_deadline':
                      $line_to_fill = $context['sandbox']['line'] + 4;
-                break; 
+                break;
                 default:
 //                     dsm('error for line :');
 //                     dsm($agglo);
-                    continue 2;                                
+                    continue 2;
             }
 //             dsm($ind['generated_load_p.e.'] . ',' .$line_to_fill . ','. $agglo[$ind['generated_load_p.e.']]);
             $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $line_to_fill, $agglo[$ind['generated_load_p.e.']]);
@@ -388,63 +388,63 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $line_to_fill, $agglo[$ind['secondary_treatment_installed_(p._e.)']]);
             $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $line_to_fill, $agglo[$ind['monitoring_results_f._secondary_ok']]);
             $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $line_to_fill, $agglo[$ind['more_str._treatment_installed_(p._e.)']]);
-            $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $line_to_fill, $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);            
-            
+            $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $line_to_fill, $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
+
         }
         fclose($r);
-        
-        
+
+
         //write evulation data
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_evaluation_name'], $annee);
         $r = fopen($filename, 'rb');
-        for ($i = 0; $i <= 3; $i++) {            
+        for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
-            
+
             switch($i) {
                 case 0:
                     $line_to_fill = $context['sandbox']['line'] + 7;
-                break; 
+                break;
                 case 1:
                      $line_to_fill = $context['sandbox']['line'] + 17;
-                break; 
+                break;
                 case 2:
                      $line_to_fill = $context['sandbox']['line'] + 27;
-                break;                              
+                break;
             }
-                   
-            //subjected_agglo                            
+
+            //subjected_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[0]);
             //compliant_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[1]);
             //notcompliant_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[2]);
-            
+
             //subjected_load     generated
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill, $agglo[3]);
             //subjected_load    collected
             $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[4]);
-            
+
             //compliant_load     generated
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill, $agglo[5]);
             //compliant_load     collected
             $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[6]);
-            
+
             //notcompliant_load   generated
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill, $agglo[7]);
             //notcompliant_load   collected
             $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[8]);
-            
+
             //exempted
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[9]);
-            
+
             //exempted_load   generated
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill, $agglo[10]);
             //exempted  collected
-            $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[11]);         
+            $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[11]);
         }
-        fclose($r);          
-    }    
-   
+        fclose($r);
+    }
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -452,103 +452,103 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-                                            
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }              
+    }
 }
 
 function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
-{   
-    uwwtd_trace(__FUNCTION__); 
-//  if (!isset($context['sandbox']['progress'])) {    
+{
+    uwwtd_trace(__FUNCTION__);
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
 //     }
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] . '.csv';
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);           
-    
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
+
 //     dsm($filename);
-//  if (!isset($context['sandbox']['progress'])) {  
-//         $context['sandbox']['file_position'] = 0;  
+//  if (!isset($context['sandbox']['progress'])) {
+//         $context['sandbox']['file_position'] = 0;
 //         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
 //         $context['sandbox']['max'] = filesize($filename);
 //     }
-    
+
     $ruwwtpfile = fopen($filename, 'rb');
-    
+
     //pass header line
-    if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        
-        //ignore header    
+
+        //ignore header
         $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['line'] = 4; //start line
-        
-        
-        
+
+
+
         $path_xlsx = uwwtd_getregister_modelfile_path();
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);        
-    } else {        
+        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
+    } else {
 //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
-        $target_path = $path_xlsx;          
-    }  
-    
+        $target_path = $path_xlsx;
+    }
+
 //     dsm($context);
 //     dsm($path_xlsx);
-//     dsm($target_path); 
-    
-    fseek($ruwwtpfile, $context['sandbox']['file_position']); 
+//     dsm($target_path);
+
+    fseek($ruwwtpfile, $context['sandbox']['file_position']);
 
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'],
                                         ) );
-    uwwtd_trace('start load');                                        
+    uwwtd_trace('start load');
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
     uwwtd_trace('end load');
     uwwtd_trace('start getSheetByName');
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
     uwwtd_trace('end getSheetByName');
-    
+
 //     $sheet->insertNewRowBefore(5, count($listuwwtp));
-    
+
 //     $i = $context['sandbox']['line'];
 
-    
+
     //ignore header //decomment for debug on xls final file
 //     $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
 
-//     while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {    
+//     while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
     $j = 0;
     uwwtd_trace('start loop');
     while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
-            uwwtd_trace($j);    
+            uwwtd_trace($j);
 //         if ($uwwtp[0] == 'TOTAL' || $uwwtp[0] == 'expired_deadline' || $uwwtp[0] == 'pending_deadline' ) {
 //             $line_to_fill = 0;
 //             switch($uwwtp[0]) {
 //                 case 'TOTAL';
 //                     $line_to_fill = $context['sandbox']['line'] + 2;
-//                 break; 
+//                 break;
 //                 case 'expired_deadline';
 //                      $line_to_fill = $context['sandbox']['line'] + 3;
-//                 break; 
+//                 break;
 //                 case 'pending_deadline';
 //                      $line_to_fill = $context['sandbox']['line'] + 4;
-//                 break;                                 
+//                 break;
 //             }
 //             $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]);
 //             $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, $uwwtp[$ind['uww_entering load  p. e.']]);
@@ -557,9 +557,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 //             $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, $uwwtp[$ind['previous_capacity p. e.']]);
 //             $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of entering load (1) %']]);
 //             $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]);
-//         } else {    
-                   
-    //     foreach($listuwwtp as $uwwtp) {  
+//         } else {
+
+    //     foreach($listuwwtp as $uwwtp) {
     if (isset($ind['aggcode']) && isset($context['sandbox']['line']) && isset($ind['aggcode'], $uwwtp[$ind['aggcode']]))
         $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $uwwtp[$ind['aggcode']]);
     if (isset($ind['aggname']) && isset($context['sandbox']['line']) && isset($ind['aggname'], $uwwtp[$ind['aggname']]))
@@ -598,7 +598,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     if (isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]));
 
-    if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['uww_entering this UWWTP % of gen. load'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))        
+    if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['uww_entering this UWWTP % of gen. load'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
     if (isset($ind['uww_entering load  p. e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering load  p. e.'], $uwwtp[$ind['uww_entering load  p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering load  p. e.']]));
@@ -612,8 +612,8 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_entering load p. e.']]));
     if (isset($ind['previous_capacity p. e.']) && isset($context['sandbox']['line']) && isset($ind['previous_capacity p. e.'], $uwwtp[$ind['previous_capacity p. e.']]))
         $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_capacity p. e.']]));
-        
-    
+
+
     if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]))
     	$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
         if (isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) && abs((float)$uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) > 20) {
@@ -631,15 +631,15 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
             $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
                 ->getFill()
                 ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');        
+                ->getStartColor()->setARGB('FFFFC000');
         } else {
         	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($context['sandbox']['line'])) {
 	            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
 	                ->getFill()
 	                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-	                ->getStartColor()->setARGB('FFFFFFFF');   
+	                ->getStartColor()->setARGB('FFFFFFFF');
         	}
-        }  
+        }
 
     if (isset($ind['water body type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['water body type']]))
         $sheet->setCellValueByColumnAndRow($ind['water body type'],$context['sandbox']['line'], $uwwtp[$ind['water body type']]);
@@ -687,15 +687,15 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['In cause of failure (3)'],$context['sandbox']['line'], $uwwtp[$ind['In cause of failure (3)']]);
     if (isset($ind['difference between monitoring result N and P and treatment in place']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['difference between monitoring result N and P and treatment in place']]))
         $sheet->setCellValueByColumnAndRow($ind['difference between monitoring result N and P and treatment in place'],$context['sandbox']['line'], $uwwtp[$ind['difference between monitoring result N and P and treatment in place']]);
-        
+
 //         $sheet->setCellValueByColumnAndRow($ind['Number of discharge points for this UWWTP'],$context['sandbox']['line'], $uwwtp[$ind['Number of discharge points for this UWWTP']]);
 //         $sheet->setCellValueByColumnAndRow($ind['DCP ID'],$context['sandbox']['line'], $uwwtp[$ind['DCP ID']]);
 //         $sheet->setCellValueByColumnAndRow($ind['ID of receiving water body 2'],$context['sandbox']['line'], $uwwtp[$ind['ID of receiving water body 2']]);
 //         $sheet->setCellValueByColumnAndRow($ind['water body type 2'],$context['sandbox']['line'], $uwwtp[$ind['water body type 2']]);
 //         $sheet->setCellValueByColumnAndRow($ind['ID of the SA or LSA 2'],$context['sandbox']['line'], $uwwtp[$ind['ID of the SA or LSA 2']]);
 //         $sheet->setCellValueByColumnAndRow($ind['rcaname 2'],$context['sandbox']['line'], $uwwtp[$ind['rcaname 2']]);
-//         $sheet->setCellValueByColumnAndRow($ind['designation date 2'],$context['sandbox']['line'], $uwwtp[$ind['designation date 2']]);  
-        
+//         $sheet->setCellValueByColumnAndRow($ind['designation date 2'],$context['sandbox']['line'], $uwwtp[$ind['designation date 2']]);
+
 
     if (isset($ind['art4_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_treatment type']]))
         $sheet->setCellValueByColumnAndRow($ind['art4_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art4_treatment type']]);
@@ -789,34 +789,34 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration P mg/l']], 1));
     if (isset($ind['average Discharge concentration P mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration P mg/l']]))
         $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration P mg/l']], 1));
-        
+
         $context['sandbox']['line']++;
     	if (isset($context['sandbox']['line']))
         	$sheet->insertNewRowBefore($context['sandbox']['line'], 1);
 //         }
-        $j++;        
+        $j++;
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];   
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
     uwwtd_trace('end loop');
     fclose($ruwwtpfile);
-    
+
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
         $r = fopen($filename, 'rb');
-        $line_to_fill = 0;  
+        $line_to_fill = 0;
         for ($i = 0; $i < 3; $i++) {
             $uwwtp = fgetcsv($r, 5000, ';');
             switch($uwwtp[0]) {
                 case 'TOTAL';
                     $line_to_fill = $context['sandbox']['line'] + 2;
-                break; 
+                break;
                 case 'expired_deadline';
                      $line_to_fill = $context['sandbox']['line'] + 3;
-                break; 
+                break;
                 case 'pending_deadline';
                      $line_to_fill = $context['sandbox']['line'] + 4;
-                break;                                 
+                break;
             }
     		if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))
             	$sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
@@ -833,9 +833,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 	    	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_Percentage of change of capacity (2) %']]))
 	            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
         }
-        fclose($r);    
+        fclose($r);
     }
-    
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -843,55 +843,55 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }              
+    }
 }
 
 function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
-{    
-    if (!isset($context['sandbox']['progress'])) {    
+{
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
     }
-    
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
-    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'], $annee);    
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'], $annee);
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
+
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']);
-    
+
     $start_line = 6;
 //     $sheet->insertNewRowBefore(7, count($listrca));   todo    $listrca exist pas
-    
+
     $i = $start_line;
     $ind = $GLOBALS['uwwtd']['sheet1_rca'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['rca']['csv_name']. '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['csv_name'], $annee);
-               
+
     $rrcafile = fopen($filename, 'rb');
-    
+
     //ignore header //decomment for debug on xls final file
     $rca = fgetcsv($rrcafile, 5000, ';');
-    
-    while ($rca = fgetcsv($rrcafile, 5000, ';')) {  
-        
+
+    while ($rca = fgetcsv($rrcafile, 5000, ';')) {
+
 //     foreach($listrca as $rca) {
         $sheet->setCellValueByColumnAndRow($ind['id_of_sensitive_area'], $i, $rca[$ind['id_of_sensitive_area']]);
         $sheet->setCellValueByColumnAndRow($ind['name_of_sensitive_area'], $i, $rca[$ind['name_of_sensitive_area']]);
@@ -939,46 +939,46 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
         $sheet->insertNewRowBefore($i, 1);
     }
     fclose($rrcafile);
-   
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
-    $objWriter->save(drupal_realpath($target_path));   
+    $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }     
+//     }
 }
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_summary_big_cities_sheet8($annee) 
-{    
+ */
+function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
+{
     if (!isset($context['sandbox']['progress'])) {
-    
+
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['progressbc'] = 0;
         $context['sandbox']['progressagg'] = 0;
         $context['sandbox']['idbc']  = array();
         $context['sandbox']['idagg'] = array();
-            
+
         $query = 'select n.nid
-        from {node} n    
+        from {node} n
             left join
                 {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    ON n.nid = f_annee.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
         ';
-        
+
         $param = array(
             ':typenode' => 'big_city',
             ':annee' => $annee,
@@ -993,27 +993,27 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-         
+
        //get all agglo > 150 000
         $query = 'select n.nid, a.field_agggenerated_value
-        from {node} n    
+        from {node} n
             left join
                 {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id   
+                    ON n.nid = f_annee.entity_id
             left join
                 {field_data_field_agggenerated} a
-                    ON n.nid = a.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+                    ON n.nid = a.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and a.field_agggenerated_value::integer > :agggenerated
         ';
-        
+
         $param = array(
             ':typenode' => 'agglomeration',
             ':annee' => $annee,
             ':agggenerated' => 150000,
             );
-     
+
         try {
             $result = db_query($query, $param);
             while($row = $result->fetchAssoc()) {
@@ -1025,54 +1025,54 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-        
+
         $context['sandbox']['maxbc'] = count($context['sandbox']['idbc']);
-        $context['sandbox']['maxagg'] = count($context['sandbox']['idagg']);    
+        $context['sandbox']['maxagg'] = count($context['sandbox']['idagg']);
         $context['sandbox']['max'] = $context['sandbox']['maxbc'] + $context['sandbox']['maxagg'];
 //         dsm($context['sandbox']);
     }
-    
+
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'] .'.csv';
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);      
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
 
     if ($context['sandbox']['progress'] == 0) {
-        $r = fopen($filename, 'wb');  
-    
+        $r = fopen($filename, 'wb');
+
         $header = array(
-            $ind['id'] => 'ID', 
-            $ind['name'] => 'name', 
-            $ind['generated_load'] => 'generated load p.e.', 
-            $ind['collecting_system'] => 'collecting system % of generated load', 
-            $ind['ias'] => 'IAS % of generated load', 
-            $ind['no_collecting_system_nor_ias'] => 'no collecting system nor IAS % of generated load', 
-            $ind['treatment_0'] => 'best treatment provided 0', 
-            $ind['treatment_1'] => 'best treatment provided 1', 
-            $ind['treatment_2'] => 'best treatment provided 2', 
-            $ind['treatment_3n_p_np'] => 'best treatment provided 3N', 
-//             $ind['treatment_3p'] => 'best treatment provided 3P', 
-//             $ind['treatment_3np'] => 'best treatment provided 3NP', 
-            $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)', 
-            $ind['type_of_receiving_area'] => 'Type of receiving area',  
+            $ind['id'] => 'ID',
+            $ind['name'] => 'name',
+            $ind['generated_load'] => 'generated load p.e.',
+            $ind['collecting_system'] => 'collecting system % of generated load',
+            $ind['ias'] => 'IAS % of generated load',
+            $ind['no_collecting_system_nor_ias'] => 'no collecting system nor IAS % of generated load',
+            $ind['treatment_0'] => 'best treatment provided 0',
+            $ind['treatment_1'] => 'best treatment provided 1',
+            $ind['treatment_2'] => 'best treatment provided 2',
+            $ind['treatment_3n_p_np'] => 'best treatment provided 3N',
+//             $ind['treatment_3p'] => 'best treatment provided 3P',
+//             $ind['treatment_3np'] => 'best treatment provided 3NP',
+            $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)',
+            $ind['type_of_receiving_area'] => 'Type of receiving area',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
 //         dsm($header);
     } else {
-        $r = fopen($filename, 'ab');  
+        $r = fopen($filename, 'ab');
     }
-    
+
     $j = 0;
-    while ($j < 20 && $context['sandbox']['progressbc'] < $context['sandbox']['maxbc']) {              
+    while ($j < 20 && $context['sandbox']['progressbc'] < $context['sandbox']['maxbc']) {
 //     foreach($id as $nid_bc) {
 //         dsm($j + $context['sandbox']['progressbc']);
 //         dsm($context['sandbox']['idbc'][$context['sandbox']['progressbc']]);
         $bc = node_load($context['sandbox']['idbc'][$context['sandbox']['progressbc']]);
 //         dsm($bc);
         $line = array();
-        
+
         $generated_load = 0;
         $collecting_system = 0;
         $ias = 0;
@@ -1082,7 +1082,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         $treatment_2 = 0;
         $treatment_3np_3n_3p = 0;
         $type_of_receiving_area = '';
-                
+
         $line[$ind['id']] = $bc->field_inspireidlocalid['und'][0]['value'];
 //         dsm($bc);
 //         dsm($line);
@@ -1092,7 +1092,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 //         dsm($bc->field_bcaggliste['und']);
         foreach($bc->field_bcaggliste['und'] as $nidagglo) {
             $agglotreated[] = $nidagglo['nid'];
-            $agg = node_load($nidagglo['nid']); 
+            $agg = node_load($nidagglo['nid']);
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
 //             dsm($agg_detail);
             unset($agg);
@@ -1100,20 +1100,20 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $collecting_system +=  $agg_detail['collecting_system'];
             $ias +=  $agg_detail['ias'];
             $no_collecting_system_nor_ias +=  $agg_detail['no_collecting_system_nor_ias'];
-            
+
             $dcptype = array_merge($dcptype, $agg_detail['dcptype']);
-//             dsm($dcptype);  
-            $treat_3np_3n_3p_pe +=   $agg_detail['treat_3np_3n_3p_pe']; 
-            $treat_3np_3n_3p_agggenerated += $agg_detail['treat_3np_3n_3p_agggenerated'];   
+//             dsm($dcptype);
+            $treat_3np_3n_3p_pe +=   $agg_detail['treat_3np_3n_3p_pe'];
+            $treat_3np_3n_3p_agggenerated += $agg_detail['treat_3np_3n_3p_agggenerated'];
             $treat_2_pe +=           $agg_detail['treat_2_pe'];
-            $treat_2_agggenerated += $agg_detail['treat_2_agggenerated'];   
+            $treat_2_agggenerated += $agg_detail['treat_2_agggenerated'];
             $treat_1_pe +=           $agg_detail['treat_1_pe'];
-            $treat_1_agggenerated += $agg_detail['treat_1_agggenerated'];   
+            $treat_1_agggenerated += $agg_detail['treat_1_agggenerated'];
             $treat_0_pe +=           $agg_detail['treat_0_pe'];
-            $treat_0_agggenerated += $agg_detail['treat_0_agggenerated'];   
+            $treat_0_agggenerated += $agg_detail['treat_0_agggenerated'];
         }
-        
-      
+
+
 //         dsm("treat_3np_3n_3p_pe = $treat_3np_3n_3p_pe");
 //         dsm("treat_3np_3n_3p_agggenerated = $treat_3np_3n_3p_agggenerated");
 //         dsm("treat_2_pe = $treat_2_pe");
@@ -1122,29 +1122,29 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 //         dsm("treat_1_agggenerated = $treat_1_agggenerated");
 //         dsm("treat_0_pe = $treat_0_pe");
 //         dsm("treat_0_agggenerated = $treat_0_agggenerated");
-                        
+
         $treatment_3np_3n_3p = $treat_3np_3n_3p_pe * 100 / $treat_3np_3n_3p_agggenerated;
         $treatment_2 = $treat_2_pe * 100 / $treat_2_agggenerated;
         $treatment_1 = $treat_1_pe * 100 / $treat_1_agggenerated;
         $treatment_0 = $treat_0_pe * 100 / $treat_0_agggenerated;
-        
+
 //         dsm("treatment_0 = $treatment_0");
 //         dsm("treatment_1 = $treatment_1");
 //         dsm("treatment_2 = $treatment_2");
-//         dsm("treatment_3np_3n_3p = $treatment_3np_3n_3p");             
-        
+//         dsm("treatment_3np_3n_3p = $treatment_3np_3n_3p");
+
         $type_of_receiving_area = implode(';', array_keys($dcptype));
 //         dsm($type_of_receiving_area);
-            
+
         $collecting_system_percent =  $collecting_system * 100 / $generated_load;
         $ias_percent =  $ias * 100 / $generated_load;
         $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
-        
+
         $line[$ind['generated_load']] = $generated_load;
         $line[$ind['collecting_system']] = $collecting_system_percent;
         $line[$ind['ias']] = $ias_percent;
         $line[$ind['no_collecting_system_nor_ias']] = $no_collecting_system_nor_ias_percent;
-        
+
         //if max treatement in place = 0
         $line[$ind['treatment_0']] = $treatment_0;
         //if max treatement in place = 1
@@ -1168,7 +1168,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 
     if ($context['sandbox']['progressbc'] >= $context['sandbox']['maxbc']) {
         $j = 0;
-        while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {      
+        while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {
     //     foreach($id as $nidagglo) {
             $line = array();
             $generated_load = 0;
@@ -1180,26 +1180,26 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $treatment_2 = '0';
             $treatment_3np_3n_3p = '0';
             $type_of_receiving_area = '';
-                    
-            $agg = node_load($nidagglo['nid']);                                          
+
+            $agg = node_load($nidagglo['nid']);
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
-            
+
             $treatment_0 = $agg_detail['treat_0'];
             $treatment_1 = $agg_detail['treat_1'];
             $treatment_2 = $agg_detail['treat_2'];
             $treatment_3np_3n_3p = $agg_detail['treat_3np_3n_3p'];
-            
+
             $generated_load = $agg_detail['generated_load'];
             $collecting_system =  $agg_detail['collecting_system'];
             $ias =  $agg_detail['ias'];
             $no_collecting_system_nor_ias =  $agg_detail['no_collecting_system_nor_ias'];
-            
+
             $collecting_system_percent =  $collecting_system * 100 / $generated_load;
             $ias_percent =  $ias * 100 / $generated_load;
-            $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;            
-                         
+            $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
+
             $line[$ind['id']] = $agg->field_inspireidlocalid['und'][0]['value'];
-            $line[$ind['name']] = $agg->title;         
+            $line[$ind['name']] = $agg->title;
             $line[$ind['generated_load']] = $generated_load;
             $line[$ind['collecting_system']] = $collecting_system_percent;
             $line[$ind['ias']] = $ias_percent;
@@ -1207,75 +1207,75 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $line[$ind['treatment_0']] = $treatment_0;
             $line[$ind['treatment_1']] = $treatment_1;
             $line[$ind['treatment_2']] = $treatment_2;
-            
-            $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p;  
+
+            $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p;
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
             $line[$ind['type_of_receiving_area']] = implode(';', $dcptype);
             unset($agg);
             fputcsv($r, $line, ';');
-            
+
             $context['sandbox']['progressagg']++;
             $context['sandbox']['progress']++;
-            $j++;            
+            $j++;
         }
-    }  
-    
+    }
+
     fclose($r);
-                                            
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];   
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }    
+    }
 }
 
 /**
  *
  */
 function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
-{          
+{
 //     $result['generated_load'] = 0;
 //     $result['collecting_system'] = 0;
 //     $result['ias'] = 0;
 //     $result['no_collecting_system_nor_ias'] = 0;
-    $result['dcptype'] = ''; 
+    $result['dcptype'] = '';
 //     $agg = node_load($nidagglo);
 //     dsm($agg);
     $result['generated_load'] = $agg->field_agggenerated['und'][0]['value'];
     $result['collecting_system'] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
     $result['ias'] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
     $result['no_collecting_system_nor_ias'] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-    
+
     $result['treat_0_pe'] = 0;
     $result['treat_1_pe'] = 0;
     $result['treat_2_pe'] = 0;
     $result['treat_3np_3n_3p_pe'] = 0;
-    
+
     $result['treat_0_agggenerated'] = 0;
     $result['treat_1_agggenerated'] = 0;
     $result['treat_2_agggenerated'] = 0;
-    $result['treat_3np_3n_3p_agggenerated'] = 0;    
- 
-        
-   //for rca we need to load uwwtp -> dcp -> rca           
+    $result['treat_3np_3n_3p_agggenerated'] = 0;
+
+
+   //for rca we need to load uwwtp -> dcp -> rca
    foreach($agg->field_agguwwliste['und'] as $uwwtpnid) {
         $uwwtp = node_load($uwwtpnid['nid']);
         $uwwtp_treat_inplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
-        
+
         $percent_generated_load = 0;
         //load agglo_uuwtp node
         $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
-        
+
         if ('' !== $agglo_uwwtpnid) {
             $agglo_uwwtp = node_load($agglo_uwwtpnid);
 //             $entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']);
             $entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-//             $percent_of_generating_load = $entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value']; 
-            
+//             $percent_of_generating_load = $entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];
+
             if (false !== strpos($uwwtp_treat_inplace, '3other') || false !== strpos($uwwtp_treat_inplace, '3NP')
                 || false !== strpos($uwwtp_treat_inplace, '3P') || false !== strpos($uwwtp_treat_inplace, '3N')) {
                 $result['treat_3np_3n_3p_pe'] += $entering_load_pe;
-                $result['treat_3np_3n_3p_agggenerated'] += $agg->field_agggenerated['und'][0]['value'];        
+                $result['treat_3np_3n_3p_agggenerated'] += $agg->field_agggenerated['und'][0]['value'];
             } elseif (false !== strpos($uwwtp_treat_inplace, '2')) {
                $result['treat_2_pe'] += $entering_load_pe;
                $result['treat_2_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
@@ -1283,80 +1283,80 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
                $result['treat_1_pe'] += $entering_load_pe;
                $result['treat_1_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
             } else {
-               $result['treat_0_pe'] += $entering_load_pe;  
+               $result['treat_0_pe'] += $entering_load_pe;
                $result['treat_0_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
             }
-            
+
             unset($agglo_uwwtp);
         }
-        
+
         foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
             $dcp = node_load($dcpnid['nid']);
             $result['dcptype'][$dcp->field_rcatype['und'][0]['value']] = 0;
             unset($dcp);
         }
         unset($uwwtp);
-    }            
+    }
     unset($agg);
-    
+
     $result['treat_3np_3n_3p'] = $result['treat_3np_3n_3p_pe'] * 100 / $result['treat_3np_3n_3p_agggenerated'];
     $result['treat_3other']    = $result['treat_3np_3n_3p'];
     $result['treat_2'] = $result['treat_2_pe'] * 100 / $result['treat_2_agggenerated'];
     $result['treat_1'] = $result['treat_1_pe'] * 100 / $result['treat_1_agggenerated'];
-    $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];    
+    $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];
 
     return $result;
-} 
+}
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context)
 {
     //get all agglo
     //group by nuts2 code
     $indagglo = $GLOBALS['uwwtd']['sheet3_agglo'];
-    $filenameagglo = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);    
+    $filenameagglo = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
     $ragglofile = fopen($filenameagglo, 'rb');
-    
-    $ind = $GLOBALS['uwwtd']['sheet9_nuts2_analyse'];        
+
+    $ind = $GLOBALS['uwwtd']['sheet9_nuts2_analyse'];
     //pass header line
-    if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filenameagglo);
-            
+
         //ignore header line
         $agglo = fgetcsv($ragglofile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['nuts2'] = array();
-    }   
-    
-    fseek($ragglofile, $context['sandbox']['file_position']);
-    
-    $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
-        //build context value       
+    }
 
-        $j++;        
+    fseek($ragglofile, $context['sandbox']['file_position']);
+
+    $j = 0;
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+        //build context value
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
 
         if (isset($agglo[$indagglo['nuts_2_code']]) && !empty($agglo[$indagglo['nuts_2_code']])) {
-            $nuts2 = $agglo[$indagglo['nuts_2_code']];            
+            $nuts2 = $agglo[$indagglo['nuts_2_code']];
         } else {
             continue;
         }
-        
+
         if (!isset($context['sandbox']['nuts2'][$nuts2])) {
             $context['sandbox']['nuts2'][$nuts2] = array();
             $context['sandbox']['nuts2'][$nuts2][$ind['nuts2_code']] = $nuts2;
             $context['sandbox']['nuts2'][$nuts2][$ind['number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['generated_load_pe']] = 0;
-            $context['sandbox']['nuts2'][$nuts2][$ind['collected_pe']] = 0; 
+            $context['sandbox']['nuts2'][$nuts2][$ind['collected_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['collected_percent']] = 0;
-            
+
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_target_load']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_compliant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_compliant_pe']] = 0;
@@ -1365,7 +1365,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_notrelevant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_notrelevant_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_rate']] = 0;
-            
+
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_target_load']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_pe']] = 0;
@@ -1374,7 +1374,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_rate']] = 0;
-            
+
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_target_load']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_pe']] = 0;
@@ -1382,18 +1382,18 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notcompliant_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_number_agglo']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_pe']] = 0;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art5_rate']] = 0;            
+            $context['sandbox']['nuts2'][$nuts2][$ind['art5_rate']] = 0;
         }
-        
+
         $context['sandbox']['nuts2'][$nuts2][$ind['number_agglo']]++;
         $context['sandbox']['nuts2'][$nuts2][$ind['generated_load_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         $context['sandbox']['nuts2'][$nuts2][$ind['collected_pe']]      += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         $context['sandbox']['nuts2'][$nuts2][$ind['collected_percent']] += $agglo[$indagglo['connected_to_collecting_system']];
-        
+
         if ($agglo[$indagglo['art3_compliance']] != 'NR') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
         }
-        if ($agglo[$indagglo['art3_compliance']] == 'C') {         
+        if ($agglo[$indagglo['art3_compliance']] == 'C') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_compliant_number_agglo']]++;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_compliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
@@ -1406,12 +1406,12 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_notrelevant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
 //         $context['sandbox']['nuts2'][$nuts2][$ind['art3_rate']]= 'TODO';//+=
-        
+
         //art4
         if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] != 'NR') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
-        }        
-        if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {         
+        }
+        if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_number_agglo']]++;
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
@@ -1424,12 +1424,12 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
 //         $context['sandbox']['nuts2'][$nuts2][$ind['art4_rate']]= 'TODO';//+=
-        
+
         //art5
         if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] != 'NR') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
-        }           
-        if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {         
+        }
+        if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_number_agglo']]++;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
@@ -1441,12 +1441,12 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_number_agglo']]++;
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         }
-//         $context['sandbox']['nuts2'][$nuts2][$ind['art5_rate']] = 'TODO';//+=                
-                                                                      
-  
+//         $context['sandbox']['nuts2'][$nuts2][$ind['art5_rate']] = 'TODO';//+=
+
+
     }
-    fclose($ragglofile);     
-    
+    fclose($ragglofile);
+
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         //write final file
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['csv_name'], $annee);
@@ -1455,53 +1455,53 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $ind['nuts2_code'] => 'NUTS 2 code',
             $ind['number_agglo'] => 'number of agglo-merations',
             $ind['generated_load_pe'] => 'total generated load pe',
-            $ind['collected_pe'] => 'load collected in collecting systems pe', 
+            $ind['collected_pe'] => 'load collected in collecting systems pe',
             $ind['collected_percent'] => 'target load',
-            
+
             $ind['art3_target_load'] => 'art3 target load',
             $ind['art3_compliant_number_agglo'] => 'art3 compliance number of agglos',
             $ind['art3_compliant_pe'] => 'art3 compliance p.e.',
             $ind['art3_notcompliant_number_agglo'] => 'art3 not compliant number of agglos',
             $ind['art3_notcompliant_pe'] => 'art3 not compliant p.e.',
             $ind['art3_notrelevant_number_agglo'] => 'art3 not relevant number of agglos',
-            $ind['art3_notrelevant_pe'] => 'art3 not relevant p.e.',    
+            $ind['art3_notrelevant_pe'] => 'art3 not relevant p.e.',
             $ind['art3_rate'] => 'Compliance rate Art. 3',
-            
+
             $ind['art4_target_load'] => 'art4 target load',
             $ind['art4_compliant_number_agglo'] => 'art4 compliance number of agglos',
             $ind['art4_compliant_pe'] => 'art4 compliance p.e.',
             $ind['art4_notcompliant_number_agglo'] => 'art4 not compliant number of agglos',
             $ind['art4_notcompliant_pe'] => 'art4 not compliant p.e.',
             $ind['art4_notrelevant_number_agglo'] => 'art4 not relevant number of agglos',
-            $ind['art4_notrelevant_pe'] => 'art4 not relevant p.e.',    
-            $ind['art4_rate'] => 'Compliance rate Art. 4',  
-            
+            $ind['art4_notrelevant_pe'] => 'art4 not relevant p.e.',
+            $ind['art4_rate'] => 'Compliance rate Art. 4',
+
             $ind['art5_target_load'] => 'art5 target load',
             $ind['art5_compliant_number_agglo'] => 'art5 compliance number of agglos',
             $ind['art5_compliant_pe'] => 'art5 compliance p.e.',
             $ind['art5_notcompliant_number_agglo'] => 'art5 not compliant number of agglos',
             $ind['art5_notcompliant_pe'] => 'art5 not compliant p.e.',
             $ind['art5_notrelevant_number_agglo'] => 'art5 not relevant number of agglos',
-            $ind['art5_notrelevant_pe'] => 'art5 not relevant p.e.',    
-            $ind['art5_rate'] => 'Compliance rate Art. 5',     
+            $ind['art5_notrelevant_pe'] => 'art5 not relevant p.e.',
+            $ind['art5_rate'] => 'Compliance rate Art. 5',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');   
-        
+        fputcsv($r, $header, ';');
+
         //foreach nuts write line
         foreach ($context['sandbox']['nuts2'] as $nuts2) {
-        
+
             $nuts2[$ind['art3_rate']] = $nuts2[$ind['art3_compliant_pe']] * 100 / $nuts2[$ind['art3_target_load']];
             $nuts2[$ind['art4_rate']] = $nuts2[$ind['art4_compliant_pe']] * 100 / $nuts2[$ind['art4_target_load']];
             $nuts2[$ind['art5_rate']] = $nuts2[$ind['art5_compliant_pe']] * 100 / $nuts2[$ind['art5_target_load']];
-            
+
             $line = array(
                 $nuts2[$ind['nuts2_code']],
                 $nuts2[$ind['number_agglo']],
                 $nuts2[$ind['generated_load_pe']],
-                $nuts2[$ind['collected_pe']], 
+                $nuts2[$ind['collected_pe']],
                 $nuts2[$ind['collected_percent']],
-                
+
                 $nuts2[$ind['art3_target_load']],
                 $nuts2[$ind['art3_compliant_number_agglo']],
                 $nuts2[$ind['art3_compliant_pe']],
@@ -1510,7 +1510,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
                 $nuts2[$ind['art3_notrelevant_number_agglo']],
                 $nuts2[$ind['art3_notrelevant_pe']],
                 $nuts2[$ind['art3_rate']],
-                
+
                 $nuts2[$ind['art4_target_load']],
                 $nuts2[$ind['art4_compliant_number_agglo']],
                 $nuts2[$ind['art4_compliant_pe']],
@@ -1519,7 +1519,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
                 $nuts2[$ind['art4_notrelevant_number_agglo']],
                 $nuts2[$ind['art4_notrelevant_pe']],
                 $nuts2[$ind['art4_rate']],
-                
+
                 $nuts2[$ind['art5_target_load']],
                 $nuts2[$ind['art5_compliant_number_agglo']],
                 $nuts2[$ind['art5_compliant_pe']],
@@ -1527,16 +1527,16 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
                 $nuts2[$ind['art5_notcompliant_pe']],
                 $nuts2[$ind['art5_notrelevant_number_agglo']],
                 $nuts2[$ind['art5_notrelevant_pe']],
-                $nuts2[$ind['art5_rate']],             
+                $nuts2[$ind['art5_rate']],
             );
             fputcsv($r, $line, ';');
-        }                                     
-               
+        }
+
         fclose($r);
     }
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
@@ -1544,37 +1544,37 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$context)
 {
-    if (!isset($context['sandbox']['progress'])) {    
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
-    } 
-    
+    }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
+
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name']);
-    
+
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name']. '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
-               
+
     $rbcfile = fopen($filename, 'rb');
-    
+
     $start_line = 4;
     //ignore header //decomment for debug on xls final file
     $bc = fgetcsv($rbcfile, 5000, ';');
@@ -1599,20 +1599,20 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
         $sheet->setCellValueByColumnAndRow($ind['treatment_0'], $i, $bc[$ind['treatment_0']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_1'], $i, $bc[$ind['treatment_1']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_2'], $i, $bc[$ind['treatment_2']]);
-//         
+//
         $sheet->setCellValueByColumnAndRow($ind['treatment_3n_p_np'], $i, $bc[$ind['treatment_3n_p_np']]);
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3n'], $i, $bc[$ind['treatment_3n']]);
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3p'], $i, $bc[$ind['treatment_3p']]);
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3np'], $i, $bc[$ind['treatment_3np']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_3_other_(e.g._uv,_filtration)'], $i, $bc[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
         $sheet->setCellValueByColumnAndRow($ind['type_of_receiving_area'], $i, $bc[$ind['type_of_receiving_area']]);
-        
+
         $i++;
-        $sheet->insertNewRowBefore($i, 1);        
+        $sheet->insertNewRowBefore($i, 1);
     }
-    fclose($rbcfile);    
-        
-    
+    fclose($rbcfile);
+
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -1620,63 +1620,63 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name']));    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name']));
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }     
+//     }
 }
 
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet9_nuts2_analyse'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['csv_name'], $annee);
-    
+
     $rnuts = fopen($filename, 'rb');
-    
+
     //pass header line
-    if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($rnuts, 5000, ';');
         $context['sandbox']['file_position'] = ftell($rnuts);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['line'] = 4; //start line
-        
+
         $path_xlsx = uwwtd_getregister_modelfile_path();
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_name'], $annee);        
-    } else {        
+        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_name'], $annee);
+    } else {
 //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_name'], $annee);
-        $target_path = $path_xlsx;          
-    }     
-    
+        $target_path = $path_xlsx;
+    }
+
     fseek($rnuts, $context['sandbox']['file_position']);
-     
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
-    
+
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name']);
-    
+
     $j = 0;
-    while ($j < 20 && $nuts = fgetcsv($rnuts, 5000, ';')) { 
+    while ($j < 20 && $nuts = fgetcsv($rnuts, 5000, ';')) {
         $sheet->setCellValueByColumnAndRow($ind['nuts2_code'], $context['sandbox']['line'], $nuts[$ind['nuts2_code'] ]);
         $sheet->setCellValueByColumnAndRow($ind['number_agglo'], $context['sandbox']['line'], $nuts[$ind['number_agglo'] ]);
         $sheet->setCellValueByColumnAndRow($ind['generated_load_pe'], $context['sandbox']['line'], $nuts[$ind['generated_load_pe'] ]);
-                       
+
         $sheet->setCellValueByColumnAndRow($ind['collected_pe'] , $context['sandbox']['line'], $nuts[$ind['collected_pe'] ]);
         $sheet->setCellValueByColumnAndRow($ind['collected_percent'] , $context['sandbox']['line'], $nuts[$ind['collected_percent']]);
         $sheet->setCellValueByColumnAndRow($ind['art3_target_load'] , $context['sandbox']['line'], $nuts[$ind['art3_target_load']]);
@@ -1703,15 +1703,15 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
         $sheet->setCellValueByColumnAndRow($ind['art5_notrelevant_number_agglo'] , $context['sandbox']['line'], $nuts[$ind['art5_notrelevant_number_agglo']]);
         $sheet->setCellValueByColumnAndRow($ind['art5_notrelevant_pe'] , $context['sandbox']['line'], $nuts[$ind['art5_notrelevant_pe']]);
         $sheet->setCellValueByColumnAndRow($ind['art5_rate'] , $context['sandbox']['line'], $nuts[$ind['art5_rate'] ]);
-      
+
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-        
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($rnuts);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];           
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    fclose($rnuts);   
+    fclose($rnuts);
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
@@ -1720,89 +1720,89 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }    
+    }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee, &$context)
 {
-    if (!isset($context['sandbox']['progress'])) {    
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
-    } 
-    
+    }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
+
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_model_sheet_name']);
-    
+
     $nidms = uwwtd_check_exist(uwwtd_get_siteid('ms_level', array('year' => $annee)));
-    
+
     if ('' != $nidms) {
         $node = node_load($nidms);
-        
+
         //Yearly production of sludge
-        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : ''; 
-        //Of which discharged into surface waters: Pipelines 
-        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : ''; 
+        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : '';
+        //Of which discharged into surface waters: Pipelines
+        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : '';
         //Of which discharged into surface waters: Ships
-        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : ''; 
+        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : '';
         //Of which discharged into surface waters: Others
-        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : ''; 
+        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : '';
         //Of which: re-used: Soil and agriculture
-        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : ''; 
-        //Of which: re-used: Others 
-        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : ''; 
+        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : '';
+        //Of which: re-used: Others
+        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : '';
         //Of which: disposed: Landfill
-        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : ''; 
+        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : '';
         //Of which: disposed: Incineration
-        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : ''; 
-        //Of which: disposed: Others 
-        $field_msldisposalothers = isset($node->field_msldisposalothers['und'][0]['value']) ? $node->field_msldisposalothers['und'][0]['value'] : ''; 
+        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : '';
+        //Of which: disposed: Others
+        $field_msldisposalothers = isset($node->field_msldisposalothers['und'][0]['value']) ? $node->field_msldisposalothers['und'][0]['value'] : '';
         //Remarks
-        $field_mslremarks = isset($node->field_mslremarks['und'][0]['value']) ? $node->field_mslremarks['und'][0]['value'] : ''; 
-        
+        $field_mslremarks = isset($node->field_mslremarks['und'][0]['value']) ? $node->field_mslremarks['und'][0]['value'] : '';
+
         //Volume of waste water treated
         $volume_treated = $context['results']['country_volume_waste_water'];
         //Rate of treated waste water re-used
-        $reuse = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : ''; 
+        $reuse = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : '';
         //re-use in agriculture
         $reuse_agriculture = '';
         if (isset($node->field_mslwwreuseagri['und'][0]['value'])) {
-            $reuse_agriculture = $node->field_mslwwreuseagri['und'][0]['value'] == 1 ? 'yes' : 'no'; 
-        }         
+            $reuse_agriculture = $node->field_mslwwreuseagri['und'][0]['value'] == 1 ? 'yes' : 'no';
+        }
         //re-use in industry
         $reuse_industry = '';
         if (isset($node->field_mslwwreuseind['und'][0]['value'])) {
-            $reuse_industry = $node->field_mslwwreuseind['und'][0]['value'] == 1 ? 'yes' : 'no'; 
+            $reuse_industry = $node->field_mslwwreuseind['und'][0]['value'] == 1 ? 'yes' : 'no';
         }
         //re-use others
         $reuse_others = '';
         if (isset($node->field_mslwwreuseother['und'][0]['value'])) {
-            $reuse_others = $node->field_mslwwreuseother['und'][0]['value'] == 1 ? 'yes' : 'no'; 
-        }         
+            $reuse_others = $node->field_mslwwreuseother['und'][0]['value'] == 1 ? 'yes' : 'no';
+        }
         //Remarks
-        $remarks = isset($node->field_mslwwreuseexplain['und'][0]['value']) ? $node->field_mslwwreuseexplain['und'][0]['value'] : ''; 
-        
+        $remarks = isset($node->field_mslwwreuseexplain['und'][0]['value']) ? $node->field_mslwwreuseexplain['und'][0]['value'] : '';
+
         $sheet->getCell('C4')->setValue($field_mslsludgeproduction);
         $sheet->getCell('C5')->setValue($field_msldischargepipelines);
         $sheet->getCell('C6')->setValue($field_msldischargeships);
@@ -1813,16 +1813,16 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
         $sheet->getCell('C11')->setValue($field_msldisposalincineration);
         $sheet->getCell('C12')->setValue($field_msldisposalothers);
         $sheet->getCell('C13')->setValue($field_mslremarks);
-        
+
         $sheet->getCell('C21')->setValue($volume_treated);
         $sheet->getCell('C22')->setValue($reuse);
         $sheet->getCell('C23')->setValue($reuse_agriculture);
         $sheet->getCell('C24')->setValue($reuse_industry);
         $sheet->getCell('C25')->setValue($reuse_others);
-        $sheet->getCell('C26')->setValue($remarks);         
+        $sheet->getCell('C26')->setValue($remarks);
     }
-           
-    
+
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -1830,39 +1830,39 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_model_sheet_name']));    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_model_sheet_name']));
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }     
+//     }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 {
     //country name
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
-    $country_name = variable_get('siif_eru_country_name'); 
-            
-    if (!isset($context['sandbox']['progress'])) {    
+    $country_name = variable_get('siif_eru_country_name');
+
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
-    } 
-    
+    }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setIncludeCharts(TRUE);
     $objReader->setLoadSheetsOnly( array(
@@ -1870,24 +1870,24 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
-    
+
     //get previous year
     $previous_year = uwwtd_get_previous_year($annee);
     $previoussheet = null;
-    
+
     if (false !== $previous_year) {
         $previous_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'], $previous_year);
-        if (true === file_exists($previous_model_path)) {    
+        if (true === file_exists($previous_model_path)) {
             $previousobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousobjReader->setIncludeCharts(false);
             $previousobjReader->setLoadSheetsOnly( array(
                                                  $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
                                                 ) );
-            $previousobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_model_path));    
+            $previousobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_model_path));
             $previoussheet = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
-        }    
+        }
     }
-    
+
     //size of agglo/pe per class
     //array1
     if (isset($context['results']['graph']['0_10000']['number'])) {
@@ -1908,15 +1908,15 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['100000_n']['pe'])) {
 	    $sheet->setCellValue('C7', round($context['results']['graph']['100000_n']['pe'], 0));
     }
-    
+
     //previous
     $sheet->setCellValue('D5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
-    $sheet->setCellValue('E5', uwwtd_register_get_cell_value($previoussheet, 'C5')); 
-    $sheet->setCellValue('D6', uwwtd_register_get_cell_value($previoussheet, 'B6')); 
-    $sheet->setCellValue('E6', uwwtd_register_get_cell_value($previoussheet, 'C6')); 
-    $sheet->setCellValue('D7', uwwtd_register_get_cell_value($previoussheet, 'B7')); 
-    $sheet->setCellValue('E7', uwwtd_register_get_cell_value($previoussheet, 'C7')); 
-    
+    $sheet->setCellValue('E5', uwwtd_register_get_cell_value($previoussheet, 'C5'));
+    $sheet->setCellValue('D6', uwwtd_register_get_cell_value($previoussheet, 'B6'));
+    $sheet->setCellValue('E6', uwwtd_register_get_cell_value($previoussheet, 'C6'));
+    $sheet->setCellValue('D7', uwwtd_register_get_cell_value($previoussheet, 'B7'));
+    $sheet->setCellValue('E7', uwwtd_register_get_cell_value($previoussheet, 'C7'));
+
     //array2
     if (isset($context['results']['graph']['total_generated']['pe'])) {
     	$sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
@@ -1933,15 +1933,15 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['total_capacity']['pe'])) {
     	$sheet->setCellValue('B19', round($context['results']['graph']['total_capacity']['pe'], 0));
     }
-    
+
     //previous
     $sheet->setCellValue('C15', uwwtd_register_get_cell_value($previoussheet, 'B15'));
     $sheet->setCellValue('C16', uwwtd_register_get_cell_value($previoussheet, 'B16'));
     $sheet->setCellValue('C17', uwwtd_register_get_cell_value($previoussheet, 'B17'));
-    $sheet->setCellValue('C18', uwwtd_register_get_cell_value($previoussheet, 'B18')); 
-    $sheet->setCellValue('C19', uwwtd_register_get_cell_value($previoussheet, 'B19')); 
-    
-        
+    $sheet->setCellValue('C18', uwwtd_register_get_cell_value($previoussheet, 'B18'));
+    $sheet->setCellValue('C19', uwwtd_register_get_cell_value($previoussheet, 'B19'));
+
+
     //array 5 6 7
 //     $previous_year = uwwtd_get_previous_year($annee);
     $replaceyearby = $previous_year;
@@ -1972,8 +1972,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A71');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-                                      
-	if (isset($context['results']['graph']['art3_C']['number'])) {  
+
+	if (isset($context['results']['graph']['art3_C']['number'])) {
     	$sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
 	}
 	if (isset($context['results']['graph']['art3_C']['pe'])) {
@@ -2027,7 +2027,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 	if (isset($context['results']['graph']['art5_NR']['pe'])) {
     	$sheet->setCellValue('C51', round($context['results']['graph']['art5_NR']['pe']));
 	}
-    
+
     //previous
     $sheet->setCellValue('D43', uwwtd_register_get_cell_value($previoussheet, 'B43'));
     $sheet->setCellValue('E43', uwwtd_register_get_cell_value($previoussheet, 'C43'));
@@ -2047,11 +2047,11 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E50', uwwtd_register_get_cell_value($previoussheet, 'C50'));
     $sheet->setCellValue('D51', uwwtd_register_get_cell_value($previoussheet, 'B51'));
     $sheet->setCellValue('E51', uwwtd_register_get_cell_value($previoussheet, 'C51'));
-    
-        
+
+
     //array 6
     if (isset($context['results']['graph']['art3_C']['pe'])) {
-    	$sheet->setCellValue('E55', round($context['results']['graph']['art3_C']['pe']));  
+    	$sheet->setCellValue('E55', round($context['results']['graph']['art3_C']['pe']));
     }
     if (isset($context['results']['graph']['art3_NC']['pe'])) {
     	$sheet->setCellValue('F55', round($context['results']['graph']['art3_NC']['pe']));
@@ -2077,25 +2077,25 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['art5_NR']['pe'])) {
     	$sheet->setCellValue('G61', round($context['results']['graph']['art5_NR']['pe']));
     }
-    
+
     //previous
-    $sheet->setCellValue('B54', uwwtd_register_get_cell_value($previoussheet, 'E55')); 
-    $sheet->setCellValue('C54', uwwtd_register_get_cell_value($previoussheet, 'F55')); 
-    $sheet->setCellValue('D54', uwwtd_register_get_cell_value($previoussheet, 'G55')); 
-    $sheet->setCellValue('B57', uwwtd_register_get_cell_value($previoussheet, 'E58')); 
-    $sheet->setCellValue('C57', uwwtd_register_get_cell_value($previoussheet, 'F58')); 
-    $sheet->setCellValue('D57', uwwtd_register_get_cell_value($previoussheet, 'G58')); 
-    $sheet->setCellValue('B60', uwwtd_register_get_cell_value($previoussheet, 'E61')); 
-    $sheet->setCellValue('C60', uwwtd_register_get_cell_value($previoussheet, 'F61')); 
-    $sheet->setCellValue('D60', uwwtd_register_get_cell_value($previoussheet, 'G61')); 
-    
-        
+    $sheet->setCellValue('B54', uwwtd_register_get_cell_value($previoussheet, 'E55'));
+    $sheet->setCellValue('C54', uwwtd_register_get_cell_value($previoussheet, 'F55'));
+    $sheet->setCellValue('D54', uwwtd_register_get_cell_value($previoussheet, 'G55'));
+    $sheet->setCellValue('B57', uwwtd_register_get_cell_value($previoussheet, 'E58'));
+    $sheet->setCellValue('C57', uwwtd_register_get_cell_value($previoussheet, 'F58'));
+    $sheet->setCellValue('D57', uwwtd_register_get_cell_value($previoussheet, 'G58'));
+    $sheet->setCellValue('B60', uwwtd_register_get_cell_value($previoussheet, 'E61'));
+    $sheet->setCellValue('C60', uwwtd_register_get_cell_value($previoussheet, 'F61'));
+    $sheet->setCellValue('D60', uwwtd_register_get_cell_value($previoussheet, 'G61'));
+
+
     //array 7
     if (isset($context['results']['graph']['art3_C']['number'])) {
     	$sheet->setCellValue('E65', $context['results']['graph']['art3_C']['number']);
     }
     if (isset($context['results']['graph']['art3_NC']['number'])) {
-    	$sheet->setCellValue('F65', $context['results']['graph']['art3_NC']['number']);    
+    	$sheet->setCellValue('F65', $context['results']['graph']['art3_NC']['number']);
 	}
 	if (isset($context['results']['graph']['art3_NR']['number'])) {
     	$sheet->setCellValue('G65', $context['results']['graph']['art3_NR']['number']);
@@ -2118,48 +2118,48 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 	if (isset($context['results']['graph']['art5_NR']['number'])) {
     	$sheet->setCellValue('G71', $context['results']['graph']['art5_NR']['number']);
 	}
-    
+
     //previous
-    $sheet->setCellValue('B64', uwwtd_register_get_cell_value($previoussheet, 'E65')); 
+    $sheet->setCellValue('B64', uwwtd_register_get_cell_value($previoussheet, 'E65'));
     $sheet->setCellValue('C64', uwwtd_register_get_cell_value($previoussheet, 'F65'));
     $sheet->setCellValue('D64', uwwtd_register_get_cell_value($previoussheet, 'G65'));
-    $sheet->setCellValue('B67', uwwtd_register_get_cell_value($previoussheet, 'E68')); 
-    $sheet->setCellValue('C67', uwwtd_register_get_cell_value($previoussheet, 'F68'));  
-    $sheet->setCellValue('D67', uwwtd_register_get_cell_value($previoussheet, 'G68'));  
-    $sheet->setCellValue('B70', uwwtd_register_get_cell_value($previoussheet, 'E71')); 
-    $sheet->setCellValue('C70', uwwtd_register_get_cell_value($previoussheet, 'F71'));                          
-    $sheet->setCellValue('D70', uwwtd_register_get_cell_value($previoussheet, 'G71'));                          
-    
-    
+    $sheet->setCellValue('B67', uwwtd_register_get_cell_value($previoussheet, 'E68'));
+    $sheet->setCellValue('C67', uwwtd_register_get_cell_value($previoussheet, 'F68'));
+    $sheet->setCellValue('D67', uwwtd_register_get_cell_value($previoussheet, 'G68'));
+    $sheet->setCellValue('B70', uwwtd_register_get_cell_value($previoussheet, 'E71'));
+    $sheet->setCellValue('C70', uwwtd_register_get_cell_value($previoussheet, 'F71'));
+    $sheet->setCellValue('D70', uwwtd_register_get_cell_value($previoussheet, 'G71'));
+
+
     //array 3
-    $nidms = uwwtd_check_exist(uwwtd_get_siteid('ms_level', array('year' => $annee)));    
+    $nidms = uwwtd_check_exist(uwwtd_get_siteid('ms_level', array('year' => $annee)));
     if ('' != $nidms) {
         $node = node_load($nidms);
-        
+
         //Yearly production of sludge
-        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : 0; 
+        $field_mslsludgeproduction = isset($node->field_mslsludgeproduction['und'][0]['value']) ? $node->field_mslsludgeproduction['und'][0]['value'] : 0;
         // Discharged into surface waters : Pipelines
-        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : 0; 
+        $field_msldischargepipelines = isset($node->field_msldischargepipelines['und'][0]['value']) ? $node->field_msldischargepipelines['und'][0]['value'] : 0;
         // Discharged into surface waters : Ships
-        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : 0; 
+        $field_msldischargeships = isset($node->field_msldischargeships['und'][0]['value']) ? $node->field_msldischargeships['und'][0]['value'] : 0;
         // Discharged into surface waters : Others
-        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : 0; 
+        $field_msldischargeothers = isset($node->field_msldischargeothers['und'][0]['value']) ? $node->field_msldischargeothers['und'][0]['value'] : 0;
         //Of which: re-used: Soil and agriculture
-        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : 0; 
-        //Of which: re-used: Others 
-        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : 0; 
+        $field_mslreusesoilagriculture = isset($node->field_mslreusesoilagriculture['und'][0]['value']) ? $node->field_mslreusesoilagriculture['und'][0]['value'] : 0;
+        //Of which: re-used: Others
+        $field_mslreuseothers = isset($node->field_mslreuseothers['und'][0]['value']) ? $node->field_mslreuseothers['und'][0]['value'] : 0;
         //Of which: disposed: Landfill
-        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : 0; 
+        $field_msldisposallandfill = isset($node->field_msldisposallandfill['und'][0]['value']) ? $node->field_msldisposallandfill['und'][0]['value'] : 0;
         //Of which: disposed: Incineration
-        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : 0; 
-        //Of which: disposed: Others 
+        $field_msldisposalincineration = isset($node->field_msldisposalincineration['und'][0]['value']) ? $node->field_msldisposalincineration['und'][0]['value'] : 0;
+        //Of which: disposed: Others
         $field_msldisposalothers = isset($node->field_msldisposalothers['und'][0]['value']) ? $node->field_msldisposalothers['und'][0]['value'] : 0;
         //reuse percent
         $field_mslwwreuseperc = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : 0;
         unset($node);
 
         $field_others = $field_msldischargepipelines + $field_msldischargeships + $field_msldischargeothers;
-        
+
         $sheet->setCellValue('B24', round($field_mslsludgeproduction));
         $sheet->setCellValue('B25', round($field_mslreusesoilagriculture));
         $sheet->setCellValue('B26', round($field_mslreuseothers));
@@ -2167,28 +2167,28 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $sheet->setCellValue('B28', round($field_msldisposalincineration));
         $sheet->setCellValue('B29', round($field_msldisposalothers));
         $sheet->setCellValue('B30', round($field_others));
-        
+
         if (!empty($field_mslsludgeproduction)) {
             if (!empty($field_mslreusesoilagriculture)) {
-                $sheet->setCellValue('C25', round($field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction, 1));    
-            } 
+                $sheet->setCellValue('C25', round($field_mslreusesoilagriculture * 100 / $field_mslsludgeproduction, 1));
+            }
             if (!empty($field_mslreuseothers)) {
-                $sheet->setCellValue('C26', round($field_mslreuseothers * 100 / $field_mslsludgeproduction, 1));    
-            } 
+                $sheet->setCellValue('C26', round($field_mslreuseothers * 100 / $field_mslsludgeproduction, 1));
+            }
             if (!empty($field_msldisposallandfill)) {
-                $sheet->setCellValue('C27', round($field_msldisposallandfill * 100 / $field_mslsludgeproduction, 1));    
-            }  
+                $sheet->setCellValue('C27', round($field_msldisposallandfill * 100 / $field_mslsludgeproduction, 1));
+            }
             if (!empty($field_msldisposalincineration)) {
-                $sheet->setCellValue('C28', round($field_msldisposalincineration * 100 / $field_mslsludgeproduction, 1));    
-            } 
+                $sheet->setCellValue('C28', round($field_msldisposalincineration * 100 / $field_mslsludgeproduction, 1));
+            }
             if (!empty($field_msldisposalothers)) {
-                $sheet->setCellValue('C29', round($field_msldisposalothers * 100 / $field_mslsludgeproduction, 1));    
+                $sheet->setCellValue('C29', round($field_msldisposalothers * 100 / $field_mslsludgeproduction, 1));
             }
             if (!empty($field_others)) {
-                $sheet->setCellValue('C30', round($field_others * 100 / $field_mslsludgeproduction, 1));    
-            }                                                         
+                $sheet->setCellValue('C30', round($field_others * 100 / $field_mslsludgeproduction, 1));
+            }
         }
-        
+
         //previous
         $sheet->setCellValue('D24', uwwtd_register_get_cell_value($previoussheet, 'B24'));
         $sheet->setCellValue('D25', uwwtd_register_get_cell_value($previoussheet, 'B25'));
@@ -2196,67 +2196,67 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $sheet->setCellValue('D27', uwwtd_register_get_cell_value($previoussheet, 'B27'));
         $sheet->setCellValue('D28', uwwtd_register_get_cell_value($previoussheet, 'B28'));
         $sheet->setCellValue('D29', uwwtd_register_get_cell_value($previoussheet, 'B29'));
-        
-        $sheet->setCellValue('E25', uwwtd_register_get_cell_value($previoussheet, 'C25')); 
-        $sheet->setCellValue('E26', uwwtd_register_get_cell_value($previoussheet, 'C26')); 
-        $sheet->setCellValue('E27', uwwtd_register_get_cell_value($previoussheet, 'C27')); 
-        $sheet->setCellValue('E28', uwwtd_register_get_cell_value($previoussheet, 'C28')); 
-        $sheet->setCellValue('E29', uwwtd_register_get_cell_value($previoussheet, 'C29'));            
-        
+
+        $sheet->setCellValue('E25', uwwtd_register_get_cell_value($previoussheet, 'C25'));
+        $sheet->setCellValue('E26', uwwtd_register_get_cell_value($previoussheet, 'C26'));
+        $sheet->setCellValue('E27', uwwtd_register_get_cell_value($previoussheet, 'C27'));
+        $sheet->setCellValue('E28', uwwtd_register_get_cell_value($previoussheet, 'C28'));
+        $sheet->setCellValue('E29', uwwtd_register_get_cell_value($previoussheet, 'C29'));
+
         //array 4
         if (isset($context['results']['country_volume_waste_water'])) {
         	$sheet->setCellValue('C36', $context['results']['country_volume_waste_water']);
         }
         $sheet->setCellValue('C37', $field_mslwwreuseperc);
-        
+
         //previous
         $sheet->setCellValue('D36', uwwtd_register_get_cell_value($previoussheet, 'C36'));
-        $sheet->setCellValue('D37', uwwtd_register_get_cell_value($previoussheet, 'C37'));           
-        
-        
-    } 
-    
-    //array 8 Summary installation in place 
+        $sheet->setCellValue('D37', uwwtd_register_get_cell_value($previoussheet, 'C37'));
+
+
+    }
+
+    //array 8 Summary installation in place
 // $context['results']['graph']['summary_installation']
 // $sheet->getCell('C10')->setValue($context['sandbox']['summary']['total']['number']);
 // $sheet->getCell('D10')->setValue($context['sandbox']['summary']['total']['percentage']);
 // $sheet->getCell('E10')->setValue($context['sandbox']['summary']['total']['waste_pe']);
 // $sheet->getCell('F10')->setValue($context['sandbox']['summary']['total']['waste_percent']);
-// 
+//
 // $sheet->getCell('C11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['number']);
 // $sheet->getCell('D11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['percent']);
 // $sheet->getCell('E11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']);
-// $sheet->getCell('F11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_percent']);    
-// 
+// $sheet->getCell('F11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_percent']);
+//
 // $sheet->getCell('C12')->setValue($context['sandbox']['summary']['total']['collecting_system']['number']);
 // $sheet->getCell('D12')->setValue($context['sandbox']['summary']['total']['collecting_system']['percent']);
 // $sheet->getCell('E12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_pe']);
 // $sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
-// //secondary treatment    
+// //secondary treatment
 // $sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
 // $sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
 // $sheet->getCell('E15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']);
 // $sheet->getCell('F15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent']);
-//     
+//
 // $sheet->getCell('C16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['number']);
 // $sheet->getCell('D16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['percent']);
 // $sheet->getCell('E16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']);
-// $sheet->getCell('F16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent']);    
+// $sheet->getCell('F16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent']);
 // //more stringent treatment
 // $sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
 // $sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
 // $sheet->getCell('E19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']);
 // $sheet->getCell('F19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent']);
-//     
+//
 // $sheet->getCell('C20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']);
 // $sheet->getCell('D20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['percent']);
 // $sheet->getCell('E20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']);
 // $sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
-             
+
 
     $cell = $sheet->getCell('A75');
     $cell->setValue(str_replace(array('[#COUNTRY#]', '[#current_year#]'), array($country_name, $annee), $cell->getValue()));
-                                 
+
     if (isset($context['results']['graph']['summary_installation']['total']['number'])) {
     	$sheet->getCell('B77')->setValue($context['results']['graph']['summary_installation']['total']['number']);
     }
@@ -2329,38 +2329,38 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'])) {
     	$sheet->getCell('E82')->setValue(round($context['results']['graph']['summary_installation']['more_stringent']['meet_requirement']['waste_percent'], 1));
     }
-    
-    //previous   
+
+    //previous
     $sheet->setCellValue('F77', uwwtd_register_get_cell_value($previoussheet, 'B77'));
     $sheet->setCellValue('G77', uwwtd_register_get_cell_value($previoussheet, 'C77'));
     $sheet->setCellValue('H77', uwwtd_register_get_cell_value($previoussheet, 'D77'));
-    $sheet->setCellValue('I77', uwwtd_register_get_cell_value($previoussheet, 'E77'));     
-                                                                                  
+    $sheet->setCellValue('I77', uwwtd_register_get_cell_value($previoussheet, 'E77'));
+
     $sheet->setCellValue('F78', uwwtd_register_get_cell_value($previoussheet, 'B78'));
     $sheet->setCellValue('G78', uwwtd_register_get_cell_value($previoussheet, 'C78'));
     $sheet->setCellValue('H78', uwwtd_register_get_cell_value($previoussheet, 'D78'));
     $sheet->setCellValue('I78', uwwtd_register_get_cell_value($previoussheet, 'E78'));
-                                                                                  
+
     $sheet->setCellValue('F79', uwwtd_register_get_cell_value($previoussheet, 'B79'));
     $sheet->setCellValue('G79', uwwtd_register_get_cell_value($previoussheet, 'C79'));
     $sheet->setCellValue('H79', uwwtd_register_get_cell_value($previoussheet, 'D79'));
     $sheet->setCellValue('I79', uwwtd_register_get_cell_value($previoussheet, 'E79'));
-                                                                                  
+
     $sheet->setCellValue('F80', uwwtd_register_get_cell_value($previoussheet, 'B80'));
     $sheet->setCellValue('G80', uwwtd_register_get_cell_value($previoussheet, 'C80'));
     $sheet->setCellValue('H80', uwwtd_register_get_cell_value($previoussheet, 'D80'));
     $sheet->setCellValue('I80', uwwtd_register_get_cell_value($previoussheet, 'E80'));
-                                                                                  
+
     $sheet->setCellValue('F81', uwwtd_register_get_cell_value($previoussheet, 'B81'));
     $sheet->setCellValue('G81', uwwtd_register_get_cell_value($previoussheet, 'C81'));
     $sheet->setCellValue('H81', uwwtd_register_get_cell_value($previoussheet, 'D81'));
     $sheet->setCellValue('I81', uwwtd_register_get_cell_value($previoussheet, 'E81'));
-                                                                                  
+
     $sheet->setCellValue('F82', uwwtd_register_get_cell_value($previoussheet, 'B82'));
     $sheet->setCellValue('G82', uwwtd_register_get_cell_value($previoussheet, 'C82'));
     $sheet->setCellValue('H82', uwwtd_register_get_cell_value($previoussheet, 'D82'));
-    $sheet->setCellValue('I82', uwwtd_register_get_cell_value($previoussheet, 'E82'));                
-                                                            
+    $sheet->setCellValue('I82', uwwtd_register_get_cell_value($previoussheet, 'E82'));
+
     //array 9 Summary distance to compliance expired deadline
     //Target connection pe
     if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['total_load_pe'])) {
@@ -2409,15 +2409,15 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']));
     }
-    
+
     //previous
     $sheet->setCellValue('E88', uwwtd_register_get_cell_value($previoussheet, 'C88'));
-    //not EonneEted                                                               
+    //not EonneEted
     $sheet->setCellValue('D89', uwwtd_register_get_cell_value($previoussheet, 'B89'));
     $sheet->setCellValue('E89', uwwtd_register_get_cell_value($previoussheet, 'C89'));
     //2nd treatment targe                                                      arg
     $sheet->setCellValue('E90', uwwtd_register_get_cell_value($previoussheet, 'C90'));
-    //2nd treatment not i                                                      ot 
+    //2nd treatment not i                                                      ot
     $sheet->setCellValue('D91', uwwtd_register_get_cell_value($previoussheet, 'B91'));
     $sheet->setCellValue('E91', uwwtd_register_get_cell_value($previoussheet, 'C91'));
     //2nd treatment perfo                                                      erf
@@ -2430,9 +2430,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('E94', uwwtd_register_get_cell_value($previoussheet, 'C94'));
     //Tertiary stringent                                                       ent
     $sheet->setCellValue('D95', uwwtd_register_get_cell_value($previoussheet, 'B95'));
-    $sheet->setCellValue('E95', uwwtd_register_get_cell_value($previoussheet, 'C95'));    
-    
-    
+    $sheet->setCellValue('E95', uwwtd_register_get_cell_value($previoussheet, 'C95'));
+
+
     //array 10 summary distance to compliance pending deadlines
     if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe'])) {
     	$sheet->getCell('C104')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['total_load_pe']));
@@ -2480,29 +2480,29 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']));
     }
-    
+
     //previous
-    $sheet->setCellValue('E104', uwwtd_register_get_cell_value($previoussheet, 'C104'));    
-    //not connected                                                                 
-    $sheet->setCellValue('D105', uwwtd_register_get_cell_value($previoussheet, 'B105'));    
-    $sheet->setCellValue('E105', uwwtd_register_get_cell_value($previoussheet, 'C105'));    
+    $sheet->setCellValue('E104', uwwtd_register_get_cell_value($previoussheet, 'C104'));
+    //not connected
+    $sheet->setCellValue('D105', uwwtd_register_get_cell_value($previoussheet, 'B105'));
+    $sheet->setCellValue('E105', uwwtd_register_get_cell_value($previoussheet, 'C105'));
     //2nd treatment target                                                      arge
-    $sheet->setCellValue('E106', uwwtd_register_get_cell_value($previoussheet, 'C106'));    
+    $sheet->setCellValue('E106', uwwtd_register_get_cell_value($previoussheet, 'C106'));
     //2nd treatment not in                                                      ot i
-    $sheet->setCellValue('D107', uwwtd_register_get_cell_value($previoussheet, 'B107'));    
-    $sheet->setCellValue('E107', uwwtd_register_get_cell_value($previoussheet, 'C107'));    
+    $sheet->setCellValue('D107', uwwtd_register_get_cell_value($previoussheet, 'B107'));
+    $sheet->setCellValue('E107', uwwtd_register_get_cell_value($previoussheet, 'C107'));
     //2nd treatment perfor                                                      erfo
-    $sheet->setCellValue('D108', uwwtd_register_get_cell_value($previoussheet, 'B108'));    
-    $sheet->setCellValue('E108', uwwtd_register_get_cell_value($previoussheet, 'C108'));    
-    //Tertiary treatment t                                                      ent 
-    $sheet->setCellValue('E109', uwwtd_register_get_cell_value($previoussheet, 'C109'));    
-    //Tertiary treatment n                                                      ent 
-    $sheet->setCellValue('D110', uwwtd_register_get_cell_value($previoussheet, 'B110'));    
-    $sheet->setCellValue('E110', uwwtd_register_get_cell_value($previoussheet, 'C110'));    
-    //Tertiary stringent t                                                      ent 
-    $sheet->setCellValue('D111', uwwtd_register_get_cell_value($previoussheet, 'B111'));    
-    $sheet->setCellValue('E111', uwwtd_register_get_cell_value($previoussheet, 'C111'));    
-    
+    $sheet->setCellValue('D108', uwwtd_register_get_cell_value($previoussheet, 'B108'));
+    $sheet->setCellValue('E108', uwwtd_register_get_cell_value($previoussheet, 'C108'));
+    //Tertiary treatment t                                                      ent
+    $sheet->setCellValue('E109', uwwtd_register_get_cell_value($previoussheet, 'C109'));
+    //Tertiary treatment n                                                      ent
+    $sheet->setCellValue('D110', uwwtd_register_get_cell_value($previoussheet, 'B110'));
+    $sheet->setCellValue('E110', uwwtd_register_get_cell_value($previoussheet, 'C110'));
+    //Tertiary stringent t                                                      ent
+    $sheet->setCellValue('D111', uwwtd_register_get_cell_value($previoussheet, 'B111'));
+    $sheet->setCellValue('E111', uwwtd_register_get_cell_value($previoussheet, 'C111'));
+
     //array 11 summary distance to compliance total
     if (isset($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe'])) {
     	$sheet->getCell('C119')->setValue(round($context['results']['distance_to_compliance']['total']['target_connection']['total_load_pe']));
@@ -2550,10 +2550,10 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C126')->setValue(round($context['results']['distance_to_compliance']['total']['morestringent_target']['monitoring_result_distance_pe']));
     }
-    
+
     //previous
     $sheet->setCellValue('E119', uwwtd_register_get_cell_value($previoussheet, 'C119'));
-    //not connected                                                                 
+    //not connected
     $sheet->setCellValue('D120', uwwtd_register_get_cell_value($previoussheet, 'B120'));
     $sheet->setCellValue('E120', uwwtd_register_get_cell_value($previoussheet, 'C120'));
     //2nd treatment target                                                      arge
@@ -2564,19 +2564,19 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     //2nd treatment perfor                                                      erfo
     $sheet->setCellValue('D123', uwwtd_register_get_cell_value($previoussheet, 'B123'));
     $sheet->setCellValue('E123', uwwtd_register_get_cell_value($previoussheet, 'C123'));
-    //Tertiary treatment t                                                      ent 
+    //Tertiary treatment t                                                      ent
     $sheet->setCellValue('E124', uwwtd_register_get_cell_value($previoussheet, 'C124'));
-    //Tertiary treatment n                                                      ent 
+    //Tertiary treatment n                                                      ent
     $sheet->setCellValue('D125', uwwtd_register_get_cell_value($previoussheet, 'B125'));
     $sheet->setCellValue('E125', uwwtd_register_get_cell_value($previoussheet, 'C125'));
-    //Tertiary stringent t                                                      ent 
+    //Tertiary stringent t                                                      ent
     $sheet->setCellValue('D126', uwwtd_register_get_cell_value($previoussheet, 'B126'));
     $sheet->setCellValue('E126', uwwtd_register_get_cell_value($previoussheet, 'C126'));
-    
+
     //array 12  treatment details
-    // Parameters   reference year          
-    //  %   p.e.    number of plants    
-    // Total load generated 100,00% 5 164 016       
+    // Parameters   reference year
+    //  %   p.e.    number of plants
+    // Total load generated 100,00% 5 164 016
     // No treatment (not connected + no treatment after connection) 5,11%   264097      sum of ((neither collecting system nor IAS)+(collected in collecting system-entering load)+(entering load for all stations with compliance article 4 =NC))
     // IAS  0,00%   0       sum of adressed through IAS
     // primary treatment as a maximum   0,23%   11779       sum of entering load for all stations with treatment type in place = 1
@@ -2584,7 +2584,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     // N removal without P removal (performance met)    6,91%   356636      sum of entering load for all stations with treatment type in place = 3N and performance Ntot=pass or NR
     // P removal without N removal (performance met)    1,44%   74542       sum of entering load for all stations with treatment type in place = 3P and performance Ptot=pass or NR
     // N and P removal (performance met)    0,40%   20813       sum of entering load for all stations with treatment type in place = 3NP and performance Ntot=pass or NR & Ptot=pass or NR
-    // Other more stringent treatments  60,69%  3133913     sum of entering load for all stations with treatment type in place = 3O only (no 3N, no 3NP, no P)    
+    // Other more stringent treatments  60,69%  3133913     sum of entering load for all stations with treatment type in place = 3O only (no 3N, no 3NP, no P)
     //todo
 //         $context['results']['uwwtp_total_load_generated_pe'] = 0;
 //         $context['results']['uwwtp_notreatment_pe'] = 0;
@@ -2594,8 +2594,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 //         $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
 //         $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
 //         $context['results']['uwwtp_np_removal_pe'] = 0;
-//         $context['results']['uwwtp_other_morestringent_pe'] = 0; 
-            
+//         $context['results']['uwwtp_other_morestringent_pe'] = 0;
+
     $sheet->setCellValue('B131', '100.00');
     if (isset($context['results']['uwwtp_total_load_generated_pe'])) {
     	$sheet->setCellValue('C131', round($context['results']['uwwtp_total_load_generated_pe']));
@@ -2675,8 +2675,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['uwwtp_other_morestringent_nb'])) {
     	$sheet->setCellValue('D139', $context['results']['uwwtp_other_morestringent_nb']);
     }
-      
-    //array 13    incoming/discharged        
+
+    //array 13    incoming/discharged
     if (isset($context['results']['graph']['incoming_load_bod'])) {
     	$sheet->getCell('C148')->setValue(round($context['results']['graph']['incoming_load_bod']));
     }
@@ -2701,7 +2701,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['discharge_load_p'])) {
     	$sheet->getCell('C155')->setValue(round($context['results']['graph']['discharge_load_p']));
     }
-    
+
     //previous
     $sheet->getCell('D148')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C148'));
     $sheet->getCell('D149')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C149'));
@@ -2710,8 +2710,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D152')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C152'));
     $sheet->getCell('D153')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C153'));
     $sheet->getCell('D154')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C154'));
-    $sheet->getCell('D155')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C155'));        
-       
+    $sheet->getCell('D155')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C155'));
+
     //array 14    rate
     if (isset($context['results']['graph']['discharge_load_bod']) && isset($context['results']['graph']['incoming_load_bod'])) {
     	$sheet->getCell('C159')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['graph']['incoming_load_bod']) *100, 1));
@@ -2729,16 +2729,16 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D159')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C159'));
     $sheet->getCell('D160')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C160'));
     $sheet->getCell('D161')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C161'));
-    $sheet->getCell('D162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));    
-    
+    $sheet->getCell('D162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));
+
     //array 15   totla volume
     if (isset($context['results']['country_volume_waste_water'])) {
     	$sheet->getCell('C166')->setValue(round($context['results']['country_volume_waste_water']));
     }
     //previous
     $sheet->getCell('D166')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C166'));
-    
-    //array 16  average  
+
+    //array 16  average
     if (isset($context['results']['graph']['incoming_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
     	$sheet->getCell('C169')->setValue(round(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
     }
@@ -2763,7 +2763,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['discharge_load_p']) && isset($context['results']['country_volume_waste_water'])) {
     	$sheet->getCell('C176')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
     }
-    
+
     //previous
     $sheet->getCell('D169')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C169'));
     $sheet->getCell('D170')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C170'));
@@ -2772,14 +2772,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D173')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C173'));
     $sheet->getCell('D174')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C174'));
     $sheet->getCell('D175')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C175'));
-    $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));          
-    
+    $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));
+
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
     $arrayInPe = array();
     $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('E55')->getValue();
     $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('E58')->getValue();
     $arrayInPe['Compliant']['Article 5'] = $sheet->getCell('E61')->getValue();
-    
+
     $arrayInPe['Not compliant']['Article 3'] = $sheet->getCell('F55')->getValue();
     $arrayInPe['Not compliant']['Article 4'] = $sheet->getCell('F58')->getValue();
     $arrayInPe['Not compliant']['Article 5'] = $sheet->getCell('F61')->getValue();
@@ -2787,21 +2787,21 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $arrayInPe['Not relevant']['Article 3'] = $sheet->getCell('G55')->getValue();
     $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('G58')->getValue();
     $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('G61')->getValue();
-    
+
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
     $arrayInNumOfAgg = array();
     $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B43')->getValue();
     $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B46')->getValue();
     $arrayInNumOfAgg['Compliant']['Article 5'] = $sheet->getCell('B49')->getValue();
-    
+
     $arrayInNumOfAgg['Not compliant']['Article 3'] = $sheet->getCell('B44')->getValue();
     $arrayInNumOfAgg['Not compliant']['Article 4'] = $sheet->getCell('B47')->getValue();
     $arrayInNumOfAgg['Not compliant']['Article 5'] = $sheet->getCell('B50')->getValue();
-    
+
     $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('B45')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
-    
+
     // Récupération des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
     $distancesExpired = array();
     $distancesExpired['Target connection'] = $sheet->getCell('B88')->getValue();
@@ -2812,7 +2812,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesExpired['Tertiary treatment target'] = $sheet->getCell('B93')->getValue();
     $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('B94')->getValue();
     $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('B95')->getValue();
-    
+
     // Récupération des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
     $distancesPending = array();
     $distancesPending['Target connection'] = $sheet->getCell('B104')->getValue();
@@ -2823,7 +2823,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesPending['Tertiary treatment target'] = $sheet->getCell('B109')->getValue();
     $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('B110')->getValue();
     $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('B111')->getValue();
-    
+
     // Récupération des valeurs du tableau "Distance to compliance total" :
     $distancesTotal = array();
     $distancesTotal['Target connection'] = $sheet->getCell('C119')->getValue();
@@ -2834,7 +2834,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesTotal['Tertiary treatment target'] = $sheet->getCell('C124')->getValue();
     $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
     $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
-    
+
     // Récupération du nid du node MS_LEVEL de cette année :
     $query = db_select('node', 'n');
     $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
@@ -2844,12 +2844,12 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $query->condition('n.type', 'ms_level', '=');
     $query->condition('n.status', 1, '=');
     $nid = $query->execute()->fetchField();
-    
+
     // Si il n'y a pas encore de node ms_level pour cette année :
     global $language;
 	$siteId = $annee.'_mslevel';
     if (empty($nid)) {
-		// Création du node pour cette année :    	
+		// Création du node pour cette année :
         $node = new stdClass();
     	$node->type = 'ms_level';
     	$node->uid = 1;
@@ -2863,7 +2863,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $node->field_siteid['und'][0]['value'] = $siteId;
         $node->field_anneedata['und'][0]['value'] = $annee;
         node_save($node);
-        
+
         // Récupération du nid :
         $query = db_select('node', 'n');
         $query->fields('n');
@@ -2871,7 +2871,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $query->condition('n.title', 'Data on MS level - '. $annee, '=');
         $nid = $query->execute()->fetchField();
     }
-    
+
     // Renseignement des champs "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
     $node = node_load($nid);
     if (!empty($node)) {
@@ -2882,7 +2882,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     	$node->field_compliance_total[LANGUAGE_NONE][0]['value'] = json_encode($distancesTotal);
     }
     node_save($node);
-    
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
 //     $objWriter->setPreCalculateFormulas(true);
@@ -2891,50 +2891,50 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']));    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']));
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 	if (isset($context['sandbox']['progress']) && isset($context['sandbox']['max'])) {
     	$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 	}
-//     }     
+//     }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context)
 {
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filenameagglo = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
     $filenameagglo = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-    
+
 
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'] . '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'], $annee);
-        
-    
+
+
     $ind = $GLOBALS['uwwtd']['sheet12_newagglo'];
-    
-    if (!isset($context['sandbox']['progress'])) {  
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filenameagglo);
 
-        $r = fopen($filename, 'wb');  
-    
+        $r = fopen($filename, 'wb');
+
         $header = array(
-            $ind['id_of_agglomeration'] => 'id_of_agglomeration', 
-            $ind['name_of_agglomeration'] => 'name_of_agglomeration', 
-            $ind['size_of_agglomeration'] => 'size_of_agglomeration', 
-            $ind['reason'] => 'reason', 
+            $ind['id_of_agglomeration'] => 'id_of_agglomeration',
+            $ind['name_of_agglomeration'] => 'name_of_agglomeration',
+            $ind['size_of_agglomeration'] => 'size_of_agglomeration',
+            $ind['reason'] => 'reason',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');  
-        
+        fputcsv($r, $header, ';');
+
         //get previous year
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
         //if not previous year nothing do to
@@ -2942,21 +2942,21 @@ function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context
             $context['message'] = '('.$annee.') ' . t('End of @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name']));
             $context['sandbox']['progress'] = $context['sandbox']['max'];
             $context['finished'] = 1;
-            return;    
+            return;
         }
-                     
+
     } else {
-        $r = fopen($filename, 'ab');  
-    }     
+        $r = fopen($filename, 'ab');
+    }
 
     $ragglofile = fopen($filenameagglo, 'rb');
-    
+
     //pass header line
     if ($context['sandbox']['progress'] == 0) {
         $agglo = fgetcsv($ragglofile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-    } else {    
+    } else {
         fseek($ragglofile, $context['sandbox']['file_position']);
     }
     $indagglo = $GLOBALS['uwwtd']['sheet3_agglo'];
@@ -2965,23 +2965,23 @@ function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //     get all agglo from csv file
 //         check if agglo > 2000 and exist in previous year
-//             if no add a line 
-        if ($agglo[$indagglo['generated_load_p.e.']] >= 2000 
+//             if no add a line
+        if ($agglo[$indagglo['generated_load_p.e.']] >= 2000
             && '' == uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agglo[$indagglo['aggcode']])))) {
             $line = array();
-            $line[$ind['id_of_agglomeration']] = $agglo[$indagglo['aggcode']];    
-            $line[$ind['name_of_agglomeration']] = $agglo[$indagglo['aggname']];    
-            $line[$ind['size_of_agglomeration']] = $agglo[$indagglo['generated_load_p.e.']];    
-            $line[$ind['reason']] = '';  
-            fputcsv($r, $line, ';');     
-        }       
-        $j++;        
+            $line[$ind['id_of_agglomeration']] = $agglo[$indagglo['aggcode']];
+            $line[$ind['name_of_agglomeration']] = $agglo[$indagglo['aggname']];
+            $line[$ind['size_of_agglomeration']] = $agglo[$indagglo['generated_load_p.e.']];
+            $line[$ind['reason']] = '';
+            fputcsv($r, $line, ';');
+        }
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];    
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
@@ -2989,7 +2989,7 @@ function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
 {
 //     get previous year
@@ -2998,24 +2998,24 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
 //         add a line
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'] . '.csv';
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);    
-    
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);
+
     $ind = $GLOBALS['uwwtd']['sheet13_aggloout'];
-    
-    if (!isset($context['sandbox']['progress'])) {  
+
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
 //         dsm($filename);
-        $r = fopen($filename, 'wb');  
+        $r = fopen($filename, 'wb');
 //         dsm($r);
         $header = array(
-            $ind['id_of_agglomeration'] => 'id_of_agglomeration', 
-            $ind['name_of_agglomeration'] => 'name_of_agglomeration', 
+            $ind['id_of_agglomeration'] => 'id_of_agglomeration',
+            $ind['name_of_agglomeration'] => 'name_of_agglomeration',
             $ind['size_of_agglomeration'] => 'size_of_agglomeration',
-            $ind['remarks'] => 'remarks', 
+            $ind['remarks'] => 'remarks',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');  
-        
+        fputcsv($r, $header, ';');
+
         //get previous year
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
         //if not previous year nothing do to
@@ -3023,9 +3023,9 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
             $context['message'] = '('.$annee.') ' . t('End of  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name']));
             $context['sandbox']['progress'] = $context['sandbox']['max'];
             $context['finished'] = 1;
-            return;    
+            return;
         }
-        
+
         $query = 'select n.nid
         from {node} n
             left join
@@ -3036,14 +3036,14 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
                     ON n.nid = f_agggenerated.entity_id
             left join
                 {field_data_field_status} f_status
-                    ON n.nid = f_status.entity_id                
-                    
+                    ON n.nid = f_status.entity_id
+
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= :agggenerated
             and f_status.field_status_value = :status
         ';
-        
+
         $param = array(
             ':typenode' => 'agglomeration',
             ':annee' => $context['sandbox']['previous_year'],
@@ -3059,35 +3059,35 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-        
+
         $context['sandbox']['max'] = count($context['sandbox']['id']);
     } else {
-        $r = fopen($filename, 'ab');  
+        $r = fopen($filename, 'ab');
     }
-        
+
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-    
+
         $previousagglo = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-        
+
         if ('' != ($agglonid = uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $annee, 'aggCode' => $previousagglo->field_inspireidlocalid['und'][0]['value'] ))))) {
             $agg = node_load($agglonid);
             if ($agg->field_status['und'][0]['value'] === '0') {
                 $line = array(
-                    $ind['id_of_agglomeration'] => $previousagglo->field_inspireidlocalid['und'][0]['value'], 
-                    $ind['name_of_agglomeration'] => $previousagglo->title, 
+                    $ind['id_of_agglomeration'] => $previousagglo->field_inspireidlocalid['und'][0]['value'],
+                    $ind['name_of_agglomeration'] => $previousagglo->title,
                     $ind['size_of_agglomeration'] => $previousagglo->field_agggenerated['und'][0]['value'],
-                    $ind['remarks'] => '', 
+                    $ind['remarks'] => '',
                 );
-                fputcsv($r, $line, ';');                 
+                fputcsv($r, $line, ';');
             }
-        }    
+        }
         $context['sandbox']['progress']++;
         $j++;
-    }    
-   
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'])) . ' ' .  $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];    
-    
+    }
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'])) . ' ' .  $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
@@ -3095,10 +3095,10 @@ function uwwtd_create_register_2015_agglomerationout_sheet13($annee, &$context)
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$context)
 {
-//         
+//
 //     get previous year
 //     if not previous year nothing do to
 
@@ -3106,30 +3106,30 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
 //     $filenameuwwtp = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] . '.csv';
     $filenameuwwtp = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
 
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'] . '.csv';  
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);  
-    
+//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'] . '.csv';
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);
+
     $ind = $GLOBALS['uwwtd']['sheet14_newuwwtp'];
-    
-    if (!isset($context['sandbox']['progress'])) {  
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filenameuwwtp);
 
-        $r = fopen($filename, 'wb');  
+        $r = fopen($filename, 'wb');
 
-        
+
         $header = array(
-            $ind['id_of_uwwtp'] => 'id_of_uwwtp', 
-            $ind['name_of_uwwtp'] => 'name_of_uwwtp', 
+            $ind['id_of_uwwtp'] => 'id_of_uwwtp',
+            $ind['name_of_uwwtp'] => 'name_of_uwwtp',
             $ind['id_of_agglomeration'] => 'id_of_agglomeration',
-            $ind['name_of_agglomeration'] => 'name_of_agglomeration', 
-            $ind['size_of_uwwtp'] => 'size_of_uwwtp',              
-            $ind['reason'] => 'reason', 
+            $ind['name_of_agglomeration'] => 'name_of_agglomeration',
+            $ind['size_of_uwwtp'] => 'size_of_uwwtp',
+            $ind['reason'] => 'reason',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');  
-        
+        fputcsv($r, $header, ';');
+
         //get previous year
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
         //if not previous year nothing do to
@@ -3137,21 +3137,21 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
             $context['message'] = '('.$annee.') ' . t('End of @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name']));
             $context['sandbox']['progress'] = $context['sandbox']['max'];
             $context['finished'] = 1;
-            return;    
+            return;
         }
-                     
+
     } else {
-        $r = fopen($filename, 'ab');  
-    }     
+        $r = fopen($filename, 'ab');
+    }
 
     $ruwwtpfile = fopen($filenameuwwtp, 'rb');
-    
+
     //pass header line
     if ($context['sandbox']['progress'] == 0) {
         $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-    } else {    
+    } else {
         fseek($ruwwtpfile, $context['sandbox']['file_position']);
     }
     $induwwtp = $GLOBALS['uwwtd']['sheet2_uwwtp'];
@@ -3160,29 +3160,29 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
     while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
 //     get all uwwtp from csv file
 //         check if exist in previous year
-//             if no add a line 
+//             if no add a line
         if ('' == uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp[$induwwtp['uww_code']])))) {
             $line = array();
             if (isset($uwwtp[$induwwtp['uww_code']]))
-            	$line[$ind['id_of_uwwtp']] = $uwwtp[$induwwtp['uww_code']]; 
+            	$line[$ind['id_of_uwwtp']] = $uwwtp[$induwwtp['uww_code']];
             if (isset($uwwtp[$induwwtp['uww_name']]))
-            	$line[$ind['name_of_uwwtp']] = $uwwtp[$induwwtp['uww_name']]; 
+            	$line[$ind['name_of_uwwtp']] = $uwwtp[$induwwtp['uww_name']];
             if (isset($uwwtp[$induwwtp['aggcode']]))
             	$line[$ind['id_of_agglomeration']] = $uwwtp[$induwwtp['aggcode']];
             if (isset($uwwtp[$induwwtp['aggname']]))
             	$line[$ind['name_of_agglomeration']] = $uwwtp[$induwwtp['aggname']];
             if (isset($uwwtp[$induwwtp['uww_capacity p. e.']]))
-            	$line[$ind['size_of_uwwtp']] = $uwwtp[$induwwtp['uww_capacity p. e.']];    
-            $line[$ind['reason']] = ''; 
-            fputcsv($r, $line, ';');     
-        }       
-        $j++;        
+            	$line[$ind['size_of_uwwtp']] = $uwwtp[$induwwtp['uww_capacity p. e.']];
+            $line[$ind['reason']] = '';
+            fputcsv($r, $line, ';');
+        }
+        $j++;
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];    
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'])) . ' ' .  $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'])) . ' ' .  $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
@@ -3190,36 +3190,36 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
 {
 //     get previous year
-//     get all uwwtp from prvious year active 
+//     get all uwwtp from prvious year active
 //     if uwwtp current year is not active
-//         add a line 
+//         add a line
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'] . '.csv';
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);    
-    
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
+
     $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-    
-    if (!isset($context['sandbox']['progress'])) {  
+
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
 //         dsm($filename);
-        $r = fopen($filename, 'wb');  
+        $r = fopen($filename, 'wb');
 //         dsm($r);
-   
+
         $header = array(
-            $ind['id_of_uwwtp'] => 'id_of_uwwtp', 
-            $ind['name_of_uwwtp'] => 'name_of_uwwtp', 
+            $ind['id_of_uwwtp'] => 'id_of_uwwtp',
+            $ind['name_of_uwwtp'] => 'name_of_uwwtp',
             $ind['id_of_agglomeration'] => 'id_of_agglomeration',
             $ind['name_of_agglomeration'] => 'name_of_agglomeration',
             $ind['size_of_uwwtp'] => 'size_of_uwwtp',
-            $ind['remarks'] => 'remarks', 
+            $ind['remarks'] => 'remarks',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');  
-        
+        fputcsv($r, $header, ';');
+
         //get previous year
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
         //if not previous year nothing do to
@@ -3227,9 +3227,9 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
             $context['message'] = '('.$annee.') ' . t('End of @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name']));
             $context['sandbox']['progress'] = $context['sandbox']['max'];
             $context['finished'] = 1;
-            return;    
+            return;
         }
-        
+
         $query = 'select n.nid
         from {node} n
             left join
@@ -3237,13 +3237,13 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
                     ON n.nid = f_annee.entity_id
             left join
                 {field_data_field_status} f_status
-                    ON n.nid = f_status.entity_id                
-                    
+                    ON n.nid = f_status.entity_id
+
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
         ';
-        
+
         $param = array(
             ':typenode' => 'uwwtp',
             ':annee' => $context['sandbox']['previous_year'],
@@ -3258,48 +3258,48 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-        
+
         $context['sandbox']['max'] = count($context['sandbox']['id']);
     } else {
-        $r = fopen($filename, 'ab');  
+        $r = fopen($filename, 'ab');
     }
-        
+
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-    
+
         $previousuwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-        
+
         if ('' != ($uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $annee, 'uwwCode' => $previousuwwtp->field_inspireidlocalid['und'][0]['value'] ))))) {
             $uwwtp = node_load($uwwtpnid);
             if ($uwwtp->field_status['und'][0]['value'] === '0') {
-            
+
                 $list_id_agglo = '';
                 $list_name_agglo = '';
-                
+
                 foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
                     $agg = node_load($nidagg['nid']);
                     $list_id_agglo = ($list_id_agglo == '' ? '' : ';') . $agg->field_inspireidlocalid['und'][0]['value'];
                     $list_name_agglo = ($list_name_agglo == '' ? '' : ';') . $agg->title;
                     unset($agg);
                 }
-                
+
                 $line = array(
                     $ind['id_of_uwwtp'] => $previousuwwtp->field_inspireidlocalid['und'][0]['value'],
-                    $ind['name_of_uwwtp'] => $previousuwwtp->title, 
+                    $ind['name_of_uwwtp'] => $previousuwwtp->title,
                     $ind['id_of_agglomeration'] => $list_id_agglo,
-                    $ind['name_of_agglomeration'] => $list_name_agglo, 
+                    $ind['name_of_agglomeration'] => $list_name_agglo,
                     $ind['size_of_uwwtp'] => $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'],
                     $ind['remarks'] => '',
                 );
-                fputcsv($r, $line, ';');                 
+                fputcsv($r, $line, ';');
             }
-        }    
+        }
         $context['sandbox']['progress']++;
         $j++;
-    }    
-   
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];    
-    
+    }
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
@@ -3308,56 +3308,56 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet12_newagglo'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'], $annee);
-        
+
     $ragglofile = fopen($filename, 'rb');
-        
-    if (!isset($context['sandbox']['progress'])) {    
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+
         $context['sandbox']['line'] = 6;
-        
+
         $model_path = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
         $target_path = $model_path;
-    } 
-    
+    }
+
     fseek($ragglofile, $context['sandbox']['file_position']);
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
 //     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
+
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name']);
-    
+
 //     $start_line = 6;
 //     $sheet->insertNewRowBefore(5, count($listagglo));
-    
+
 //     $i = $start_line;
-    
-    
+
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'] . '.csv';
 
@@ -3374,13 +3374,13 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-        
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];              
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    fclose($ragglofile);  
-    
+    fclose($ragglofile);
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -3388,90 +3388,90 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = t('new_agglomerations_sheet12 finish');    
-//     
+
+//     $context['message'] = t('new_agglomerations_sheet12 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 // //     }
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if (isset($context['sandbox']['progress']) && isset($context['sandbox']['max'])) {
 	    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 	        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	    }  
+	    }
     }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet13_aggloout'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);
-        
+
     $ragglofile = fopen($filename, 'rb');
-        
-    if (!isset($context['sandbox']['progress'])) {    
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-       //ignore header    
+       //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+
         $context['sandbox']['line'] = 6;
-        
+
         $model_path = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
         $target_path = $model_path;
-    } 
-    
+    }
+
     fseek($ragglofile, $context['sandbox']['file_position']);
-    
-//  if (!isset($context['sandbox']['progress'])) {    
+
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     } 
-    
+//     }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
 //     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
-    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name']);    
-    
-    
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name']);
+
+
 //     $start_line = 6;
 //     $sheet->insertNewRowBefore(5, count($listagglo));
-    
+
 //     $i = $start_line;
 //     $ind = $GLOBALS['uwwtd']['sheet13_aggloout'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);
-        
+
 //     $ragglofile = fopen($filename, 'rb');
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {    
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
     	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['id_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
     	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['name_of_agglomeration']]))
@@ -3483,13 +3483,13 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-        
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];        
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    fclose($ragglofile);   
-        
+    fclose($ragglofile);
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -3497,86 +3497,86 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = t('agglomerationout_sheet13 finish');    
-//     
+
+//     $context['message'] = t('agglomerationout_sheet13 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }  
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+// //     }
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }     
+    }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet14_newuwwtp'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);
-            
+
     $rfile = fopen($filename, 'rb');
-        
-    if (!isset($context['sandbox']['progress'])) {    
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($rfile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($rfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+
         $context['sandbox']['line'] = 5;
-        
+
         $model_path = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
         $target_path = $model_path;
-    } 
-    
+    }
+
     fseek($rfile, $context['sandbox']['file_position']);
-    
-//  if (!isset($context['sandbox']['progress'])) {    
+
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     } 
-    
+//     }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
 //     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
-    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name']);    
-    
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name']);
+
 //     $start_line = 5;
-    
+
 //     $i = $start_line;
 //     $ind = $GLOBALS['uwwtd']['sheet14_newuwwtp'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);
-//             
+//
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {   
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
     	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
     	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
@@ -3592,13 +3592,13 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-        
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];           
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    fclose($rfile);  
-        
+    fclose($rfile);
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -3606,87 +3606,87 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = t('new_treatment_plants_sheet14 finish');    
-//     
+
+//     $context['message'] = t('new_treatment_plants_sheet14 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 // //     }
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }       
+    }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
-        
+
     $rfile = fopen($filename, 'rb');
-        
-    if (!isset($context['sandbox']['progress'])) {    
-        $context['sandbox']['file_position'] = 0;  
+
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($rfile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($rfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+
         $context['sandbox']['line'] = 6;
-        
+
         $model_path = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
         $target_path = $model_path;
-    } 
-    
+    }
+
     fseek($rfile, $context['sandbox']['file_position']);
-    
-    
-//  if (!isset($context['sandbox']['progress'])) {    
+
+
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     } 
-    
+//     }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
 //     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'],
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
-    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name']);    
-    
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name']);
+
 //     $start_line = 6;
-    
+
 //     $i = $start_line;
 //     $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
-                
+
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {     
+    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
     	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
     	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
@@ -3702,13 +3702,13 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 
         $context['sandbox']['line']++;
         $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-        
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];          
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
-    fclose($rfile);  
-        
+    fclose($rfile);
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -3716,44 +3716,44 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
 //     $context['sandbox']['progress']++;
-//  
-//     $context['message'] = t('uwwtpsout_sheet15 finish');    
-//     
+//
+//     $context['message'] = t('uwwtpsout_sheet15 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }  
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+// //     }
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }    
+    }
 }
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context) 
+ */
+function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
 {
-    if (!isset($context['sandbox']['progress'])) {    
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
-    } 
-    
+    }
+
     //all agglo NC on art3 or 4 or5
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
     $induww = $GLOBALS['uwwtd']['sheet2_uwwtp'];
     $agglo_breach = array();
-    
+
 //     $i = 0;
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-               
+
     $ragglofile = fopen($filename, 'rb');
-    
+
     // art3_count
     $art3_count = 0;
     // art3_generated_load
@@ -3770,18 +3770,18 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     $art5_count = 0;
     // art5_generated_load
     $art5_generated_load = 0;
-    // art5_collected_load            
+    // art5_collected_load
     $art5_collected_load = 0;
     //ignore header
     $agglo = fgetcsv($ragglofile, 5000, ';');
-    
-    $i = 0;    
-    while ($agglo = fgetcsv($ragglofile, 5000, ';')) {       
-//     foreach ($listagglo as $agglo) {  
+
+    $i = 0;
+    while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
+//     foreach ($listagglo as $agglo) {
 		if (isset($ind['art3_compliance']) &&
 			isset($ind['art4_compliance_art._4_(hierarchical_approach)']) &&
 			isset($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']) &&
-			isset($agglo[$ind['art3_compliance']]) && 
+			isset($agglo[$ind['art3_compliance']]) &&
 			isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
 			isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
         	$agglo[$ind['art3_compliance']] != 'NC'
@@ -3790,42 +3790,42 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
             ) {
             continue;
         }
-        
+
         if (isset($ind['art3_compliance']) &&
 			isset($ind['generated_load_p.e.']) &&
 			isset($ind['connected_to_collecting_system_p._e.']) &&
-        	isset($agglo[$ind['art3_compliance']]) && 
+        	isset($agglo[$ind['art3_compliance']]) &&
         	isset($agglo[$ind['generated_load_p.e.']]) &&
         	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
         	$agglo[$ind['art3_compliance']] == 'NC') {
             $art3_count          ++;
             $art3_generated_load += $agglo[$ind['generated_load_p.e.']];
-            $art3_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
+            $art3_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']];
         }
-        
+
         if (isset($ind['art4_compliance_art._4_(hierarchical_approach)']) &&
 			isset($ind['generated_load_p.e.']) &&
 			isset($ind['connected_to_collecting_system_p._e.']) &&
-        	isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && 
+        	isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
         	isset($agglo[$ind['generated_load_p.e.']]) &&
         	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
         	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
             $art4_count          ++;
             $art4_generated_load += $agglo[$ind['generated_load_p.e.']];
-            $art4_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
+            $art4_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']];
         }
-        
+
         if (isset($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']) &&
 			isset($ind['generated_load_p.e.']) &&
 			isset($ind['connected_to_collecting_system_p._e.']) &&
-        	isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) && 
+        	isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
         	isset($agglo[$ind['generated_load_p.e.']]) &&
         	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
         	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $art5_count          ++;
             $art5_generated_load += $agglo[$ind['generated_load_p.e.']];
-            $art5_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']]; 
-        }                
+            $art5_collected_load += $agglo[$ind['connected_to_collecting_system_p._e.']];
+        }
 
         $agglo_breach[$i] = array(
             // Code
@@ -3855,7 +3855,7 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
             // Type of Receiving Area NA/ SA/ CSA
             'type_of_receiving_water' => $agglo[$ind['type_of_receiving_water']],
         );
-         
+
 //         // art3_count
 //         $agglo_breach[$i][] = $art3_count;
 //         // art3_generated_load
@@ -3872,54 +3872,54 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
 //         $agglo_breach[$i][] = $art5_count;
 //         // art5_generated_load
 //         $agglo_breach[$i][] = $art5_generated_load;
-//         // art5_collected_load            
+//         // art5_collected_load
 //         $agglo_breach[$i][] = $art5_collected_load;
-        
-        $i++;        
+
+        $i++;
     }
-    fclose($ragglofile); 
-    
+    fclose($ragglofile);
+
 //     return $agglo_breach;
 //     dsm($agglo_breach);
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
     $model_path = uwwtd_getregister_modelfile_path();
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_name'], $annee);
-    
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
                                          'breach_list',
                                         ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-    
+
     $sheet = $objPHPExcel->getSheetByName('breach_list');
-    
+
     // art3_count
     $sheet->getCell('K4')->setValue($art3_count);
     // art3_generated_load
     $sheet->getCell('K5')->setValue($art3_generated_load);
     // art3_collected_load
     $sheet->getCell('K6')->setValue($art3_collected_load);
-    // art4_count 
+    // art4_count
     $sheet->getCell('L4')->setValue($art4_count);
     // art4_generated_load
     $sheet->getCell('L5')->setValue($art4_generated_load);
-    // art4_collected_load 
+    // art4_collected_load
     $sheet->getCell('L6')->setValue($art4_collected_load);
     // art5_count
     $sheet->getCell('M4')->setValue($art5_count);
     // art5_generated_load
     $sheet->getCell('M5')->setValue($art5_generated_load);
-    // art5_collected_load            
+    // art5_collected_load
     $sheet->getCell('M6')->setValue($art5_collected_load);
-        
+
     $start_line = 7;
     $sheet->insertNewRowBefore(8, count($agglo_breach));
-    
-    foreach($agglo_breach as $breach) {    
+
+    foreach($agglo_breach as $breach) {
         $col = 1;
         // Code
          $sheet->setCellValueByColumnAndRow($col++, $start_line, $breach['aggcode']);
@@ -3946,11 +3946,11 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
         // Compliance     Article 5 NC = Non-Compliant
          $sheet->setCellValueByColumnAndRow($col++, $start_line, $breach['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
         // Type of Receiving Area NA/ SA/ CSA
-         $sheet->setCellValueByColumnAndRow($col++, $start_line, $breach['type_of_receiving_water']);        
-        
+         $sheet->setCellValueByColumnAndRow($col++, $start_line, $breach['type_of_receiving_water']);
+
         $start_line++;
-    }    
-    
+    }
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -3958,113 +3958,113 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($objWriter);
     unset($objReader);
-    
+
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' .t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_model_sheet_name']));    
-    
+
+    $context['message'] = '('.$annee.') ' .t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_model_sheet_name']));
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }         
-        
+//     }
+
 }
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($annee, &$context) 
+ */
+function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($annee, &$context)
 {
-//  if (!isset($context['sandbox']['progress'])) {    
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     } 
-    
+//     }
+
 
 //     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-    
+
     $ragglofile = fopen($filename, 'rb');
-    
-   if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+
+   if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        
+
 //         $context['results']['graph']['summary_installation']  = array();
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];    
-        
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+
         //MS total
         $context['sandbox']['summary']['total']['number'] = 0;
         $context['sandbox']['summary']['total']['percentage'] = 100;
         $context['sandbox']['summary']['total']['waste_pe'] = 0;
         $context['sandbox']['summary']['total']['waste_percent'] = 100;
-        
+
         $context['sandbox']['summary']['total']['ias_in_place']['number'] = 0;
         $context['sandbox']['summary']['total']['ias_in_place']['percent'] = 0;
         $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] = 0;
-        $context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = 0;    
-        
+        $context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = 0;
+
         $context['sandbox']['summary']['total']['collecting_system']['number'] = 0;
         $context['sandbox']['summary']['total']['collecting_system']['percent'] = 0;
         $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] = 0;
         $context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = 0;
-        //secondary treatment    
+        //secondary treatment
         $context['sandbox']['summary']['secondary']['installation_in_place']['number'] = 0;
         $context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = 0;
         $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] = 0;
         $context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = 0;
-            
+
         $context['sandbox']['summary']['secondary']['meet_requirement']['number'] = 0;
         $context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = 0;
         $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] = 0;
-        $context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = 0;    
+        $context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = 0;
         //more stringent treatment
         $context['sandbox']['summary']['more_stringent']['installation_in_place']['number'] = 0;
         $context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'] = 0;
         $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] = 0;
         $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'] = 0;
-            
+
         $context['sandbox']['summary']['more_stringent']['meet_requirement']['number'] = 0;
         $context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'] = 0;
         $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] = 0;
-        $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = 0;    
+        $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = 0;
     }
-    
+
     fseek($ragglofile, $context['sandbox']['file_position']);
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-               
+
 //     $ragglofile = fopen($filename, 'rb');
-    
+
 //     $agglo = fgetcsv($ragglofile, 5000, ';');
-    
+
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {   
-        
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+
 //     foreach ($listagglo as $agglo) {
-    
+
         //MS total
-        $context['sandbox']['summary']['total']['number']++;    
+        $context['sandbox']['summary']['total']['number']++;
         if (isset($agglo[$ind['generated_load_p.e.']]))
         	$context['sandbox']['summary']['total']['waste_pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load
-                                       
+
         if (isset($agglo[$ind['addressed_through_ias_p._e.']]) && $agglo[$ind['addressed_through_ias_p._e.']] > 0) {
-            $context['sandbox']['summary']['total']['ias_in_place']['number']++;         
-            $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] += $agglo[$ind['addressed_through_ias_p._e.']];  //addressed through IAS pe 
-        }                                                     
-        if (isset($agglo[$ind['connected_to_collecting_system_p._e.']]) && $agglo[$ind['connected_to_collecting_system_p._e.']] > 0) {                                  
-            $context['sandbox']['summary']['total']['collecting_system']['number']++;       
-            $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']]; //connected to collecting system pe   
+            $context['sandbox']['summary']['total']['ias_in_place']['number']++;
+            $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] += $agglo[$ind['addressed_through_ias_p._e.']];  //addressed through IAS pe
         }
-        
+        if (isset($agglo[$ind['connected_to_collecting_system_p._e.']]) && $agglo[$ind['connected_to_collecting_system_p._e.']] > 0) {
+            $context['sandbox']['summary']['total']['collecting_system']['number']++;
+            $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']]; //connected to collecting system pe
+        }
+
         //secondary treatment
         //• Number summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, secondary treatment installed, p.e.’, where parameter is  >0. (Excel-function: COUNTIF(‘p.e. for which installation for secondary treatment is in place’;”>0”)
         //• p.e. summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, secondary treatment installed, p.e.’: sum of the entire column Excel-function: SUM (‘p.e. for which installation for secondary treatment is in place’)
@@ -4072,14 +4072,14 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
             $context['sandbox']['summary']['secondary']['installation_in_place']['number']++;
             $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
         }
-        
+
         //• Number summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.’, where parameter is  >0 (Excel-function: COUNTIF(‘p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment’;”>0”)
         //• p.e. summarized from sheet ‘Agglomerations’, hidden column ‘Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.’: sum of the entire column Excel-function: SUM (‘p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment’)
         if (isset($agglo[$ind['monitoring_results_f._secondary_ok']]) && $agglo[$ind['monitoring_results_f._secondary_ok']] > 0) {
             $context['sandbox']['summary']['secondary']['meet_requirement']['number']++;
             $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
-        }        
-        
+        }
+
         //more stringent treatment
         if (isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) && $agglo[$ind['more_str._treatment_installed_(p._e.)']] > 0) {
             $context['sandbox']['summary']['more_stringent']['installation_in_place']['number']++;
@@ -4090,12 +4090,12 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
             $context['sandbox']['summary']['more_stringent']['meet_requirement']['number']++;
             $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
         }
-        $j++;        
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];                      
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
     fclose($ragglofile);
-    
+
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         //calculate percentage
         //MS total
@@ -4111,15 +4111,15 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
     	if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
         	$context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
     	}
-        
-        //secondary treatment    
+
+        //secondary treatment
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
         	$context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
         	$context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
-        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {    
+        if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
         	$context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
@@ -4138,41 +4138,41 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
         	$context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
-        
+
     //     return $summary;
     //     dsm($summary);
-        
+
     //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-        
+
         $model_path = uwwtd_getregister_modelfile_path();
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_name'], $annee);
-        
+
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $objReader->setLoadSheetsOnly( array(
                                              $GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_model_sheet_name'],
                                             ) );
         $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-        
-        $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_model_sheet_name']);    
-            
-        
+
+        $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_model_sheet_name']);
+
+
         //country name
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
         $country_code = variable_get('siif_eru_country_code', '-1');
         $country_name = variable_get('siif_eru_country_name');
-        $reference_date = $annee . '/12/31';   
+        $reference_date = $annee . '/12/31';
         $sheet->setCellValue('E1', $country_name);
         unset($country_config);
         $sheet->setCellValue('E2', $reference_date);
-                                      
+
         $cell = $sheet->getCell('B6');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        $cell = $sheet->getCell('B8');  
+        $cell = $sheet->getCell('B8');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        
+
         if (isset($context['sandbox']['summary']['total']['number'])) {
         	$sheet->getCell('C10')->setValue($context['sandbox']['summary']['total']['number']);
         }
@@ -4209,7 +4209,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_percent'])) {
         	$sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
         }
-        //secondary treatment  
+        //secondary treatment
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number'])) {
         	$sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
         }
@@ -4259,9 +4259,9 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'])) {
         	$sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
         }
-        
-        $context['results']['graph']['summary_installation'] = $context['sandbox']['summary'];  
-        
+
+        $context['results']['graph']['summary_installation'] = $context['sandbox']['summary'];
+
         //write
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
         $objWriter->setPreCalculateFormulas(false);
@@ -4270,112 +4270,112 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         unset($objWriter);
         unset($objReader);
     }
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = t('summary_installation_in_place_sheet6 finish');    
-//     
+
+//     $context['message'] = t('summary_installation_in_place_sheet6 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     } 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+// //     }
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }               
+    }
 }
 
 
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &$context)
 {
-//  if (!isset($context['sandbox']['progress'])) {    
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     } 
-    
+//     }
+
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-        
+
    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    
+
    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-    
+
    $ragglofile = fopen($filename, 'rb');
    $listtypestat = array('expired', 'pending');
-    
-   if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+
+   if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        
+
         $context['results']['distance_to_compliance'] = array();
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $listtypestattmp = $listtypestat;
-        $listtypestattmp[] = 'total';  
+        $listtypestattmp[] = 'total';
         foreach($listtypestattmp as $typedeadline) {
-            $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] = 0;            
+            $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] = 0;
             $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] = 0;
             $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] = 0;
-                    
+
             $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] = 0;
             $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'] = 0;
             $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] = 0;
-                          
+
             $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] = 0;
             $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] = 0;
-            $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] = 0;        
+            $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] = 0;
         }
         unset($listtypestattmp);
     }
-    
+
     fseek($ragglofile, $context['sandbox']['file_position']);
-    
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-               
+
 //     $ragglofile = fopen($filename, 'rb');
-    
+
 //     $agglo = fgetcsv($ragglofile, 5000, ';');
-    
+
 //     $data = array();
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         foreach($listtypestat as $typedeadline) {
-//test        
-// if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {        
-//     $context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];            
+//test
+// if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
+//     $context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
 // }
 // if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
 //     $context['sandbox']['data']['total']['target_connection']['collected_system_inplace'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-//     $context['sandbox']['data']['total']['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];        
+//     $context['sandbox']['data']['total']['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];
 // }
-// 
+//
 // if (true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
 //     $context['sandbox']['data']['total']['secondary_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-// }        
-// if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {        
-//     $context['sandbox']['data']['total']['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
-//     $context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];              
 // }
-// 
+// if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
+//     $context['sandbox']['data']['total']['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
+//     $context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
+// }
+//
 // if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
 //     $context['sandbox']['data']['total']['morestringent_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
 // }
-// 
+//
 // if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
 //     $context['sandbox']['data']['total']['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
-//     $context['sandbox']['data']['total']['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];        
-// } 
-//test            
-                    
+//     $context['sandbox']['data']['total']['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
+// }
+//test
+
             //chekc if expired or pending
             if ($typedeadline == 'expired' && isset($agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]) &&
             	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'EXP' ) {
@@ -4385,60 +4385,60 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'PD') {
                 continue;
             }
-        
-            if (isset($agglo[$ind['art3_compliance']]) && 
+
+            if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
-            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {        
-                $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];            
+            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
+                $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
             }
             if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
             	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-                $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];        
+                $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];
             }
-            
+
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-            }        
+            }
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._secondary_ok']]) &&
-            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {        
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
-                $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];              
+                $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
             }
-            
+
             if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
             }
-            
+
             if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]) &&
             	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
-                $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];        
-            }            
+                $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
+            }
         }
-    
-        $j++;        
+
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];   
-    } 
-    
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+    }
+
     fclose($ragglofile);
-    
-    if ($context['sandbox']['progress'] == $context['sandbox']['max']) {    
-    
+
+    if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
+
         //calcul total
-        foreach($listtypestat as $typedeadline) {            
+        foreach($listtypestat as $typedeadline) {
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
             	$context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
         	}
@@ -4448,7 +4448,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
             	$context['sandbox']['data']['total']['target_connection']['ias'] += $context['sandbox']['data'][$typedeadline]['target_connection']['ias'];
         	}
-                
+
         	if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
             	$context['sandbox']['data']['total']['secondary_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
         	}
@@ -4458,7 +4458,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
             	$context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
         	}
-                          
+
         	if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
             	$context['sandbox']['data']['total']['morestringent_target']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
         	}
@@ -4471,7 +4471,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         }
         //calcul % and distance
         $listtypestattmp = $listtypestat;
-        $listtypestattmp[] = 'total';        
+        $listtypestattmp[] = 'total';
         foreach($listtypestattmp as $typedeadline) {
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
@@ -4479,14 +4479,14 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
         	}
-            
+
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
             	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'];
         	}
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
             	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
         	}
-        
+
             //more stringent % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
@@ -4501,15 +4501,15 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
             }
-            
+
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
             }
-                        
-            //more stringent % and distance             
+
+            //more stringent % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
@@ -4529,21 +4529,21 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];
             }
         }
-    
+
         //build excel sheet
         $model_path = uwwtd_getregister_modelfile_path();
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_name'], $annee);
-        
+
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $objReader->setLoadSheetsOnly( array(
                                              $GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_model_sheet_name'],
                                             ) );
         $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-        
+
         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_model_sheet_name']);
-        
+
         //country name
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
@@ -4553,25 +4553,25 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $sheet->setCellValue('C2', $country_name);
         unset($country_config);
         $sheet->setCellValue('C3', $reference_date);
-        
+
         $cell = $sheet->getCell('B10');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B10');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B30');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        $cell = $sheet->getCell('B49');  
+        $cell = $sheet->getCell('B49');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        
-        //expired 
+
+        //expired
         //target connection
         if (isset($context['sandbox']['data']['expired']['target_connection']['total_load_pe']))
         	$sheet->getCell('C12')->setValue($context['sandbox']['data']['expired']['target_connection']['total_load_pe']);
-        if (isset($context['sandbox']['data']['expired']['target_connection']['distance_%'])) 
+        if (isset($context['sandbox']['data']['expired']['target_connection']['distance_%']))
         	$sheet->getCell('E12')->setValue(round($context['sandbox']['data']['expired']['target_connection']['distance_%'], 1));
         if (isset($context['sandbox']['data']['expired']['target_connection']['distance_pe']))
-        	$sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);            
-                    
+        	$sheet->getCell('F12')->setValue($context['sandbox']['data']['expired']['target_connection']['distance_pe']);
+
         if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']))
         	$sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
         if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%']))
@@ -4580,8 +4580,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	$sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
         if (isset($context['sandbox']['data']['expired']['target_connection']['ias_%']))
         	$sheet->getCell('D14')->setValue(round($context['sandbox']['data']['expired']['target_connection']['ias_%'], 1));
-                                             
-        //secondary treatement       
+
+        //secondary treatement
         if (isset($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']))
         	$sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
         if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']))
@@ -4599,8 +4599,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%']))
         	$sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']))
-        	$sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);                
-                                         
+        	$sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);
+
         //more stringent treatment
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']))
         	$sheet->getCell('C20')->setValue($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']);
@@ -4617,20 +4617,20 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']))
         	$sheet->getCell('D22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_%']))
-        	$sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));  
+        	$sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']))
-        	$sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);  
-                                         
+        	$sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);
+
         //pending
         //target connection
         if (isset($context['sandbox']['data']['pending']['target_connection']['total_load_pe']))
         	$sheet->getCell('C32')->setValue($context['sandbox']['data']['pending']['target_connection']['total_load_pe']);
-        
+
         if (isset($context['sandbox']['data']['pending']['target_connection']['distance_%']))
         	$sheet->getCell('E32')->setValue(round($context['sandbox']['data']['pending']['target_connection']['distance_%'], 1));
         if (isset($context['sandbox']['data']['pending']['target_connection']['distance_pe']))
         	$sheet->getCell('F32')->setValue($context['sandbox']['data']['pending']['target_connection']['distance_pe']);
-                
+
         if (isset($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']))
         	$sheet->getCell('C33')->setValue($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace']);
         if (isset($context['sandbox']['data']['pending']['target_connection']['collected_system_inplace_%']))
@@ -4639,7 +4639,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	$sheet->getCell('C34')->setValue($context['sandbox']['data']['pending']['target_connection']['ias']);
         if (isset($context['sandbox']['data']['pending']['target_connection']['ias_%']))
         	$sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
-                                          
+
         //secondary treatement
         if (isset($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']))
         	$sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
@@ -4658,8 +4658,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']))
-	        $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);                
-        
+	        $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);
+
         //more stringent treatment
         if (isset($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']))
 	        $sheet->getCell('C40')->setValue($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']);
@@ -4678,18 +4678,18 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']))
-	        $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']); 
-                                         
+	        $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']);
+
         //total
         //target connection
         if (isset($context['sandbox']['data']['total']['target_connection']['total_load_pe']))
 	        $sheet->getCell('C51')->setValue($context['sandbox']['data']['total']['target_connection']['total_load_pe']);
-	        
+
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_%']))
 	        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_pe']))
 	        $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
-	                
+
 	    if (isset($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']))
 	        $sheet->getCell('C52')->setValue($context['sandbox']['data']['total']['target_connection']['collected_system_inplace']);
 	    if (isset($context['sandbox']['data']['total']['target_connection']['collected_system_inplace_%']))
@@ -4698,7 +4698,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('C53')->setValue($context['sandbox']['data']['total']['target_connection']['ias']);
 	    if (isset($context['sandbox']['data']['total']['target_connection']['ias_%']))
 	        $sheet->getCell('D53')->setValue(round($context['sandbox']['data']['total']['target_connection']['ias_%'], 1));
-                                          
+
         //secondary treatement
         if (isset($context['sandbox']['data']['total']['secondary_target']['total_load_pe']))
 	        $sheet->getCell('C55')->setValue($context['sandbox']['data']['total']['secondary_target']['total_load_pe']);
@@ -4717,8 +4717,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
-	        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);                
-        
+	        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);
+
         //more stringent treatment
         if (isset($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']))
 	        $sheet->getCell('C59')->setValue($context['sandbox']['data']['total']['morestringent_target']['total_load_pe']);
@@ -4738,10 +4738,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
-        
+
 	    if (isset($context['sandbox']['data']))
-        	$context['results']['distance_to_compliance'] = $context['sandbox']['data'];                          
-                                         
+        	$context['results']['distance_to_compliance'] = $context['sandbox']['data'];
+
         //write
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
         $objWriter->setPreCalculateFormulas(false);
@@ -4750,103 +4750,112 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         unset($objWriter);
         unset($objReader);
     }
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = '('.$annee.') ' . t('distance_to_compliance_sheet5 finish');    
-//     
+
+//     $context['message'] = '('.$annee.') ' . t('distance_to_compliance_sheet5 finish');
+//
 // //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }  
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+// //     }
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }     
+    }
 }
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee, &$context) 
+ */
+function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee, &$context)
 {
 //     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-//     
-//  if (!isset($context['sandbox']['progress'])) {    
+//
+//  if (!isset($context['sandbox']['progress'])) {
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
-//     }  
-    
+//     }
+
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-    
+
     $ragglofile = fopen($filename, 'rb');
     $list_type = array('all', 'NA', 'CSA/SA');
     //pass header line
-    if (!isset($context['sandbox']['progress'])) { 
-        $context['sandbox']['file_position'] = 0;  
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['file_position'] = 0;
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['max'] = filesize($filename);
-        //ignore header    
+        //ignore header
         $agglo = fgetcsv($ragglofile, 5000, ';');
-        
+
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     //     $context['sandbox']['line'] = 4; //start line
-        
+
         foreach($list_type as $type) {
             //art3
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] = 0;
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] = 0;    
-        
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] = 0;
+
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] = 0;
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage'] = 0; 
-        
+            $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage'] = 0;
+
+            $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] = 0;
+            $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage'] = 0;     
-            
+            $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['percentage'] = 100;
             $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['percentage'] = 100;
-            
+
             //art4
             $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['percentage'] = 0;
-            
+
             $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['percentage'] = 0;
-            
+
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] = 0;
@@ -4856,336 +4865,345 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['percentage'] = 0;
-            
+
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = 0;            
-            
+            $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['percentage'] = 100;
             $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['percentage'] = 100; 
-            
+            $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['percentage'] = 100;
+
             //art5
             $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = 0;
+
 
             $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage'] = 0; 
-            
+            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage'] = 0;
+
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] = 0;
-            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = 0; 
-            
-                                                                                    
+            $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = 0;
 
-            
-            
+
+
+
+
             $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['percentage'] = 100;
             $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage'] = 100;
-        }   
-            
+        }
+
     //     $path_xlsx = uwwtd_getregister_modelfile_path();
-    //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);        
-    } 
-    
+    //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
+    }
+
     fseek($ragglofile, $context['sandbox']['file_position']);
-    
-// else {        
+
+// else {
 // //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
 //     $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
-//     $target_path = $path_xlsx;          
+//     $target_path = $path_xlsx;
 // }
-      
+
 //     $header = array(
-// 
-// 
+//
+//
 //     );
-//     
+//
 //     $filename = $annee . '_summary_legal_compliance_sheet4.csv';
 //     $tmpfilename = tempnam('public://tmp/', $filename);
 //     $r = fopen($tmpfilename, 'wb');
 //     fputcsv($r, $header, ';');
-    
-       
-    
+
+
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
 //     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-               
+
 //     $ragglofile = fopen($filename, 'rb');
-    
-    
-    
+
+
+
 //     dsm($compliance);
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {         
+    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //     foreach ($listagglo as $agglo) {
-//         dsm($agglo);  
+//         dsm($agglo);
         foreach($list_type as $type) {
 //             dsm($type);
             $listrcatype = explode(';', $agglo[$ind['type_of_receiving_water']]);
             if ($type == 'NA') {
-                    //type of receiving water                                                    
-                if (false === in_array('NA', $listrcatype)) {     
+                    //type of receiving water
+                if (false === in_array('NA', $listrcatype)) {
                     continue;
                 }
             } elseif ($type == 'CSA/SA') {
                 //todo A58 ?
-                if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {     
+                if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
                     continue;
                 }
             }
-        
-            //art 3 
-//             dsm('art3'); 
+
+            //art 3
+//             dsm('art3');
 //             dsm($ind['art3_compliance']);
-                                //compliance art3   
-            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {    
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']++;      
+                                //compliance art3
+            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
+                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']++;
                 if (isset($agglo[$ind['generated_load_p.e.']]))
                 	$context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-    
-                                              
-              	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
-                	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+
+
+              	if (isset($agglo[$ind['connected_to_collecting_system_p._e.']])) {
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']++;
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] =
-                         $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100 
+                         $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100
                             /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
               	}
-                      
-              	if (isset($agglo[$ind['addressed_through_ias_p._e.']]))
+
+              	if (isset($agglo[$ind['addressed_through_ias_p._e.']])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] += $agglo[$ind['addressed_through_ias_p._e.']];
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']++;
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']  =
-                         $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100 
+                         $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100
                             /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
               	}
-                       
-              	if (isset($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]))
-                	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+
+              	if (isset($agglo[$ind['neither_collecting_system_nor_ias_p._e.']])) {
+                  $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number']++;
+                  $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                  $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']   =
-                         $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100 
+                         $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100
                             /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
               	}
-            }                                
+            }
                                   //compliance art3
-            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {    
-                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']++;              
+            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
+                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']++;
                 if (isset($agglo[$ind['generated_load_p.e.']]))
                 	$context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-            }  
+            }
                                   //compliance art3
-            if (true === in_array($agglo[$ind['art3_compliance']], array('NR'))) {                
-                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number']++;              
+            if (true === in_array($agglo[$ind['art3_compliance']], array('NR', 'PD'))) {
+                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number']++;
                 if (isset($agglo[$ind['generated_load_p.e.']]))
                 	$context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-            } 
-            
-            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++; 
+            }
+
+            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
             if (isset($agglo[$ind['generated_load_p.e.']]))
             	$context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-           
+
             $NA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'NA'));
             $CSA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'CSA'));
             $LSA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'LSA'));
             $SA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'SA') && !$CSA && !$LSA);
             $A58 = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'A58'));
             $A54 = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'A54'));
-            
-            $rcac = (1 === $agglo[$ind['required_rcac']]);
-                        
+
+            $rcac = (1 == $agglo[$ind['required_rcac']]);
+
 //             dsm('art4');
 //             dsm($ind['art4_compliance_art._4_(hierarchical_approach)']);
-            //art 4           
+            //art 4
                 //Compliance Art. 4 (hierarchical approach)
-            if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {                                              
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number']++;      
+            if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
+                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
-            
-            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {      
-                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']++;      
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))    
+
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
+                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']++;
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
-            
-            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {   
-                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;     
+
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {
+                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-    
-                //            - due to a size of 2000p.e. - 10000 p.e.     …..and discharge into coastal water            
+
+                //            - due to a size of 2000p.e. - 10000 p.e.     …..and discharge into coastal water
                 if (isset($agglo[$ind['generated_load_p.e.']]) && $agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
-                    && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++; 
+                    && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 }
     //            - due to 0% collection in collecting …...system
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++; 
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-                }    
+                }
     //            - due to discharge into LSA
-    			if (isset($agglo[ $ind['type_of_receiving_water']])) 
-                	$listrcatype = explode(';', $agglo[ $ind['type_of_receiving_water']]);
-                if ($LSA && !$SA && !$CSA && !$A58) {   
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number']++; 
+    			if (isset($agglo[ $ind['type_of_receiving_water']]))
+                $listrcatype = explode(';', $agglo[ $ind['type_of_receiving_water']]);
+                if ($LSA && !$SA && !$CSA && !$A58 && !$A54 && !$NA) {
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-                } 
-                unset($listrcatype);    
-    //            - due to transition period 
-                if ($annee < substr($agglo[ $ind['deadline_for_art._4_compliance']], 0, 4)) {  
-                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number']++; 
+                }
+                unset($listrcatype);
+    //            - due to transition period
+                if (in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('NR', 'PD'))) {
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number']++;
 	                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
-	                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.                
-                }      
+	                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                }
             }
-            
-            $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number']++;     
+
+            $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number']++;
             if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
             	$context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-            
-            //art 5 
+
+            //art 5
 //             dsm('art5');
-//             dsm($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);       
+//             dsm($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
                 //Compliance Art. 5 (whole agglo) (hierarchical approach)
-            if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {                                           
-                $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']++;      
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+            if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
+                $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']++;
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];  //connected to collecting system p. e.
             }
-            
-            if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {      
-                $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']++;      
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+
+            if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
+                $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']++;
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
             }
-            
-            if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR') {   
-                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']++;    
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+
+            if (in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('NR', 'PD'))) {
+                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']++;
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
-                
+
                 //- due to a size of ≤ 10000 p.e.     …
                 if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000) {
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
-                //   - size > 10000 p.e., but discharge    …  …..into NA   
-                if ($agglo[$ind['generated_load_p.e.']] > 10000 
+
+                //   - size > 10000 p.e., but discharge    …  …..into NA
+                if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $NA && !$LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
+
                 //   - size > 10000 p.e. and discharge into …..CSA designated for criterion c
-                if ($agglo[$ind['generated_load_p.e.']] > 10000 
+                if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $CSA
-                    && $rcac) {                
+                    && $rcac) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
+
                 //   - size > 10000 p.e., but discharge into …...Art. 5(4)- area
-                if ($agglo[$ind['generated_load_p.e.']] > 10000 
-                    && $A54) {                  
+                if ($agglo[$ind['generated_load_p.e.']] > 10000
+                    && $A54) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
+
                 //   - due to 0% collection in collecting …...system
                 if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
+
                 //   - size > 10000 p.e.  and discharge into   …...LSA
-                if ($agglo[$ind['generated_load_p.e.']] > 10000 
-                    && !$LSA && !$SA && !$CSA && !$A58) {            
+                if ($agglo[$ind['generated_load_p.e.']] > 10000
+                    && $LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                
+
                 //   - size > 10000 p.e. and discharge into …..SA/CSA, but transition period pending
-                if ($agglo[$ind['generated_load_p.e.']] > 10000 
+                if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && ($SA  || $CSA)
-                    &&  $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] == 'PD') {               
+                    &&  $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']++;
-                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+                    if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
             }
-            
-            $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']++;    
-            if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])) 
+
+            $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']++;
+            if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
-        } 
-        $j++;        
+        }
+        $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];                 
+        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
 //     dsm($compliance);
-    fclose($ragglofile); 
-    
+    fclose($ragglofile);
+
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         foreach($list_type as $type) {
             if (false === isset($context['sandbox']['compliance'][$type])) {
@@ -5201,14 +5219,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
-            } 
-            
+            }
+
             //calcul percentage art4
             if ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] != 0) {
                 $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                
+
                 $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
@@ -5218,19 +5236,19 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                
+
                 $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe']; 
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
             }
-            
+
             //calcul percentage art5
             if ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] != 0) {
                 $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                
+
                 $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
@@ -5243,17 +5261,17 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-            
+
                 $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['size_<=_10000']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe']; 
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
             }
         }
-    
+
 //     dsm($compliance);
 
 //     dsm($compliance);
@@ -5261,30 +5279,30 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-    
+
         $model_path = uwwtd_getregister_modelfile_path();
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $annee);
-        
+
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $objReader->setLoadSheetsOnly( array(
                                              $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'],
                                             ) );
         $objPHPExcel = $objReader->load(drupal_realpath($model_path));
-        
+
         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
-        
+
         //country name
         $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
         include($path);
         $country_code = variable_get('siif_eru_country_code', '-1');
         $country_name = variable_get('siif_eru_country_name');
-        $reference_date = $annee . '/12/31';    
+        $reference_date = $annee . '/12/31';
         $sheet->setCellValue('C1', $country_name);
         unset($country_config);
         $sheet->setCellValue('C2', $reference_date);
-        
+
         $cell = $sheet->getCell('B7');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B9');
@@ -5297,29 +5315,29 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('Q9');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-    
+
         $cell = $sheet->getCell('B18');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('J18');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q18');
-        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue())); 
-        
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+
         $cell = $sheet->getCell('B28');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('J28');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q28');
-        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue())); 
-        
-            
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+
+
         $cell = $sheet->getCell('B41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('J41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q41');
-        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));                    
-    
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+
         foreach($list_type as $type) {
     //     foreach(array('all') as $type) {
             if (false === isset($context['sandbox']['compliance'][$type])) {
@@ -5339,62 +5357,68 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $col['C'] = 'R';
                 $col['D'] = 'S';
                 $col['E'] = 'T';
-                $col['F'] = 'U';        
+                $col['F'] = 'U';
             }
-                    
+
+            $sheet->getCell($col['C'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']);
+            $sheet->getCell($col['D'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage']);
             $sheet->getCell($col['E'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']);
             $sheet->getCell($col['F'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage']);
+            $sheet->getCell($col['C'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']);
+            $sheet->getCell($col['D'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage']);
             $sheet->getCell($col['E'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']);
             $sheet->getCell($col['F'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']);
+            $sheet->getCell($col['C'].'14')->setValue($context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number']);
+            $sheet->getCell($col['D'].'14')->setValue($context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage']);
             $sheet->getCell($col['E'].'14')->setValue($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']);
             $sheet->getCell($col['F'].'14')->setValue($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']);
-               
+
             $sheet->getCell($col['C'].'15')->setValue($context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']);
             $sheet->getCell($col['D'].'15')->setValue($context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage']);
             $sheet->getCell($col['E'].'15')->setValue($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe']);
             $sheet->getCell($col['F'].'15')->setValue($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'16')->setValue($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']);
             $sheet->getCell($col['D'].'16')->setValue($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage']);
             $sheet->getCell($col['E'].'16')->setValue($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe']);
             $sheet->getCell($col['F'].'16')->setValue($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'17')->setValue($context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number']);
             $sheet->getCell($col['D'].'17')->setValue($context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage']);
             $sheet->getCell($col['E'].'17')->setValue($context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe']);
             $sheet->getCell($col['F'].'17')->setValue($context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'18')->setValue($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']);
             $sheet->getCell($col['D'].'18')->setValue($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'18')->setValue($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe']);
             $sheet->getCell($col['F'].'18')->setValue($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['percentage']);
-            
+
             //art4
             $sheet->getCell($col['C'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number']);
             $sheet->getCell($col['D'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage']);
             $sheet->getCell($col['E'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage']); 
-            
+            $sheet->getCell($col['F'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage']);
+
             $sheet->getCell($col['C'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']);
             $sheet->getCell($col['D'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage']);
             $sheet->getCell($col['E'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage']); 
-            
+            $sheet->getCell($col['F'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage']);
+
             $sheet->getCell($col['C'].'23')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']);
             $sheet->getCell($col['D'].'23')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'23')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe']);
             $sheet->getCell($col['F'].'23')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'24')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']);
             $sheet->getCell($col['D'].'24')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['percentage']);
             $sheet->getCell($col['E'].'24')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe']);
             $sheet->getCell($col['F'].'24')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'25')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']);
             $sheet->getCell($col['D'].'25')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['percentage']);
             $sheet->getCell($col['E'].'25')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe']);
             $sheet->getCell($col['F'].'25')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'26')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number']);
             $sheet->getCell($col['D'].'26')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['percentage']);
             $sheet->getCell($col['E'].'26')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe']);
@@ -5403,56 +5427,56 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['C'].'27')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number']);
             $sheet->getCell($col['D'].'27')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['percentage']);
             $sheet->getCell($col['E'].'27')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'27')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage']);                                                 
-            
+            $sheet->getCell($col['F'].'27')->setValue($context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage']);
+
             $sheet->getCell($col['C'].'28')->setValue($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number']);
             $sheet->getCell($col['D'].'28')->setValue($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'28')->setValue($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe']);
             $sheet->getCell($col['F'].'28')->setValue($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['percentage']);
-            
+
             //art5
             $sheet->getCell($col['C'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']);
             $sheet->getCell($col['D'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage']);
             $sheet->getCell($col['E'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']); 
-            
+            $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']);
+
             $sheet->getCell($col['C'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']);
             $sheet->getCell($col['D'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage']);
             $sheet->getCell($col['E'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage']); 
-            
+            $sheet->getCell($col['F'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage']);
+
             $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
             $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
             $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
 
 
-            
+
             $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
             $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);             
+            $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
 
             $sheet->getCell($col['C'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']);
             $sheet->getCell($col['D'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage']);
             $sheet->getCell($col['E'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe']);
             $sheet->getCell($col['F'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']);
             $sheet->getCell($col['D'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage']);
             $sheet->getCell($col['E'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe']);
             $sheet->getCell($col['F'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']);
             $sheet->getCell($col['D'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage']);
             $sheet->getCell($col['E'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe']);
             $sheet->getCell($col['F'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage']);
-            
+
 //             $sheet->getCell($col['C'].'36')->setValue('TODO');
 //             $sheet->getCell($col['D'].'36')->setValue('TODO');
 //             $sheet->getCell($col['E'].'36')->setValue('TODO');
-//             $sheet->getCell($col['F'].'36')->setValue('TODO');            
-            
+//             $sheet->getCell($col['F'].'36')->setValue('TODO');
+
             $sheet->getCell($col['C'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']);
             $sheet->getCell($col['D'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage']);
             $sheet->getCell($col['E'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe']);
@@ -5463,75 +5487,75 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //             $sheet->getCell($col['E'].'37')->setValue('TODO');
 //             $sheet->getCell($col['F'].'37')->setValue('TODO');
 
-            
+
             $sheet->getCell($col['C'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']);
             $sheet->getCell($col['D'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage']);
             $sheet->getCell($col['E'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe']);
             $sheet->getCell($col['F'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']);
             $sheet->getCell($col['D'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['percentage']);
             $sheet->getCell($col['E'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe']);
             $sheet->getCell($col['F'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage']);
-            
+
             $sheet->getCell($col['C'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']);
             $sheet->getCell($col['D'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage']);
             $sheet->getCell($col['E'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);                                                                        
+            $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);
 
 //             $sheet->getCell($col['C'].'40')->setValue('TODO (A58 ?, pending ?)');
 //             $sheet->getCell($col['D'].'40')->setValue('TODO (A58 ?, pending ?)');
 //             $sheet->getCell($col['E'].'40')->setValue('TODO (A58 ?, pending ?)');
-//             $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');                                                                        
+//             $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');
 
-            
+
             $sheet->getCell($col['C'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']);
             $sheet->getCell($col['D'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['percentage']);
             $sheet->getCell($col['E'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage']);      
-                            
-    //         break;       
+            $sheet->getCell($col['F'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage']);
+
+    //         break;
             unset($context['sandbox']['compliance'][$type]);
         }
         unset($context['sandbox']['compliance']);
-       
+
         //write
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
         $objWriter->setPreCalculateFormulas(false);
         //$objWriter->setOffice2003Compatibility(true);
         $objWriter->save(drupal_realpath($target_path));
         unset($objWriter);
-        unset($objReader);    
+        unset($objReader);
     }
-    
+
 //     $context['sandbox']['progress']++;
- 
-//     $context['message'] = t('file_summary_legal_compliance_sheet4 finish');    
-    
+
+//     $context['message'] = t('file_summary_legal_compliance_sheet4 finish');
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     } 
+//     }
 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';   
-    
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }                                             
+    }
 }
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_agglo_sheet3($annee, &$context) 
+ */
+function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
     $induww = $GLOBALS['uwwtd']['sheet2_uwwtp'];
     $listtypestat = array('expired', 'pending');
-    $list_type_rca = array('all', 'na', 'sa_csa');    
+    $list_type_rca = array('all', 'na', 'sa_csa');
     if (!isset($context['sandbox']['progress'])) {
-    
+
         $context['sandbox']['progress'] = 0;
-        
+
         $context['results']['uwwtp_total_load_generated_pe'] = 0;
         $context['results']['uwwtp_notreatment_pe'] = 0;
         $context['results']['uwwtp_ias_pe'] = 0;
@@ -5540,8 +5564,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
         $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
         $context['results']['uwwtp_np_removal_pe'] = 0;
-        $context['results']['uwwtp_other_morestringent_pe'] = 0; 
-        
+        $context['results']['uwwtp_other_morestringent_pe'] = 0;
+
         $context['results']['uwwtp_total_load_generated_nb'] = 0;
         $context['results']['uwwtp_notreatment_nb'] = 0;
         $context['results']['uwwtp_ias_nb'] = 0;
@@ -5550,30 +5574,30 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['results']['uwwtp_n_removal_without_p_nb'] = 0;
         $context['results']['uwwtp_p_removal_without_n_nb'] = 0;
         $context['results']['uwwtp_np_removal_nb'] = 0;
-        $context['results']['uwwtp_other_morestringent_nb'] = 0;             
-        
+        $context['results']['uwwtp_other_morestringent_nb'] = 0;
+
         $context['sandbox']['id'] = array();
-            
+
         $query = 'select n.nid
-        from {node} n    
+        from {node} n
             left join
                 {field_data_field_anneedata} f_annee
                     ON n.nid = f_annee.entity_id
             left join
                 {field_data_field_agggenerated} f_agggenerated
-                    ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                           
+                    ON n.nid = f_agggenerated.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
         ';
-        
+
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
             ':annee' => $annee,
             );
 //         dsm($param);
-        $listagg = array();    
+        $listagg = array();
         try {
             $result = db_query($query, $param);
             while($row = $result->fetchAssoc()) {
@@ -5582,9 +5606,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-        
+
 //         dsm($listagg);
-                
+
         $context['sandbox']['max'] = count($context['sandbox']['id']);
 //      dsm($context['sandbox']['max']);
 
@@ -5595,13 +5619,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //         $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] .'.csv';
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
-                   
+
         $ruwwtpfile = fopen($filename, 'rb');
         $context['sandbox']['uwwtpinfo_for_agglo'] = array();
 //         dsm($filename);
 //         foreach ($listuwwtp as $uwwtp) {
         $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
-        
+
         while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
 //             dsm($uwwtp);
 //             break;
@@ -5613,17 +5637,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                  dsm('la');
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] = 0;
-                
+
 //                 gen load = entering pe * 100 / generated pe
-//                 
+//
 //                             %entering / 100 * (colledted pe)
 //                                             ( %colledted / 100 * generated pe)
-//         $line[$ind['uww_entering this UWWTP % of gen. load']] = 
+//         $line[$ind['uww_entering this UWWTP % of gen. load']] =
 // //              $entering_load_pe * 100 /  ($context['sandbox']['expired']['generated_pe'] + $context['sandbox']['pending']['generated_pe']);
-//         
-//         $line[$ind['uww_entering load  p. e.']] = $entering_load_pe;                
-                    
-                                
+//
+//         $line[$ind['uww_entering load  p. e.']] = $entering_load_pe;
+
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']       = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe']      = 0;
@@ -5636,265 +5660,265 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['percent'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['percent'] = 0;
-                                                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_installed'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_percent'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_passed'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_percent'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] = 0;    
-                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] = 0;
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_installed'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_percent'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_passed'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%'] = 0; 
-                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%'] = 0;
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_collected_%'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%'] = 0; 
-                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%'] = 0;
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_collected_%'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] = 0;
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%'] = 0;                
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%'] = 0;
-                
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_collected_%'] = 0;                
-                
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe'] = 0;                
+
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_collected_%'] = 0;
+
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe'] = 0;
-                
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaP'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaN'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcab'] = 0;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcac'] = 0;
-            } 
+            }
 //             else {
 //                 $context['sandbox']['uwwtpinfo_for_agglo'] &= $context['sandbox']['uwwtpinfo_for_agglo'];
-//             } 
-//             dsm($context['sandbox']['uwwtpinfo_for_agglo']);    
+//             }
+//             dsm($context['sandbox']['uwwtpinfo_for_agglo']);
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] += $uwwtp[$induww['uww_capacity p. e.']];
-            
-            
-            if ($uwwtp[$induww['art4_final']] == 'C') {          
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  = 
+
+
+            if ($uwwtp[$induww['art4_final']] == 'C') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                         
+
             }
-            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD') {              
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  = 
+            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                
-                //(entering load for all stations with compliance article 4 =NC))            
+
+                //(entering load for all stations with compliance article 4 =NC))
                 $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['results']['uwwtp_notreatment_nb']++;                             
+                $context['results']['uwwtp_notreatment_nb']++;
             }
-            if ($uwwtp[$induww['art4_final']] == 'NR') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['percent']  = 
+            if ($uwwtp[$induww['art4_final']] == 'NR') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            
-            if ($uwwtp[$induww['art4_final']] == 'NI') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['percent']  = 
+
+            if ($uwwtp[$induww['art4_final']] == 'NI') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            
-            if ($uwwtp[$induww['art4_final']] == 'PD') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['percent']  = 
+
+            if ($uwwtp[$induww['art4_final']] == 'PD') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            
-            if ($uwwtp[$induww['art4_final']] == '?') {  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['percent']  = 
+
+            if ($uwwtp[$induww['art4_final']] == '?') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-            }                                    
-            
+            }
+
             //Secondary: installed?
             if ($uwwtp[$induww['Secondary: installed?']] == '1') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_installed'] = 1;  
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_installed'] = 1;
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_percent'] = 
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                                     
-            }   
-            
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_percent'] =
+                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+
             if ($uwwtp[$induww['Secondary:  monitoring passed?']] == '1') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_passed'] = 1;  
-                 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_passed'] = 1;
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_percent'] = 
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                  
-            }                               
-            
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_percent'] =
+                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['secondary_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+
             //tertiary install
             if ($uwwtp[$induww['More stringent:  installed?']] == '1') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_installed'] = 1;  
-                 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_installed'] = 1;
+
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_percent'] = 
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];         
-            }   
-            
-            if ($uwwtp[$induww['More stringent: monitoring passed?']] == '1') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_passed'] = 1;  
-                 
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] = 
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                   
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_percent'] =
+                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_treatement_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            
+
+            if ($uwwtp[$induww['More stringent: monitoring passed?']] == '1') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_passed'] = 1;
+
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] =
+                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+
             if ($uwwtp[$induww['uwwtp_collecting_without_treatment']] == '1') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
-            }   
-            
+            }
+
             if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false !== strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art4_monitoring']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-            } 
+            }
             if ($uwwtp[$induww['art5_treatment type']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art5_monitoring']] == 'NC') {
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = 
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-            }  
-            
+            }
+
             //for all uwwtp with more stringent treatment, check art5
 
             if (false !== strpos($uwwtp[$induww['treatment required']], '3')) {
                 //5a
-                if ($uwwtp[$induww['compliance5a']] == 'C' && 
+                if ($uwwtp[$induww['compliance5a']] == 'C' &&
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']]; 
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
 
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 }
-                
-                if ($uwwtp[$induww['compliance5a']] == 'NC' && 
+
+                if ($uwwtp[$induww['compliance5a']] == 'NC' &&
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%']  = 
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_%']  =
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                                
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_collected_%'] +=  $uwwtp[$induww['field_agglo_uww_perc_ent_uw']]; 
-                                                    
-                }  
-                
-                if (($uwwtp[$induww['compliance5a']] == 'NR') && 
+
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NC_collected_%'] +=  $uwwtp[$induww['field_agglo_uww_perc_ent_uw']];
+
+                }
+
+                if (($uwwtp[$induww['compliance5a']] == 'NR') &&
                     ($uwwtp[$induww['required_rcaaP']] == 1 || $uwwtp[$induww['required_rcaaN']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];  
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5a_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 }
-                
+
                 //5b
-                if ($uwwtp[$induww['compliance5b']] == 'C' && 
+                if ($uwwtp[$induww['compliance5b']] == 'C' &&
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 }
-                
-                if ($uwwtp[$induww['compliance5b']] == 'NC' && 
+
+                if ($uwwtp[$induww['compliance5b']] == 'NC' &&
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%']  = 
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_%']  =
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                                
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_collected_%'] +=  $uwwtp[$induww['field_agglo_uww_perc_ent_uw']];                                           
-                }  
-                
-                if (($uwwtp[$induww['compliance5b']] == 'NR') && 
+
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NC_collected_%'] +=  $uwwtp[$induww['field_agglo_uww_perc_ent_uw']];
+                }
+
+                if (($uwwtp[$induww['compliance5b']] == 'NR') &&
                     ($uwwtp[$induww['required_rcab']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5b_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 }
-                
+
                 //5c
-                if ($uwwtp[$induww['compliance5c']] == 'C' && 
+                if ($uwwtp[$induww['compliance5c']] == 'C' &&
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_C_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
                 }
-                
-                if ($uwwtp[$induww['compliance5c']] == 'NC' && 
+
+                if ($uwwtp[$induww['compliance5c']] == 'NC' &&
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%']  = 
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_%']  =
                                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
-                                
+
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NC_collected_%'] +=  $uwwtp[$induww['field_agglo_uww_perc_ent_uw']];
-                }  
-                
-                if (($uwwtp[$induww['compliance5c']] == 'NR') && 
+                }
+
+                if (($uwwtp[$induww['compliance5c']] == 'NR') &&
                     ($uwwtp[$induww['required_rcac']] == 1)) {
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];     
-                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%']  = 
-                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];                    
-                } 
-                
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                    $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_%']  =
+                                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5c_NR_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                }
+
                 //5
                 if ($uwwtp[$induww['art5_final']] == 'C') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                }                                                                                              
+                }
                 if ($uwwtp[$induww['art5_final']] == 'NC') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                }                                                                              
+                }
                 if ($uwwtp[$induww['art5_final']] == 'NR') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
-                
-                
+
+
                 if ($uwwtp[$induww['required_rcaaP']] == 1) {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcaaP'] = 1;
                 }
@@ -5906,23 +5930,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 }
                 if ($uwwtp[$induww['required_rcac']] == 1) {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['required_rcac'] = 1;
-                }                                                                                                                                                               
+                }
             }
-            
+
             //for graph sheet
             $treatmenttypeinplace_tmp = array_flip(explode(';', $uwwtp[$induww['treatment type in place (4)']]));
 //             dsm($uwwtp[$induww['treatment type in place (4)']]);
-//             dsm($treatmenttypeinplace_tmp);            
-            if ($uwwtp[$induww['treatment type in place (4)']] == '1') {            
+//             dsm($treatmenttypeinplace_tmp);
+            if ($uwwtp[$induww['treatment type in place (4)']] == '1') {
                 $context['results']['uwwtp_p_as_max_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_p_as_max_nb']++;
-            } 
+            }
             if (isset($treatmenttypeinplace_tmp['2'])
                 && !isset($treatmenttypeinplace_tmp['3N'])
                 && !isset($treatmenttypeinplace_tmp['3P'])
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 && !isset($treatmenttypeinplace_tmp['3other'])
-                ) {         
+                ) {
                 $context['results']['uwwtp_s_as_max_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_s_as_max_nb']++;
             }
@@ -5930,7 +5954,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3P'])
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')
-                ) {         
+                ) {
                 $context['results']['uwwtp_n_removal_without_p_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_n_removal_without_p_nb']++;
             }
@@ -5938,16 +5962,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3N'])
                 && !isset($treatmenttypeinplace_tmp['3NP'])
                 &&( $uwwtp[$induww['Monitoring results -Ptot']]== 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')
-                ) {         
+                ) {
                 $context['results']['uwwtp_p_removal_without_n_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_p_removal_without_n_nb']++;
             }
             if (isset($treatmenttypeinplace_tmp['3NP'])
                 && !isset($treatmenttypeinplace_tmp['3P'])
                 && !isset($treatmenttypeinplace_tmp['3N'])
-                && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')   
-                && ($uwwtp[$induww['Monitoring results -Ptot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')   
-                ) {            
+                && ($uwwtp[$induww['Monitoring results -Ntot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ntot']] == '')
+                && ($uwwtp[$induww['Monitoring results -Ptot']] == 'Pass' || $uwwtp[$induww['Monitoring results -Ptot']] == '')
+                ) {
                 $context['results']['uwwtp_np_removal_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_np_removal_nb']++;
             }
@@ -5955,29 +5979,29 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 && !isset($treatmenttypeinplace_tmp['3P'])
                 && !isset($treatmenttypeinplace_tmp['3N'])
                 && !isset($treatmenttypeinplace_tmp['3NP'])
-                ) {           
+                ) {
                 $context['results']['uwwtp_other_morestringent_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['results']['uwwtp_other_morestringent_nb']++;
-            }    
+            }
 //             }
         }
         fclose($ruwwtpfile);
-//         dsm($context['sandbox']['uwwtpinfo_for_agglo']);          
+//         dsm($context['sandbox']['uwwtpinfo_for_agglo']);
     }
-    
+
 //     dsm($context['sandbox']['uwwtpinfo_for_agglo']);
 //     return '';
-    
-   
+
+
     //get all uwwtp (repeat agglo info if one agglo has more than one uwwtp)
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] .'.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-                 
-    
+
+
     if ($context['sandbox']['progress'] == 0) {
-        $r = fopen($filename, 'wb');  
+        $r = fopen($filename, 'wb');
         $header = array(
             //Agglomeration info',
             $ind['aggcode'] => 'code',
@@ -6100,27 +6124,27 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['more_str._treatment_installed_(p._e.)'] => 'more str. treatment installed (p. e.)',
             $ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'] => 'monitoring results f. more string. OK (% of gen. load)',
             $ind['monitoring_results_f._more_string._ok_(p._e.)'] => 'monitoring results f. more string. OK (p. e.)',
-            
-            //data needed fort later sheet            
+
+            //data needed fort later sheet
             $ind['required_rcaaP'] => 'required_rcaaP',
             $ind['required_rcaaN'] => 'required_rcaaN',
             $ind['required_rcab'] => 'required_rcab',
-            $ind['required_rcac'] => 'required_rcac',  
-                        
+            $ind['required_rcac'] => 'required_rcac',
+
             //debug value
-            $ind['debug_compliance_agglo_from_algo'] => 'debug_compliance_agglo_from_algo',  
+            $ind['debug_compliance_agglo_from_algo'] => 'debug_compliance_agglo_from_algo',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
     } else {
-        $r = fopen($filename, 'ab');  
+        $r = fopen($filename, 'ab');
     }
-    
+
 
 //     $allline = array();
 //     foreach($listagg as $nidagg) {
     $j = 0;
-    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {    
+    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         $line = array();
 //         $agg = node_load($nidagg);
 //         dsm($context['sandbox']['id'][$context['sandbox']['progress'] + $j]);
@@ -6128,17 +6152,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         break;
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-        
+
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
-        
-        
+
+
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
         	$context['results']['uwwtp_total_load_generated_nb']++;
         }
-        
-                
+
+
 //         dsm($uwwtpinfo_for_agglo);
 //         dsm($uwwtpinfo_for_agglo);
 //         break;
@@ -6150,16 +6174,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['aggname']] = $agg->title;
         //'generated load p.e.',
         if (isset($agg->field_agggenerated['und'][0]['value']))
-        	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value']; 
+        	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
         //'deadline for Art. 3 compliance',
         if (isset($agg->field_aggperiodover3['und'][0]['value']))
-        	$line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10); 
+        	$line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
         //'deadline for Art. 4 compliance',
         if (isset($agg->field_aggperiodover4['und'][0]['value']))
-        	$line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10); 
+        	$line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
         //'deadline for Art. 5 compliance',
         if (isset($agg->field_aggperiodover5['und'][0]['value']))
-        	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10); 
+        	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
         //'Pending or expired deadline EXP/PD/EXP-PD',
         $pending_or_expired = '';
 //         dsm($annee);
@@ -6173,18 +6197,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         dsm(substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee);
 //         dsm(substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee);
 //         dsm(substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee);
-//         
+//
 //         dsm(substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee);
-//              
+//
 //         dsm(($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ));
 //         dsm((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
-//              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' )));             
-        
-        
+//              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' )));
+
+
 //         if ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
@@ -6200,15 +6224,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
             );
         }
-                  
+
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if ( true === $deadline_before
 	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
 	            {
 	            $pending_or_expired = 'EXP';
-	        } 
+	        }
         }
-         
+
 //         if (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
 //              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
@@ -6217,11 +6241,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if (false === $deadline_before
 	             && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
-	            {            
+	            {
 	            $pending_or_expired = 'PD';
-	        }   
+	        }
         }
-//         dsm($pending_or_expired);                  
+//         dsm($pending_or_expired);
 		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd']))
         	$line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
         //'NUTS 1 code',
@@ -6229,29 +6253,29 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
         } else {
             $line[$ind['nuts_1_code']] = '';
-        }    
+        }
         //'NUTS 2 code',
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
             $line[$ind['nuts_2_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 4);
         } else {
             $line[$ind['nuts_2_code']] = '';
-        }           
+        }
         //'NUTS 3 code',
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
             $line[$ind['nuts_3_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 5);
         } else {
             $line[$ind['nuts_3_code']] = '';
-        }           
-        
-        //Big City info', 
+        }
+
+        //Big City info',
         $bc_code = '';
-        $bc_name = ''; 
+        $bc_name = '';
         if (isset($agg->field_aggbcliste['und'])) {
 	        foreach ($agg->field_aggbcliste['und'] as $listnidbc) {
 	//             dsm($listnidbc);
 	            $bc = node_load($listnidbc['nid']);
 	//             dsm($bc);
-				if (isset($bc->field_inspireidlocalid['und'][0]['value'])) 
+				if (isset($bc->field_inspireidlocalid['und'][0]['value']))
 	            	$bc_code .= ($bc_code == '' ? '' : ';') . $bc->field_inspireidlocalid['und'][0]['value'];
 	            $bc_name .= ($bc_name == '' ? '' : ';') . $bc->title;
 	//             dsm($bc_code);
@@ -6264,12 +6288,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'name',
         $line[$ind['bcname']] = $bc_name;
         unset($bc_code, $bc_name);
-        
+
         //?',
         //'Number of UWWTPs/ Collecting systems without treatment serving the agglomeration',
-        
+
         $line[$ind['number_of_uwwtps/_collecting_systems_without_treatment_serving_the_agglomeration']] = $uwwtpinfo_for_agglo['uwwtp_collecting_without_treatment'];
-        
+
         //Previous agglomeration info',
         $previousagglonid = uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'])));
         // $previousuwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
@@ -6278,7 +6302,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $previous_aggcode = '';
         $previous_gen = '';
         $previous_percentage = '';
-        
+
         if ($context['sandbox']['previous_year'] !== false && $previousagglonid == '') {
             $previous_reported = 'no';
         }
@@ -6288,17 +6312,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             dsm($previousagg);
             $previous_aggcode =  $previousagg->field_inspireidlocalid['und'][0]['value'];
             $previous_gen = $previousagg->field_agggenerated['und'][0]['value'];
-            
+
             $previous_percentage = (($agg->field_agggenerated['und'][0]['value'] / $previousagg->field_agggenerated['und'][0]['value']) - 1) * 100;
-            
+
 //             if ($previousagg->field_agggenerated['und'][0]['value'] == $agg->field_agggenerated['und'][0]['value']) {
-//                 $previous_percentage = '0';                
+//                 $previous_percentage = '0';
 //             } elseif ($previousagg->field_agggenerated['und'][0]['value'] > $agg->field_agggenerated['und'][0]['value']) {
 //                 $previous_percentage = 100 - ($agg->field_agggenerated['und'][0]['value'] * 100 / $previousagg->field_agggenerated['und'][0]['value']);
 //             } else { //<
 //                 $previous_percentage = -1 * (100 - ($previousagg->field_agggenerated['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']));
-//             }                        
-        }            
+//             }
+        }
         //'reported ?',
          $line[$ind['previous_reported_?']] = $previous_reported;
         //'code',
@@ -6307,7 +6331,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
          $line[$ind['previous_gen._load_p.e.']] = $previous_gen;
         //'Percentage of change of size (1)',
          $line[$ind['previous_percentage_of_change_of_size_(1)']] = $previous_percentage;
-        
+
         //Connection',
         //'Total % (2)',
         $line[$ind['total_%_(2)']] = $agg->field_aggc1['und'][0]['value'] + $agg->field_aggc2['und'][0]['value'] + $agg->field_aggpercwithouttreatment['und'][0]['value'];
@@ -6323,18 +6347,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $agg->field_aggpercwithouttreatment['und'][0]['value'];
         //'neither collecting system nor IAS p. e.',
         $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-        
+
         //for next sheet
         $context['results']['uwwtp_ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
         $context['results']['uwwtp_ias_nb'] += count($agg->field_agguwwliste['und']);
         //(neither collecting system nor IAS)
-        $context['results']['uwwtp_notreatment_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']]; 
-        
+        $context['results']['uwwtp_notreatment_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+
         //(collected in collecting system-entering load)
         $context['results']['uwwtp_notreatment_pe'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering']);
-                
+
         //Distance to compliance Art. 3',
-        //take all uwwtp art3 comp NC,NI,PD of the agglo and sum the data 
+        //take all uwwtp art3 comp NC,NI,PD of the agglo and sum the data
         //'% of gen. Load (3)',
 //         $line[$ind['dist_art3_%_of_gen._load_(3)']] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']
 //                                                     + $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['percent']
@@ -6349,12 +6373,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                                         ;
         $line[$ind['dist_art3_%_of_gen._load_(3)']] = $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
         //'in p.e.',
-        $line[$ind['dist_art3_in_p.e.']] = $line[$ind['neither_collecting_system_nor_ias_p._e.']];                                     
-        
+        $line[$ind['dist_art3_in_p.e.']] = $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+
         //Compliance Art. 3',
         //'Compliance',
         $line[$ind['art3_compliance']] = $agg->field_aggart3compliance['und'][0]['value'];
-        
+
         //Compliance Art. 3 previous reporting',
         //'Compliance',
         $previous_art3_compliance = '';
@@ -6362,9 +6386,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $previous_art3_compliance = $previousagg->field_aggart3compliance['und'][0]['value'];
         }
         $line[$ind['previous_art3_compliance']] = $previous_art3_compliance;
-        
+
         //Ratio connection/collection/treatment',
-        //'Total entering load p. e.',       
+        //'Total entering load p. e.',
         $line[$ind['total_entering_load_p._e.']] = $uwwtpinfo_for_agglo['entering'];
         //'ratio connected/enentering %',
         $line[$ind['ratio_connected/enentering_%']] = $line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['connected_to_collecting_system_p._e.']];
@@ -6372,16 +6396,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['total_treatment_plant_design_capacity_p._e.']] = $uwwtpinfo_for_agglo['capacity'];
         //'ratio Total entering load/Total design capacity %',
         $line[$ind['ratio_total_entering_load/total_design_capacity_%']] = $line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['total_treatment_plant_design_capacity_p._e.']];
-        
+
         //Compliance Art. 4',
-        //in case multiple uwwtp for this agglo, we must calculate total values  
+        //in case multiple uwwtp for this agglo, we must calculate total values
 //         dsm($agg->field_inspireidlocalid['und'][0]['value']);
 //         dsm($uwwtpinfo_for_agglo);
-        //'compliant % of gen. load',                                                                                     
+        //'compliant % of gen. load',
         $line[$ind['art4_compliant_%_of_gen._load']] = $uwwtpinfo_for_agglo['C']['percent'];
         //'compliant p. e.',
         $line[$ind['art4_compliant_p._e.']] = $uwwtpinfo_for_agglo['C']['pe'];
-        //'not compliant % of gen. load', 
+        //'not compliant % of gen. load',
         $line[$ind['art4_not_compliant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NC']['percent'];
         //'not compliant',
         $line[$ind['art4_not_compliant']] = $uwwtpinfo_for_agglo['NC']['pe'];
@@ -6398,8 +6422,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
               else if comp art 3 = NC ou comp art 4 = nc then nc
                     else if comp art 4 = nr then nr
                           else nothing
-         
-        =IF(‘Compliance Art.4 ‘="NR"; 
+
+        =IF(‘Compliance Art.4 ‘="NR";
                 ‘Compliance Art.4 ‘;
                 IF(
                     AND(
@@ -6410,10 +6434,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                             IF(
                                 OR(
                                     (
-                                     ‘Compliance Art.3 ‘="NC"; 
+                                     ‘Compliance Art.3 ‘="NC";
                                      ‘Compliance Art.4 ‘NC"
                                      );
-                                        "NC"; 
+                                        "NC";
                                         IF(
                                            ‘Compliance Art.4 ‘="NR";
                                                 "NR";
@@ -6421,7 +6445,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                            )
                                    )
                                )
-                        ) 
+                        )
         */
         $compart4hierarchical = '';
         if ($agg->field_aggart4compliance['und'][0]['value'] == 'NR' ||
@@ -6429,12 +6453,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $agg->field_aggart4compliance['und'][0]['value'] == '?' ||
             $agg->field_aggart3compliance['und'][0]['value'] == 'NR' ||
             $agg->field_aggart3compliance['und'][0]['value'] == 'NI' ||
-            $agg->field_aggart3compliance['und'][0]['value'] == '?' 
-            ) { 
+            $agg->field_aggart3compliance['und'][0]['value'] == '?'
+            ) {
             $compart4hierarchical = $agg->field_aggart4compliance['und'][0]['value'];
         } elseif (($agg->field_aggart3compliance['und'][0]['value'] == 'C'
                   || $agg->field_aggart3compliance['und'][0]['value'] == 'QC')
-                  && $agg->field_aggart4compliance['und'][0]['value'] == 'C' 
+                  && $agg->field_aggart4compliance['und'][0]['value'] == 'C'
                   ) {
             $compart4hierarchical = 'C';
         } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD') {
@@ -6443,18 +6467,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $compart4hierarchical = 'PD';
         }else {
             $compart4hierarchical = 'NC';
-        } 
+        }
 
         $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] = $compart4hierarchical;
-        
+
         //Compliance Art. 4 previous reporting',
         //'Compliance',
         $previous_art4_compliance = '';
         if (isset($previousagg)) {
             $previous_art4_compliance = $previousagg->field_aggart4compliance['und'][0]['value'];
         }
-        $line[$ind['previous_art4_compliance']] = $previous_art4_compliance;        
-        
+        $line[$ind['previous_art4_compliance']] = $previous_art4_compliance;
+
 
         //Distance to compliance art. 4',
         //Treatment',
@@ -6467,11 +6491,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'];
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'];
-                        
+
         //Compliance Art. 5',
-        //'compliant 5 a  (% of gen. load)', 
+        //'compliant 5 a  (% of gen. load)',
         $line[$ind['compliant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_C_%'];
-        //'compliant 5 a  (p. e.)',     
+        //'compliant 5 a  (p. e.)',
         $line[$ind['compliant_5_a_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_C_pe'];
         //'not compliant 5 a  (% of gen. load)',
         $line[$ind['not_compliant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NC_%'];
@@ -6481,7 +6505,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['not_relevant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NR_%'];
         //'not relevant 5 a   (p. e.)',
         $line[$ind['not_relevant_5_a_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NR_pe'];
-        
+
         //'Compliance Art. 5a (only)',
 
 
@@ -6489,7 +6513,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
 
         $line[$ind['compliance_art._5a_(hierarchical_approach)']] = uwwtd_register_getcompliance_art5x_hierarchical('a', $ind, $line);
-                        
+
         //'compliant 5 b    (% of gen. load)',
         $line[$ind['compliant_5_b_(%_of_gen._load)']] =  ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_C_%'];
         //'compliant 5 b    (p. e.)',
@@ -6502,16 +6526,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['not_relevant_5_b_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_NR_%'];
         //'not relevant 5 b   (p. e.)',
         $line[$ind['not_relevant_5_b_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5b_NR_pe'];
-        
+
         //'Compliance Art. 5b (only)',
         $line[$ind['compliance_art._5b_(only)']] = uwwtd_register_getcompliance_art5x_only('b', $ind, $line, $uwwtpinfo_for_agglo['art5b_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
         //'Compliance Art. 5b (hierarchical approach)',
         $line[$ind['compliance_art._5b_(hierarchical_approach)']] =  uwwtd_register_getcompliance_art5x_hierarchical('b', $ind, $line);
-                        
+
         //'compliant 5 c      (% of gen. load)',
         $line[$ind['compliant_5_c_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_C_%'];
         //'compliant 5 c       (p. e.)',
-        $line[$ind['compliant_5_c__(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_C_pe'];        
+        $line[$ind['compliant_5_c__(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_C_pe'];
         //'not compliant 5 c   (% of gen. load)',
         $line[$ind['not_compliant_5_c_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NC_%'];
         //'not compliant 5 c   (p. e.)',
@@ -6520,19 +6544,19 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['not_relevant_5_c_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NR_%'];
         //'not relevant 5 c  (p. e.)',
         $line[$ind['not_relevant_5_c_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5c_NR_pe'];
-                                  
+
         //'Compliance Art. 5c (only)',
         $line[$ind['compliance_art._5c_(only)']] = uwwtd_register_getcompliance_art5x_only('c', $ind, $line, $uwwtpinfo_for_agglo['art5c_NC_collected_%'], $annee, substr($agg->field_aggperiodover5['und'][0]['value'], 0, 4));
         //'Compliance Art. 5c (hierarchical approach)',
         $line[$ind['compliance_art._5c_(hierarchical_approach)']] =  uwwtd_register_getcompliance_art5x_hierarchical('c', $ind, $line);
-              
+
         //'compliant Art. 5 (p. e.)',
         $line[$ind['compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_C_pe'];
         //'not compliant Art. 5 (p. e.)',
         $line[$ind['not_compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NC_pe'];
         //'Art. 5 not relevant  (p. e.)',
         $line[$ind['art._5_not_relevant_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NR_pe'];
-        
+
         //'Compliance Art. 5 (whole agglo)',
         $line[$ind['compliance_art._5_(whole_agglo)']] = $agg->field_aggart5compliance['und'][0]['value'];
         //'Compliance Art. 5  (whole agglo) (hierarchical approach)',
@@ -6543,36 +6567,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         elseif compart4 = NC or compart 5 = NC then NC
         elseif compart 5 =NR then NR
         else nothing
-                        
+
         =IF(
-            ‘Compliance Art. 5 (only)’="NR"; 
+            ‘Compliance Art. 5 (only)’="NR";
                 ‘Compliance Art. 5 (only)’;
                 IF(‘generated load’ <=10000;
                     "NR";
                     IF(
                         AND(
-                            ‘Compliance Art.4’ ="C"; 
+                            ‘Compliance Art.4’ ="C";
                             ‘Compliance Art. 5 (only)’="C"
                             );
-                                "C"; 
+                                "C";
                                 IF(
                                     OR(
                                         Compliance Art.4’ ="NC";
                                         ‘Compliance Art. 5 (only)’="NC"
-                                       ); 
+                                       );
                                         "NC";
                                         IF(
                                             ‘Compliance Art. 5 (only)’="NR";
-                                                "NR"; 
+                                                "NR";
                                                 "EXIT"
                                            )
                                    )
                        )
                 )
           )
-        */        
+        */
         $compart5hierarchical = '';
-        if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR') { 
+        if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR') {
             $compart5hierarchical = $agg->field_aggart5compliance['und'][0]['value'];
         } elseif ($agg->field_agggenerated['und'][0]['value'] <= 10000) {
             $compart5hierarchical = 'NR';
@@ -6583,36 +6607,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $compart5hierarchical = 'C';
         } elseif ( $agg->field_aggart3compliance['und'][0]['value'] == 'NC' ||
                         $agg->field_aggart4compliance['und'][0]['value'] == 'NC' ||
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'NC' 
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'NC'
                   ) {
             $compart5hierarchical = 'NC';
         }   elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' ||
                         $agg->field_aggart4compliance['und'][0]['value'] == 'PD' ||
                         $agg->field_aggart5compliance['und'][0]['value'] == 'PD') {
             $compart5hierarchical = 'PD';
-        }                     
+        }
         $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] = $compart5hierarchical;
-        
+
         //Compliance Art. 5 previous reporting',
         //'Compliance',
         $previous_art5_compliance = '';
         if (isset($previousagg)) {
             $previous_art5_compliance = $previousagg->field_aggart5compliance['und'][0]['value'];
-        }        
-        $line[$ind['previous_art5_compliance']] = $previous_art5_compliance;        
-        
+        }
+        $line[$ind['previous_art5_compliance']] = $previous_art5_compliance;
+
         //Distance to compliance art. 5',
         //Treatment',
-        //'% of gen. Load', 
+        //'% of gen. Load',
         $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'];
-        //'in p.e. (6)', 
+        //'in p.e. (6)',
         $line[$ind['distance_art5_treat_in_p.e._(6)']] = $uwwtpinfo_for_agglo['distart5_treatment'];
         //Performance',
-        //'% of gen. Load', 
+        //'% of gen. Load',
         $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'];
-        //'in p.e. (7)', 
+        //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'];
-        
+
         //current RCA details',
         $dcpWaterBodyType = '';
         $dcpWaterbodyID = '';
@@ -6672,18 +6696,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                                     $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $field_dcpwaterbodytype;
                                                     $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
                                                     $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
-                                                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value']; 
+                                                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
 
 
 			                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
 			                    $rca = node_load($rcanid['nid']);
-			                    
+
 			                    if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
 			                        continue;
 			                    }
 			                    $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
-			                    
-			                    // if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'], 
+
+			                    // if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'],
 			                    // 		  $dcp->field_dcpwaterbodyid['und'][0]['value'],
 			                    // 		  $dcp->field_dcpwfdrbd['und'][0]['value'],
 			                    // 		  $dcp->field_rcatype['und'][0]['value'],
@@ -6696,18 +6720,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				        $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
 				        $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
 				        $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
-				                                        
+
 				        unset($rca);
 			                    // }
-			                }     
+			                }
 				}
-		                unset($dcp);           
+		                unset($dcp);
 		            }
 	            }
-	            unset($uwwtp);   
-                }  
+	            unset($uwwtp);
+                }
         }
-        unset($rcatreated);   
+        unset($rcatreated);
         //'water body type',   ?dcpWaterBodyType
         $line[$ind['water_body_type']] = $dcpWaterBodyType;
         //'Id code of the water body WFD',    ?dcpWaterbodyID
@@ -6732,7 +6756,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'name',         ?title
         $line[$ind['rca_name']] = $rcaName;
         //'Starting date of application 5.8.',
-        $line[$ind['starting_date_of_application_5.8.']] = $rcaDateArt58;  
+        $line[$ind['starting_date_of_application_5.8.']] = $rcaDateArt58;
         //'Starting date of application 5.4.',
         $line[$ind['starting_date_of_application_5.4.']] = $rcaDateArt54;
         //'Starting date of application a N',
@@ -6743,71 +6767,71 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['starting_date_of_application_b']] = 'TODO';
         //'Starting date of application c',
         $line[$ind['starting_date_of_application_c']] = 'TODO';
-        
+
         //Installations for wastewater treatment in place',
         //'secondary treatment installed (% of gen. load)',
         //Aggregated from sheet ‘UWWTPs’ via the Excel function of Pivot-tables  (based on parameters ‘UWWTP info, entering this UWWTP’ and ‘Installations for wastewater treatment in place, Secondary: installed?’
         //Calculated on basis of parameters ‘Secondary treatment installed -  %of gen. load’ and the generated load of the agglomeration (p.e.)
         $secondary_install_pe      = '';
-        $secondary_install_percent = '';  
-        if ($uwwtpinfo_for_agglo['secondary_installed'] == 1) {         
-            $secondary_install_pe = $uwwtpinfo_for_agglo['secondary_treatement_pe']; 
-            $secondary_install_percent = $uwwtpinfo_for_agglo['secondary_treatement_percent']; 
+        $secondary_install_percent = '';
+        if ($uwwtpinfo_for_agglo['secondary_installed'] == 1) {
+            $secondary_install_pe = $uwwtpinfo_for_agglo['secondary_treatement_pe'];
+            $secondary_install_percent = $uwwtpinfo_for_agglo['secondary_treatement_percent'];
         }
         $line[$ind['secondary_treatment_installed_(%_of_gen._load)']] = $secondary_install_percent;
-        //'secondary treatment installed (p. e.)', 
+        //'secondary treatment installed (p. e.)',
         $line[$ind['secondary_treatment_installed_(p._e.)']] = $secondary_install_pe;
-        
+
         //'monitoring results f. secondary OK (% of gen. load)',
         $secondary_passed_pe      = '';
-        $secondary_passed_percent = '';  
-        if ($uwwtpinfo_for_agglo['secondary_passed'] == 1) {             
-            $secondary_passed_pe = $uwwtpinfo_for_agglo['secondary_monitoring_pe']; 
-            $secondary_passed_percent = $uwwtpinfo_for_agglo['secondary_monitoring_percent']; 
-        }          
+        $secondary_passed_percent = '';
+        if ($uwwtpinfo_for_agglo['secondary_passed'] == 1) {
+            $secondary_passed_pe = $uwwtpinfo_for_agglo['secondary_monitoring_pe'];
+            $secondary_passed_percent = $uwwtpinfo_for_agglo['secondary_monitoring_percent'];
+        }
         $line[$ind['monitoring_results_f._secondary_ok_(%_of_gen._load)']] = $secondary_passed_percent;
-        //'monitoring results f. secondary OK (p. e.)', 
+        //'monitoring results f. secondary OK (p. e.)',
         $line[$ind['monitoring_results_f._secondary_ok']] = $secondary_passed_pe;
-                
+
         //'more str. treatment installed (%_of_gen._load',
         $morestringent_install_pe      = '';
-        $morestringent_install_percent = '';  
-        if ($uwwtpinfo_for_agglo['morestringent_installed'] == 1) {       
-            $morestringent_install_pe = $uwwtpinfo_for_agglo['morestringent_treatement_pe']; 
-            $morestringent_install_percent = $uwwtpinfo_for_agglo['morestringent_treatement_percent']; 
-        }   
-                  
+        $morestringent_install_percent = '';
+        if ($uwwtpinfo_for_agglo['morestringent_installed'] == 1) {
+            $morestringent_install_pe = $uwwtpinfo_for_agglo['morestringent_treatement_pe'];
+            $morestringent_install_percent = $uwwtpinfo_for_agglo['morestringent_treatement_percent'];
+        }
+
         $line[$ind['more_str._treatment_installed_(%_of_gen._load)']] = $morestringent_install_percent;
-        //'more str. treatment installed (p. e.)', 
+        //'more str. treatment installed (p. e.)',
         $line[$ind['more_str._treatment_installed_(p._e.)']] = $morestringent_install_pe;
-        
+
         //'monitoring results f. more string. OK (% of gen. load)',
         $morestringent_passed_pe      = '';
-        $morestringent_passed_percent = '';  
-        if ($uwwtpinfo_for_agglo['morestringent_passed'] == 1) {  
-            $morestringent_passed_pe = $uwwtpinfo_for_agglo['morestringent_monitoring_pe']; 
-            $morestringent_passed_percent = $uwwtpinfo_for_agglo['morestringent_monitoring_percent']; 
-        }            
+        $morestringent_passed_percent = '';
+        if ($uwwtpinfo_for_agglo['morestringent_passed'] == 1) {
+            $morestringent_passed_pe = $uwwtpinfo_for_agglo['morestringent_monitoring_pe'];
+            $morestringent_passed_percent = $uwwtpinfo_for_agglo['morestringent_monitoring_percent'];
+        }
         $line[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']] = $morestringent_passed_percent;
-        //'monitoring results f. more string. OK (p. e.)', 
+        //'monitoring results f. more string. OK (p. e.)',
         $line[$ind['monitoring_results_f._more_string._ok_(p._e.)']] =$morestringent_passed_pe;
-        
-                  
+
+
         if (isset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']])) {
             unset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']]);
-        } 
-        
-        //data needed fort later sheet            
+        }
+
+        //data needed fort later sheet
         $line[$ind['required_rcaaP']] = $uwwtpinfo_for_agglo['required_rcaaP'];
         $line[$ind['required_rcaaN']] = $uwwtpinfo_for_agglo['required_rcaaN'];
         $line[$ind['required_rcab']]  = $uwwtpinfo_for_agglo['required_rcab'];
-        $line[$ind['required_rcac']]  = $uwwtpinfo_for_agglo['required_rcac'];  
-                
+        $line[$ind['required_rcac']]  = $uwwtpinfo_for_agglo['required_rcac'];
+
         //debug data info
         //$line[$ind['debug_compliance_agglo_from_algo']] = $agg->field_aggcompliance['und'][0]['value'];
-                   
+
         fputcsv($r, $line, ';');
-        
+
         //expired', 'pending')
         foreach ($listtypestat as $typestat) {
             if ( !isset($context['sandbox'][$typestat])) {
@@ -6821,32 +6845,32 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox'][$typestat]['not_collected_percent'] = 0;
                 $context['sandbox'][$typestat]['not_collected_pe'] = 0;
                 $context['sandbox'][$typestat]['distance_art3_percent'] = 0;
-                $context['sandbox'][$typestat]['distance_art3_pe'] = 0;        
+                $context['sandbox'][$typestat]['distance_art3_pe'] = 0;
                 $context['sandbox'][$typestat]['ratio_entering'] = 0;
                 $context['sandbox'][$typestat]['ratio_connected_entering'] = 0;
                 $context['sandbox'][$typestat]['ratio_capacity'] = 0;
                 $context['sandbox'][$typestat]['ratio_entering_capacity'] = 0;
                 $context['sandbox'][$typestat]['art4_c_percent'] = 0;
-                $context['sandbox'][$typestat]['art4_c_pe'] = 0; 
+                $context['sandbox'][$typestat]['art4_c_pe'] = 0;
                 $context['sandbox'][$typestat]['art4_nc_percent'] = 0;
                 $context['sandbox'][$typestat]['art4_nc_pe'] = 0;
                 $context['sandbox'][$typestat]['art4_nr_percent'] = 0;
                 $context['sandbox'][$typestat]['art4_nr_pe'] = 0;
                 $context['sandbox'][$typestat]['distance_art4_treatment_percent'] = 0;
-                $context['sandbox'][$typestat]['distance_art4_treatment_pe'] = 0;                                 
+                $context['sandbox'][$typestat]['distance_art4_treatment_pe'] = 0;
                 $context['sandbox'][$typestat]['distance_art4_performance_percent'] = 0;
                 $context['sandbox'][$typestat]['distance_art4_performance_pe'] = 0;
                 $context['sandbox'][$typestat]['distance_art5_treatment_percent'] = 0;
-                $context['sandbox'][$typestat]['distance_art5_treatment_pe'] = 0;                                 
+                $context['sandbox'][$typestat]['distance_art5_treatment_pe'] = 0;
                 $context['sandbox'][$typestat]['distance_art5_performance_percent'] = 0;
-                $context['sandbox'][$typestat]['distance_art5_performance_pe'] = 0;        
+                $context['sandbox'][$typestat]['distance_art5_performance_pe'] = 0;
                 $context['sandbox'][$typestat]['secondary_installed'] = 0;
                 $context['sandbox'][$typestat]['secondary_monitoring'] = 0;
                 $context['sandbox'][$typestat]['morestringent_installed'] = 0;
-                $context['sandbox'][$typestat]['morestringent_monitoring'] = 0; 
-            }        
+                $context['sandbox'][$typestat]['morestringent_monitoring'] = 0;
+            }
             //expired deadline   (toutes les NC +  les C qui ont date dépassée)
-            if ($typestat == 'expired' && $pending_or_expired != 'EXP') {        
+            if ($typestat == 'expired' && $pending_or_expired != 'EXP') {
 //                 if (false === (
 //                     (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
 //                      || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
@@ -6857,9 +6881,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     continue;
 //                 }
             }
-            
+
             //pending deadline    PD + les C avec date pas dépassée
-            if ($typestat == 'pending' && $pending_or_expired != 'PD') {     
+            if ($typestat == 'pending' && $pending_or_expired != 'PD') {
 //                 if (false === (
 //                     ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
 //                      && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
@@ -6870,7 +6894,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     continue;
 //                 }
             }
-                 
+
             $context['sandbox'][$typestat]['generated_pe'] += $line[$ind['generated_load_p.e.']];
             $context['sandbox'][$typestat]['previous_generated_pe'] += $line[$ind['previous_gen._load_p.e.']];
 //             $context['sandbox'][$typestat]['total_percent'] += $line[$ind['total_%_(2)']];
@@ -6880,39 +6904,39 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $context['sandbox'][$typestat]['ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
 //             $context['sandbox'][$typestat]['not_collected_percent'] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $context['sandbox'][$typestat]['not_collected_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
-            
+
 //             $context['sandbox'][$typestat]['distance_art3_percent'] += $line[$ind['dist_art3_%_of_gen._load_(3)']];
             $context['sandbox'][$typestat]['distance_art3_pe'] += $line[$ind['dist_art3_in_p.e.']];
-            
+
             $context['sandbox'][$typestat]['ratio_entering'] += $line[$ind['total_entering_load_p._e.']];
 //             $context['sandbox'][$typestat]['ratio_connected_entering'] += $line[$ind['ratio_connected/enentering_%']];
             $context['sandbox'][$typestat]['ratio_capacity'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
 //             $context['sandbox'][$typestat]['ratio_entering_capacity'] += $line[$ind['ratio_total_entering_load/total_design_capacity_%']];
-            
+
 //             $context['sandbox'][$typestat]['art4_c_percent'] += $line[$ind['art4_compliant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_c_pe'] += $line[$ind['art4_compliant_p._e.']];
 //             $context['sandbox'][$typestat]['art4_nc_percent'] += $line[$ind['art4_not_compliant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_nc_pe'] += $line[$ind['art4_not_compliant']];
 //             $context['sandbox'][$typestat]['art4_nr_percent'] += $line[$ind['art4_not_relevant_%_of_gen._load']];
             $context['sandbox'][$typestat]['art4_nr_pe'] += $line[$ind['art4_not_relevant']];
-            
+
 //             $context['sandbox'][$typestat]['distance_art4_treatment_percent'] += $line[$ind['dist_art4_treat__%_of_connected_load']];
-            $context['sandbox'][$typestat]['distance_art4_treatment_pe'] += $line[$ind['dist_art4_treat_in_p.e._(4)']];                           
+            $context['sandbox'][$typestat]['distance_art4_treatment_pe'] += $line[$ind['dist_art4_treat_in_p.e._(4)']];
 //             $context['sandbox'][$typestat]['distance_art4_performance_percent'] += $line[$ind['dist_art4_perf_%_of_connected_load']];
             $context['sandbox'][$typestat]['distance_art4_performance_pe'] += $line[$ind['dist_art4_perf_in_p.e._(5)']];
-            
-            
+
+
 //             $context['sandbox'][$typestat]['distance_art5_treatment_percent'] += $line[$ind['distance_art5_treat_%_of_gen._load']];
-            $context['sandbox'][$typestat]['distance_art5_treatment_pe'] += $line[$ind['distance_art5_treat_in_p.e._(6)']];                        
+            $context['sandbox'][$typestat]['distance_art5_treatment_pe'] += $line[$ind['distance_art5_treat_in_p.e._(6)']];
 //             $context['sandbox'][$typestat]['distance_art5_performance_percent'] += $line[$ind['distance_art5_perf_%_of_gen._load']];
             $context['sandbox'][$typestat]['distance_art5_performance_pe'] += $line[$ind['distance_art5_perf_in_p.e._(7)']];
-            
+
             $context['sandbox'][$typestat]['secondary_installed'] += $line[$ind['secondary_treatment_installed_(p._e.)']];
             $context['sandbox'][$typestat]['secondary_monitoring'] += $line[$ind['monitoring_results_f._secondary_ok']];
             $context['sandbox'][$typestat]['morestringent_installed'] += $line[$ind['more_str._treatment_installed_(p._e.)']];
-            $context['sandbox'][$typestat]['morestringent_monitoring'] += $line[$ind['monitoring_results_f._more_string._ok_(p._e.)']];  
-        } 
-        
+            $context['sandbox'][$typestat]['morestringent_monitoring'] += $line[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
+        }
+
         //get all stat of agglo for NA or CSA/NA/A58 RCA
         foreach ($list_type_rca as $type_rca) {
             if ( !isset($context['sandbox'][$type_rca])) {
@@ -6920,68 +6944,68 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox'][$type_rca]['compliant_agglo'] = 0;
                 $context['sandbox'][$type_rca]['notcompliant_agglo'] = 0;
                 $context['sandbox'][$type_rca]['subjected_load']['generated'] = 0;
-                $context['sandbox'][$type_rca]['subjected_load']['collected'] = 0;                
+                $context['sandbox'][$type_rca]['subjected_load']['collected'] = 0;
                 $context['sandbox'][$type_rca]['compliant_load']['generated'] = 0;
                 $context['sandbox'][$type_rca]['compliant_load']['collected'] = 0;
                 $context['sandbox'][$type_rca]['notcompliant_load']['generated'] = 0;
                 $context['sandbox'][$type_rca]['notcompliant_load']['collected'] = 0;
                 $context['sandbox'][$type_rca]['exempted'] = 0;
                 $context['sandbox'][$type_rca]['exempted_load']['generated'] = 0;
-                $context['sandbox'][$type_rca]['exempted_load']['collected'] = 0;            
+                $context['sandbox'][$type_rca]['exempted_load']['collected'] = 0;
             }
-            
+
             if ($type_rca == 'na' && false === strpos($line[$ind['type_of_receiving_water']], 'NA')) {
                 continue;
             }
-            if ($type_rca == 'sa_csa' 
+            if ($type_rca == 'sa_csa'
                 && false === strpos($line[$ind['type_of_receiving_water']], 'SA')
                 && false === strpos($line[$ind['type_of_receiving_water']], 'CSA')
                 && false === strpos($line[$ind['type_of_receiving_water']], 'A58')) {
                 continue;
-            }            
-            
+            }
+
             $context['sandbox'][$type_rca]['subjected_agglo']++;
             $context['sandbox'][$type_rca]['subjected_load']['generated'] += $line[$ind['generated_load_p.e.']];
             $context['sandbox'][$type_rca]['subjected_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
-                
+
             if ($agg->field_aggcompliance['und'][0]['value'] == 'C') {
                 $context['sandbox'][$type_rca]['compliant_agglo']++;
                 $context['sandbox'][$type_rca]['compliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];             
+                $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
             }
             if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
                 $context['sandbox'][$type_rca]['notcompliant_agglo']++;
                 $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];           
-            }   
+                $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            }
             if ($pending_or_expired == 'PD') {
                 $context['sandbox'][$type_rca]['exempted']++;
                 $context['sandbox'][$type_rca]['exempted_load']['generated'] += $line[$ind['generated_load_p.e.']];
-                $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];           
-            }         
-        }  
-        
+                $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            }
+        }
+
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
         if ($line[$ind['generated_load_p.e.']] >= 2000 && $line[$ind['generated_load_p.e.']] < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['0_10000']['number']++;        
+            $context['results']['graph']['0_10000']['number']++;
         } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 100001) {
             $context['results']['graph']['10000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['10000_100000']['number']++;                                    
+            $context['results']['graph']['10000_100000']['number']++;
         } elseif ($line[$ind['generated_load_p.e.']] >= 100001) {
             $context['results']['graph']['100000_n']['pe']  += $line[$ind['generated_load_p.e.']];
-            $context['results']['graph']['100000_n']['number']++;             
+            $context['results']['graph']['100000_n']['number']++;
         }
-        
+
         //array2
         $context['results']['graph']['total_generated']['pe'] += $line[$ind['generated_load_p.e.']];
         $context['results']['graph']['total_collected']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
         $context['results']['graph']['total_load_ias']['pe'] += $line[$ind['addressed_through_ias_p._e.']];
         $context['results']['graph']['total_entering']['pe'] += $line[$ind['total_entering_load_p._e.']];
         $context['results']['graph']['total_capacity']['pe'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
-        
+
         //array 5 6 7
         if ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') {
             $context['results']['graph']['art3_C']['number']++;
@@ -7018,27 +7042,27 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' || $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art5_NR']['number']++;
             $context['results']['graph']['art5_NR']['pe'] += $line[$ind['generated_load_p.e.']];
-        }        
+        }
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
-                      
+
 
         unset($agg);
         $j++;
         $context['sandbox']['progress']++;
-    } 
+    }
     fclose($r);
     //write last lines with aggregate data
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
-        
+
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
         $r = fopen($filename, 'wb');
         $totalline = array_pad(array(), count($ind), '');
         $totalline[0] = 'TOTAL';
         $expired = array_pad(array(), count($ind), '');
-        $expired[0] = 'expired_deadline'; 
+        $expired[0] = 'expired_deadline';
         $pending = array_pad(array(), count($ind), '');
-        $pending[0] = 'pending_deadline';                    
+        $pending[0] = 'pending_deadline';
 //         dsm($expired);
 //         dsm($pending);
 //         dsm($listtypestat);
@@ -7052,69 +7076,69 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         foreach ($listtypestat as $typestat) {
             ${$typestat}[$ind['generated_load_p.e.']] = $context['sandbox'][$typestat]['generated_pe'] ;
             ${$typestat}[$ind['previous_gen._load_p.e.']] = $context['sandbox'][$typestat]['previous_generated_pe'] ;
-            
+
 //             ${$typestat}[$ind['total_%_(2)']] = $context['sandbox'][$typestat]['total_percent'] ;
-            
-            ${$typestat}[$ind['total_%_(2)']] = ($context['sandbox'][$typestat]['collected_pe'] + $context['sandbox'][$typestat]['ias_pe'] + $context['sandbox'][$typestat]['not_collected_pe']) * 100 / $context['sandbox'][$typestat]['generated_pe']; 
-            
+
+            ${$typestat}[$ind['total_%_(2)']] = ($context['sandbox'][$typestat]['collected_pe'] + $context['sandbox'][$typestat]['ias_pe'] + $context['sandbox'][$typestat]['not_collected_pe']) * 100 / $context['sandbox'][$typestat]['generated_pe'];
+
 //             ${$typestat}[$ind['connected_to_collecting_system']] = $context['sandbox'][$typestat]['collected_percent'] ;
             ${$typestat}[$ind['connected_to_collecting_system']] = $context['sandbox'][$typestat]['collected_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
-            
+
             ${$typestat}[$ind['connected_to_collecting_system_p._e.']] = $context['sandbox'][$typestat]['collected_pe'] ;
-            
+
 //             ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['ias_percent'] ;
-            ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] =  $context['sandbox'][$typestat]['ias_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
-            
+            ${$typestat}[$ind['addressed_through_ias_%_of_gen._load']] =  $context['sandbox'][$typestat]['ias_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
+
             ${$typestat}[$ind['addressed_through_ias_p._e.']] = $context['sandbox'][$typestat]['ias_pe'] ;
-            
+
 //             ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_percent'] ;
-            ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
-            
+            ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $context['sandbox'][$typestat]['not_collected_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
+
             ${$typestat}[$ind['neither_collecting_system_nor_ias_p._e.']] = $context['sandbox'][$typestat]['not_collected_pe'] ;
-            
+
 //             ${$typestat}[$ind['dist_art3_%_of_gen._load_(3)']] = $context['sandbox'][$typestat]['distance_art3_percent'] ;
             ${$typestat}[$ind['dist_art3_%_of_gen._load_(3)']] = ${$typestat}[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
-            
+
             ${$typestat}[$ind['dist_art3_in_p.e.']] = $context['sandbox'][$typestat]['distance_art3_pe']         ;
 
             ${$typestat}[$ind['total_entering_load_p._e.']] = $context['sandbox'][$typestat]['ratio_entering'] ;
 //             ${$typestat}[$ind['ratio_connected/enentering_%']] = $context['sandbox'][$typestat]['ratio_connected_entering'] ;
             //$line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['connected_to_collecting_system_p._e.']];
             ${$typestat}[$ind['ratio_connected/enentering_%']] = ${$typestat}[$ind['total_entering_load_p._e.']] * 100 / ${$typestat}[$ind['connected_to_collecting_system_p._e.']];
-            
+
             ${$typestat}[$ind['total_treatment_plant_design_capacity_p._e.']] = $context['sandbox'][$typestat]['ratio_capacity'] ;
 //             ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] = $context['sandbox'][$typestat]['ratio_entering_capacity'] ;
             //$line[$ind['total_entering_load_p._e.']] * 100 / $line[$ind['total_treatment_plant_design_capacity_p._e.']];
-            ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] =  ${$typestat}[$ind['total_entering_load_p._e.']] * 100 / ${$typestat}[$ind['total_treatment_plant_design_capacity_p._e.']]; 
+            ${$typestat}[$ind['ratio_total_entering_load/total_design_capacity_%']] =  ${$typestat}[$ind['total_entering_load_p._e.']] * 100 / ${$typestat}[$ind['total_treatment_plant_design_capacity_p._e.']];
 
 //             ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_percent'] ;
-            ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe']; 
+            ${$typestat}[$ind['art4_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_c_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['art4_compliant_p._e.']] = $context['sandbox'][$typestat]['art4_c_pe']  ;
-            
+
 //             ${$typestat}[$ind['art4_not_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nc_percent'] ;
             ${$typestat}[$ind['art4_not_compliant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nc_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['art4_not_compliant']] = $context['sandbox'][$typestat]['art4_nc_pe'] ;
-            
+
 //             ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_percent'] ;
-            ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe']; 
+            ${$typestat}[$ind['art4_not_relevant_%_of_gen._load']] = $context['sandbox'][$typestat]['art4_nr_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['art4_not_relevant']] = $context['sandbox'][$typestat]['art4_nr_pe'] ;
-            
+
 //             ${$typestat}[$ind['dist_art4_treat__%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_treatment_percent'] ;
             ${$typestat}[$ind['dist_art4_treat__%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_treatment_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['dist_art4_treat_in_p.e._(4)']] = $context['sandbox'][$typestat]['distance_art4_treatment_pe'];
-            
+
 //             ${$typestat}[$ind['dist_art4_perf_%_of_connected_load']] = $context['sandbox'][$typestat]['distance_art4_performance_percent'] ;
             ${$typestat}[$ind['dist_art4_perf_%_of_connected_load']] =   $context['sandbox'][$typestat]['distance_art4_performance_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['dist_art4_perf_in_p.e._(5)']] = $context['sandbox'][$typestat]['distance_art4_performance_pe'] ;
-            
+
 //             ${$typestat}[$ind['distance_art5_treat_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_treatment_percent'] ;
             ${$typestat}[$ind['distance_art5_treat_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_treatment_pe'] * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['distance_art5_treat_in_p.e._(6)']] = $context['sandbox'][$typestat]['distance_art5_treatment_pe'];
-            
+
 //             ${$typestat}[$ind['distance_art5_perf_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_performance_percent'] ;
             ${$typestat}[$ind['distance_art5_perf_%_of_gen._load']] = $context['sandbox'][$typestat]['distance_art5_performance_pe']  * 100 / $context['sandbox'][$typestat]['generated_pe'];
             ${$typestat}[$ind['distance_art5_perf_in_p.e._(7)']] = $context['sandbox'][$typestat]['distance_art5_performance_pe']         ;
-            
+
             ${$typestat}[$ind['secondary_treatment_installed_(p._e.)']] = $context['sandbox'][$typestat]['secondary_installed'] ;
             ${$typestat}[$ind['monitoring_results_f._secondary_ok']] = $context['sandbox'][$typestat]['secondary_monitoring'] ;
             ${$typestat}[$ind['more_str._treatment_installed_(p._e.)']] = $context['sandbox'][$typestat]['morestringent_installed'] ;
@@ -7126,39 +7150,39 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     //here % col are added but recalculate after the loop
                     $totalline[$j] += ${$typestat}[$j];
                 }
-            } 
+            }
             //calcul the %
             $totalline[$ind['total_%_(2)']] = ($totalline[$ind['connected_to_collecting_system_p._e.']] + $totalline[$ind['addressed_through_ias_p._e.']] + $totalline[$ind['neither_collecting_system_nor_ias_p._e.']]) * 100 / $totalline[$ind['generated_load_p.e.']];
-            
-            $totalline[$ind['connected_to_collecting_system']] = $totalline[$ind['connected_to_collecting_system_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
+
+            $totalline[$ind['connected_to_collecting_system']] = $totalline[$ind['connected_to_collecting_system_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['addressed_through_ias_%_of_gen._load']] = $totalline[$ind['addressed_through_ias_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $totalline[$ind['neither_collecting_system_nor_ias_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['dist_art3_%_of_gen._load_(3)']] = $totalline[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $totalline[$ind['ratio_connected/enentering_%']] = $totalline[$ind['total_entering_load_p._e.']] * 100 / $totalline[$ind['connected_to_collecting_system_p._e.']];
             $totalline[$ind['ratio_total_entering_load/total_design_capacity_%']] = $totalline[$ind['total_entering_load_p._e.']] * 100 / $totalline[$ind['total_treatment_plant_design_capacity_p._e.']];
             $totalline[$ind['art4_compliant_%_of_gen._load']] = $totalline[$ind['art4_compliant_p._e.']] * 100 / $totalline[$ind['generated_load_p.e.']];
-            $totalline[$ind['art4_not_compliant_%_of_gen._load']] = $totalline[$ind['art4_not_compliant']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
+            $totalline[$ind['art4_not_compliant_%_of_gen._load']] = $totalline[$ind['art4_not_compliant']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['art4_not_relevant_%_of_gen._load']] = $totalline[$ind['art4_not_relevant']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['dist_art4_treat__%_of_connected_load']] = $totalline[$ind['dist_art4_treat_in_p.e._(4)']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['dist_art4_perf_%_of_connected_load']] = $totalline[$ind['dist_art4_perf_in_p.e._(5)']] * 100 / $totalline[$ind['generated_load_p.e.']];
             $totalline[$ind['distance_art5_treat_%_of_gen._load']] = $totalline[$ind['distance_art5_treat_in_p.e._(6)']] * 100 / $totalline[$ind['generated_load_p.e.']];
-            $totalline[$ind['distance_art5_perf_%_of_gen._load']] = $totalline[$ind['distance_art5_perf_in_p.e._(7)']] * 100 / $totalline[$ind['generated_load_p.e.']]; 
+            $totalline[$ind['distance_art5_perf_%_of_gen._load']] = $totalline[$ind['distance_art5_perf_in_p.e._(7)']] * 100 / $totalline[$ind['generated_load_p.e.']];
         }
-        
+
 //         dsm($totalline);
 //         dsm($expired);
 //         dsm($pending);
         fputcsv($r, $totalline, ';');
         fputcsv($r, $expired, ';');
-        fputcsv($r, $pending, ';');  
-        fclose($r);  
-        
-        
+        fputcsv($r, $pending, ';');
+        fclose($r);
+
+
         //calcul the evaluation line at the bottom of the sheet
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_evaluation_name'], $annee);
         $r = fopen($filename, 'wb');
         foreach ($list_type_rca as $type_rca) {
-            
+
             $line = array(
                 $context['sandbox'][$type_rca]['subjected_agglo'],
                 $context['sandbox'][$type_rca]['compliant_agglo'],
@@ -7172,23 +7196,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox'][$type_rca]['exempted'],
                 $context['sandbox'][$type_rca]['exempted_load']['generated'],
                 $context['sandbox'][$type_rca]['exempted_load']['collected'],
-            );             
-            fputcsv($r, $line, ';');    
+            );
+            fputcsv($r, $line, ';');
         }
         fclose($r);
-                 
+
     }
-           
-    
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];   
-    
+
+
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }       
+    }
 
 //     dsm(file_get_contents($tmpfilename));
-// 
+//
 //     ini_set("auto_detect_line_endings", false); //for Mac user
 //     $aHeaders = array(
 //           'Content-Type'        => 'application/octet-stream',
@@ -7201,7 +7225,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //     foreach ($aHeaders as $sName => $sValue) {
 //         drupal_add_http_header($sName, $sValue);
 //     }
-// 
+//
 //     readfile($tmpfilename);
 //     unlink($tmpfilename);
 //     exit();
@@ -7210,38 +7234,38 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context) 
+ */
+function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 {
     $listtypestat = array('expired', 'pending');
-    
+
     if (!isset($context['sandbox']['progress'])) {
-    
+
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['id'] = array();
-        
+
         $context['results']['country_volume_waste_water'] = 0;
         $context['sandbox']['list_uwwtp_treated'] = array();
         $context['sandbox']['expired']['list_agglo_treated'] = array();
         $context['sandbox']['pending']['list_agglo_treated'] = array();
-            
+
         //get all uwwtp (repeat agglo info if one agglo has more than one uwwtp)
         $query = 'select n.nid
-        from {node} n    
+        from {node} n
             left join
                 {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    ON n.nid = f_annee.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
         ';
-        
+
         $param = array(
             ':typenode' => 'uwwtp',
             ':annee' => $annee,
             );
 //         dsm($query);
 //         dsm($param);
-        $listuwwtp = array();    
+        $listuwwtp = array();
         try {
             $result = db_query($query, $param);
             while($row = $result->fetchAssoc()) {
@@ -7250,11 +7274,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-                
+
         $context['sandbox']['max'] = count($context['sandbox']['id']);
-        
+
         $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
-                
+
 //         $context['results']['uwwtp_total_load_generated_pe'] = 0;
 //         $context['results']['uwwtp_notreatment_pe'] = 0;
 //         $context['results']['uwwtp_ias_pe'] = 0;
@@ -7263,18 +7287,18 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         $context['results']['uwwtp_n_removal_without_p_pe'] = 0;
 //         $context['results']['uwwtp_p_removal_without_n_pe'] = 0;
 //         $context['results']['uwwtp_np_removal_pe'] = 0;
-//         $context['results']['uwwtp_other_morestringent_pe'] = 0;       
+//         $context['results']['uwwtp_other_morestringent_pe'] = 0;
 //      dsm($context);
-    } 
+    }
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] .'.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
-          
-    
+
+
     if ($context['sandbox']['progress'] == 0) {
-        $r = fopen($filename, 'wb');  
+        $r = fopen($filename, 'wb');
         $header = array(
             //Agglomeration info',
             $ind['aggcode'] => 'code',
@@ -7295,10 +7319,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['uww_code'] => 'code',
             $ind['uww_name'] => 'name',
             $ind['uww_status'] => 'status',
-            
+
             $ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'] => 'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load',
-            $ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'] => 'uww_entering_load_calculated_UwwtpAgglo_p._e.',            
-                        
+            $ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'] => 'uww_entering_load_calculated_UwwtpAgglo_p._e.',
+
             $ind['uww_entering this UWWTP % of gen. load'] => 'entering this UWWTP % of gen. load',
             $ind['uww_entering load  p. e.'] => 'entering load  p. e.',
             $ind['uww_capacity p. e.'] => 'capacity p. e.',
@@ -7334,8 +7358,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['Monitoring results -other'] => 'Monitoring results -other',
             $ind['In cause of failure (3)'] => 'In cause of failure (3)',
             $ind['difference between monitoring result N and P and treatment in place'] => 'difference between monitoring result N and P and treatment in place',
-            
-            
+
+
 //             $ind['Number of discharge points for this UWWTP'] => 'Number of discharge points for this UWWTP',
 //             $ind['DCP ID'] => 'DCP ID',
 //             //current RCA info (Q 2013)
@@ -7343,9 +7367,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             $ind['water body type 2'] => 'water body type',
 //             $ind['ID of the SA or LSA 2'] => 'ID',
 //             $ind['rcaname 2'] => 'name',
-//             $ind['designation date 2'] => 'designation date',          
-            
-            
+//             $ind['designation date 2'] => 'designation date',
+
+
             //Compliance of treatment plant under expired and pending deadline',
             //compliance Art. 4',
             $ind['art4_treatment type'] => 'treatment type',
@@ -7373,7 +7397,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['previous_art5_expired_treatment type'] => 'treatment type',
             $ind['previous_art5_expired_monitoring'] => 'monitoring',
             $ind['previous_art5_expired_final'] => 'final',
-            
+
 //             //compliance Art. 4',
 //              $ind['previous_art4_expired_treatment'] => 'previous_art4_expired_treatment',
 //              $ind['previous_art4_expired_monitoring'] => 'previous_art4_expired_monitoring',
@@ -7383,7 +7407,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //              $ind['previous_art5_expired_monitoring'] => 'previous_art5_expired_monitoring',
 //              $ind['previous_art5_expired_final'] => 'previous_art5_expired_final',
 
-            
+
             $ind['previous_art5_expired_difference between the previous situation and now'] => 'difference between the previous situation and now',
             //Installations for wastewater treatment in place',
             $ind['Secondary: installed?'] => 'Secondary: installed?',
@@ -7418,8 +7442,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['uwwtp_collecting_without_treatment'] => 'uwwtp_collecting_without_treatment',
             $ind['required_rcaaP'] => 'required_rcaaP',
             $ind['required_rcaaN'] => 'required_rcaaN',
-            $ind['required_rcab'] => 'required_rcab', 
-            $ind['required_rcac'] => 'required_rcac',  
+            $ind['required_rcab'] => 'required_rcab',
+            $ind['required_rcac'] => 'required_rcac',
             $ind['field_agglo_uww_perc_ent_uw'] => 'field_agglo_uww_perc_ent_uw',
             $ind['compliance5a'] => 'compliance5a',
             $ind['compliance5b'] => 'compliance5b',
@@ -7428,20 +7452,20 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['debug_pending_or_expired'] => 'debug_pending_or_expired',
             $ind['debug_art4_final'] => 'debug_art4_final',
         );
-        
+
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
     } else {
-        $r = fopen($filename, 'ab');  
+        $r = fopen($filename, 'ab');
     }
 //     dsm($header);
-    
+
 
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-        
+
 //         if ($context['sandbox']['id'][$context['sandbox']['progress']] != 173583 || $context['sandbox']['id'][$context['sandbox']['progress']] != 173557) {
-//             $context['sandbox']['progress']++;   
+//             $context['sandbox']['progress']++;
 //             $j++;
 //             continue;
 //         }
@@ -7450,15 +7474,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         dsm($uwwtp->field_uwwaggliste['und']);
         //a uwwtp can be attach to multiple agglo
         $uwwtpCompliance5x = uwwtd_get_compliance_5abc_uwwtp($uwwtp);
-        
+
         if (!isset($context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']])) {
             $context['results']['country_volume_waste_water'] += $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
         }
-        
+
         $context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']] = 1;
-        
+
         foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
-       
+
             $line = array();
 //             dsm($nidagg);
             $agg = node_load($nidagg['nid']);
@@ -7469,30 +7493,30 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['aggname']] = $agg->title;
             //'status',
             $line[$ind['aggstatus']] = $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
-            //'generated load  p. e.',     
+            //'generated load  p. e.',
             $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
-            //'deadline for Art. 3 compliance',    
+            //'deadline for Art. 3 compliance',
             $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
             //'deadline for Art. 4 compliance',
             $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
             //'deadline for Art. 5 compliance',
             $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
-            
+
             //Collection
             //'collected in collecting system % of gen. load',
             $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
             //'collected in collecting system  p. e.',
             $line[$ind['collected in collecting system  p. e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-            //'addressed through IAS % of gen. load', 
+            //'addressed through IAS % of gen. load',
             $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
-            //'addressed through IAS p. e.',        
+            //'addressed through IAS p. e.',
             $line[$ind['addressed through IAS p. e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-            //'neither collecting system nor IAS % of gen. load',      
+            //'neither collecting system nor IAS % of gen. load',
             $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
-            //'neither collecting system nor IAS p. e.',   
+            //'neither collecting system nor IAS p. e.',
             $line[$ind['neither collecting system nor IAS p. e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-            
-            //UWWTP general info            
+
+            //UWWTP general info
             //'code',
             $line[$ind['uww_code']] = $uwwtp->field_inspireidlocalid['und'][0]['value'];
             //'name',
@@ -7515,35 +7539,35 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //'entering this UWWTP % of gen. load',
                 //$uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value']/ 100 * $agg->field_agggenerated['und'][0]['value']);
 //                 $uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];//$uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];              
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];//$uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-                
+
                 $field_agglo_uww_perc_ent_uw = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 unset($agglo_uwwtp, $siteid);
             } else {
-                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = '';              
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = '';
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = '';
-                $field_agglo_uww_perc_ent_uw = 0; 
-            } 
-            
+                $field_agglo_uww_perc_ent_uw = 0;
+            }
+
             $line[$ind['uww_entering this UWWTP % of gen. load']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value'];
-            $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];         
-            
+            $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];
+
 //             dsm($line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
 //             dsm($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
 //             dsm($line[$ind['uww_entering this UWWTP % of gen. load']]);
 //             dsm($line[$ind['uww_entering load  p. e.']]);
-            
-                                   
+
+
             //'capacity p. e.',
             $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
-            //'status', 
+            //'status',
 //             $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
-            
-            
-            
+
+
+
             //Previous UWWTP general info
             $previousagglonid = uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'])));
             $previousuwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
@@ -7554,11 +7578,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             dsm($previousuwwtpnid);
 //             dsm(array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
 //             dsm($previousagglo_uwwtpnid);
-            $previous_reference_year = ''; 
+            $previous_reference_year = '';
             $previous_entering_load_pe = '';
-            $previous_capacity_pe = '';   
+            $previous_capacity_pe = '';
             $previous_percentage_of_change_of_entering_load = '';
-            $previous_percentage_of_change_of_capacity = '';            
+            $previous_percentage_of_change_of_capacity = '';
             if ($previousuwwtpnid != '' && $previousagglonid != '' && $previousagglo_uwwtpnid != '') {
                 $previousuwwtp = node_load($previousuwwtpnid);
                 $previousagglo_uwwtp = node_load($previousagglo_uwwtpnid);
@@ -7566,7 +7590,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 dsm($previousuwwtp);
 //                 dsm($previousagglo_uwwtp);
 //                 dsm($previousagglo);
-                $previous_reference_year = $context['sandbox']['previous_year']; 
+                $previous_reference_year = $context['sandbox']['previous_year'];
 //                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
                 //$previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
@@ -7577,10 +7601,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 } else {
                     $previous_percentage_of_change_of_entering_load = 'NI';
                 }
-                
+
                 if (isset($line[$ind['uww_capacity p. e.']]) && $previous_capacity_pe > 0) {
 //                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
-                    
+
                     $previous_percentage_of_change_of_capacity = ($line[$ind['uww_capacity p. e.']] - $previous_capacity_pe) / $previous_capacity_pe* 100;
                 } else {
                     $previous_percentage_of_change_of_capacity = 'NI';
@@ -7589,7 +7613,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 unset($previousagglo_uwwtp);
 //                 unset($previousagglo);
             }
-            
+
             //'reference year',
             $line[$ind['previous_reference year']] = $previous_reference_year;
             //'entering load p. e.',
@@ -7599,8 +7623,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'Percentage of change of entering load (1) %',
             $line[$ind['previous_Percentage of change of entering load (1) %']] = $previous_percentage_of_change_of_entering_load;
             //'Percentage of change of capacity (2) %',
-            $line[$ind['previous_Percentage of change of capacity (2) %']] = $previous_percentage_of_change_of_capacity;            
-            
+            $line[$ind['previous_Percentage of change of capacity (2) %']] = $previous_percentage_of_change_of_capacity;
+
             //current RCA details
             //a uwwtp can have multiple dcp and rca, thi case is not documented, so we put all info
             //on each rca separated by a ';'
@@ -7621,10 +7645,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $startingDateOfApplication_c = '';
             foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
                 $dcp = node_load($dcpnid['nid']);
-                
+
                 foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
                     $rca = node_load($rcanid['nid']);
-                    
+
                     if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
                         continue;
                     }
@@ -7662,29 +7686,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                             $field_dcpirrigation = '';
                             break;
                     }
-                    
+
                     $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $field_dcpwaterbodytype;
                     $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
                     $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
                     $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
-                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];   
-                                        
+                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
+
                     $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
                     $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
                     $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
                     $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
-                    
+
                     $startingDateOfApplication_an = ($startingDateOfApplication_an == '' ? '' : ';') . (isset($rca->field_rcaapdatedesignation_value['und'][0]['value']) ? substr($rca->field_rcaapdatedesignation_value['und'][0]['value'], 0, 10)  : '-');
                     $startingDateOfApplication_ap = $startingDateOfApplication_an;
                     $startingDateOfApplication_b = $startingDateOfApplication_an;
-                    $startingDateOfApplication_c = ($startingDateOfApplication_c == '' ? '' : ';') . (isset($rca->field_rcacdateotherdirective['und'][0]['value']) ? substr($rca->field_rcacdateotherdirective['und'][0]['value'], 0, 10)  : '-');                 
-                                        
+                    $startingDateOfApplication_c = ($startingDateOfApplication_c == '' ? '' : ';') . (isset($rca->field_rcacdateotherdirective['und'][0]['value']) ? substr($rca->field_rcacdateotherdirective['und'][0]['value'], 0, 10)  : '-');
+
                     unset($rca);
-                }     
-                unset($dcp);           
+                }
+                unset($dcp);
             }
             unset($rcatreated);
-            
+
             //'water body type',   ?dcpWaterBodyType
             $line[$ind['water body type']] = $dcpWaterBodyType;
             //'In case of discharge on land please specify the purpose',  ?dcpIrrigation
@@ -7702,7 +7726,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     break;
                 }
             }
-            unset($WBT);            
+            unset($WBT);
             $line[$ind['entirely discharging into coastal waters?']] = $entirely_discharge_in_CW;  //=yes if column Z= CW?
             //'type of receiving water',   ?dcpTypeOfReceivingArea
             $line[$ind['type of receiving water']] = $dcpTypeOfReceivingArea;
@@ -7711,37 +7735,37 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'name',         ?title
             $line[$ind['rcaname']] = $rcaName;
             //'Starting date of application 5.8.',
-            $line[$ind['Starting date of application 5.8.']] = $rcaDateArt58;  
+            $line[$ind['Starting date of application 5.8.']] = $rcaDateArt58;
             //'Starting date of application 5.4.',
             $line[$ind['Starting date of application 5.4.']] = $rcaDateArt54;
             //'Starting date of application a N',
             $line[$ind['Starting date of application a N']] = $startingDateOfApplication_an; //'TODO';  field_rcaapdatedesignation_value + 7
             //'Starting date of application a P',
             $line[$ind['Starting date of application a P']] = $startingDateOfApplication_ap; //'TODO';  field_rcaapdatedesignation_value + 7
-            //'Starting date of application b',     
+            //'Starting date of application b',
             $line[$ind['Starting date of application b']] = $startingDateOfApplication_b; //'TODO';    field_rcaapdatedesignation_value + 7
             //'Starting date of application c',
             $line[$ind['Starting date of application c']] = $startingDateOfApplication_c; //'TODO';    field_rcacdateotherdirective_value + 7
-            
+
             //UWWTP treatment and performance
             //'treatment required',
             $treatment_required = uwwtd_get_register_treatment_required_with_deadline(
-                $uwwtp->field_uwwtreatmentrequired['und'][0]['value'], 
-                substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10), 
-                substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10), 
+                $uwwtp->field_uwwtreatmentrequired['und'][0]['value'],
+                substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10),
+                substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10),
                 substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
                 $annee
             );
-            
-            
+
+
             $line[$ind['treatment required']] = $treatment_required;//$uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
-            
+
             $previous_treatment_required = '';
             if (isset($previousuwwtp)) {
                 $previous_treatment_required = uwwtd_get_register_treatment_required_with_deadline(
-                    $previousuwwtp->field_uwwtreatmentrequired['und'][0]['value'], 
-                    substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10), 
-                    substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10), 
+                    $previousuwwtp->field_uwwtreatmentrequired['und'][0]['value'],
+                    substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10),
+                    substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10),
                     substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10),
                     $previous_reference_year
                 );
@@ -7769,16 +7793,16 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             break;
 //         case 'Appropriate':
 //             $previous_treatment_required = 'Appropriate';
-//             break;  
+//             break;
 //         case 'NI':
 //             $previous_treatment_required = '0';
-//             break; 
-//         default:  
-//             $previous_treatment_required = '';                                                                                                                                         
-//     }            
+//             break;
+//         default:
+//             $previous_treatment_required = '';
+//     }
 // }
             //'treatment type in place (4)',
-            /*            
+            /*
             IIf([uwwPRemoval]=True And [uwwNRemoval]=True,
                 "3NP",
                 IIf([uwwPRemoval]=True And [uwwNRemoval]=False,
@@ -7793,10 +7817,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                     1,
                                     IIf([uwwPRemoval]=False And [uwwNRemoval]=False And [uwwOtherTreatment]=False And [uwwSecondaryTreatment]=False And [uwwPrimaryTreatment]=False,
                                         0,
-                                        "error"))))))) 
+                                        "error")))))))
             */
 //             $treatmenttypeinplace = '';
-//                  
+//
 //             if ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '1') {
 //                 $treatmenttypeinplace = '3NP';
 //             } elseif ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
@@ -7814,15 +7838,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             } else {
 //                 $treatmenttypeinplace = 'error';
 //             }
-             
-            
+
+
             $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
-            
+
             $previous_treatmenttypeinplace = '';
             if (isset($previousuwwtp)) {
                 $previous_treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($previousuwwtp);
             }
-            
+
 //             if (isset($previousuwwtp)) {
 //                 if ($previousuwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
 //                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'1';
@@ -7843,10 +7867,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 if ($previous_treatmenttypeinplace == '') {
 //                     $previous_treatmenttypeinplace .= '0';
 //                 }
-//             }             
-            
-                                                                      
-            $line[$ind['treatment type in place (4)']] = $treatmenttypeinplace;        
+//             }
+
+
+            $line[$ind['treatment type in place (4)']] = $treatmenttypeinplace;
             //$line[$ind['replace_____']] = $uwwtp->field_uwwtreatmenttype['und'][0]['value'];
             //'Monitoring results - BOD5',
             $line[$ind['Monitoring results - BOD5']] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
@@ -7858,31 +7882,31 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Monitoring results -Ptot']] = ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
             //'Monitoring results -other',
             $line[$ind['Monitoring results -other']] = ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
-            
-            if (isset($previousuwwtp)) {    
+
+            if (isset($previousuwwtp)) {
                 $bod5monitoring = ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
                 //'Monitoring results -COD',
                 $codmonitoring = ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
                 //'Monitoring results -Ntot',
                 $monitoring_Ntot = ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
                 //'Monitoring results -Ptot',
-                $monitoring_Ptot = ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));            
+                $monitoring_Ptot = ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
             }
-            
-            //'In cause of failure (3)',            
+
+            //'In cause of failure (3)',
             $causefailure = '';
             if ($uwwtp->field_uwwbaddesign['und'][0]['value'] == '1') {
                  $causefailure .= ($causefailure == '' ? '' : ';' ) . 'Bad design or dimensioning';
-            } 
+            }
             if ($uwwtp->field_uwwaccidents['und'][0]['value'] == '1') {
                  $causefailure .= ($causefailure == '' ? '' : ';' ) . 'Major accidents';
-            } 
+            }
             if ($uwwtp->field_uwwbadperfdesign['und'][0]['value'] == '1') {
                  $causefailure .= ($causefailure == '' ? '' : ';' ) . 'Bad performance';
-            }  
+            }
             if (isset($uwwtp->field_uwwinformation['und'][0]['value'])) {
                  $causefailure .= ($causefailure == '' ? '' : ';' ) . $uwwtp->field_uwwinformation['und'][0]['value'];
-            }                                    
+            }
             $line[$ind['In cause of failure (3)']] = $causefailure;
             unset($causefailure);
             //'difference between monitoring result N and P and treatment in place',
@@ -7892,24 +7916,24 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $difference_monitoring = 'no';
                 } else {
                     $difference_monitoring = 'yes';
-                }  
+                }
             } elseif (false !== strpos($treatmenttypeinplace, '3N')) {
                 if ($line[$ind['Monitoring results -Ntot']] == 'Pass') {
                     $difference_monitoring = 'no';
                 } else {
                     $difference_monitoring = 'yes';
-                }            
+                }
             } elseif (false !== strpos($treatmenttypeinplace, '3P')) {
                 if ($line[$ind['Monitoring results -Ptot']] == 'Pass') {
                     $difference_monitoring = 'no';
                 } else {
                     $difference_monitoring = 'yes';
-                }                                                      
+                }
             }
             $line[$ind['difference between monitoring result N and P and treatment in place']] = $difference_monitoring;
-            
+
             ////////////////////////////////////////
-            //todo check : to delete ?? 
+            //todo check : to delete ??
 //             $line[$ind['Number of discharge points for this UWWTP']] = 'TODO delete ?';
 //             $line[$ind['DCP ID']] = 'TODO delete ?';
 //             //current RCA info (Q 2013)
@@ -7917,29 +7941,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             $line[$ind['water body type 2']] = 'TODO delete ?';
 //             $line[$ind['ID of the SA or LSA 2']] = 'TODO delete ?';
 //             $line[$ind['rcaname 2']] = 'TODO delete ?';
-//             $line[$ind['designation date 2']] = 'TODO delete ?';       
+//             $line[$ind['designation date 2']] = 'TODO delete ?';
             //todo check : to delete ??
             ////////////////////////////////////////
-            
+
             //check if uwwtp under expired or pending deadline
             $pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
                                                                               $line[$ind['deadline for Art. 3 compliance']],
                                                                               $line[$ind['deadline for Art. 4 compliance']],
                                                                               $line[$ind['deadline for Art. 5 compliance']],
                                                                               $uwwtp);
-                                  
-           
+
+
             $previous_pending_or_expired = '';
-            if (isset($previousuwwtp)) {                 
+            if (isset($previousuwwtp)) {
                 $previous_pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
                                                                                   $line[$ind['deadline for Art. 3 compliance']],
                                                                                   $line[$ind['deadline for Art. 4 compliance']],
                                                                                   $line[$ind['deadline for Art. 5 compliance']],
                                                                                   $previousuwwtp);
             }
-                                                                                          
+
 // $previous_pending_or_expired = '';
-// if (isset($previousuwwtp)) {        
+// if (isset($previousuwwtp)) {
 //     if (
 //         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
 //          || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
@@ -7949,7 +7973,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         ) {
 //         $previous_pending_or_expired = 'EXP';
 //     }
-//     
+//
 //     //pending deadline    PD + les C avec date pas dépassée
 //     if (
 //         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
@@ -7959,35 +7983,35 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         && ($previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
 //         ) {
 //         $previous_pending_or_expired = 'PD';
-//     } 
-// }               
-         
-            
+//     }
+// }
 
-            
+
+
+
             //Compliance of treatment plant under expired and pending deadline
-            
+
             //calculate compliance of art 4 and 5 for this station and this agglo
             $uwwtp_compliance = uwwtd_article4_5_6_station_compliance($agg, $uwwtp);
-            
+
             $previous_uwwtp_compliance = array();
             if (isset($previousagglo) && isset($previousuwwtp)) {
                 $previous_uwwtp_compliance = uwwtd_article4_5_6_station_compliance($previousagglo, $previousuwwtp);
             }
-                 
+
             //compliance Art. 4    //secondary treatment in place
             //'treatment type', //Treatment met
-            
+
             // =IF(
-            //     OR(‘generated load ‘<2000; 
-            //         ‘neither collecting system nor IAS’ =100; 
-            //         ‘entering this UWWTP’=0; 
-            //         ‘deadline for Art. 4 compliance’ >’reference date’; 
-            //         ‘UWWTP status’=”inactive”; 
+            //     OR(‘generated load ‘<2000;
+            //         ‘neither collecting system nor IAS’ =100;
+            //         ‘entering this UWWTP’=0;
+            //         ‘deadline for Art. 4 compliance’ >’reference date’;
+            //         ‘UWWTP status’=”inactive”;
             //         AND(
-            //             OR(‘water body type’="to coastal water"; 
+            //             OR(‘water body type’="to coastal water";
             //                ‘water body type’="on land (catchment of coastal water)"
-            //                ); 
+            //                );
             //             ‘generated load’ <=10000
             //             )
             //         );
@@ -8001,15 +8025,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //                                 "C"
             //                             )
             //                 )
-            //     )            
+            //     )
 
             $art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            
+
             $previous_art4_treatment_type = '';
             if (isset($previousuwwtp)) {
                 $previous_art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
             }
-            
+
 //             if ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['false']) {
 //                 $line[$ind['art4_treatment type']] = 'TODO';
 //             } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['true']) {
@@ -8021,37 +8045,37 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             }
 
             //'monitoring',     //Performance met
-            
-            // =IF(OR(‘generated load’ <2000; 
-            //        ‘neither collecting system nor IAS’ =100; 
+
+            // =IF(OR(‘generated load’ <2000;
+            //        ‘neither collecting system nor IAS’ =100;
             //        ‘entering this UWWTP’=0;
             //        ’deadline for Art. 4 compliance’ >”reference date”;
-            //        ’ Monitoring results - BOD5’="reported as NR"; 
-            //        ‘Monitoring results –COD’="reported as NR"; 
+            //        ’ Monitoring results - BOD5’="reported as NR";
+            //        ‘Monitoring results –COD’="reported as NR";
             //        ‘Compliance Art. 4 – treatment type’="NR");
             //        "NR";
-            //        IF(OR(; ’Monitoring results - BOD5’="fail”; 
-            //                ‘Monitoring results - BOD5’=” not reported"; 
-            //                ‘Monitoring results –COD’="fail"; 
-            //                ‘Monitoring results –COD’="not reported"; 
-            //                ‘Monitoring results - BOD5’="--"; 
+            //        IF(OR(; ’Monitoring results - BOD5’="fail”;
+            //                ‘Monitoring results - BOD5’=” not reported";
+            //                ‘Monitoring results –COD’="fail";
+            //                ‘Monitoring results –COD’="not reported";
+            //                ‘Monitoring results - BOD5’="--";
             //                ‘Monitoring results –COD’="--");
             //                "NC";
-            //                IF(AND(‘Monitoring results - BOD5’="pass"; 
+            //                IF(AND(‘Monitoring results - BOD5’="pass";
             //                       ‘Monitoring results –COD’="pass");
             //                       "C";
             //                       "NC")
             //          )
             //    )
-   
-            
+
+
             $art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($treatment_required, $line[$ind['Monitoring results - BOD5']], $line[$ind['Monitoring results -COD']]);
-            
+
             $previous_art4_monitoring = '';
             if (isset($previousuwwtp)) {
                 $previous_art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($previous_treatment_required, $bod5monitoring, $codmonitoring);
-            } 
-            
+            }
+
 //             if ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['false']) {
 //                 $line[$ind['art4_monitoring']] = 'TODO';
 //             } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['true']) {
@@ -8060,8 +8084,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 $line[$ind['art4_monitoring']] = 'TODO';
 //             } else {
 //                 $line[$ind['art4_monitoring']] = 'TODO';
-//             }   
-         
+//             }
+
             //'final',
             // =IF(OR(‘Compliance Art. 4 – treatment type’="NC";
             //        ’Compliance Art. 4 – monitoring results’="NC");
@@ -8082,63 +8106,63 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $art4_final = 'C';
             }
 
-             
+
             //compliance Art. 5   //more stringent treatment in place
             //'treatment type',
             $art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-          
+
             $previous_art5_treatment = '';
             if (isset($previousuwwtp)) {
                 $previous_art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
             }
-            
+
             //'monitoring',
             $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
-            
+
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
                 $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
             }
-            
+
             //'final',
             $art5_final =  $uwwtp_compliance['compArt5'];
-            
+
             //save date in array
             if ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP') {
                 $line[$ind['art4_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_monitoring']] = $art4_monitoring;
-                $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];            
+                $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
                 $line[$ind['art5_treatment type']] = $art5_treatment;
                 $line[$ind['art5_monitoring']] = $art5_monitoring;
-                $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];                
+                $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
             } else {
                 $line[$ind['art4_treatment type']] = $pending_or_expired;
-                $line[$ind['art4_monitoring']] = $pending_or_expired;            
-                $line[$ind['art4_final']] = $pending_or_expired;            
+                $line[$ind['art4_monitoring']] = $pending_or_expired;
+                $line[$ind['art4_final']] = $pending_or_expired;
                 $line[$ind['art5_treatment type']] = $pending_or_expired;
                 $line[$ind['art5_monitoring']] = $pending_or_expired;
-                $line[$ind['art5_final']] = $pending_or_expired;                     
-            } 
-            
-            
+                $line[$ind['art5_final']] = $pending_or_expired;
+            }
+
+
             //Compliance of treatment plant under expired deadlines
             if ($pending_or_expired == 'EXP') {
                 $line[$ind['art4_expired_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_expired_monitoring']] = $art4_monitoring;
-                $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];            
+                $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];
                 $line[$ind['art5_expired_treatment type']] = $art5_treatment;
                 $line[$ind['art5_expired_monitoring']] = $art5_monitoring;
-                $line[$ind['art5_expired_final']] = $uwwtp_compliance['compArt5'];                
+                $line[$ind['art5_expired_final']] = $uwwtp_compliance['compArt5'];
             } else {
                 $line[$ind['art4_expired_treatment type']] = '';
-                $line[$ind['art4_expired_monitoring']] = '';            
-                $line[$ind['art4_expired_final']] = '';            
+                $line[$ind['art4_expired_monitoring']] = '';
+                $line[$ind['art4_expired_final']] = '';
                 $line[$ind['art5_expired_treatment type']] = '';
                 $line[$ind['art5_expired_monitoring']] = '';
-                $line[$ind['art5_expired_final']] = '';                     
-            }             
+                $line[$ind['art5_expired_final']] = '';
+            }
 
-             
+
             //Compliance of treatment plant under expired deadlines
 //             $art4_expired_treatment = '';
 //             $art4_expired_monitoring = '';
@@ -8153,24 +8177,24 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 $art5_expired_treatment = $line[$ind['art5_treatment type']];
 //                 $art5_expired_monitoring = $line[$ind['art5_monitoring']];
 //                 $art5_expired_final = $line[$ind['art5_final']];
-//             }     
-            //compliance Art. 4 
+//             }
+            //compliance Art. 4
             //'treatment type',
 //             $line[$ind['art4_expired_treatment type']] = $art4_expired_treatment;
 //             //'monitoring',
 //             $line[$ind['art4_expired_monitoring']] = $art4_expired_monitoring;
 //             //'final',
-//             $line[$ind['art4_expired_final']] = $art4_expired_final;              
-//             //compliance Art. 5 
+//             $line[$ind['art4_expired_final']] = $art4_expired_final;
+//             //compliance Art. 5
 //             //'treatment type',
 //             $line[$ind['art5_expired_treatment type']] = $art5_expired_treatment;
 //             //'monitoring',
 //             $line[$ind['art5_expired_monitoring']] = $art5_expired_monitoring;
 //             //'final',
 //             $line[$ind['art5_expired_final']] = $art5_expired_final;
-            
+
             unset($uwwtp_compliance);
-             
+
             //Previous compliance of the treatment under expired deadlines
 //             $previous_art4_expired_treatment = 'TODO';
 //             $previous_art4_expired_monitoring = 'TODO';
@@ -8185,58 +8209,58 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 $previous_art4_expired_final = 'TODO';
 //                 $previous_art5_expired_treatment = 'TODO';
 //                 $previous_art5_expired_monitoring = 'TODO';
-//                 $previous_art5_expired_final = 'TODO';  
-//                 $previous_art5_expired_difference = 'TODO';          
+//                 $previous_art5_expired_final = 'TODO';
+//                 $previous_art5_expired_difference = 'TODO';
 //             }
-//             //'treatment type', 
-//             $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment; 
+//             //'treatment type',
+//             $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment;
 //             //'monitoring',
 //             $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_expired_monitoring;
-//             //'final', 
+//             //'final',
 //             $line[$ind['previous_art4_expired_final']] = $previous_art4_expired_final;
-//             //'treatment type', 
+//             //'treatment type',
 //             $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_expired_treatment;
-//             //'monitoring', 
+//             //'monitoring',
 //             $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_expired_monitoring;
-//             //'final', 
+//             //'final',
 //             $line[$ind['previous_art5_expired_final']] = $previous_art5_expired_final;
-//              
+//
 //             //'difference between the previous situation and now',
 //             $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;
-            
+
             $line[$ind['previous_art4_expired_treatment']] = '';
-            $line[$ind['previous_art4_expired_monitoring']] = '';            
-            $line[$ind['previous_art4_expired_final']] = '';            
+            $line[$ind['previous_art4_expired_monitoring']] = '';
+            $line[$ind['previous_art4_expired_final']] = '';
             $line[$ind['previous_art5_expired_treatment type']] = '';
             $line[$ind['previous_art5_expired_monitoring']] = '';
-            $line[$ind['previous_art5_expired_final']] = '';      
-            $line[$ind['previous_art5_expired_difference between the previous situation and now']] = '';            
+            $line[$ind['previous_art5_expired_final']] = '';
+            $line[$ind['previous_art5_expired_difference between the previous situation and now']] = '';
             if (isset($previousuwwtp)) {
 //                 $previous_art4_treatment_type = '';
 //                 $previous_art4_monitoring = '';
 //                 $previous_art5_treatment = '';
 //                 $previous_art5_monitoring = '';
 //                 $previous_art5_expired_difference = '';
-                
+
                 if ($previous_pending_or_expired == 'EXP') {
                     $line[$ind['previous_art4_expired_treatment']] = $previous_art4_treatment_type;
                     $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_monitoring;
-                    $line[$ind['previous_art4_expired_final']] = $previous_uwwtp_compliance['compArt4'];            
+                    $line[$ind['previous_art4_expired_final']] = $previous_uwwtp_compliance['compArt4'];
                     $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_treatment;
                     $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_monitoring;
                     $line[$ind['previous_art5_expired_final']] = $previous_uwwtp_compliance['compArt5'];
-                    
-                    if ($line[$ind['previous_art4_expired_final']] != $line[$ind['art4_expired_final']]     
+
+                    if ($line[$ind['previous_art4_expired_final']] != $line[$ind['art4_expired_final']]
                         || $line[$ind['previous_art5_expired_final']] != $line[$ind['art5_expired_final']]) {
                             $previous_art5_expired_difference = 'yes';
                     } else {
                         $previous_art5_expired_difference = 'no';
                     }
-                    
-                    $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;                
+
+                    $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;
                 }
-            }            
-            
+            }
+
             if (isset($previous_uwwtp_compliance)) {
                 unset($previous_uwwtp_compliance);
             }
@@ -8248,9 +8272,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             if (isset($previousagglo)) {
                 unset($previousagglo);
-            }                        
+            }
 
-             
+
             //Installations for wastewater treatment in place
             //'Secondary: installed?',
             /*
@@ -8259,7 +8283,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     IFERROR (
                             IF(SEARCH("1";’treatment type’)>0;
                                 "0"
-                            );                 
+                            );
                             IFERROR(
                                     IF(SEARCH("0";’treatment type’)>0;
                                         "0"
@@ -8267,16 +8291,16 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                     "1"
                                    )
                             )
-                ) 
-            */            
+                )
+            */
 //             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
 //                 $secondaryinstalled = 'NR';
 //             } elseif ($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == 'MS' || $uwwtp->field_uwwtreatmenttype['und'][0]['value']== 'S') {
 //                 $secondaryinstalled = '1';
 //             } else {
 //                 $secondaryinstalled = '0';
-//             }   
-            
+//             }
+
 //             dsm('$treatmenttypeinplace : ' . $treatmenttypeinplace);
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $secondaryinstalled = 'NR';
@@ -8286,43 +8310,43 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $secondaryinstalled = '0';
             }
 //             dsm('$secondaryinstalled:'.$secondaryinstalled);
-               
-            $line[$ind['Secondary: installed?']] = $secondaryinstalled; 
+
+            $line[$ind['Secondary: installed?']] = $secondaryinstalled;
             //'Secondary:  monitoring passed?',
-            /*            
+            /*
             =IF(‘generated load’ <2000;
                 "NR";
                 IF(‘Secondary – installed’ =0;
                     0;
-                    IF(AND(‘Monitoring results - BOD5’="pass"; 
+                    IF(AND(‘Monitoring results - BOD5’="pass";
                            ‘Monitoring results –COD’);
                         1;
-                        0))) 
-            */            
+                        0)))
+            */
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $secondarypass = 'NR';
             } elseif ($secondaryinstalled == '0') {
-                $secondarypass = '0';                            
+                $secondarypass = '0';
             } elseif ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' && $uwwtp->field_uwwcodperf['und'][0]['value'] == 'P') {
                 $secondarypass = '1';
             } else {
                 $secondarypass = '0';
-            }                       
-            $line[$ind['Secondary:  monitoring passed?']] = $secondarypass; 
+            }
+            $line[$ind['Secondary:  monitoring passed?']] = $secondarypass;
             //'Secondary:  FINAL',
-            /*            
+            /*
             =IF(‘generated load’ <2000;
-                "NR"; 
+                "NR";
                 ‘Secondary – installed’ * ‘Secondary - monitoring passed?’)
-            */    
+            */
             $secondaryfinal = ($secondaryinstalled == '1' && $secondarypass == '1' ? '1': '0');
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $secondaryfinal = 'NR';
-            }            
-            $line[$ind['Secondary:  FINAL']] = $secondaryfinal; 
+            }
+            $line[$ind['Secondary:  FINAL']] = $secondaryfinal;
             //'More stringent:  installed?',
-            /*            
-            =IF(OR(‘neither collecting system nor IAS’ =100; 
+            /*
+            =IF(OR(‘neither collecting system nor IAS’ =100;
                    ‘entering this UWWTP’ =0);
                    0;
                    IF(‘generated load’ <2000;
@@ -8330,14 +8354,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     IFERROR(IF(SEARCH("3";’treatment type’)>0;
                                 1);
                             0)))
-            */                
+            */
             $morestringentinstalled = '0';
 //             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
 //                 $morestringentinstalled = 'NR';
 //             }elseif ($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == 'MS') {
 //                 $morestringentinstalled = '1';
-//             }  
-            
+//             }
+
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentinstalled = 'NR';
             } elseif (false !== strpos($treatmenttypeinplace, '3')) {
@@ -8345,10 +8369,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $morestringentinstalled = '0';
             }
-                                  
-            $line[$ind['More stringent:  installed?']] = $morestringentinstalled; 
+
+            $line[$ind['More stringent:  installed?']] = $morestringentinstalled;
             //'More stringent: monitoring passed?',
-//             /*            
+//             /*
             // Part 1
             // =IF(‘generated load’ <2000;
             //     "NR";
@@ -8378,7 +8402,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //                                )
             //                           ) ;
             //                         1;
-            //                         0); 
+            //                         0);
             //                       IFERROR(IF(AND(
             //                                      FIND("3P";’treatment type’)>0;
             //                                      OR(‘Monitoring results –Ptot’="pass";
@@ -8412,10 +8436,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //                       )
             //               )
             //     )
-//             */    
-            
+//             */
+
             $morestringentpassed = '';
-            if ($agg->field_agggenerated['und'][0]['value'] < 2000) {   
+            if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentpassed = 'NR';
             }
             if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3NP')) {
@@ -8427,29 +8451,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     (
                         $line[$ind['Monitoring results -Ntot']] == 'Pass'
                         && $secondarypass == '1'
-                    ) 
+                    )
                     ||
                     (
                         $line[$ind['Monitoring results -Ptot']] == 'Pass'
                         && $secondarypass == '1'
-                    ) 
+                    )
                     ||
                     (
                         $secondarypass == '1'
-                    ) 
+                    )
                     ) {
                     $morestringentpassed = '1';
                 } else {
                     $morestringentpassed = '0';
-                }             
-            } 
+                }
+            }
             if ($morestringentpassed == '' &&  false !== strpos($treatmenttypeinplace, '3N')) {
                 if ($line[$ind['Monitoring results -Ntot']] == 'Pass'
                     || $secondarypass == '1') {
                     $morestringentpassed = '1';
                 } else {
                     $morestringentpassed = '0';
-                }              
+                }
             }
             if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3P')) {
                 if ($line[$ind['Monitoring results -Ptot']] == 'Pass'
@@ -8457,45 +8481,45 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $morestringentpassed = '1';
                 } else {
                     $morestringentpassed = '0';
-                }             
+                }
             }
             if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3other')) {
                 if ($secondarypass == '1') {
                     $morestringentpassed = '1';
                 } else {
                     $morestringentpassed = '0';
-                }            
+                }
             }
             if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '2')) {
-                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' 
+                if ($line[$ind['Monitoring results -Ntot']] == 'Pass'
                     || $line[$ind['Monitoring results -Ptot']] == 'Pass'
                     || $secondarypass == '1') {
                     $morestringentpassed = '1';
                 } else {
                     $morestringentpassed = '0';
-                }                    
-            }                        
+                }
+            }
             if ($morestringentpassed == '') {
                 $morestringentpassed = '0';
-            } 
-            
-            
-            $line[$ind['More stringent: monitoring passed?']] = $morestringentpassed; 
+            }
+
+
+            $line[$ind['More stringent: monitoring passed?']] = $morestringentpassed;
             //'More stringent:  FINAL',
-            /*            
+            /*
             =IF(‘generated load’ <2000;
                 "NR"; ‘More stringent  - installed’ * ‘More stringent - monitoring passed’)
-            */      
+            */
             $morestringentfinal = ($morestringentinstalled == '1' && $morestringentpassed == '1' ? '1': '0');
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentfinal = 'NR';
-            }            
-            $line[$ind['More stringent:  FINAL']] = $morestringentfinal;                       
-            
+            }
+            $line[$ind['More stringent:  FINAL']] = $morestringentfinal;
+
             //UWWTP incoming and discharged load
-            //'Volume of waste water treated' 'm3/y',     field_uwwwastewatertreated                          
+            //'Volume of waste water treated' 'm3/y',     field_uwwwastewatertreated
             $line[$ind['Volume of waste water treated m3/y']] = $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
-            
+
             //'Incoming loads BOD-tot  t/y',       field_uwwbodincoming
             if (isset($uwwtp->field_uwwbodincoming['und'][0]['value'])) {
                 $line[$ind['Incoming loads BOD-tot  t/y']] = $uwwtp->field_uwwbodincoming['und'][0]['value'];
@@ -8503,29 +8527,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Incoming loads BOD-tot  t/y']] = 0;
             }
-            
-            //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge 
+
+            //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge
             if (isset($uwwtp->field_uwwboddischarge['und'][0]['value'])) {
                 $line[$ind['Discharged loads BOD-tot  t/y']] = $uwwtp->field_uwwboddischarge['und'][0]['value'];
                 $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
             } else {
                 $line[$ind['Discharged loads BOD-tot  t/y']] = 0;
             }
-                        
+
             //'BOD rate of removal %',      round(((1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100), 2)
             if ($uwwtp->field_uwwboddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwbodincoming['und'][0]['value'] > 0) {
                 $line[$ind['BOD rate of removal %']] = (1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100;
             } else {
                 $line[$ind['BOD rate of removal %']] = '';
             }
-            
+
             //'average Incoming concentration BOD mg/l', ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {  
+            if (isset($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration BOD mg/l']] = ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration BOD mg/l']] = '';
             }
-            
+
             //'average Discharge concentration BOD mg/l', ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration BOD mg/l']] = ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
@@ -8540,7 +8564,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Incoming cocentration COD-tot   t/y']] = 0;
             }
-            
+
             //'Discharged concentration COD-tot  t/y',    field_uwwcoddischarge
             if (isset($uwwtp->field_uwwcoddischarge['und'][0]['value'])) {
                 $line[$ind['Discharged concentration COD-tot  t/y']] = $uwwtp->field_uwwcoddischarge['und'][0]['value'];
@@ -8548,28 +8572,28 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Discharged concentration COD-tot  t/y']] = '';
             }
-            
+
             //'COD rate of removal %',   round(( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%'
             if ($uwwtp->field_uwwcoddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwcodincoming['und'][0]['value'] > 0) {
                 $line[$ind['COD rate of removal %']] =  ( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100);
             } else {
                 $line[$ind['COD rate of removal %']] = '';
-            }            
-            
-            //'average Incoming concentration COD mg/l',  ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000; 
+            }
+
+            //'average Incoming concentration COD mg/l',  ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration COD mg/l']] = ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration COD mg/l']] = '';
             }
-            
+
             //'average Discharge concentration COD mg/l',  ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration COD mg/l']] = ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration COD mg/l']] = '';
             }
-            
+
             //'Incoming loads N-tot   t/y',   field_uwwnincoming
             if (isset($uwwtp->field_uwwnincoming['und'][0]['value'])) {
                 $line[$ind['Incoming loads N-tot   t/y']] = $uwwtp->field_uwwnincoming['und'][0]['value'];
@@ -8584,29 +8608,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Discharged loads N-tot  t/y']] = '';
             }
-            
+
             //'N rate of removal %',   round(( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%'
             if ($uwwtp->field_uwwndischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwnincoming['und'][0]['value'] > 0) {
                 $line[$ind['N rate of removal %']] = ( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100);
             } else {
                 $line[$ind['N rate of removal %']] = '';
             }
-            
-                        
+
+
             //'average Incoming concentration N mg/l',         ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration N mg/l']] = ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration N mg/l']] = '';
             }
-            
+
             //'average Discharge concentration N mg/l',    ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration N mg/l']] = ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration N mg/l']] = '';
             }
-            
+
             //'Incoming cocentration P-tot   t/y',    field_uwwpincoming
             if (isset($uwwtp->field_uwwpincoming['und'][0]['value'])) {
                 $line[$ind['Incoming cocentration P-tot   t/y']] = $uwwtp->field_uwwpincoming['und'][0]['value'];
@@ -8614,7 +8638,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Incoming cocentration P-tot   t/y']] = '';
             }
-            
+
             //'Discharged concentration P-tot  t/y',    field_uwwpdischarge
             if (isset($uwwtp->field_uwwpdischarge['und'][0]['value'])) {
                 $line[$ind['Discharged concentration P-tot  t/y']] = $uwwtp->field_uwwpdischarge['und'][0]['value'];
@@ -8622,41 +8646,41 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } else {
                 $line[$ind['Discharged concentration P-tot  t/y']] = '';
             }
-            
+
             //'P rate of removal %',   round(( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%'
             if ($uwwtp->field_uwwpdischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwpincoming['und'][0]['value'] > 0) {
                 $line[$ind['P rate of removal %']] = ( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100);
             } else {
                 $line[$ind['P rate of removal %']] = '';
             }
-            
-                        
+
+
             //'average Incoming concentration P mg/l',  ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if (isset($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration P mg/l']] = ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration P mg/l']] = '';
             }
-            
+
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) { 
+            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration P mg/l']] = '';
             }
-            
+
             //needed on next sheets :
             //here same test as in tpl node--uwwtp.tpl.php
-            if((!isset($uwwtp->field_uwwcollectingsystem['und'][0]['value']) 
-                || $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON') 
-               || 
-               (!isset($uwwtp->field_physicalcapacityactivity['und'][0]['value']) 
+            if((!isset($uwwtp->field_uwwcollectingsystem['und'][0]['value'])
+                || $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON')
+               ||
+               (!isset($uwwtp->field_physicalcapacityactivity['und'][0]['value'])
                 || $uwwtp->field_physicalcapacityactivity['und'][0]['value'] == '0')){
                 $line[$ind['uwwtp_collecting_without_treatment']] = 1;
             } else {
                 $line[$ind['uwwtp_collecting_without_treatment']] = 0;
             }
-            
+
             //here field for next sheet
             $line[$ind['required_rcaaP']] = $uwwtp->field_uwww_required_rcaap['und'][0]['value'];
             $line[$ind['required_rcaaN']] = $uwwtp->field_uwww_required_rcaan['und'][0]['value'];
@@ -8666,25 +8690,25 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['compliance5a']] = $uwwtpCompliance5x['5a'];
             $line[$ind['compliance5b']] = $uwwtpCompliance5x['5b'];
             $line[$ind['compliance5c']] = $uwwtpCompliance5x['5c'];
-            
+
             //debug value
             $line[$ind['debug_pending_or_expired']] = $pending_or_expired;
             $line[$ind['debug_art4_final']] = $art4_final;
-            
+
             fputcsv($r, $line, ';');
-            
-            
+
+
             foreach ($listtypestat as $typestat) {
                 if ( !isset($context['sandbox'][$typestat])) {
                     $context['sandbox'][$typestat]['generated_pe'] = 0;
                     $context['sandbox'][$typestat]['entering_pe'] = 0;
                     $context['sandbox'][$typestat]['capacity_pe'] = 0;
                     $context['sandbox'][$typestat]['previous_entering_pe'] = 0;
-                    $context['sandbox'][$typestat]['previous_capacity_pe'] = 0;          
+                    $context['sandbox'][$typestat]['previous_capacity_pe'] = 0;
                 }
-                
+
                 //expired deadline   (toutes les NC +  les C qui ont date dépassée)
-                if ($typestat == 'expired' && $pending_or_expired != 'EXP') {        
+                if ($typestat == 'expired' && $pending_or_expired != 'EXP') {
     //                 if (false === (
     //                     (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
     //                      || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
@@ -8695,9 +8719,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         continue;
     //                 }
                 }
-                
+
                 //pending deadline    PD + les C avec date pas dépassée
-                if ($typestat == 'pending' && $pending_or_expired != 'PD') {     
+                if ($typestat == 'pending' && $pending_or_expired != 'PD') {
     //                 if (false === (
     //                     ((substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
     //                      && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
@@ -8706,32 +8730,32 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
     //                     && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
     //                     )) {
                         continue;
-    //                 } 
+    //                 }
                 }
-    
+
                 if (!isset($context['sandbox'][$typestat]['list_agglo_treated'][$line[$ind['aggcode']]])) {
                     $context['sandbox'][$typestat]['generated_pe'] += $line[$ind['generated load  p. e.']];
-                    
-                    $context['sandbox'][$typestat]['list_agglo_treated'][$line[$ind['aggcode']]] = 1;                    
+
+                    $context['sandbox'][$typestat]['list_agglo_treated'][$line[$ind['aggcode']]] = 1;
                 }
                 $context['sandbox'][$typestat]['entering_pe'] +=  $line[$ind['uww_entering load  p. e.']];
                 $context['sandbox'][$typestat]['capacity_pe'] +=  $line[$ind['uww_capacity p. e.']];
                 $context['sandbox'][$typestat]['previous_entering_pe'] +=  $line[$ind['previous_entering load p. e.']];
-                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  $line[$ind['previous_capacity p. e.']];                        
-            }                           
+                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  $line[$ind['previous_capacity p. e.']];
+            }
         }
-         
+
         unset($uwwtp);
 //         dsm($line);
 //         return;
 //     $context['sandbox']['progress'] = $context['sandbox']['max'];
-//         break;        
+//         break;
 //         $allline[] = $line;
         $j++;
-        $context['sandbox']['progress']++;   
-    } 
+        $context['sandbox']['progress']++;
+    }
     fclose($r);
-    
+
     //write last lines with aggregate data
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
@@ -8739,137 +8763,137 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         $line = array_pad(array(), count($ind), '');
 //         $line = array(
         $line[0] = 'TOTAL';
-        $entering_load_pe = $context['sandbox']['expired']['entering_pe'] + $context['sandbox']['pending']['entering_pe']; 
-        
-        $line[$ind['uww_entering this UWWTP % of gen. load']] = 
+        $entering_load_pe = $context['sandbox']['expired']['entering_pe'] + $context['sandbox']['pending']['entering_pe'];
+
+        $line[$ind['uww_entering this UWWTP % of gen. load']] =
              $entering_load_pe * 100 / ($context['sandbox']['expired']['generated_pe'] + $context['sandbox']['pending']['generated_pe']);
-        
+
         $line[$ind['uww_entering load  p. e.']] = $entering_load_pe;
         $line[$ind['uww_capacity p. e.']] = $context['sandbox']['expired']['capacity_pe'] + $context['sandbox']['pending']['capacity_pe'];
         $line[$ind['previous_entering load p. e.']] = $context['sandbox']['expired']['previous_entering_pe'] + $context['sandbox']['pending']['previous_entering_pe'];
         $line[$ind['previous_capacity p. e.']] = $context['sandbox']['expired']['previous_capacity_pe'] + $context['sandbox']['pending']['previous_capacity_pe'];
-        
-//         $previous_percentage_of_change_of_entering_load =  
-//             ($line[$ind['uww_entering load  p. e.']] -  $previous_entering_load_pe) 
-//             / $previous_entering_load_pe * 100;    
-    
+
+//         $previous_percentage_of_change_of_entering_load =
+//             ($line[$ind['uww_entering load  p. e.']] -  $previous_entering_load_pe)
+//             / $previous_entering_load_pe * 100;
+
         if ($line[$ind['uww_entering load  p. e.']] > 0 && $line[$ind['previous_entering load p. e.']] > 0) {
-            $line[$ind['previous_Percentage of change of entering load (1) %']] = 
-                //(($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;           
+            $line[$ind['previous_Percentage of change of entering load (1) %']] =
+                //(($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
                 ($line[$ind['uww_entering load  p. e.']] - $line[$ind['previous_entering load p. e.']]) / $line[$ind['previous_entering load p. e.']] * 100;
         } else {
             $line[$ind['previous_Percentage of change of entering load (1) %']] = 'NI';
         }
-        
+
 //         if ($line[$ind['previous_Percentage of change of entering load (1) %']] == -100) {
 //             $line[$ind['previous_Percentage of change of entering load (1) %']] = '0';
 //         }
 
 
         if ($line[$ind['previous_capacity p. e.']] > 0 && $line[$ind['uww_capacity p. e.']] > 0) {
-    //                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];            
+    //                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
             $line[$ind['previous_Percentage of change of capacity (2) %']] = ($line[$ind['uww_capacity p. e.']] - $line[$ind['previous_capacity p. e.']]) / $line[$ind['previous_capacity p. e.']]* 100;
         } else {
             $line[$ind['previous_Percentage of change of capacity (2) %']] = 'NI';
         }
-        
-//         $line[$ind['previous_Percentage of change of capacity (2) %']] = 
-//                     (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;        
+
+//         $line[$ind['previous_Percentage of change of capacity (2) %']] =
+//                     (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
 //         );
 
 //         if ($line[$ind['previous_Percentage of change of capacity (2) %']] == -100) {
 //             $line[$ind['previous_Percentage of change of capacity (2) %']] = '0';
 //         }
-        
+
         fputcsv($r, $line, ';');
-            
+
         $line = array_pad(array(), count($ind), '');
 //         $line = array(
         $line[0] = 'expired_deadline';
         $entering_load_pe = $context['sandbox']['expired']['entering_pe'];
-        $line[$ind['uww_entering this UWWTP % of gen. load']] = 
+        $line[$ind['uww_entering this UWWTP % of gen. load']] =
              $entering_load_pe * 100 /  $context['sandbox']['expired']['generated_pe'];
-             
+
         $line[$ind['uww_entering load  p. e.']] = $entering_load_pe;
         $line[$ind['uww_capacity p. e.']] = $context['sandbox']['expired']['capacity_pe'];
         $line[$ind['previous_entering load p. e.']] = $context['sandbox']['expired']['previous_entering_pe'];
         $line[$ind['previous_capacity p. e.']] = $context['sandbox']['expired']['previous_capacity_pe'];
-        $line[$ind['previous_Percentage of change of entering load (1) %']] = 
+        $line[$ind['previous_Percentage of change of entering load (1) %']] =
             (($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
 
-        $line[$ind['previous_Percentage of change of capacity (2) %']] = 
-                    (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;    
+        $line[$ind['previous_Percentage of change of capacity (2) %']] =
+                    (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
 //         );
         fputcsv($r, $line, ';');
-        
-        $line = array_pad(array(), count($ind), '');  
+
+        $line = array_pad(array(), count($ind), '');
 //         $line = array(
         $line[0] = 'pending_deadline';
         $entering_load_pe = $context['sandbox']['pending']['entering_pe'];
-        $line[$ind['uww_entering this UWWTP % of gen. load']] = 
+        $line[$ind['uww_entering this UWWTP % of gen. load']] =
              $entering_load_pe * 100 /  $context['sandbox']['pending']['generated_pe'];
-             
+
         $line[$ind['uww_entering load  p. e.']] = $entering_load_pe;
 
         $line[$ind['uww_capacity p. e.']] = $context['sandbox']['pending']['capacity_pe'];
         $line[$ind['previous_entering load p. e.']] = $context['sandbox']['pending']['previous_entering_pe'];
         $line[$ind['previous_capacity p. e.']] = $context['sandbox']['pending']['previous_capacity_pe'];
-        $line[$ind['previous_Percentage of change of entering load (1) %']] = 
+        $line[$ind['previous_Percentage of change of entering load (1) %']] =
             (($line[$ind['uww_entering load  p. e.']] /$line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
 
-        $line[$ind['previous_Percentage of change of capacity (2) %']] = 
-                    (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;    
+        $line[$ind['previous_Percentage of change of capacity (2) %']] =
+                    (($line[$ind['uww_capacity p. e.']] / $line[$ind['previous_capacity p. e.']]) - 1 ) * 100;
 //         );
-        fputcsv($r, $line, ';');  
-        fclose($r);              
-    }                                           
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];    
-    
+        fputcsv($r, $line, ';');
+        fclose($r);
+    }
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }    
+    }
 }
 
 /**
  *
- */ 
+ */
 function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context)
 {
     if (!isset($context['sandbox']['progress'])) {
-    
+
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['id'] = array();
-        
+
         //get all agglomeration without station (= no trace of the agglo nid inn agglo_uwwtp content)
         $query = 'select n.nid
-        from {node} n    
+        from {node} n
             left join
                 {field_data_field_anneedata} f_annee
                     ON n.nid = f_annee.entity_id
             left join
             {field_data_field_agggenerated} f_agggenerated
-                ON n.nid = f_agggenerated.entity_id                                                                                                                                                                                    
+                ON n.nid = f_agggenerated.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
             and not EXISTS (select 1 from {field_data_field_agglo_uww_agglo} where field_agglo_uww_agglo_nid = n.nid)
         ';
-        
+
 // select n.nid
-//         from drupal_node n    
+//         from drupal_node n
 //             left join
 //                 drupal_field_data_field_anneedata f_annee
-//                     ON n.nid = f_annee.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+//                     ON n.nid = f_annee.entity_id
 //         where n.type = 'agglomeration'
 //             and f_annee.field_anneedata_value = 2011
 //             and n.nid not EXISTS (select 1 from drupal_field_data_field_agglo_uww_agglo where field_agglo_uww_agglo_nid = n.nid)
-                    
+
         $param = array(
             ':typenode' => 'agglomeration',
             ':annee' => $annee,
             );
-    
+
         try {
             $result = db_query($query, $param);
             while($row = $result->fetchAssoc()) {
@@ -8878,89 +8902,89 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-                
+
         $context['sandbox']['max'] = count($context['sandbox']['id']);
-        
-    } 
+
+    }
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
-    
-    
+
+
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
-    $r = fopen($filename, 'ab');  
-    
+    $r = fopen($filename, 'ab');
+
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-    
+
         $agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-        
+
         $line = array();
-        
+
         $line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
         //'name',
         $line[$ind['aggname']] = $agg->title;
         //'status',
         $line[$ind['aggstatus']] = $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
-        //'generated load  p. e.',     
+        //'generated load  p. e.',
         $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
-        //'deadline for Art. 3 compliance',    
+        //'deadline for Art. 3 compliance',
         $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
         //'deadline for Art. 4 compliance',
         $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
         //'deadline for Art. 5 compliance',
         $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
-        
+
         //Collection
         //'collected in collecting system % of gen. load',
         $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
         //'collected in collecting system  p. e.',
         $line[$ind['collected in collecting system  p. e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-        //'addressed through IAS % of gen. load', 
+        //'addressed through IAS % of gen. load',
         $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
-        //'addressed through IAS p. e.',        
+        //'addressed through IAS p. e.',
         $line[$ind['addressed through IAS p. e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-        //'neither collecting system nor IAS % of gen. load',      
+        //'neither collecting system nor IAS % of gen. load',
         $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
-        //'neither collecting system nor IAS p. e.',   
+        //'neither collecting system nor IAS p. e.',
         $line[$ind['neither collecting system nor IAS p. e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
-                
+
         fputcsv($r, $line, ';');
-        
+
         unset($agg);
-    
+
         $j++;
-        $context['sandbox']['progress']++;           
-    } 
-    
+        $context['sandbox']['progress']++;
+    }
+
     fclose($r);
-    
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' (second pass for aggloemration without uwwtp) ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' (second pass for aggloemration without uwwtp) ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
-} 
+}
 
 /**
  *
- */ 
-function uwwtd_create_register_2015_rca_sheet1($annee, &$context) 
+ */
+function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 {
 //     dsm('la');
-    if (!isset($context['sandbox']['progress'])) {  
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['max'] = 1;
         $context['sandbox']['progress'] = 0;
-    } 
+    }
     $ind = $GLOBALS['uwwtd']['sheet1_rca'];
-  
+
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['rca']['csv_name']. '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['csv_name'], $annee);
-    
+
     $r = fopen($filename, 'wb');
 
     //create sensitive area register
     $header = array(
-        $ind['id_of_sensitive_area'] => 'ID of Sensitive Area', //; rcaCode 
+        $ind['id_of_sensitive_area'] => 'ID of Sensitive Area', //; rcaCode
         $ind['name_of_sensitive_area'] => 'Name of Sensitive Area', //; rcaName
         $ind['zone_type_code'] => 'Zone Type Code', //; rcaType
         $ind['specialised_zone_type_code'] => 'Specialised Zone type Code', //; ?rcaType
@@ -8990,13 +9014,13 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => 'Total organic design capacity of the UWWTPs (p.e.) of the article 5.4 area (1)', //; ?rcaPlantsCapacity
         $ind['incoming_loads_(t/y)_n-tot_(1)'] => 'Incoming loads (t/y) N-tot (1)', //; rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
         $ind['rate_of_removal_n-tot'] => 'Rate of Removal N-tot', //; ?
-        $ind['discharged_loads_(t/y)_n-tot_(1)'] => 'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated 
-        $ind['incoming_loads_(t/y)_p-tot_(1)'] => 'Incoming loads (t/y) P-tot (1)', //; rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated 
+        $ind['discharged_loads_(t/y)_n-tot_(1)'] => 'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
+        $ind['incoming_loads_(t/y)_p-tot_(1)'] => 'Incoming loads (t/y) P-tot (1)', //; rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
         $ind['rate_of_removal_p-tot'] => 'Rate of Removal P-tot', //; ?
         $ind['discharged_loads_(t/y)_p-tot:_'] => 'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
         $ind['general_remark'] => 'general Remark', //; rcaRemarks
         $ind['rcabeginlife'] => 'rcaBeginLife', //; ?
-        $ind['rcaendlife'] => 'rcaEndLife', //; ? 
+        $ind['rcaendlife'] => 'rcaEndLife', //; ?
         $ind['id_code_of_successor_(2)'] => 'ID code of successor (2)', //; ?
         $ind['id_code_of_predecessor_(2)'] => 'ID code of predecessor (2)', //; ?
         $ind['remark_successor/predecessor_sa'] => 'remark Successor/Predecessor SA', //; ?
@@ -9010,21 +9034,21 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 
     fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
     fputcsv($r, $header, ';');
-        
+
 //     $allline = array();
     for ($i = 0, $max = count($rca); $i < $max; $i++) {
         if (false === in_array($rca[$i]['field_specialisedzonetype_value'], array('SA', 'LSA', 'CSA', 'A58'))) {
             continue;
         }
         $line = array(
-            //'ID of Sensitive Area', //;       rcaCode 
+            //'ID of Sensitive Area', //;       rcaCode
             $ind['id_of_sensitive_area'] => $rca[$i]['field_inspireidlocalid_value'],
             //'Name of Sensitive Area', //;     rcaName
             $ind['name_of_sensitive_area'] => $rca[$i]['title'],
             //'Zone Type Code', //;             rcaType
             $ind['zone_type_code'] => $rca[$i]['field_specialisedzonetype_value'],
             //'Specialised Zone type Code', //;   ?rcaType
-            $ind['specialised_zone_type_code'] => 'TODO', 
+            $ind['specialised_zone_type_code'] => 'TODO',
             //'Parameters subject to More Stringent Treatment: N', //;      rcaParameterN
             $ind['parameters_subject_to_more_stringent_treatment:_n'] => $rca[$i]['field_rca_parameter_n_value'],
             //'Parameters subject to More Stringent Treatment: P', //;      rcaParameterP
@@ -9034,8 +9058,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Parameters subject to More Stringent Treatment: other', //;   rcaParameterOther
             $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]['field_rca_parameter_other_value'],
             //'Date of designation of Art. 5(8)', //;                  ?
-            $ind['date_of_designation_of_art._5(8)'] => 'TODO', 
-//             $ind['date_of_designation_of_art._5(8)'] => ('' != $rca[$i]['field_rcadateart5854_value'] ?  substr($rca[$i]['field_rcadateart5854_value'], 0, 10) - 7 : ''), 
+            $ind['date_of_designation_of_art._5(8)'] => 'TODO',
+//             $ind['date_of_designation_of_art._5(8)'] => ('' != $rca[$i]['field_rcadateart5854_value'] ?  substr($rca[$i]['field_rcadateart5854_value'], 0, 10) - 7 : ''),
             //'Starting date of application of Art. 5(8)', //;         rcaDateArt58
             $ind['starting_date_of_application_of_art._5(8)'] => $rca[$i]['field_rcadateart5854_value'],
             //'Starting date of application of Art. 5(4)', //;         rcaDateArt54
@@ -9047,7 +9071,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['starting_date_of_designation_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application a N', //;                  ?
             $ind['starting_date_of_application_a_n'] => 'TODO', // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
+//             $ind['starting_date_of_application_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  a P', //;                         rcaAPhos
             $ind['designation_criteria_a_p'] => $rca[$i]['field_rcaaphos_value'],
             //'Starting date of designation a P', //;                  ?
@@ -9055,7 +9079,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['starting_date_of_designation_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application a P', //;                  ?
             $ind['starting_date_of_application_a_p'] => 'TODO', // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
+//             $ind['starting_date_of_application_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  b', //;                           rcaB
             $ind['designation_criteria_b'] => $rca[$i]['field_rcab_value'],
             //'Starting date of designation', //;                      ?
@@ -9063,7 +9087,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['starting_date_of_designation_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
             //'Starting date of application', //;                      ?
             $ind['starting_date_of_application_b'] => 'TODO',     // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''), 
+//             $ind['starting_date_of_application_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  c', //;                           rcaC
             $ind['designation_criteria_c'] => $rca[$i]['field_rcac_value'],
             //'Starting date of designation', //;                      ?
@@ -9071,7 +9095,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['starting_date_of_designation_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
             //'Starting date of application', //;                      ?
             $ind['starting_date_of_application_c'] => 'TODO',   // =rcaCDateOtherDirective + 7 years
-//             $ind['starting_date_of_application_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) + 7 : ''), 
+//             $ind['starting_date_of_application_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) + 7 : ''),
             //'Designation criteria c - relevant EU-Directives and related parameters', //;            ?
 //             $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => 'TODO',    rcaCRelevantDirective        field_rcacrelevantdirective
             $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => $rca[$i]['field_rcacrelevantdirective_value'] ,
@@ -9082,10 +9106,10 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 //             $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => 'TODO',  rcaCDateOtherDirective   field_rcacdateotherdirective
             $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
             //'Number of UWWTPs of the article 5.4 area (1)', //;                                      ?rcaPlants
-            $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplants_value'],            
+            $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplants_value'],
             //'Total organic design capacity of the UWWTPs (p.e.) of the article 5.4 area (1)', //;    ?rcaPlantsCapacity
             $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplantscapacity_value'],
-            
+
             //'Incoming loads (t/y) N-tot (1)', //;    rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
             $ind['incoming_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']),
             //'Rate of Removal N-tot', //;              ?
@@ -9093,10 +9117,10 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['rate_of_removal_n-tot'] =>  ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value'])
                                                 /
                                                ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']) ,
-            //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated    
+            //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
             $ind['discharged_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']),
-            
-            //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated    
+
+            //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
             $ind['incoming_loads_(t/y)_p-tot_(1)'] => ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
             //'Rate of Removal P-tot', //;              ?
 //             $ind['rate_of_removal_p-tot'] => 'TODO',  =discharged loads Ptot/incoming loads Ptot
@@ -9105,10 +9129,10 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
                                              ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
             $ind['discharged_loads_(t/y)_p-tot:_'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value']),
-            
+
             //'general Remark', //;                   rcaRemarks
             $ind['general_remark'] => $rca[$i]['field_rcaremarks_value'],
-            
+
             //'rcaBeginLife', //;                        ?
             $ind['rcabeginlife'] => 'TODO',     //new reporting format?
             //'rcaEndLife', //;                          ?
@@ -9123,15 +9147,15 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 //             $ind['related_sensitive_area_(2)'] => 'TODO',       si CSA, voir rcaSensitiveArea field_rca_sensitive_area
             $ind['related_sensitive_area_(2)'] => ($rca[$i]['field_specialisedzonetype_value'] != 'CSA' ? '' : $rca[$i]['field_rca_sensitive_area_value']),
             //'Remark Related sensitive area (2)', //;   ?
-            $ind['remark_related_sensitive_area_(2)'] => 'TODO',        
+            $ind['remark_related_sensitive_area_(2)'] => 'TODO',
         );
         fputcsv($r, $line, ';');
-//         $allline[] = $line;    
-    }    
+//         $allline[] = $line;
+    }
     fclose($r);
 
     $context['sandbox']['progress']++;
-//     $context['results'][] = 'sheet 1 rca create';    
+//     $context['results'][] = 'sheet 1 rca create';
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 }
@@ -9145,42 +9169,42 @@ function uwwtd_get_all_rca($annee)
                      f_rca_param_p.field_rca_parameter_p_value,
                      f_rca_param_o.field_rca_parameter_other_value,
                      f_art58.field_rcadateart5854_value,
-                     f_art54.field_rcadateart54_value,  
+                     f_art54.field_rcadateart54_value,
                      f_datedesign.field_rcaapdatedesignation_value,
                      f_dateotherdir.field_rcacdateotherdirective_value,
-                     
+
                      f_relevantdir.field_rcacrelevantdirective_value,
                      f_idotherdir.field_rcacidotherdirective_value,
                      f_rca_sensitivearea.field_rca_sensitive_area_value,
-                                          
+
                      f_rcaan.field_rcaanitro_value,
                      f_rcaap.field_rcaaphos_value,
                      f_rcab.field_rcab_value,
                      f_rcac.field_rcac_value,
                      f_rcaplant.field_rcaPlants_value,
-                     
+
                      f_capacity.field_rcaplantscapacity_value,
                      f_nincoming_m.field_rcanincomingmeasured_value,
                      f_nincoming_c.field_rcanincomingcalculated_value,
                      f_nincoming_e.field_rcanincomingestimated_value,
-                     
+
                      f_ndischarged_m.field_rcandischargedmeasured_value,
                      f_ndischarged_c.field_rcandischargedcalculated_value,
                      f_ndischarged_e.field_rcandischargedestimated_value,
-                     
+
                      f_pincoming_m.field_rcapincomingmeasured_value,
                      f_pincoming_c.field_rcapincomingcalculated_value,
                      f_pincoming_e.field_rcapincomingestimated_value,
-                     
+
                      f_pdischarged_m.field_rcapdischargedmeasured_value,
                      f_pdischarged_c.field_rcapdischargedcalculated_value,
                      f_pdischarged_e.field_rcapdischargedestimated_value,
-                     
-                     f_remarks.field_rcaremarks_value  
+
+                     f_remarks.field_rcaremarks_value
     from {node} n
         left join
             {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id    
+                ON n.nid = f_annee.entity_id
         left join
             {field_data_field_inspireidlocalid} f_rcacode
                 ON n.nid = f_rcacode.entity_id
@@ -9204,20 +9228,20 @@ function uwwtd_get_all_rca($annee)
                 ON n.nid = f_art54.entity_id
         left join
             {field_data_field_rcaapdatedesignation} f_datedesign
-                ON n.nid = f_datedesign.entity_id                
+                ON n.nid = f_datedesign.entity_id
         left join
             {field_data_field_rcacdateotherdirective} f_dateotherdir
-                ON n.nid = f_dateotherdir.entity_id                   
+                ON n.nid = f_dateotherdir.entity_id
         left join
             {field_data_field_rcacrelevantdirective} f_relevantdir
-                ON n.nid = f_relevantdir.entity_id 
+                ON n.nid = f_relevantdir.entity_id
         left join
             {field_data_field_rcacidotherdirective} f_idotherdir
                 ON n.nid = f_idotherdir.entity_id
         left join
             {field_data_field_rca_sensitive_area} f_rca_sensitivearea
-                ON n.nid = f_rca_sensitivearea.entity_id                
-                                                             
+                ON n.nid = f_rca_sensitivearea.entity_id
+
         left join
             {field_data_field_rcaanitro} f_rcaan
                 ON n.nid = f_rcaan.entity_id
@@ -9271,30 +9295,30 @@ function uwwtd_get_all_rca($annee)
                 ON n.nid = f_pdischarged_c.entity_id
         left join
             {field_data_field_rcapdischargedestimated} f_pdischarged_e
-                ON n.nid = f_pdischarged_e.entity_id   
+                ON n.nid = f_pdischarged_e.entity_id
         left join
             {field_data_field_rcaremarks} f_remarks
-                ON n.nid = f_remarks.entity_id                                                                                                                                                                                                                                                                                                                                                                                                                                
+                ON n.nid = f_remarks.entity_id
     where n.type = :typenode
         and f_annee.field_anneedata_value = :annee
-    order by 
-            CASE 
+    order by
+            CASE
                 WHEN f_rcatype.field_specialisedzonetype_value = \'CSA\' THEN 1
                 WHEN f_rcatype.field_specialisedzonetype_value = \'SA\'  THEN 2
                 WHEN f_rcatype.field_specialisedzonetype_value = \'LSA\' THEN 3
                 WHEN f_rcatype.field_specialisedzonetype_value = \'A58\' THEN 4
                 ELSE 99
-            END     
+            END
         asc
     ';
-    
+
 //     dsm($query);
     $param = array(
         ':typenode' => 'receiving_area',
         ':annee' => $annee,
         );
-    
-    $data = array();    
+
+    $data = array();
     try {
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
@@ -9304,19 +9328,19 @@ function uwwtd_get_all_rca($annee)
         dsm($e->getMessage());
     }
 
-    return $data;                               
+    return $data;
 }
 
 function uwwtd_create_register_2015_final_file($annee, &$context)
 {
-    if (!isset($context['sandbox']['progress'])) {    
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
     }
-    
+
     $configsheet = $GLOBALS['uwwtd']['sheet'];
     $listesheet = array('rca',
-                        'uwwtp', 
+                        'uwwtp',
                         'agglo',
                         'summary_legal_comp',
                         'distance_to_comp',
@@ -9331,17 +9355,17 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
                         'new_uwwtp',
                         'uwwtp_out',
                         );
-    
+
     $finalPHPExcel = new PHPExcel();
     $sheetIndex = $finalPHPExcel->getIndex($finalPHPExcel->getSheetByName('Worksheet')); //default worksheet
-    $finalPHPExcel->removeSheetByIndex($sheetIndex);    
-    
+    $finalPHPExcel->removeSheetByIndex($sheetIndex);
+
     foreach($listesheet as $sheet) {
 //         dsm($sheet);
-        //load sheet         
+        //load sheet
 //         $sheet_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'] .'.xlsx';
         $sheet_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'], $annee);
-        
+
         if (!file_exists($sheet_path)) {
             continue;
         }
@@ -9350,56 +9374,56 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 //         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $objReader->setIncludeCharts(TRUE);
-        $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));                                        
-        $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));     
+        $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
+        $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));
 //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
 //         dsm(1);
         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
 //         dsm(2);
         unset($objPHPExcel, $objReader);
-    } 
-    
+    }
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($finalPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $target_path = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
-//     dsm($target_path);  
-    $objWriter->setIncludeCharts(TRUE);  
+//     dsm($target_path);
+    $objWriter->setIncludeCharts(TRUE);
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
-    unset($objWriter);  
+    unset($objWriter);
     $context['sandbox']['progress']++;
- 
-    $context['message'] = '('.$annee.') ' . t('Finalization');    
-    
+
+    $context['message'] = '('.$annee.') ' . t('Finalization');
+
 //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }  
+//     }
 
 
     variable_set('registre_'.$annee, time());
-    drupal_set_message(uwwtd_registre_create_html_link($annee));             
+    drupal_set_message(uwwtd_registre_create_html_link($annee));
 }
 
 
 function uwwtd_getregister_file_path($filename, $annee)
 {
-    return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $filename;    
+    return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $filename;
 }
 
 function uwwtd_getregister_modelfile_path()
 {
-    return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];    
+    return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
 }
 
 function uwwtd_getregister_finalfile_path($annee)
 {
-    return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $GLOBALS['uwwtd']['sheet']['final_register'];    
+    return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $GLOBALS['uwwtd']['sheet']['final_register'];
 }
 
 
-function uwwtd_get_register_treatment_required($required_calculated) {            
+function uwwtd_get_register_treatment_required($required_calculated) {
     $treatment_required = '';
     switch($required_calculated) {
         case 'P':
@@ -9425,26 +9449,26 @@ function uwwtd_get_register_treatment_required($required_calculated) {
             break;
         case 'PO':
             $treatment_required = '3Pother';
-            break;        
+            break;
         case 'O':
             $treatment_required = '3other';
             break;
         case 'Appropriate':
             $treatment_required = 'Appropriate';
-            break;  
+            break;
         case 'NI':
             $treatment_required = '0';
-            break; 
-        default:  
-            $treatment_required = '';                                                                                                                                         
+            break;
+        default:
+            $treatment_required = '';
     }
     return $treatment_required;
 }
 
 function uwwtd_get_register_treatment_required_with_deadline($required_calculated, $deadlineart3, $deadlineart4, $deadlineart5, $referenceyear) {
-    $deadline_over_art3 = deadline_beforeorequal_to_referenceyear($deadlineart3, $referenceyear);            
-    $deadline_over_art4 = deadline_beforeorequal_to_referenceyear($deadlineart4, $referenceyear);            
-    $deadline_over_art5 = deadline_beforeorequal_to_referenceyear($deadlineart5, $referenceyear);            
+    $deadline_over_art3 = deadline_beforeorequal_to_referenceyear($deadlineart3, $referenceyear);
+    $deadline_over_art4 = deadline_beforeorequal_to_referenceyear($deadlineart4, $referenceyear);
+    $deadline_over_art5 = deadline_beforeorequal_to_referenceyear($deadlineart5, $referenceyear);
     $treatment_required = '';
 
     switch($required_calculated) {
@@ -9499,7 +9523,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
             } else {
                 $treatment_required = '3Pother';
             }
-            break;  
+            break;
         case 'O':
             if ($deadlineart5 == false) {
                 $treatment_required = '2';
@@ -9509,9 +9533,9 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
             break;
         case 'NI':
             $treatment_required = '0';
-            break; 
-        default:  
-            $treatment_required = '';                                                                                                                                         
+            break;
+        default:
+            $treatment_required = '';
     }
 
     if ($deadlineart3 === true && $deadlineart4 === true && $deadlineart5 === true) {
@@ -9529,7 +9553,7 @@ function uwwtd_get_register_treatment_required_with_deadline($required_calculate
     return $treatment_required;
 }
 
-function uwwtd_get_register_treatmenttype_inplace($uwwtp) 
+function uwwtd_get_register_treatmenttype_inplace($uwwtp)
 {
     $treatmenttypeinplace = '';
     if ($uwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
@@ -9550,26 +9574,26 @@ function uwwtd_get_register_treatmenttype_inplace($uwwtp)
     }
     if ($treatmenttypeinplace == '') {
         $treatmenttypeinplace .= '0';
-    } 
+    }
     return $treatmenttypeinplace;
 }
 
 function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $deadlineart4, $deadlineart5, $uwwtp)
-{                                                                             
-    $pending_or_expired = '';   
-    
+{
+    $pending_or_expired = '';
+
     $deadline_before = (deadline_beforeorequal_to_referenceyear($deadlineart3, $annee)
          || deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)
          || deadline_beforeorequal_to_referenceyear($deadlineart5, $annee)
         );
-                 
+
     if (
         true === $deadline_before
          && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
         ) {
         $pending_or_expired = 'EXP';
     }
-    
+
     //pending deadline    PD + les C avec date pas dépassée
     // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
     if (
@@ -9577,13 +9601,13 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
         ) {
         $pending_or_expired = 'PD';
-    } 
-    
+    }
+
     return $pending_or_expired;
-} 
+}
 
 function uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace)
-{  
+{
                       //if treatment required is 2 or 3 (if not NR), check if treatment in place is 2 or 3 if yes=C if no NC
     $art4_treatment_type = '';
 //             if ($line[$ind['generated load  p. e.']] < 2000
@@ -9596,9 +9620,9 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
 //                          || false !== strpos($line[$ind['water body type']], 'LC')
 //                         )
 //                         && $line[$ind['generated load  p. e.']] <= 10000
-//                    ) 
+//                    )
 //                ) {
-//                 $art4_treatment_type = 'NR';   
+//                 $art4_treatment_type = 'NR';
 //             } else {
     switch($treatment_required) {
         case '3other':
@@ -9620,43 +9644,43 @@ function uwwtd_get_register_art4_treatement_type_compliance($treatment_required,
         //         $art4_treatment_type = 'C';
         //     } else {
         //         $art4_treatment_type = 'NC';
-        //     }                
-        //     break; 
+        //     }
+        //     break;
         // case '3P':
         //     if (false !== strpos($treatmenttypeinplace, '3P')) {
         //         $art4_treatment_type = 'C';
         //     } else {
         //         $art4_treatment_type = 'NC';
-        //     }                
+        //     }
         //     break;
         // case '3NP':
         //     if (false !== strpos($treatmenttypeinplace, '3NP')) {
         //         $art4_treatment_type = 'C';
         //     } else {
         //         $art4_treatment_type = 'NC';
-        //     }                
-        //     break;  
+        //     }
+        //     break;
         // case '3other':
         //     if (false !== strpos($treatmenttypeinplace, '3other')) {
         //         $art4_treatment_type = 'C';
         //     } else {
         //         $art4_treatment_type = 'NC';
-        //     }                
+        //     }
         //     break;
-        case 'Appropriate':  
+        case 'Appropriate':
         case 'NR':
             $art4_treatment_type = 'NR';
             break;
         case '0':
         case '1':
-            $art4_treatment_type = 'NC';                                                                                          
+            $art4_treatment_type = 'NC';
     }
 //             }
     return $art4_treatment_type;
 }
 
-function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod5monitoring, $codmonitoring) 
-{  
+function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod5monitoring, $codmonitoring)
+{
             //if treatment required is 2 or 3 (if not NR) then if 'uwwBOD5Perf=pass+uwwCODPerf=pass = C if not = NC
     $art4_monitoring = '';
 //             if ($line[$ind['generated load  p. e.']] < 2000
@@ -9679,19 +9703,19 @@ function uwwtd_get_register_art4_monitoring_compliance($treatment_required, $bod
                 $art4_monitoring = 'C';
             } else {
                 $art4_monitoring = 'NC';
-            }                
+            }
             break;
-        case 'Appropriate':  
+        case 'Appropriate':
         case 'NR':
             $art4_monitoring = 'NR';
-            break;                                                                                          
-    }                
+            break;
+    }
 //             }
     return $art4_monitoring;
 }
 
 function uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace)
-{            
+{
     // dsm($treatment_required);
     // dsm($treatmenttypeinplace);
     //if treatment required is 3N, NP P Other (if not NR), check if treatment in place is the same 3N, NP, P Other if yes=C if no NC
@@ -9702,68 +9726,68 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
-            break;                
+            }
+            break;
         case '3P':
             if (false !== strpos($treatmenttypeinplace, '3P')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
-            break;                
+            }
+            break;
         case '3NP':
             if (false !== strpos($treatmenttypeinplace, '3NP')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
-            break;                
+            }
+            break;
         case '3other':
             if (false !== strpos($treatmenttypeinplace, '3other')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
+            }
             break;
         case '3NPother':
             if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3NP')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
+            }
             break;
         case '3Nother':
             if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3N')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
+            }
             break;
         case '3Pother':
             if (false !== strpos($treatmenttypeinplace, '3other') && false !== strpos($treatmenttypeinplace, '3P')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
-            }                
+            }
             break;
-        case 'Appropriate':  
+        case 'Appropriate':
         case 'NR':
             $art5_treatment = 'NR';
-            break;                                                                                          
-    }                
-//             }  
-    return $art5_treatment;          
-}  
+            break;
+    }
+//             }
+    return $art5_treatment;
+}
 
 function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC, $required_rcaaP, $required_rcaaN)
-{            
+{
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
     $art5_monitoring = '';
-    // dsm($treatment_required);            
-    // dsm($required_rcaB);            
-    // dsm($required_rcaC);            
+    // dsm($treatment_required);
+    // dsm($required_rcaB);
+    // dsm($required_rcaC);
     switch($treatment_required) {
-        case '3N':   
+        case '3N':
             if ($monitoring_Ntot == 'Pass' || $monitoring_Ntot == 'P') {
                 $art5_monitoring = 'C';
             } else {
@@ -9771,8 +9795,8 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ntot)) {
                 $art5_monitoring = 'NC';
-            }                
-            break;                
+            }
+            break;
         case '3P':
             if ($monitoring_Ptot == 'Pass' || $monitoring_Ptot == 'P') {
                 $art5_monitoring = 'C';
@@ -9781,8 +9805,8 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ptot)) {
                 $art5_monitoring = 'NC';
-            }                 
-            break;                
+            }
+            break;
         case '3NP':
             if (($monitoring_Ntot == 'Pass' && $monitoring_Ptot == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_Ptot == 'P')) {
                 $art5_monitoring = 'C';
@@ -9791,8 +9815,8 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ntot) || is_null($monitoring_Ptot)) {
                 $art5_monitoring = 'NC';
-            }                 
-            break;  
+            }
+            break;
         case '3other':
             if($monitoring_other == 'Pass' || $monitoring_other == 'P') {
                 $art5_monitoring = 'C';
@@ -9811,7 +9835,7 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ntot) || is_null($monitoring_Ptot) || is_null($monitoring_other)) {
                 $art5_monitoring = 'NC';
-            }                
+            }
             break;
         case '3Nother':
             if (($monitoring_Ntot == 'Pass' && $monitoring_other == 'Pass') || ($monitoring_Ntot == 'P' && $monitoring_other == 'P')) {
@@ -9821,7 +9845,7 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ntot) || is_null($monitoring_other)) {
                 $art5_monitoring = 'NC';
-            }                
+            }
             break;
         case '3Pother':
             if (($monitoring_other == 'Pass' && $monitoring_Ptot == 'Pass') || ($monitoring_other == 'P' && $monitoring_Ptot == 'P')) {
@@ -9831,19 +9855,19 @@ function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $mon
             }
             if (is_null($monitoring_Ptot) || is_null($monitoring_other)) {
                 $art5_monitoring = 'NC';
-            }                
+            }
             break;
-        case 'Appropriate':  
+        case 'Appropriate':
         case 'NR':
             $art5_monitoring = 'NR';
-            break;                                                                                          
+            break;
     }
 
     if (($required_rcaB == '1' || $required_rcaC == '1') && ($required_rcaaN != '1' || $required_rcaaP != '1')) {
         $art5_monitoring = 'NR';
     }
-    
-    return $art5_monitoring;            
+
+    return $art5_monitoring;
 }
 
 
@@ -9852,7 +9876,7 @@ function uwwtd_register_get_cell_value($sheet, $coord)
     if (is_null($sheet)) {
         return '';
     }
-    
+
     return $sheet->getCell($coord)->getValue();
 }
 
@@ -9869,12 +9893,12 @@ function uwwtd_registre_create_html_link($annee)
 //        IF(AND(‘Compliance Art.4’="C";
 //               “COMPLIANCE ART.5“="C");
 //             "C";
-//             IF(OR(‘Compliance Art.4’="NC"; 
+//             IF(OR(‘Compliance Art.4’="NC";
 //                   ‘Compliance Art.5’="NC");
 //                 "NC";
 //                 IF(‘Compliance Art.5’="NR";
 //                    "NR";
-//                    "EXIT")))))   
+//                    "EXIT")))))
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 {
     switch($type) {
@@ -9886,7 +9910,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
             break;
         case 'c':
             $compart5x = $line[$ind['compliance_art._5c_(only)']];
-            break;                                        
+            break;
     }
 
 
@@ -9911,37 +9935,37 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
     if ($line[$ind['art4_compliance_art._4_(only)']] == 'C'
         && $compart5x == 'C') {
         return 'C';
-    } 
+    }
 
     if ($line[$ind['art4_compliance_art._4_(only)']] == 'NC'
         || $compart5x == 'NC') {
         return 'NC';
-    }   
-    return '';                        
+    }
+    return '';
 }
 
 // =IF(’% of generated load for which compliance with Art. 5a/5b/5c is not relevant’>0;
 //     "NR";
-//     IF(AND(‘deadline for agglomeration’<=reference date of reporting; 
-//            ’% of generated load not compliant with Art. 5a/5b/5c’=0; 
+//     IF(AND(‘deadline for agglomeration’<=reference date of reporting;
+//            ’% of generated load not compliant with Art. 5a/5b/5c’=0;
 //            ’% of generated load for which compliance with Art. 5a/5b/5c  is not relevant’=0);
 //         "C";
-//         IF(AND(‘deadline for agglomeration’<=reference date of reporting; 
+//         IF(AND(‘deadline for agglomeration’<=reference date of reporting;
 //                ’% of generated load for which compliance with Art. 5a/5b/5c  is not relevant’=0;
 //                (AND(
-//                      AND(’% of generated load not compliant with Art. 5a/5b/5c’>0; 
+//                      AND(’% of generated load not compliant with Art. 5a/5b/5c’>0;
 //                         ’% of collected load not compliant with Art. 5a/5b/5c’<=1
-//                         ); 
+//                         );
 //                      ’p.e. not compliant with Art. 5a/5b/5c’<2000))
 //                );
 //                "C";
-//                IF(AND(‘deadline for agglomeration’<=reference date of reporting; 
+//                IF(AND(‘deadline for agglomeration’<=reference date of reporting;
 //                       ’% of generated load for which compliance with Art. 5a/5b/5c  is not relevant’=0;
-//                       (OR(’% of generated load not compliant with Art. 5a/5b/5c’>1; 
+//                       (OR(’% of generated load not compliant with Art. 5a/5b/5c’>1;
 //                           ’p.e. not compliant with Art. 5a/5b/5c’>=2000))
 //                      );
 //                      "NC";
-//                      7))))                                     
+//                      7))))
 function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_collected, $reporting_year, $deadline_agglo) {
     switch($type) {
         case 'a':
@@ -9961,7 +9985,7 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
             $c = $line[$ind['compliant_5_c_(%_of_gen._load)']];
             $nc = $line[$ind['not_compliant_5_c_(%_of_gen._load)']];
             $nc_pe = $line[$ind['not_compliant_5_c_(p._e.)']];
-            break;                                        
+            break;
     }
 
     if ($line[$ind['generated_load_p.e.']] <= 10000) {
@@ -9982,22 +10006,22 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
 
     if ($deadline_agglo < $reporting_year
         && $nc > 0
-        && $art5x_NC_collected <= 1 
+        && $art5x_NC_collected <= 1
         && $nc_pe < 2000
         ) {
         return 'C';
     }
 
     if ($deadline_agglo < $reporting_year
-        && 
+        &&
         ($nc > 1 || $nc_pe >= 2000)
         ) {
         return 'NC';
-    } 
+    }
 
-    return 7;     
+    return 7;
 }
- 
+
 
 function uwwtd_get_compliance_5abc_uwwtp($uwwtp)
 {
@@ -10009,7 +10033,7 @@ function uwwtd_get_compliance_5abc_uwwtp($uwwtp)
     // Compliance 5a
 
     if ($uwwtp->field_uwww_required_rcaap['und'][0]['value'] == 1 && $uwwtp->field_uwww_required_rcaan['und'][0]['value'] == 0) {
-           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('premoval')) === true && 
+           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('premoval')) === true &&
                 uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ptotperf')) ===true
             ) {
                 $compliance5x['5a'] = 'C';
@@ -10019,7 +10043,7 @@ function uwwtd_get_compliance_5abc_uwwtp($uwwtp)
     }
 
     if ($uwwtp->field_uwww_required_rcaan['und'][0]['value'] == 1 && $uwwtp->field_uwww_required_rcaap['und'][0]['value'] == 0) {
-           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('nremoval')) === true && 
+           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('nremoval')) === true &&
                 uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf')) === true
             ) {
                 $compliance5x['5a'] = 'C';
@@ -10029,7 +10053,7 @@ function uwwtd_get_compliance_5abc_uwwtp($uwwtp)
     }
 
     if ($uwwtp->field_uwww_required_rcaan['und'][0]['value'] == 1 && $uwwtp->field_uwww_required_rcaap['und'][0]['value'] == 1) {
-           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('nremoval', 'premoval')) === true && 
+           if(  uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('nremoval', 'premoval')) === true &&
                 uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf')) === true
             ) {
                 $compliance5x['5a'] = 'C';
