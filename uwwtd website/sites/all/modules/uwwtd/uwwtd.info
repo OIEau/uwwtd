@@ -1,7 +1,7 @@
 name = UWWTD
-description = uwwtd
+description = This module provide all functionalities for UWWTD SIIF plateform.
 core = 7.x
-version = 7.x-1.0
+version = 7.x-1.1
 project = uwwtd
 package = uwwtd
 stylesheets[all][] = css/styles.css

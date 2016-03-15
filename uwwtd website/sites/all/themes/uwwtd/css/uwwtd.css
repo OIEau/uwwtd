@@ -882,7 +882,7 @@ figure:focus{
 .node-uwwtp .uwwcontainer .flip .front{width:325px!important;}
 .node-uwwtp .uwwcontainer .flip .back{width:325px!important;}
 
-.node-agglomeration .flip .front .field-name-field-aggc1{margin-left: 21px;line-height:2;}
+.node-agglomeration .flip .front .field-group-aggcx{margin-left: 21px;line-height:2;}
 .node-agglomeration .flip .front .field-name-field-agggenerated .custom_tooltip{width: 250px;max-width:250px;}
 .node-uwwtp .field-name-field-uwwwastewatertreated{margin-bottom: 10px;line-height:2;}
 
@@ -1076,3 +1076,6 @@ form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .form-control{
     max-width:105px;
 }
 
+.openlayers_map_fullscreen{
+    position: fixed !important;
+}

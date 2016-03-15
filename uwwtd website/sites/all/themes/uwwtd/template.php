@@ -90,7 +90,7 @@ function uwwtd_preprocess_field(&$variables){
   }
 
   // For percentage '%'
-  if (in_array($variables['element']['#field_name'], array('field_aggc1','field_aggc2','field_aggpercwithouttreatment','field_aggpercprimtreatment','field_aggpercsectreatment','field_aggpercstringenttreatment'))
+  if (in_array($variables['element']['#field_name'], array('field_aggpercprimtreatment','field_aggpercsectreatment','field_aggpercstringenttreatment'))
        && $variables['items']['0']['#markup'] != '<p>'.t('Not provided').'</p>'
   ){
     $variables['items']['0']['#markup'] = $variables['items']['0']['#markup'].' %';
@@ -1662,19 +1662,22 @@ function uwwtd_get_agglo_graphic($node){
     return $output;
 }
 
-function uwwtd_render_field_with_pe($field)
-{
+function uwwtd_render_field_with_pe($field){
 //     $field[0]['#markup'] = 'Not provided';
     $pe = '';
     if (true === is_numeric($field[0]['#markup'])) {
         $pe = ' % ('. uwwtd_format_number($field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value']) .' p.e.)';
     }
+    $field[0]['#markup']  = uwwtd_format_number($field[0]['#markup'], 1). $pe;
+    return render($field);
+    /*
     return '<div class="field field-name-field-aggc1 field-type-number-decimal field-label-inline clearfix">
         <div class="field-label">'.$field['#title'].':&nbsp;</div>
         <div class="field-items">
             <div class="field-item even">'.uwwtd_format_number($field[0]['#markup'], 1). $pe .'</div>
         </div>
     </div>';
+    */
 }
 
 function uwwtd_field_num($field)

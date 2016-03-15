@@ -155,13 +155,17 @@ echo uwwtd_insert_errors_tab($node);
 	                  hide($content['links']);
 	                  hide($content['field_tags']);
                       print render($content['field_agggenerated']);
+                   ?>
+                   <div class="field-group-aggcx">
+                    <?php
                       print uwwtd_render_field_with_pe($content['field_aggc1']);
                       print uwwtd_render_field_with_pe($content['field_aggc2']);
                       print uwwtd_render_field_with_pe($content['field_aggpercwithouttreatment']);  
-                  ?>
+                    ?>
+                   </div>
                </div>
                <div class="back">
-                  <div class="flip-title">Generated Load by collection type in population equivalent</div>
+                  <div class="flip-title"><?php print t("Generated Load by collection type in population equivalent"); ?></div>
                   <div class="flip-image"><img src="<?php print file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png'); ?>" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>
                   
                   <svg id="agglo_piechart_back"></svg>
@@ -270,29 +274,29 @@ echo uwwtd_insert_errors_tab($node);
             <div class="uwwrealthird">
                 <div class="distance">
                     <div class="field custom_tooltip_wrapper">
-                        <div class="field-label">Distance to compliance:</div>
-                            <span class="custom_tooltip">The distance to compliance concept present the rate of waste water load that is:
+                        <div class="field-label"><?php print t('Distance to compliance:'); ?></div>
+                            <span class="custom_tooltip"><?php print t('The distance to compliance concept present the rate of waste water load that is:'); ?>
                             <ul>
-                                <li>adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)</li>
+                                <li><?php print t('adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)'); ?></li>
                             </ul>
-                            and then when collected:
+                            <?php print t('and then when collected:'); ?>
                             <ul>
-                                <li>treated at an adequate level (secondary or more stringent treatment) as required by the directive,</li>
-                                <li>and with the performance requirements under tables 1 or 2 of the annex I of Directive 91/271/EEC, (UWWTD).</li>
+                                <li><?php print t('treated at an adequate level (secondary or more stringent treatment) as required by the directive,'); ?></li>
+                                <li><?php print t('and with the performance requirements under tables 1 or 2 of the annex I of Directive 91/271/EEC, (UWWTD).'); ?></li>
                             </ul>
-                            When countries joined the EU, they have obtained a delay to implement the Directive. 
+                            <?php print t('When countries joined the EU, they have obtained a delay to implement the Directive. 
                             In such case the deadline for implementing the above (see in section characteristics) may be different, 
-                            and if the above is not already implemented for the agglomeration it is identified with orange colour in the table.</span>
+                            and if the above is not already implemented for the agglomeration it is identified with orange colour in the table.'); ?></span>
                     </div>
 
                     <table id="UwwtpDescription">
                         <tr>
                             <td style="font-weight:bold;border: 1px solid #000;"></td>
-                            <td style="font-weight:bold;border: 1px solid #000;">Equipment</td>
-                            <td style="font-weight:bold;border: 1px solid #000;">Performance</td>
+                            <td style="font-weight:bold;border: 1px solid #000;"><?php print t('Equipment'); ?></td>
+                            <td style="font-weight:bold;border: 1px solid #000;"><?php print t('Performance'); ?></td>
                         </tr>
                         <tr>
-                            <td class="black" style="font-weight:bold;" rowspan="2">Connection</td>
+                            <td class="black" style="font-weight:bold;" rowspan="2"><?php print t('Connection'); ?></td>
                             <td class="light" style="background-color:<?php print $colorart3;?>;color:white;"><?php print uwwtd_field_num($content['field_aggpercwithouttreatment']);?>%</td>
                             <td class="black"></td>
                         </tr>
@@ -302,7 +306,7 @@ echo uwwtd_insert_errors_tab($node);
                             ?> p.e</td>
                         </tr>
                         <tr>
-                            <td class="black" style="font-weight:bold;" rowspan="2">2nd treatment</td>
+                            <td class="black" style="font-weight:bold;" rowspan="2"><?php print t('2nd treatment'); ?></td>
                             <td class="light" style="background-color:<?php print $colorart4T;?>;color:white;"><?php print number_format($distanceToCompliance['art4_treat_percent'],1, ',', ' ');?>%</td>
                             <td class="black"  style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['art4_perf_percent'],1, ',', ' ');?>%</td>
                         </tr>
@@ -311,7 +315,7 @@ echo uwwtd_insert_errors_tab($node);
                             <td class="black" style="background-color:<?php print $colorart4P;?>;color:white;"><?php print number_format($distanceToCompliance['art4_perf_pe'],0, ',', ' ');?> p.e </td>
                         </tr>
                         <tr>
-                            <td class="black" style="font-weight:bold;" rowspan="2">3rd treatment</td>
+                            <td class="black" style="font-weight:bold;" rowspan="2"><?php print t('3rd treatment'); ?></td>
                             <td class="light" style="background-color:<?php print $colorart5T;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_treat_percent'],1).'%');?></td>
                             <td class="black"  style="background-color:<?php print $colorart5P;?>;color:white;"><?php print ((integer)$node->field_agggenerated['und'][0]['value'] < 10000 ? '-':uwwtd_format_number($distanceToCompliance['art5_perf_percent'],1).'%');?></td>
                         </tr>

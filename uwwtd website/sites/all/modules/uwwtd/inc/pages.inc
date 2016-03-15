@@ -922,7 +922,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $page .= '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">' 
-                    .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
+                    .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt;2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
                   .'</div>'
                 .'</div>'
                 .'<div class="cell charts-rows-cell">'
