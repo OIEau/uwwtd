@@ -5076,7 +5076,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 	$context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
 
-            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('NR', 'PD')) {
+            if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('NR', 'PD'))) {
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
@@ -5809,7 +5809,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }
 
-            if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false !== strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
+            if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false === strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
