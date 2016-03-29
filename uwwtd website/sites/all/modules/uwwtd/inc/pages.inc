@@ -1446,22 +1446,27 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     unset($data);
     
     
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;
-        $d1->color = $optionstyle['color']['list'][$compliance_format];
-        $data_pie_1[] = $d1;
+    foreach($graph as $compliance_format => $detail) {       
+        $seg = array();
+        $seg['value'] = $detail['nb'];
+        $seg['valueformat'] = number_format($detail['nb']);
+        $seg['label'] = $compliance_format;
+        $seg['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_1[] = $seg;
+        
+        
         $data_table_1[]=array(
             uwwtd_format_number($detail['nb']),
             $compliance_format
         );
         $total_1 += $detail['nb'];
         
-        
-        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d2->label =$compliance_format;//$detail['label'];
-        $d2->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie_2[] = $d2;
+        $seg2 = array();
+        $seg2['value'] = (float)$detail['field_uwwloadenteringuwwtp_value'];
+        $seg2['valueformat'] = number_format($detail['field_uwwloadenteringuwwtp_value']).' pe';
+        $seg2['label'] = $compliance_format;
+        $seg2['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_2[] = $seg2;
         $data_table_2[]=array(
             uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
             $compliance_format
@@ -1471,14 +1476,25 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     $data_table_1[] = array( uwwtd_format_number($total_1), '');
     $data_table_2[] = array( uwwtd_format_number($total_2), '');
     
-    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
     $header_1 = array(t('Number of plants'),t('Compliance'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
-    
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
     $header_2 = array(t('Load entering (p.e.)'),t('Compliance'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
+    $render_graph_nb = $front;
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    //Graph 2
+    $graph2Id = 'flot-auto-identifier-2';
+    $front2 = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+    $front2 .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_2).",  '".$graph2Id."');});</script>";
+    $render_graph = $front2;
+    
+    
     unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
     
 
@@ -1730,21 +1746,29 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     
     $graph = array_replace(array_flip($keys_order), $graph);
     foreach($graph as $treatmenttype_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $treatmenttype_format;
-        $d1->color = $optionstyle['color']['list'][$treatmenttype_format];
-        $data_pie_1[] = $d1;
+        
+        $seg = array();
+        $seg['value'] = $detail['nb'];
+        $seg['valueformat'] = number_format($detail['nb']);
+        $seg['label'] = $treatmenttype_format;
+        $seg['color'] = $optionstyle['color']['list'][$treatmenttype_format];
+        $data_pie_1[] = $seg;
+        
         $data_table_1[]=array(
             uwwtd_format_number($detail['nb']),
             $treatmenttype_format
         );
         $total_1 += $detail['nb'];
         
+        $seg2 = array();
+        $seg2['value'] = (float)$detail['field_uwwloadenteringuwwtp_value'];
+        $seg2['valueformat'] = number_format($detail['field_uwwloadenteringuwwtp_value']).' pe';
+        $seg2['label'] = $treatmenttype_format;
+        $seg2['color'] = $optionstyle['color']['list'][$treatmenttype_format];
+        $data_pie_2[] = $seg2;
         
-        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d2->label =$treatmenttype_format;//$detail['label'];
-        $d2->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
-        $data_pie_2[] = $d2;
+        
+        
         $data_table_2[]=array(
             uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
             $treatmenttype_format
@@ -1754,14 +1778,24 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     $data_table_1[] = array( uwwtd_format_number($total_1), '');
     $data_table_2[] = array( uwwtd_format_number($total_2), '');
     
-    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
     $header_1 = array(t('Number of plants'),t('Treatment type in place'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
-    
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
     $header_2 = array(t('Load entering (p.e.)'),t('Treatment type in place'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
+    $render_graph_nb = $front;
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    //Graph 2
+    $graph2Id = 'flot-auto-identifier-2';
+    $front2 = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+    $front2 .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_2).",  '".$graph2Id."');});</script>";
+    $render_graph = $front2;
+    
     unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
     
 
