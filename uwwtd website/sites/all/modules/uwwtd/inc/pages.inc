@@ -2904,6 +2904,12 @@ function uwwtd_build_map($map, $features) {
   
   // Return themed map if no errors found
   if (empty($map['errors'])) {
+      
+    libraries_load('proj4js');
+    openlayers_add_js_projection_definition(
+      openlayers_get_projection_by_identifier('EPSG:3857')
+    );  
+      
     $js = array('openlayers' => array('maps' => array($map['id'] => $map)));
     //put js in html output in order to put all block in cache
     $output =
