@@ -631,6 +631,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
+    
 //     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
 	$type = "agglomeration";
     $option = array();
@@ -994,6 +996,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
     
     d3_draw(array(
         'type'=>'ColumnChart',
@@ -1263,6 +1266,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
+    
     $type = "uwwtp";
 	$option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp'];
@@ -1562,7 +1567,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     drupal_set_title($title); 
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-    
+    libraries_load('d3.drupal');
     $keys_order = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'];
     unset($keys_order['All']);
     $keys_order = array_reverse(array_values($keys_order));
