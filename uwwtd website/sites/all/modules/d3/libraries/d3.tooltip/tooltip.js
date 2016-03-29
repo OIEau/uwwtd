@@ -3,8 +3,7 @@
  * D3.js tooltip extensions
  */
 (function($) {
-  d3 = d3 || {};
-
+  //d3 = d3 || {};
   /**
    * Creates a tooltip-like popup in svg
    *

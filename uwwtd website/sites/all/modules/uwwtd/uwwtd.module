@@ -449,7 +449,13 @@ function uwwtd_node_redirect($annee, $id, $action = null){
 	}
 }
 
-
+function uwwtd_init(){
+    //$d3 = d3_get_libraries();
+    //dsm($d3);
+    //drupal_add_library('d3', 'd3.drupal');
+   
+    
+}
 
 //test
 function uwwtd_node_redirection($id){
