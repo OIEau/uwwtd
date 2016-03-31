@@ -373,9 +373,9 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
       }
     }
 	
-	//libraries_load('d3.piechart');
+	libraries_load('d3.drupal');
 	//We just need the d3js lib
-	drupal_add_js(libraries_get_path('d3').'/d3.v3.min.js');
+	//drupal_add_js(libraries_get_path('d3').'/d3.js');
     drupal_add_js(drupal_get_path('module', 'openlayers_plus') . '/behaviors/openlayers_plus_behavior_piechart.js');
     $options = array();
     $options['styles'] = $this->get_styles();

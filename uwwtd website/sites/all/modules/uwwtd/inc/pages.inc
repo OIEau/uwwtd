@@ -631,6 +631,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
+    
 //     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
 	$type = "agglomeration";
     $option = array();
@@ -852,10 +854,12 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     
 //     dsm($optionstyle);
     foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;
-        $d1->color = $optionstyle['color']['list'][$compliance_format];
-        $data_pie_1[] = $d1;
+        $seg = array();
+        $seg['value'] = $detail['nb'];
+        $seg['valueformat'] = number_format($detail['nb']);
+        $seg['label'] = $compliance_format;
+        $seg['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_1[] = $seg;
         $data_table_1[]=array(
             uwwtd_format_number($detail['nb']),
             $compliance_format
@@ -863,12 +867,15 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $total_1 += $detail['nb'];
         
         
-        $d2 = new flotData($detail['field_agggenerated_value']);
-        $d2->label =$compliance_format;//$detail['label'];
-        $d2->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie_2[] = $d2;
+        $seg2 = array();
+        $seg2['value'] = (float)$detail['field_agggenerated_value'];
+        $seg2['valueformat'] = number_format($detail['field_agggenerated_value']).' pe';
+        $seg2['label'] = $compliance_format;
+        $seg2['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_2[] = $seg2;
+        
         $data_table_2[]=array(
-            uwwtd_format_number($detail['field_agggenerated_value']),
+            uwwtd_format_number($detail['field_agggenerated_value']).' pe',
             $compliance_format
         );
         $total_2 += $detail['field_agggenerated_value'];
@@ -876,11 +883,21 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $data_table_1[] = array( uwwtd_format_number($total_1), '');
     $data_table_2[] = array( uwwtd_format_number($total_2), '');
     
-    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
-    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
+    $render_graph_nb = $front;
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
     
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
+    //Graph 2
+    $graph2Id = 'flot-auto-identifier-2';
+    $front2 = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+    $front2 .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_2).",  '".$graph2Id."');});</script>";
+    $render_graph = $front2;
+    
+    
+    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
     $header_2 = array(t('Generated load (p.e.)'),t('Compliance'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
@@ -976,8 +993,26 @@ function getYearsPossibles() {
 function uwwtd_page_agglomeration_connection($type_export = ''){
     $title = 'Agglomeration connection map and list';
     drupal_set_title($title);
+    
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
+    
+    d3_draw(array(
+        'type'=>'ColumnChart',
+        'id'=>'default-empty-d3'
+    ));
+    
+    /*
+    $info = libraries_load('d3');
+    $info = libraries_load('d3.tooltip');
+    dsm($info);
+    $d3 = drupal_add_library('d3', 'd3.drupal');
+    $d3 = drupal_add_library('d3', 'd3.tooltip');
+    $d3 = drupal_add_library('d3', 'd3.extend');
+    dsm('D3 : '.$d3);
+    */
+    
     $type = "agglomeration";
 	$option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment'];   
@@ -1155,10 +1190,13 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     $i = 0;
     foreach($graph as $field => $detail) {
         if($field!='total'){
-            $d1 = new flotData($detail['value']);
-            $d1->label = $detail['label'];
-            $d1->color = $optionstyle['piechart'][$field]['color'];
-            $data_pie[] = $d1;
+            $seg = array();
+            $seg['value'] = $detail['value'];
+            $seg['valueformat'] = number_format($detail['value']);
+            $seg['label'] = $detail['label'];
+            $seg['color'] = $optionstyle['piechart'][$field]['color'];
+            $data_pie_1[] = $seg;
+            
         }
     }
     if(!empty($graph)){
@@ -1179,8 +1217,14 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     //build export data on ODT,XML,CSV,DOC...
 
     //todo save view and map and .install update map/style/overlay
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie, 'flot-auto-identifier-1'));
-
+    //$render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie, 'flot-auto-identifier-1'));
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $js = "jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');})";
+    //drupal_add_js(array('inline'=>$js), array('defer'=>true));
+    $front .= "<script>".$js."</script>";
+    $render_graph = $front;
 
     $page =  '<h1>'.$title.'</h1>'
             . $form
@@ -1222,6 +1266,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
+    
     $type = "uwwtp";
 	$option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp'];
@@ -1405,22 +1451,27 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     unset($data);
     
     
-    foreach($graph as $compliance_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $compliance_format;
-        $d1->color = $optionstyle['color']['list'][$compliance_format];
-        $data_pie_1[] = $d1;
+    foreach($graph as $compliance_format => $detail) {       
+        $seg = array();
+        $seg['value'] = $detail['nb'];
+        $seg['valueformat'] = number_format($detail['nb']);
+        $seg['label'] = $compliance_format;
+        $seg['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_1[] = $seg;
+        
+        
         $data_table_1[]=array(
             uwwtd_format_number($detail['nb']),
             $compliance_format
         );
         $total_1 += $detail['nb'];
         
-        
-        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d2->label =$compliance_format;//$detail['label'];
-        $d2->color = $optionstyle['color']['list'][$compliance_format];//$detail['label'];
-        $data_pie_2[] = $d2;
+        $seg2 = array();
+        $seg2['value'] = (float)$detail['field_uwwloadenteringuwwtp_value'];
+        $seg2['valueformat'] = number_format($detail['field_uwwloadenteringuwwtp_value']).' pe';
+        $seg2['label'] = $compliance_format;
+        $seg2['color'] = $optionstyle['color']['list'][$compliance_format];
+        $data_pie_2[] = $seg2;
         $data_table_2[]=array(
             uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
             $compliance_format
@@ -1430,14 +1481,25 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     $data_table_1[] = array( uwwtd_format_number($total_1), '');
     $data_table_2[] = array( uwwtd_format_number($total_2), '');
     
-    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
     $header_1 = array(t('Number of plants'),t('Compliance'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
-    
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
     $header_2 = array(t('Load entering (p.e.)'),t('Compliance'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
+    $render_graph_nb = $front;
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    //Graph 2
+    $graph2Id = 'flot-auto-identifier-2';
+    $front2 = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+    $front2 .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_2).",  '".$graph2Id."');});</script>";
+    $render_graph = $front2;
+    
+    
     unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
     
 
@@ -1505,7 +1567,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     drupal_set_title($title); 
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-    
+    libraries_load('d3.drupal');
     $keys_order = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'];
     unset($keys_order['All']);
     $keys_order = array_reverse(array_values($keys_order));
@@ -1689,21 +1751,29 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     
     $graph = array_replace(array_flip($keys_order), $graph);
     foreach($graph as $treatmenttype_format => $detail) {
-        $d1 = new flotData($detail['nb']);
-        $d1->label = $treatmenttype_format;
-        $d1->color = $optionstyle['color']['list'][$treatmenttype_format];
-        $data_pie_1[] = $d1;
+        
+        $seg = array();
+        $seg['value'] = $detail['nb'];
+        $seg['valueformat'] = number_format($detail['nb']);
+        $seg['label'] = $treatmenttype_format;
+        $seg['color'] = $optionstyle['color']['list'][$treatmenttype_format];
+        $data_pie_1[] = $seg;
+        
         $data_table_1[]=array(
             uwwtd_format_number($detail['nb']),
             $treatmenttype_format
         );
         $total_1 += $detail['nb'];
         
+        $seg2 = array();
+        $seg2['value'] = (float)$detail['field_uwwloadenteringuwwtp_value'];
+        $seg2['valueformat'] = number_format($detail['field_uwwloadenteringuwwtp_value']).' pe';
+        $seg2['label'] = $treatmenttype_format;
+        $seg2['color'] = $optionstyle['color']['list'][$treatmenttype_format];
+        $data_pie_2[] = $seg2;
         
-        $d2 = new flotData($detail['field_uwwloadenteringuwwtp_value']);
-        $d2->label =$treatmenttype_format;//$detail['label'];
-        $d2->color = $optionstyle['color']['list'][$treatmenttype_format];//$detail['label'];
-        $data_pie_2[] = $d2;
+        
+        
         $data_table_2[]=array(
             uwwtd_format_number($detail['field_uwwloadenteringuwwtp_value']),
             $treatmenttype_format
@@ -1713,14 +1783,24 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     $data_table_1[] = array( uwwtd_format_number($total_1), '');
     $data_table_2[] = array( uwwtd_format_number($total_2), '');
     
-    $render_graph_nb = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_1, 'flot-auto-identifier-1'));
     $header_1 = array(t('Number of plants'),t('Treatment type in place'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
-    
-    $render_graph = theme('flot_graph', uwwtd_page_build_flot_piechart($data_pie_2, 'flot-auto-identifier-2'));
     $header_2 = array(t('Load entering (p.e.)'),t('Treatment type in place'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
+    //Graph 1
+    $graph1Id = 'flot-auto-identifier-1';
+    $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+    $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
+    $render_graph_nb = $front;
+    $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
+    
+    //Graph 2
+    $graph2Id = 'flot-auto-identifier-2';
+    $front2 = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+    $front2 .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_2).",  '".$graph2Id."');});</script>";
+    $render_graph = $front2;
+    
     unset($data_pie_1,$data_pie_2, $data_table_1, $data_table_2);
     
 
@@ -2863,6 +2943,12 @@ function uwwtd_build_map($map, $features) {
   
   // Return themed map if no errors found
   if (empty($map['errors'])) {
+      
+    libraries_load('proj4js');
+    openlayers_add_js_projection_definition(
+      openlayers_get_projection_by_identifier('EPSG:3857')
+    );  
+      
     $js = array('openlayers' => array('maps' => array($map['id'] => $map)));
     //put js in html output in order to put all block in cache
     $output =
