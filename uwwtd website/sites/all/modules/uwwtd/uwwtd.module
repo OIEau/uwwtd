@@ -1300,7 +1300,6 @@ function uwwtd_get_national_stat_str($year){
 	module_load_include('inc','uwwtd','inc/pages');
     $option['field_anneedata_value'] = $year;
 	$dataUwwtp = uwwtd_get_data_uwwtp($option);
-
 	$dataAggl = uwwtd_get_data_agglomeration($option);
 
 	$nbGeneratedLoad = 0;

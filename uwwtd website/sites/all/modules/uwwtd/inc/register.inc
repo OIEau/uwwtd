@@ -4481,13 +4481,13 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	}
 
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'];
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  100 - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%']);
         	}
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
             	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
         	}
 
-            //more stringent % and distance
+            //secondary % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
             }
@@ -4503,10 +4503,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             }
 
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'];
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
             }
 
             //more stringent % and distance
@@ -4523,10 +4523,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
 			}
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];
             }
         }
 
@@ -5631,6 +5631,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             break;
 //             $uww_aggcode = $uwwtp[$induww['aggcode']];
 //             if ($uww_aggcode == $agg->field_inspireidlocalid['und'][0]['value']) {
+            $context['sandbox']['uwwtpinfos_graph'][$uwwtp[$induww['uww_code']]]['design_capacity'] = $uwwtp[$induww['uww_capacity p. e.']];
+
+
             $uww_aggcode = $uwwtp[$induww['aggcode']];
 //             dsm($uww_aggcode);
             if (false === isset($context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode])) {
@@ -5987,6 +5990,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
         fclose($ruwwtpfile);
 //         dsm($context['sandbox']['uwwtpinfo_for_agglo']);
+
+        foreach ($context['sandbox']['uwwtpinfos_graph'] as $uwwtp_info_graph) {
+            $context['results']['graph']['total_capacity']['pe'] += $uwwtp_info_graph['design_capacity'];
+        }
     }
 
 //     dsm($context['sandbox']['uwwtpinfo_for_agglo']);
@@ -6605,15 +6612,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                         $agg->field_aggart5compliance['und'][0]['value'] == 'C'
                   ) {
             $compart5hierarchical = 'C';
+        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' ||
+                        $agg->field_aggart4compliance['und'][0]['value'] == 'PD' ||
+                        $agg->field_aggart5compliance['und'][0]['value'] == 'PD'
+                  ) {
+            $compart5hierarchical = 'PD';
         } elseif ( $agg->field_aggart3compliance['und'][0]['value'] == 'NC' ||
                         $agg->field_aggart4compliance['und'][0]['value'] == 'NC' ||
                         $agg->field_aggart5compliance['und'][0]['value'] == 'NC'
                   ) {
             $compart5hierarchical = 'NC';
-        }   elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' ||
-                        $agg->field_aggart4compliance['und'][0]['value'] == 'PD' ||
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'PD') {
-            $compart5hierarchical = 'PD';
         }
         $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] = $compart5hierarchical;
 
@@ -7004,7 +7012,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['results']['graph']['total_collected']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
         $context['results']['graph']['total_load_ias']['pe'] += $line[$ind['addressed_through_ias_p._e.']];
         $context['results']['graph']['total_entering']['pe'] += $line[$ind['total_entering_load_p._e.']];
-        $context['results']['graph']['total_capacity']['pe'] += $line[$ind['total_treatment_plant_design_capacity_p._e.']];
 
         //array 5 6 7
         if ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') {
@@ -7052,6 +7059,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['sandbox']['progress']++;
     }
     fclose($r);
+
+
+
+
+
     //write last lines with aggregate data
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
 
@@ -9065,34 +9077,34 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Starting date of application of Art. 5(4)', //;         rcaDateArt54
             $ind['starting_date_of_application_of_art._5(4)'] => $rca[$i]['field_rcadateart54_value'],
             //'Designation criteria  a N', //;                         rcaANitro
-            $ind['designation_criteria_a_n'] => $rca[$i]['field_rcaanitro_value'],
+            $ind['designation_criteria_a_n'] => ($rca[$i]['field_rcaanitro_value'] == 0) ? '' : $rca[$i]['field_rcaanitro_value'],
             //'Starting date of designation a N', //;                  ?
 //             $ind['starting_date_of_designation_a_n'] => 'TODO',  rcaDateDesignation  $node->field_rcaapdatedesignation['und'][0]['value']
-            $ind['starting_date_of_designation_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
+            $ind['starting_date_of_designation_a_n'] => ($rca[$i]['field_rcaanitro_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
             //'Starting date of application a N', //;                  ?
             $ind['starting_date_of_application_a_n'] => 'TODO', // =rcaDateDesignation + 7 years
 //             $ind['starting_date_of_application_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  a P', //;                         rcaAPhos
-            $ind['designation_criteria_a_p'] => $rca[$i]['field_rcaaphos_value'],
+            $ind['designation_criteria_a_p'] => ($rca[$i]['field_rcaaphos_value'] == 0) ? '' : $rca[$i]['field_rcaanitro_value'],
             //'Starting date of designation a P', //;                  ?
 //             $ind['starting_date_of_designation_a_p'] => 'TODO',   rcaDateDesignation
-            $ind['starting_date_of_designation_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
+            $ind['starting_date_of_designation_a_p'] => ($rca[$i]['field_rcaaphos_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
             //'Starting date of application a P', //;                  ?
             $ind['starting_date_of_application_a_p'] => 'TODO', // =rcaDateDesignation + 7 years
 //             $ind['starting_date_of_application_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  b', //;                           rcaB
-            $ind['designation_criteria_b'] => $rca[$i]['field_rcab_value'],
+            $ind['designation_criteria_b'] => ($rca[$i]['field_rcab_value'] == 0) ? '' : $rca[$i]['field_rcab_value'],
             //'Starting date of designation', //;                      ?
 //             $ind['starting_date_of_designation_b'] => 'TODO',       rcaDateDesignation
-            $ind['starting_date_of_designation_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : ''),
+            $ind['starting_date_of_designation_b'] => ($rca[$i]['field_rcab_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
             //'Starting date of application', //;                      ?
             $ind['starting_date_of_application_b'] => 'TODO',     // =rcaDateDesignation + 7 years
 //             $ind['starting_date_of_application_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
             //'Designation criteria  c', //;                           rcaC
-            $ind['designation_criteria_c'] => $rca[$i]['field_rcac_value'],
+            $ind['designation_criteria_c'] => ($rca[$i]['field_rcac_value'] == 0) ? '' : $rca[$i]['field_rcac_value'],
             //'Starting date of designation', //;                      ?
 //             $ind['starting_date_of_designation_c'] => 'TODO',    rcaCDateOtherDirective       field_rcacdateotherdirective
-            $ind['starting_date_of_designation_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
+            $ind['starting_date_of_designation_c'] => ($rca[$i]['field_rcac_value'] != 0) ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : '',
             //'Starting date of application', //;                      ?
             $ind['starting_date_of_application_c'] => 'TODO',   // =rcaCDateOtherDirective + 7 years
 //             $ind['starting_date_of_application_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) + 7 : ''),
@@ -9111,24 +9123,24 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplantscapacity_value'],
 
             //'Incoming loads (t/y) N-tot (1)', //;    rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
-            $ind['incoming_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']),
+            $ind['incoming_loads_(t/y)_n-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']) : '',
             //'Rate of Removal N-tot', //;              ?
             //$ind['rate_of_removal_n-tot'] => 'TODO',         =discharged loads Ntot/incoming loads Ntot
             $ind['rate_of_removal_n-tot'] =>  ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value'])
                                                 /
-                                               ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']) ,
+                                               ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']),
             //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
-            $ind['discharged_loads_(t/y)_n-tot_(1)'] => ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']),
+            $ind['discharged_loads_(t/y)_n-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']) : '',
 
             //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
-            $ind['incoming_loads_(t/y)_p-tot_(1)'] => ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
+            $ind['incoming_loads_(t/y)_p-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']) : '',
             //'Rate of Removal P-tot', //;              ?
 //             $ind['rate_of_removal_p-tot'] => 'TODO',  =discharged loads Ptot/incoming loads Ptot
             $ind['rate_of_removal_p-tot'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value'])
                                              /
                                              ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
-            $ind['discharged_loads_(t/y)_p-tot:_'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value']),
+            $ind['discharged_loads_(t/y)_p-tot:_'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value']) : '',
 
             //'general Remark', //;                   rcaRemarks
             $ind['general_remark'] => $rca[$i]['field_rcaremarks_value'],
