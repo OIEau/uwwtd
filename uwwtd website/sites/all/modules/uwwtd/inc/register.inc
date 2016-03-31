@@ -6384,7 +6384,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Compliance Art. 3',
         //'Compliance',
-        $line[$ind['art3_compliance']] = $agg->field_aggart3compliance['und'][0]['value'];
+        if (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)) {
+        	$line[$ind['art3_compliance']] = $agg->field_aggart3compliance['und'][0]['value'];
+        } else {
+        	$line[$ind['art3_compliance']] = 'PD';
+        }
 
         //Compliance Art. 3 previous reporting',
         //'Compliance',
@@ -6421,7 +6425,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'not relevant',
         $line[$ind['art4_not_relevant']] = $uwwtpinfo_for_agglo['NR']['pe'];
         //'Compliance Art. 4 (only)',
-        $line[$ind['art4_compliance_art._4_(only)']] = $agg->field_aggart4compliance['und'][0]['value'];
+        if (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)) {
+        	$line[$ind['art4_compliance_art._4_(only)']] = $agg->field_aggart4compliance['und'][0]['value'];
+        } else {
+        	$line[$ind['art4_compliance_art._4_(only)']] = 'PD';
+        }
         //'Compliance Art. 4 (hierarchical approach)',
         /*
         if art4 = nr then nr
@@ -6455,22 +6463,22 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                         )
         */
         $compart4hierarchical = '';
-        if ($agg->field_aggart4compliance['und'][0]['value'] == 'NR' ||
-            $agg->field_aggart4compliance['und'][0]['value'] == 'NI' ||
-            $agg->field_aggart4compliance['und'][0]['value'] == '?' ||
-            $agg->field_aggart3compliance['und'][0]['value'] == 'NR' ||
-            $agg->field_aggart3compliance['und'][0]['value'] == 'NI' ||
-            $agg->field_aggart3compliance['und'][0]['value'] == '?'
+        if ($line[$ind['art4_compliance_art._4_(only)']] == 'NR' ||
+            $line[$ind['art4_compliance_art._4_(only)']] == 'NI' ||
+            $line[$ind['art4_compliance_art._4_(only)']] == '?' ||
+            $line[$ind['art3_compliance']] == 'NR' ||
+            $line[$ind['art3_compliance']] == 'NI' ||
+            $line[$ind['art3_compliance']] == '?'
             ) {
-            $compart4hierarchical = $agg->field_aggart4compliance['und'][0]['value'];
-        } elseif (($agg->field_aggart3compliance['und'][0]['value'] == 'C'
-                  || $agg->field_aggart3compliance['und'][0]['value'] == 'QC')
-                  && $agg->field_aggart4compliance['und'][0]['value'] == 'C'
+            $compart4hierarchical = $line[$ind['art4_compliance_art._4_(only)']];
+        } elseif (($line[$ind['art3_compliance']] == 'C'
+                  || $line[$ind['art3_compliance']] == 'QC')
+                  && $line[$ind['art4_compliance_art._4_(only)']] == 'C'
                   ) {
             $compart4hierarchical = 'C';
-        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD') {
+        } elseif ($line[$ind['art3_compliance']] == 'PD') {
             $compart4hierarchical = 'PD';
-        } elseif ($agg->field_aggart4compliance['und'][0]['value'] == 'PD') {
+        } elseif ($line[$ind['art4_compliance_art._4_(only)']] == 'PD') {
             $compart4hierarchical = 'PD';
         }else {
             $compart4hierarchical = 'NC';
@@ -6565,7 +6573,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['art._5_not_relevant_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NR_pe'];
 
         //'Compliance Art. 5 (whole agglo)',
-        $line[$ind['compliance_art._5_(whole_agglo)']] = $agg->field_aggart5compliance['und'][0]['value'];
+        if (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)) {
+        	$line[$ind['compliance_art._5_(whole_agglo)']] = $agg->field_aggart5compliance['und'][0]['value'];
+        } else {
+        	$line[$ind['compliance_art._5_(whole_agglo)']] = 'PD';
+        }
         //'Compliance Art. 5  (whole agglo) (hierarchical approach)',
         /*
         if compart5 = nr then nr
@@ -6603,23 +6615,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
           )
         */
         $compart5hierarchical = '';
-        if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR') {
-            $compart5hierarchical = $agg->field_aggart5compliance['und'][0]['value'];
+        if ($line[$ind['compliance_art._5_(whole_agglo)']] == 'NR') {
+            $compart5hierarchical = $line[$ind['compliance_art._5_(whole_agglo)']];
         } elseif ($agg->field_agggenerated['und'][0]['value'] <= 10000) {
             $compart5hierarchical = 'NR';
-        } elseif ( ($agg->field_aggart3compliance['und'][0]['value'] == 'C' || $agg->field_aggart3compliance['und'][0]['value'] == 'QC') &&
-                        $agg->field_aggart4compliance['und'][0]['value'] == 'C' &&
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'C'
+        } elseif ( ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') &&
+                        $line[$ind['art4_compliance_art._4_(only)']] == 'C' &&
+                        $line[$ind['compliance_art._5_(whole_agglo)']] == 'C'
                   ) {
             $compart5hierarchical = 'C';
-        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' ||
-                        $agg->field_aggart4compliance['und'][0]['value'] == 'PD' ||
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'PD'
+        } elseif ($line[$ind['art3_compliance']] == 'PD' ||
+                        $line[$ind['art4_compliance_art._4_(only)']] == 'PD' ||
+                        $line[$ind['compliance_art._5_(whole_agglo)']] == 'PD'
                   ) {
             $compart5hierarchical = 'PD';
-        } elseif ( $agg->field_aggart3compliance['und'][0]['value'] == 'NC' ||
-                        $agg->field_aggart4compliance['und'][0]['value'] == 'NC' ||
-                        $agg->field_aggart5compliance['und'][0]['value'] == 'NC'
+        } elseif ( $line[$ind['art3_compliance']] == 'NC' ||
+                        $line[$ind['art4_compliance_art._4_(only)']] == 'NC' ||
+                        $line[$ind['compliance_art._5_(whole_agglo)']] == 'NC'
                   ) {
             $compart5hierarchical = 'NC';
         }
