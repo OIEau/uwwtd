@@ -2368,7 +2368,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //not connected
     if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'])) {
-    	$sheet->getCell('B89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'], 1));
+    	($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe'] == 0) ? $sheet->getCell('C89')->setValue(0) : $sheet->getCell('B89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe'])) {
     	$sheet->getCell('C89')->setValue(round($context['results']['distance_to_compliance']['expired']['target_connection']['distance_pe']));
@@ -2379,14 +2379,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //2nd treatment not in place
     if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'])) {
-    	$sheet->getCell('B91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe'] == 0) ? $sheet->getCell('B91')->setValue(0) : $sheet->getCell('B91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe'])) {
     	$sheet->getCell('C91')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['treatement_inplace_distance_pe']));
     }
     //2nd treatment performance not met
     if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'])) {
-    	$sheet->getCell('B92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe'] == 0) ? $sheet->getCell('B92')->setValue(0) : $sheet->getCell('B92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C92')->setValue(round($context['results']['distance_to_compliance']['expired']['secondary_target']['monitoring_result_distance_pe']));
@@ -2397,14 +2397,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //Tertiary treatment not in place
     if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'])) {
-    	$sheet->getCell('B94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe'] == 0) ? $sheet->getCell('B94')->setValue(0) : $sheet->getCell('B94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe'])) {
     	$sheet->getCell('C94')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['installation_inplace_distance_pe']));
     }
     //Tertiary stringent treatment performance not met
     if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'])) {
-    	$sheet->getCell('B95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe'] == 0) ? $sheet->getCell('B95')->setValue(0) : $sheet->getCell('B95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C95')->setValue(round($context['results']['distance_to_compliance']['expired']['morestringent_target']['monitoring_result_distance_pe']));
@@ -2439,7 +2439,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //not connected
     if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'])) {
-    	$sheet->getCell('B105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'], 1));
+    	($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe'] == 0) ? $sheet->getCell('B105')->setValue(0) : $sheet->getCell('B105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe'])) {
     	$sheet->getCell('C105')->setValue(round($context['results']['distance_to_compliance']['pending']['target_connection']['distance_pe']));
@@ -2450,14 +2450,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //2nd treatment not in place
     if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'])) {
-    	$sheet->getCell('B107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe'] == 0) ? $sheet->getCell('B107')->setValue(0) : $sheet->getCell('B107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe'])) {
     	$sheet->getCell('C107')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['treatement_inplace_distance_pe']));
     }
     //2nd treatment performance not met
     if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'])) {
-    	$sheet->getCell('B108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe'] == 0) ? $sheet->getCell('B108')->setValue(0) : $sheet->getCell('B108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C108')->setValue(round($context['results']['distance_to_compliance']['pending']['secondary_target']['monitoring_result_distance_pe']));
@@ -2468,14 +2468,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     //Tertiary treatment not in place
     if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'])) {
-    	$sheet->getCell('B110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe'] == 0) ? $sheet->getCell('B110')->setValue(0) : $sheet->getCell('B110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe'])) {
     	$sheet->getCell('C110')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['installation_inplace_distance_pe']));
     }
     //Tertiary stringent treatment performance not met
     if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'])) {
-    	$sheet->getCell('B111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
+    	($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe'] == 0) ? $sheet->getCell('B111')->setValue(0) : $sheet->getCell('B111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
     }
     if (isset($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe'])) {
     	$sheet->getCell('C111')->setValue(round($context['results']['distance_to_compliance']['pending']['morestringent_target']['monitoring_result_distance_pe']));
@@ -4408,7 +4408,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._secondary_ok']]) &&
-            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C' ||
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
             }
@@ -4422,10 +4423,12 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]) &&
-            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
+            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C' ||
+            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
             }
+
         }
 
         $j++;
@@ -4576,6 +4579,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	$sheet->getCell('C13')->setValue($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace']);
         if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%']))
         	$sheet->getCell('D13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_distance%']))
+        	$sheet->getCell('E13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_distance%'], 1));
+        if (isset($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_distance_pe']))
+        	$sheet->getCell('F13')->setValue(round($context['sandbox']['data']['expired']['target_connection']['collected_system_inplace_distance_pe'], 1));
         if (isset($context['sandbox']['data']['expired']['target_connection']['ias']))
         	$sheet->getCell('C14')->setValue($context['sandbox']['data']['expired']['target_connection']['ias']);
         if (isset($context['sandbox']['data']['expired']['target_connection']['ias_%']))
@@ -5009,7 +5016,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
               	}
 
               	if (isset($agglo[$ind['addressed_through_ias_p._e.']]) && $agglo[$ind['addressed_through_ias_p._e.']] > 0) {
@@ -5020,7 +5027,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']  =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
               	}
 
               	if (isset($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]) && $agglo[$ind['neither_collecting_system_nor_ias_p._e.']] > 0) {
@@ -5031,7 +5038,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
               	if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']   =
                          $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
               	}
             }
                                   //compliance art3
@@ -8695,15 +8702,18 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //needed on next sheets :
             //here same test as in tpl node--uwwtp.tpl.php
-            if((!isset($uwwtp->field_uwwcollectingsystem['und'][0]['value'])
-                || $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON')
-               ||
-               (!isset($uwwtp->field_physicalcapacityactivity['und'][0]['value'])
-                || $uwwtp->field_physicalcapacityactivity['und'][0]['value'] == '0')){
-                $line[$ind['uwwtp_collecting_without_treatment']] = 1;
-            } else {
-                $line[$ind['uwwtp_collecting_without_treatment']] = 0;
-            }
+            // if((!isset($uwwtp->field_uwwcollectingsystem['und'][0]['value'])
+                // || $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON')
+               // ||
+               // (!isset($uwwtp->field_physicalcapacityactivity['und'][0]['value'])
+                // || $uwwtp->field_physicalcapacityactivity['und'][0]['value'] == '0')){
+                // $line[$ind['uwwtp_collecting_without_treatment']] = 1;
+            // } else {
+                // $line[$ind['uwwtp_collecting_without_treatment']] = 0;
+            // }
+
+            // Ugly fix for #166 but hey! It works!
+            $line[$ind['uwwtp_collecting_without_treatment']]++;
 
             //here field for next sheet
             $line[$ind['required_rcaaP']] = $uwwtp->field_uwww_required_rcaap['und'][0]['value'];
