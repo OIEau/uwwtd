@@ -6354,8 +6354,17 @@ function uwwtd_csv_to_array($filename='', $delimiter=','){
 
 function uwwtd_xml_to_array($link){
     $string = file_get_contents($link);
-    $deXml = simplexml_load_string($string);
-    $deJson = json_encode($deXml);
+    $xml = simplexml_load_string($string);
+    $namespaces = $xml->getDocNamespaces();
+    unset($xml);
+    $ns = array_keys($namespaces);
+    foreach($ns as $k=>$v){
+        $ns[$k]=$v.':';
+    }
+    $string = str_replace($ns, '', $string);
+    $xml = simplexml_load_string($string);
+    $deJson = json_encode($xml);
+    unset($xml, $string, $ns, $namespaces);
     $xml_array = json_decode($deJson,TRUE);
     return $xml_array;
 }
