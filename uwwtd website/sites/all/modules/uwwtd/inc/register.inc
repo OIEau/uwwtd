@@ -4,6 +4,11 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
+
+    $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+    $cacheSettings = array('memoryCacheSize' => '4MB', 'cacheTime' => '1000'); 
+    PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+
 /**
  *
  */
@@ -76,7 +81,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
-    //excel
+    //excel  ===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib. 
     $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
@@ -168,6 +173,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
+
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
 
     $objReader->setLoadSheetsOnly( array(
@@ -196,7 +202,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //         dsm($agglo);
 //         break;
 //     foreach($listagglo as $agglo) {
@@ -331,7 +337,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
     fclose($ragglofile);
-
+    unset($ragglofile);
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
 //         dsm($context['sandbox']['line']);
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
@@ -450,9 +456,15 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+/*    
+    $objWriter->__destruct();
+    $objReader->__destruct();
+*/     
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
-
+    gc_collect_cycles();
 //     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
@@ -841,6 +853,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -945,6 +960,9 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -1219,6 +1237,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $j++;
         }
     }
+
 
     fclose($r);
 
@@ -1618,6 +1637,9 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -1718,6 +1740,8 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -1828,6 +1852,8 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -2889,6 +2915,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $objWriter->setIncludeCharts(TRUE);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -3386,6 +3415,8 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -3495,6 +3526,8 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -3604,6 +3637,8 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -3714,6 +3749,8 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -3956,6 +3993,8 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
 
@@ -4754,6 +4793,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $objWriter->setPreCalculateFormulas(false);
         //$objWriter->setOffice2003Compatibility(true);
         $objWriter->save(drupal_realpath($target_path));
+        $objPHPExcel->__destruct();
+        unset($objPHPExcel);
         unset($objWriter);
         unset($objReader);
     }
@@ -5531,6 +5572,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $objWriter->setPreCalculateFormulas(false);
         //$objWriter->setOffice2003Compatibility(true);
         $objWriter->save(drupal_realpath($target_path));
+        $objPHPExcel->__destruct();
+        unset($objPHPExcel);
         unset($objWriter);
         unset($objReader);
     }
@@ -9413,7 +9456,8 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
 //         dsm(1);
         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
-//         dsm(2);
+        
+        $objPHPExcel->__destruct();
         unset($objPHPExcel, $objReader);
     }
 
