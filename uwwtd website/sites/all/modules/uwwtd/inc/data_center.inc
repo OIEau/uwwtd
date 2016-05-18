@@ -4785,6 +4785,7 @@ function uwwtd_finished($success, $results, $operations){
 function uwwtd_shapes_form($form, &$form_state){
     
     if(!isset($_SESSION['uwwtd_annee'])){
+        //dsm($_SESSION);
         drupal_goto('data');
     }
     else{
@@ -5453,7 +5454,6 @@ function uwwtd_add_csa_criterions_batch_process($csas, $timestamp, &$context){
  *
  */ 
 function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
-
     uwwtd_trace(__FUNCTION__);
     if (!isset($context['sandbox']['progress'])) {
     
