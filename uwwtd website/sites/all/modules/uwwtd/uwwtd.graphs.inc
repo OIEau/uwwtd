@@ -1282,7 +1282,6 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 				$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
 				$keys = array_keys($graph2Front);
 				$graph2Front = $graph2Front[$keys[0]];
-                dsm($graph2Front);
 				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
 			} elseif (array_key_exists('data', $graph2Front) &&
 				array_key_exists('color', $graph2Front) &&
