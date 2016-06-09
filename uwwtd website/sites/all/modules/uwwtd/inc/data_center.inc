@@ -760,19 +760,17 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
 function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
     if(!empty($datas)){
         if (!isset($context['sandbox']['progress'])) {
-        
             //Get all receiving areas from data
-            
             $context['sandbox']['max'] = count($datas);
             $context['sandbox']['progress'] = 0;
-            $context['sandbox']['ids'] = $datas;
+            $context['sandbox']['ids'] = array_keys($datas);
             $_SESSION['totRca'] = $context['sandbox']['max'];
         }
         $i = $context['sandbox']['progress'];
         $j=0;
         while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
-            $data = $context['sandbox']['ids'][$k];
+            $data = $datas[$context['sandbox']['ids'][$k]];
             $node = uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i);
             if($node){
                 $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
