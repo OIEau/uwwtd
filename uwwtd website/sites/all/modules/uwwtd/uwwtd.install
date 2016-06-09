@@ -4296,6 +4296,28 @@ function uwwtd_update_7147(&$context = null) {
 	//throw new DrupalUpdateException(__FUNCTION__);
 }
     
+//Re-asing field : field_zonetype to "receiving_area" bundle (before it was assigned to agglomeration)
+function uwwtd_update_7148(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    // Mise à jour de la base :
+    db_update('field_config_instance')
+        ->fields(array('bundle' => 'receiving_area'))
+        ->condition('field_name', 'field_zonetype', '=')
+        ->execute();
+    
+    
+    drupal_flush_all_caches();
+   
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}
     
 /**
  * Redéfinit la précision et le scale du champs donné.

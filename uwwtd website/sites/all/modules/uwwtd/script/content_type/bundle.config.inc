@@ -31367,7 +31367,7 @@ $list_contenttype = array (
         'field_id' => '399',
         'field_name' => 'field_zonetype',
         'entity_type' => 'node',
-        'bundle' => 'agglomeration',
+        'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
       39 => 
