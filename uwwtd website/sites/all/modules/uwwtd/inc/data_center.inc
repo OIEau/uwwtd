@@ -140,7 +140,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
         $repCode = null;
     }
     
-    //On profite de l'occasion pour creer le noued sur le MSLevel
+    //On profite de l'occasion pour creer le noeud sur le MSLevel
     if(!empty($datas['UWWTD_Report']['MSLevel'])){
         uwwtd_update_mslevel($newFile, $annee, $datas['UWWTD_Report']['MSLevel'], $repCode, $timestamp);
     }
@@ -570,86 +570,52 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
     
     /*DG 15/12/2015 Add type RCA*/
+    /*Fix nd@oieau.fr 09/06/2016 : reprocess the ReceivingAreas import ==> the batch operation not working before*/
     //ReceivingAreas
     $imports  = array();
+    //Old reporting format (until the 8th)
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
+            //Case of country with only one RCA
             if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
                 $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
             }
+            //Case of country with more of one RCA
             else{
                 $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
             }       
         }
-    }elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
+    }
+    //New report Format (9th)
+    elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
         //ReceivingAreasSAMain
         if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
-            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca_main){
-                $rcacode_SAMain= $rca_main['rcaCode'];
-                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter']=array();
-                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54']=array();
-                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA']= array();
-                $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor']= array();
-                //ReceivingAreasSAParameter
-                if(isset($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'])){
-                    foreach($datas['UWWTD_Report']['ReceivingAreasSAParameter']['ReceivingAreaSAParameter'] as $rca_parameter){
-                        if($rca_parameter['rcaCode'] == $rcacode_SAMain){
-                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSAParameter'][]=$rca_parameter;
-                        }
-                    }
-                }
-                //ReceivingAreasSA54
-                if(isset($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'])){
-                    foreach($datas['UWWTD_Report']['ReceivingAreasSA54']['ReceivingAreaSA54'] as $rca_sa54){
-                        if($rca_sa54['rcaCode'] == $rcacode_SAMain){
-                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSA54'][]=$rca_sa54;
-                        }
-                    }
-                }
-                //ReceivingAreasSASA
-                if(isset($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'])){
-                    foreach($datas['UWWTD_Report']['ReceivingAreasSASA']['ReceivingAreaSASA'] as $rca_sasa){
-                        if($rca_sasa['rcaCode'] == $rcacode_SAMain){
-                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSASA'][]=$rca_sasa;
-                        }
-                    }
-                }
-                //ReceivingAreasSALSAPredecessor
-                if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
-                    foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_salsapre){
-                        if($rca_salsapre['rcaCode'] == $rcacode_SAMain){
-                            $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['ReceivingAreaSALSAPredecessor'][]=$rca_salsapre;
-                        }
-                    }
-                }
+            //ReceivingAreaSAMain
+            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
                 
-            }
-            $imports += $datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'];      
-        }
-    }
-    /*DG 15/12/2015 Add type ReceivingAreasLSA*/
-    if(isset($datas['UWWTD_Report']['ReceivingAreasLSA'])){
-        if(isset($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['rcaCode'])){
-            foreach($datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'] as $rca_lsa){
-                $rcacode_lsa= $rca_lsa['rcaCode'];
-                //ReceivingAreasSALSAPredecessor
-                if(isset($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'])){
-                    foreach($datas['UWWTD_Report']['ReceivingAreasSALSAPredecessor']['ReceivingAreaSALSAPredecessor'] as $rca_lsapre){
-                        if($rca_lsapre['rcaCode'] == $rcacode_lsa){
-                            $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA']['ReceivingAreaSALSAPredecessor'][]=$rca_lsapre;
+            $subkeys = array(
+                'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
+                'ReceivingAreasSA54'=>'ReceivingAreaSA54',
+                'ReceivingAreasLSA'=>'ReceivingAreaLSA',
+                'ReceivingAreasSASA'=>'ReceivingAreaSASA',
+                'ReceivingAreasSALSAPredecessor'=>'ReceivingAreaSALSAPredecessor'
+            );
+            foreach($subkeys as $root=>$key){
+                if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
+                    foreach($datas['UWWTD_Report'][$root][$key] as $rca){
+                        if(isset($imports[$rca['rcaCode']])){
+                            $imports[$rca['rcaCode']][$root]+=$rca;
                         }
+                        
                     }
                 }
-                $imports += $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
             }
-        }else{
-            $imports = $datas['UWWTD_Report']['ReceivingAreasLSA']['ReceivingAreaLSA'];
-        } 
-        uwwtd_trace('$imports ReceivingAreas');
-        uwwtd_trace(var_export($imports, true));
-        $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+              
         }
-    
+        $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
         
     //BigCityDischargers
     $imports  = array();
