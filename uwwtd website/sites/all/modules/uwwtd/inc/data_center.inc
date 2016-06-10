@@ -3558,9 +3558,9 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             /*DG 15/12/2015 add rcaCode*/
             //text
             if(isset($data['rcaID']) || isset($data['rcaCode'])){
-                if(isset($date['rcaID'])){
+                if(isset($data['rcaID'])){
                      $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaID']);
-                }elseif(isset($date['rcaCode'])){
+                }elseif(isset($data['rcaCode'])){
                      $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
                 }
             }
