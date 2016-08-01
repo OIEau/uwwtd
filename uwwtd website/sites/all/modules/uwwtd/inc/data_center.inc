@@ -6504,7 +6504,7 @@ function uwwtd_coord_transform($lat, $long){
 
     // create array
     $table = array();
-    $sql = "SELECT ST_AsBinary('".$geo."') as bin, 'point' as pt, ST_Y('".$geo."') as geoy, ST_X('".$geo."') as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    $sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, 'point' as pt, ST_Y('".$geo."'::geometry) as geoy, ST_X('".$geo."'::geometry) as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
     $result = db_query($sql);
     foreach ($result as $record) {
         $table['bin'] = $record->bin;
@@ -6660,7 +6660,7 @@ function uwwtd_coord_transform_multipolygon($parts){
     $table = array();
 //  $sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
     
-    $sql = "SELECT ST_AsBinary(:thegeom) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
+    $sql = "SELECT ST_AsBinary(:thegeom::geometry) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
     $aParam = array(
                 ':thegeom' => $geo,
                     );
