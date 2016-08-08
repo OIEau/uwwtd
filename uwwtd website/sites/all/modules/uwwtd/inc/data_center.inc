@@ -575,26 +575,24 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     $imports  = array();
     //Old reporting format (until the 8th)
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-        if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-            //Case of country with only one RCA
-            if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-                $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-            }
-            //Case of country with more of one RCA
-            else{
-                $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-            }       
+        //Case of country with only one RCA
+
+        if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
+            $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
         }
+        //Case of country with more of one RCA
+        else{
+            $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+        }  
     }
     //New report Format (9th)
     elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
         //ReceivingAreasSAMain
-        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
+        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
             //ReceivingAreaSAMain
-            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
+            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
                 $imports[$rca['rcaCode']] = $rca;
             }
-                
             $subkeys = array(
                 'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
                 'ReceivingAreasSA54'=>'ReceivingAreaSA54',
@@ -606,7 +604,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                 if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
                     foreach($datas['UWWTD_Report'][$root][$key] as $rca){
                         if(isset($imports[$rca['rcaCode']])){
-                            $imports[$rca['rcaCode']][$root]+=$rca;
+                            $imports[$rca['rcaCode']][$root] = $rca;
                         }
                         
                     }
@@ -614,7 +612,10 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
               
         }
-        $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
+
+    if (!empty($imports)) {
+    	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
         
     //BigCityDischargers
@@ -6960,7 +6961,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     }
 
     if($compliance_info->required == 'S'){      
-
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))) {
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
@@ -7498,7 +7498,7 @@ function uwwtd_zipped_csvs_to_array($files){
  *                              possible value : Appropriate, S, P, N, NP, MP, O
  *                                               NI if no case found in algorythm  
  */ 
-function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
+function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     $required_treatment->reason = '';
@@ -8226,11 +8226,10 @@ function uwwtd_rca_art54_applies($dcp)
 /**
  *
  */
-function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen)
+function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     // dsm(func_get_args());
-    
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
@@ -8403,7 +8402,7 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
 /**
  *
  */
-function uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen)
+function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
