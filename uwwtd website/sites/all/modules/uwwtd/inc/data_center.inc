@@ -2946,7 +2946,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //memo
         if(isset($data['uwwInformation'])){
-            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text($data['uwwInformation']);
+            $node->field_uwwinformation['und'][0]['value'] = substr(uwwtd_check_text($data['uwwInformation']), 0, 255);
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
         
