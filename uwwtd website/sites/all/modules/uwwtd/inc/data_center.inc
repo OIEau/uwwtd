@@ -591,8 +591,17 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         //ReceivingAreasSAMain
         if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
             //ReceivingAreaSAMain
-            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
-                $imports[$rca['rcaCode']] = $rca;
+            //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
+            
+            if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
+                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
+                    $imports[$rca['rcaCode']] = $rca; 
+                }
+            }
+            else{
+                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
+                    $imports[$rca['rcaCode']] = $rca;
+                }
             }
             $subkeys = array(
                 'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
@@ -605,7 +614,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                 if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
                     foreach($datas['UWWTD_Report'][$root][$key] as $rca){
                         if(isset($imports[$rca['rcaCode']])){
-                            $imports[$rca['rcaCode']][$root] = $rca;
+                            //ajout d'un tableau
+                            $imports[$rca['rcaCode']][$root][] = $rca;
                         }
                         
                     }
@@ -614,7 +624,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
               
         }
     }
-    //print_r($imports);
+    //krumo($imports);
     //exit();
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
