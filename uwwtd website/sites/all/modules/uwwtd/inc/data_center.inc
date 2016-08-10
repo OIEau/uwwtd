@@ -303,7 +303,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
             
         }        
         //text
-        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = uwwtd_check_text($datas['mslRemarks']);
+        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = substr(uwwtd_check_text($datas['mslRemarks']),0, 255);
         //numeric
 //         if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_numeric($datas['mslWWReusePerc'], $timestamp,  0 , $node);
         if(isset($datas['mslWWReusePerc'])) {
@@ -574,6 +574,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     //ReceivingAreas
     $imports  = array();
     //Old reporting format (until the 8th)
+    //krumo($datas['UWWTD_Report']);
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         //Case of country with only one RCA
 
@@ -613,11 +614,11 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
               
         }
     }
-
+    //print_r($imports);
+    //exit();
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
-    }
-        
+    }    
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -772,7 +773,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
         while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
             $data = $datas[$context['sandbox']['ids'][$k]];
-            $node = uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i);
+            $node = uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $k);
             if($node){
                 $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
             }
