@@ -593,7 +593,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
             if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
                 foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
-                    $imports[$rca['rcaCode']] = $rca;
+                    $imports[$rca['rcaCode']] = $rca; 
                 }
             }
             else{
