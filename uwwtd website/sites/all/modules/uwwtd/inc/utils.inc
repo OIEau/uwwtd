@@ -1235,12 +1235,21 @@ function uuwtd_get_distance_compliance($agg){
     $dist_art5_perf_pe = 0;
     $dist_art5_perf_percent = 0;
 
+    $totalLoadenteringPE = 0;
+    $totalLoadenteringPercent = 0;
+    $totalLoadenteringPE_P_NI = 0;
+    $totalLoadenteringPercent_P_NI = 0;
+
     foreach ($agg->field_agguwwliste['und'] as $uwwtpnid) {
         $uwwtp = node_load($uwwtpnid['nid']);
+
         $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
         $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
         $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
         $agglo_uwwtp = node_load($agglo_uwwtpnid);
+
+        $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
+        $totalLoadenteringPercent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
 
         $collected_by_uww_for_this_agglo = $agg->field_agggenerated['und'][0]['value'] * ($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
 
@@ -1284,6 +1293,35 @@ function uuwtd_get_distance_compliance($agg){
             }
         // }
     }
+
+    // dsm($totalLoadenteringPE);
+    // dsm($totalLoadenteringPercent);
+
+    $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
+    $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
+
+    $collected = $agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'] / 100;
+    $onePercentOfCollected = $collected / 100;
+    $disappearing = $collected - $totalLoadenteringPE;
+
+    if ($onePercentOfCollected < 2000) {
+        $difference = $disappearing - $onePercentOfCollected;
+    } else {
+        $difference = $disappearing - 2000;
+    }
+
+    $difference_pe = ($difference * 100) / $collected;
+
+    if (true === $percentage_lost > 1 || $pe_lost >= 2000) {
+        $dist_art4_treatment_pe =  $difference;
+        $dist_art4_treatment_percent += $difference_pe;
+        $art4complianceTreat = 'NC';
+        $dist_art4_perf_pe += $difference;
+        $dist_art4_perf_percent += $difference_pe;
+        $art4compliancePerf = 'NC';
+
+    }
+
 
     $dtc = array(
         'art4_treat_pe' => $dist_art4_treatment_pe,

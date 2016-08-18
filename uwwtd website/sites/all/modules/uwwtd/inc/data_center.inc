@@ -5903,12 +5903,12 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }
     }
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
     } 
         
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
     
@@ -7523,8 +7523,8 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
     $typePriority = array(
         'SA'   => 1, //biggest priority
         'CSA'  => 2,
-        'A58'  => 3,
-        'A54'  => 4,
+        'A54'  => 3,
+        'A58'  => 4,
         'NA'   => 5,
         'LSA'  => 6, //lower priority
     );
@@ -7538,7 +7538,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
             $dcp = $oneDcp;
         }
     }            
-
 
         // If the discharge point is in a Less Sensitive Area
     switch($dcp['rcatype']) {
@@ -8229,7 +8228,7 @@ function uwwtd_rca_art54_applies($dcp)
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace('rcatype = ' . $dcp['rcatype']);
     uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
-    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true));
+    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true));
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
 }

@@ -201,11 +201,15 @@ echo uwwtd_insert_errors_tab($node);
                 $distanceToCompliance = uuwtd_get_distance_compliance($node);
                 // Set the colors of "Distance to compliance" table
                 // Article 3
-                if ($node->field_aggart3compliance['und'][0]['value'] == 'C' || $node->field_aggart3compliance['und'][0]['value'] == 'QC') {
+                if ($node->field_aggart3compliance['und'][0]['value'] == 'C'
+                    || $node->field_aggart3compliance['und'][0]['value'] == 'QC') 
+                {
                     $colorart3 = '#4f91e1';
                 } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
                     $colorart3 = '#d93c3c';
-                } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'PD' && $node->field_aggpercwithouttreatment['und'][0]['value'] > 0) {
+                } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'PD' 
+                    && $node->field_aggpercwithouttreatment['und'][0]['value'] > 0) 
+                {
                     $colorart3 = '#FF5200';
                 } else {
                     $colorart3 = '#a2a2a2';
@@ -227,9 +231,9 @@ echo uwwtd_insert_errors_tab($node);
                     deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === true &&
                     $distanceToCompliance['art4_perf_pe'] > 0) {
                     $colorart4P = '#d93c3c';
-            } elseif ($distanceToCompliance['art4_perf_compliance'] == 'NC' && 
+                } elseif ($distanceToCompliance['art4_perf_compliance'] == 'NC' && 
                         deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === false) {
-                $colorart4P = '#FF5200';
+                    $colorart4P = '#FF5200';
                 } else {
                     $colorart4P = '#4f91e1';
                 }
