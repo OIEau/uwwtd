@@ -146,9 +146,12 @@ function uwwtd_timeline_output($node){
     <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
     </legend>';
     foreach($histories as $history){  
+
       $other = node_load($history);
-      $otherY = $other->field_anneedata['und'][0]['value'];
-      $otherList[$otherY] = array('node'=>$other);
+      if ($other->type == 'uwwtp' || $other->type == 'agglomeration') {
+        $otherY = $other->field_anneedata['und'][0]['value'];
+        $otherList[$otherY] = array('node'=>$other);
+      } 
     }
     ksort($otherList);
     $output .='<table class = "dispo-annee">
@@ -159,7 +162,6 @@ function uwwtd_timeline_output($node){
       $ting = $other['node'];
       if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
       if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
-
             //override PD and QC value, we don't want to display QC and PD (for now)
             if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
                 $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
