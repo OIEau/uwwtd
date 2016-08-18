@@ -591,7 +591,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
             //ReceivingAreaSAMain
             //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
-            if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
+            
+            if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
                 foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
                     $imports[$rca['rcaCode']] = $rca; 
                 }
@@ -612,7 +613,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                 if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
                     foreach($datas['UWWTD_Report'][$root][$key] as $rca){
                         if(isset($imports[$rca['rcaCode']])){
-                            $imports[$rca['rcaCode']][$root] = $rca;
+                            //ajout d'un tableau
+                            $imports[$rca['rcaCode']][$root][] = $rca;
                         }
                         
                     }
@@ -621,6 +623,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
               
         }
     }
+    //krumo($imports);
+    //exit();
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
@@ -5900,12 +5904,12 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }
     }
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
     } 
         
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
     
@@ -7520,8 +7524,8 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
     $typePriority = array(
         'SA'   => 1, //biggest priority
         'CSA'  => 2,
-        'A58'  => 3,
-        'A54'  => 4,
+        'A54'  => 3,
+        'A58'  => 4,
         'NA'   => 5,
         'LSA'  => 6, //lower priority
     );
@@ -7535,7 +7539,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
             $dcp = $oneDcp;
         }
     }            
-
 
         // If the discharge point is in a Less Sensitive Area
     switch($dcp['rcatype']) {
@@ -8226,7 +8229,7 @@ function uwwtd_rca_art54_applies($dcp)
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace('rcatype = ' . $dcp['rcatype']);
     uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
-    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true));
+    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true));
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
 }
