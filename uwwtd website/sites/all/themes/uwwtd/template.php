@@ -252,44 +252,48 @@ function uwwtd_timeline_receiving_area_output($node){
 			$otherList[$otherY] = array('node'=>$other);
 		}
 		ksort($otherList);
+    // dsm($otherList);
 		$output .='<table class = "dispo-annee receiving-area">
               <tbody>
                 <tr>
                   <td class="dispo-before"><div></div></td>';
 		foreach($otherList as $other){
 			$ting = $other['node'];
-			if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
-			if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
+   //    if ($ting->type == 'receiving_area') {
+        
+   //    }
+			// if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
+			// if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
 
-			//override PD and QC value, we don't want to display QC and PD (for now)
-			if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
-				$val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
-			}
+			// //override PD and QC value, we don't want to display QC and PD (for now)
+			// if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
+			// 	$val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
+			// }
 
-			//default colors
-			$color = '#6b6b6b'; $borderc = '#6b5e66';
+			// //default colors
+			// $color = '#6b6b6b'; $borderc = '#6b5e66';
 
-			if(isset($val)){
-				if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
-				if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
-				if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
-				if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-				// if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
-				if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
-			}
+			// if(isset($val)){
+			// 	if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
+			// 	if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
+			// 	if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
+			// 	if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
+			// 	// if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+			// 	if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
+			// }
 			// $color = uwwtd_adjustBrightness($color, 50);
 			$nbAnnee = count($otherY);
 			$j=0;
 			$cell = 0;
 			for($a=1;$a<=$nbAnnee;$a++){
 				if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-					$output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
-					$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+					$output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current">';
+					$output .= '<h4 style="color: #000;">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
 					// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
 					$output .= '</td>';
 				}else{
-					$output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element">';
-					$output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
+					$output.='<td class="dispo-annee uwwtd-history-element">';
+					$output .= '<h4 style="color: #000;">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid, array('attributes' => array('style' => 'color: #000 !important'))).'</h4>';
 					// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
 					$output .= '</td>';
 				}
