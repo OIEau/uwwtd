@@ -810,7 +810,6 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
     global $language;
-    dsm($data);
     
     // Check basic elements exist
     // errors
@@ -1727,7 +1726,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         // save node
         node_save($node);
-        exit();
 
         if (empty($node->nid)) {
             uwwtd_trace('receiving_area ' . $siteId . ' node_save() error2');
