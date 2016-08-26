@@ -7002,7 +7002,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     uwwtd_trace('$compliance_info become : ' . var_export($compliance_info, true));
     
     //same case as below for count($dcp), missing information on dcp    
-    if($compliance_info->required == 'NI'){        
+    if($compliance_info->required == 'NI' || $compliance_info->required == '?'){        
         $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $compliance_info->reason, $timestamp, null, $node);
         $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
