@@ -5744,7 +5744,41 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     }
     
     //ALGO10    
-    $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);            
+    $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
+
+
+    // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
+    if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
+        if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
+            $node->field_aggart4compliance['und'][0]['value'] = 'NR';
+            $node->field_aggart5compliance['und'][0]['value'] = 'NR';
+            $node->field_aggart6compliance['und'][0]['value'] = 'NC';
+        } else {
+            if ($node->field_aggart4compliance['und'][0]['value'] != 'NR') {
+                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+                } else {
+                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+                }
+            }
+        }
+    } else {
+    	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+    		if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+            } else {
+                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+            }
+    	}
+    }
+
+
 
     unset($infoAllAggUww);    
 
@@ -5963,11 +5997,13 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
     $totalLoadenteringPercent = 0;
     foreach ($listUwwtpCompliance as $aUwwtp) {
-        $totalLoadenteringPercent = $aUwwtp['agglo_uww_perc_ent_uw'];
+        $totalLoadenteringPercent += $aUwwtp['agglo_uww_perc_ent_uw'];
     }
     $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
 
+    uwwtd_trace('WOLOLOLO');
+    uwwtd_trace($agg->title);
     uwwtd_trace($pe_lost);
     uwwtd_trace($percentage_lost);
 
@@ -7604,6 +7640,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
         'A54'  => 3,
         'A5854'=> 3,
         'A58'  => 4,
+        'A58523' => 4,
         'NA'   => 5,
         'LSA'  => 6, //lower priority
     );
@@ -7681,6 +7718,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
         case 'A58':
         case 'A54':
         case 'A5854':
+        case 'A58523':
             if (true === uwwtd_rca_art54_applies($dcp)) {
                 if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
                     if($maxgen <= 10000){
@@ -7695,7 +7733,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
                     $required_treatment->required = 'NI';
                     $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
                 }                              
-            } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
+            } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58' || $dcp['rcatype'] == 'A58523') {
                 uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
             } else { //$dcp['rcatype'] = CSA
                 uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
@@ -8420,7 +8458,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
                     }  
                 }            
             }
-        } elseif($dcp['rcatype'] == 'A58') {
+        } elseif($dcp['rcatype'] == 'A58' || $dcp['rcatype'] == 'A58523') {
             if($dcp['paramN']) {
                 if($dcp['paramP']) {
                     if ($dcp['paramO']) {
