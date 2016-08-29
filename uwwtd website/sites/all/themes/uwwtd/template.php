@@ -1022,7 +1022,17 @@ function uwwtd_get_uww_graphic($node){
     $reseau['nid'] = $node->nid;
     $reseau['title'] = $node->title;
     $reseau['id'] = $node->field_siteid['und'][0]['value'];
-    $reseau['compliance'] = $node->field_uwwcompliance['und'][0]['value'];
+    if ($node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+        $node->field_uwwcodperf['und'][0]['value'] == 'P' &&
+        $node->field_uwwbod5perf['und'][0]['value'] == 'P') {
+      $reseau['compliance'] = 'C';
+    } elseif ($node->field_uwwsecondarytreatment['und'][0]['value'] == '0' ||
+        $node->field_uwwcodperf['und'][0]['value'] == 'F' ||
+        $node->field_uwwbod5perf['und'][0]['value'] == 'F') {
+      $reseau['compliance'] = 'NC';
+    } else {
+      $reseau['compliance'] = 'NR';
+    }
     $reseau['collectingSystem'] = $node->field_uwwcollectingsystem['und'][0]['value'];
     $reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
     $reseau['required'] = $node->field_uwwtreatmentrequired['und'][0]['value'];
@@ -1079,9 +1089,9 @@ function uwwtd_get_uww_graphic($node){
     foreach ($node->field_linked_agglomerations['und'] as $aggs) {
         $nbAgglos++;
         $agg = node_load($aggs['nid']);
-        if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
+        if ($agg->field_aggart3compliance['und'][0]['value'] == 'NC') {
             $aggComplianceNC = true;
-        } elseif ($agg->field_aggcompliance['und'][0]['value'] == 'NR' || $agg->field_aggcompliance['und'][0]['value'] == 'PD') {
+        } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'NR' || $agg->field_aggcompliance['und'][0]['value'] == 'PD') {
             $aggComplianceNR = true;
         }
         
@@ -1161,7 +1171,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['n-removal']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['n-removal']['performance'] == 'F') {
+        } elseif ($reseau['n-removal']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1174,7 +1184,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['p-removal']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['p-removal']['performance'] == 'F') {
+        } elseif ($reseau['p-removal']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1187,7 +1197,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['uv']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['uv']['performance'] == 'F') {
+        } elseif ($reseau['uv']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1200,7 +1210,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['micro']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['micro']['performance'] == 'F') {
+        } elseif ($reseau['micro']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1213,7 +1223,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['chlorination']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['chlorination']['performance'] == 'F') {
+        } elseif ($reseau['chlorination']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1226,7 +1236,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['ozonation']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['ozonation']['performance'] == 'F') {
+        } elseif ($reseau['ozonation']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1239,7 +1249,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['sand']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['sand']['performance'] == 'F') {
+        } elseif ($reseau['sand']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1252,7 +1262,7 @@ function uwwtd_get_uww_graphic($node){
         $output .= '<div class="more">';
         if ($reseau['other']['performance'] == 'P') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-        } elseif ($reseau['other']['performance'] == 'F') {
+        } elseif ($reseau['other']['performance'] == 'F' || $reseau['compliance'] == 'NC') {
             $output .= '<img src="'.$src.'/images/graphic/ms-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
         } else {
             $output .= '<img src="'.$src.'/images/graphic/ms-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
@@ -1436,7 +1446,17 @@ function uwwtd_get_agglo_graphic($node){
         $reseau[$uwws['nid']]['mstype'] = $msType;
         $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
         $reseau[$uwws['nid']]['title'] = $uww->title;
-        $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
+        if ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+            $uww->field_uwwcodperf['und'][0]['value'] == 'P' &&
+            $uww->field_uwwbod5perf['und'][0]['value'] == 'P') {
+          $reseau[$uwws['nid']]['compStation'] = 'C';
+        } elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '0' ||
+            $uww->field_uwwcodperf['und'][0]['value'] == 'F' ||
+            $uww->field_uwwbod5perf['und'][0]['value'] == 'F') {
+          $reseau[$uwws['nid']]['compStation'] = 'NC';
+        } else {
+          $reseau[$uwws['nid']]['compStation'] = 'NR';
+        }
         $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
 
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
@@ -1547,10 +1567,10 @@ function uwwtd_get_agglo_graphic($node){
             foreach ($station['mstype'] as $nameMS => $moreStringentStatus) {
                 if ($moreStringentStatus['treatment'] === '1') {
                     $output .= '<div class="msbox" >';
-                    if ($moreStringentStatus['performance'] == 'P') {
-                        $output .= '<img src="'.$src.'/images/graphic/msagg-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
-                    } elseif ($moreStringentStatus['performance'] == 'F') {
+                    if ($moreStringentStatus['performance'] == 'F' || $station['compStation'] == 'NC') {
                         $output .= '<img src="'.$src.'/images/graphic/msagg-small-nc.png" alt="reseau" title="More stringent treatment : Performance & Type">';
+                    } elseif ($moreStringentStatus['performance'] == 'P') {
+                        $output .= '<img src="'.$src.'/images/graphic/msagg-small-c.png" alt="reseau" title="More stringent treatment : Performance & Type">';
                     } else {
                         $output .= '<img src="'.$src.'/images/graphic/msagg-small.png" alt="reseau" title="More stringent treatment : Performance & Type">';
                     }
