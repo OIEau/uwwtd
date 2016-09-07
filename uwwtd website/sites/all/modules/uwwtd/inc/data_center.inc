@@ -3034,7 +3034,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //memo
         if(isset($data['uwwInformation'])){
-            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text($data['uwwInformation']);
+            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text(substr($data['uwwInformation'], 0, 254));
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
         
@@ -5746,7 +5746,6 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     //ALGO10    
     $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
 
-
     // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
     if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
         if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
@@ -5777,8 +5776,6 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
             }
     	}
     }
-
-
 
     unset($infoAllAggUww);    
 
@@ -6971,6 +6968,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $hasParamN      = (isset($rca->field_rca_parameter_n['und'][0]['value']) ? $rca->field_rca_parameter_n['und'][0]['value'] == 1: false);
                 $hasParamP      = (isset($rca->field_rca_parameter_p['und'][0]['value']) ? $rca->field_rca_parameter_p['und'][0]['value'] == 1: false);
                 $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
+
+                $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
                 
                 if($isrca54applied) $rca54applied = true;
                 
@@ -6988,6 +6987,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 'title' => $dcp->title,
                 'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
                 'rcatype' => $rcaTypeid,
+                'rcazonetype' => $zonetypeIsSet,
                 'rca54applied' => $rca54applied,
                 'rcaan' => $rcaANitro,
                 'rcaap' => $rcaAPhos,
@@ -7623,26 +7623,29 @@ function uwwtd_zipped_csvs_to_array($files){
  *                              possible value : Appropriate, S, P, N, NP, MP, O
  *                                               NI if no case found in algorythm  
  */ 
-function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
-{
-    uwwtd_trace(__FUNCTION__);
+
+function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
+	uwwtd_trace(__FUNCTION__);
     $required_treatment->reason = '';
-    if($maxgen < 2000){
-        $required_treatment->required = 'Appropriate';
-//         $required_treatment->reason = $reason;
+    if ($maxgen < 2000) {
+    	$required_treatment->required = 'Appropriate';
         return $required_treatment;
-    }    
+    }
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
-        'SA'   => 1, //biggest priority
+    	'A51523' => 1, //biggest priority
+        'SA'   => 1, 
         'CSA'  => 2,
         'A54'  => 3,
         'A5854'=> 3,
+        'A5154'=> 3,
         'A58'  => 4,
         'A58523' => 4,
-        'NA'   => 5,
-        'LSA'  => 6, //lower priority
+        'A54523' => 5,
+        'A5854523' => 5,
+        'NA'   => 6,
+        'LSA'  => 7, //lower priority
     );
 
     foreach($dcps as $oneDcp){
@@ -7653,99 +7656,102 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen)
         if ($typePriority[ $oneDcp['rcatype'] ] < $typePriority[ $dcp['rcatype'] ]) {
             $dcp = $oneDcp;
         }
-    }            
-
-        // If the discharge point is in a Less Sensitive Area
-    switch($dcp['rcatype']) {
-       //if($dcp['rcatype'] == 'LSA'){
-       case 'LSA':
-            // For dcps in a LSA with water body type LC or CW
-            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-   
-                // For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
-                if($maxgen > 150000){
-                    // secondary treatment must be present
-                    $required_treatment->required = 'S';
-                // For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+    }
+    
+    switch ($dcp['rcatype']) {
+		case 'LSA':
+            if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                if ($maxgen > 150000) {
+       				$required_treatment->required = 'S';
                 } else {
                     $required_treatment->required = 'P';
                 }
-            // For stations in a LSA with water body type ES
-            }elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
-    
-                // For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
-                if($maxgen >= 2000 && $maxgen <= 10000){
-                    // primary treatment must be present
+            } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
+                if ($maxgen >= 2000 && $maxgen <= 10000) {
                     $required_treatment->required = 'P';
-                }else{
-                    // secondary treatment must be present
+                } else {
                     $required_treatment->required = 'S';
                 }
             } else {
-                //problem
+                // Problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
-    // If the discharge point is in a Normal Area
         case 'NA':    
-            // For stations in a NA with water body type LC or CW
-            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-    
-                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-                if($maxgen <= 10000){
+            if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                if ($maxgen <= 10000) {
                     $required_treatment->required = 'Appropriate';
-                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of > 10000
                 } else {
-                    // secondary treatment must be present
-                    // LG pas la bonne variable mise à jour :  $typeTreat = 'S';
                     $required_treatment->required = 'S';                    
                 }
-            // For stations in a NA with water body type ES or FW
-            } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
-    
-                // secondary treatment must be present
+            } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
                 $required_treatment->required = 'S';
             } else {
-                //problem
+                // Problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
+
         // If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
         case 'SA':
         case 'CSA':
+            if ($maxgen <= 10000) {
+        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                	$required_treatment->required = 'Appropriate';
+                } else {
+                    $required_treatment->required = 'S';                    
+                }
+            } else {
+            	if (true === uwwtd_rca_art54_applies($dcp)) {
+                    $required_treatment->required = 'S';                    
+                } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
+        			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+                } else {
+                    uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);              
+                }                              
+            }
+            break;
+        case 'A51523':
         case 'A58':
         case 'A54':
+        case 'A5154':
         case 'A5854':
         case 'A58523':
-            if (true === uwwtd_rca_art54_applies($dcp)) {
-                if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-                    if($maxgen <= 10000){
-                        $required_treatment->required = 'Appropriate';
-                    } else {
-                        $required_treatment->required = 'S';                    
-                    }
-                } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
-        
-                    $required_treatment->required = 'S';
+        case 'A54523':
+        case 'A5854523':
+        	if ($maxgen <= 10000) {
+        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                	$required_treatment->required = 'Appropriate';
                 } else {
-                    $required_treatment->required = 'NI';
-                    $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
-                }                              
-            } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58' || $dcp['rcatype'] == 'A58523') {
-                uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
-            } else { //$dcp['rcatype'] = CSA
-                uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+                    $required_treatment->required = 'S';                    
+                }
+            } else {
+            	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
+            		if (true === uwwtd_rca_art54_applies($dcp)) {
+                    	$required_treatment->required = 'S';                    
+                	}
+            	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
+            		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+            	} elseif ($dcp['rcatype'] == 'A51523') {
+            		if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
+            			uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+            		} else {
+            			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+            		}
+            	} else {
+            		$required_treatment->required = '?'; 
+            	}
             }
             break;
         default:
-            //dsm('rcatype unknown : "' . $dcp['rcatype'] .'" /' . $dcp['nid'] . '/' . $dcp['title']);
             $required_treatment->required = 'NI';
-            $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';            
+            $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';
             break;
     }
 }
+
 
 /**
  * Return a list of all the uwwtp with there infirmation
@@ -8346,7 +8352,7 @@ function uwwtd_rca_art54_applies($dcp)
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace('rcatype = ' . $dcp['rcatype']);
     uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
-    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true));
+    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true));
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
 }
@@ -8363,7 +8369,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
     } elseif ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW' || $dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
-        if($dcp['rcatype'] == 'SA') {
+        if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58523') {
             //if rca demands nitrogen rcaANitro
             if ($dcp['rcaan']) {
                 //if rca demands phosphorus rcaAPhos

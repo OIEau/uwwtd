@@ -998,7 +998,7 @@ function uwwtd_get_url_path($type, $param = array())
         case 'receiving-area':
             $path .= $type;
             foreach ($param as $value) {
-                $path.= '/' . $value;
+                $path.= '/' . str_replace('_', '',$value);
             }
             break;
     }

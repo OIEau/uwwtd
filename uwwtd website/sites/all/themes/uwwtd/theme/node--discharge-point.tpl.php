@@ -180,10 +180,16 @@ echo uwwtd_insert_errors_tab($node);
 		  <?php
             //print render($content['field_dcpuwwliste']);
             //print render($content['field_dcprcaliste']);
-            
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_treatment_plants']);
-			print render($content['field_linked_receiving_areas']);
+            if ($content['field_rcatype']['#items'][0]['value'] == 'NA') {
+              print('<div class="field field-name-field-linked-receiving-areas field-type-node-reference field-label-above">');
+              print('<div class="field-label">Linked receiving areas:&nbsp;</div>');
+              print('<div class="field-items"><div class="field-item even">Normal area</div></div>');
+              print('</div>');
+            } else {
+              print render($content['field_linked_receiving_areas']);
+            }
             print render($content['field_dcpreceivingwater']);
             print render($content['field_dcpwaterbodyid']);
 		?>

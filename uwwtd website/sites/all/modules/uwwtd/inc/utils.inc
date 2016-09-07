@@ -1300,26 +1300,23 @@ function uuwtd_get_distance_compliance($agg){
     $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
 
-    $collected = $agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'] / 100;
-    $onePercentOfCollected = $collected / 100;
-    $disappearing = $collected - $totalLoadenteringPE;
+    // $collected = $agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'] / 100;
+    // $onePercentOfCollected = $collected / 100;
+    // $disappearing = $collected - $totalLoadenteringPE;
+    // if ($onePercentOfCollected < 2000) {
+    //     $difference = $disappearing - $onePercentOfCollected;
+    // } else {
+    //     $difference = $disappearing - 2000;
+    // }
+    // $difference_pe = ($difference * 100) / $collected;
 
-    if ($onePercentOfCollected < 2000) {
-        $difference = $disappearing - $onePercentOfCollected;
-    } else {
-        $difference = $disappearing - 2000;
-    }
-
-    $difference_pe = ($difference * 100) / $collected;
-
+    $dist_art4_treatment_pe =  $pe_lost;
+    $dist_art4_treatment_percent += $percentage_lost;
+    $dist_art4_perf_pe += $pe_lost;
+    $dist_art4_perf_percent += $percentage_lost;
     if (true === $percentage_lost > 1 || $pe_lost >= 2000) {
-        $dist_art4_treatment_pe =  $difference;
-        $dist_art4_treatment_percent += $difference_pe;
         $art4complianceTreat = 'NC';
-        $dist_art4_perf_pe += $difference;
-        $dist_art4_perf_percent += $difference_pe;
-        $art4compliancePerf = 'NC';
-
+        $art4compliancePerf = 'NC'; 
     }
 
 
