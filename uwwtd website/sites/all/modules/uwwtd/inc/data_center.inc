@@ -5882,7 +5882,15 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         ||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-    }  
+    }
+
+    // If the country has a lot of IAS
+	if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']
+        && $node->field_aggc2['und'][0]['value'] >= 98) {
+        uwwtd_trace(__LINE__);      
+        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+    } 
+
     uwwtd_trace(__LINE__);
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];          
 }
