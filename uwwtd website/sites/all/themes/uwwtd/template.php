@@ -1453,10 +1453,17 @@ function uwwtd_get_agglo_graphic($node){
         } elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '0' ||
             $uww->field_uwwcodperf['und'][0]['value'] == 'F' ||
             $uww->field_uwwbod5perf['und'][0]['value'] == 'F') {
-          $reseau[$uwws['nid']]['compStation'] = 'NC';
+            $reseau[$uwws['nid']]['compStation'] = 'NC';
         } else {
           $reseau[$uwws['nid']]['compStation'] = 'NR';
         }
+
+        $percentage_lost = $node->field_aggc1['und'][0]['value'] - $perce_entering;
+        $pe_lost = ($percentage_lost * ($node->field_aggc1['und'][0]['value'] * $node->field_agggenerated['und'][0]['value'])) / 10000;
+
+        $reseau[$uwws['nid']]['percent_lost'] = $percentage_lost;
+        $reseau[$uwws['nid']]['pe_lost'] = $pe_lost;
+
         $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
 
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
@@ -1494,7 +1501,7 @@ function uwwtd_get_agglo_graphic($node){
         <div class="agglomeration-graphic">';
     if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
         $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-nc.png" alt="reseau">';
-    } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'QC') {
+    } elseif ($node->field_aggart3compliance['und'][0]['value'] == 'QC' || $node->field_aggart3compliance['und'][0]['value'] == 'C') {
         $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau-c.png" alt="reseau">';
     } else {
         $output .= '<img width="270px" src="'.$src.'/images/graphic/reseau.png" alt="reseau">';
@@ -1553,9 +1560,15 @@ function uwwtd_get_agglo_graphic($node){
 
         $output .= '<div class="graphic-title">
                 '.l($station['title'], "node/".$station['nid']).'
-            </div>
-            <div class="station-load">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
             </div>';
+
+        if ($station['percent_lost'] > 2000 || $station['pe_lost'] > 1) {
+          $output .= '<div class="station-load" style="color:red;">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
+            </div>';
+        } else {
+          $output .= '<div class="station-load">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
+            </div>';
+        }
     }
 
     $output .= '</div>';
