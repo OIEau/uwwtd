@@ -317,7 +317,9 @@ echo uwwtd_insert_errors_tab($node);
           print '<div class="panel-body">';
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_treatment_plants']);
-            print render($content['field_linked_discharge_points']);
+            //print render($content['field_linked_discharge_points']);
+            //Fix nd@oieau.fr : 10/06/2016 bad field name 
+            print render($content['field_rcadcpliste']);
           print '</div>';
         print '</fieldset>';
       print '</div>';

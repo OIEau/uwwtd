@@ -183,7 +183,9 @@ echo uwwtd_insert_errors_tab($node);
             
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_treatment_plants']);
-			print render($content['field_linked_receiving_areas']);
+			//print render($content['field_linked_receiving_areas']);
+            //Fix nd@oieau.fr : 10/06/2016 bad field name 
+            print render($content['field_dcprcaliste']);
             print render($content['field_dcpreceivingwater']);
             print render($content['field_dcpwaterbodyid']);
 		?>
