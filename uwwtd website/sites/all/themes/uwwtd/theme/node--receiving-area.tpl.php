@@ -168,6 +168,17 @@ echo uwwtd_insert_errors_tab($node);
         print '</legend>';
         print '<div class="panel-body">';
             print '<table>';
+              print '<tr>';
+                print '<td>';
+                  print render($content['field_rca58applied']);
+                print '</td>';
+                print '<td>';
+                  print render($content['field_rcaart58datedesign']);
+                print '</td>';
+                print '<td>';
+                  print render($content['field_rcadateart5854']);
+                print '</td>';
+              print '</tr>';
  			  print '<tr>';
  			    print '<td>';
 		          if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering) &&

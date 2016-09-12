@@ -303,7 +303,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
             
         }        
         //text
-        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = uwwtd_check_text($datas['mslRemarks']);
+        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = uwwtd_check_text(substr($datas['mslRemarks'], 0, 254));
         //numeric
 //         if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_numeric($datas['mslWWReusePerc'], $timestamp,  0 , $node);
         if(isset($datas['mslWWReusePerc'])) {
@@ -575,26 +575,33 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     $imports  = array();
     //Old reporting format (until the 8th)
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-        if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
-            //Case of country with only one RCA
-            if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
-                $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-            }
-            //Case of country with more of one RCA
-            else{
-                $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-            }       
+        //Case of country with only one RCA
+
+        if(isset($datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea']['rcaCode'])){
+            $imports[0] = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
         }
+        //Case of country with more of one RCA
+        else{
+            $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
+        }  
     }
     //New report Format (9th)
     elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
         //ReceivingAreasSAMain
-        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'])){
+        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
             //ReceivingAreaSAMain
-            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
-                $imports[$rca['rcaCode']] = $rca;
+            //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
+            
+            if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
+                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
+                    $imports[$rca['rcaCode']] = $rca; 
+                }
             }
-                
+            else{
+                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
+                    $imports[$rca['rcaCode']] = $rca;
+                }
+            }
             $subkeys = array(
                 'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
                 'ReceivingAreasSA54'=>'ReceivingAreaSA54',
@@ -604,9 +611,10 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             );
             foreach($subkeys as $root=>$key){
                 if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
-                    foreach($datas['UWWTD_Report'][$root][$key] as $rca){
+                    foreach($datas['UWWTD_Report'][$root][$key] as $rcaKey => $rcaValue){
                         if(isset($imports[$rca['rcaCode']])){
-                            $imports[$rca['rcaCode']][$root]+=$rca;
+                            //ajout d'un tableau
+                            $imports[$rca['rcaCode']][$root][$rcaKey] = $rcaValue;
                         }
                         
                     }
@@ -614,7 +622,10 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
               
         }
-        $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
+    //exit();
+    if (!empty($imports)) {
+    	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
         
     //BigCityDischargers
@@ -799,6 +810,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
     global $language;
+    
     // Check basic elements exist
     // errors
     $e = 0;
@@ -815,6 +827,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
     // Check if no errors were found
     uwwtd_trace('import receiving_area : ' . $annee.'_rca_'.uwwtd_check_text($data['rcaCode']));
+    //dsm($data);
     if($e == 0){
 
         // Variables
@@ -886,9 +899,21 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa environmental domain found.', $timestamp, $i, $node);
         
         //text
+        // BB 22/08 added elseif for 9th report
+        // BeginLife date is set and is before report date
+        if (isset($data['rcaBeginLife']) && date("Y", strtotime($data['rcaBeginLife'])) < $annee) {
+        	$rcaState9thReport = '1';
+        	// If EndLife date before report date, rca is inactive
+        	if (isset($data['rcaEndLife']) && date("Y", strtotime($data['rcaEndLife'])) < $annee) {
+        		$rcaState9thReport = '0';
+        	}
+        } 
+
         if(isset($data['rcaState'])){
-            $node->field_status['und'][0]['value'] = uwwtd_check_text($data['rcaState']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area status found.', $timestamp, $i, $node);
+            $node->field_status['und'][0]['value'] = uwwtd_check_text($data['rcaState']);
+        } elseif(isset($rcaState9thReport)) {
+        	$node->field_status['und'][0]['value'] = $rcaState9thReport;
+        } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area status found.', $timestamp, $i, $node);
         
         //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
@@ -1400,7 +1425,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         $node->field_rca52applied['und'][0]['value'] = '1';
 
-        if($node->field_specialisedzonetype['und'][0]['value'] == 'A58'){
+        if($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'){
             $node->field_rca58applied['und'][0]['value'] = '1';
         }
         else{
@@ -1633,6 +1658,71 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->field_rcasalsaremark['und'][0]['value'] = uwwtd_check_text($data['rcasalsaRemark']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA remarks area found.', $timestamp, $i, $node);
         
+        // dsm($node);
+
+        //BB - 22/08 - 9th report changes
+
+        if(isset($data['ReceivingAreasSAParameter'])) {
+        	$node->field_rcaanitro['und'][0]['value'] = '0';
+        	$node->field_rcaaphos['und'][0]['value'] = '0';
+        	$node->field_rcab['und'][0]['value'] = '0';
+        	$node->field_rcac['und'][0]['value'] = '0';
+        	foreach ($data['ReceivingAreasSAParameter'] as $rcaSAParameter) {
+        		switch ($rcaSAParameter['rcaParameter']) {
+        			case 'aN':
+        				$node->field_rcaanitro['und'][0]['value'] = '1';
+        				$node->field_rcaanstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+        				$node->field_rcaandatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+        				break;
+        			case 'aP':
+        				$node->field_rcaaphos['und'][0]['value'] = '1';
+        				$node->field_rcaapstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+        				$node->field_rcaapdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+        				break;
+        			case 'b':
+        				$node->field_rcab['und'][0]['value'] = '1';
+        				$node->field_rcabstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+        				$node->field_rcabdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+        				break;
+        			case 'c':
+        				$node->field_rcac['und'][0]['value'] = '1';
+        				$node->field_rcacstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+        				$node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+        				break;
+        			default:
+        				break;
+        		}
+        	}
+        }
+
+        // TODO : improve this test
+        if(isset($data['ReceivingAreasSA54'])) {
+            $node->field_rca54applied['und'][0]['value'] = '1';
+            
+            switch ($data['ReceivingAreasSA54']['rcaMethod54']) {
+            	case 'M':
+            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+            	case 'C':
+            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+            	case 'E':
+            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+         		default:
+         			break;
+            }
+        }
+        // dsm($node);
         
         // save node
         node_save($node);
@@ -2944,7 +3034,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //memo
         if(isset($data['uwwInformation'])){
-            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text($data['uwwInformation']);
+            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text(substr($data['uwwInformation'], 0, 254));
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
         
@@ -5654,7 +5744,38 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     }
     
     //ALGO10    
-    $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);            
+    $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
+
+    // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
+    if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
+        if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
+            $node->field_aggart4compliance['und'][0]['value'] = 'NR';
+            $node->field_aggart5compliance['und'][0]['value'] = 'NR';
+            $node->field_aggart6compliance['und'][0]['value'] = 'NC';
+        } else {
+            if ($node->field_aggart4compliance['und'][0]['value'] != 'NR') {
+                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+                } else {
+                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+                }
+            }
+        }
+    } else {
+    	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+    		if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+            } else {
+                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+            }
+    	}
+    }
 
     unset($infoAllAggUww);    
 
@@ -5761,7 +5882,15 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         ||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-    }  
+    }
+
+    // If the country has a lot of IAS
+	if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']
+        && $node->field_aggc2['und'][0]['value'] >= 98) {
+        uwwtd_trace(__LINE__);      
+        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+    } 
+
     uwwtd_trace(__LINE__);
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];          
 }
@@ -5873,11 +6002,13 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
     $totalLoadenteringPercent = 0;
     foreach ($listUwwtpCompliance as $aUwwtp) {
-        $totalLoadenteringPercent = $aUwwtp['agglo_uww_perc_ent_uw'];
+        $totalLoadenteringPercent += $aUwwtp['agglo_uww_perc_ent_uw'];
     }
     $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
 
+    uwwtd_trace('WOLOLOLO');
+    uwwtd_trace($agg->title);
     uwwtd_trace($pe_lost);
     uwwtd_trace($percentage_lost);
 
@@ -5891,12 +6022,12 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }
     }
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
     } 
         
     
-    if (true === uwwtd_all_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
     
@@ -6504,7 +6635,7 @@ function uwwtd_coord_transform($lat, $long){
 
     // create array
     $table = array();
-    $sql = "SELECT ST_AsBinary('".$geo."') as bin, 'point' as pt, ST_Y('".$geo."') as geoy, ST_X('".$geo."') as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
+    $sql = "SELECT ST_AsBinary('".$geo."'::geometry) as bin, 'point' as pt, ST_Y('".$geo."'::geometry) as geoy, ST_X('".$geo."'::geometry) as geox, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
     $result = db_query($sql);
     foreach ($result as $record) {
         $table['bin'] = $record->bin;
@@ -6660,7 +6791,7 @@ function uwwtd_coord_transform_multipolygon($parts){
     $table = array();
 //  $sql = "SELECT ST_AsBinary('".$geo."') as bin, ST_GeoHash('".$geo."'::geometry, 16) as geohash";
     
-    $sql = "SELECT ST_AsBinary(:thegeom) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
+    $sql = "SELECT ST_AsBinary(:thegeom::geometry) as bin, ST_GeoHash(:thegeom::geometry, 16) as geohash";
     $aParam = array(
                 ':thegeom' => $geo,
                     );
@@ -6845,6 +6976,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $hasParamN      = (isset($rca->field_rca_parameter_n['und'][0]['value']) ? $rca->field_rca_parameter_n['und'][0]['value'] == 1: false);
                 $hasParamP      = (isset($rca->field_rca_parameter_p['und'][0]['value']) ? $rca->field_rca_parameter_p['und'][0]['value'] == 1: false);
                 $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
+
+                $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
                 
                 if($isrca54applied) $rca54applied = true;
                 
@@ -6862,6 +6995,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 'title' => $dcp->title,
                 'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
                 'rcatype' => $rcaTypeid,
+                'rcazonetype' => $zonetypeIsSet,
                 'rca54applied' => $rca54applied,
                 'rcaan' => $rcaANitro,
                 'rcaap' => $rcaAPhos,
@@ -6912,7 +7046,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     uwwtd_trace('$compliance_info become : ' . var_export($compliance_info, true));
     
     //same case as below for count($dcp), missing information on dcp    
-    if($compliance_info->required == 'NI'){        
+    if($compliance_info->required == 'NI' || $compliance_info->required == '?'){        
         $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $compliance_info->reason, $timestamp, null, $node);
         $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
@@ -6960,7 +7094,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     }
 
     if($compliance_info->required == 'S'){      
-
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))) {
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
@@ -7498,24 +7631,29 @@ function uwwtd_zipped_csvs_to_array($files){
  *                              possible value : Appropriate, S, P, N, NP, MP, O
  *                                               NI if no case found in algorythm  
  */ 
-function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
-{
-    uwwtd_trace(__FUNCTION__);
+
+function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
+	uwwtd_trace(__FUNCTION__);
     $required_treatment->reason = '';
-    if($maxgen < 2000){
-        $required_treatment->required = 'Appropriate';
-//         $required_treatment->reason = $reason;
+    if ($maxgen < 2000) {
+    	$required_treatment->required = 'Appropriate';
         return $required_treatment;
-    }    
+    }
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
-        'SA'   => 1, //biggest priority
+    	'A51523' => 1, //biggest priority
+        'SA'   => 1, 
         'CSA'  => 2,
-        'A58'  => 3,
-        'A54'  => 4,
-        'NA'   => 5,
-        'LSA'  => 6, //lower priority
+        'A54'  => 3,
+        'A5854'=> 3,
+        'A5154'=> 3,
+        'A58'  => 4,
+        'A58523' => 4,
+        'A54523' => 5,
+        'A5854523' => 5,
+        'NA'   => 6,
+        'LSA'  => 7, //lower priority
     );
 
     foreach($dcps as $oneDcp){
@@ -7526,98 +7664,102 @@ function uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen)
         if ($typePriority[ $oneDcp['rcatype'] ] < $typePriority[ $dcp['rcatype'] ]) {
             $dcp = $oneDcp;
         }
-    }            
-
-
-        // If the discharge point is in a Less Sensitive Area
-    switch($dcp['rcatype']) {
-       //if($dcp['rcatype'] == 'LSA'){
-       case 'LSA':
-            // For dcps in a LSA with water body type LC or CW
-            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-   
-                // For stations in a LSA with water body type LC or CW and having an agg population (p.e) of > 10000
-                if($maxgen > 150000){
-                    // secondary treatment must be present
-                    $required_treatment->required = 'S';
-                // For dcps in a LSA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
+    }
+    
+    switch ($dcp['rcatype']) {
+		case 'LSA':
+            if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                if ($maxgen > 150000) {
+       				$required_treatment->required = 'S';
                 } else {
                     $required_treatment->required = 'P';
                 }
-            // For stations in a LSA with water body type ES
-            }elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF'){
-    
-                // For stations in a LSA with water body type ES and having an agg population (p.e) of 2000 - 10000
-                if($maxgen >= 2000 && $maxgen <= 10000){
-                    // primary treatment must be present
+            } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
+                if ($maxgen >= 2000 && $maxgen <= 10000) {
                     $required_treatment->required = 'P';
-                }else{
-                    // secondary treatment must be present
+                } else {
                     $required_treatment->required = 'S';
                 }
             } else {
-                //problem
+                // Problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
-    // If the discharge point is in a Normal Area
         case 'NA':    
-            // For stations in a NA with water body type LC or CW
-            if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-    
-                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of 2000 - 10000
-                if($maxgen <= 10000){
+            if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                if ($maxgen <= 10000) {
                     $required_treatment->required = 'Appropriate';
-                // For stations in a NA with water body type LC or CW and having an agg population (p.e) of > 10000
                 } else {
-                    // secondary treatment must be present
-                    // LG pas la bonne variable mise à jour :  $typeTreat = 'S';
                     $required_treatment->required = 'S';                    
                 }
-            // For stations in a NA with water body type ES or FW
-            } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
-    
-                // secondary treatment must be present
+            } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
                 $required_treatment->required = 'S';
             } else {
-                //problem
+                // Problem
                 $required_treatment->required = 'NI';
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
             }
             break;
+
         // If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
         case 'SA':
         case 'CSA':
+            if ($maxgen <= 10000) {
+        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                	$required_treatment->required = 'Appropriate';
+                } else {
+                    $required_treatment->required = 'S';                    
+                }
+            } else {
+            	if (true === uwwtd_rca_art54_applies($dcp)) {
+                    $required_treatment->required = 'S';                    
+                } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
+        			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+                } else {
+                    uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);              
+                }                              
+            }
+            break;
+        case 'A51523':
         case 'A58':
         case 'A54':
-            if (true === uwwtd_rca_art54_applies($dcp)) {
-                if($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW'){
-                    if($maxgen <= 10000){
-                        $required_treatment->required = 'Appropriate';
-                    } else {
-                        $required_treatment->required = 'S';                    
-                    }
-                } elseif($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF'){
-        
-                    $required_treatment->required = 'S';
+        case 'A5154':
+        case 'A5854':
+        case 'A58523':
+        case 'A54523':
+        case 'A5854523':
+        	if ($maxgen <= 10000) {
+        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                	$required_treatment->required = 'Appropriate';
                 } else {
-                    $required_treatment->required = 'NI';
-                    $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
-                }                              
-            } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
-                uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
-            } else { //$dcp['rcatype'] = CSA
-                uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+                    $required_treatment->required = 'S';                    
+                }
+            } else {
+            	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
+            		if (true === uwwtd_rca_art54_applies($dcp)) {
+                    	$required_treatment->required = 'S';                    
+                	}
+            	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
+            		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+            	} elseif ($dcp['rcatype'] == 'A51523') {
+            		if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
+            			uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+            		} else {
+            			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+            		}
+            	} else {
+            		$required_treatment->required = '?'; 
+            	}
             }
             break;
         default:
-            //dsm('rcatype unknown : "' . $dcp['rcatype'] .'" /' . $dcp['nid'] . '/' . $dcp['title']);
             $required_treatment->required = 'NI';
-            $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';            
+            $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';
             break;
     }
 }
+
 
 /**
  * Return a list of all the uwwtp with there infirmation
@@ -8218,7 +8360,7 @@ function uwwtd_rca_art54_applies($dcp)
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace('rcatype = ' . $dcp['rcatype']);
     uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
-    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true));
+    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true));
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
 }
@@ -8226,17 +8368,16 @@ function uwwtd_rca_art54_applies($dcp)
 /**
  *
  */
-function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen)
+function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     // dsm(func_get_args());
-    
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
     } elseif ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW' || $dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
-        if($dcp['rcatype'] == 'SA') {
+        if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58523') {
             //if rca demands nitrogen rcaANitro
             if ($dcp['rcaan']) {
                 //if rca demands phosphorus rcaAPhos
@@ -8331,7 +8472,7 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
                     }  
                 }            
             }
-        } elseif($dcp['rcatype'] == 'A58') {
+        } elseif($dcp['rcatype'] == 'A58' || $dcp['rcatype'] == 'A58523') {
             if($dcp['paramN']) {
                 if($dcp['paramP']) {
                     if ($dcp['paramO']) {
@@ -8403,7 +8544,7 @@ function uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxg
 /**
  *
  */
-function uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen)
+function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
 {
     uwwtd_trace(__FUNCTION__);
     if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){

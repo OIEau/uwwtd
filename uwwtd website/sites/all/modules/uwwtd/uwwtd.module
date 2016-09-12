@@ -453,7 +453,7 @@ function uwwtd_init(){
     //$d3 = d3_get_libraries();
     //dsm($d3);
     //drupal_add_library('d3', 'd3.drupal');
-   
+  ini_set('max_execution_time', '3600');
     
 }
 
@@ -998,7 +998,7 @@ function uwwtd_get_url_path($type, $param = array())
         case 'receiving-area':
             $path .= $type;
             foreach ($param as $value) {
-                $path.= '/' . $value;
+                $path.= '/' . str_replace('_', '',$value);
             }
             break;
     }
