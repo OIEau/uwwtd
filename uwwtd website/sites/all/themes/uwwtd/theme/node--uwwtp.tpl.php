@@ -152,17 +152,17 @@ echo uwwtd_insert_errors_tab($node);
 			?>
             <div class="google-map-banner">
                 <h1>
-                	<span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
-                	<span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
-                	<span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
-                	<span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+                	<span class="white-title"><?php echo t($nodetype); ?> : </span><?php echo $node->title; ?>
+                    <span class="white-title"> - <?php echo t("Identifier"); ?> : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
+                    <span class="white-title"> - <?php echo t("Status"); ?> : </span><?php echo $fieldstat[0]['#markup']; ?>
+                    <span class="white-title"> - <?php echo t("Reporting year"); ?> : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
                 	<br />
                 	<small>
                 		<?php 
                 		if (!empty($node->field_regionnuts['und'][0]['value'])) {
                 			?>
-                			Region (NUTS) Code : <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
-                			Region (NUTS) Name : <?php echo $fieldnuts[0]['#markup'];
+                			<?php echo t("Region (NUTS) Code" ;?>: <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
+                			<?php echo t("Region (NUTS) Name" ;?> : <?php echo $fieldnuts[0]['#markup'];
                 		}
                 		?>
                 	</small>
@@ -304,53 +304,53 @@ echo uwwtd_insert_errors_tab($node);
 						)
 						{
 							  print '<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-chart-off.png').'" class="button-flipper table-to-chart" title="See diagram" alt="See diagram"></div>';
-						  $output = '<p style="font-weight:bold;">Load and concentration per parameter :</p>';						  
+						  $output = '<p style="font-weight:bold;">'.t("Load and concentration per parameter").' :</p>';						  
 						$output .='<table id="UwwtpDescription">
 								 <tr>
 									<td style="border: 1px solid #000;" class="black" ></td>
-									<td style="font-weight: bold;border: 1px solid #000;" class="black">Incoming</td>
-									<td style="font-weight: bold;border: 1px solid #000;" class="black">Discharged</td>
-									<td style="font-weight: bold;border: 1px solid #000;" class="black">Rate</td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">'.t("Incoming").'</td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">'.t("Discharged").'</td>
+									<td style="font-weight: bold;border: 1px solid #000;" class="black">'.t("Rate").'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;" class="black">BOD</td>
-									<td class="light">'.(isset($incomingLoadBod)?$incomingLoadBod.' t/year':'').'</td>
-									<td class="light">'.(isset($dischargeLoadBod)?$dischargeLoadBod.' t/year':'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">'.t("BOD").'</td>
+									<td class="light">'.(isset($incomingLoadBod)?$incomingLoadBod.' '.t('t/year'):'').'</td>
+									<td class="light">'.(isset($dischargeLoadBod)?$dischargeLoadBod.' '.t('t/year'):'').'</td>
 									<td rowspan=2  class="black">'.(isset($rateBod)?$rateBod:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td class="light">'.(isset($resultIncomingBod)?$resultIncomingBod.' mg/l':'').'</td>
-									<td class="light">'.(isset($resultDischargedBod)?$resultDischargedBod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingBod)?$resultIncomingBod.' '.t('mg/l'):'').'</td>
+									<td class="light">'.(isset($resultDischargedBod)?$resultDischargedBod.' '.t('mg/l'):'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;" class="black">COD</td>
-									<td class="light">'.(isset($incomingLoadCod)?$incomingLoadCod.' t/year':'').'</td>
-									<td class="light">'.(isset($dischargeLoadCod)?$dischargeLoadCod.' t/year':'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">'.t('COD').'</td>
+									<td class="light">'.(isset($incomingLoadCod)?$incomingLoadCod.' '.t('t/year'):'').'</td>
+									<td class="light">'.(isset($dischargeLoadCod)?$dischargeLoadCod.' '.t('t/year'):'').'</td>
 									<td rowspan=2  class="black">'.(isset($rateCod)?$rateCod:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td class="light">'.(isset($resultIncomingCod)?$resultIncomingCod.' mg/l':'').'</td>
-									<td class="light">'.(isset($resultDischargedCod)?$resultDischargedCod.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingCod)?$resultIncomingCod.' '.t('mg/l'):'').'</td>
+									<td class="light">'.(isset($resultDischargedCod)?$resultDischargedCod.' '.t('mg/l'):'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;" class="black">Nitrogen</td>
-									<td class="light">'.(isset($incomingLoadN)?$incomingLoadN.' t/year':'').'</td>
-									<td class="light">'.(isset($dischargeLoadN)?$dischargeLoadN.' t/year':'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">'.t('Nitrogen').'</td>
+									<td class="light">'.(isset($incomingLoadN)?$incomingLoadN.' '.t('t/year'):'').'</td>
+									<td class="light">'.(isset($dischargeLoadN)?$dischargeLoadN.' '.t('t/year'):'').'</td>
 									<td rowspan=2  class="black">'.(isset($rateN)?$rateN:'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td class="light">'.(isset($resultIncomingN)?$resultIncomingN.' mg/l':'').'</td>
-									<td class="light">'.(isset($resultDischargedN)?$resultDischargedN.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingN)?$resultIncomingN.' '.t('mg/l'):'').'</td>
+									<td class="light">'.(isset($resultDischargedN)?$resultDischargedN.' '.t('mg/l'):'').'</td>
 								</tr>';
 						$output .='<tr>
-									<td rowspan=2 style="font-weight: bold;" class="black">Phosphorus</td>
-									<td class="light">'.(isset($incomingLoadP)?$incomingLoadP.' t/year':'').'</td>
-									<td class="light">'.(isset($dischargeLoadP)?$dischargeLoadP.' t/year':'').'</td>
+									<td rowspan=2 style="font-weight: bold;" class="black">'.t('Phosphorus').'</td>
+									<td class="light">'.(isset($incomingLoadP)?$incomingLoadP.' '.t('t/year'):'').'</td>
+									<td class="light">'.(isset($dischargeLoadP)?$dischargeLoadP.' '.t('t/year'):'').'</td>
 									<td rowspan=2  class="black">'.(isset($rateP)?$rateP:'').'</td>
 								</tr>';	
 						$output .='<tr>
-									<td class="light">'.(isset($resultIncomingP)?$resultIncomingP.' mg/l':'').'</td>
-									<td class="light">'.(isset($resultDischargedP)?$resultDischargedP.' mg/l':'').'</td>
+									<td class="light">'.(isset($resultIncomingP)?$resultIncomingP.' '.t('mg/l'):'').'</td>
+									<td class="light">'.(isset($resultDischargedP)?$resultDischargedP.' '.t('mg/l'):'').'</td>
 								</tr>';		
 						$output .= '</table>';
 						$output .= t('* Concentration calculated using the annual load and the annual volume of wastewater treated.');
@@ -365,7 +365,7 @@ echo uwwtd_insert_errors_tab($node);
 			   isset($incomingLoadP)|| isset($resultIncomingP)|| isset($dischargeLoadP)|| isset($resultDischargedP)
 			)
 			{
-				print '<div class="flip-title">Incoming and discharged loads (t/year)</div>';
+				print '<div class="flip-title">'.t("Incoming and discharged loads (t/year)").'</div>';
                 print'<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>';
 				echo uwwtd_stackedbar_uwwtpnode($node);
              } 
@@ -487,19 +487,19 @@ echo uwwtd_insert_errors_tab($node);
 					}else{
 						$server = explode('/',$_SERVER['REQUEST_URI']);
 						
-						$outputSiteInfo = '<br><b>Year of data: </b>'.$files['year'].'<br>';
-						$outputSiteInfo.= '<b>Source of data: </b><img src="/'.$server[1].'/modules/file/icons/application-octet-stream.png" title="application/xml" alt="file"/>
-						<a href=/'.$server[1].'/sites/default/files/data_sources/'.$files['file'].'>See sourcefile</a>';
+						$outputSiteInfo = '<br><b>'.t("Year of data").': </b>'.$files['year'].'<br>';
+						$outputSiteInfo.= '<b>'.t("Source of data").': </b><img src="/'.$server[1].'/modules/file/icons/application-octet-stream.png" title="application/xml" alt="file"/>
+						<a href=/'.$server[1].'/sites/default/files/data_sources/'.$files['file'].'>'.t("See sourcefile").'</a>';
 					}
 				} 
 			}
 			print render($content['field_anneedata']);
-			$content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
+			$content['field_sourcefile'][0]['#file']->filename = t('See sourcefile');
 			print render($content['field_sourcefile']).'<br>';
 			
 			if(isset($outputSiteInfo) && $outputSiteInfo !="")
 			{
-				print '<b><i>Other year : </i></b>';
+				print '<b><i>'.t("Other year").' : </i></b>';
 			}
 			
 			print $outputSiteInfo;

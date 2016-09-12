@@ -117,14 +117,14 @@ echo uwwtd_insert_errors_tab($node);
         ?>
         <div class="google-map-banner">
         	<h1>
-            	<span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
-            	<span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
-            	<span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
-            	<span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+            	<span class="white-title"><?php echo t($nodetype); ?> : </span><?php echo $node->title; ?>
+            	<span class="white-title"> - <?php echo t("Identifier"); ?> : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
+            	<span class="white-title"> - <?php echo t("Status"); ?> : </span><?php echo $fieldstat[0]['#markup']; ?>
+            	<span class="white-title"> - <?php echo t("Reporting year"); ?> : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
             	<br />
             	<small>
-                	Region (NUTS) Code : <?php echo $node->field_regionnuts['und'][0]['value']; ?> - 
-                	Region (NUTS) Name : <?php echo $fieldnuts[0]['#markup'];?>
+                	<?php echo t("Region (NUTS) Code"); ?> : <?php echo $node->field_regionnuts['und'][0]['value']; ?> - 
+                	<?php echo t("Region (NUTS) Name"); ?> : <?php echo $fieldnuts[0]['#markup'];?>
              	</small>
             	</h1>
    		</div>
@@ -184,8 +184,8 @@ echo uwwtd_insert_errors_tab($node);
             print render($content['field_linked_treatment_plants']);
             if ($content['field_rcatype']['#items'][0]['value'] == 'NA') {
               print('<div class="field field-name-field-linked-receiving-areas field-type-node-reference field-label-above">');
-              print('<div class="field-label">Linked receiving areas:&nbsp;</div>');
-              print('<div class="field-items"><div class="field-item even">Normal area</div></div>');
+              print('<div class="field-label">'.t("Linked receiving areas").':&nbsp;</div>');
+              print('<div class="field-items"><div class="field-item even">'.t("Normal area").'</div></div>');
               print('</div>');
             } else {
               print render($content['field_linked_receiving_areas']);
@@ -204,7 +204,7 @@ echo uwwtd_insert_errors_tab($node);
           <div class="panel-body">
 			<?php
             print render($content['field_anneedata']);
-            $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
+            $content['field_sourcefile'][0]['#file']->filename = t('See sourcefile');
             print render($content['field_sourcefile']);
 			?>
           </div>
