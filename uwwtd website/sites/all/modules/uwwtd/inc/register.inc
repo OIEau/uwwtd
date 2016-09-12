@@ -67,12 +67,14 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
+    /*
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-
+    */
     $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    /*
     $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
 
     $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
@@ -98,6 +100,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    */
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -1113,7 +1116,6 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $agglotreated[] = $nidagglo['nid'];
             $agg = node_load($nidagglo['nid']);
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
-//             dsm($agg_detail);
             unset($agg);
             $generated_load += $agg_detail['generated_load'];
             $collecting_system +=  $agg_detail['collecting_system'];
@@ -1177,7 +1179,6 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 //         $line[$ind['treatment_3np']] = $treatment_3np;
         $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
         $line[$ind['type_of_receiving_area']] = $type_of_receiving_area;
-//         dsm($line);
         fputcsv($r, $line, ';');
 //         dsm($line);
         $context['sandbox']['progressbc']++;
@@ -1190,14 +1191,17 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {
     //     foreach($id as $nidagglo) {
             $line = array();
+            
             $generated_load = 0;
             $collecting_system = 0;
             $ias = 0;
             $no_collecting_system_nor_ias = 0;
-            $treatment_0 = '0';
-            $treatment_1 = '0';
-            $treatment_2 = '0';
-            $treatment_3np_3n_3p = '0';
+            $treatment_0 = 0;
+            $treatment_1 = 0;
+            $treatment_2 = 0;
+            $treatment_3np_3n_3p = 0;
+            $treat_3np_3n_3p_pe = 0;
+            $treat_3np_3n_3p_agggenerated = 0;
             $type_of_receiving_area = '';
 
             $agg = node_load($nidagglo['nid']);
@@ -1295,16 +1299,16 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
             if (false !== strpos($uwwtp_treat_inplace, '3other') || false !== strpos($uwwtp_treat_inplace, '3NP')
                 || false !== strpos($uwwtp_treat_inplace, '3P') || false !== strpos($uwwtp_treat_inplace, '3N')) {
                 $result['treat_3np_3n_3p_pe'] += $entering_load_pe;
-                $result['treat_3np_3n_3p_agggenerated'] += $agg->field_agggenerated['und'][0]['value'];
+                $result['treat_3np_3n_3p_agggenerated'] = $agg->field_agggenerated['und'][0]['value'];
             } elseif (false !== strpos($uwwtp_treat_inplace, '2')) {
                $result['treat_2_pe'] += $entering_load_pe;
-               $result['treat_2_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
+               $result['treat_2_agggenerated']    = $agg->field_agggenerated['und'][0]['value'];
             } elseif (false !== strpos($uwwtp_treat_inplace, '1')) {
                $result['treat_1_pe'] += $entering_load_pe;
-               $result['treat_1_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
+               $result['treat_1_agggenerated']    = $agg->field_agggenerated['und'][0]['value'];
             } else {
                $result['treat_0_pe'] += $entering_load_pe;
-               $result['treat_0_agggenerated']    += $agg->field_agggenerated['und'][0]['value'];
+               $result['treat_0_agggenerated']    = $agg->field_agggenerated['und'][0]['value'];
             }
 
             unset($agglo_uwwtp);
