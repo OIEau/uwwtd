@@ -67,13 +67,15 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
+    /*
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-
+*/
 
     $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    /*
     $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
 
     $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
@@ -99,6 +101,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    */
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -1099,6 +1102,8 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         $treatment_1 = 0;
         $treatment_2 = 0;
         $treatment_3np_3n_3p = 0;
+        $treat_3np_3n_3p_pe = 0;
+        $treat_3np_3n_3p_agggenerated = 0;
         $type_of_receiving_area = '';
 
         $line[$ind['id']] = $bc->field_inspireidlocalid['und'][0]['value'];
@@ -1141,7 +1146,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 //         dsm("treat_0_pe = $treat_0_pe");
 //         dsm("treat_0_agggenerated = $treat_0_agggenerated");
 
-        $treatment_3np_3n_3p = $treat_3np_3n_3p_pe * 100 / $treat_3np_3n_3p_agggenerated;
+        $treatment_3np_3n_3p = $treat_3np_3n_3p_pe * 100/ $treat_3np_3n_3p_agggenerated;
         $treatment_2 = $treat_2_pe * 100 / $treat_2_agggenerated;
         $treatment_1 = $treat_1_pe * 100 / $treat_1_agggenerated;
         $treatment_0 = $treat_0_pe * 100 / $treat_0_agggenerated;

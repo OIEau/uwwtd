@@ -161,8 +161,8 @@ echo uwwtd_insert_errors_tab($node);
                 		<?php 
                 		if (!empty($node->field_regionnuts['und'][0]['value'])) {
                 			?>
-                			<?php echo t("Region (NUTS) Code" ;?>: <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
-                			<?php echo t("Region (NUTS) Name" ;?> : <?php echo $fieldnuts[0]['#markup'];
+                			<?php echo t("Region (NUTS) Code") ;?>: <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
+                			<?php echo t("Region (NUTS) Name") ;?> : <?php echo $fieldnuts[0]['#markup'];
                 		}
                 		?>
                 	</small>
