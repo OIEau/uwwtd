@@ -1700,7 +1700,8 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
         $sheet->setCellValueByColumnAndRow($ind['generated_load_pe'], $context['sandbox']['line'], $nuts[$ind['generated_load_pe'] ]);
 
         $sheet->setCellValueByColumnAndRow($ind['collected_pe'] , $context['sandbox']['line'], $nuts[$ind['collected_pe'] ]);
-        $sheet->setCellValueByColumnAndRow($ind['collected_percent'] , $context['sandbox']['line'], $nuts[$ind['collected_percent']]);
+        //$sheet->setCellValueByColumnAndRow($ind['collected_percent'] , $context['sandbox']['line'], $nuts[$ind['collected_percent']]);
+        $sheet->setCellValueByColumnAndRow($ind['collected_percent'] , $context['sandbox']['line'], $nuts[$ind['collected_pe']]/$nuts[$ind['generated_load_pe'] ]*100 );
         $sheet->setCellValueByColumnAndRow($ind['art3_target_load'] , $context['sandbox']['line'], $nuts[$ind['art3_target_load']]);
         $sheet->setCellValueByColumnAndRow($ind['art3_compliant_number_agglo'] , $context['sandbox']['line'], $nuts[$ind['art3_compliant_number_agglo']]);
         $sheet->setCellValueByColumnAndRow($ind['art3_compliant_pe'] , $context['sandbox']['line'], $nuts[$ind['art3_compliant_pe']]);
