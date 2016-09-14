@@ -7646,7 +7646,8 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
-    	'A51523' => 1, //biggest priority
+        'A51523' => 1, //biggest priority
+    	'A523' => 1, //biggest priority
         'SA'   => 1, 
         'CSA'  => 2,
         'A54'  => 3,
@@ -7726,6 +7727,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             }
             break;
         case 'A51523':
+        case 'A523':
         case 'A58':
         case 'A54':
         case 'A5154':
@@ -7746,7 +7748,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 	}
             	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
             		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
-            	} elseif ($dcp['rcatype'] == 'A51523') {
+            	} elseif ($dcp['rcatype'] == 'A51523' || $dcp['rcatype'] == 'A523') {
             		if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
             			uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
             		} else {
@@ -8381,7 +8383,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
     } elseif ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW' || $dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
-        if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58523') {
+        if($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A51523' || $dcp['rcatype'] == 'A523') {
             //if rca demands nitrogen rcaANitro
             if ($dcp['rcaan']) {
                 //if rca demands phosphorus rcaAPhos
