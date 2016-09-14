@@ -237,84 +237,84 @@ function uwwtd_timeline_output($node){
 }
 
 function uwwtd_timeline_receiving_area_output($node){
-	$output = '';
-	$histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
-	if($histories != false){
-		$otherList = array();
-		$output .= '<div class="uwwtd-history">';
-		$output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
+  $output = '';
+  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+  if($histories != false){
+    $otherList = array();
+    $output .= '<div class="uwwtd-history">';
+    $output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
     <legend class="panel-heading">
     <div class="panel-title fieldset-legend">'.t('Timeline').'</div>
     </legend>';
-		foreach($histories as $history){
-			$other = node_load($history);
-			$otherY = $other->field_anneedata['und'][0]['value'];
-			$otherList[$otherY] = array('node'=>$other);
-		}
-		ksort($otherList);
+    foreach($histories as $history){
+      $other = node_load($history);
+      $otherY = $other->field_anneedata['und'][0]['value'];
+      $otherList[$otherY] = array('node'=>$other);
+    }
+    ksort($otherList);
     // dsm($otherList);
-		$output .='<table class = "dispo-annee receiving-area">
+    $output .='<table class = "dispo-annee receiving-area">
               <tbody>
                 <tr>
                   <td class="dispo-before"><div></div></td>';
-		foreach($otherList as $other){
-			$ting = $other['node'];
+    foreach($otherList as $other){
+      $ting = $other['node'];
    //    if ($ting->type == 'receiving_area') {
         
    //    }
-			// if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
-			// if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
+      // if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
+      // if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
 
-			// //override PD and QC value, we don't want to display QC and PD (for now)
-			// if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
-			// 	$val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
-			// }
+      // //override PD and QC value, we don't want to display QC and PD (for now)
+      // if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
+      //  $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
+      // }
 
-			// //default colors
-			// $color = '#6b6b6b'; $borderc = '#6b5e66';
+      // //default colors
+      // $color = '#6b6b6b'; $borderc = '#6b5e66';
 
-			// if(isset($val)){
-			// 	if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
-			// 	if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
-			// 	if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
-			// 	if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-			// 	// if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
-			// 	if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
-			// }
-			// $color = uwwtd_adjustBrightness($color, 50);
-			$nbAnnee = count($otherY);
-			$j=0;
-			$cell = 0;
-			for($a=1;$a<=$nbAnnee;$a++){
-				if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-					$output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current">';
-					$output .= '<h4 style="color: #000;">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-					// if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
-					$output .= '</td>';
-				}else{
-					$output.='<td class="dispo-annee uwwtd-history-element">';
-					$output .= '<h4 style="color: #000;">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid, array('attributes' => array('style' => 'color: #000 !important'))).'</h4>';
-					// if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
-					$output .= '</td>';
-				}
-				//Si on arrive a 16 cellules, un retour à la ligne s'impose
-				if($cell==16){
-					$output.='<td class="dispo-next">...</td></tr><tr><td class="dispo-next">...</td>';
-					$cell=0;
-				}
-				else{
-					$cell++;
-				}
-				$j++;
-			}
-		}
-		$output.='<td class="dispo-after"><div></div></td>';
-		$output.='</tr>';
-		$output.='</table>';
-		$output .= '</fieldset></div>';
-	}
+      // if(isset($val)){
+      //  if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
+      //  if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
+      //  if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
+      //  if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
+      //  // if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+      //  if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
+      // }
+      // $color = uwwtd_adjustBrightness($color, 50);
+      $nbAnnee = count($otherY);
+      $j=0;
+      $cell = 0;
+      for($a=1;$a<=$nbAnnee;$a++){
+        if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+          $output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current">';
+          $output .= '<h4 style="color: #000;">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
+          // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
+          $output .= '</td>';
+        }else{
+          $output.='<td class="dispo-annee uwwtd-history-element">';
+          $output .= '<h4 style="color: #000;">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid, array('attributes' => array('style' => 'color: #000 !important'))).'</h4>';
+          // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
+          $output .= '</td>';
+        }
+        //Si on arrive a 16 cellules, un retour à la ligne s'impose
+        if($cell==16){
+          $output.='<td class="dispo-next">...</td></tr><tr><td class="dispo-next">...</td>';
+          $cell=0;
+        }
+        else{
+          $cell++;
+        }
+        $j++;
+      }
+    }
+    $output.='<td class="dispo-after"><div></div></td>';
+    $output.='</tr>';
+    $output.='</table>';
+    $output .= '</fieldset></div>';
+  }
 
-	return $output;
+  return $output;
 }
 
 function uwwtd_field_attach_view_alter(&$output, $context){
@@ -384,14 +384,14 @@ function uwwtd_preprocess_node(&$vars){
     if ($vars["is_front"]){
        $vars["theme_hook_suggestions"][] = "node__front";
     } elseif ($vars['node']->type === 'agglomeration') {
-    	// Récupérer les données de cette agglomeration :
-    	$data = array();
-    	
-    	// Produire le graph de comparaison inter année :
-    	$htmlGraph = '';
-    	
-    	// Envoie au template :
-    	$vars['htmlGraph'] = $htmlGraph;
+      // Récupérer les données de cette agglomeration :
+      $data = array();
+      
+      // Produire le graph de comparaison inter année :
+      $htmlGraph = '';
+      
+      // Envoie au template :
+      $vars['htmlGraph'] = $htmlGraph;
     }
 }
 
@@ -1370,6 +1370,8 @@ function uwwtd_get_agglo_graphic($node){
     $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
     $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
 
+    $sumOfLoadEntering = 0;
+
     $nbPlants = 0;
     $reseau = array();
     foreach ($node->field_linked_treatment_plants['und'] as $uwws) {
@@ -1391,6 +1393,8 @@ function uwwtd_get_agglo_graphic($node){
             $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
             //$mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
         }
+
+        $sumOfLoadEntering += $perce_entering;
 
         //$totale = floor(($totalout / 100) * $perce);
         $total_entering = $node->field_agggenerated['und'][0]['value'] / 100 * $perce_entering;
@@ -1458,12 +1462,6 @@ function uwwtd_get_agglo_graphic($node){
           $reseau[$uwws['nid']]['compStation'] = 'NR';
         }
 
-        $percentage_lost = $node->field_aggc1['und'][0]['value'] - $perce_entering;
-        $pe_lost = ($percentage_lost * ($node->field_aggc1['und'][0]['value'] * $node->field_agggenerated['und'][0]['value'])) / 10000;
-
-        $reseau[$uwws['nid']]['percent_lost'] = $percentage_lost;
-        $reseau[$uwws['nid']]['pe_lost'] = $pe_lost;
-
         $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
 
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
@@ -1478,6 +1476,10 @@ function uwwtd_get_agglo_graphic($node){
             $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
         }
     }
+
+    $percentage_lost = $node->field_aggc1['und'][0]['value'] - $sumOfLoadEntering;
+    $pe_lost = ($percentage_lost * ($node->field_aggc1['und'][0]['value'] * $node->field_agggenerated['und'][0]['value'])) / 10000;
+
     $nbPlantsT = 0;
     $nbPlantsB = 0;
     for ($i=0; $i <= $nbPlants; $i++) {
@@ -1562,7 +1564,7 @@ function uwwtd_get_agglo_graphic($node){
                 '.l($station['title'], "node/".$station['nid']).'
             </div>';
 
-        if ($station['percent_lost'] > 2000 || $station['pe_lost'] > 1) {
+        if ($percentage_lost > 2000 || $pe_lost > 1) {
           $output .= '<div class="station-load" style="color:red;">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
             </div>';
         } else {
@@ -1669,8 +1671,12 @@ function uwwtd_get_agglo_graphic($node){
             </div>
             <div class="dischage-wot">
                 <div class="graphic-title">
-                    '.t('Discharge without treatment:').' '.uwwtd_format_number($totalWOT, 0).' p.e ('.uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1).'%)
-                </div>
+                    '.t('Discharge without treatment:').' '.uwwtd_format_number($totalWOT, 0).' p.e ('.uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1).'%)<br>';
+                    if ($percentage_lost > 2000 || $pe_lost > 1) {
+                      $output .= '<span style="color:red;">'. t('Warning : Agglomeration found not compliant because of notable difference between load collected in collective system and sum of load entering UWWTPs (> 2000pe or > 1% of the generated load).') .'</span>';
+                    }
+                $output .= '</div>
+                <br><br>
                 <img width="1098px" src="'.$src.'/images/graphic/wot.png" alt="reseau">
                 <div class="graphic-legend">
                     <ul><b>Main treatment :</b>
@@ -1735,17 +1741,17 @@ function uwwtd_field_pe($field, $format=true)
     }
 
     $pe = '';
-	
+  
     if (true === is_numeric($field[0]['#markup'])) {
         $pe = $field['#items'][0]['value'] / 100 * $field['#object']->field_agggenerated['und'][0]['value'];
     }elseif(true === is_numeric($field[0]['#markup']['und'][0]['value'])){
-		$pe = $field[0]['#markup']['und'][0]['value'] / 100 * $field['#object']['und'][0]['value'];
-	}
-	if($format==true){
-		return uwwtd_format_number($pe);
-	}else{
-		return $pe;
-	}
+    $pe = $field[0]['#markup']['und'][0]['value'] / 100 * $field['#object']['und'][0]['value'];
+  }
+  if($format==true){
+    return uwwtd_format_number($pe);
+  }else{
+    return $pe;
+  }
     
 }
 // function uwwtd_preprocess_field(&$vars) {
@@ -1886,16 +1892,16 @@ function uwwtd_menu_link__main_menu(&$variables)
 
 function uwwtd_wkhtmltopdf_tag($selector, $options, $nodeType = '')
 {
-	switch (arg(0)) {
-		case 'receiving_area':
-		case 'stats':
-		case 'agglomerations':
-		case 'agglomeration':
-		case 'uwwtp':
-		case 'discharge_point':
-			$nodeType = arg(0);
-    		break;
-	}
+  switch (arg(0)) {
+    case 'receiving_area':
+    case 'stats':
+    case 'agglomerations':
+    case 'agglomeration':
+    case 'uwwtp':
+    case 'discharge_point':
+      $nodeType = arg(0);
+        break;
+  }
     switch ($nodeType) {
         case 'receiving_area':
         case 'uwwtp':
@@ -1905,13 +1911,13 @@ function uwwtd_wkhtmltopdf_tag($selector, $options, $nodeType = '')
             return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
             break;
         case 'stats':
-        	$options['orientation'] = 'Landscape';
-        	return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
-        	break;
+          $options['orientation'] = 'Landscape';
+          return wkhtmltopdf_tag(array('.main-container', '.region-content'), $options);
+          break;
         case 'page':
         default:
-        	return '';
-        	break;
+          return '';
+          break;
     }
     return '';
 }

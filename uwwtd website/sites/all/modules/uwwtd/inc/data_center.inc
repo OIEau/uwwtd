@@ -131,7 +131,6 @@ function uwwtd_import_submit_handler($form, &$form_state) {
 
     //dsm($timestamp);
 
-    //dsm($datas);
     if(isset($datas['UWWTD_Report']['ReportPeriod']['repCode'])){
         $repCode =  uwwtd_check_text($datas['UWWTD_Report']['ReportPeriod']['repCode']);
     }
@@ -303,7 +302,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
             
         }        
         //text
-        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = uwwtd_check_text(substr($datas['mslRemarks'], 0, 254));
+        if(isset($datas['mslRemarks'])) $node->field_mslremarks['und'][0]['value'] = truncate_utf8(uwwtd_check_text($datas['mslRemarks']), 254);
         //numeric
 //         if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_numeric($datas['mslWWReusePerc'], $timestamp,  0 , $node);
         if(isset($datas['mslWWReusePerc'])) {
@@ -811,6 +810,8 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
     global $language;
     
+    dsm($data);
+    exit();
     // Check basic elements exist
     // errors
     $e = 0;
@@ -3034,7 +3035,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //memo
         if(isset($data['uwwInformation'])){
-            $node->field_uwwinformation['und'][0]['value'] = uwwtd_check_text(substr($data['uwwInformation'], 0, 254));
+            $node->field_uwwinformation['und'][0]['value'] = truncate_utf8(uwwtd_check_text($data['uwwInformation']), 254);
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
         
@@ -6978,7 +6979,10 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
 
                 $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
-                
+                if (isset($rca->field_specialisedzonetype['und'][0]['value'])) {
+                    $rcaTypeid = $rca->field_specialisedzonetype['und'][0]['value'];
+                }
+
                 if($isrca54applied) $rca54applied = true;
                 
                 if($isrcaANitro) $rcaANitro = true;
