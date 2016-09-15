@@ -586,43 +586,39 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     }
     //New report Format (9th)
     elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
-        //ReceivingAreasSAMain
-        if(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
-            //ReceivingAreaSAMain
-            //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
-            
-            if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
-                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
-                    $imports[$rca['rcaCode']] = $rca; 
-                }
+        //ReceivingAreaSAMain
+        //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
+        
+        if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
+            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
+                $imports[$rca['rcaCode']] = $rca; 
             }
-            else{
-                foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
-                    $imports[$rca['rcaCode']] = $rca;
-                }
+        }
+        else{
+            foreach($datas['UWWTD_Report']['ReceivingAreasSAMain'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
             }
-            $subkeys = array(
-                'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
-                'ReceivingAreasSA54'=>'ReceivingAreaSA54',
-                'ReceivingAreasLSA'=>'ReceivingAreaLSA',
-                'ReceivingAreasSASA'=>'ReceivingAreaSASA',
-                'ReceivingAreasSALSAPredecessor'=>'ReceivingAreaSALSAPredecessor'
-            );
-            foreach($subkeys as $root=>$key){
-                if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
-                    foreach($datas['UWWTD_Report'][$root][$key] as $rcaKey => $rcaValue){
-                        if(isset($imports[$rca['rcaCode']])){
-                            //ajout d'un tableau
-                            $imports[$rca['rcaCode']][$root][$rcaKey] = $rcaValue;
-                        }
-                        
+        }
+        $subkeys = array(
+            'ReceivingAreasSAParameter'=>'ReceivingAreaSAParameter',
+            'ReceivingAreasSA54'=>'ReceivingAreaSA54',
+            'ReceivingAreasLSA'=>'ReceivingAreaLSA',
+            'ReceivingAreasSALSAPredecessorASA'=>'ReceivingAreaSASA',
+            'ReceivingAreasSALSAPredecessor'=>'ReceivingAreaSALSAPredecessor'
+        );
+        foreach($subkeys as $root=>$key){
+            if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
+                foreach($datas['UWWTD_Report'][$root][$key] as $rcaKey => $rcaValue){
+                    if(isset($imports[$rcaValue['rcaCode']])){
+                        //ajout d'un tableau
+                        $imports[$rcaValue['rcaCode']][$key] = $rcaValue;
                     }
+                    
                 }
             }
-              
         }
     }
-    //exit();
+
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
@@ -1661,12 +1657,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         //BB - 22/08 - 9th report changes
 
-        if(isset($data['ReceivingAreasSAParameter'])) {
+        if(isset($data['ReceivingAreaSAParameter'])) {
         	$node->field_rcaanitro['und'][0]['value'] = '0';
         	$node->field_rcaaphos['und'][0]['value'] = '0';
         	$node->field_rcab['und'][0]['value'] = '0';
         	$node->field_rcac['und'][0]['value'] = '0';
-        	foreach ($data['ReceivingAreasSAParameter'] as $rcaSAParameter) {
+        	foreach ($data['ReceivingAreaSAParameter'] as $rcaSAParameter) {
         		switch ($rcaSAParameter['rcaParameter']) {
         			case 'aN':
         				$node->field_rcaanitro['und'][0]['value'] = '1';
@@ -1695,27 +1691,27 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
 
         // TODO : improve this test
-        if(isset($data['ReceivingAreasSA54'])) {
+        if(isset($data['ReceivingAreaSA54'])) {
             $node->field_rca54applied['und'][0]['value'] = '1';
             
-            switch ($data['ReceivingAreasSA54']['rcaMethod54']) {
+            switch ($data['ReceivingAreaSA54']['rcaMethod54']) {
             	case 'M':
-            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPDischarged54'];
             		break;
             	case 'C':
-            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPDischarged54'];
             		break;
             	case 'E':
-            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreaSA54']['rcaPDischarged54'];
             		break;
          		default:
          			break;
