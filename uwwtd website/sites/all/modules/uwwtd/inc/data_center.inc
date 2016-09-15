@@ -809,9 +809,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
     global $language;
-    
-    dsm($data);
-    exit();
+ 
     // Check basic elements exist
     // errors
     $e = 0;
