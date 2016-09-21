@@ -428,6 +428,7 @@ function uwwtd_get_data_dcp($option){
                      f_annee.field_anneedata_value,
                      f_dcpcode.field_inspireidlocalid_value,
                      zt.field_rcatype_value as zonetype,
+                     wbt.field_dcpwaterbodytype_value as rcacat,
                      uwwtp.title as uwwtp_name,
                      uwwtp.nid as uwwtp_id,
                      f_comp.field_uwwcompliance_value,
@@ -442,6 +443,9 @@ function uwwtd_get_data_dcp($option){
         LEFT join
             {field_data_field_inspireidlocalid} f_dcpcode
                 ON n.nid = f_dcpcode.entity_id
+        LEFT join
+            {field_data_field_dcpwaterbodytype} wbt
+                ON n.nid = wbt.entity_id        
         LEFT join
             {field_data_field_rcatype} zt
                 ON n.nid = zt.entity_id        
@@ -485,6 +489,7 @@ function uwwtd_get_data_dcp($option){
         while($row = $result->fetchAssoc()) {
             
             $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
+            $row['rcacat_format'] =  (isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :$GLOBALS['uwwtd_value']['rcacat_labels']['default']);
             $row['rca_format'] =  l($row['rca_name'], 'node/'.$row['rca_id']);
             $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
             $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
@@ -2357,6 +2362,7 @@ function uwwtd_dcp_page($type_export = ''){
     $option['default']['sort'] = 'asc';
     $option['allyear'] = uwwtd_get_all_year();
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
+    $option['rcacat'] = $GLOBALS['uwwtd_value']['rcacat_labels'];
 
     $filter = uwwtd_get_form_filter($option);
     $preset_name = 'dcp_map';
@@ -2375,7 +2381,6 @@ function uwwtd_dcp_page($type_export = ''){
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_dcp($filter['filter']);
-    dsm($data);
     $list_field = array(
     
         'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -3331,6 +3336,9 @@ function uwwtd_get_form_filter($option){
     }
     if (isset($_GET['zonetype']) && array_key_exists($_GET['zonetype'], $option['zonetype'])  && $_GET['zonetype'] != 'All') {
 	  $filter['filter']['zonetype'] = $_GET['zonetype'];
+    }
+    if (isset($_GET['rcacat']) && array_key_exists($_GET['rcacat'], $option['rcacat'])  && $_GET['rcacat'] != 'All') {
+	  $filter['filter']['rcacat'] = $_GET['rcacat'];
     }
     
     if (isset($_GET['rca52_art']) && in_array($_GET['rca52_art'], array_keys($GLOBALS['uwwtd']['ui']['yes_no']))
