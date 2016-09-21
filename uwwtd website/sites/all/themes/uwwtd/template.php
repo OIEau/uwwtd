@@ -1564,7 +1564,7 @@ function uwwtd_get_agglo_graphic($node){
                 '.l($station['title'], "node/".$station['nid']).'
             </div>';
 
-        if ($percentage_lost > 2000 || $pe_lost > 1) {
+        if ($percentage_lost > 1 || $pe_lost > 2000) {
           $output .= '<div class="station-load" style="color:red;">Load entering from:<br>'.$node->title.'<br>'.uwwtd_format_number($station['loadEntering'], 0).' p.e <br>('.uwwtd_format_number($station['percEntering'], 1).'%)</div>
             </div>';
         } else {
