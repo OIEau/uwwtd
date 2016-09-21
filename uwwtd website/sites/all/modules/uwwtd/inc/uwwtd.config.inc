@@ -108,6 +108,14 @@ $GLOBALS['uwwtd_value']['rcatype'] = array(
     'sensitive_area' => 'SA',
     '?' => 'A58',
 );
+
+$GLOBALS['uwwtd_value']['rcacat_labels']=array(
+    'All' => t('- Any -'),
+    'ES' => t('Estuary'),
+    'CW' => t('Coastal waters'),
+    'FW' => t('Freshwater'),
+);
+
 $GLOBALS['uwwtd_value']['rcatype_labels']=array(
     'All' => t('- Any -'),
     'SA'=>t('Sensitive Area'),
@@ -369,6 +377,8 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'zonetype_format'=>array('label'=>t('Type of area')),
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
+    'rcacat_format'=>array('label'=>t('Type of receiving area')),
+    
     
 );
 

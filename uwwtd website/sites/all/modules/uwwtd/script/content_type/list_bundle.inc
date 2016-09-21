@@ -25,4 +25,5 @@ $list_content_type = array(
                         //Title
     'article_17_agglomeration',
     'article_17_uwwtp',
+    'article_17_ms_level',
 ); 

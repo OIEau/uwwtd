@@ -2375,11 +2375,13 @@ function uwwtd_dcp_page($type_export = ''){
         return $cache->data['page'];
     }
 	$data = uwwtd_get_data_dcp($filter['filter']);
-    
+    dsm($data);
     $list_field = array(
     
         'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
         'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
+        'rcacat'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rcacat_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcacat_labels']),  
+        
     /*
         'tot_design_capacity'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
         'tot_entering_load'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),

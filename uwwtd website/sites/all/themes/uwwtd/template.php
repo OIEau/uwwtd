@@ -51,20 +51,20 @@ function uwwtd_check_history($id, $annee){
 function uwwtd_preprocess_field(&$variables){
 
   // For discharge point values
-  if (
-    $variables['element']['#field_name'] == 'field_rcatype' ||
-    $variables['element']['#field_name'] == 'field_dcpwaterbodytype'
-  ){
+  if ($variables['element']['#field_name'] == 'field_rcatype'){
     // rcatype
-    if($variables['element']['#items']['0']['value'] == 'NA') $variables['items']['0']['#markup'] = t('Normal Area');
-    if($variables['element']['#items']['0']['value'] == 'SA') $variables['items']['0']['#markup'] = t('Sensitive Area');
-    if($variables['element']['#items']['0']['value'] == 'CSA') $variables['items']['0']['#markup'] = t('Catchment sensitive area');
-    if($variables['element']['#items']['0']['value'] == 'LSA') $variables['items']['0']['#markup'] = t('Less sensititve area');
-
+    $k = $variables['element']['#items']['0']['value'];
+    if(isset($GLOBALS['uwwtd_value']['rcatype_labels'][$k])){
+        $variables['items']['0']['#markup'] =$GLOBALS['uwwtd_value']['rcatype_labels'][$k];
+    }
+  }
+    
+   if($variables['element']['#field_name'] == 'field_dcpwaterbodytype'){ 
     // waterbody
-    if($variables['element']['#items']['0']['value'] == 'ES') $variables['items']['0']['#markup'] = t('Estuary');
-    if($variables['element']['#items']['0']['value'] == 'CW') $variables['items']['0']['#markup'] = t('Coastal waters');
-    if($variables['element']['#items']['0']['value'] == 'FW') $variables['items']['0']['#markup'] = t('Freshwater');
+    if(isset($GLOBALS['uwwtd_value']['rcacat_labels'][$k])){
+        $variables['items']['0']['#markup'] =$GLOBALS['uwwtd_value']['rcacat_labels'][$k];
+    }
+    
   }
 
   // For booleans

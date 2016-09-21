@@ -15,8 +15,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -61,87 +61,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggart5compliance' => 
-  array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'NI' => 'No information',
-        'NR' => 'Not relevant',
-        'C' => 'Compliant',
-        'NC' => 'Not compliant',
-        '?' => '?',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggart5compliance' => 
-            array (
-              'value' => 'field_aggart5compliance_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggart5compliance' => 
-            array (
-              'value' => 'field_aggart5compliance_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '284',
-    'custom_tooltip' => 'More stringent treatment',
-    'field_name' => 'field_aggart5compliance',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -225,6 +146,85 @@ $list_field = array (
         'not null' => false,
       ),
       'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggart5compliance' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'NI' => 'No information',
+        'NR' => 'Not relevant',
+        'C' => 'Compliant',
+        'NC' => 'Not compliant',
+        '?' => '?',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggart5compliance' => 
+            array (
+              'value' => 'field_aggart5compliance_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggart5compliance' => 
+            array (
+              'value' => 'field_aggart5compliance_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '284',
+    'custom_tooltip' => 'More stringent treatment in place and performance met as requested by Article 5 and Annex I.B  of the Urban Waste Water Treatment directive 91/271/EC',
+    'field_name' => 'field_aggart5compliance',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
       array (
         'type' => 'varchar',
         'length' => 255,
@@ -399,8 +399,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -445,88 +445,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggart6compliance' => 
-  array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'C' => 'Compliant',
-        'NC' => 'Not compliant',
-        'NR' => 'Not relevant',
-        'NI' => 'No information',
-        'RNC' => 'Not compliant',
-        '?' => '?',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggart6compliance' => 
-            array (
-              'value' => 'field_aggart6compliance_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggart6compliance' => 
-            array (
-              'value' => 'field_aggart6compliance_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '459',
-    'custom_tooltip' => 'Primary treatment',
-    'field_name' => 'field_aggart6compliance',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -1039,7 +959,7 @@ $list_field = array (
   ),
   'field_aggc2' => 
   array (
-    'custom_tooltip' => 'Rate of generated load of agglomeration addressed through IAS (% of p.e.)',
+    'custom_tooltip' => 'Mainly individual sanitation systems that equipped households such as sceptic tanks or micro waste water treatment plants',
     'entity_types' => 
     array (
     ),
@@ -1052,8 +972,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -1098,8 +1018,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -1180,92 +1100,6 @@ $list_field = array (
       array (
         'type' => 'text',
         'size' => 'big',
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggsewagenetwork' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggsewagenetwork' => 
-            array (
-              'value' => 'field_aggsewagenetwork_value',
-              'format' => 'field_aggsewagenetwork_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggsewagenetwork' => 
-            array (
-              'value' => 'field_aggsewagenetwork_value',
-              'format' => 'field_aggsewagenetwork_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '327',
-    'field_name' => 'field_aggsewagenetwork',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
         'not null' => false,
       ),
       'format' => 
@@ -2573,161 +2407,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_aggart3compliance' => 
-  array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'NI' => 'No information',
-        'C' => 'Compliant',
-        'AddQC' => 'Not compliant',
-        'QC' => 'Compliant',
-        'NC' => 'Not compliant',
-        'NR' => 'Not relevant',
-        '?' => '?',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'custom_tooltip' => 'Collection',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggart3compliance' => 
-            array (
-              'value' => 'field_aggart3compliance_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggart3compliance' => 
-            array (
-              'value' => 'field_aggart3compliance_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '282',
-    'field_name' => 'field_aggart3compliance',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggart3addcompliance' => 
-  array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'AddQC' => 'Not compliant',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'entity_types' => 
-    array (
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggart3addcompliance' => 
-            array (
-              'value' => 'field_aggart3addcompliance_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggart3addcompliance' => 
-            array (
-              'value' => 'field_aggart3addcompliance_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '475',
-    'field_name' => 'field_aggart3addcompliance',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_aggbcliste' => 
   array (
     'entity_types' => 
@@ -2881,170 +2560,6 @@ $list_field = array (
       array (
         'type' => 'int',
         'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggperiodover3' => 
-  array (
-    'custom_tooltip' => 'Collection',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'granularity' => 
-      array (
-        'month' => 'month',
-        'day' => 'day',
-        'year' => 'year',
-        'hour' => 0,
-        'minute' => 0,
-        'second' => 0,
-      ),
-      'tz_handling' => 'none',
-      'timezone_db' => '',
-      'cache_enabled' => 0,
-      'cache_count' => '4',
-      'todate' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggperiodover3' => 
-            array (
-              'value' => 'field_aggperiodover3_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggperiodover3' => 
-            array (
-              'value' => 'field_aggperiodover3_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '321',
-    'field_name' => 'field_aggperiodover3',
-    'type' => 'date',
-    'module' => 'date',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 20,
-        'not null' => false,
-        'sortable' => true,
-        'views' => true,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggperiodover4' => 
-  array (
-    'custom_tooltip' => 'Secondary treatment',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'granularity' => 
-      array (
-        'month' => 'month',
-        'day' => 'day',
-        'year' => 'year',
-        'hour' => 0,
-        'minute' => 0,
-        'second' => 0,
-      ),
-      'tz_handling' => 'none',
-      'timezone_db' => '',
-      'cache_enabled' => 0,
-      'cache_count' => '4',
-      'todate' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggperiodover4' => 
-            array (
-              'value' => 'field_aggperiodover4_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggperiodover4' => 
-            array (
-              'value' => 'field_aggperiodover4_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '322',
-    'field_name' => 'field_aggperiodover4',
-    'type' => 'date',
-    'module' => 'date',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 20,
-        'not null' => false,
-        'sortable' => true,
-        'views' => true,
       ),
     ),
     'bundles' => 
@@ -3392,6 +2907,88 @@ $list_field = array (
     array (
     ),
   ),
+  'field_aggperiodover4' => 
+  array (
+    'custom_tooltip' => 'Deadline as regards the secondary treatment in place and performance met as requested by Article 4 and Annex I.B of the Urban Waste Water Treatment directive 91/271/EC',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'granularity' => 
+      array (
+        'month' => 'month',
+        'day' => 'day',
+        'year' => 'year',
+        'hour' => 0,
+        'minute' => 0,
+        'second' => 0,
+      ),
+      'tz_handling' => 'none',
+      'timezone_db' => '',
+      'cache_enabled' => 0,
+      'cache_count' => '4',
+      'todate' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggperiodover4' => 
+            array (
+              'value' => 'field_aggperiodover4_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggperiodover4' => 
+            array (
+              'value' => 'field_aggperiodover4_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '322',
+    'field_name' => 'field_aggperiodover4',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_agghaveregistrationsystem' => 
   array (
     'custom_tooltip' => 'Is a registration system for leaks in place?',
@@ -3714,173 +3311,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_aggart4compliance' => 
-  array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'C' => 'Compliant',
-        'NC' => 'Not compliant',
-        'NR' => 'Not relevant',
-        'NI' => 'No information',
-        'RNC' => 'Not compliant',
-        '?' => '?',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'custom_tooltip' => 'Secondary treatment',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggart4compliance' => 
-            array (
-              'value' => 'field_aggart4compliance_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggart4compliance' => 
-            array (
-              'value' => 'field_aggart4compliance_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '283',
-    'field_name' => 'field_aggart4compliance',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggexistmaintenanceplan' => 
-  array (
-    'custom_tooltip' => 'Is a maintenance plan (quality assurance) in place?',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggexistmaintenanceplan' => 
-            array (
-              'value' => 'field_aggexistmaintenanceplan_value',
-              'format' => 'field_aggexistmaintenanceplan_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggexistmaintenanceplan' => 
-            array (
-              'value' => 'field_aggexistmaintenanceplan_value',
-              'format' => 'field_aggexistmaintenanceplan_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '302',
-    'field_name' => 'field_aggexistmaintenanceplan',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_article_4_compliance_expli' => 
   array (
     'custom_tooltip' => '',
@@ -4054,6 +3484,93 @@ $list_field = array (
       array (
         'type' => 'int',
         'unsigned' => true,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggexistmaintenanceplan' => 
+  array (
+    'custom_tooltip' => 'Is a maintenance plan (quality assurance) in place?',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggexistmaintenanceplan' => 
+            array (
+              'value' => 'field_aggexistmaintenanceplan_value',
+              'format' => 'field_aggexistmaintenanceplan_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggexistmaintenanceplan' => 
+            array (
+              'value' => 'field_aggexistmaintenanceplan_value',
+              'format' => 'field_aggexistmaintenanceplan_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '302',
+    'field_name' => 'field_aggexistmaintenanceplan',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
     ),
@@ -4491,88 +4008,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_aggperiodover5' => 
-  array (
-    'custom_tooltip' => 'More stringent treatment',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'granularity' => 
-      array (
-        'month' => 'month',
-        'day' => 'day',
-        'year' => 'year',
-        'hour' => 0,
-        'minute' => 0,
-        'second' => 0,
-      ),
-      'tz_handling' => 'none',
-      'timezone_db' => '',
-      'cache_enabled' => 0,
-      'cache_count' => '4',
-      'todate' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggperiodover5' => 
-            array (
-              'value' => 'field_aggperiodover5_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggperiodover5' => 
-            array (
-              'value' => 'field_aggperiodover5_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '323',
-    'field_name' => 'field_aggperiodover5',
-    'type' => 'date',
-    'module' => 'date',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 20,
-        'not null' => false,
-        'sortable' => true,
-        'views' => true,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_rcadcpliste' => 
   array (
     'entity_types' => 
@@ -4809,76 +4244,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_aggpercwithouttreatment' => 
-  array (
-    'custom_tooltip' => 'Rate of generated load of agglomeration not collected through collecting systems and not addressed through IAS (% of p.e.)',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggpercwithouttreatment' => 
-            array (
-              'value' => 'field_aggpercwithouttreatment_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggpercwithouttreatment' => 
-            array (
-              'value' => 'field_aggpercwithouttreatment_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '320',
-    'field_name' => 'field_aggpercwithouttreatment',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_agguwwliste' => 
   array (
     'custom_tooltip' => 'Linked Urban Waste Water Treatment plant(s)',
@@ -4992,8 +4357,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -5038,8 +4403,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -5286,76 +4651,6 @@ $list_field = array (
       array (
         'type' => 'varchar',
         'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_aggc1' => 
-  array (
-    'custom_tooltip' => 'Rate of generated load of agglomeration collected through collecting system (% of p.e.)',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggc1' => 
-            array (
-              'value' => 'field_aggc1_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggc1' => 
-            array (
-              'value' => 'field_aggc1_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '288',
-    'field_name' => 'field_aggc1',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
         'not null' => false,
       ),
     ),
@@ -5634,8 +4929,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -5680,8 +4975,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -5961,8 +5256,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -6007,8 +5302,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -6837,92 +6132,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_aggbigid' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_aggbigid' => 
-            array (
-              'value' => 'field_aggbigid_value',
-              'format' => 'field_aggbigid_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_aggbigid' => 
-            array (
-              'value' => 'field_aggbigid_value',
-              'format' => 'field_aggbigid_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '287',
-    'field_name' => 'field_aggbigid',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_agggenerated' => 
   array (
     'entity_types' => 
@@ -6968,6 +6177,7 @@ $list_field = array (
       ),
     ),
     'id' => '304',
+    'custom_tooltip' => 'Load generated by the agglomeration. It Includes load generated by resident and non-resident population (e.g.  tourism), industrial and tertiary sectors connected to collecting system, rain under normal climatic conditions. It integrates Individual or Appropriate systems and seasonal variation.',
     'field_name' => 'field_agggenerated',
     'type' => 'number_integer',
     'module' => 'number',
@@ -7572,6 +6782,172 @@ $list_field = array (
       array (
         'description' => 'A description of the file.',
         'type' => 'text',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggbigid' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggbigid' => 
+            array (
+              'value' => 'field_aggbigid_value',
+              'format' => 'field_aggbigid_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggbigid' => 
+            array (
+              'value' => 'field_aggbigid_value',
+              'format' => 'field_aggbigid_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '287',
+    'field_name' => 'field_aggbigid',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggart6compliance' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'C' => 'Compliant',
+        'NC' => 'Not compliant',
+        'NR' => 'Not relevant',
+        'NI' => 'No information',
+        'RNC' => 'Not compliant',
+        '?' => '?',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggart6compliance' => 
+            array (
+              'value' => 'field_aggart6compliance_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggart6compliance' => 
+            array (
+              'value' => 'field_aggart6compliance_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '459',
+    'custom_tooltip' => 'Primary treatment',
+    'field_name' => 'field_aggart6compliance',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
     ),
@@ -9849,6 +9225,80 @@ $list_field = array (
     array (
     ),
   ),
+  'field_aggart3addcompliance' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'AddQC' => 'Not compliant',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggart3addcompliance' => 
+            array (
+              'value' => 'field_aggart3addcompliance_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggart3addcompliance' => 
+            array (
+              'value' => 'field_aggart3addcompliance_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '475',
+    'field_name' => 'field_aggart3addcompliance',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_article17_agglo' => 
   array (
     'entity_types' => 
@@ -9937,7 +9387,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwtreatmentrequired' => 
+  'field_aggc1' => 
   array (
     'custom_tooltip' => '',
     'entity_types' => 
@@ -9948,26 +9398,12 @@ $list_field = array (
     ),
     'indexes' => 
     array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
     ),
     'settings' => 
     array (
-      'allowed_values' => 
-      array (
-        'P' => 'Primary treatment',
-        'S' => 'Secondary treatment',
-        'N' => 'More stringent treatment : Nitrogen',
-        'MP' => 'More stringent treatment : Phosphorus',
-        'NP' => 'More stringent treatment : Nitrogen and Phosphorus',
-        'O' => 'More stringent treatment - Other',
-        'NPO' => 'More stringent treatment - Nitrogen and Phosphorus and Other',
-        'NO' => 'More stringent treatment - Nitrogen and Other',
-        'PO' => 'More stringent treatment - Phosphorus and Other',
-      ),
-      'allowed_values_function' => '',
+      'decimal_separator' => ',',
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -9984,25 +9420,25 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwtreatmentrequired' => 
+            'field_data_field_aggc1' => 
             array (
-              'value' => 'field_uwwtreatmentrequired_value',
+              'value' => 'field_aggc1_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwtreatmentrequired' => 
+            'field_revision_field_aggc1' => 
             array (
-              'value' => 'field_uwwtreatmentrequired_value',
+              'value' => 'field_aggc1_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '392',
-    'field_name' => 'field_uwwtreatmentrequired',
-    'type' => 'list_text',
-    'module' => 'list',
+    'id' => '288',
+    'field_name' => 'field_aggc1',
+    'type' => 'number_decimal',
+    'module' => 'number',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -10011,8 +9447,9 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -10020,7 +9457,77 @@ $list_field = array (
     array (
     ),
   ),
-  'field_functioninput' => 
+  'field_aggpercwithouttreatment' => 
+  array (
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'decimal_separator' => ',',
+      'precision' => 32,
+      'scale' => 2,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggpercwithouttreatment' => 
+            array (
+              'value' => 'field_aggpercwithouttreatment_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggpercwithouttreatment' => 
+            array (
+              'value' => 'field_aggpercwithouttreatment_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '320',
+    'field_name' => 'field_aggpercwithouttreatment',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggsewagenetwork' => 
   array (
     'entity_types' => 
     array (
@@ -10062,25 +9569,26 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_functioninput' => 
+            'field_data_field_aggsewagenetwork' => 
             array (
-              'value' => 'field_functioninput_value',
-              'format' => 'field_functioninput_format',
+              'value' => 'field_aggsewagenetwork_value',
+              'format' => 'field_aggsewagenetwork_format',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_functioninput' => 
+            'field_revision_field_aggsewagenetwork' => 
             array (
-              'value' => 'field_functioninput_value',
-              'format' => 'field_functioninput_format',
+              'value' => 'field_aggsewagenetwork_value',
+              'format' => 'field_aggsewagenetwork_format',
             ),
           ),
         ),
       ),
     ),
-    'id' => '337',
-    'field_name' => 'field_functioninput',
+    'id' => '327',
+    'custom_tooltip' => 'separated/combine/separated and combine',
+    'field_name' => 'field_aggsewagenetwork',
     'type' => 'text',
     'module' => 'text',
     'active' => '1',
@@ -10106,94 +9614,22 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwww_required_rcab' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => '',
-        1 => '',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwww_required_rcab' => 
-            array (
-              'value' => 'field_uwww_required_rcab_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwww_required_rcab' => 
-            array (
-              'value' => 'field_uwww_required_rcab_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '524',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwww_required_rcab',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwtreatment_met' => 
+  'field_aggart4compliance' => 
   array (
     'settings' => 
     array (
       'allowed_values' => 
       array (
-        2 => 'Not Calculable',
-        1 => 'Yes',
-        0 => 'No',
+        'C' => 'Compliant',
+        'NC' => 'Not compliant',
+        'NR' => 'Not relevant',
+        'NI' => 'No information',
+        'RNC' => 'Not compliant',
+        '?' => '?',
       ),
       'allowed_values_function' => '',
     ),
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Secondary treatment in place and performance met as requested by Article 4 and Annex I.B of  the   Urban Waste Water Treatment directive 91/271/EC',
     'entity_types' => 
     array (
     ),
@@ -10222,23 +9658,23 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwtreatment_met' => 
+            'field_data_field_aggart4compliance' => 
             array (
-              'value' => 'field_uwwtreatment_met_value',
+              'value' => 'field_aggart4compliance_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwtreatment_met' => 
+            'field_revision_field_aggart4compliance' => 
             array (
-              'value' => 'field_uwwtreatment_met_value',
+              'value' => 'field_aggart4compliance_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '391',
-    'field_name' => 'field_uwwtreatment_met',
+    'id' => '283',
+    'field_name' => 'field_aggart4compliance',
     'type' => 'list_text',
     'module' => 'list',
     'active' => '1',
@@ -10258,15 +9694,270 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwtdaggid' => 
+  'field_aggperiodover3' => 
   array (
-    'translatable' => '0',
+    'custom_tooltip' => 'Deadline as regards the connection to "collecting system" or "Individual or appropriate  system"  as requested by Article 3 of the Urban Waste Water Treatment directive 91/271/EC',
     'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
     array (
     ),
     'settings' => 
     array (
-      'max_length' => '255',
+      'granularity' => 
+      array (
+        'month' => 'month',
+        'day' => 'day',
+        'year' => 'year',
+        'hour' => 0,
+        'minute' => 0,
+        'second' => 0,
+      ),
+      'tz_handling' => 'none',
+      'timezone_db' => '',
+      'cache_enabled' => 0,
+      'cache_count' => '4',
+      'todate' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggperiodover3' => 
+            array (
+              'value' => 'field_aggperiodover3_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggperiodover3' => 
+            array (
+              'value' => 'field_aggperiodover3_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '321',
+    'field_name' => 'field_aggperiodover3',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggart3compliance' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'NI' => 'No information',
+        'C' => 'Compliant',
+        'AddQC' => 'Not compliant',
+        'QC' => 'Compliant',
+        'NC' => 'Not compliant',
+        'NR' => 'Not relevant',
+        '?' => '?',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'custom_tooltip' => 'Connection to "collecting system" or "Individual or appropriate system" as requested by Article 3 of   the Urban Waste Water Treatment directive 91/271/EC',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggart3compliance' => 
+            array (
+              'value' => 'field_aggart3compliance_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggart3compliance' => 
+            array (
+              'value' => 'field_aggart3compliance_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '282',
+    'field_name' => 'field_aggart3compliance',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggperiodover5' => 
+  array (
+    'custom_tooltip' => 'Deadline as regards the more stringent treatment in place and performance met as requested by Article 5 and Annex I.B  of the Urban Waste Water Treatment directive 91/271/EC',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'granularity' => 
+      array (
+        'month' => 'month',
+        'day' => 'day',
+        'year' => 'year',
+        'hour' => 0,
+        'minute' => 0,
+        'second' => 0,
+      ),
+      'tz_handling' => 'none',
+      'timezone_db' => '',
+      'cache_enabled' => 0,
+      'cache_count' => '4',
+      'todate' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggperiodover5' => 
+            array (
+              'value' => 'field_aggperiodover5_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggperiodover5' => 
+            array (
+              'value' => 'field_aggperiodover5_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '323',
+    'field_name' => 'field_aggperiodover5',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggbeginlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
     ),
     'storage' => 
     array (
@@ -10282,22 +9973,132 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwtdaggid' => 
+            'field_data_field_aggbeginlife' => 
             array (
-              'value' => 'field_uwwtdaggid_value',
-              'format' => 'field_uwwtdaggid_format',
+              'value' => 'field_aggbeginlife_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwtdaggid' => 
+            'field_revision_field_aggbeginlife' => 
             array (
-              'value' => 'field_uwwtdaggid_value',
-              'format' => 'field_uwwtdaggid_format',
+              'value' => 'field_aggbeginlife_value',
             ),
           ),
         ),
       ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '528',
+    'field_name' => 'field_aggbeginlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_aggendlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggendlife' => 
+            array (
+              'value' => 'field_aggendlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggendlife' => 
+            array (
+              'value' => 'field_aggendlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '529',
+    'field_name' => 'field_aggendlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwremarks' => 
+  array (
+    'entity_types' => 
+    array (
     ),
     'foreign keys' => 
     array (
@@ -10317,10 +10118,44 @@ $list_field = array (
         0 => 'format',
       ),
     ),
-    'id' => '434',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwtdaggid',
-    'type' => 'text',
+    'settings' => 
+    array (
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwremarks' => 
+            array (
+              'value' => 'field_uwwremarks_value',
+              'format' => 'field_uwwremarks_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwremarks' => 
+            array (
+              'value' => 'field_uwwremarks_value',
+              'format' => 'field_uwwremarks_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '385',
+    'field_name' => 'field_uwwremarks',
+    'type' => 'text_long',
     'module' => 'text',
     'active' => '1',
     'locked' => '0',
@@ -10330,8 +10165,8 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'varchar',
-        'length' => '255',
+        'type' => 'text',
+        'size' => 'big',
         'not null' => false,
       ),
       'format' => 
@@ -10345,9 +10180,8 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwaccidents' => 
+  'field_uwwprimarytreatment' => 
   array (
-    'custom_tooltip' => '',
     'entity_types' => 
     array (
     ),
@@ -10385,89 +10219,25 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwaccidents' => 
+            'field_data_field_uwwprimarytreatment' => 
             array (
-              'value' => 'field_uwwaccidents_value',
+              'value' => 'field_uwwprimarytreatment_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwaccidents' => 
+            'field_revision_field_uwwprimarytreatment' => 
             array (
-              'value' => 'field_uwwaccidents_value',
+              'value' => 'field_uwwprimarytreatment_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '348',
-    'field_name' => 'field_uwwaccidents',
+    'id' => '383',
+    'field_name' => 'field_uwwprimarytreatment',
     'type' => 'list_boolean',
     'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpinhabitantsconnected' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpinhabitantsconnected' => 
-            array (
-              'value' => 'field_uwwpinhabitantsconnected_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpinhabitantsconnected' => 
-            array (
-              'value' => 'field_uwwpinhabitantsconnected_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '381',
-    'field_name' => 'field_uwwpinhabitantsconnected',
-    'type' => 'number_integer',
-    'module' => 'number',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -10563,9 +10333,267 @@ $list_field = array (
     array (
     ),
   ),
+  'field_functiondescription' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_functiondescription' => 
+            array (
+              'value' => 'field_functiondescription_value',
+              'format' => 'field_functiondescription_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_functiondescription' => 
+            array (
+              'value' => 'field_functiondescription_value',
+              'format' => 'field_functiondescription_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '336',
+    'field_name' => 'field_functiondescription',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_physicalcapacityoutput' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_physicalcapacityoutput' => 
+            array (
+              'value' => 'field_physicalcapacityoutput_value',
+              'format' => 'field_physicalcapacityoutput_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_physicalcapacityoutput' => 
+            array (
+              'value' => 'field_physicalcapacityoutput_value',
+              'format' => 'field_physicalcapacityoutput_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '343',
+    'field_name' => 'field_physicalcapacityoutput',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwsuccessor' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwsuccessor' => 
+            array (
+              'value' => 'field_uwwsuccessor_value',
+              'format' => 'field_uwwsuccessor_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwsuccessor' => 
+            array (
+              'value' => 'field_uwwsuccessor_value',
+              'format' => 'field_uwwsuccessor_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '390',
+    'field_name' => 'field_uwwsuccessor',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_uwwntotperf' => 
   array (
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Sum of total kjeldahl nitrogen (organic, ammonia and ammonium), nitrate and nitrite',
     'entity_types' => 
     array (
     ),
@@ -10639,80 +10667,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwprimarytreatment' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwprimarytreatment' => 
-            array (
-              'value' => 'field_uwwprimarytreatment_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwprimarytreatment' => 
-            array (
-              'value' => 'field_uwwprimarytreatment_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '383',
-    'field_name' => 'field_uwwprimarytreatment',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_uwwe_prtrcode' => 
   array (
     'entity_types' => 
@@ -10774,166 +10728,6 @@ $list_field = array (
     ),
     'id' => '362',
     'field_name' => 'field_uwwe_prtrcode',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwuv' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwuv' => 
-            array (
-              'value' => 'field_uwwuv_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwuv' => 
-            array (
-              'value' => 'field_uwwuv_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '395',
-    'field_name' => 'field_uwwuv',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwnathyperlink' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwnathyperlink' => 
-            array (
-              'value' => 'field_uwwnathyperlink_value',
-              'format' => 'field_uwwnathyperlink_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwnathyperlink' => 
-            array (
-              'value' => 'field_uwwnathyperlink_value',
-              'format' => 'field_uwwnathyperlink_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '369',
-    'field_name' => 'field_uwwnathyperlink',
     'type' => 'text',
     'module' => 'text',
     'active' => '1',
@@ -11045,18 +10839,34 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwnincomingcalculated' => 
+  'field_uwwmethodwastewatertreated' => 
   array (
-    'translatable' => '0',
     'entity_types' => 
     array (
     ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
     'settings' => 
     array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
+      'max_length' => 255,
     ),
+    'translatable' => '0',
     'storage' => 
     array (
       'type' => 'field_sql_storage',
@@ -11071,32 +10881,27 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwnincomingcalculated' => 
+            'field_data_field_uwwmethodwastewatertreated' => 
             array (
-              'value' => 'field_uwwnincomingcalculated_value',
+              'value' => 'field_uwwmethodwastewatertreated_value',
+              'format' => 'field_uwwmethodwastewatertreated_format',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwnincomingcalculated' => 
+            'field_revision_field_uwwmethodwastewatertreated' => 
             array (
-              'value' => 'field_uwwnincomingcalculated_value',
+              'value' => 'field_uwwmethodwastewatertreated_value',
+              'format' => 'field_uwwmethodwastewatertreated_format',
             ),
           ),
         ),
       ),
     ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '438',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwnincomingcalculated',
-    'type' => 'number_decimal',
-    'module' => 'number',
+    'id' => '367',
+    'field_name' => 'field_uwwmethodwastewatertreated',
+    'type' => 'text',
+    'module' => 'text',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -11105,9 +10910,263 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwtreatment_met' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        2 => 'Not Calculable',
+        1 => 'Yes',
+        0 => 'No',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwtreatment_met' => 
+            array (
+              'value' => 'field_uwwtreatment_met_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwtreatment_met' => 
+            array (
+              'value' => 'field_uwwtreatment_met_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '391',
+    'field_name' => 'field_uwwtreatment_met',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_validfrom' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_validfrom' => 
+            array (
+              'value' => 'field_validfrom_value',
+              'format' => 'field_validfrom_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_validfrom' => 
+            array (
+              'value' => 'field_validfrom_value',
+              'format' => 'field_validfrom_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '121',
+    'field_name' => 'field_validfrom',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwnathyperlink' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwnathyperlink' => 
+            array (
+              'value' => 'field_uwwnathyperlink_value',
+              'format' => 'field_uwwnathyperlink_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwnathyperlink' => 
+            array (
+              'value' => 'field_uwwnathyperlink_value',
+              'format' => 'field_uwwnathyperlink_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '369',
+    'field_name' => 'field_uwwnathyperlink',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
     ),
@@ -11160,6 +11219,7 @@ $list_field = array (
       ),
     ),
     'id' => '342',
+    'custom_tooltip' => 'the urban waste water treatment plants are designed, constructed, operated and maintained to ensure sufficient performance under all normal local climatic conditions. When designing the plants, seasonal variations of the load shall be taken into account. (Article 10 of the Urban Waste Water Treatment Directive 91/271/CE)',
     'field_name' => 'field_physicalcapacityinput',
     'type' => 'number_integer',
     'module' => 'number',
@@ -11179,19 +11239,8 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwperformance_met' => 
+  'field_uwwuv' => 
   array (
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        2 => 'Not Calculable',
-        1 => 'Yes',
-        0 => 'No',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'custom_tooltip' => '',
     'entity_types' => 
     array (
     ),
@@ -11204,6 +11253,15 @@ $list_field = array (
       array (
         0 => 'value',
       ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
     ),
     'translatable' => '0',
     'storage' => 
@@ -11220,23 +11278,105 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwperformance_met' => 
+            'field_data_field_uwwuv' => 
             array (
-              'value' => 'field_uwwperformance_met_value',
+              'value' => 'field_uwwuv_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwperformance_met' => 
+            'field_revision_field_uwwuv' => 
             array (
-              'value' => 'field_uwwperformance_met_value',
+              'value' => 'field_uwwuv_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '379',
-    'field_name' => 'field_uwwperformance_met',
+    'id' => '395',
+    'field_name' => 'field_uwwuv',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwtreatmentrequired' => 
+  array (
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'P' => 'Primary treatment',
+        'S' => 'Secondary treatment',
+        'N' => 'More stringent treatment : Nitrogen',
+        'MP' => 'More stringent treatment : Phosphorus',
+        'NP' => 'More stringent treatment : Nitrogen and Phosphorus',
+        'O' => 'More stringent treatment - Other',
+        'NPO' => 'More stringent treatment - Nitrogen and Phosphorus and Other',
+        'NO' => 'More stringent treatment - Nitrogen and Other',
+        'PO' => 'More stringent treatment - Phosphorus and Other',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwtreatmentrequired' => 
+            array (
+              'value' => 'field_uwwtreatmentrequired_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwtreatmentrequired' => 
+            array (
+              'value' => 'field_uwwtreatmentrequired_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '392',
+    'field_name' => 'field_uwwtreatmentrequired',
     'type' => 'list_text',
     'module' => 'list',
     'active' => '1',
@@ -11256,7 +11396,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwmicrofiltration' => 
+  'field_uwwbod5perf' => 
   array (
     'entity_types' => 
     array (
@@ -11275,8 +11415,8 @@ $list_field = array (
     array (
       'allowed_values' => 
       array (
-        0 => 0,
-        1 => 1,
+        'P' => 'Pass',
+        'F' => 'Fail',
       ),
       'allowed_values_function' => '',
     ),
@@ -11295,24 +11435,25 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwmicrofiltration' => 
+            'field_data_field_uwwbod5perf' => 
             array (
-              'value' => 'field_uwwmicrofiltration_value',
+              'value' => 'field_uwwbod5perf_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwmicrofiltration' => 
+            'field_revision_field_uwwbod5perf' => 
             array (
-              'value' => 'field_uwwmicrofiltration_value',
+              'value' => 'field_uwwbod5perf_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '368',
-    'field_name' => 'field_uwwmicrofiltration',
-    'type' => 'list_boolean',
+    'id' => '351',
+    'custom_tooltip' => 'Biological Oxygen Demand',
+    'field_name' => 'field_uwwbod5perf',
+    'type' => 'list_text',
     'module' => 'list',
     'active' => '1',
     'locked' => '0',
@@ -11322,82 +11463,8 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwnremoval' => 
-  array (
-    'custom_tooltip' => '',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwnremoval' => 
-            array (
-              'value' => 'field_uwwnremoval_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwnremoval' => 
-            array (
-              'value' => 'field_uwwnremoval_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '372',
-    'field_name' => 'field_uwwnremoval',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
     ),
@@ -11481,7 +11548,302 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwptotperf' => 
+  'field_uwwchlorination' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwchlorination' => 
+            array (
+              'value' => 'field_uwwchlorination_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwchlorination' => 
+            array (
+              'value' => 'field_uwwchlorination_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '354',
+    'field_name' => 'field_uwwchlorination',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwtdaggid' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'max_length' => '255',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwtdaggid' => 
+            array (
+              'value' => 'field_uwwtdaggid_value',
+              'format' => 'field_uwwtdaggid_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwtdaggid' => 
+            array (
+              'value' => 'field_uwwtdaggid_value',
+              'format' => 'field_uwwtdaggid_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '434',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwtdaggid',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwlongitude' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwlongitude' => 
+            array (
+              'value' => 'field_uwwlongitude_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwlongitude' => 
+            array (
+              'value' => 'field_uwwlongitude_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '366',
+    'field_name' => 'field_uwwlongitude',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwloadenteringuwwtp' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwloadenteringuwwtp' => 
+            array (
+              'value' => 'field_uwwloadenteringuwwtp_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwloadenteringuwwtp' => 
+            array (
+              'value' => 'field_uwwloadenteringuwwtp_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '365',
+    'custom_tooltip' => 'load expressed in population equivalent shall be calculated on the basis of the maximum average weekly load entering the treatment plant during the year, excluding unusual situations such as those due to heavy rain (Article 4 of the Urban Waste Water Treatment Directive 91/271/CE)',
+    'field_name' => 'field_uwwloadenteringuwwtp',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwaccidents' => 
   array (
     'custom_tooltip' => '',
     'entity_types' => 
@@ -11501,8 +11863,8 @@ $list_field = array (
     array (
       'allowed_values' => 
       array (
-        'P' => 'Pass',
-        'F' => 'Fail',
+        0 => 0,
+        1 => 1,
       ),
       'allowed_values_function' => '',
     ),
@@ -11521,24 +11883,24 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwptotperf' => 
+            'field_data_field_uwwaccidents' => 
             array (
-              'value' => 'field_uwwptotperf_value',
+              'value' => 'field_uwwaccidents_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwptotperf' => 
+            'field_revision_field_uwwaccidents' => 
             array (
-              'value' => 'field_uwwptotperf_value',
+              'value' => 'field_uwwaccidents_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '384',
-    'field_name' => 'field_uwwptotperf',
-    'type' => 'list_text',
+    'id' => '348',
+    'field_name' => 'field_uwwaccidents',
+    'type' => 'list_boolean',
     'module' => 'list',
     'active' => '1',
     'locked' => '0',
@@ -11548,148 +11910,7 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcoddischarge' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcoddischarge' => 
-            array (
-              'value' => 'field_uwwcoddischarge_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcoddischarge' => 
-            array (
-              'value' => 'field_uwwcoddischarge_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '355',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwcoddischarge',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpincomingcalculated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpincomingcalculated' => 
-            array (
-              'value' => 'field_uwwpincomingcalculated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpincomingcalculated' => 
-            array (
-              'value' => 'field_uwwpincomingcalculated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '439',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpincomingcalculated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'type' => 'int',
         'not null' => false,
       ),
     ),
@@ -11771,6 +11992,92 @@ $list_field = array (
       array (
         'type' => 'varchar',
         'length' => '255',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_functioninput' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_functioninput' => 
+            array (
+              'value' => 'field_functioninput_value',
+              'format' => 'field_functioninput_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_functioninput' => 
+            array (
+              'value' => 'field_functioninput_value',
+              'format' => 'field_functioninput_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '337',
+    'field_name' => 'field_functioninput',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
       'format' => 
@@ -11870,6 +12177,1328 @@ $list_field = array (
     array (
     ),
   ),
+  'field_uwwpincomingestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpincomingestimated' => 
+            array (
+              'value' => 'field_uwwpincomingestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpincomingestimated' => 
+            array (
+              'value' => 'field_uwwpincomingestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '457',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwpincomingestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwwastewatertreated' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwwastewatertreated' => 
+            array (
+              'value' => 'field_uwwwastewatertreated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwwastewatertreated' => 
+            array (
+              'value' => 'field_uwwwastewatertreated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '396',
+    'custom_tooltip' => 'Volume of waste water treated and partially treated in the UWWTP',
+    'field_name' => 'field_uwwwastewatertreated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwdateexported' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'cache_count' => 4,
+      'cache_enabled' => 0,
+      'granularity' => 
+      array (
+        'day' => 'day',
+        'hour' => 0,
+        'minute' => 0,
+        'month' => 'month',
+        'second' => 0,
+        'year' => 'year',
+      ),
+      'timezone_db' => '',
+      'todate' => '',
+      'tz_handling' => 'none',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwdateexported' => 
+            array (
+              'value' => 'field_uwwdateexported_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwdateexported' => 
+            array (
+              'value' => 'field_uwwdateexported_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '360',
+    'field_name' => 'field_uwwdateexported',
+    'type' => 'datestamp',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwperformance_met' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        2 => 'Not Calculable',
+        1 => 'Yes',
+        0 => 'No',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwperformance_met' => 
+            array (
+              'value' => 'field_uwwperformance_met_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwperformance_met' => 
+            array (
+              'value' => 'field_uwwperformance_met_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '379',
+    'field_name' => 'field_uwwperformance_met',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwozonation' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwozonation' => 
+            array (
+              'value' => 'field_uwwozonation_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwozonation' => 
+            array (
+              'value' => 'field_uwwozonation_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '376',
+    'field_name' => 'field_uwwozonation',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpinhabitantsconnected' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpinhabitantsconnected' => 
+            array (
+              'value' => 'field_uwwpinhabitantsconnected_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpinhabitantsconnected' => 
+            array (
+              'value' => 'field_uwwpinhabitantsconnected_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '381',
+    'field_name' => 'field_uwwpinhabitantsconnected',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_physicalcapacityactivity' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_physicalcapacityactivity' => 
+            array (
+              'value' => 'field_physicalcapacityactivity_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_physicalcapacityactivity' => 
+            array (
+              'value' => 'field_physicalcapacityactivity_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '410',
+    'custom_tooltip' => '',
+    'field_name' => 'field_physicalcapacityactivity',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwnincomingcalculated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwnincomingcalculated' => 
+            array (
+              'value' => 'field_uwwnincomingcalculated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwnincomingcalculated' => 
+            array (
+              'value' => 'field_uwwnincomingcalculated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '438',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwnincomingcalculated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwlatitude' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwlatitude' => 
+            array (
+              'value' => 'field_uwwlatitude_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwlatitude' => 
+            array (
+              'value' => 'field_uwwlatitude_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '363',
+    'field_name' => 'field_uwwlatitude',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwnremoval' => 
+  array (
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwnremoval' => 
+            array (
+              'value' => 'field_uwwnremoval_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwnremoval' => 
+            array (
+              'value' => 'field_uwwnremoval_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '372',
+    'field_name' => 'field_uwwnremoval',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwtreatmenttype' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'NI' => 'No information',
+        'P' => 'Primary treatment',
+        'S' => 'Secondary treatment',
+        'MS' => 'More stringent treatment',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwtreatmenttype' => 
+            array (
+              'value' => 'field_uwwtreatmenttype_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwtreatmenttype' => 
+            array (
+              'value' => 'field_uwwtreatmenttype_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '393',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwtreatmenttype',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwptotperf' => 
+  array (
+    'custom_tooltip' => 'Sum of dissolved phosphorus and insoluble phosphorus',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'P' => 'Pass',
+        'F' => 'Fail',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwptotperf' => 
+            array (
+              'value' => 'field_uwwptotperf_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwptotperf' => 
+            array (
+              'value' => 'field_uwwptotperf_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '384',
+    'field_name' => 'field_uwwptotperf',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwdcpliste' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'nid' => 
+      array (
+        'table' => 'node',
+        'columns' => 
+        array (
+          'nid' => 'nid',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'nid' => 
+      array (
+        0 => 'nid',
+      ),
+    ),
+    'settings' => 
+    array (
+      'referenceable_types' => 
+      array (
+        'agglomeration' => 0,
+        'article' => 0,
+        'big_city' => 0,
+        'discharge_point' => 'discharge_point',
+        'page' => 0,
+        'receiving_area' => 0,
+        'uwwtp' => 0,
+      ),
+      'view' => 
+      array (
+        'args' => 
+        array (
+        ),
+        'display_name' => '',
+        'view_name' => '',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwdcpliste' => 
+            array (
+              'nid' => 'field_uwwdcpliste_nid',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwdcpliste' => 
+            array (
+              'nid' => 'field_uwwdcpliste_nid',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '361',
+    'field_name' => 'field_uwwdcpliste',
+    'type' => 'node_reference',
+    'module' => 'node_reference',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '-1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'nid' => 
+      array (
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwperctruck' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'decimal_separator' => ',',
+      'precision' => 32,
+      'scale' => 2,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwperctruck' => 
+            array (
+              'value' => 'field_uwwperctruck_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwperctruck' => 
+            array (
+              'value' => 'field_uwwperctruck_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '378',
+    'field_name' => 'field_uwwperctruck',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwmicrofiltration' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwmicrofiltration' => 
+            array (
+              'value' => 'field_uwwmicrofiltration_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwmicrofiltration' => 
+            array (
+              'value' => 'field_uwwmicrofiltration_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '368',
+    'field_name' => 'field_uwwmicrofiltration',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcodperf' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'P' => 'Pass',
+        'F' => 'Fail',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcodperf' => 
+            array (
+              'value' => 'field_uwwcodperf_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcodperf' => 
+            array (
+              'value' => 'field_uwwcodperf_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '357',
+    'custom_tooltip' => 'Chemical Oxygen Demand',
+    'field_name' => 'field_uwwcodperf',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcoddischarge' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcoddischarge' => 
+            array (
+              'value' => 'field_uwwcoddischarge_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcoddischarge' => 
+            array (
+              'value' => 'field_uwwcoddischarge_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '355',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwcoddischarge',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpincomingcalculated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpincomingcalculated' => 
+            array (
+              'value' => 'field_uwwpincomingcalculated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpincomingcalculated' => 
+            array (
+              'value' => 'field_uwwpincomingcalculated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '439',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwpincomingcalculated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_uwwcoddischargecalculated' => 
   array (
     'translatable' => '0',
@@ -11878,8 +13507,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
-      'scale' => '2',
+      'precision' => 32,
+      'scale' => 2,
       'decimal_separator' => '.',
     ),
     'storage' => 
@@ -11931,8 +13560,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -12101,145 +13730,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwozonation' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwozonation' => 
-            array (
-              'value' => 'field_uwwozonation_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwozonation' => 
-            array (
-              'value' => 'field_uwwozonation_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '376',
-    'field_name' => 'field_uwwozonation',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_physicalcapacityactivity' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_physicalcapacityactivity' => 
-            array (
-              'value' => 'field_physicalcapacityactivity_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_physicalcapacityactivity' => 
-            array (
-              'value' => 'field_physicalcapacityactivity_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '410',
-    'custom_tooltip' => '',
-    'field_name' => 'field_physicalcapacityactivity',
-    'type' => 'number_integer',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_physicalcapacitytime' => 
   array (
     'entity_types' => 
@@ -12326,426 +13816,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_validto' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_validto' => 
-            array (
-              'value' => 'field_validto_value',
-              'format' => 'field_validto_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_validto' => 
-            array (
-              'value' => 'field_validto_value',
-              'format' => 'field_validto_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '398',
-    'field_name' => 'field_validto',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_functionactivity' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_functionactivity' => 
-            array (
-              'value' => 'field_functionactivity_value',
-              'format' => 'field_functionactivity_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_functionactivity' => 
-            array (
-              'value' => 'field_functionactivity_value',
-              'format' => 'field_functionactivity_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '335',
-    'field_name' => 'field_functionactivity',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpremoval' => 
-  array (
-    'custom_tooltip' => '',
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpremoval' => 
-            array (
-              'value' => 'field_uwwpremoval_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpremoval' => 
-            array (
-              'value' => 'field_uwwpremoval_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '382',
-    'field_name' => 'field_uwwpremoval',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwtreatmenttype' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'NI' => 'No information',
-        'P' => 'Primary treatment',
-        'S' => 'Secondary treatment',
-        'MS' => 'More stringent treatment',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwtreatmenttype' => 
-            array (
-              'value' => 'field_uwwtreatmenttype_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwtreatmenttype' => 
-            array (
-              'value' => 'field_uwwtreatmenttype_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '393',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwtreatmenttype',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwdcpliste' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'nid' => 
-      array (
-        'table' => 'node',
-        'columns' => 
-        array (
-          'nid' => 'nid',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'nid' => 
-      array (
-        0 => 'nid',
-      ),
-    ),
-    'settings' => 
-    array (
-      'referenceable_types' => 
-      array (
-        'agglomeration' => 0,
-        'article' => 0,
-        'big_city' => 0,
-        'discharge_point' => 'discharge_point',
-        'page' => 0,
-        'receiving_area' => 0,
-        'uwwtp' => 0,
-      ),
-      'view' => 
-      array (
-        'args' => 
-        array (
-        ),
-        'display_name' => '',
-        'view_name' => '',
-      ),
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwdcpliste' => 
-            array (
-              'nid' => 'field_uwwdcpliste_nid',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwdcpliste' => 
-            array (
-              'nid' => 'field_uwwdcpliste_nid',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '361',
-    'field_name' => 'field_uwwdcpliste',
-    'type' => 'node_reference',
-    'module' => 'node_reference',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '-1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'nid' => 
-      array (
-        'type' => 'int',
-        'unsigned' => true,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_facilitydescription' => 
   array (
     'entity_types' => 
@@ -12807,6 +13877,187 @@ $list_field = array (
     ),
     'id' => '334',
     'field_name' => 'field_facilitydescription',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwaggliste' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'nid' => 
+      array (
+        'table' => 'node',
+        'columns' => 
+        array (
+          'nid' => 'nid',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'nid' => 
+      array (
+        0 => 'nid',
+      ),
+    ),
+    'settings' => 
+    array (
+      'referenceable_types' => 
+      array (
+        'agglomeration' => 'agglomeration',
+        'article' => 0,
+        'big_city' => 0,
+        'discharge_point' => 0,
+        'page' => 0,
+        'receiving_area' => 0,
+        'uwwtp' => 0,
+      ),
+      'view' => 
+      array (
+        'args' => 
+        array (
+        ),
+        'display_name' => '',
+        'view_name' => '',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwaggliste' => 
+            array (
+              'nid' => 'field_uwwaggliste_nid',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwaggliste' => 
+            array (
+              'nid' => 'field_uwwaggliste_nid',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '349',
+    'field_name' => 'field_uwwaggliste',
+    'type' => 'node_reference',
+    'module' => 'node_reference',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '-1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'nid' => 
+      array (
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_validto' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_validto' => 
+            array (
+              'value' => 'field_validto_value',
+              'format' => 'field_validto_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_validto' => 
+            array (
+              'value' => 'field_validto_value',
+              'format' => 'field_validto_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '398',
+    'field_name' => 'field_validto',
     'type' => 'text',
     'module' => 'text',
     'active' => '1',
@@ -13004,6 +14255,477 @@ $list_field = array (
     array (
     ),
   ),
+  'field_uwwsandfiltration' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwsandfiltration' => 
+            array (
+              'value' => 'field_uwwsandfiltration_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwsandfiltration' => 
+            array (
+              'value' => 'field_uwwsandfiltration_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '386',
+    'field_name' => 'field_uwwsandfiltration',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwhistorie' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'max_length' => '255',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwhistorie' => 
+            array (
+              'value' => 'field_uwwhistorie_value',
+              'format' => 'field_uwwhistorie_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwhistorie' => 
+            array (
+              'value' => 'field_uwwhistorie_value',
+              'format' => 'field_uwwhistorie_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '450',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwhistorie',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_functionactivity' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_functionactivity' => 
+            array (
+              'value' => 'field_functionactivity_value',
+              'format' => 'field_functionactivity_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_functionactivity' => 
+            array (
+              'value' => 'field_functionactivity_value',
+              'format' => 'field_functionactivity_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '335',
+    'field_name' => 'field_functionactivity',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpremoval' => 
+  array (
+    'custom_tooltip' => '',
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpremoval' => 
+            array (
+              'value' => 'field_uwwpremoval_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpremoval' => 
+            array (
+              'value' => 'field_uwwpremoval_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '382',
+    'field_name' => 'field_uwwpremoval',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwsecondarytreatment' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwsecondarytreatment' => 
+            array (
+              'value' => 'field_uwwsecondarytreatment_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwsecondarytreatment' => 
+            array (
+              'value' => 'field_uwwsecondarytreatment_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '387',
+    'field_name' => 'field_uwwsecondarytreatment',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwbaddesign' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => '0',
+        1 => '1',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwbaddesign' => 
+            array (
+              'value' => 'field_uwwbaddesign_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwbaddesign' => 
+            array (
+              'value' => 'field_uwwbaddesign_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '452',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwbaddesign',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_uwwndischargecalculated' => 
   array (
     'translatable' => '0',
@@ -13012,8 +14734,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
-      'scale' => '2',
+      'precision' => 32,
+      'scale' => 2,
       'decimal_separator' => '.',
     ),
     'storage' => 
@@ -13065,8 +14787,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -13418,6 +15140,81 @@ $list_field = array (
     array (
     ),
   ),
+  'field_uwwother' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => '0',
+        1 => '1',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwother' => 
+            array (
+              'value' => 'field_uwwother_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwother' => 
+            array (
+              'value' => 'field_uwwother_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '451',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwother',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_uwwspecification' => 
   array (
     'entity_types' => 
@@ -13504,176 +15301,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwaggliste' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'nid' => 
-      array (
-        'table' => 'node',
-        'columns' => 
-        array (
-          'nid' => 'nid',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'nid' => 
-      array (
-        0 => 'nid',
-      ),
-    ),
-    'settings' => 
-    array (
-      'referenceable_types' => 
-      array (
-        'agglomeration' => 'agglomeration',
-        'article' => 0,
-        'big_city' => 0,
-        'discharge_point' => 0,
-        'page' => 0,
-        'receiving_area' => 0,
-        'uwwtp' => 0,
-      ),
-      'view' => 
-      array (
-        'args' => 
-        array (
-        ),
-        'display_name' => '',
-        'view_name' => '',
-      ),
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwaggliste' => 
-            array (
-              'nid' => 'field_uwwaggliste_nid',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwaggliste' => 
-            array (
-              'nid' => 'field_uwwaggliste_nid',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '349',
-    'field_name' => 'field_uwwaggliste',
-    'type' => 'node_reference',
-    'module' => 'node_reference',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '-1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'nid' => 
-      array (
-        'type' => 'int',
-        'unsigned' => true,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwsandfiltration' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwsandfiltration' => 
-            array (
-              'value' => 'field_uwwsandfiltration_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwsandfiltration' => 
-            array (
-              'value' => 'field_uwwsandfiltration_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '386',
-    'field_name' => 'field_uwwsandfiltration',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwhistorie' => 
+  'field_uwwpdischargeestimated' => 
   array (
     'translatable' => '0',
     'entity_types' => 
@@ -13681,7 +15309,9 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'max_length' => '255',
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
     ),
     'storage' => 
     array (
@@ -13697,18 +15327,16 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_uwwhistorie' => 
+            'field_data_field_uwwpdischargeestimated' => 
             array (
-              'value' => 'field_uwwhistorie_value',
-              'format' => 'field_uwwhistorie_format',
+              'value' => 'field_uwwpdischargeestimated_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_uwwhistorie' => 
+            'field_revision_field_uwwpdischargeestimated' => 
             array (
-              'value' => 'field_uwwhistorie_value',
-              'format' => 'field_uwwhistorie_format',
+              'value' => 'field_uwwpdischargeestimated_value',
             ),
           ),
         ),
@@ -13716,27 +15344,15 @@ $list_field = array (
     ),
     'foreign keys' => 
     array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
     ),
     'indexes' => 
     array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
     ),
-    'id' => '450',
+    'id' => '446',
     'custom_tooltip' => '',
-    'field_name' => 'field_uwwhistorie',
-    'type' => 'text',
-    'module' => 'text',
+    'field_name' => 'field_uwwpdischargeestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -13745,14 +15361,9 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -13846,722 +15457,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwotherperf' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'P' => 'Pass',
-        'F' => 'Fail',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwotherperf' => 
-            array (
-              'value' => 'field_uwwotherperf_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwotherperf' => 
-            array (
-              'value' => 'field_uwwotherperf_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '374',
-    'custom_tooltip' => 'Other type of more stringent treatment',
-    'field_name' => 'field_uwwotherperf',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwbodincoming' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwbodincoming' => 
-            array (
-              'value' => 'field_uwwbodincoming_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwbodincoming' => 
-            array (
-              'value' => 'field_uwwbodincoming_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '353',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwbodincoming',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwbaddesign' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => '0',
-        1 => '1',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwbaddesign' => 
-            array (
-              'value' => 'field_uwwbaddesign_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwbaddesign' => 
-            array (
-              'value' => 'field_uwwbaddesign_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '452',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwbaddesign',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwother' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => '0',
-        1 => '1',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwother' => 
-            array (
-              'value' => 'field_uwwother_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwother' => 
-            array (
-              'value' => 'field_uwwother_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '451',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwother',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwboddischarge' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwboddischarge' => 
-            array (
-              'value' => 'field_uwwboddischarge_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwboddischarge' => 
-            array (
-              'value' => 'field_uwwboddischarge_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '352',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwboddischarge',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwndischarge' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwndischarge' => 
-            array (
-              'value' => 'field_uwwndischarge_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwndischarge' => 
-            array (
-              'value' => 'field_uwwndischarge_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '370',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwndischarge',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpdischarge' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpdischarge' => 
-            array (
-              'value' => 'field_uwwpdischarge_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpdischarge' => 
-            array (
-              'value' => 'field_uwwpdischarge_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '377',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpdischarge',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcodincomingcalculated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcodincomingcalculated' => 
-            array (
-              'value' => 'field_uwwcodincomingcalculated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcodincomingcalculated' => 
-            array (
-              'value' => 'field_uwwcodincomingcalculated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '437',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwcodincomingcalculated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwboddischargeestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwboddischargeestimated' => 
-            array (
-              'value' => 'field_uwwboddischargeestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwboddischargeestimated' => 
-            array (
-              'value' => 'field_uwwboddischargeestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '441',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwboddischargeestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcoddischargeestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcoddischargeestimated' => 
-            array (
-              'value' => 'field_uwwcoddischargeestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcoddischargeestimated' => 
-            array (
-              'value' => 'field_uwwcoddischargeestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '443',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwcoddischargeestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_uwwbodincomingcalculated' => 
   array (
     'translatable' => '0',
@@ -14570,8 +15465,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
-      'scale' => '2',
+      'precision' => 32,
+      'scale' => 2,
       'decimal_separator' => '.',
     ),
     'storage' => 
@@ -14623,1252 +15518,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwnincoming' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwnincoming' => 
-            array (
-              'value' => 'field_uwwnincoming_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwnincoming' => 
-            array (
-              'value' => 'field_uwwnincoming_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '371',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwnincoming',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpdischargecalculated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpdischargecalculated' => 
-            array (
-              'value' => 'field_uwwpdischargecalculated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpdischargecalculated' => 
-            array (
-              'value' => 'field_uwwpdischargecalculated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '445',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpdischargecalculated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwnincomingestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwnincomingestimated' => 
-            array (
-              'value' => 'field_uwwnincomingestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwnincomingestimated' => 
-            array (
-              'value' => 'field_uwwnincomingestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '456',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwnincomingestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwbodincomingestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwbodincomingestimated' => 
-            array (
-              'value' => 'field_uwwbodincomingestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwbodincomingestimated' => 
-            array (
-              'value' => 'field_uwwbodincomingestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '454',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwbodincomingestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpincoming' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpincoming' => 
-            array (
-              'value' => 'field_uwwpincoming_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpincoming' => 
-            array (
-              'value' => 'field_uwwpincoming_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '380',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpincoming',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwmethodwastewatertreated' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwmethodwastewatertreated' => 
-            array (
-              'value' => 'field_uwwmethodwastewatertreated_value',
-              'format' => 'field_uwwmethodwastewatertreated_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwmethodwastewatertreated' => 
-            array (
-              'value' => 'field_uwwmethodwastewatertreated_value',
-              'format' => 'field_uwwmethodwastewatertreated_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '367',
-    'field_name' => 'field_uwwmethodwastewatertreated',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_validfrom' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_validfrom' => 
-            array (
-              'value' => 'field_validfrom_value',
-              'format' => 'field_validfrom_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_validfrom' => 
-            array (
-              'value' => 'field_validfrom_value',
-              'format' => 'field_validfrom_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '121',
-    'field_name' => 'field_validfrom',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwwastewatertreated' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwwastewatertreated' => 
-            array (
-              'value' => 'field_uwwwastewatertreated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwwastewatertreated' => 
-            array (
-              'value' => 'field_uwwwastewatertreated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '396',
-    'custom_tooltip' => 'Volume of waste water treated and partially treated in the UWWTP',
-    'field_name' => 'field_uwwwastewatertreated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwchlorination' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwchlorination' => 
-            array (
-              'value' => 'field_uwwchlorination_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwchlorination' => 
-            array (
-              'value' => 'field_uwwchlorination_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '354',
-    'field_name' => 'field_uwwchlorination',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwlongitude' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '20',
-      'scale' => '8',
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwlongitude' => 
-            array (
-              'value' => 'field_uwwlongitude_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwlongitude' => 
-            array (
-              'value' => 'field_uwwlongitude_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '366',
-    'field_name' => 'field_uwwlongitude',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '20',
-        'scale' => '8',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpincomingestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpincomingestimated' => 
-            array (
-              'value' => 'field_uwwpincomingestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpincomingestimated' => 
-            array (
-              'value' => 'field_uwwpincomingestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '457',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpincomingestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwlatitude' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '20',
-      'scale' => '8',
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwlatitude' => 
-            array (
-              'value' => 'field_uwwlatitude_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwlatitude' => 
-            array (
-              'value' => 'field_uwwlatitude_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '363',
-    'field_name' => 'field_uwwlatitude',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '20',
-        'scale' => '8',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcodincomingestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcodincomingestimated' => 
-            array (
-              'value' => 'field_uwwcodincomingestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcodincomingestimated' => 
-            array (
-              'value' => 'field_uwwcodincomingestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '455',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwcodincomingestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwperctruck' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'decimal_separator' => ',',
-      'precision' => 10,
-      'scale' => 2,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwperctruck' => 
-            array (
-              'value' => 'field_uwwperctruck_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwperctruck' => 
-            array (
-              'value' => 'field_uwwperctruck_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '378',
-    'field_name' => 'field_uwwperctruck',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => 10,
+        'precision' => 32,
         'scale' => 2,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcodperf' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'P' => 'Pass',
-        'F' => 'Fail',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcodperf' => 
-            array (
-              'value' => 'field_uwwcodperf_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcodperf' => 
-            array (
-              'value' => 'field_uwwcodperf_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '357',
-    'custom_tooltip' => 'Chemical Oxygen Demand',
-    'field_name' => 'field_uwwcodperf',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwremarks' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwremarks' => 
-            array (
-              'value' => 'field_uwwremarks_value',
-              'format' => 'field_uwwremarks_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwremarks' => 
-            array (
-              'value' => 'field_uwwremarks_value',
-              'format' => 'field_uwwremarks_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '385',
-    'field_name' => 'field_uwwremarks',
-    'type' => 'text_long',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwpdischargeestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwpdischargeestimated' => 
-            array (
-              'value' => 'field_uwwpdischargeestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwpdischargeestimated' => 
-            array (
-              'value' => 'field_uwwpdischargeestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '446',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwpdischargeestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
         'not null' => false,
       ),
     ),
@@ -15884,8 +15535,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
-      'scale' => '2',
+      'precision' => 32,
+      'scale' => 2,
       'decimal_separator' => '.',
     ),
     'storage' => 
@@ -15937,8 +15588,78 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpdischargecalculated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpdischargecalculated' => 
+            array (
+              'value' => 'field_uwwpdischargecalculated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpdischargecalculated' => 
+            array (
+              'value' => 'field_uwwpdischargecalculated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '445',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwpdischargecalculated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -16047,6 +15768,1062 @@ $list_field = array (
     array (
     ),
   ),
+  'field_uwwotherperf' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'P' => 'Pass',
+        'F' => 'Fail',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwotherperf' => 
+            array (
+              'value' => 'field_uwwotherperf_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwotherperf' => 
+            array (
+              'value' => 'field_uwwotherperf_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '374',
+    'custom_tooltip' => 'e.g. e-coli',
+    'field_name' => 'field_uwwotherperf',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwbodincoming' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwbodincoming' => 
+            array (
+              'value' => 'field_uwwbodincoming_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwbodincoming' => 
+            array (
+              'value' => 'field_uwwbodincoming_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '353',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwbodincoming',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcodincoming' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcodincoming' => 
+            array (
+              'value' => 'field_uwwcodincoming_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcodincoming' => 
+            array (
+              'value' => 'field_uwwcodincoming_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '356',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwcodincoming',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwnincoming' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwnincoming' => 
+            array (
+              'value' => 'field_uwwnincoming_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwnincoming' => 
+            array (
+              'value' => 'field_uwwnincoming_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '371',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwnincoming',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpincoming' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpincoming' => 
+            array (
+              'value' => 'field_uwwpincoming_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpincoming' => 
+            array (
+              'value' => 'field_uwwpincoming_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '380',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwpincoming',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwboddischarge' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwboddischarge' => 
+            array (
+              'value' => 'field_uwwboddischarge_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwboddischarge' => 
+            array (
+              'value' => 'field_uwwboddischarge_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '352',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwboddischarge',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwndischarge' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwndischarge' => 
+            array (
+              'value' => 'field_uwwndischarge_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwndischarge' => 
+            array (
+              'value' => 'field_uwwndischarge_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '370',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwndischarge',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwpdischarge' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => ',',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwpdischarge' => 
+            array (
+              'value' => 'field_uwwpdischarge_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwpdischarge' => 
+            array (
+              'value' => 'field_uwwpdischarge_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '377',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwpdischarge',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcodincomingcalculated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcodincomingcalculated' => 
+            array (
+              'value' => 'field_uwwcodincomingcalculated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcodincomingcalculated' => 
+            array (
+              'value' => 'field_uwwcodincomingcalculated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '437',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwcodincomingcalculated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwboddischargeestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwboddischargeestimated' => 
+            array (
+              'value' => 'field_uwwboddischargeestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwboddischargeestimated' => 
+            array (
+              'value' => 'field_uwwboddischargeestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '441',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwboddischargeestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcoddischargeestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcoddischargeestimated' => 
+            array (
+              'value' => 'field_uwwcoddischargeestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcoddischargeestimated' => 
+            array (
+              'value' => 'field_uwwcoddischargeestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '443',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwcoddischargeestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwndischargeestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwndischargeestimated' => 
+            array (
+              'value' => 'field_uwwndischargeestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwndischargeestimated' => 
+            array (
+              'value' => 'field_uwwndischargeestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '444',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwndischargeestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwbodincomingestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwbodincomingestimated' => 
+            array (
+              'value' => 'field_uwwbodincomingestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwbodincomingestimated' => 
+            array (
+              'value' => 'field_uwwbodincomingestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '454',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwbodincomingestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwcodincomingestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwcodincomingestimated' => 
+            array (
+              'value' => 'field_uwwcodincomingestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwcodincomingestimated' => 
+            array (
+              'value' => 'field_uwwcodincomingestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '455',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwcodincomingestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwnincomingestimated' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => 32,
+      'scale' => 2,
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwnincomingestimated' => 
+            array (
+              'value' => 'field_uwwnincomingestimated_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwnincomingestimated' => 
+            array (
+              'value' => 'field_uwwnincomingestimated_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '456',
+    'custom_tooltip' => '',
+    'field_name' => 'field_uwwnincomingestimated',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => 32,
+        'scale' => 2,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
   'field_article17_uwwtp' => 
   array (
     'entity_types' => 
@@ -16135,226 +16912,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_uwwloadenteringuwwtp' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwloadenteringuwwtp' => 
-            array (
-              'value' => 'field_uwwloadenteringuwwtp_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwloadenteringuwwtp' => 
-            array (
-              'value' => 'field_uwwloadenteringuwwtp_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '365',
-    'field_name' => 'field_uwwloadenteringuwwtp',
-    'type' => 'number_integer',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwbod5perf' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        'P' => 'Pass',
-        'F' => 'Fail',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwbod5perf' => 
-            array (
-              'value' => 'field_uwwbod5perf_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwbod5perf' => 
-            array (
-              'value' => 'field_uwwbod5perf_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '351',
-    'custom_tooltip' => 'Biological Oxygen Demand',
-    'field_name' => 'field_uwwbod5perf',
-    'type' => 'list_text',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwdateexported' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'cache_count' => 4,
-      'cache_enabled' => 0,
-      'granularity' => 
-      array (
-        'day' => 'day',
-        'hour' => 0,
-        'minute' => 0,
-        'month' => 'month',
-        'second' => 0,
-        'year' => 'year',
-      ),
-      'timezone_db' => '',
-      'todate' => '',
-      'tz_handling' => 'none',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwdateexported' => 
-            array (
-              'value' => 'field_uwwdateexported_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwdateexported' => 
-            array (
-              'value' => 'field_uwwdateexported_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '360',
-    'field_name' => 'field_uwwdateexported',
-    'type' => 'datestamp',
-    'module' => 'date',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-        'sortable' => true,
-        'views' => true,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_uwww_required_rcaan' => 
   array (
     'translatable' => '0',
@@ -16412,80 +16969,6 @@ $list_field = array (
     'id' => '522',
     'custom_tooltip' => '',
     'field_name' => 'field_uwww_required_rcaan',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwsecondarytreatment' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwsecondarytreatment' => 
-            array (
-              'value' => 'field_uwwsecondarytreatment_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwsecondarytreatment' => 
-            array (
-              'value' => 'field_uwwsecondarytreatment_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '387',
-    'field_name' => 'field_uwwsecondarytreatment',
     'type' => 'list_boolean',
     'module' => 'list',
     'active' => '1',
@@ -16579,34 +17062,21 @@ $list_field = array (
     array (
     ),
   ),
-  'field_functiondescription' => 
+  'field_uwww_required_rcab' => 
   array (
+    'translatable' => '0',
     'entity_types' => 
     array (
     ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
     'settings' => 
     array (
-      'max_length' => 255,
+      'allowed_values' => 
+      array (
+        0 => '',
+        1 => '',
+      ),
+      'allowed_values_function' => '',
     ),
-    'translatable' => '0',
     'storage' => 
     array (
       'type' => 'field_sql_storage',
@@ -16621,274 +17091,36 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_functiondescription' => 
+            'field_data_field_uwww_required_rcab' => 
             array (
-              'value' => 'field_functiondescription_value',
-              'format' => 'field_functiondescription_format',
+              'value' => 'field_uwww_required_rcab_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_functiondescription' => 
+            'field_revision_field_uwww_required_rcab' => 
             array (
-              'value' => 'field_functiondescription_value',
-              'format' => 'field_functiondescription_format',
+              'value' => 'field_uwww_required_rcab_value',
             ),
           ),
         ),
       ),
     ),
-    'id' => '336',
-    'field_name' => 'field_functiondescription',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
     array (
       'value' => 
       array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
+        0 => 'value',
       ),
     ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_physicalcapacityoutput' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_physicalcapacityoutput' => 
-            array (
-              'value' => 'field_physicalcapacityoutput_value',
-              'format' => 'field_physicalcapacityoutput_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_physicalcapacityoutput' => 
-            array (
-              'value' => 'field_physicalcapacityoutput_value',
-              'format' => 'field_physicalcapacityoutput_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '343',
-    'field_name' => 'field_physicalcapacityoutput',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwsuccessor' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'settings' => 
-    array (
-      'max_length' => 255,
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwsuccessor' => 
-            array (
-              'value' => 'field_uwwsuccessor_value',
-              'format' => 'field_uwwsuccessor_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwsuccessor' => 
-            array (
-              'value' => 'field_uwwsuccessor_value',
-              'format' => 'field_uwwsuccessor_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '390',
-    'field_name' => 'field_uwwsuccessor',
-    'type' => 'text',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwcodincoming' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => 20,
-      'scale' => 8,
-      'decimal_separator' => ',',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwcodincoming' => 
-            array (
-              'value' => 'field_uwwcodincoming_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwcodincoming' => 
-            array (
-              'value' => 'field_uwwcodincoming_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '356',
+    'id' => '524',
     'custom_tooltip' => '',
-    'field_name' => 'field_uwwcodincoming',
-    'type' => 'number_decimal',
-    'module' => 'number',
+    'field_name' => 'field_uwww_required_rcab',
+    'type' => 'list_boolean',
+    'module' => 'list',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -16897,79 +17129,7 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_uwwndischargeestimated' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'precision' => '10',
-      'scale' => '2',
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_uwwndischargeestimated' => 
-            array (
-              'value' => 'field_uwwndischargeestimated_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_uwwndischargeestimated' => 
-            array (
-              'value' => 'field_uwwndischargeestimated_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '444',
-    'custom_tooltip' => '',
-    'field_name' => 'field_uwwndischargeestimated',
-    'type' => 'number_decimal',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'numeric',
-        'precision' => '10',
-        'scale' => '2',
+        'type' => 'int',
         'not null' => false,
       ),
     ),
@@ -17046,6 +17206,162 @@ $list_field = array (
       array (
         'type' => 'int',
         'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwbeginlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwbeginlife' => 
+            array (
+              'value' => 'field_uwwbeginlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwbeginlife' => 
+            array (
+              'value' => 'field_uwwbeginlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '530',
+    'field_name' => 'field_uwwbeginlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_uwwendlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_uwwendlife' => 
+            array (
+              'value' => 'field_uwwendlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_uwwendlife' => 
+            array (
+              'value' => 'field_uwwendlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '531',
+    'field_name' => 'field_uwwendlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
       ),
     ),
     'bundles' => 
@@ -19334,8 +19650,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -19380,8 +19696,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -19403,8 +19719,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -19449,8 +19765,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -19536,8 +19852,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -19582,8 +19898,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -20622,20 +20938,25 @@ $list_field = array (
     array (
     ),
   ),
-  'field_rca58applied' => 
+  'field_dcpbeginlife' => 
   array (
-    'translatable' => '0',
     'entity_types' => 
     array (
     ),
+    'translatable' => '0',
     'settings' => 
     array (
-      'allowed_values' => 
+      'todate' => '',
+      'granularity' => 
       array (
-        0 => '0',
-        1 => '1',
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
       ),
-      'allowed_values_function' => '',
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
     ),
     'storage' => 
     array (
@@ -20651,16 +20972,16 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_rca58applied' => 
+            'field_data_field_dcpbeginlife' => 
             array (
-              'value' => 'field_rca58applied_value',
+              'value' => 'field_dcpbeginlife_value',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_rca58applied' => 
+            'field_revision_field_dcpbeginlife' => 
             array (
-              'value' => 'field_rca58applied_value',
+              'value' => 'field_dcpbeginlife_value',
             ),
           ),
         ),
@@ -20671,16 +20992,11 @@ $list_field = array (
     ),
     'indexes' => 
     array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
     ),
-    'id' => '429',
-    'custom_tooltip' => '',
-    'field_name' => 'field_rca58applied',
-    'type' => 'list_boolean',
-    'module' => 'list',
+    'id' => '532',
+    'field_name' => 'field_dcpbeginlife',
+    'type' => 'date',
+    'module' => 'date',
     'active' => '1',
     'locked' => '0',
     'cardinality' => '1',
@@ -20689,8 +21005,89 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'int',
+        'type' => 'varchar',
+        'length' => 20,
         'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_dcpendlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_dcpendlife' => 
+            array (
+              'value' => 'field_dcpendlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_dcpendlife' => 
+            array (
+              'value' => 'field_dcpendlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '533',
+    'field_name' => 'field_dcpendlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
       ),
     ),
     'bundles' => 
@@ -20711,8 +21108,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -20757,8 +21154,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -20780,8 +21177,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -20826,8 +21223,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21009,8 +21406,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21055,8 +21452,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21164,8 +21561,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21210,8 +21607,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21443,7 +21840,7 @@ $list_field = array (
       ),
     ),
     'id' => '448',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Mainly when this sensitive area is a catchment that includes other sensitive areas.',
     'field_name' => 'field_rca_sensitive_area',
     'type' => 'text',
     'module' => 'text',
@@ -21484,8 +21881,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21530,8 +21927,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21553,8 +21950,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21599,8 +21996,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21622,8 +22019,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21668,8 +22065,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21787,7 +22184,7 @@ $list_field = array (
     array (
     ),
     'id' => '407',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Total Phosphorus discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ',
     'field_name' => 'field_rca_total_p_discharged',
     'type' => 'number_float',
     'module' => 'number',
@@ -21821,8 +22218,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -21867,82 +22264,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_rca54applied' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => 0,
-        1 => 1,
-      ),
-      'allowed_values_function' => '',
-    ),
-    'translatable' => '0',
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_rca54applied' => 
-            array (
-              'value' => 'field_rca54applied_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_rca54applied' => 
-            array (
-              'value' => 'field_rca54applied_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'id' => '125',
-    'field_name' => 'field_rca54applied',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -21996,7 +22319,7 @@ $list_field = array (
     array (
     ),
     'id' => '408',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ',
     'field_name' => 'field_rca_total_n_entering',
     'type' => 'number_float',
     'module' => 'number',
@@ -22238,7 +22561,7 @@ $list_field = array (
       ),
     ),
     'id' => '133',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Nitrogen Criteria that is defined to be reduced in this sensitive area due to nitrogen quality of drinking water when this receiving area is intended to be used for the asbtraction of drinking water. This criteria is related to the annex II.b of the urban waste water treatment directive 91/271/EC',
     'field_name' => 'field_rcab',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -22388,7 +22711,7 @@ $list_field = array (
       ),
     ),
     'id' => '419',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Phosphorus Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC',
     'field_name' => 'field_rca_parameter_p',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -22671,8 +22994,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -22717,8 +23040,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -22859,7 +23182,7 @@ $list_field = array (
       ),
     ),
     'id' => '132',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Date when the requirements of the sensitive area enter into force',
     'field_name' => 'field_rcaapstartdate',
     'type' => 'date',
     'module' => 'date',
@@ -22876,81 +23199,6 @@ $list_field = array (
         'not null' => false,
         'sortable' => true,
         'views' => true,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_rca52applied' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'allowed_values' => 
-      array (
-        0 => '0',
-        1 => '1',
-      ),
-      'allowed_values_function' => '',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_rca52applied' => 
-            array (
-              'value' => 'field_rca52applied_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_rca52applied' => 
-            array (
-              'value' => 'field_rca52applied_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-      'value' => 
-      array (
-        0 => 'value',
-      ),
-    ),
-    'id' => '428',
-    'custom_tooltip' => '',
-    'field_name' => 'field_rca52applied',
-    'type' => 'list_boolean',
-    'module' => 'list',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'int',
-        'not null' => false,
       ),
     ),
     'bundles' => 
@@ -23012,7 +23260,7 @@ $list_field = array (
       ),
     ),
     'id' => '136',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Other parameters related to further treatment than secondary treatment that are defined to fulfil other European directive objectives. This criteria is related to the annex II.c of the urban waste water treatment directive 91/271/EC',
     'field_name' => 'field_rcac',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -23087,7 +23335,7 @@ $list_field = array (
       ),
     ),
     'id' => '131',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Phosphorus Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC',
     'field_name' => 'field_rcaaphos',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -23291,7 +23539,7 @@ $list_field = array (
     array (
     ),
     'id' => '406',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Total Phosphorus incoming load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharges without treatment. For the smallest treatment plants and the discharged without treatment the calculation can include estimation. ',
     'field_name' => 'field_rca_total_p_entering',
     'type' => 'number_float',
     'module' => 'number',
@@ -23615,8 +23863,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -23661,8 +23909,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -23684,8 +23932,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -23730,8 +23978,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -24126,7 +24374,7 @@ $list_field = array (
       ),
     ),
     'id' => '418',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Nitrogen Criteria that is defined to be reduced in this sensitive area due to existing Eutrophication or potential future Eutrophication problems. This criteria is related to the annex II.a of the urban waste water treatment directive 91/271/EC',
     'field_name' => 'field_rca_parameter_n',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -24160,8 +24408,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 20,
-      'scale' => 8,
+      'precision' => 32,
+      'scale' => 2,
     ),
     'translatable' => '0',
     'storage' => 
@@ -24206,8 +24454,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 20,
-        'scale' => 8,
+        'precision' => 32,
+        'scale' => 2,
         'not null' => false,
       ),
     ),
@@ -24351,7 +24599,7 @@ $list_field = array (
       ),
     ),
     'id' => '420',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'When required agglomerations of more than 10 000 population equivalent that are discharging in this area have to implement a more stringent treatment adapted to the quality objectives of the directive that is related to designation criteria other',
     'field_name' => 'field_rca_parameter_other',
     'type' => 'list_boolean',
     'module' => 'list',
@@ -24417,7 +24665,7 @@ $list_field = array (
     array (
     ),
     'id' => '409',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Total Nitrogen discharged load of all treatment plants discharging in the sensitive area (in tons/year). The calculation has also to include the waste water load discharged without treatment. For the smallest treatment plants and the discharges without treatment the calculation can include estimation. ',
     'field_name' => 'field_rca_total_n_discharged',
     'type' => 'number_float',
     'module' => 'number',
@@ -24658,7 +24906,7 @@ $list_field = array (
       ),
     ),
     'id' => '137',
-    'custom_tooltip' => '',
+    'custom_tooltip' => 'Official date of designation of the sensitive area.',
     'field_name' => 'field_rcacdatedesignation',
     'type' => 'date',
     'module' => 'date',
@@ -24761,6 +25009,1480 @@ $list_field = array (
       array (
         'type' => 'varchar',
         'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rca_parameter_m' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rca_parameter_m' => 
+            array (
+              'value' => 'field_rca_parameter_m_value',
+              'format' => 'field_rca_parameter_m_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rca_parameter_m' => 
+            array (
+              'value' => 'field_rca_parameter_m_value',
+              'format' => 'field_rca_parameter_m_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '539',
+    'field_name' => 'field_rca_parameter_m',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcahyperlink' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcahyperlink' => 
+            array (
+              'value' => 'field_rcahyperlink_value',
+              'format' => 'field_rcahyperlink_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcahyperlink' => 
+            array (
+              'value' => 'field_rcahyperlink_value',
+              'format' => 'field_rcahyperlink_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '536',
+    'field_name' => 'field_rcahyperlink',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcabeginlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcabeginlife' => 
+            array (
+              'value' => 'field_rcabeginlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcabeginlife' => 
+            array (
+              'value' => 'field_rcabeginlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '537',
+    'field_name' => 'field_rcabeginlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rca61datedesignation' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rca61datedesignation' => 
+            array (
+              'value' => 'field_rca61datedesignation_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rca61datedesignation' => 
+            array (
+              'value' => 'field_rca61datedesignation_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '535',
+    'field_name' => 'field_rca61datedesignation',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcaendlife' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcaendlife' => 
+            array (
+              'value' => 'field_rcaendlife_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcaendlife' => 
+            array (
+              'value' => 'field_rcaendlife_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '538',
+    'field_name' => 'field_rcaendlife',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcaenvdom' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcaenvdom' => 
+            array (
+              'value' => 'field_rcaenvdom_value',
+              'format' => 'field_rcaenvdom_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcaenvdom' => 
+            array (
+              'value' => 'field_rcaenvdom_value',
+              'format' => 'field_rcaenvdom_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '534',
+    'field_name' => 'field_rcaenvdom',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcaart58datedesign' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcaart58datedesign' => 
+            array (
+              'value' => 'field_rcaart58datedesign_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcaart58datedesign' => 
+            array (
+              'value' => 'field_rcaart58datedesign_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '540',
+    'field_name' => 'field_rcaart58datedesign',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcaparameter' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcaparameter' => 
+            array (
+              'value' => 'field_rcaparameter_value',
+              'format' => 'field_rcaparameter_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcaparameter' => 
+            array (
+              'value' => 'field_rcaparameter_value',
+              'format' => 'field_rcaparameter_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '541',
+    'field_name' => 'field_rcaparameter',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcastartdate' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'todate' => '',
+      'granularity' => 
+      array (
+        'year' => 'year',
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcastartdate' => 
+            array (
+              'value' => 'field_rcastartdate_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcastartdate' => 
+            array (
+              'value' => 'field_rcastartdate_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '542',
+    'field_name' => 'field_rcastartdate',
+    'type' => 'date',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcamethod54' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcamethod54' => 
+            array (
+              'value' => 'field_rcamethod54_value',
+              'format' => 'field_rcamethod54_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcamethod54' => 
+            array (
+              'value' => 'field_rcamethod54_value',
+              'format' => 'field_rcamethod54_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '543',
+    'field_name' => 'field_rcamethod54',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcarelatedsa' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcarelatedsa' => 
+            array (
+              'value' => 'field_rcarelatedsa_value',
+              'format' => 'field_rcarelatedsa_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcarelatedsa' => 
+            array (
+              'value' => 'field_rcarelatedsa_value',
+              'format' => 'field_rcarelatedsa_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '544',
+    'field_name' => 'field_rcarelatedsa',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcarelatedsaremark' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcarelatedsaremark' => 
+            array (
+              'value' => 'field_rcarelatedsaremark_value',
+              'format' => 'field_rcarelatedsaremark_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcarelatedsaremark' => 
+            array (
+              'value' => 'field_rcarelatedsaremark_value',
+              'format' => 'field_rcarelatedsaremark_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '545',
+    'field_name' => 'field_rcarelatedsaremark',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcacodepredecessor' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcacodepredecessor' => 
+            array (
+              'value' => 'field_rcacodepredecessor_value',
+              'format' => 'field_rcacodepredecessor_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcacodepredecessor' => 
+            array (
+              'value' => 'field_rcacodepredecessor_value',
+              'format' => 'field_rcacodepredecessor_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '546',
+    'field_name' => 'field_rcacodepredecessor',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcaevolutiontype' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcaevolutiontype' => 
+            array (
+              'value' => 'field_rcaevolutiontype_value',
+              'format' => 'field_rcaevolutiontype_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcaevolutiontype' => 
+            array (
+              'value' => 'field_rcaevolutiontype_value',
+              'format' => 'field_rcaevolutiontype_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '547',
+    'field_name' => 'field_rcaevolutiontype',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rcasalsaremark' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+      'max_length' => 255,
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rcasalsaremark' => 
+            array (
+              'value' => 'field_rcasalsaremark_value',
+              'format' => 'field_rcasalsaremark_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rcasalsaremark' => 
+            array (
+              'value' => 'field_rcasalsaremark_value',
+              'format' => 'field_rcasalsaremark_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '548',
+    'field_name' => 'field_rcasalsaremark',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rca52applied' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => '0',
+        1 => '1',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rca52applied' => 
+            array (
+              'value' => 'field_rca52applied_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rca52applied' => 
+            array (
+              'value' => 'field_rca52applied_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '428',
+    'custom_tooltip' => 'When this Article of the urban waste water treatment directive 91/271/EC applies, Member States shall ensure that urban waste water entering collecting systems shall before discharge into this sensitive areas be subject to more stringent treatment for all discharges from agglomerations of more than 10 000 population equivalent. The starting date of application is the deadline that each agglomeration has to respect in this sensitive area.',
+    'field_name' => 'field_rca52applied',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rca54applied' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => 0,
+        1 => 1,
+      ),
+      'allowed_values_function' => '',
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rca54applied' => 
+            array (
+              'value' => 'field_rca54applied_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rca54applied' => 
+            array (
+              'value' => 'field_rca54applied_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '125',
+    'field_name' => 'field_rca54applied',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_rca58applied' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        0 => '0',
+        1 => '1',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_rca58applied' => 
+            array (
+              'value' => 'field_rca58applied_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_rca58applied' => 
+            array (
+              'value' => 'field_rca58applied_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'id' => '429',
+    'custom_tooltip' => '',
+    'field_name' => 'field_rca58applied',
+    'type' => 'list_boolean',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
         'not null' => false,
       ),
     ),
@@ -24882,72 +26604,6 @@ $list_field = array (
     'id' => '460',
     'custom_tooltip' => '',
     'field_name' => 'field_mslsludgeproduction',
-    'type' => 'number_float',
-    'module' => 'number',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'float',
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_mslreusesoilagriculture' => 
-  array (
-    'translatable' => '0',
-    'entity_types' => 
-    array (
-    ),
-    'settings' => 
-    array (
-      'decimal_separator' => '.',
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_mslreusesoilagriculture' => 
-            array (
-              'value' => 'field_mslreusesoilagriculture_value',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_mslreusesoilagriculture' => 
-            array (
-              'value' => 'field_mslreusesoilagriculture_value',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-    ),
-    'indexes' => 
-    array (
-    ),
-    'id' => '464',
-    'custom_tooltip' => 'Of which: re-used: Soil and agriculture (t DS/y)',
-    'field_name' => 'field_mslreusesoilagriculture',
     'type' => 'number_float',
     'module' => 'number',
     'active' => '1',
@@ -25828,7 +27484,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_art17_flaggotherfundname' => 
+  'field_comparison_of_compliance_a' => 
   array (
     'entity_types' => 
     array (
@@ -25851,18 +27507,18 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_art17_flaggotherfundname' => 
+            'field_data_field_comparison_of_compliance_a' => 
             array (
-              'value' => 'field_art17_flaggotherfundname_value',
-              'format' => 'field_art17_flaggotherfundname_format',
+              'value' => 'field_comparison_of_compliance_a_value',
+              'format' => 'field_comparison_of_compliance_a_format',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_art17_flaggotherfundname' => 
+            'field_revision_field_comparison_of_compliance_a' => 
             array (
-              'value' => 'field_art17_flaggotherfundname_value',
-              'format' => 'field_art17_flaggotherfundname_format',
+              'value' => 'field_comparison_of_compliance_a_value',
+              'format' => 'field_comparison_of_compliance_a_format',
             ),
           ),
         ),
@@ -25886,8 +27542,8 @@ $list_field = array (
         0 => 'format',
       ),
     ),
-    'id' => '493',
-    'field_name' => 'field_art17_flaggotherfundname',
+    'id' => '527',
+    'field_name' => 'field_comparison_of_compliance_a',
     'type' => 'text_long',
     'module' => 'text',
     'active' => '1',
@@ -25913,7 +27569,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_art17_flaggloan' => 
+  'field_compliance_pending' => 
   array (
     'entity_types' => 
     array (
@@ -25936,16 +27592,187 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_art17_flaggloan' => 
+            'field_data_field_compliance_pending' => 
             array (
-              'value' => 'field_art17_flaggloan_value',
+              'value' => 'field_compliance_pending_value',
+              'format' => 'field_compliance_pending_format',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_art17_flaggloan' => 
+            'field_revision_field_compliance_pending' => 
             array (
-              'value' => 'field_art17_flaggloan_value',
+              'value' => 'field_compliance_pending_value',
+              'format' => 'field_compliance_pending_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '550',
+    'field_name' => 'field_compliance_pending',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_compliance_total' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_compliance_total' => 
+            array (
+              'value' => 'field_compliance_total_value',
+              'format' => 'field_compliance_total_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_compliance_total' => 
+            array (
+              'value' => 'field_compliance_total_value',
+              'format' => 'field_compliance_total_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '551',
+    'field_name' => 'field_compliance_total',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_mslreusesoilagriculture' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_mslreusesoilagriculture' => 
+            array (
+              'value' => 'field_mslreusesoilagriculture_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_mslreusesoilagriculture' => 
+            array (
+              'value' => 'field_mslreusesoilagriculture_value',
             ),
           ),
         ),
@@ -25957,9 +27784,10 @@ $list_field = array (
     'indexes' => 
     array (
     ),
-    'id' => '494',
-    'field_name' => 'field_art17_flaggloan',
-    'type' => 'number_integer',
+    'id' => '464',
+    'custom_tooltip' => 'Of which: re-used: Soil and agriculture (t DS/y)',
+    'field_name' => 'field_mslreusesoilagriculture',
+    'type' => 'number_float',
     'module' => 'number',
     'active' => '1',
     'locked' => '0',
@@ -25969,7 +27797,7 @@ $list_field = array (
     array (
       'value' => 
       array (
-        'type' => 'int',
+        'type' => 'float',
         'not null' => false,
       ),
     ),
@@ -25977,7 +27805,7 @@ $list_field = array (
     array (
     ),
   ),
-  'field_art17_flaggloanname' => 
+  'field_comparison_of_compliance_p' => 
   array (
     'entity_types' => 
     array (
@@ -26000,18 +27828,18 @@ $list_field = array (
         array (
           'FIELD_LOAD_CURRENT' => 
           array (
-            'field_data_field_art17_flaggloanname' => 
+            'field_data_field_comparison_of_compliance_p' => 
             array (
-              'value' => 'field_art17_flaggloanname_value',
-              'format' => 'field_art17_flaggloanname_format',
+              'value' => 'field_comparison_of_compliance_p_value',
+              'format' => 'field_comparison_of_compliance_p_format',
             ),
           ),
           'FIELD_LOAD_REVISION' => 
           array (
-            'field_revision_field_art17_flaggloanname' => 
+            'field_revision_field_comparison_of_compliance_p' => 
             array (
-              'value' => 'field_art17_flaggloanname_value',
-              'format' => 'field_art17_flaggloanname_format',
+              'value' => 'field_comparison_of_compliance_p_value',
+              'format' => 'field_comparison_of_compliance_p_format',
             ),
           ),
         ),
@@ -26035,8 +27863,8 @@ $list_field = array (
         0 => 'format',
       ),
     ),
-    'id' => '495',
-    'field_name' => 'field_art17_flaggloanname',
+    'id' => '526',
+    'field_name' => 'field_comparison_of_compliance_p',
     'type' => 'text_long',
     'module' => 'text',
     'active' => '1',
@@ -26055,6 +27883,194 @@ $list_field = array (
       array (
         'type' => 'varchar',
         'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_compliance_expired' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_compliance_expired' => 
+            array (
+              'value' => 'field_compliance_expired_value',
+              'format' => 'field_compliance_expired_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_compliance_expired' => 
+            array (
+              'value' => 'field_compliance_expired_value',
+              'format' => 'field_compliance_expired_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '549',
+    'field_name' => 'field_compliance_expired',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_article_17_ms_level' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'referenceable_types' => 
+      array (
+        'article_17_ms_level' => 'article_17_ms_level',
+        'agglomeration' => 0,
+        'agglo_uww' => 0,
+        'article' => 0,
+        'article_17_agglomeration' => 0,
+        'article_17_uwwtp' => 0,
+        'page' => 0,
+        'big_city' => 0,
+        'discharge_point' => 0,
+        'uwwtd_error' => 0,
+        'forum' => 0,
+        'ms_level' => 0,
+        'receiving_area' => 0,
+        'uwwtp' => 0,
+      ),
+      'view' => 
+      array (
+        'view_name' => '',
+        'display_name' => '',
+        'args' => 
+        array (
+        ),
+      ),
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_article_17_ms_level' => 
+            array (
+              'nid' => 'field_article_17_ms_level_nid',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_article_17_ms_level' => 
+            array (
+              'nid' => 'field_article_17_ms_level_nid',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'nid' => 
+      array (
+        'table' => 'node',
+        'columns' => 
+        array (
+          'nid' => 'nid',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'nid' => 
+      array (
+        0 => 'nid',
+      ),
+    ),
+    'id' => '569',
+    'custom_tooltip' => '',
+    'field_name' => 'field_article_17_ms_level',
+    'type' => 'node_reference',
+    'module' => 'node_reference',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'nid' => 
+      array (
+        'type' => 'int',
+        'unsigned' => true,
         'not null' => false,
       ),
     ),
@@ -26829,7 +28845,7 @@ $list_field = array (
     'translatable' => '0',
     'settings' => 
     array (
-      'precision' => 10,
+      'precision' => 32,
       'scale' => 2,
       'decimal_separator' => '.',
     ),
@@ -26881,7 +28897,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 10,
+        'precision' => 32,
         'scale' => 2,
         'not null' => false,
       ),
@@ -27196,7 +29212,7 @@ $list_field = array (
     'translatable' => '0',
     'settings' => 
     array (
-      'precision' => 10,
+      'precision' => 32,
       'scale' => 2,
       'decimal_separator' => '.',
     ),
@@ -27248,7 +29264,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 10,
+        'precision' => 32,
         'scale' => 2,
         'not null' => false,
       ),
@@ -27265,7 +29281,7 @@ $list_field = array (
     'translatable' => '0',
     'settings' => 
     array (
-      'precision' => 10,
+      'precision' => 32,
       'scale' => 2,
       'decimal_separator' => '.',
     ),
@@ -27317,7 +29333,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 10,
+        'precision' => 32,
         'scale' => 2,
         'not null' => false,
       ),
@@ -27383,6 +29399,495 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flaggotherfundname' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flaggotherfundname' => 
+            array (
+              'value' => 'field_art17_flaggotherfundname_value',
+              'format' => 'field_art17_flaggotherfundname_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flaggotherfundname' => 
+            array (
+              'value' => 'field_art17_flaggotherfundname_value',
+              'format' => 'field_art17_flaggotherfundname_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '493',
+    'field_name' => 'field_art17_flaggotherfundname',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flaggloan' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flaggloan' => 
+            array (
+              'value' => 'field_art17_flaggloan_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flaggloan' => 
+            array (
+              'value' => 'field_art17_flaggloan_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '494',
+    'field_name' => 'field_art17_flaggloan',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flaggloanname' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flaggloanname' => 
+            array (
+              'value' => 'field_art17_flaggloanname_value',
+              'format' => 'field_art17_flaggloanname_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flaggloanname' => 
+            array (
+              'value' => 'field_art17_flaggloanname_value',
+              'format' => 'field_art17_flaggloanname_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '495',
+    'field_name' => 'field_art17_flaggloanname',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flatpreasons' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flatpreasons' => 
+            array (
+              'value' => 'field_art17_flatpreasons_value',
+              'format' => 'field_art17_flatpreasons_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flatpreasons' => 
+            array (
+              'value' => 'field_art17_flatpreasons_value',
+              'format' => 'field_art17_flatpreasons_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '502',
+    'field_name' => 'field_art17_flatpreasons',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flatpmeasures' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flatpmeasures' => 
+            array (
+              'value' => 'field_art17_flatpmeasures_value',
+              'format' => 'field_art17_flatpmeasures_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flatpmeasures' => 
+            array (
+              'value' => 'field_art17_flatpmeasures_value',
+              'format' => 'field_art17_flatpmeasures_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '503',
+    'field_name' => 'field_art17_flatpmeasures',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_art17_flatpcomments' => 
+  array (
+    'entity_types' => 
+    array (
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_art17_flatpcomments' => 
+            array (
+              'value' => 'field_art17_flatpcomments_value',
+              'format' => 'field_art17_flatpcomments_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_art17_flatpcomments' => 
+            array (
+              'value' => 'field_art17_flatpcomments_value',
+              'format' => 'field_art17_flatpcomments_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '514',
+    'field_name' => 'field_art17_flatpcomments',
+    'type' => 'text_long',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => false,
       ),
     ),
@@ -27895,176 +30400,6 @@ $list_field = array (
       array (
         'type' => 'varchar',
         'length' => 255,
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_art17_flatpreasons' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'translatable' => '0',
-    'settings' => 
-    array (
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_art17_flatpreasons' => 
-            array (
-              'value' => 'field_art17_flatpreasons_value',
-              'format' => 'field_art17_flatpreasons_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_art17_flatpreasons' => 
-            array (
-              'value' => 'field_art17_flatpreasons_value',
-              'format' => 'field_art17_flatpreasons_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'id' => '502',
-    'field_name' => 'field_art17_flatpreasons',
-    'type' => 'text_long',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
-  'field_art17_flatpmeasures' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'translatable' => '0',
-    'settings' => 
-    array (
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_art17_flatpmeasures' => 
-            array (
-              'value' => 'field_art17_flatpmeasures_value',
-              'format' => 'field_art17_flatpmeasures_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_art17_flatpmeasures' => 
-            array (
-              'value' => 'field_art17_flatpmeasures_value',
-              'format' => 'field_art17_flatpmeasures_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'id' => '503',
-    'field_name' => 'field_art17_flatpmeasures',
-    'type' => 'text_long',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'text',
-        'size' => 'big',
         'not null' => false,
       ),
       'format' => 
@@ -28829,91 +31164,6 @@ $list_field = array (
     array (
     ),
   ),
-  'field_art17_flatpcomments' => 
-  array (
-    'entity_types' => 
-    array (
-    ),
-    'translatable' => '0',
-    'settings' => 
-    array (
-    ),
-    'storage' => 
-    array (
-      'type' => 'field_sql_storage',
-      'settings' => 
-      array (
-      ),
-      'module' => 'field_sql_storage',
-      'active' => '1',
-      'details' => 
-      array (
-        'sql' => 
-        array (
-          'FIELD_LOAD_CURRENT' => 
-          array (
-            'field_data_field_art17_flatpcomments' => 
-            array (
-              'value' => 'field_art17_flatpcomments_value',
-              'format' => 'field_art17_flatpcomments_format',
-            ),
-          ),
-          'FIELD_LOAD_REVISION' => 
-          array (
-            'field_revision_field_art17_flatpcomments' => 
-            array (
-              'value' => 'field_art17_flatpcomments_value',
-              'format' => 'field_art17_flatpcomments_format',
-            ),
-          ),
-        ),
-      ),
-    ),
-    'foreign keys' => 
-    array (
-      'format' => 
-      array (
-        'table' => 'filter_format',
-        'columns' => 
-        array (
-          'format' => 'format',
-        ),
-      ),
-    ),
-    'indexes' => 
-    array (
-      'format' => 
-      array (
-        0 => 'format',
-      ),
-    ),
-    'id' => '514',
-    'field_name' => 'field_art17_flatpcomments',
-    'type' => 'text_long',
-    'module' => 'text',
-    'active' => '1',
-    'locked' => '0',
-    'cardinality' => '1',
-    'deleted' => '0',
-    'columns' => 
-    array (
-      'value' => 
-      array (
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => false,
-      ),
-      'format' => 
-      array (
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => false,
-      ),
-    ),
-    'bundles' => 
-    array (
-    ),
-  ),
   'field_art17_flatpexploadtruck' => 
   array (
     'entity_types' => 
@@ -28922,7 +31172,7 @@ $list_field = array (
     'translatable' => '0',
     'settings' => 
     array (
-      'precision' => 10,
+      'precision' => 32,
       'scale' => 2,
       'decimal_separator' => '.',
     ),
@@ -28974,7 +31224,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 10,
+        'precision' => 32,
         'scale' => 2,
         'not null' => false,
       ),
@@ -29281,6 +31531,1519 @@ $list_field = array (
     array (
     ),
   ),
+  'body' => 
+  array (
+    'entity_types' => 
+    array (
+      0 => 'node',
+    ),
+    'translatable' => '0',
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_body' => 
+            array (
+              'value' => 'body_value',
+              'summary' => 'body_summary',
+              'format' => 'body_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_body' => 
+            array (
+              'value' => 'body_value',
+              'summary' => 'body_summary',
+              'format' => 'body_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '2',
+    'field_name' => 'body',
+    'type' => 'text_with_summary',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'summary' => 
+      array (
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_linked_ms_level' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'referenceable_types' => 
+      array (
+        'ms_level' => 'ms_level',
+        'agglomeration' => 0,
+        'agglo_uww' => 0,
+        'article' => 0,
+        'article_17_ms_level' => 0,
+        'article_17_agglomeration' => 0,
+        'article_17_uwwtp' => 0,
+        'page' => 0,
+        'big_city' => 0,
+        'discharge_point' => 0,
+        'uwwtd_error' => 0,
+        'forum' => 0,
+        'receiving_area' => 0,
+        'uwwtp' => 0,
+      ),
+      'view' => 
+      array (
+        'view_name' => '',
+        'display_name' => '',
+        'args' => 
+        array (
+        ),
+      ),
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_linked_ms_level' => 
+            array (
+              'nid' => 'field_linked_ms_level_nid',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_linked_ms_level' => 
+            array (
+              'nid' => 'field_linked_ms_level_nid',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'nid' => 
+      array (
+        'table' => 'node',
+        'columns' => 
+        array (
+          'nid' => 'nid',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'nid' => 
+      array (
+        0 => 'nid',
+      ),
+    ),
+    'id' => '572',
+    'custom_tooltip' => '',
+    'field_name' => 'field_linked_ms_level',
+    'type' => 'node_reference',
+    'module' => 'node_reference',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'nid' => 
+      array (
+        'type' => 'int',
+        'unsigned' => true,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecinvcol' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecinvcol' => 
+            array (
+              'value' => 'field_soecinvcol_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecinvcol' => 
+            array (
+              'value' => 'field_soecinvcol_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '557',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecinvcol',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecinvcomments' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'max_length' => '1000',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecinvcomments' => 
+            array (
+              'value' => 'field_soecinvcomments_value',
+              'format' => 'field_soecinvcomments_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecinvcomments' => 
+            array (
+              'value' => 'field_soecinvcomments_value',
+              'format' => 'field_soecinvcomments_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '559',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecinvcomments',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => '1000',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeccode' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'max_length' => '255',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeccode' => 
+            array (
+              'value' => 'field_soeccode_value',
+              'format' => 'field_soeccode_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeccode' => 
+            array (
+              'value' => 'field_soeccode_value',
+              'format' => 'field_soeccode_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '552',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeccode',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecendyear' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'granularity' => 
+      array (
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'year' => 'year',
+        'second' => 0,
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+      'cache_enabled' => 0,
+      'cache_count' => '4',
+      'todate' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecendyear' => 
+            array (
+              'value' => 'field_soecendyear_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecendyear' => 
+            array (
+              'value' => 'field_soecendyear_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '554',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecendyear',
+    'type' => 'datetime',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'pgsql_type' => 'timestamp without time zone',
+        'sqlite_type' => 'varchar',
+        'sqlsrv_type' => 'smalldatetime',
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecopcosts' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecopcosts' => 
+            array (
+              'value' => 'field_soecopcosts_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecopcosts' => 
+            array (
+              'value' => 'field_soecopcosts_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '561',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecopcosts',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecperiod' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'max_length' => '255',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecperiod' => 
+            array (
+              'value' => 'field_soecperiod_value',
+              'format' => 'field_soecperiod_format',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecperiod' => 
+            array (
+              'value' => 'field_soecperiod_value',
+              'format' => 'field_soecperiod_format',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+      'format' => 
+      array (
+        'table' => 'filter_format',
+        'columns' => 
+        array (
+          'format' => 'format',
+        ),
+      ),
+    ),
+    'indexes' => 
+    array (
+      'format' => 
+      array (
+        0 => 'format',
+      ),
+    ),
+    'id' => '555',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecperiod',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => false,
+      ),
+      'format' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecstartyear' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'granularity' => 
+      array (
+        'month' => 'month',
+        'day' => 'day',
+        'hour' => 'hour',
+        'minute' => 'minute',
+        'year' => 'year',
+        'second' => 0,
+      ),
+      'tz_handling' => 'site',
+      'timezone_db' => 'UTC',
+      'cache_enabled' => 0,
+      'cache_count' => '4',
+      'todate' => '',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecstartyear' => 
+            array (
+              'value' => 'field_soecstartyear_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecstartyear' => 
+            array (
+              'value' => 'field_soecstartyear_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '553',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecstartyear',
+    'type' => 'datetime',
+    'module' => 'date',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'datetime',
+        'mysql_type' => 'datetime',
+        'pgsql_type' => 'timestamp without time zone',
+        'sqlite_type' => 'varchar',
+        'sqlsrv_type' => 'smalldatetime',
+        'not null' => false,
+        'sortable' => true,
+        'views' => true,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeclenghtcocs' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeclenghtcocs' => 
+            array (
+              'value' => 'field_soeclenghtcocs_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeclenghtcocs' => 
+            array (
+              'value' => 'field_soeclenghtcocs_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '564',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeclenghtcocs',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecinvias' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecinvias' => 
+            array (
+              'value' => 'field_soecinvias_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecinvias' => 
+            array (
+              'value' => 'field_soecinvias_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '560',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecinvias',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeceufunds' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeceufunds' => 
+            array (
+              'value' => 'field_soeceufunds_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeceufunds' => 
+            array (
+              'value' => 'field_soeceufunds_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '562',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeceufunds',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecjobs' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecjobs' => 
+            array (
+              'value' => 'field_soecjobs_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecjobs' => 
+            array (
+              'value' => 'field_soecjobs_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '563',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecjobs',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecnumbias' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecnumbias' => 
+            array (
+              'value' => 'field_soecnumbias_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecnumbias' => 
+            array (
+              'value' => 'field_soecnumbias_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '567',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecnumbias',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecpop' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecpop' => 
+            array (
+              'value' => 'field_soecpop_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecpop' => 
+            array (
+              'value' => 'field_soecpop_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '568',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecpop',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeclenghtstcs' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeclenghtstcs' => 
+            array (
+              'value' => 'field_soeclenghtstcs_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeclenghtstcs' => 
+            array (
+              'value' => 'field_soeclenghtstcs_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '566',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeclenghtstcs',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeclenghtsacs' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeclenghtsacs' => 
+            array (
+              'value' => 'field_soeclenghtsacs_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeclenghtsacs' => 
+            array (
+              'value' => 'field_soeclenghtsacs_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '565',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeclenghtsacs',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soecinvtp' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+      'precision' => '10',
+      'scale' => '2',
+      'decimal_separator' => '.',
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soecinvtp' => 
+            array (
+              'value' => 'field_soecinvtp_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soecinvtp' => 
+            array (
+              'value' => 'field_soecinvtp_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '558',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soecinvtp',
+    'type' => 'number_decimal',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'numeric',
+        'precision' => '10',
+        'scale' => '2',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_soeccapacity' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_soeccapacity' => 
+            array (
+              'value' => 'field_soeccapacity_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_soeccapacity' => 
+            array (
+              'value' => 'field_soeccapacity_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '556',
+    'custom_tooltip' => '',
+    'field_name' => 'field_soeccapacity',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
+  'field_year_of_datas' => 
+  array (
+    'translatable' => '0',
+    'entity_types' => 
+    array (
+    ),
+    'settings' => 
+    array (
+    ),
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_year_of_datas' => 
+            array (
+              'value' => 'field_year_of_datas_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_year_of_datas' => 
+            array (
+              'value' => 'field_year_of_datas_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+    ),
+    'id' => '571',
+    'custom_tooltip' => '',
+    'field_name' => 'field_year_of_datas',
+    'type' => 'number_integer',
+    'module' => 'number',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'int',
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
+  ),
 );
 $list_contenttype = array (
   'agglomeration' => 
@@ -29370,55 +33133,6 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '9',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Article 5 compliance',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '83',
-        ),
-        'id' => '362',
-        'field_id' => '284',
-        'field_name' => 'field_aggart5compliance',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      2 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
             'type' => 'text_default',
             'weight' => '15',
             'settings' => 
@@ -29457,6 +33171,55 @@ $list_contenttype = array (
         'id' => '431',
         'field_id' => '72',
         'field_name' => 'field_namenativeness',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      2 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '9',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => '3rd treatment compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '83',
+        ),
+        'id' => '362',
+        'field_id' => '284',
+        'field_name' => 'field_aggart5compliance',
         'entity_type' => 'node',
         'bundle' => 'agglomeration',
         'deleted' => '0',
@@ -29628,54 +33391,6 @@ $list_contenttype = array (
       ),
       6 => 
       array (
-        'label' => 'Article 6 compliance',
-        'widget' => 
-        array (
-          'type' => 'options_select',
-          'weight' => '102',
-          'settings' => 
-          array (
-          ),
-          'module' => 'options',
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '135',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '604',
-        'field_id' => '459',
-        'field_name' => 'field_aggart6compliance',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      7 => 
-      array (
         'default_value' => NULL,
         'description' => '',
         'display' => 
@@ -29725,7 +33440,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      8 => 
+      7 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -29776,7 +33491,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      9 => 
+      8 => 
       array (
         'default_value' => 
         array (
@@ -29831,7 +33546,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      10 => 
+      9 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -29882,7 +33597,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      11 => 
+      10 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -29933,7 +33648,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      12 => 
+      11 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -29984,7 +33699,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      13 => 
+      12 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30014,7 +33729,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Individual and Appropriate Systems (IAS)',
+        'label' => 'Individual or Appropriate Systems (IAS)',
         'required' => 0,
         'settings' => 
         array (
@@ -30041,7 +33756,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      14 => 
+      13 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30092,58 +33807,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      15 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '91',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Type of collecing system: combined, separated or both?',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '40',
-        ),
-        'id' => '405',
-        'field_id' => '327',
-        'field_name' => 'field_aggsewagenetwork',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      16 => 
+      14 => 
       array (
         'description' => '',
         'display' => 
@@ -30209,7 +33873,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      17 => 
+      15 => 
       array (
         'default_value' => 
         array (
@@ -30264,7 +33928,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      18 => 
+      16 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30315,7 +33979,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      19 => 
+      17 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30366,7 +34030,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      20 => 
+      18 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30417,7 +34081,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      21 => 
+      19 => 
       array (
         'label' => 'Linked discharge points',
         'widget' => 
@@ -30469,7 +34133,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      22 => 
+      20 => 
       array (
         'default_value' => 
         array (
@@ -30524,7 +34188,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      23 => 
+      21 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30575,7 +34239,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      24 => 
+      22 => 
       array (
         'label' => 'Errors',
         'widget' => 
@@ -30627,7 +34291,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      25 => 
+      23 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30678,7 +34342,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      26 => 
+      24 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30729,7 +34393,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      27 => 
+      25 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30780,7 +34444,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      28 => 
+      26 => 
       array (
         'label' => 'Linked treatment plants',
         'widget' => 
@@ -30828,7 +34492,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      29 => 
+      27 => 
       array (
         'default_value' => 
         array (
@@ -30880,7 +34544,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      30 => 
+      28 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -30931,104 +34595,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      31 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '7',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Article 3 compliance',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '81',
-        ),
-        'id' => '360',
-        'field_id' => '282',
-        'field_name' => 'field_aggart3compliance',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      32 => 
-      array (
-        'label' => 'Additionnal Compliance article3',
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'list_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-            'weight' => 136,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'widget' => 
-        array (
-          'type' => 'options_select',
-          'settings' => 
-          array (
-          ),
-          'weight' => 103,
-          'module' => 'options',
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '627',
-        'field_id' => '475',
-        'field_name' => 'field_aggart3addcompliance',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      33 => 
+      29 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31080,7 +34647,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      34 => 
+      30 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31137,139 +34704,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      35 => 
-      array (
-        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 3',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'date_default',
-            'weight' => '74',
-            'settings' => 
-            array (
-              'format_type' => 'short',
-              'fromto' => 'both',
-              'multiple_from' => '',
-              'multiple_number' => '',
-              'multiple_to' => '',
-              'show_remaining_days' => false,
-            ),
-            'module' => 'date',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Deadline article 3',
-        'required' => 0,
-        'settings' => 
-        array (
-          'default_value' => 'now',
-          'default_value_code' => '',
-          'default_value2' => 'same',
-          'default_value_code2' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '23',
-          'type' => 'date_text',
-          'module' => 'date',
-          'active' => 1,
-          'settings' => 
-          array (
-            'input_format' => 'm/d/Y - H:i:s',
-            'input_format_custom' => '',
-            'year_range' => '-3:+3',
-            'increment' => 15,
-            'label_position' => 'above',
-            'text_parts' => 
-            array (
-            ),
-          ),
-        ),
-        'id' => '399',
-        'field_id' => '321',
-        'field_name' => 'field_aggperiodover3',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      36 => 
-      array (
-        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 4',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'date_default',
-            'weight' => '76',
-            'settings' => 
-            array (
-              'format_type' => 'short',
-              'fromto' => 'both',
-              'multiple_from' => '',
-              'multiple_number' => '',
-              'multiple_to' => '',
-              'show_remaining_days' => false,
-            ),
-            'module' => 'date',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Deadline article 4',
-        'required' => 0,
-        'settings' => 
-        array (
-          'default_value' => 'now',
-          'default_value_code' => '',
-          'default_value2' => 'same',
-          'default_value_code2' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '25',
-          'type' => 'date_text',
-          'module' => 'date',
-          'active' => 1,
-          'settings' => 
-          array (
-            'input_format' => 'm/d/Y - H:i:s',
-            'input_format_custom' => '',
-            'year_range' => '-3:+3',
-            'increment' => 15,
-            'label_position' => 'above',
-            'text_parts' => 
-            array (
-            ),
-          ),
-        ),
-        'id' => '400',
-        'field_id' => '322',
-        'field_name' => 'field_aggperiodover4',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      37 => 
+      31 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31319,7 +34754,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      38 => 
+      32 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31367,10 +34802,10 @@ $list_contenttype = array (
         'field_id' => '399',
         'field_name' => 'field_zonetype',
         'entity_type' => 'node',
-        'bundle' => 'receiving_area',
+        'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      39 => 
+      33 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31421,7 +34856,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      40 => 
+      34 => 
       array (
         'description' => '',
         'display' => 
@@ -31487,7 +34922,73 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      41 => 
+      35 => 
+      array (
+        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 4',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'date_default',
+            'weight' => '76',
+            'settings' => 
+            array (
+              'format_type' => 'short',
+              'fromto' => 'both',
+              'multiple_from' => '',
+              'multiple_number' => '',
+              'multiple_to' => '',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Deadline 2nd treatment compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '25',
+          'type' => 'date_text',
+          'module' => 'date',
+          'active' => 1,
+          'settings' => 
+          array (
+            'input_format' => 'm/d/Y - H:i:s',
+            'input_format_custom' => '',
+            'year_range' => '-3:+3',
+            'increment' => 15,
+            'label_position' => 'above',
+            'text_parts' => 
+            array (
+            ),
+          ),
+        ),
+        'id' => '400',
+        'field_id' => '322',
+        'field_name' => 'field_aggperiodover4',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      36 => 
       array (
         'default_value' => NULL,
         'description' => 'Is a registration system for leaks in place?',
@@ -31538,7 +35039,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      42 => 
+      37 => 
       array (
         'default_value' => 
         array (
@@ -31593,7 +35094,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      43 => 
+      38 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31644,7 +35145,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      44 => 
+      39 => 
       array (
         'label' => 'What are the measures based on: Dilution rates',
         'widget' => 
@@ -31693,107 +35194,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      45 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '8',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Article 4 compliance',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '82',
-        ),
-        'id' => '361',
-        'field_id' => '283',
-        'field_name' => 'field_aggart4compliance',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      46 => 
-      array (
-        'default_value' => NULL,
-        'description' => 'Is a maintenance plan (quality assurance) in place?',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '96',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Maintenance plan',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '45',
-        ),
-        'id' => '380',
-        'field_id' => '302',
-        'field_name' => 'field_aggexistmaintenanceplan',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      47 => 
+      40 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31844,7 +35245,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      48 => 
+      41 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31896,7 +35297,58 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      49 => 
+      42 => 
+      array (
+        'default_value' => NULL,
+        'description' => 'Is a maintenance plan (quality assurance) in place?',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '96',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Maintenance plan',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '45',
+        ),
+        'id' => '380',
+        'field_id' => '302',
+        'field_name' => 'field_aggexistmaintenanceplan',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      43 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31947,7 +35399,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      50 => 
+      44 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -31998,7 +35450,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      51 => 
+      45 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32049,7 +35501,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      52 => 
+      46 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32100,7 +35552,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      53 => 
+      47 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32151,73 +35603,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      54 => 
-      array (
-        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 5',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'date_default',
-            'weight' => '78',
-            'settings' => 
-            array (
-              'format_type' => 'short',
-              'fromto' => 'both',
-              'multiple_from' => '',
-              'multiple_number' => '',
-              'multiple_to' => '',
-              'show_remaining_days' => false,
-            ),
-            'module' => 'date',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Deadline article 5',
-        'required' => 0,
-        'settings' => 
-        array (
-          'default_value' => 'now',
-          'default_value_code' => '',
-          'default_value2' => 'same',
-          'default_value_code2' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '27',
-          'type' => 'date_text',
-          'module' => 'date',
-          'active' => 1,
-          'settings' => 
-          array (
-            'input_format' => 'm/d/Y - H:i:s',
-            'input_format_custom' => '',
-            'year_range' => '-3:+3',
-            'increment' => 15,
-            'label_position' => 'above',
-            'text_parts' => 
-            array (
-            ),
-          ),
-        ),
-        'id' => '401',
-        'field_id' => '323',
-        'field_name' => 'field_aggperiodover5',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      55 => 
+      48 => 
       array (
         'label' => 'Linked discharge point(s)',
         'widget' => 
@@ -32268,7 +35654,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      56 => 
+      49 => 
       array (
         'default_value' => 
         array (
@@ -32323,7 +35709,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      57 => 
+      50 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32380,64 +35766,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      58 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '86',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Discharge without treatment',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '35',
-        ),
-        'id' => '398',
-        'field_id' => '320',
-        'field_name' => 'field_aggpercwithouttreatment',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      59 => 
+      51 => 
       array (
         'default_value' => NULL,
         'description' => 'Linked Urban Waste Water Treatment plant(s)',
@@ -32489,7 +35818,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      60 => 
+      52 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32546,7 +35875,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      61 => 
+      53 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32597,7 +35926,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      62 => 
+      54 => 
       array (
         'default_value' => 
         array (
@@ -32649,7 +35978,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      63 => 
+      55 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32700,64 +36029,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      64 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '82',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Collective system',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '31',
-        ),
-        'id' => '366',
-        'field_id' => '288',
-        'field_name' => 'field_aggc1',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      65 => 
+      56 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32808,7 +36080,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      66 => 
+      57 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32859,7 +36131,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      67 => 
+      58 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32910,7 +36182,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      68 => 
+      59 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -32967,7 +36239,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      69 => 
+      60 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33018,7 +36290,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      70 => 
+      61 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33069,7 +36341,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      71 => 
+      62 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33120,7 +36392,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      72 => 
+      63 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33177,7 +36449,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      73 => 
+      64 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33228,7 +36500,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      74 => 
+      65 => 
       array (
         'label' => 'Indicate number of overflows',
         'widget' => 
@@ -33285,7 +36557,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      75 => 
+      66 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33336,7 +36608,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      76 => 
+      67 => 
       array (
         'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 6',
         'display' => 
@@ -33395,7 +36667,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      77 => 
+      68 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33446,7 +36718,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      78 => 
+      69 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33503,7 +36775,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      79 => 
+      70 => 
       array (
         'description' => '',
         'display' => 
@@ -33562,7 +36834,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      80 => 
+      71 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33634,7 +36906,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      81 => 
+      72 => 
       array (
         'default_value' => 
         array (
@@ -33689,58 +36961,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      82 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '70',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'ID of the big city/ big discharger',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '19',
-        ),
-        'id' => '365',
-        'field_id' => '287',
-        'field_name' => 'field_aggbigid',
-        'entity_type' => 'node',
-        'bundle' => 'agglomeration',
-        'deleted' => '0',
-      ),
-      83 => 
+      73 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -33797,7 +37018,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      84 => 
+      74 => 
       array (
         'description' => '',
         'display' => 
@@ -33863,7 +37084,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      85 => 
+      75 => 
       array (
         'label' => 'Linked receiving areas',
         'widget' => 
@@ -33915,7 +37136,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      86 => 
+      76 => 
       array (
         'label' => 'What are the measures based on: Capacity in relation to dry weather flow',
         'widget' => 
@@ -33964,7 +37185,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      87 => 
+      77 => 
       array (
         'label' => 'What are the measures based on: Acceptable number of overflows per year',
         'widget' => 
@@ -34013,7 +37234,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      88 => 
+      78 => 
       array (
         'default_value' => 
         array (
@@ -34065,7 +37286,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      89 => 
+      79 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -34116,7 +37337,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      90 => 
+      80 => 
       array (
         'description' => '',
         'display' => 
@@ -34169,7 +37390,106 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      91 => 
+      81 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '70',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'ID of the big city/ big discharger',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '19',
+        ),
+        'id' => '365',
+        'field_id' => '287',
+        'field_name' => 'field_aggbigid',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      82 => 
+      array (
+        'label' => 'Article 6 compliance',
+        'widget' => 
+        array (
+          'type' => 'options_select',
+          'weight' => '102',
+          'settings' => 
+          array (
+          ),
+          'module' => 'options',
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '135',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '604',
+        'field_id' => '459',
+        'field_name' => 'field_aggart6compliance',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      83 => 
       array (
         'label' => 'When will the total generated load of the agglomeration be collected through collecting systems or adressed through IAS?',
         'widget' => 
@@ -34235,7 +37555,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      92 => 
+      84 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -34292,7 +37612,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      93 => 
+      85 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -34343,7 +37663,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      94 => 
+      86 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -34394,7 +37714,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      95 => 
+      87 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -34443,7 +37763,7 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      96 => 
+      88 => 
       array (
         'description' => '',
         'display' => 
@@ -34509,7 +37829,55 @@ $list_contenttype = array (
         'bundle' => 'agglomeration',
         'deleted' => '0',
       ),
-      97 => 
+      89 => 
+      array (
+        'label' => 'Additionnal Compliance article3',
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 136,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'options_select',
+          'settings' => 
+          array (
+          ),
+          'weight' => 103,
+          'module' => 'options',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '627',
+        'field_id' => '475',
+        'field_name' => 'field_aggart3addcompliance',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      90 => 
       array (
         'label' => 'Article 17 Agglo',
         'widget' => 
@@ -34560,6 +37928,519 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
+      91 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '82',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Connected to collecting system',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '31',
+        ),
+        'id' => '366',
+        'field_id' => '288',
+        'field_name' => 'field_aggc1',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      92 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '86',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Discharged without treatment',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '35',
+        ),
+        'id' => '398',
+        'field_id' => '320',
+        'field_name' => 'field_aggpercwithouttreatment',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      93 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '91',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Type of sewage network',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '40',
+        ),
+        'id' => '405',
+        'field_id' => '327',
+        'field_name' => 'field_aggsewagenetwork',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      94 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '8',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => '2nd treatment compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '82',
+        ),
+        'id' => '361',
+        'field_id' => '283',
+        'field_name' => 'field_aggart4compliance',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      95 => 
+      array (
+        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 3',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'date_default',
+            'weight' => '74',
+            'settings' => 
+            array (
+              'format_type' => 'short',
+              'fromto' => 'both',
+              'multiple_from' => '',
+              'multiple_number' => '',
+              'multiple_to' => '',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Deadline connection compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '23',
+          'type' => 'date_text',
+          'module' => 'date',
+          'active' => 1,
+          'settings' => 
+          array (
+            'input_format' => 'm/d/Y - H:i:s',
+            'input_format_custom' => '',
+            'year_range' => '-3:+3',
+            'increment' => 15,
+            'label_position' => 'above',
+            'text_parts' => 
+            array (
+            ),
+          ),
+        ),
+        'id' => '399',
+        'field_id' => '321',
+        'field_name' => 'field_aggperiodover3',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      96 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '7',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Connection compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '81',
+        ),
+        'id' => '360',
+        'field_id' => '282',
+        'field_name' => 'field_aggart3compliance',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      97 => 
+      array (
+        'description' => 'Date of the relevant deadline of UWWTD or Transitional Period article 5',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'date_default',
+            'weight' => '78',
+            'settings' => 
+            array (
+              'format_type' => 'short',
+              'fromto' => 'both',
+              'multiple_from' => '',
+              'multiple_number' => '',
+              'multiple_to' => '',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Deadline 3rd treatment compliance',
+        'required' => 0,
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '27',
+          'type' => 'date_text',
+          'module' => 'date',
+          'active' => 1,
+          'settings' => 
+          array (
+            'input_format' => 'm/d/Y - H:i:s',
+            'input_format_custom' => '',
+            'year_range' => '-3:+3',
+            'increment' => 15,
+            'label_position' => 'above',
+            'text_parts' => 
+            array (
+            ),
+          ),
+        ),
+        'id' => '401',
+        'field_id' => '323',
+        'field_name' => 'field_aggperiodover5',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+      ),
+      98 => 
+      array (
+        'label' => 'Agglomeration begin life',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 105,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 138,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '684',
+        'field_id' => '528',
+        'field_name' => 'field_aggbeginlife',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      99 => 
+      array (
+        'label' => 'Agglomeration end life',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 106,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 139,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '685',
+        'field_id' => '529',
+        'field_name' => 'field_aggendlife',
+        'entity_type' => 'node',
+        'bundle' => 'agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
     ),
   ),
   'uwwtp' => 
@@ -34592,12 +38473,12 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '70',
+            'type' => 'text_default',
+            'weight' => '50',
             'settings' => 
             array (
             ),
-            'module' => 'list',
+            'module' => 'text',
           ),
           'teaser' => 
           array (
@@ -34609,496 +38490,81 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Treatment required',
+        'label' => 'Remarks',
         'required' => 0,
         'settings' => 
         array (
+          'text_processing' => 0,
           'user_register_form' => false,
         ),
         'widget' => 
         array (
-          'weight' => '79',
-          'type' => 'options_select',
-          'module' => 'options',
           'active' => 1,
+          'module' => 'text',
           'settings' => 
           array (
+            'rows' => 5,
           ),
+          'type' => 'text_textarea',
+          'weight' => '43',
         ),
-        'id' => '518',
-        'field_id' => '392',
-        'field_name' => 'field_uwwtreatmentrequired',
+        'id' => '511',
+        'field_id' => '385',
+        'field_name' => 'field_uwwremarks',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
       1 => 
       array (
-        'label' => 'Errors',
-        'widget' => 
-        array (
-          'weight' => '98',
-          'type' => 'node_reference_autocomplete',
-          'module' => 'node_reference',
-          'active' => 1,
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'size' => '60',
-            'autocomplete_path' => 'node_reference/autocomplete',
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
+        'default_value' => NULL,
+        'description' => '',
         'display' => 
         array (
           'default' => 
           array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '77',
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '9',
             'settings' => 
             array (
             ),
-            'module' => 'node_reference',
+            'module' => 'list',
           ),
           'teaser' => 
           array (
-            'type' => 'hidden',
             'label' => 'above',
             'settings' => 
             array (
             ),
+            'type' => 'hidden',
             'weight' => 0,
           ),
         ),
+        'label' => 'Primary treatment',
         'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '561',
-        'field_id' => '416',
-        'field_name' => 'field_uwwtd_error_link',
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '20',
+        ),
+        'id' => '509',
+        'field_id' => '383',
+        'field_name' => 'field_uwwprimarytreatment',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
       2 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '56',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'functionInput',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '49',
-        ),
-        'id' => '452',
-        'field_id' => '337',
-        'field_name' => 'field_functioninput',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      3 => 
-      array (
-        'label' => 'Treatment required rcaB',
-        'widget' => 
-        array (
-          'weight' => '113',
-          'type' => 'options_buttons',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'list_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-            'weight' => 104,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => '0',
-          ),
-        ),
-        'id' => '680',
-        'field_id' => '524',
-        'field_name' => 'field_uwww_required_rcab',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      4 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '71',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Treatment met',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '80',
-        ),
-        'id' => '517',
-        'field_id' => '391',
-        'field_name' => 'field_uwwtreatment_met',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      5 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '64',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'endLifespanVersion',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '57',
-        ),
-        'id' => '448',
-        'field_id' => '62',
-        'field_name' => 'field_endlifespanversion',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      6 => 
-      array (
-        'label' => 'ID of agglomeration',
-        'widget' => 
-        array (
-          'weight' => '86',
-          'type' => 'text_textfield',
-          'module' => 'text',
-          'active' => 1,
-          'settings' => 
-          array (
-            'size' => '60',
-          ),
-        ),
-        'settings' => 
-        array (
-          'text_processing' => '0',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'weight' => '78',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '578',
-        'field_id' => '434',
-        'field_name' => 'field_uwwtdaggid',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      7 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '69',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Accidents',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '78',
-        ),
-        'id' => '474',
-        'field_id' => '348',
-        'field_name' => 'field_uwwaccidents',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      8 => 
-      array (
-        'label' => 'Compliance explication',
-        'widget' => 
-        array (
-          'weight' => '109',
-          'type' => 'text_textarea',
-          'module' => 'text',
-          'active' => 1,
-          'settings' => 
-          array (
-            'rows' => '5',
-          ),
-        ),
-        'settings' => 
-        array (
-          'text_processing' => '0',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'weight' => '100',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '603',
-        'field_id' => '281',
-        'field_name' => 'field_compliance_explication',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      9 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_integer',
-            'weight' => '51',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 0,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Number of inhabitants connected to particular UWWTP/collecting system',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '44',
-        ),
-        'id' => '507',
-        'field_id' => '381',
-        'field_name' => 'field_uwwpinhabitantsconnected',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      10 => 
       array (
         'default_value' => 
         array (
@@ -35153,7 +38619,160 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      11 => 
+      3 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '58',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'functionDescription',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '51',
+        ),
+        'id' => '451',
+        'field_id' => '336',
+        'field_name' => 'field_functiondescription',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      4 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '35',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'physicalCapacityOutput',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '17',
+        ),
+        'id' => '461',
+        'field_id' => '343',
+        'field_name' => 'field_physicalcapacityoutput',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      5 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '26',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'ID of the successor (historical management)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '7',
+        ),
+        'id' => '516',
+        'field_id' => '390',
+        'field_name' => 'field_uwwsuccessor',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      6 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -35202,56 +38821,7 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      12 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '9',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Primary treatment',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '20',
-        ),
-        'id' => '509',
-        'field_id' => '383',
-        'field_name' => 'field_uwwprimarytreatment',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      13 => 
+      7 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -35302,10 +38872,65 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      14 => 
+      8 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '47',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Method used to determine the load ',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '40',
+        ),
+        'id' => '490',
+        'field_id' => '364',
+        'field_name' => 'field_uwwloadcalculation',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      9 => 
       array (
         'default_value' => 
         array (
+          0 => 
+          array (
+            'value' => 2014,
+          ),
         ),
         'description' => '',
         'display' => 
@@ -35314,7 +38939,7 @@ $list_contenttype = array (
           array (
             'label' => 'inline',
             'type' => 'list_default',
-            'weight' => '13',
+            'weight' => '11',
             'settings' => 
             array (
             ),
@@ -35330,7 +38955,158 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'UV',
+        'label' => 'Year of data',
+        'required' => 1,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '62',
+        ),
+        'id' => '446',
+        'field_id' => '57',
+        'field_name' => 'field_anneedata',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      10 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '3',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Identifier of UWWTP/ collecting system without treatment',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '2',
+        ),
+        'id' => '454',
+        'field_id' => '65',
+        'field_name' => 'field_inspireidlocalid',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      11 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '49',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Method used to determine the volume of waste water treated',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '42',
+        ),
+        'id' => '493',
+        'field_id' => '367',
+        'field_name' => 'field_uwwmethodwastewatertreated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      12 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '71',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Treatment met',
         'required' => 0,
         'settings' => 
         array (
@@ -35342,14 +39118,116 @@ $list_contenttype = array (
           'module' => 'options',
           'settings' => 
           array (
-            'display_label' => 0,
           ),
-          'type' => 'options_buttons',
-          'weight' => '24',
+          'type' => 'options_select',
+          'weight' => '80',
         ),
-        'id' => '521',
-        'field_id' => '395',
-        'field_name' => 'field_uwwuv',
+        'id' => '517',
+        'field_id' => '391',
+        'field_name' => 'field_uwwtreatment_met',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      13 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '65',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'validFrom',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '58',
+        ),
+        'id' => '524',
+        'field_id' => '121',
+        'field_name' => 'field_validfrom',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      14 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'node_reference_default',
+            'weight' => '66',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'sensitiveAreaLink',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'node_reference',
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'autocomplete_path' => 'node_reference/autocomplete',
+            'size' => 60,
+          ),
+          'type' => 'node_reference_autocomplete',
+          'weight' => '61',
+        ),
+        'id' => '466',
+        'field_id' => '77',
+        'field_name' => 'field_sensitivearealink',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
@@ -35414,165 +39292,6 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '47',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Method used to determine the load ',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '40',
-        ),
-        'id' => '490',
-        'field_id' => '364',
-        'field_name' => 'field_uwwloadcalculation',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      17 => 
-      array (
-        'label' => 'Incoming load N-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '89',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '82',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '582',
-        'field_id' => '438',
-        'field_name' => 'field_uwwnincomingcalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      18 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '20',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'inspireIdVersionId',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '5',
-        ),
-        'id' => '456',
-        'field_id' => '67',
-        'field_name' => 'field_inspireidversionid',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      19 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
             'type' => 'number_integer',
             'weight' => '34',
             'settings' => 
@@ -35621,9 +39340,11 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      20 => 
+      17 => 
       array (
-        'default_value' => NULL,
+        'default_value' => 
+        array (
+        ),
         'description' => '',
         'display' => 
         array (
@@ -35631,7 +39352,7 @@ $list_contenttype = array (
           array (
             'label' => 'inline',
             'type' => 'list_default',
-            'weight' => '18',
+            'weight' => '13',
             'settings' => 
             array (
             ),
@@ -35647,7 +39368,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Performance met',
+        'label' => 'UV',
         'required' => 0,
         'settings' => 
         array (
@@ -35659,18 +39380,19 @@ $list_contenttype = array (
           'module' => 'options',
           'settings' => 
           array (
+            'display_label' => 0,
           ),
-          'type' => 'options_select',
-          'weight' => '76',
+          'type' => 'options_buttons',
+          'weight' => '24',
         ),
-        'id' => '505',
-        'field_id' => '379',
-        'field_name' => 'field_uwwperformance_met',
+        'id' => '521',
+        'field_id' => '395',
+        'field_name' => 'field_uwwuv',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      21 => 
+      18 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -35679,12 +39401,12 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '9',
+            'type' => 'list_default',
+            'weight' => '70',
             'settings' => 
             array (
             ),
-            'module' => 'text',
+            'module' => 'list',
           ),
           'teaser' => 
           array (
@@ -35696,36 +39418,32 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Site unique ID',
+        'label' => 'Treatment required',
         'required' => 0,
         'settings' => 
         array (
-          'text_processing' => 0,
           'user_register_form' => false,
         ),
         'widget' => 
         array (
+          'weight' => '79',
+          'type' => 'options_select',
+          'module' => 'options',
           'active' => 1,
-          'module' => 'text',
           'settings' => 
           array (
-            'size' => 60,
           ),
-          'type' => 'text_textfield',
-          'weight' => '63',
         ),
-        'id' => '469',
-        'field_id' => '79',
-        'field_name' => 'field_siteid',
+        'id' => '518',
+        'field_id' => '392',
+        'field_name' => 'field_uwwtreatmentrequired',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      22 => 
+      19 => 
       array (
-        'default_value' => 
-        array (
-        ),
+        'default_value' => NULL,
         'description' => '',
         'display' => 
         array (
@@ -35749,57 +39467,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Micro filtration',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-            'display_label' => 0,
-          ),
-          'type' => 'options_buttons',
-          'weight' => '28',
-        ),
-        'id' => '494',
-        'field_id' => '368',
-        'field_name' => 'field_uwwmicrofiltration',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      23 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '11',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'N removal',
+        'label' => 'Treatment performance: BOD5',
         'required' => 0,
         'settings' => 
         array (
@@ -35812,17 +39480,17 @@ $list_contenttype = array (
           'settings' => 
           array (
           ),
-          'type' => 'options_buttons',
-          'weight' => '22',
+          'type' => 'options_select',
+          'weight' => '68',
         ),
-        'id' => '498',
-        'field_id' => '372',
-        'field_name' => 'field_uwwnremoval',
+        'id' => '477',
+        'field_id' => '351',
+        'field_name' => 'field_uwwbod5perf',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      24 => 
+      20 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -35871,9 +39539,11 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      25 => 
+      21 => 
       array (
-        'default_value' => NULL,
+        'default_value' => 
+        array (
+        ),
         'description' => '',
         'display' => 
         array (
@@ -35881,7 +39551,7 @@ $list_contenttype = array (
           array (
             'label' => 'inline',
             'type' => 'list_default',
-            'weight' => '21',
+            'weight' => '14',
             'settings' => 
             array (
             ),
@@ -35897,7 +39567,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Treatment performance: Total phosphorus',
+        'label' => 'Chlorination',
         'required' => 0,
         'settings' => 
         array (
@@ -35909,13 +39579,231 @@ $list_contenttype = array (
           'module' => 'options',
           'settings' => 
           array (
+            'display_label' => 0,
           ),
-          'type' => 'options_select',
-          'weight' => '72',
+          'type' => 'options_buttons',
+          'weight' => '25',
         ),
-        'id' => '510',
-        'field_id' => '384',
-        'field_name' => 'field_uwwptotperf',
+        'id' => '480',
+        'field_id' => '354',
+        'field_name' => 'field_uwwchlorination',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      22 => 
+      array (
+        'label' => 'ID of agglomeration',
+        'widget' => 
+        array (
+          'weight' => '86',
+          'type' => 'text_textfield',
+          'module' => 'text',
+          'active' => 1,
+          'settings' => 
+          array (
+            'size' => '60',
+          ),
+        ),
+        'settings' => 
+        array (
+          'text_processing' => '0',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 78,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '578',
+        'field_id' => '434',
+        'field_name' => 'field_uwwtdaggid',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      23 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '24',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Longitude',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '13',
+        ),
+        'id' => '492',
+        'field_id' => '366',
+        'field_name' => 'field_uwwlongitude',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      24 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_integer',
+            'weight' => '5',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 0,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Load entering UWWTP (p.e.)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '14',
+        ),
+        'id' => '491',
+        'field_id' => '365',
+        'field_name' => 'field_uwwloadenteringuwwtp',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      25 => 
+      array (
+        'label' => 'Errors',
+        'widget' => 
+        array (
+          'weight' => '98',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 77,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '561',
+        'field_id' => '416',
+        'field_name' => 'field_uwwtd_error_link',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
@@ -35929,16 +39817,12 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '44',
+            'type' => 'list_default',
+            'weight' => '69',
             'settings' => 
             array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
             ),
-            'module' => 'number',
+            'module' => 'list',
           ),
           'teaser' => 
           array (
@@ -35950,91 +39834,30 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Discharged load COD (t per year)',
+        'label' => 'Accidents',
         'required' => 0,
         'settings' => 
         array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
           'user_register_form' => false,
         ),
         'widget' => 
         array (
-          'weight' => '37',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
+          'active' => 1,
+          'module' => 'options',
           'settings' => 
           array (
           ),
+          'type' => 'options_buttons',
+          'weight' => '78',
         ),
-        'id' => '481',
-        'field_id' => '355',
-        'field_name' => 'field_uwwcoddischarge',
+        'id' => '474',
+        'field_id' => '348',
+        'field_name' => 'field_uwwaccidents',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
       27 => 
-      array (
-        'label' => 'Incoming load P-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '90',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '83',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '583',
-        'field_id' => '439',
-        'field_name' => 'field_uwwpincomingcalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      28 => 
       array (
         'label' => 'In cause of failure: Further information on cause of failure',
         'widget' => 
@@ -36059,11 +39882,11 @@ $list_contenttype = array (
           array (
             'label' => 'above',
             'type' => 'text_default',
-            'weight' => '94',
             'settings' => 
             array (
             ),
             'module' => 'text',
+            'weight' => 94,
           ),
           'teaser' => 
           array (
@@ -36081,6 +39904,57 @@ $list_contenttype = array (
         'id' => '597',
         'field_id' => '453',
         'field_name' => 'field_uwwinformation',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      28 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '56',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'functionInput',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '49',
+        ),
+        'id' => '452',
+        'field_id' => '337',
+        'field_name' => 'field_functioninput',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
@@ -36138,10 +40012,10 @@ $list_contenttype = array (
       ),
       30 => 
       array (
-        'label' => 'Discharged load COD-tot Calculated',
+        'label' => 'Incoming load P-tot Estimated',
         'widget' => 
         array (
-          'weight' => '93',
+          'weight' => '106',
           'type' => 'number',
           'module' => 'number',
           'active' => 0,
@@ -36163,7 +40037,6 @@ $list_contenttype = array (
           array (
             'label' => 'above',
             'type' => 'number_decimal',
-            'weight' => '86',
             'settings' => 
             array (
               'thousand_separator' => ' ',
@@ -36172,6 +40045,7 @@ $list_contenttype = array (
               'prefix_suffix' => true,
             ),
             'module' => 'number',
+            'weight' => 98,
           ),
           'teaser' => 
           array (
@@ -36186,2764 +40060,14 @@ $list_contenttype = array (
         'required' => 0,
         'description' => '',
         'default_value' => NULL,
-        'id' => '586',
-        'field_id' => '442',
-        'field_name' => 'field_uwwcoddischargecalculated',
+        'id' => '601',
+        'field_id' => '457',
+        'field_name' => 'field_uwwpincomingestimated',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
       31 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '68',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Other treatment',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '77',
-        ),
-        'id' => '501',
-        'field_id' => '375',
-        'field_name' => 'field_uwwothertreat',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      32 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '37',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'physicalCapacityDescription',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '19',
-        ),
-        'id' => '459',
-        'field_id' => '341',
-        'field_name' => 'field_physicalcapacitydescriptio',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      33 => 
-      array (
-        'default_value' => 
-        array (
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '15',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Ozonation',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-            'display_label' => 0,
-          ),
-          'type' => 'options_buttons',
-          'weight' => '26',
-        ),
-        'id' => '502',
-        'field_id' => '376',
-        'field_name' => 'field_uwwozonation',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      34 => 
-      array (
-        'label' => 'Physical Capacity (p.e.)',
-        'widget' => 
-        array (
-          'weight' => '85',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_integer',
-            'weight' => '76',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 0,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '546',
-        'field_id' => '410',
-        'field_name' => 'field_physicalcapacityactivity',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      35 => 
-      array (
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => 0,
-          ),
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '4',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Status of the waste water treatment plant',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '4',
-        ),
-        'id' => '471',
-        'field_id' => '83',
-        'field_name' => 'field_status',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      36 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '36',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'physicalCapacityTime',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '18',
-        ),
-        'id' => '462',
-        'field_id' => '344',
-        'field_name' => 'field_physicalcapacitytime',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      37 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '30',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Date of closing of the UWWTP',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '11',
-        ),
-        'id' => '525',
-        'field_id' => '398',
-        'field_name' => 'field_validto',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      38 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'hidden',
-            'weight' => '5',
-            'settings' => 
-            array (
-            ),
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Report ID',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '1',
-        ),
-        'id' => '465',
-        'field_id' => '76',
-        'field_name' => 'field_repcode',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      39 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '55',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'functionActivity',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '48',
-        ),
-        'id' => '450',
-        'field_id' => '335',
-        'field_name' => 'field_functionactivity',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      40 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '12',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'P removal',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '23',
-        ),
-        'id' => '508',
-        'field_id' => '382',
-        'field_name' => 'field_uwwpremoval',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      41 => 
-      array (
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => 'NI',
-          ),
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '10',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Treatment type in place',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '74',
-          'type' => 'options_select',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '519',
-        'field_id' => '393',
-        'field_name' => 'field_uwwtreatmenttype',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      42 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '7',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Linked discharge point(s)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'node_reference',
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'autocomplete_path' => 'node_reference/autocomplete',
-            'size' => 60,
-          ),
-          'type' => 'node_reference_autocomplete',
-          'weight' => '66',
-        ),
-        'id' => '487',
-        'field_id' => '361',
-        'field_name' => 'field_uwwdcpliste',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      43 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '61',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'facilityDescription',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '54',
-        ),
-        'id' => '449',
-        'field_id' => '334',
-        'field_name' => 'field_facilitydescription',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      44 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '28',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'type of treatment of sludge',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '9',
-        ),
-        'id' => '514',
-        'field_id' => '388',
-        'field_name' => 'field_uwwsludgetreatment',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      45 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '29',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Identification whether it is the existing UWWTP (in operation) or a collecting system without UWWTPs ',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '10',
-        ),
-        'id' => '484',
-        'field_id' => '358',
-        'field_name' => 'field_uwwcollectingsystem',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      46 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '7',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Region (NUTS)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '75',
-        ),
-        'id' => '464',
-        'field_id' => '235',
-        'field_name' => 'field_regionnuts',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      47 => 
-      array (
-        'label' => 'Discharged load N-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '107',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '99',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '602',
-        'field_id' => '458',
-        'field_name' => 'field_uwwndischargecalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      48 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '59',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'type',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '52',
-        ),
-        'id' => '473',
-        'field_id' => '347',
-        'field_name' => 'field_type',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      49 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '38',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'In cause of failure: Bad operating/Bad design or dimensioning',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '31',
-        ),
-        'id' => '476',
-        'field_id' => '350',
-        'field_name' => 'field_uwwbadperfdesign',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      50 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '19',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'inspireIdNamespace',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '3',
-        ),
-        'id' => '455',
-        'field_id' => '66',
-        'field_name' => 'field_inspireidnamespace',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      51 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '62',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'permission',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '55',
-        ),
-        'id' => '457',
-        'field_id' => '339',
-        'field_name' => 'field_permission',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      52 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '60',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'serviceHours',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '53',
-        ),
-        'id' => '468',
-        'field_id' => '346',
-        'field_name' => 'field_servicehours',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      53 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '63',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'beginLifespanVersion',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '56',
-        ),
-        'id' => '447',
-        'field_id' => '58',
-        'field_name' => 'field_beginlifespanversion',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      54 => 
-      array (
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'file_default',
-            'weight' => '12',
-            'settings' => 
-            array (
-            ),
-            'module' => 'file',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Source of data',
-        'required' => 0,
-        'settings' => 
-        array (
-          'description_field' => 0,
-          'file_directory' => 'data_sources',
-          'file_extensions' => 'txt csv xml',
-          'max_filesize' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'file',
-          'settings' => 
-          array (
-            'progress_indicator' => 'throbber',
-          ),
-          'type' => 'file_generic',
-          'weight' => '64',
-        ),
-        'id' => '470',
-        'field_id' => '80',
-        'field_name' => 'field_sourcefile',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      55 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '16',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Please specify other type of more stringent treatment',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '30',
-        ),
-        'id' => '515',
-        'field_id' => '389',
-        'field_name' => 'field_uwwspecification',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      56 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '8',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Linked agglomeration(s)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'node_reference',
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'autocomplete_path' => 'node_reference/autocomplete',
-            'size' => 60,
-          ),
-          'type' => 'node_reference_autocomplete',
-          'weight' => '65',
-        ),
-        'id' => '475',
-        'field_id' => '349',
-        'field_name' => 'field_uwwaggliste',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      57 => 
-      array (
-        'default_value' => 
-        array (
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '16',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Sand filtration',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-            'display_label' => 0,
-          ),
-          'type' => 'options_buttons',
-          'weight' => '27',
-        ),
-        'id' => '512',
-        'field_id' => '386',
-        'field_name' => 'field_uwwsandfiltration',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      58 => 
-      array (
-        'label' => 'Explanation for closing of the UWWTP/What happened with the wastewater since last reporting exercise',
-        'widget' => 
-        array (
-          'weight' => '99',
-          'type' => 'text_textfield',
-          'module' => 'text',
-          'active' => 1,
-          'settings' => 
-          array (
-            'size' => '60',
-          ),
-        ),
-        'settings' => 
-        array (
-          'text_processing' => '0',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'weight' => '91',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '594',
-        'field_id' => '450',
-        'field_name' => 'field_uwwhistorie',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      59 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '27',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'type of treatment of sewage',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '8',
-        ),
-        'id' => '523',
-        'field_id' => '397',
-        'field_name' => 'field_uwwwatertreatment',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      60 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '22',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Treatment performance: Other',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '73',
-          'type' => 'options_select',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '500',
-        'field_id' => '374',
-        'field_name' => 'field_uwwotherperf',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      61 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '39',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Incoming load BOD (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '32',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '479',
-        'field_id' => '353',
-        'field_name' => 'field_uwwbodincoming',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      62 => 
-      array (
-        'label' => 'Linked discharge point(s)',
-        'widget' => 
-        array (
-          'weight' => '82',
-          'type' => 'node_reference_autocomplete',
-          'module' => 'node_reference',
-          'active' => 1,
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'size' => '60',
-            'autocomplete_path' => 'node_reference/autocomplete',
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '73',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '527',
-        'field_id' => '401',
-        'field_name' => 'field_linked_discharge_points',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      63 => 
-      array (
-        'label' => 'In cause of failure: Bad design or dimensioning',
-        'widget' => 
-        array (
-          'weight' => '101',
-          'type' => 'options_buttons',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'list_default',
-            'weight' => '93',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '596',
-        'field_id' => '452',
-        'field_name' => 'field_uwwbaddesign',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      64 => 
-      array (
-        'label' => 'Other type of more stringent ',
-        'widget' => 
-        array (
-          'weight' => '100',
-          'type' => 'options_buttons',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'list_default',
-            'weight' => '92',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '595',
-        'field_id' => '451',
-        'field_name' => 'field_uwwother',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      65 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '43',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Discharged load BOD (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '36',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '478',
-        'field_id' => '352',
-        'field_name' => 'field_uwwboddischarge',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      66 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '45',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Discharged load Ntot (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '38',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '496',
-        'field_id' => '370',
-        'field_name' => 'field_uwwndischarge',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      67 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '46',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Discharged load Ptot (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '39',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '503',
-        'field_id' => '377',
-        'field_name' => 'field_uwwpdischarge',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      68 => 
-      array (
-        'label' => 'Incoming load COD-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '88',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '81',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '581',
-        'field_id' => '437',
-        'field_name' => 'field_uwwcodincomingcalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      69 => 
-      array (
-        'label' => 'Discharged load BOD-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '92',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '85',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '585',
-        'field_id' => '441',
-        'field_name' => 'field_uwwboddischargeestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      70 => 
-      array (
-        'label' => 'Discharged load COD-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '94',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '87',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '587',
-        'field_id' => '443',
-        'field_name' => 'field_uwwcoddischargeestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      71 => 
-      array (
-        'label' => 'Incoming load BOD-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '87',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '80',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '580',
-        'field_id' => '436',
-        'field_name' => 'field_uwwbodincomingcalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      72 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '41',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Incoming load Ntot (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '34',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '497',
-        'field_id' => '371',
-        'field_name' => 'field_uwwnincoming',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      73 => 
-      array (
-        'label' => 'Discharged load P-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '96',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '89',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '589',
-        'field_id' => '445',
-        'field_name' => 'field_uwwpdischargecalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      74 => 
-      array (
-        'label' => 'Incoming load N-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '105',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '97',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '600',
-        'field_id' => '456',
-        'field_name' => 'field_uwwnincomingestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      75 => 
-      array (
-        'label' => 'Linked receiving area(s)',
-        'widget' => 
-        array (
-          'weight' => '83',
-          'type' => 'node_reference_autocomplete',
-          'module' => 'node_reference',
-          'active' => 1,
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'size' => '60',
-            'autocomplete_path' => 'node_reference/autocomplete',
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '74',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '528',
-        'field_id' => '402',
-        'field_name' => 'field_linked_receiving_areas',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      76 => 
-      array (
-        'label' => 'Incoming load BOD-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '103',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '95',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '598',
-        'field_id' => '454',
-        'field_name' => 'field_uwwbodincomingestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      77 => 
-      array (
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => 2014,
-          ),
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '11',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Year of data',
-        'required' => 1,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '62',
-        ),
-        'id' => '446',
-        'field_id' => '57',
-        'field_name' => 'field_anneedata',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      78 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '3',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Identifier of UWWTP/ collecting system without treatment',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '2',
-        ),
-        'id' => '454',
-        'field_id' => '65',
-        'field_name' => 'field_inspireidlocalid',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      79 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '42',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Incoming load Ptot (t per year)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'weight' => '35',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'id' => '506',
-        'field_id' => '380',
-        'field_name' => 'field_uwwpincoming',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      80 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '49',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Method used to determine the volume of waste water treated',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '42',
-        ),
-        'id' => '493',
-        'field_id' => '367',
-        'field_name' => 'field_uwwmethodwastewatertreated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      81 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '65',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'validFrom',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '58',
-        ),
-        'id' => '524',
-        'field_id' => '121',
-        'field_name' => 'field_validfrom',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      82 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'node_reference_default',
-            'weight' => '66',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'sensitiveAreaLink',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'node_reference',
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'autocomplete_path' => 'node_reference/autocomplete',
-            'size' => 60,
-          ),
-          'type' => 'node_reference_autocomplete',
-          'weight' => '61',
-        ),
-        'id' => '466',
-        'field_id' => '77',
-        'field_name' => 'field_sensitivearealink',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      83 => 
       array (
         'default_value' => NULL,
         'description' => 'Volume of waste water treated and partially treated (m3/y) in the UWWTP',
@@ -39000,818 +40124,7 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      84 => 
-      array (
-        'default_value' => 
-        array (
-        ),
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '14',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Chlorination',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-            'display_label' => 0,
-          ),
-          'type' => 'options_buttons',
-          'weight' => '25',
-        ),
-        'id' => '480',
-        'field_id' => '354',
-        'field_name' => 'field_uwwchlorination',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      85 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '24',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Longitude',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '13',
-        ),
-        'id' => '492',
-        'field_id' => '366',
-        'field_name' => 'field_uwwlongitude',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      86 => 
-      array (
-        'label' => 'Incoming load P-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '106',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '98',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '601',
-        'field_id' => '457',
-        'field_name' => 'field_uwwpincomingestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      87 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '23',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Latitude',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '12',
-        ),
-        'id' => '489',
-        'field_id' => '363',
-        'field_name' => 'field_uwwlatitude',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      88 => 
-      array (
-        'label' => 'Incoming load COD-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '104',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '96',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '599',
-        'field_id' => '455',
-        'field_name' => 'field_uwwcodincomingestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      89 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_decimal',
-            'weight' => '32',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 2,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Rate of entering load transported to this UWWTP by trucks (%)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '15',
-        ),
-        'id' => '504',
-        'field_id' => '378',
-        'field_name' => 'field_uwwperctruck',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      90 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '18',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Treatment performance: COD',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '69',
-        ),
-        'id' => '483',
-        'field_id' => '357',
-        'field_name' => 'field_uwwcodperf',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      91 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '50',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Remarks',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'type' => 'text_textarea',
-          'weight' => '43',
-        ),
-        'id' => '511',
-        'field_id' => '385',
-        'field_name' => 'field_uwwremarks',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      92 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '54',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'thematicId',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '47',
-        ),
-        'id' => '472',
-        'field_id' => '84',
-        'field_name' => 'field_thematicid',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      93 => 
-      array (
-        'label' => 'Discharged load P-tot Estimated',
-        'widget' => 
-        array (
-          'weight' => '97',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '90',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '590',
-        'field_id' => '446',
-        'field_name' => 'field_uwwpdischargeestimated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      94 => 
-      array (
-        'label' => 'Discharged load BOD-tot Calculated',
-        'widget' => 
-        array (
-          'weight' => '91',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'weight' => '84',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '584',
-        'field_id' => '440',
-        'field_name' => 'field_uwwboddischargecalculated',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      95 => 
-      array (
-        'label' => 'Linked agglomeration(s)',
-        'widget' => 
-        array (
-          'weight' => '81',
-          'type' => 'node_reference_autocomplete',
-          'module' => 'node_reference',
-          'active' => 1,
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'size' => '60',
-            'autocomplete_path' => 'node_reference/autocomplete',
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '72',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '526',
-        'field_id' => '400',
-        'field_name' => 'field_linked_agglomerations',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      96 => 
-      array (
-        'label' => 'Article 17 Uwwtp',
-        'widget' => 
-        array (
-          'type' => 'node_reference_autocomplete',
-          'settings' => 
-          array (
-            'autocomplete_match' => 'contains',
-            'size' => 60,
-            'autocomplete_path' => 'node_reference/autocomplete',
-          ),
-          'weight' => '110',
-          'module' => 'node_reference',
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'node_reference_default',
-            'weight' => '101',
-            'settings' => 
-            array (
-            ),
-            'module' => 'node_reference',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '677',
-        'field_id' => '521',
-        'field_name' => 'field_article17_uwwtp',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      97 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'number_integer',
-            'weight' => '5',
-            'settings' => 
-            array (
-              'decimal_separator' => '.',
-              'prefix_suffix' => true,
-              'scale' => 0,
-              'thousand_separator' => ' ',
-            ),
-            'module' => 'number',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Load entering UWWTP (p.e.)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'max' => '',
-          'min' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 0,
-          'module' => 'number',
-          'settings' => 
-          array (
-          ),
-          'type' => 'number',
-          'weight' => '14',
-        ),
-        'id' => '491',
-        'field_id' => '365',
-        'field_name' => 'field_uwwloadenteringuwwtp',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      98 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '17',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Treatment performance: BOD5',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_select',
-          'weight' => '68',
-        ),
-        'id' => '477',
-        'field_id' => '351',
-        'field_name' => 'field_uwwbod5perf',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      99 => 
+      32 => 
       array (
         'description' => '',
         'display' => 
@@ -39877,7 +40190,1379 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      100 => 
+      33 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '18',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Performance met',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '76',
+        ),
+        'id' => '505',
+        'field_id' => '379',
+        'field_name' => 'field_uwwperformance_met',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      34 => 
+      array (
+        'default_value' => 
+        array (
+        ),
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '15',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Ozonation',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+            'display_label' => 0,
+          ),
+          'type' => 'options_buttons',
+          'weight' => '26',
+        ),
+        'id' => '502',
+        'field_id' => '376',
+        'field_name' => 'field_uwwozonation',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      35 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '9',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Site unique ID',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '63',
+        ),
+        'id' => '469',
+        'field_id' => '79',
+        'field_name' => 'field_siteid',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      36 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_integer',
+            'weight' => '51',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 0,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Number of inhabitants connected to particular UWWTP/collecting system',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '44',
+        ),
+        'id' => '507',
+        'field_id' => '381',
+        'field_name' => 'field_uwwpinhabitantsconnected',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      37 => 
+      array (
+        'label' => 'Physical Capacity (p.e.)',
+        'widget' => 
+        array (
+          'weight' => '85',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 76,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '546',
+        'field_id' => '410',
+        'field_name' => 'field_physicalcapacityactivity',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      38 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '64',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'endLifespanVersion',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '57',
+        ),
+        'id' => '448',
+        'field_id' => '62',
+        'field_name' => 'field_endlifespanversion',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      39 => 
+      array (
+        'label' => 'Incoming load N-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '89',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 82,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '582',
+        'field_id' => '438',
+        'field_name' => 'field_uwwnincomingcalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      40 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '23',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Latitude',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '12',
+        ),
+        'id' => '489',
+        'field_id' => '363',
+        'field_name' => 'field_uwwlatitude',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      41 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '11',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'N removal',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '22',
+        ),
+        'id' => '498',
+        'field_id' => '372',
+        'field_name' => 'field_uwwnremoval',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      42 => 
+      array (
+        'default_value' => 
+        array (
+          0 => 
+          array (
+            'value' => 'NI',
+          ),
+        ),
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '10',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Treatment type in place',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '74',
+          'type' => 'options_select',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '519',
+        'field_id' => '393',
+        'field_name' => 'field_uwwtreatmenttype',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      43 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '21',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Treatment performance: Total phosphorus',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '72',
+        ),
+        'id' => '510',
+        'field_id' => '384',
+        'field_name' => 'field_uwwptotperf',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      44 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'weight' => '7',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Linked discharge point(s)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'node_reference',
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'autocomplete_path' => 'node_reference/autocomplete',
+            'size' => 60,
+          ),
+          'type' => 'node_reference_autocomplete',
+          'weight' => '66',
+        ),
+        'id' => '487',
+        'field_id' => '361',
+        'field_name' => 'field_uwwdcpliste',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      45 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '32',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Rate of entering load transported to this UWWTP by trucks (%)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'max' => '',
+          'min' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 0,
+          'module' => 'number',
+          'settings' => 
+          array (
+          ),
+          'type' => 'number',
+          'weight' => '15',
+        ),
+        'id' => '504',
+        'field_id' => '378',
+        'field_name' => 'field_uwwperctruck',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      46 => 
+      array (
+        'default_value' => 
+        array (
+        ),
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '17',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Micro filtration',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+            'display_label' => 0,
+          ),
+          'type' => 'options_buttons',
+          'weight' => '28',
+        ),
+        'id' => '494',
+        'field_id' => '368',
+        'field_name' => 'field_uwwmicrofiltration',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      47 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '20',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'inspireIdVersionId',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '5',
+        ),
+        'id' => '456',
+        'field_id' => '67',
+        'field_name' => 'field_inspireidversionid',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      48 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '18',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Treatment performance: COD',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '69',
+        ),
+        'id' => '483',
+        'field_id' => '357',
+        'field_name' => 'field_uwwcodperf',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      49 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'hidden',
+            'weight' => '5',
+            'settings' => 
+            array (
+            ),
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Report ID',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '1',
+        ),
+        'id' => '465',
+        'field_id' => '76',
+        'field_name' => 'field_repcode',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      50 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '7',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Region (NUTS)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_select',
+          'weight' => '75',
+        ),
+        'id' => '464',
+        'field_id' => '235',
+        'field_name' => 'field_regionnuts',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      51 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '44',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Discharged load COD (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '37',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '481',
+        'field_id' => '355',
+        'field_name' => 'field_uwwcoddischarge',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      52 => 
+      array (
+        'label' => 'Incoming load P-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '90',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 83,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '583',
+        'field_id' => '439',
+        'field_name' => 'field_uwwpincomingcalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      53 => 
+      array (
+        'label' => 'Discharged load COD-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '93',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 86,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '586',
+        'field_id' => '442',
+        'field_name' => 'field_uwwcoddischargecalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      54 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '68',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Other treatment',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '77',
+        ),
+        'id' => '501',
+        'field_id' => '375',
+        'field_name' => 'field_uwwothertreat',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      55 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '37',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'physicalCapacityDescription',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '19',
+        ),
+        'id' => '459',
+        'field_id' => '341',
+        'field_name' => 'field_physicalcapacitydescriptio',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      56 => 
+      array (
+        'default_value' => 
+        array (
+          0 => 
+          array (
+            'value' => 0,
+          ),
+        ),
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '4',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Status of the waste water treatment plant',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '4',
+        ),
+        'id' => '471',
+        'field_id' => '83',
+        'field_name' => 'field_status',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      57 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '36',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'physicalCapacityTime',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '18',
+        ),
+        'id' => '462',
+        'field_id' => '344',
+        'field_name' => 'field_physicalcapacitytime',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      58 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '54',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'thematicId',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '47',
+        ),
+        'id' => '472',
+        'field_id' => '84',
+        'field_name' => 'field_thematicid',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      59 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -39950,21 +41635,331 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      101 => 
+      60 => 
       array (
-        'label' => 'Treatment required rcaANitro',
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '61',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'facilityDescription',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
         'widget' => 
         array (
-          'weight' => '111',
-          'type' => 'options_buttons',
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '54',
+        ),
+        'id' => '449',
+        'field_id' => '334',
+        'field_name' => 'field_facilitydescription',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      61 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'weight' => '8',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Linked agglomeration(s)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'node_reference',
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'autocomplete_path' => 'node_reference/autocomplete',
+            'size' => 60,
+          ),
+          'type' => 'node_reference_autocomplete',
+          'weight' => '65',
+        ),
+        'id' => '475',
+        'field_id' => '349',
+        'field_name' => 'field_uwwaggliste',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      62 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '30',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Date of closing',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '11',
+        ),
+        'id' => '525',
+        'field_id' => '398',
+        'field_name' => 'field_validto',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      63 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '28',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'type of treatment of sludge',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '9',
+        ),
+        'id' => '514',
+        'field_id' => '388',
+        'field_name' => 'field_uwwsludgetreatment',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      64 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '29',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Identification whether it is the existing UWWTP (in operation) or a collecting system without UWWTPs ',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '10',
+        ),
+        'id' => '484',
+        'field_id' => '358',
+        'field_name' => 'field_uwwcollectingsystem',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      65 => 
+      array (
+        'default_value' => 
+        array (
+        ),
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '16',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Sand filtration',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
           'module' => 'options',
+          'settings' => 
+          array (
+            'display_label' => 0,
+          ),
+          'type' => 'options_buttons',
+          'weight' => '27',
+        ),
+        'id' => '512',
+        'field_id' => '386',
+        'field_name' => 'field_uwwsandfiltration',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      66 => 
+      array (
+        'label' => 'Explanation for closing of the UWWTP/What happened with the wastewater since last reporting exercise',
+        'widget' => 
+        array (
+          'weight' => '99',
+          'type' => 'text_textfield',
+          'module' => 'text',
           'active' => 1,
           'settings' => 
           array (
+            'size' => '60',
           ),
         ),
         'settings' => 
         array (
+          'text_processing' => '0',
           'user_register_form' => false,
         ),
         'display' => 
@@ -39972,12 +41967,12 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'above',
-            'type' => 'list_default',
+            'type' => 'text_default',
             'settings' => 
             array (
             ),
-            'module' => 'list',
-            'weight' => 102,
+            'module' => 'text',
+            'weight' => 91,
           ),
           'teaser' => 
           array (
@@ -39991,21 +41986,115 @@ $list_contenttype = array (
         ),
         'required' => 0,
         'description' => '',
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => '0',
-          ),
-        ),
-        'id' => '678',
-        'field_id' => '522',
-        'field_name' => 'field_uwww_required_rcaan',
+        'default_value' => NULL,
+        'id' => '594',
+        'field_id' => '450',
+        'field_name' => 'field_uwwhistorie',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      102 => 
+      67 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '55',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'functionActivity',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '48',
+        ),
+        'id' => '450',
+        'field_id' => '335',
+        'field_name' => 'field_functionactivity',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      68 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '12',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'P removal',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '23',
+        ),
+        'id' => '508',
+        'field_id' => '382',
+        'field_name' => 'field_uwwpremoval',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      69 => 
       array (
         'default_value' => 
         array (
@@ -40057,7 +42146,521 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      103 => 
+      70 => 
+      array (
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'file_default',
+            'weight' => '12',
+            'settings' => 
+            array (
+            ),
+            'module' => 'file',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Source of data',
+        'required' => 0,
+        'settings' => 
+        array (
+          'description_field' => 0,
+          'file_directory' => 'data_sources',
+          'file_extensions' => 'txt csv xml',
+          'max_filesize' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'file',
+          'settings' => 
+          array (
+            'progress_indicator' => 'throbber',
+          ),
+          'type' => 'file_generic',
+          'weight' => '64',
+        ),
+        'id' => '470',
+        'field_id' => '80',
+        'field_name' => 'field_sourcefile',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      71 => 
+      array (
+        'label' => 'In cause of failure: Bad design or dimensioning',
+        'widget' => 
+        array (
+          'weight' => '101',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 93,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '596',
+        'field_id' => '452',
+        'field_name' => 'field_uwwbaddesign',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      72 => 
+      array (
+        'label' => 'Discharged load N-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '107',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 99,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '602',
+        'field_id' => '458',
+        'field_name' => 'field_uwwndischargecalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      73 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '59',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'type',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '52',
+        ),
+        'id' => '473',
+        'field_id' => '347',
+        'field_name' => 'field_type',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      74 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '38',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'In cause of failure: Bad operating/Bad design or dimensioning',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '31',
+        ),
+        'id' => '476',
+        'field_id' => '350',
+        'field_name' => 'field_uwwbadperfdesign',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      75 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '19',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'inspireIdNamespace',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '3',
+        ),
+        'id' => '455',
+        'field_id' => '66',
+        'field_name' => 'field_inspireidnamespace',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      76 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '62',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'permission',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '55',
+        ),
+        'id' => '457',
+        'field_id' => '339',
+        'field_name' => 'field_permission',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      77 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '60',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'serviceHours',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '53',
+        ),
+        'id' => '468',
+        'field_id' => '346',
+        'field_name' => 'field_servicehours',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      78 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '63',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'beginLifespanVersion',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '56',
+        ),
+        'id' => '447',
+        'field_id' => '58',
+        'field_name' => 'field_beginlifespanversion',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      79 => 
+      array (
+        'label' => 'Other type of more stringent ',
+        'widget' => 
+        array (
+          'weight' => '100',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 92,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '595',
+        'field_id' => '451',
+        'field_name' => 'field_uwwother',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      80 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -40108,62 +42711,593 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      104 => 
+      81 => 
       array (
-        'label' => 'Treatment required rcaAPhos',
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '16',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Please specify other type of more stringent treatment',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
         'widget' => 
         array (
-          'weight' => '112',
-          'type' => 'options_buttons',
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '30',
+        ),
+        'id' => '515',
+        'field_id' => '389',
+        'field_name' => 'field_uwwspecification',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      82 => 
+      array (
+        'label' => 'Discharged load P-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '97',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 90,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '590',
+        'field_id' => '446',
+        'field_name' => 'field_uwwpdischargeestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      83 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'text_default',
+            'weight' => '27',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'type of treatment of sewage',
+        'required' => 0,
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'text',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'type' => 'text_textfield',
+          'weight' => '8',
+        ),
+        'id' => '523',
+        'field_id' => '397',
+        'field_name' => 'field_uwwwatertreatment',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      84 => 
+      array (
+        'label' => 'Compliance explication',
+        'widget' => 
+        array (
+          'weight' => '109',
+          'type' => 'text_textarea',
+          'module' => 'text',
+          'active' => 1,
+          'settings' => 
+          array (
+            'rows' => '5',
+          ),
+        ),
+        'settings' => 
+        array (
+          'text_processing' => '0',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 100,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '603',
+        'field_id' => '281',
+        'field_name' => 'field_compliance_explication',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      85 => 
+      array (
+        'label' => 'Incoming load BOD-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '87',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 80,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '580',
+        'field_id' => '436',
+        'field_name' => 'field_uwwbodincomingcalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      86 => 
+      array (
+        'label' => 'Discharged load BOD-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '91',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 84,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '584',
+        'field_id' => '440',
+        'field_name' => 'field_uwwboddischargecalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      87 => 
+      array (
+        'label' => 'Discharged load P-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '96',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 89,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '589',
+        'field_id' => '445',
+        'field_name' => 'field_uwwpdischargecalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      88 => 
+      array (
+        'label' => 'Linked agglomeration(s)',
+        'widget' => 
+        array (
+          'weight' => '81',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 72,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '526',
+        'field_id' => '400',
+        'field_name' => 'field_linked_agglomerations',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      89 => 
+      array (
+        'label' => 'Linked discharge point(s)',
+        'widget' => 
+        array (
+          'weight' => '82',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 73,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '527',
+        'field_id' => '401',
+        'field_name' => 'field_linked_discharge_points',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      90 => 
+      array (
+        'label' => 'Linked receiving area(s)',
+        'widget' => 
+        array (
+          'weight' => '83',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 74,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '528',
+        'field_id' => '402',
+        'field_name' => 'field_linked_receiving_areas',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      91 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '22',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Treatment performance: Other',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '73',
+          'type' => 'options_select',
           'module' => 'options',
           'active' => 1,
           'settings' => 
           array (
           ),
         ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'list_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-            'weight' => 103,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => 
-        array (
-          0 => 
-          array (
-            'value' => '0',
-          ),
-        ),
-        'id' => '679',
-        'field_id' => '523',
-        'field_name' => 'field_uwww_required_rcaap',
+        'id' => '500',
+        'field_id' => '374',
+        'field_name' => 'field_uwwotherperf',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      105 => 
+      92 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -40172,12 +43306,16 @@ $list_contenttype = array (
           'default' => 
           array (
             'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '58',
+            'type' => 'number_decimal',
+            'weight' => '39',
             'settings' => 
             array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
             ),
-            'module' => 'text',
+            'module' => 'number',
           ),
           'teaser' => 
           array (
@@ -40189,134 +43327,34 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'functionDescription',
+        'label' => 'Incoming load BOD (t per year)',
         'required' => 0,
         'settings' => 
         array (
-          'text_processing' => 0,
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
           'user_register_form' => false,
         ),
         'widget' => 
         array (
-          'active' => 1,
-          'module' => 'text',
+          'weight' => '32',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
           'settings' => 
           array (
-            'size' => 60,
           ),
-          'type' => 'text_textfield',
-          'weight' => '51',
         ),
-        'id' => '451',
-        'field_id' => '336',
-        'field_name' => 'field_functiondescription',
+        'id' => '479',
+        'field_id' => '353',
+        'field_name' => 'field_uwwbodincoming',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      106 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '35',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'physicalCapacityOutput',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '17',
-        ),
-        'id' => '461',
-        'field_id' => '343',
-        'field_name' => 'field_physicalcapacityoutput',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      107 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'text_default',
-            'weight' => '26',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'ID of the successor (historical management)',
-        'required' => 0,
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'text',
-          'settings' => 
-          array (
-            'size' => 60,
-          ),
-          'type' => 'text_textfield',
-          'weight' => '7',
-        ),
-        'id' => '516',
-        'field_id' => '390',
-        'field_name' => 'field_uwwsuccessor',
-        'entity_type' => 'node',
-        'bundle' => 'uwwtp',
-        'deleted' => '0',
-      ),
-      108 => 
+      93 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -40373,7 +43411,463 @@ $list_contenttype = array (
         'bundle' => 'uwwtp',
         'deleted' => '0',
       ),
-      109 => 
+      94 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '41',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Incoming load Ntot (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '34',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '497',
+        'field_id' => '371',
+        'field_name' => 'field_uwwnincoming',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      95 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '42',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Incoming load Ptot (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '35',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '506',
+        'field_id' => '380',
+        'field_name' => 'field_uwwpincoming',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      96 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '43',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Discharged load BOD (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '36',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '478',
+        'field_id' => '352',
+        'field_name' => 'field_uwwboddischarge',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      97 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '45',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Discharged load Ntot (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '38',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '496',
+        'field_id' => '370',
+        'field_name' => 'field_uwwndischarge',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      98 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'number_decimal',
+            'weight' => '46',
+            'settings' => 
+            array (
+              'decimal_separator' => '.',
+              'prefix_suffix' => true,
+              'scale' => 2,
+              'thousand_separator' => ' ',
+            ),
+            'module' => 'number',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Discharged load Ptot (t per year)',
+        'required' => 0,
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'weight' => '39',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'id' => '503',
+        'field_id' => '377',
+        'field_name' => 'field_uwwpdischarge',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      99 => 
+      array (
+        'label' => 'Incoming load COD-tot Calculated',
+        'widget' => 
+        array (
+          'weight' => '88',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 81,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '581',
+        'field_id' => '437',
+        'field_name' => 'field_uwwcodincomingcalculated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      100 => 
+      array (
+        'label' => 'Discharged load BOD-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '92',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 85,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '585',
+        'field_id' => '441',
+        'field_name' => 'field_uwwboddischargeestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      101 => 
+      array (
+        'label' => 'Discharged load COD-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '94',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 87,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '587',
+        'field_id' => '443',
+        'field_name' => 'field_uwwcoddischargeestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      102 => 
       array (
         'label' => 'Discharged load N-tot Estimated',
         'widget' => 
@@ -40400,7 +43894,6 @@ $list_contenttype = array (
           array (
             'label' => 'above',
             'type' => 'number_decimal',
-            'weight' => '88',
             'settings' => 
             array (
               'thousand_separator' => ' ',
@@ -40409,6 +43902,7 @@ $list_contenttype = array (
               'prefix_suffix' => true,
             ),
             'module' => 'number',
+            'weight' => 88,
           ),
           'teaser' => 
           array (
@@ -40426,6 +43920,393 @@ $list_contenttype = array (
         'id' => '588',
         'field_id' => '444',
         'field_name' => 'field_uwwndischargeestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      103 => 
+      array (
+        'label' => 'Incoming load BOD-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '103',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 95,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '598',
+        'field_id' => '454',
+        'field_name' => 'field_uwwbodincomingestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      104 => 
+      array (
+        'label' => 'Incoming load COD-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '104',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 96,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '599',
+        'field_id' => '455',
+        'field_name' => 'field_uwwcodincomingestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      105 => 
+      array (
+        'label' => 'Incoming load N-tot Estimated',
+        'widget' => 
+        array (
+          'weight' => '105',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 97,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '600',
+        'field_id' => '456',
+        'field_name' => 'field_uwwnincomingestimated',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      106 => 
+      array (
+        'label' => 'Article 17 Uwwtp',
+        'widget' => 
+        array (
+          'type' => 'node_reference_autocomplete',
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => 60,
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+          'weight' => 110,
+          'module' => 'node_reference',
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 101,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '677',
+        'field_id' => '521',
+        'field_name' => 'field_article17_uwwtp',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      107 => 
+      array (
+        'label' => 'Treatment required rcaANitro',
+        'widget' => 
+        array (
+          'weight' => '111',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 102,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => 
+        array (
+          0 => 
+          array (
+            'value' => '0',
+          ),
+        ),
+        'id' => '678',
+        'field_id' => '522',
+        'field_name' => 'field_uwww_required_rcaan',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      108 => 
+      array (
+        'label' => 'Treatment required rcaAPhos',
+        'widget' => 
+        array (
+          'weight' => '112',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 103,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => 
+        array (
+          0 => 
+          array (
+            'value' => '0',
+          ),
+        ),
+        'id' => '679',
+        'field_id' => '523',
+        'field_name' => 'field_uwww_required_rcaap',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+      ),
+      109 => 
+      array (
+        'label' => 'Treatment required rcaB',
+        'widget' => 
+        array (
+          'weight' => '113',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'list_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+            'weight' => 104,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => 
+        array (
+          0 => 
+          array (
+            'value' => '0',
+          ),
+        ),
+        'id' => '680',
+        'field_id' => '524',
+        'field_name' => 'field_uwww_required_rcab',
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
@@ -40484,6 +44365,124 @@ $list_contenttype = array (
         'entity_type' => 'node',
         'bundle' => 'uwwtp',
         'deleted' => '0',
+      ),
+      111 => 
+      array (
+        'label' => 'uwwbeginlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 115,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 106,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '686',
+        'field_id' => '530',
+        'field_name' => 'field_uwwbeginlife',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      112 => 
+      array (
+        'label' => 'uwwendlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 116,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 107,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '687',
+        'field_id' => '531',
+        'field_name' => 'field_uwwendlife',
+        'entity_type' => 'node',
+        'bundle' => 'uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
       ),
     ),
   ),
@@ -44522,6 +48521,124 @@ $list_contenttype = array (
         'bundle' => 'discharge_point',
         'deleted' => '0',
       ),
+      55 => 
+      array (
+        'label' => 'dcpbeginlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 57,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 46,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '688',
+        'field_id' => '532',
+        'field_name' => 'field_dcpbeginlife',
+        'entity_type' => 'node',
+        'bundle' => 'discharge_point',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      56 => 
+      array (
+        'label' => 'dcpendlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 58,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 47,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '689',
+        'field_id' => '533',
+        'field_name' => 'field_dcpendlife',
+        'entity_type' => 'node',
+        'bundle' => 'discharge_point',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
     ),
   ),
   'receiving_area' => 
@@ -44802,55 +48919,6 @@ $list_contenttype = array (
       ),
       5 => 
       array (
-        'label' => 'Article 58 applied',
-        'widget' => 
-        array (
-          'weight' => '86',
-          'type' => 'options_buttons',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '64',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '573',
-        'field_id' => '429',
-        'field_name' => 'field_rca58applied',
-        'entity_type' => 'node',
-        'bundle' => 'receiving_area',
-        'deleted' => '0',
-      ),
-      6 => 
-      array (
         'default_value' => NULL,
         'description' => '',
         'display' => 
@@ -44900,7 +48968,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      7 => 
+      6 => 
       array (
         'default_value' => 
         array (
@@ -44955,7 +49023,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      8 => 
+      7 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45012,7 +49080,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      9 => 
+      8 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45063,7 +49131,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      10 => 
+      9 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45114,7 +49182,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      11 => 
+      10 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45165,7 +49233,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      12 => 
+      11 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45216,7 +49284,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      13 => 
+      12 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45273,7 +49341,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      14 => 
+      13 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45324,7 +49392,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      15 => 
+      14 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45375,7 +49443,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      16 => 
+      15 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45424,7 +49492,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      17 => 
+      16 => 
       array (
         'default_value' => 
         array (
@@ -45479,7 +49547,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      18 => 
+      17 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45530,7 +49598,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      19 => 
+      18 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45587,7 +49655,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      20 => 
+      19 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45638,7 +49706,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      21 => 
+      20 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45695,7 +49763,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      22 => 
+      21 => 
       array (
         'description' => '',
         'display' => 
@@ -45748,7 +49816,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      23 => 
+      22 => 
       array (
         'description' => '',
         'display' => 
@@ -45814,7 +49882,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      24 => 
+      23 => 
       array (
         'description' => 'Starting date of application of Art. 5(2,3) - b',
         'display' => 
@@ -45880,7 +49948,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      25 => 
+      24 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -45952,7 +50020,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      26 => 
+      25 => 
       array (
         'label' => 'Related Sensitive area',
         'widget' => 
@@ -46003,7 +50071,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      27 => 
+      26 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46060,7 +50128,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      28 => 
+      27 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46117,7 +50185,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      29 => 
+      28 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46168,7 +50236,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      30 => 
+      29 => 
       array (
         'label' => 'Linked treatment plants',
         'widget' => 
@@ -46217,7 +50285,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      31 => 
+      30 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46268,7 +50336,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      32 => 
+      31 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46325,7 +50393,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      33 => 
+      32 => 
       array (
         'label' => 'Linked discharge points',
         'widget' => 
@@ -46376,7 +50444,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      34 => 
+      33 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46433,7 +50501,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      35 => 
+      34 => 
       array (
         'label' => 'Phosphorus discharged UWWTPs (t/year)',
         'widget' => 
@@ -46490,7 +50558,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      36 => 
+      35 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46547,56 +50615,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      37 => 
-      array (
-        'default_value' => NULL,
-        'description' => '',
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '49',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'type' => 'hidden',
-            'weight' => 0,
-          ),
-        ),
-        'label' => 'Article 54 applied',
-        'required' => 0,
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'widget' => 
-        array (
-          'active' => 1,
-          'module' => 'options',
-          'settings' => 
-          array (
-          ),
-          'type' => 'options_buttons',
-          'weight' => '65',
-        ),
-        'id' => '167',
-        'field_id' => '125',
-        'field_name' => 'field_rca54applied',
-        'entity_type' => 'node',
-        'bundle' => 'receiving_area',
-        'deleted' => '0',
-      ),
-      38 => 
+      36 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46647,7 +50666,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      39 => 
+      37 => 
       array (
         'label' => 'Nitrogen entering UWWTPs (t/year)',
         'widget' => 
@@ -46704,7 +50723,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      40 => 
+      38 => 
       array (
         'description' => '',
         'display' => 
@@ -46770,7 +50789,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      41 => 
+      39 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46821,7 +50840,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      42 => 
+      40 => 
       array (
         'default_value' => NULL,
         'description' => 'Designation criteria c - relevant EU-Directives and related parameters',
@@ -46872,7 +50891,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      43 => 
+      41 => 
       array (
         'default_value' => NULL,
         'description' => 'Designation Criteria (a, b, c): b',
@@ -46921,7 +50940,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      44 => 
+      42 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -46972,7 +50991,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      45 => 
+      43 => 
       array (
         'default_value' => NULL,
         'description' => 'Designation Criteria (a, b, c): a - Nitrogen',
@@ -47021,7 +51040,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      46 => 
+      44 => 
       array (
         'label' => 'Errors',
         'widget' => 
@@ -47073,7 +51092,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      47 => 
+      45 => 
       array (
         'label' => 'Linked agglomerations',
         'widget' => 
@@ -47125,7 +51144,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      48 => 
+      46 => 
       array (
         'label' => 'Designation Criteria Eutrophication - Phosphorus',
         'widget' => 
@@ -47174,7 +51193,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      49 => 
+      47 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47225,7 +51244,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      50 => 
+      48 => 
       array (
         'description' => 'Date of designation: Art. 5(2,3) – criterion a (P)',
         'display' => 
@@ -47291,7 +51310,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      51 => 
+      49 => 
       array (
         'description' => 'Date of designation: Art. 5(2,3) – criterion a (N)',
         'display' => 
@@ -47357,7 +51376,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      52 => 
+      50 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47414,7 +51433,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      53 => 
+      51 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47463,7 +51482,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      54 => 
+      52 => 
       array (
         'description' => 'Starting date of application of Art. 5(2,3) -P',
         'display' => 
@@ -47529,7 +51548,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      55 => 
+      53 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47580,56 +51599,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      56 => 
-      array (
-        'label' => 'Article 52 applied',
-        'widget' => 
-        array (
-          'weight' => '85',
-          'type' => 'options_buttons',
-          'module' => 'options',
-          'active' => 1,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'inline',
-            'type' => 'list_default',
-            'weight' => '63',
-            'settings' => 
-            array (
-            ),
-            'module' => 'list',
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => '',
-        'default_value' => NULL,
-        'id' => '572',
-        'field_id' => '428',
-        'field_name' => 'field_rca52applied',
-        'entity_type' => 'node',
-        'bundle' => 'receiving_area',
-        'deleted' => '0',
-      ),
-      57 => 
+      54 => 
       array (
         'default_value' => NULL,
         'description' => 'Designation Criteria (a, b, c): c',
@@ -47678,7 +51648,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      58 => 
+      55 => 
       array (
         'default_value' => NULL,
         'description' => 'Designation Criteria (a, b, c): a - Phosphorus
@@ -47728,7 +51698,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      59 => 
+      56 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47777,7 +51747,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      60 => 
+      57 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47834,7 +51804,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      61 => 
+      58 => 
       array (
         'label' => 'Phosphorus entering UWWTPs (t/year)',
         'widget' => 
@@ -47891,7 +51861,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      62 => 
+      59 => 
       array (
         'label' => 'Total organic design capacity of the UWWTPs',
         'widget' => 
@@ -47948,7 +51918,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      63 => 
+      60 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -47999,7 +51969,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      64 => 
+      61 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48050,7 +52020,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      65 => 
+      62 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48102,7 +52072,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      66 => 
+      63 => 
       array (
         'label' => 'Number of UWWTPs',
         'widget' => 
@@ -48159,7 +52129,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      67 => 
+      64 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48210,7 +52180,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      68 => 
+      65 => 
       array (
         'default_value' => 
         array (
@@ -48262,7 +52232,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      69 => 
+      66 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48319,7 +52289,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      70 => 
+      67 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48376,7 +52346,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      71 => 
+      68 => 
       array (
         'description' => 'Date of designation: Art. 5(2,3) – criterion b',
         'display' => 
@@ -48442,7 +52412,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      72 => 
+      69 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48493,7 +52463,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      73 => 
+      70 => 
       array (
         'label' => 'Starting date of application of Art. 5(4)',
         'widget' => 
@@ -48559,7 +52529,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      74 => 
+      71 => 
       array (
         'description' => 'Starting date of application of Art. 5(2,3) - N',
         'display' => 
@@ -48625,7 +52595,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      75 => 
+      72 => 
       array (
         'label' => 'Designation Criteria Eutrophication - Nitrogen',
         'widget' => 
@@ -48674,7 +52644,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      76 => 
+      73 => 
       array (
         'default_value' => NULL,
         'description' => '',
@@ -48731,7 +52701,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      77 => 
+      74 => 
       array (
         'description' => '',
         'display' => 
@@ -48797,7 +52767,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      78 => 
+      75 => 
       array (
         'label' => 'Designation Criteria other',
         'widget' => 
@@ -48846,7 +52816,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      79 => 
+      76 => 
       array (
         'label' => 'Nitrogen discharged UWWTPs (t/year)',
         'widget' => 
@@ -48903,7 +52873,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      80 => 
+      77 => 
       array (
         'description' => '',
         'display' => 
@@ -48969,7 +52939,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      81 => 
+      78 => 
       array (
         'description' => 'Starting date of application of Art. 5(2,3) - c',
         'display' => 
@@ -49035,7 +53005,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      82 => 
+      79 => 
       array (
         'description' => 'Date of designation: Art. 5(2,3) – criterion c',
         'display' => 
@@ -49102,7 +53072,7 @@ $list_contenttype = array (
         'bundle' => 'receiving_area',
         'deleted' => '0',
       ),
-      83 => 
+      80 => 
       array (
         'label' => 'Root of corresponding GIS-Data File',
         'widget' => 
@@ -49149,6 +53119,948 @@ $list_contenttype = array (
         'id' => '575',
         'field_id' => '431',
         'field_name' => 'field_rcagis',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+      ),
+      81 => 
+      array (
+        'label' => 'rca_parameter_m',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 73,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 95,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '695',
+        'field_id' => '539',
+        'field_name' => 'field_rca_parameter_m',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      82 => 
+      array (
+        'label' => 'rcahyperlink',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 70,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 92,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '692',
+        'field_id' => '536',
+        'field_name' => 'field_rcahyperlink',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      83 => 
+      array (
+        'label' => 'rcabeginlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 93,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 71,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '693',
+        'field_id' => '537',
+        'field_name' => 'field_rcabeginlife',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      84 => 
+      array (
+        'label' => 'rca61datedesignation',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 91,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 69,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '691',
+        'field_id' => '535',
+        'field_name' => 'field_rca61datedesignation',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      85 => 
+      array (
+        'label' => 'rcaendlife',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 94,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 72,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '694',
+        'field_id' => '538',
+        'field_name' => 'field_rcaendlife',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      86 => 
+      array (
+        'label' => 'rcaenvdom',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 68,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 90,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '690',
+        'field_id' => '534',
+        'field_name' => 'field_rcaenvdom',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      87 => 
+      array (
+        'label' => 'rcaart58datedesign',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 96,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 74,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '696',
+        'field_id' => '540',
+        'field_name' => 'field_rcaart58datedesign',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      88 => 
+      array (
+        'label' => 'rcaparameter',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 75,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 97,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '697',
+        'field_id' => '541',
+        'field_name' => 'field_rcaparameter',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      89 => 
+      array (
+        'label' => 'rcastartdate',
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 98,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 76,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '698',
+        'field_id' => '542',
+        'field_name' => 'field_rcastartdate',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      90 => 
+      array (
+        'label' => 'rcamethod54',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 77,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 99,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '699',
+        'field_id' => '543',
+        'field_name' => 'field_rcamethod54',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      91 => 
+      array (
+        'label' => 'rcarelatedsa',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 78,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 100,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '700',
+        'field_id' => '544',
+        'field_name' => 'field_rcarelatedsa',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      92 => 
+      array (
+        'label' => 'rcarelatedsaremark',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 79,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 101,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '701',
+        'field_id' => '545',
+        'field_name' => 'field_rcarelatedsaremark',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      93 => 
+      array (
+        'label' => 'rcacodepredecessor',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 80,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 102,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '702',
+        'field_id' => '546',
+        'field_name' => 'field_rcacodepredecessor',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      94 => 
+      array (
+        'label' => 'rcaevolutiontype',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 81,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 103,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '703',
+        'field_id' => '547',
+        'field_name' => 'field_rcaevolutiontype',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      95 => 
+      array (
+        'label' => 'rcasalsaremark',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 82,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textfield',
+          'settings' => 
+          array (
+            'size' => 60,
+          ),
+          'weight' => 104,
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '704',
+        'field_id' => '548',
+        'field_name' => 'field_rcasalsaremark',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      96 => 
+      array (
+        'label' => 'Article 5(2) applied',
+        'widget' => 
+        array (
+          'weight' => '85',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '63',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '572',
+        'field_id' => '428',
+        'field_name' => 'field_rca52applied',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+      ),
+      97 => 
+      array (
+        'default_value' => NULL,
+        'description' => '',
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '49',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'type' => 'hidden',
+            'weight' => 0,
+          ),
+        ),
+        'label' => 'Article 5(4) applied',
+        'required' => 0,
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'widget' => 
+        array (
+          'active' => 1,
+          'module' => 'options',
+          'settings' => 
+          array (
+          ),
+          'type' => 'options_buttons',
+          'weight' => '65',
+        ),
+        'id' => '167',
+        'field_id' => '125',
+        'field_name' => 'field_rca54applied',
+        'entity_type' => 'node',
+        'bundle' => 'receiving_area',
+        'deleted' => '0',
+      ),
+      98 => 
+      array (
+        'label' => 'Article 5(8) applied',
+        'widget' => 
+        array (
+          'weight' => '86',
+          'type' => 'options_buttons',
+          'module' => 'options',
+          'active' => 1,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'inline',
+            'type' => 'list_default',
+            'weight' => '64',
+            'settings' => 
+            array (
+            ),
+            'module' => 'list',
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '573',
+        'field_id' => '429',
+        'field_name' => 'field_rca58applied',
         'entity_type' => 'node',
         'bundle' => 'receiving_area',
         'deleted' => '0',
@@ -49293,63 +54205,6 @@ $list_contenttype = array (
       ),
       2 => 
       array (
-        'label' => 'Re-used: Soil and agriculture',
-        'widget' => 
-        array (
-          'weight' => '8',
-          'type' => 'number',
-          'module' => 'number',
-          'active' => 0,
-          'settings' => 
-          array (
-          ),
-        ),
-        'settings' => 
-        array (
-          'min' => '0',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => 't DS/y',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_decimal',
-            'settings' => 
-            array (
-              'thousand_separator' => ' ',
-              'decimal_separator' => '.',
-              'scale' => 2,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-            'weight' => 7,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => 0,
-        'description' => 'Of which: re-used: Soil and agriculture (t DS/y)',
-        'default_value' => NULL,
-        'id' => '614',
-        'field_id' => '464',
-        'field_name' => 'field_mslreusesoilagriculture',
-        'entity_type' => 'node',
-        'bundle' => 'ms_level',
-        'deleted' => '0',
-      ),
-      3 => 
-      array (
         'label' => 'Discharged into surface waters : Pipelines',
         'widget' => 
         array (
@@ -49405,7 +54260,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      4 => 
+      3 => 
       array (
         'label' => 'Site unique ID',
         'widget' => 
@@ -49456,7 +54311,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      5 => 
+      4 => 
       array (
         'label' => 'Remarks',
         'widget' => 
@@ -49507,7 +54362,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      6 => 
+      5 => 
       array (
         'label' => 'Disposed: Incineration',
         'widget' => 
@@ -49565,7 +54420,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      7 => 
+      6 => 
       array (
         'label' => 'Source of data',
         'widget' => 
@@ -49618,7 +54473,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      8 => 
+      7 => 
       array (
         'label' => 'Discharged into surface waters : Ships',
         'widget' => 
@@ -49676,7 +54531,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      9 => 
+      8 => 
       array (
         'label' => 'Year of data',
         'widget' => 
@@ -49725,7 +54580,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      10 => 
+      9 => 
       array (
         'label' => 'Discharged into surface waters : Others',
         'widget' => 
@@ -49783,7 +54638,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      11 => 
+      10 => 
       array (
         'label' => 'Re-use of treated waste water in: Agriculture',
         'widget' => 
@@ -49839,7 +54694,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      12 => 
+      11 => 
       array (
         'label' => 'Re-use of treated wastewater in: Industry',
         'widget' => 
@@ -49895,7 +54750,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      13 => 
+      12 => 
       array (
         'label' => 'Re-used: Others',
         'widget' => 
@@ -49953,7 +54808,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      14 => 
+      13 => 
       array (
         'label' => 'Re-use of treated waste water in: Others',
         'widget' => 
@@ -50009,7 +54864,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      15 => 
+      14 => 
       array (
         'label' => 'Rate of treated waste water re-used',
         'widget' => 
@@ -50066,7 +54921,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      16 => 
+      15 => 
       array (
         'label' => 'Re-use of treated waste water',
         'widget' => 
@@ -50117,7 +54972,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      17 => 
+      16 => 
       array (
         'label' => 'disposed: Others',
         'widget' => 
@@ -50174,7 +55029,7 @@ $list_contenttype = array (
         'bundle' => 'ms_level',
         'deleted' => '0',
       ),
-      18 => 
+      17 => 
       array (
         'label' => 'Report ID',
         'widget' => 
@@ -50224,148 +55079,9 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-    ),
-  ),
-  'article_17_agglomeration' => 
-  array (
-    'node_type_load' => 
-    array (
-      'type' => 'article_17_agglomeration',
-      'name' => 'Article 17 agglomeration',
-      'base' => 'node_content',
-      'module' => 'node',
-      'description' => '',
-      'help' => '',
-      'has_title' => '1',
-      'title_label' => 'Title',
-      'custom' => '0',
-      'modified' => '1',
-      'locked' => '0',
-      'disabled' => '0',
-      'orig_type' => 'article_17_agglomeration',
-      'disabled_changed' => false,
-    ),
-    'field_info_instance' => 
-    array (
-      0 => 
+      18 => 
       array (
-        'label' => 'Name of the entity planned to give fund to complete the collecting system or IAS (if any)',
-        'widget' => 
-        array (
-          'type' => 'text_textarea',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'weight' => 49,
-          'module' => 'text',
-        ),
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-            'weight' => 18,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '648',
-        'field_id' => '493',
-        'field_name' => 'field_art17_flaggotherfundname',
-        'entity_type' => 'node',
-        'bundle' => 'article_17_agglomeration',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      1 => 
-      array (
-        'label' => 'Amount of loan likely to be granted to complete the collecting system or IAS (if any)',
-        'widget' => 
-        array (
-          'type' => 'number',
-          'settings' => 
-          array (
-          ),
-          'weight' => 50,
-          'module' => 'number',
-        ),
-        'settings' => 
-        array (
-          'min' => '',
-          'max' => '',
-          'prefix' => '',
-          'suffix' => '',
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'number_integer',
-            'settings' => 
-            array (
-              'thousand_separator' => '',
-              'decimal_separator' => '.',
-              'scale' => 0,
-              'prefix_suffix' => true,
-            ),
-            'module' => 'number',
-            'weight' => 19,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '649',
-        'field_id' => '494',
-        'field_name' => 'field_art17_flaggloan',
-        'entity_type' => 'node',
-        'bundle' => 'article_17_agglomeration',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      2 => 
-      array (
-        'label' => 'Name of the entity planned to give loan to complete the collecting system or IAS (if any)',
-        'widget' => 
-        array (
-          'type' => 'text_textarea',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'weight' => 51,
-          'module' => 'text',
-        ),
+        'label' => 'Comparison of compliance by agg',
         'settings' => 
         array (
           'text_processing' => 0,
@@ -50393,17 +55109,359 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => '23',
+          'module' => 'text',
+        ),
         'required' => false,
         'description' => '',
-        'id' => '650',
-        'field_id' => '495',
-        'field_name' => 'field_art17_flaggloanname',
+        'id' => '683',
+        'field_id' => '527',
+        'field_name' => 'field_comparison_of_compliance_a',
         'entity_type' => 'node',
-        'bundle' => 'article_17_agglomeration',
+        'bundle' => 'ms_level',
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      3 => 
+      19 => 
+      array (
+        'label' => 'Comparison of compliance pending',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 22,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => '25',
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '706',
+        'field_id' => '550',
+        'field_name' => 'field_compliance_pending',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      20 => 
+      array (
+        'label' => 'Comparison of compliance total',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 23,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => '26',
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '707',
+        'field_id' => '551',
+        'field_name' => 'field_compliance_total',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      21 => 
+      array (
+        'label' => 'Re-used: Soil and agriculture',
+        'widget' => 
+        array (
+          'weight' => '8',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '0',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => 't DS/y',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => ' ',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 7,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Of which: re-used: Soil and agriculture (t DS/y)',
+        'default_value' => NULL,
+        'id' => '614',
+        'field_id' => '464',
+        'field_name' => 'field_mslreusesoilagriculture',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+      ),
+      22 => 
+      array (
+        'label' => 'Comparison of compliance by p.e.',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 19,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => '22',
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '682',
+        'field_id' => '526',
+        'field_name' => 'field_comparison_of_compliance_p',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      23 => 
+      array (
+        'label' => 'Comparison of compliance expired.',
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 21,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => '24',
+          'module' => 'text',
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '705',
+        'field_id' => '549',
+        'field_name' => 'field_compliance_expired',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      24 => 
+      array (
+        'label' => 'Article 17 MS level',
+        'widget' => 
+        array (
+          'weight' => '27',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 24,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '727',
+        'field_id' => '569',
+        'field_name' => 'field_article_17_ms_level',
+        'entity_type' => 'node',
+        'bundle' => 'ms_level',
+        'deleted' => '0',
+      ),
+    ),
+  ),
+  'article_17_agglomeration' => 
+  array (
+    'node_type_load' => 
+    array (
+      'type' => 'article_17_agglomeration',
+      'name' => 'Article 17 agglomeration',
+      'base' => 'node_content',
+      'module' => 'node',
+      'description' => '',
+      'help' => '',
+      'has_title' => '1',
+      'title_label' => 'Title',
+      'custom' => '0',
+      'modified' => '1',
+      'locked' => '0',
+      'disabled' => '0',
+      'orig_type' => 'article_17_agglomeration',
+      'disabled_changed' => false,
+    ),
+    'field_info_instance' => 
+    array (
+      0 => 
       array (
         'label' => 'Year of data',
         'widget' => 
@@ -50451,7 +55509,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      4 => 
+      1 => 
       array (
         'label' => 'Linked Agglomeration',
         'widget' => 
@@ -50502,7 +55560,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      5 => 
+      2 => 
       array (
         'label' => 'ID of the agglomeration',
         'widget' => 
@@ -50552,7 +55610,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      6 => 
+      3 => 
       array (
         'label' => 'Name of the agglomeration related to this UWWTP',
         'widget' => 
@@ -50602,7 +55660,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      7 => 
+      4 => 
       array (
         'label' => 'Status of the agglomeration at the reference reporting year (Not compliant/Pending deadlines)',
         'widget' => 
@@ -50652,7 +55710,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      8 => 
+      5 => 
       array (
         'label' => 'Identified reason(s) for non compliance',
         'widget' => 
@@ -50702,7 +55760,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      9 => 
+      6 => 
       array (
         'label' => 'Measure(s) foreseen to reach compliance with Article 3 (collecting systems and IAS)',
         'widget' => 
@@ -50752,7 +55810,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      10 => 
+      7 => 
       array (
         'label' => 'Date or expected date for completion of preparatory measures for the collecting system or IAS (planning, design, procurement, c',
         'widget' => 
@@ -50817,7 +55875,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_agglomeration',
         'deleted' => '0',
       ),
-      11 => 
+      8 => 
       array (
         'label' => 'Start date or expected start date for works on the collecting systems or IAS',
         'widget' => 
@@ -50882,7 +55940,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_agglomeration',
         'deleted' => '0',
       ),
-      12 => 
+      9 => 
       array (
         'label' => 'Expected date of completion of the collecting system or IAS works',
         'widget' => 
@@ -50947,7 +56005,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_agglomeration',
         'deleted' => '0',
       ),
-      13 => 
+      10 => 
       array (
         'label' => 'Forecast investment cost for the collecting system or IAS (as in the national plan)',
         'widget' => 
@@ -51003,7 +56061,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      14 => 
+      11 => 
       array (
         'label' => 'Name of EU fund planned to be used to complete the collecting system or IAS (if any)',
         'widget' => 
@@ -51053,7 +56111,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      15 => 
+      12 => 
       array (
         'label' => 'Amount of (planned) EU funds likely to be requested to complete the collecting system or IAS (if any)',
         'widget' => 
@@ -51109,7 +56167,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      16 => 
+      13 => 
       array (
         'label' => 'Any relevant comment on collecting system or IAS',
         'widget' => 
@@ -51159,7 +56217,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      17 => 
+      14 => 
       array (
         'label' => 'Expected generated load of the agglomeration at the exepected date of compliance',
         'widget' => 
@@ -51215,7 +56273,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      18 => 
+      15 => 
       array (
         'label' => 'Expected rate of the generated load of agglomeration collected through collecting systems at the expected date of compliance',
         'widget' => 
@@ -51271,7 +56329,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      19 => 
+      16 => 
       array (
         'label' => 'Expected rate of the generated load of the agglomeration addressed throug IAS at the expected date of compliance',
         'widget' => 
@@ -51327,7 +56385,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      20 => 
+      17 => 
       array (
         'label' => 'Amount of funds likely to be given to complete the collecting system or IAS (if any)',
         'widget' => 
@@ -51383,6 +56441,162 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
+      18 => 
+      array (
+        'label' => 'Name of the entity planned to give fund to complete the collecting system or IAS (if any)',
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => 49,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 18,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '648',
+        'field_id' => '493',
+        'field_name' => 'field_art17_flaggotherfundname',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      19 => 
+      array (
+        'label' => 'Amount of loan likely to be granted to complete the collecting system or IAS (if any)',
+        'widget' => 
+        array (
+          'type' => 'number',
+          'settings' => 
+          array (
+          ),
+          'weight' => 50,
+          'module' => 'number',
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 19,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '649',
+        'field_id' => '494',
+        'field_name' => 'field_art17_flaggloan',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      20 => 
+      array (
+        'label' => 'Name of the entity planned to give loan to complete the collecting system or IAS (if any)',
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => 51,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 20,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '650',
+        'field_id' => '495',
+        'field_name' => 'field_art17_flaggloanname',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_agglomeration',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
     ),
   ),
   'article_17_uwwtp' => 
@@ -51407,6 +56621,156 @@ $list_contenttype = array (
     'field_info_instance' => 
     array (
       0 => 
+      array (
+        'label' => 'Identified reason(s) for non compliance',
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => 38,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 7,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '658',
+        'field_id' => '502',
+        'field_name' => 'field_art17_flatpreasons',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      1 => 
+      array (
+        'label' => 'Measure(s) to reach the compliance needed for UWWTP',
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => 39,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 8,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '659',
+        'field_id' => '503',
+        'field_name' => 'field_art17_flatpmeasures',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      2 => 
+      array (
+        'label' => 'Any relevant comment on UWWTP',
+        'widget' => 
+        array (
+          'type' => 'text_textarea',
+          'settings' => 
+          array (
+            'rows' => 5,
+          ),
+          'weight' => 50,
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'text_processing' => 0,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 19,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '670',
+        'field_id' => '514',
+        'field_name' => 'field_art17_flatpcomments',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_uwwtp',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      3 => 
       array (
         'label' => 'Year of data',
         'widget' => 
@@ -51454,7 +56818,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      1 => 
+      4 => 
       array (
         'label' => 'Linked Treatment Plant',
         'widget' => 
@@ -51505,7 +56869,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      2 => 
+      5 => 
       array (
         'label' => 'ID of UWWTP/ collecting system without treatment',
         'widget' => 
@@ -51555,7 +56919,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      3 => 
+      6 => 
       array (
         'label' => 'Name of UWWTP/ collecting system without treatment',
         'widget' => 
@@ -51605,7 +56969,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      4 => 
+      7 => 
       array (
         'label' => 'ID of the agglomeration related to this UWWTP',
         'widget' => 
@@ -51655,7 +57019,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      5 => 
+      8 => 
       array (
         'label' => 'Name of the agglomeration related to this UWWTP',
         'widget' => 
@@ -51705,7 +57069,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      6 => 
+      9 => 
       array (
         'label' => 'Status of the UWWTP at the reference reporting year (Not compliant/Pending deadlines)',
         'widget' => 
@@ -51755,107 +57119,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      7 => 
-      array (
-        'label' => 'Identified reason(s) for non compliance',
-        'widget' => 
-        array (
-          'type' => 'text_textarea',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'weight' => 38,
-          'module' => 'text',
-        ),
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-            'weight' => 7,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '658',
-        'field_id' => '502',
-        'field_name' => 'field_art17_flatpreasons',
-        'entity_type' => 'node',
-        'bundle' => 'article_17_uwwtp',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      8 => 
-      array (
-        'label' => 'Measure(s) to reach the compliance needed for UWWTP',
-        'widget' => 
-        array (
-          'type' => 'text_textarea',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'weight' => 39,
-          'module' => 'text',
-        ),
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-            'weight' => 8,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '659',
-        'field_id' => '503',
-        'field_name' => 'field_art17_flatpmeasures',
-        'entity_type' => 'node',
-        'bundle' => 'article_17_uwwtp',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      9 => 
+      10 => 
       array (
         'label' => 'Load entering the UWWTP at the expected date of compliance (as planned)',
         'widget' => 
@@ -51911,7 +57175,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      10 => 
+      11 => 
       array (
         'label' => 'Organic design capacity UWWTP (as planned)',
         'widget' => 
@@ -51967,7 +57231,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      11 => 
+      12 => 
       array (
         'label' => 'Type of treatment UWWTP (as planned)',
         'widget' => 
@@ -52017,7 +57281,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      12 => 
+      13 => 
       array (
         'label' => 'Date or expected date of completion of preparatory measures (planning, design, etc)',
         'widget' => 
@@ -52082,7 +57346,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
       ),
-      13 => 
+      14 => 
       array (
         'label' => 'Date or expected start date for works',
         'widget' => 
@@ -52147,7 +57411,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
       ),
-      14 => 
+      15 => 
       array (
         'label' => 'Date or expected date of completion of works',
         'widget' => 
@@ -52212,7 +57476,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
       ),
-      15 => 
+      16 => 
       array (
         'label' => 'Expected date of compliance (12 months of compliant samples) ',
         'widget' => 
@@ -52277,7 +57541,7 @@ $list_contenttype = array (
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
       ),
-      16 => 
+      17 => 
       array (
         'label' => 'Forecast cost investment needed for the UWWTP (as in the national plan)',
         'widget' => 
@@ -52333,7 +57597,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      17 => 
+      18 => 
       array (
         'label' => 'Name of EU fund planned to be used UWWTP (if any)',
         'widget' => 
@@ -52383,7 +57647,7 @@ $list_contenttype = array (
         'deleted' => '0',
         'default_value' => NULL,
       ),
-      18 => 
+      19 => 
       array (
         'label' => 'Amount of (planned) EU funding needed',
         'widget' => 
@@ -52434,56 +57698,6 @@ $list_contenttype = array (
         'id' => '669',
         'field_id' => '513',
         'field_name' => 'field_art17_flatpeufund',
-        'entity_type' => 'node',
-        'bundle' => 'article_17_uwwtp',
-        'deleted' => '0',
-        'default_value' => NULL,
-      ),
-      19 => 
-      array (
-        'label' => 'Any relevant comment on UWWTP',
-        'widget' => 
-        array (
-          'type' => 'text_textarea',
-          'settings' => 
-          array (
-            'rows' => 5,
-          ),
-          'weight' => 50,
-          'module' => 'text',
-        ),
-        'settings' => 
-        array (
-          'text_processing' => 0,
-          'user_register_form' => false,
-        ),
-        'display' => 
-        array (
-          'default' => 
-          array (
-            'label' => 'above',
-            'type' => 'text_default',
-            'settings' => 
-            array (
-            ),
-            'module' => 'text',
-            'weight' => 19,
-          ),
-          'teaser' => 
-          array (
-            'type' => 'hidden',
-            'label' => 'above',
-            'settings' => 
-            array (
-            ),
-            'weight' => 0,
-          ),
-        ),
-        'required' => false,
-        'description' => '',
-        'id' => '670',
-        'field_id' => '514',
-        'field_name' => 'field_art17_flatpcomments',
         'entity_type' => 'node',
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
@@ -52756,6 +57970,1174 @@ $list_contenttype = array (
         'bundle' => 'article_17_uwwtp',
         'deleted' => '0',
         'default_value' => NULL,
+      ),
+    ),
+  ),
+  'article_17_ms_level' => 
+  array (
+    'node_type_load' => 
+    array (
+      'type' => 'article_17_ms_level',
+      'name' => 'Article 17 MS level',
+      'base' => 'node_content',
+      'module' => 'node',
+      'description' => '',
+      'help' => '',
+      'has_title' => '1',
+      'title_label' => 'Title',
+      'custom' => '1',
+      'modified' => '1',
+      'locked' => '0',
+      'disabled' => '0',
+      'orig_type' => 'article_17_ms_level',
+      'disabled_changed' => false,
+    ),
+    'field_info_instance' => 
+    array (
+      0 => 
+      array (
+        'label' => 'Body',
+        'widget' => 
+        array (
+          'type' => 'text_textarea_with_summary',
+          'settings' => 
+          array (
+            'rows' => 20,
+            'summary_rows' => 5,
+          ),
+          'weight' => '31',
+          'module' => 'text',
+        ),
+        'settings' => 
+        array (
+          'display_summary' => true,
+          'text_processing' => 1,
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'hidden',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 0,
+          ),
+          'teaser' => 
+          array (
+            'label' => 'hidden',
+            'type' => 'text_summary_or_trimmed',
+            'settings' => 
+            array (
+              'trim_length' => 600,
+            ),
+            'module' => 'text',
+            'weight' => 0,
+          ),
+        ),
+        'required' => false,
+        'description' => '',
+        'id' => '709',
+        'field_id' => '2',
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+        'default_value' => NULL,
+      ),
+      1 => 
+      array (
+        'label' => 'Linked MS level',
+        'widget' => 
+        array (
+          'weight' => '50',
+          'type' => 'node_reference_autocomplete',
+          'module' => 'node_reference',
+          'active' => 1,
+          'settings' => 
+          array (
+            'autocomplete_match' => 'contains',
+            'size' => '60',
+            'autocomplete_path' => 'node_reference/autocomplete',
+          ),
+        ),
+        'settings' => 
+        array (
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'node_reference_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'node_reference',
+            'weight' => 19,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '730',
+        'field_id' => '572',
+        'field_name' => 'field_linked_ms_level',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      2 => 
+      array (
+        'label' => 'Current or expected investment costs of the collecting systems (new and renewal)',
+        'widget' => 
+        array (
+          'weight' => '37',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 6,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: million euros. 
+Indicate euros in current price giving reference date (in mm/yyyy) and whether VAT included or not in the comment cell.
+All investments have to be taken into account and not only the investments needed for the not compliant situations. What is needed to renovate all the system is also important to maintain the performance of the whole system.
+Explanation of how it is calculated might be added in the comment cell',
+        'default_value' => NULL,
+        'id' => '715',
+        'field_id' => '557',
+        'field_name' => 'field_soecinvcol',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      3 => 
+      array (
+        'label' => 'Comments on investments costs',
+        'widget' => 
+        array (
+          'weight' => '39',
+          'type' => 'text_textfield',
+          'module' => 'text',
+          'active' => 1,
+          'settings' => 
+          array (
+            'size' => '60',
+          ),
+        ),
+        'settings' => 
+        array (
+          'text_processing' => '0',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 8,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Examples: calculation of total design capacity, amount of investment whether VAT included or not,…)',
+        'default_value' => NULL,
+        'id' => '717',
+        'field_id' => '559',
+        'field_name' => 'field_soecinvcomments',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      4 => 
+      array (
+        'label' => 'ID Code corresponding to the period covered',
+        'widget' => 
+        array (
+          'weight' => '32',
+          'type' => 'text_textfield',
+          'module' => 'text',
+          'active' => 1,
+          'settings' => 
+          array (
+            'size' => '60',
+          ),
+        ),
+        'settings' => 
+        array (
+          'text_processing' => '0',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 1,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Code has to be generated with the code of the country then \'UWWINV\' then the beginning year and if the begining year of the period is different to the last year it has to be added the last year with \'_\' before.
+examples: ATUWWINV2014_2016 or CZUWWINV2015',
+        'default_value' => NULL,
+        'id' => '710',
+        'field_id' => '552',
+        'field_name' => 'field_soeccode',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      5 => 
+      array (
+        'label' => 'End Reference period',
+        'widget' => 
+        array (
+          'weight' => '34',
+          'type' => 'date_text',
+          'module' => 'date',
+          'active' => 1,
+          'settings' => 
+          array (
+            'input_format' => 'd/m/Y - H:i:s',
+            'input_format_custom' => '',
+            'year_range' => '-3:+3',
+            'increment' => 15,
+            'label_position' => 'above',
+            'text_parts' => 
+            array (
+            ),
+            'no_fieldset' => 0,
+          ),
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 3,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'id' => '712',
+        'field_id' => '554',
+        'field_name' => 'field_soecendyear',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      6 => 
+      array (
+        'label' => '	Current or expected operating costs of the collecting systems and UWWTPs without amortization of investments',
+        'widget' => 
+        array (
+          'weight' => '41',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 10,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: million euros.
+Indicate euros in current price giving reference date (in mm/yyyy) and whether VAT included or not.',
+        'default_value' => NULL,
+        'id' => '719',
+        'field_id' => '561',
+        'field_name' => 'field_soecopcosts',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      7 => 
+      array (
+        'label' => 'Current and expected situation',
+        'widget' => 
+        array (
+          'weight' => '35',
+          'type' => 'text_textfield',
+          'module' => 'text',
+          'active' => 1,
+          'settings' => 
+          array (
+            'size' => '60',
+          ),
+        ),
+        'settings' => 
+        array (
+          'text_processing' => '0',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'text_default',
+            'settings' => 
+            array (
+            ),
+            'module' => 'text',
+            'weight' => 4,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Filled information about the the period time for which the information is provided.',
+        'default_value' => NULL,
+        'id' => '713',
+        'field_id' => '555',
+        'field_name' => 'field_soecperiod',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      8 => 
+      array (
+        'label' => 'Starting Reference period',
+        'widget' => 
+        array (
+          'weight' => '33',
+          'type' => 'date_text',
+          'module' => 'date',
+          'active' => 1,
+          'settings' => 
+          array (
+            'input_format' => 'd/m/Y - H:i:s',
+            'input_format_custom' => '',
+            'year_range' => '-3:+3',
+            'increment' => 15,
+            'label_position' => 'above',
+            'text_parts' => 
+            array (
+            ),
+            'no_fieldset' => 0,
+          ),
+        ),
+        'settings' => 
+        array (
+          'default_value' => 'now',
+          'default_value_code' => '',
+          'default_value2' => 'same',
+          'default_value_code2' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'date_default',
+            'settings' => 
+            array (
+              'format_type' => 'long',
+              'multiple_number' => '',
+              'multiple_from' => '',
+              'multiple_to' => '',
+              'fromto' => 'both',
+              'show_remaining_days' => false,
+            ),
+            'module' => 'date',
+            'weight' => 2,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'id' => '711',
+        'field_id' => '553',
+        'field_name' => 'field_soecstartyear',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      9 => 
+      array (
+        'label' => 'Lenght of combined sewer systems',
+        'widget' => 
+        array (
+          'weight' => '44',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 13,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: km',
+        'default_value' => NULL,
+        'id' => '722',
+        'field_id' => '564',
+        'field_name' => 'field_soeclenghtcocs',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      10 => 
+      array (
+        'label' => 'Current of expected Investment costs of the IAS',
+        'widget' => 
+        array (
+          'weight' => '40',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 9,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: million euros.
+Indicate euros in current price giving reference date (in mm/yyyy) and whether VAT included or not.
+Could be added if not included in the "current or expected costs of the collecting systems (new and renewal)"',
+        'default_value' => NULL,
+        'id' => '718',
+        'field_id' => '560',
+        'field_name' => 'field_soecinvias',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      11 => 
+      array (
+        'label' => 'Current or expected EU funds (if applicable)',
+        'widget' => 
+        array (
+          'weight' => '42',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 11,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: million euros',
+        'default_value' => NULL,
+        'id' => '720',
+        'field_id' => '562',
+        'field_name' => 'field_soeceufunds',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      12 => 
+      array (
+        'label' => 'Current or expected number of Jobs in the waste water field',
+        'widget' => 
+        array (
+          'weight' => '43',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 12,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '721',
+        'field_id' => '563',
+        'field_name' => 'field_soecjobs',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      13 => 
+      array (
+        'label' => 'Number of IAS in the country',
+        'widget' => 
+        array (
+          'weight' => '47',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 16,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Provide the number of IAS included those for isolated areas',
+        'default_value' => NULL,
+        'id' => '725',
+        'field_id' => '567',
+        'field_name' => 'field_soecnumbias',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      14 => 
+      array (
+        'label' => 'Population of the country at the reference year',
+        'widget' => 
+        array (
+          'weight' => '48',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 17,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '726',
+        'field_id' => '568',
+        'field_name' => 'field_soecpop',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      15 => 
+      array (
+        'label' => 'Lenght of storm drainage systems',
+        'widget' => 
+        array (
+          'weight' => '46',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 15,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: km',
+        'default_value' => NULL,
+        'id' => '724',
+        'field_id' => '566',
+        'field_name' => 'field_soeclenghtstcs',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      16 => 
+      array (
+        'label' => 'Lenght of sanitary sewer systems',
+        'widget' => 
+        array (
+          'weight' => '45',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 14,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: km',
+        'default_value' => NULL,
+        'id' => '723',
+        'field_id' => '565',
+        'field_name' => 'field_soeclenghtsacs',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      17 => 
+      array (
+        'label' => 'Current or expected investment costs of the treatment plants (new and renewal)',
+        'widget' => 
+        array (
+          'weight' => '38',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_decimal',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 2,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 7,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: million euros. 
+Indicate euros in current price giving reference date (in mm/yyyy) and whether VAT included or not.
+All investments have to be taken into account and not only the investments needed for the not compliant situations. What is needed to renovate all the system is also important to maintain the performance of the whole system. Explanation of how it is calculated might be added in the comment cell',
+        'default_value' => NULL,
+        'id' => '716',
+        'field_id' => '558',
+        'field_name' => 'field_soecinvtp',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      18 => 
+      array (
+        'label' => 'Current or expected total organic design capacity of all UWWTPs at the end of the period',
+        'widget' => 
+        array (
+          'weight' => '36',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 5,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 0,
+        'description' => 'Unit: p.e. (population equivalent)
+For the current situation it can be calculated by the sum of all organic design capacity of the UWWTPs reported under article 15 for compliant and not compliant situations
+For the expected total organic design capacity, the total amount might be corrected with the information given in table tables 3 of the implementing decision. If this information is know, it has to include UWWTPs belonging to agglomeration of less than 2000 p.e.. Explanation of how it is calculated might be added in the comment cell.',
+        'default_value' => NULL,
+        'id' => '714',
+        'field_id' => '556',
+        'field_name' => 'field_soeccapacity',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
+      ),
+      19 => 
+      array (
+        'label' => 'Year of datas',
+        'widget' => 
+        array (
+          'weight' => '49',
+          'type' => 'number',
+          'module' => 'number',
+          'active' => 0,
+          'settings' => 
+          array (
+          ),
+        ),
+        'settings' => 
+        array (
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+          'user_register_form' => false,
+        ),
+        'display' => 
+        array (
+          'default' => 
+          array (
+            'label' => 'above',
+            'type' => 'number_integer',
+            'settings' => 
+            array (
+              'thousand_separator' => '',
+              'decimal_separator' => '.',
+              'scale' => 0,
+              'prefix_suffix' => true,
+            ),
+            'module' => 'number',
+            'weight' => 18,
+          ),
+          'teaser' => 
+          array (
+            'type' => 'hidden',
+            'label' => 'above',
+            'settings' => 
+            array (
+            ),
+            'weight' => 0,
+          ),
+        ),
+        'required' => 1,
+        'description' => '',
+        'default_value' => NULL,
+        'id' => '729',
+        'field_id' => '571',
+        'field_name' => 'field_year_of_datas',
+        'entity_type' => 'node',
+        'bundle' => 'article_17_ms_level',
+        'deleted' => '0',
       ),
     ),
   ),
