@@ -1310,7 +1310,7 @@ function uuwtd_get_distance_compliance($agg){
     // }
     // $difference_pe = ($difference * 100) / $collected;
 
-    $dist_art4_treatment_pe =  $pe_lost;
+    $dist_art4_treatment_pe +=  $pe_lost;
     $dist_art4_treatment_percent += $percentage_lost;
     $dist_art4_perf_pe += $pe_lost;
     $dist_art4_perf_percent += $percentage_lost;
