@@ -4344,7 +4344,7 @@ function uwwtd_update_7149(&$context = null) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     } 
-    
+
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	//throw new DrupalUpdateException(__FUNCTION__);
 }

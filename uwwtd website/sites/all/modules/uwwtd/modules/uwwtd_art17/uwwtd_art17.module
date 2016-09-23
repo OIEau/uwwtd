@@ -2565,7 +2565,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
     }
 
     // Processing investments
-    foreach ($datas['FLAInvestments'] as $investment) {
+    foreach ($datas['FLAInvestments']['FLAInvestment'] as $investment) {
     	$e = 0;
 
     	// Retrieving values from XML file
@@ -2639,149 +2639,145 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 		}
 
 		if($e == 0) {
-			$siteId = $annee.'_mslevel';
-			$exists = uwwtd_check_exist($siteId);
-			if ($exists != false) {
-    			$element = node_load($exists);
+						
+			$results = db_query('SELECT c.entity_id, y.field_year_of_datas_value, c.field_soeccode_value
+								FROM {field_data_field_year_of_datas} y, {field_revision_field_soeccode} c
+								WHERE c.entity_id = y.entity_id
+								AND field_soeccode_value = :code
+								AND field_year_of_datas_value = :year', 
+								array(	':code' => $investment['soecCode'],
+										':year' => $annee));
 
-    			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
-    			dsm($element);
+			foreach($results as $result){
+				$id = $result->entity_id;
+			}
 
-    			if (isset($element->field_article_17_ms_level['und'][0]['nid']) && ($element->field_article_17_ms_level['und'][0]['nid']!= "" || $element->field_article_17_ms_level['und'][0]['nid']!= NULL)) {
-					$art = node_load($element->field_article_17_ms_level['und'][0]['nid']);
-				} else {
-					// Create new article 17 node
-					$art = new StdClass();
-					$art->type = 'article_17_ms_level';
-					$art->title = $art17_title;
-				}
+			if (!is_null($id)) {
+    			$art = node_load($id);
+    		} else {
+    			$art = new StdClass();
+				$art->type = 'article_17_ms_level';
+    			$art17_title = $annee .' - Article 17 data - '. $investment['soecCode'];
+				$art->title = $art17_title;
+    		}
+			
+			// Mapping required fields
+			$art->field_soeccode['und'][0]['value'] = $field_art17_soecCode;
+			$art->field_soecstartyear['und'][0]['value'] = $field_art17_soecStartDate;
+			$art->field_soecendyear['und'][0]['value'] = $field_art17_soecEndYear;
+			$art->field_soecperiod['und'][0]['value'] = $field_art17_soecPeriod;
 
-				// Mapping required fields
-				$art->field_soeccode['und'][0]['value'] = $field_art17_soecCode;
-				$art->field_soecstartyear['und'][0]['value'] = $field_art17_soecStartDate;
-				$art->field_soecendyear['und'][0]['value'] = $field_art17_soecEndYear;
-				$art->field_soecperiod['und'][0]['value'] = $field_art17_soecPeriod;
+			$check = uwwtd_check_numeric($field_art17_soecCapacity);
+            if ($check === false) {
+               	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+            } else {                
+        		$art->field_soeccapacity['und'][0]['value'] = $check;
+            }
 
-				$check = uwwtd_check_numeric($field_art17_soecCapacity);
+            $check = uwwtd_check_decimal($field_art17_soecInvCol);
+            if ($check === false) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+            } else {                 
+    			$art->field_soecinvcol['und'][0]['value'] = $check;
+            }
+
+            $check = uwwtd_check_decimal($field_art17_soecInvTp);
+            if ($check === false) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+            } else {                 
+    			$art->field_soecinvtp['und'][0]['value'] = $check;
+            }
+
+			// Mapping optional fields
+			if (!empty($field_art17_soeInvComments)) $art->field_soecinvcomments['und'][0]['value'] = $field_art17_soeInvComments;
+
+			if (!empty($field_art17_soecInvIAS)) {
+				$check = uwwtd_check_decimal($field_art17_soecInvIAS);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                } else {                 
+    				$art->field_soecinvias['und'][0]['value'] = $check;
+                }
+			}
+
+			if (!empty($field_art17_soecOpCosts)) {
+				$check = uwwtd_check_decimal($field_art17_soecOpCosts);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                } else {                 
+    				$art->field_soecopcosts['und'][0]['value'] = $check;
+                }
+			}
+
+			if (!empty($field_art17_soecEUFunds)) {
+				$check = uwwtd_check_decimal($field_art17_soecEUFunds);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                } else {                 
+    				$art->field_soeceufunds['und'][0]['value'] = $check;
+                }
+			}
+
+			if (!empty($field_art17_soecJobs)) {
+				$check = uwwtd_check_numeric($field_art17_soecJobs);
                 if ($check === false) {
                 	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                 } else {                
-        			$art->field_soeccapacity['und'][0]['value'] = $check;
-                }
+        			$art->field_soecjobs['und'][0]['value'] = $check;
+                }					
+			}
 
-                $check = uwwtd_check_decimal($field_art17_soecInvCol);
+			if (!empty($field_art17_soecLenghtCoCs)) {
+				$check = uwwtd_check_decimal($field_art17_soecLenghtCoCs);
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
                 } else {                 
-    				$art->field_soecinvcol['und'][0]['value'] = $check;
+    				$art->field_soeclenghtcocs['und'][0]['value'] = $check;
                 }
+			}
 
-                $check = uwwtd_check_decimal($field_art17_soecInvTp);
+			if (!empty($field_art17_soecLenghtSaCs)) {
+				$check = uwwtd_check_decimal($field_art17_soecLenghtSaCs);
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
                 } else {                 
-    				$art->field_soecinvtp['und'][0]['value'] = $check;
+    				$art->field_soeclenghtsacs['und'][0]['value'] = $check;
                 }
+			}
 
-				// Mapping optional fields
-				if (!empty($field_art17_soeInvComments)) $art->field_soecinvcomments['und'][0]['value'] = $field_art17_soeInvComments;
+			if (!empty($field_art17_soecLenghtStCs)) {
+				$check = uwwtd_check_decimal($field_art17_soecLenghtStCs);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                } else {                 
+    				$art->field_soeclenghtstcs['und'][0]['value'] = $check;
+                }
+			}
 
-				if (!empty($field_art17_soecInvIAS)) {
-					$check = uwwtd_check_decimal($field_art17_soecInvIAS);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soecinvias['und'][0]['value'] = $check;
-                	}
-				}
-
-				if (!empty($field_art17_soecOpCosts)) {
-					$check = uwwtd_check_decimal($field_art17_soecOpCosts);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soecopcosts['und'][0]['value'] = $check;
-                	}
-				}
-
-				if (!empty($field_art17_soecEUFunds)) {
-					$check = uwwtd_check_decimal($field_art17_soecEUFunds);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soeceufunds['und'][0]['value'] = $check;
-                	}
-				}
-
-				if (!empty($field_art17_soecJobs)) {
-					$check = uwwtd_check_numeric($field_art17_soecJobs);
-                	if ($check === false) {
+			if (!empty($field_art17_soecNumbIAS)) {
+				$check = uwwtd_check_numeric($field_art17_soecNumbIAS);
+                if ($check === false) {
                 		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
-                	} else {                
-        				$art->field_soecjobs['und'][0]['value'] = $check;
-                	}					
-				}
+                } else {                
+        			$art->field_soecnumbias['und'][0]['value'] = $check;
+                }		
+			}
 
-				if (!empty($field_art17_soecLenghtCoCs)) {
-					$check = uwwtd_check_decimal($field_art17_soecLenghtCoCs);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soeclenghtcocs['und'][0]['value'] = $check;
-                	}
-				}
+			if (!empty($field_art17_soecPop)) {
+				$check = uwwtd_check_numeric($field_art17_soecPop);
+                if ($check === false) {
+                	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                } else {                
+        			$art->field_soecpop['und'][0]['value'] = $check;
+                }	
+			}
 
-				if (!empty($field_art17_soecLenghtSaCs)) {
-					$check = uwwtd_check_decimal($field_art17_soecLenghtSaCs);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soeclenghtsacs['und'][0]['value'] = $check;
-                	}
-				}
+			$art->field_year_of_datas['und'][0]['value'] = $annee;
+			$art->uid = 1;
+			$art->language = 'en';
 
-				if (!empty($field_art17_soecLenghtStCs)) {
-					$check = uwwtd_check_decimal($field_art17_soecLenghtStCs);
-                	if ($check === false) {
-                    	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
-                	} else {                 
-    					$art->field_soeclenghtstcs['und'][0]['value'] = $check;
-                	}
-				}
-
-				if (!empty($field_art17_soecNumbIAS)) {
-					$check = uwwtd_check_numeric($field_art17_soecNumbIAS);
-                	if ($check === false) {
-                		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
-                	} else {                
-        				$art->field_soecnumbias['und'][0]['value'] = $check;
-                	}		
-				}
-
-				if (!empty($field_art17_soecPop)) {
-					$check = uwwtd_check_numeric($field_art17_soecPop);
-                	if ($check === false) {
-                		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
-                	} else {                
-        				$art->field_soecpop['und'][0]['value'] = $check;
-                	}	
-				}
-
-				$art->field_year_of_datas['und'][0]['value'] = $annee;
-				$art->uid = 1;
-				$art->language = $element->language;
-
-				// Article 17 link to element
-				$art->field_linked_ms_level['und'][0]['nid'] = $element->nid;
-    			
-    			// Save the article 17 element
-    			node_save($art);
-    			
-    			// Link element tot Article 17
-    			$element->field_article_17_ms_level['und'][0]['nid'] = $art->nid;
-    			// Save the element
-    			node_save($element);
-    		}
+    		// Save the article 17 element
+    		node_save($art);
 		}
     	
     	$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
