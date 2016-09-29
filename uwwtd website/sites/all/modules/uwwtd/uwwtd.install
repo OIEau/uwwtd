@@ -4373,7 +4373,7 @@ function uwwtd_update_7150(&$context = null) {
 function uwwtd_update_7151(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);    
     variable_set('siif_eru_version', __FUNCTION__);
-    
+    /*
     uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
     
     // Mise à jour de la base :
@@ -4388,7 +4388,7 @@ function uwwtd_update_7151(&$context = null) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     } 
-    
+    */
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
 }  
