@@ -4348,7 +4348,27 @@ function uwwtd_update_7149(&$context = null) {
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	//throw new DrupalUpdateException(__FUNCTION__);
 }
+ function uwwtd_update_7150(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);    
+    variable_set('siif_eru_version', __FUNCTION__);
     
+    // Mise à jour de la base :
+    db_query('ALTER TABLE drupal_field_data_field_uwwhistorie ALTER COLUMN field_uwwhistorie_value TYPE character varying(2500)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwhistorie ALTER COLUMN field_uwwhistorie_value TYPE character varying(2500)');
+    
+    drupal_flush_all_caches();
+   
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    
+	//==========DEBUG : permet de relancer la mise à jour si besoin.
+	//throw new DrupalUpdateException(__FUNCTION__);
+}  
+
+
+   
 /**
  * Redéfinit la précision et le scale du champs donné.
  */
