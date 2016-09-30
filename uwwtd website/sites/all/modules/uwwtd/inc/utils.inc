@@ -1031,7 +1031,7 @@ function uwwtd_check_numeric($value)
 
 function uwwtd_check_decimal($value){
     $value = str_replace(",",".",trim($value));
-	if(is_numeric($value)) {
+	if(is_numeric($value) && $value < bcpow(10,8)) {
 		return (float)$value;	
 	}
 //     else{
