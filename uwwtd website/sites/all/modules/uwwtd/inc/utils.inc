@@ -990,6 +990,10 @@ function uwwtd_set_error($i, $emes){
 function uwwtd_check_text($text){
 
 	// check format
+    //FIX ME : why sometime we have array in uwwtp import
+    if(is_array($text)){
+        return $text;
+    }
     $text = trim($text);
     $text = check_plain($text);
     
@@ -1031,7 +1035,7 @@ function uwwtd_check_numeric($value)
 
 function uwwtd_check_decimal($value){
     $value = str_replace(",",".",trim($value));
-	if(is_numeric($value)) {
+	if(is_numeric($value) && $value < bcpow(10,8)) {
 		return (float)$value;	
 	}
 //     else{
