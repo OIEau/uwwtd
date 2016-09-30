@@ -3210,7 +3210,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwboddischarge['und'][0]['value'] = round($check,2)
+                $node->field_uwwboddischarge['und'][0]['value'] = round($check,2);
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD information found.', $timestamp, $i, $node);
