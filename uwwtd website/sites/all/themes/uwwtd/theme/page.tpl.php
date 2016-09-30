@@ -75,7 +75,7 @@
 ?>
 <?php /* region--navigation.tpl.php */ ?>
 
-<div style="font-size:20px;font-weight:bold;width:100%;background-color:yellow;text-align:center;color:red;"> VERSION BETA </div>
+<div style="font-size:20px;font-weight:bold;width:100%;background-color:yellow;text-align:center;color:red;"> DRAFT VERSION - NOT FOR OFFICIAL USE </div>
 
 
 <?php if ($page['navigation']): ?>
