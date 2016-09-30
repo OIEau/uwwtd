@@ -4368,7 +4368,7 @@ function uwwtd_update_7150(&$context = null) {
     } 
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+	//throw new DrupalUpdateException(__FUNCTION__);
 }  
 function uwwtd_update_7151(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);    

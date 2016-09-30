@@ -3042,7 +3042,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwbodincoming['und'][0]['value'] = $check;
+                $node->field_uwwbodincoming['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD information found.', $timestamp, $i, $node);
@@ -3056,7 +3056,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwbodincomingcalculated['und'][0]['value'] = $check;
+                $node->field_uwwbodincomingcalculated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot calculated information found.', $timestamp, $i, $node);
@@ -3070,7 +3070,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwbodincomingestimated['und'][0]['value'] = $check;
+                $node->field_uwwbodincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot estimated information found.', $timestamp, $i, $node);
@@ -3084,7 +3084,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcodincoming['und'][0]['value'] = $check;
+                $node->field_uwwcodincoming['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD information found.', $timestamp, $i, $node);
@@ -3098,7 +3098,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcodincomingcalculated['und'][0]['value'] = $check;
+                $node->field_uwwcodincomingcalculated['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot calculated information found.', $timestamp, $i, $node);
@@ -3112,7 +3112,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcodincomingestimated['und'][0]['value'] = $check;
+                $node->field_uwwcodincomingestimated['und'][0]['value'] = round($check,2);
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot estimated information found.', $timestamp, $i, $node);
@@ -3126,7 +3126,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwnincoming['und'][0]['value'] = $check;
+                $node->field_uwwnincoming['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Nto information found.', $timestamp, $i, $node);
@@ -3140,7 +3140,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwnincomingcalculated['und'][0]['value'] = $check;
+                $node->field_uwwnincomingcalculated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot calculated information found.', $timestamp, $i, $node);
@@ -3154,7 +3154,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwnincomingestimated['und'][0]['value'] = $check;
+                $node->field_uwwnincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot estimated information found.', $timestamp, $i, $node);
@@ -3168,7 +3168,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpincoming['und'][0]['value'] = $check;
+                $node->field_uwwpincoming['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Ptot information found.', $timestamp, $i, $node);
@@ -3182,7 +3182,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpincomingcalculated['und'][0]['value'] = $check;
+                $node->field_uwwpincomingcalculated['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot calculated information found.', $timestamp, $i, $node);
@@ -3196,7 +3196,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpincomingestimated['und'][0]['value'] = $check;
+                $node->field_uwwpincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot estimated information found.', $timestamp, $i, $node);
@@ -3210,7 +3210,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwboddischarge['und'][0]['value'] = $check;
+                $node->field_uwwboddischarge['und'][0]['value'] = round($check,2)
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD information found.', $timestamp, $i, $node);
@@ -3224,7 +3224,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwboddischargecalculated['und'][0]['value'] = $check;
+                $node->field_uwwboddischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot calculated information found.', $timestamp, $i, $node);
@@ -3238,7 +3238,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwboddischargeestimated['und'][0]['value'] = $check;
+                $node->field_uwwboddischargeestimated['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot estimated information found.', $timestamp, $i, $node);
@@ -3252,7 +3252,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcoddischarge['und'][0]['value'] = $check;
+                $node->field_uwwcoddischarge['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD information found.', $timestamp, $i, $node);
@@ -3266,7 +3266,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcoddischargecalculated['und'][0]['value'] = $check;
+                $node->field_uwwcoddischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot calculated information found.', $timestamp, $i, $node);
@@ -3280,7 +3280,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwcoddischargeestimated['und'][0]['value'] = $check;
+                $node->field_uwwcoddischargeestimated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot estimated information found.', $timestamp, $i, $node);
@@ -3294,7 +3294,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwndischarge['und'][0]['value'] = $check;
+                $node->field_uwwndischarge['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ntot information found.', $timestamp, $i, $node);
@@ -3308,7 +3308,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwndischargecalculated['und'][0]['value'] = $check;
+                $node->field_uwwndischargecalculated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot calculated information found.', $timestamp, $i, $node);
@@ -3322,7 +3322,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwndischargeestimated['und'][0]['value'] = $check;
+                $node->field_uwwndischargeestimated['und'][0]['value'] = round($check,2);
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot estimated information found.', $timestamp, $i, $node);
@@ -3336,7 +3336,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpdischarge['und'][0]['value'] = $check;
+                $node->field_uwwpdischarge['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot information found.', $timestamp, $i, $node);
@@ -3350,7 +3350,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpdischargecalculated['und'][0]['value'] = $check;
+                $node->field_uwwpdischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot calculated information found.', $timestamp, $i, $node);
@@ -3364,7 +3364,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwpdischargeestimated['und'][0]['value'] = $check;
+                $node->field_uwwpdischargeestimated['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads P-tot estimated information found.', $timestamp, $i, $node);
@@ -3378,7 +3378,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
             } else {
-                $node->field_uwwwastewatertreated['und'][0]['value'] = $check;
+                $node->field_uwwwastewatertreated['und'][0]['value'] = round($check,2);
             }               
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs waste water treated  information found.', $timestamp, $i, $node);
