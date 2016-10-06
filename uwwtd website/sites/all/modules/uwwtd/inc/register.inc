@@ -5642,9 +5642,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             left join
                 {field_data_field_agggenerated} f_agggenerated
                     ON n.nid = f_agggenerated.entity_id
+            left join
+                {field_data_field_status} status
+                    ON n.nid = status.entity_id
+                    
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
+            and status.field_status_value::integer = 1
+            
         ';
 
 //         dsm($query);
