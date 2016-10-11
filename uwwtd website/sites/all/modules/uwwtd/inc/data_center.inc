@@ -1694,6 +1694,31 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['ReceivingAreasSA54'])) {
             $node->field_rca54applied['und'][0]['value'] = '1';
             
+            //fix cn@oieau.fr le 11/10/2016
+            switch ($data['ReceivingAreasSA54']['rcaMethod54']) {
+            	case 'M':
+            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+            	case 'C':
+            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+            	case 'E':
+            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
+        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
+        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
+        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
+            		break;
+         		default:
+         			break;
+            }
+            //fin fix
+            /*
             switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
             	case 'M':
             		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
@@ -1716,6 +1741,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
          		default:
          			break;
             }
+            */
         }
         // dsm($node);
         
@@ -5868,13 +5894,17 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     // }   
     
     if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
+        //cn@oieau.fr || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+        ) 
+        {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     } 
               
     if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        ||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
+        //cn@oieau.fr||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+        ) 
+        {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
