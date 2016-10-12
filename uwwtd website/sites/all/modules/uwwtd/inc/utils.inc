@@ -1355,3 +1355,14 @@ function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear)
 	$date = explode('-', $deadlinedate);
 	return $date[0] <= $referenceyear;
 }
+
+//Permet de retourne un tableau de conf id/val pour les variable de conf afin d'assurer la compatibilité
+function uwwtd_get_ind($conf){
+    $ind=array();
+    if(!empty($conf)){
+        foreach($conf as $k=>$v){
+            $ind[$k]=$v['k'];
+        }
+    }
+    return $ind;
+}

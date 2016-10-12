@@ -81,7 +81,7 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
-
+    
     //excel  ===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib. 
     $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
@@ -133,6 +133,7 @@ function uwwtd_register_finished($success, $results, $operations)
 
 function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 {
+    //$debug_times=array();
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
 
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
@@ -175,7 +176,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
 //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
-
+    //$debug_times['start'] = time();
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
 
     $objReader->setLoadSheetsOnly( array(
@@ -183,7 +184,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                                         ) );
 
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
-
+    //$debug_times['load_xls'] = time()-$debug_times['start'];
 //     dsm(444);
 //     return '111';
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
@@ -204,6 +205,15 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
+    
+    /**
+    * nd@oieau.fr ===> need test
+    *http://stackoverflow.com/questions/5983845/phpexcel-very-slow-ways-to-improve/5984286#5984286
+    *@javiniar.leonard - insertNewRowBefore() is always expensive, and more so when inserting at the top of the sheet than near the bottom: Always try to avoid using it in a loop; you can specify a number of rows to insert as a second argument, and that's a lot more efficient than inserting each row individually
+    */
+    //try to test this
+    //$sheet->insertNewRowBefore($context['sandbox']['line'], 1000);
+    //$debug_times['start_loop'] = time()-$debug_times['start'];
     while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
 //         dsm($agglo);
 //         break;
@@ -332,12 +342,14 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 //         $i++;
 //         break;
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+        
 
         $j++;
+        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
+    //$debug_times['end_loop'] = time()-$debug_times['start'];
     fclose($ragglofile);
     unset($ragglofile);
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
@@ -452,7 +464,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         }
         fclose($r);
     }
-
+    //$debug_times['end_loop2'] = time()-$debug_times['start'];
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -468,7 +480,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     unset($objReader);
     gc_collect_cycles();
 //     $context['sandbox']['progress']++;
-
+    //$debug_times['end'] = time()-$debug_times['start'];
+    //watchdog('uwwtd debug', '<pre>'.print_r($debug_times, true).'</pre>');
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
@@ -508,7 +521,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['line'] = 4; //start line
+        $context['sandbox']['line'] = 5; //start line
 
 
 
@@ -549,269 +562,75 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 //     while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
     $j = 0;
     uwwtd_trace('start loop');
-    while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
-            uwwtd_trace($j);
-//         if ($uwwtp[0] == 'TOTAL' || $uwwtp[0] == 'expired_deadline' || $uwwtp[0] == 'pending_deadline' ) {
-//             $line_to_fill = 0;
-//             switch($uwwtp[0]) {
-//                 case 'TOTAL';
-//                     $line_to_fill = $context['sandbox']['line'] + 2;
-//                 break;
-//                 case 'expired_deadline';
-//                      $line_to_fill = $context['sandbox']['line'] + 3;
-//                 break;
-//                 case 'pending_deadline';
-//                      $line_to_fill = $context['sandbox']['line'] + 4;
-//                 break;
-//             }
-//             $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]);
-//             $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, $uwwtp[$ind['uww_entering load  p. e.']]);
-//             $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, $uwwtp[$ind['uww_capacity p. e.']]);
-//             $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, $uwwtp[$ind['previous_entering load p. e.']]);
-//             $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, $uwwtp[$ind['previous_capacity p. e.']]);
-//             $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of entering load (1) %']]);
-//             $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]);
-//         } else {
-
-    //     foreach($listuwwtp as $uwwtp) {
-    if (isset($ind['aggcode']) && isset($context['sandbox']['line']) && isset($ind['aggcode'], $uwwtp[$ind['aggcode']]))
-        $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $uwwtp[$ind['aggcode']]);
-    if (isset($ind['aggname']) && isset($context['sandbox']['line']) && isset($ind['aggname'], $uwwtp[$ind['aggname']]))
-        $sheet->setCellValueByColumnAndRow($ind['aggname'], $context['sandbox']['line'], $uwwtp[$ind['aggname']]);
-    if (isset($ind['aggstatus']) && isset($context['sandbox']['line']) && isset($ind['aggstatus'], $uwwtp[$ind['aggstatus']]))
-        $sheet->setCellValueByColumnAndRow($ind['aggstatus'], $context['sandbox']['line'], $uwwtp[$ind['aggstatus']]);
-    if (isset($ind['generated load  p. e.']) && isset($context['sandbox']['line']) && isset($ind['generated load  p. e.'], $uwwtp[$ind['generated load  p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['generated load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['generated load  p. e.']]));
-    if (isset($ind['deadline for Art. 3 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 3 compliance'], $uwwtp[$ind['deadline for Art. 3 compliance']]))
-        $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 3 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 3 compliance']]);
-    if (isset($ind['deadline for Art. 4 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 4 compliance'], $uwwtp[$ind['deadline for Art. 4 compliance']]))
-        $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 4 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 4 compliance']]);
-    if (isset($ind['deadline for Art. 5 compliance']) && isset($context['sandbox']['line']) && isset($ind['deadline for Art. 5 compliance'], $uwwtp[$ind['deadline for Art. 5 compliance']]))
-        $sheet->setCellValueByColumnAndRow($ind['deadline for Art. 5 compliance'], $context['sandbox']['line'], $uwwtp[$ind['deadline for Art. 5 compliance']]);
-    if (isset($ind['collected in collecting system % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['collected in collecting system % of gen. load'], $uwwtp[$ind['collected in collecting system % of gen. load']]))
-        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system % of gen. load']], 1));
-    if (isset($ind['collected in collecting system  p. e.']) && isset($context['sandbox']['line']) && isset($ind['collected in collecting system  p. e.'], $uwwtp[$ind['collected in collecting system  p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['collected in collecting system  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['collected in collecting system  p. e.']]));
-    if (isset($ind['addressed through IAS % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['addressed through IAS % of gen. load'], $uwwtp[$ind['addressed through IAS % of gen. load']]))
-        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS % of gen. load']], 1));
-    if (isset($ind['addressed through IAS p. e.']) && isset($context['sandbox']['line']) && isset($ind['addressed through IAS p. e.'], $uwwtp[$ind['addressed through IAS p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['addressed through IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['addressed through IAS p. e.']]));
-    if (isset($ind['neither collecting system nor IAS % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['neither collecting system nor IAS % of gen. load'], $uwwtp[$ind['neither collecting system nor IAS % of gen. load']]))
-        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS % of gen. load']], 1));
-    if (isset($ind['neither collecting system nor IAS p. e.']) && isset($context['sandbox']['line']) && isset($ind['neither collecting system nor IAS p. e.'], $uwwtp[$ind['neither collecting system nor IAS p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['neither collecting system nor IAS p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['neither collecting system nor IAS p. e.']]));
-    if (isset($ind['uww_code']) && isset($context['sandbox']['line']) && isset($ind['uww_code'], $uwwtp[$ind['uww_code']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_code'], $context['sandbox']['line'], $uwwtp[$ind['uww_code']]);
-    if (isset($ind['uww_name']) && isset( $context['sandbox']['line']) && isset($ind['uww_name'], $uwwtp[$ind['uww_name']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_name'], $context['sandbox']['line'], $uwwtp[$ind['uww_name']]);
-    if (isset($ind['uww_status']) && isset($context['sandbox']['line']) && isset($ind['uww_status'], $uwwtp[$ind['uww_status']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_status'], $context['sandbox']['line'], $uwwtp[$ind['uww_status']]);
-
-    if (isset($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']], 1));
-    if (isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]));
-
-    if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($context['sandbox']['line']) && isset($ind['uww_entering this UWWTP % of gen. load'], $uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
-    if (isset($ind['uww_entering load  p. e.']) && isset($context['sandbox']['line']) && isset($ind['uww_entering load  p. e.'], $uwwtp[$ind['uww_entering load  p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_entering load  p. e.']]));
-
-    if (isset($ind['uww_capacity p. e.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['uww_capacity p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['uww_capacity p. e.']]));
-//         $sheet->setCellValueByColumnAndRow($ind['uww2_status'], $context['sandbox']['line'], $uwwtp[$ind['uww2_status']]);
-    if (isset($ind['previous_reference year']) && isset($context['sandbox']['line']) && isset($ind['previous_reference year'], $uwwtp[$ind['previous_reference year']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_reference year'], $context['sandbox']['line'], $uwwtp[$ind['previous_reference year']]);
-    if (isset($ind['previous_entering load p. e.']) && isset($context['sandbox']['line']) && isset($ind['previous_entering load p. e.'], $uwwtp[$ind['previous_entering load p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_entering load p. e.']]));
-    if (isset($ind['previous_capacity p. e.']) && isset($context['sandbox']['line']) && isset($ind['previous_capacity p. e.'], $uwwtp[$ind['previous_capacity p. e.']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $context['sandbox']['line'], round($uwwtp[$ind['previous_capacity p. e.']]));
-
-
-    if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]))
-    	$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
-        if (isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) && abs((float)$uwwtp[$ind['previous_Percentage of change of entering load (1) %']]) > 20) {
-        	if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($context['sandbox']['line'])) {
-	            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $context['sandbox']['line'])
-	                ->getFill()
-	                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
-	                ->getStartColor()->setARGB('FFFFC000');
-        	}
+    $lines = array();
+    while ($j < 3000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
+        uwwtd_trace($j);
+        $line = array();
+        
+        foreach($ind as $k=>$conf){
+            if($conf['xls']){
+                if(isset($uwwtp[$conf['k']])){
+                    $val = $uwwtp[$conf['k']];
+                    //If we have a format wrapper
+                    if(isset($conf['wrapper'])){
+                        switch($conf['wrapper']){
+                            case 'round':
+                                $val = round($val);
+                              break;
+                            case 'round1':
+                                $val = round($val,1);
+                              break;
+                            
+                        }
+                    }
+                }else{
+                    $val = null;
+                }
+                //Other condition on field ?
+                $line[$conf['k']] = $val;
+            }
         }
-
-        if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($context['sandbox']['line']) && $uwwtp[$ind['previous_Percentage of change of capacity (2) %']])
-        $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'],$context['sandbox']['line'], round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
-        if (isset($ind['previous_Percentage of change of capacity (2) %'], $uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) && $uwwtp[$ind['previous_Percentage of change of capacity (2) %']] != 'NI' && abs((float)$uwwtp[$ind['previous_Percentage of change of capacity (2) %']]) > 0) {
-            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
-                ->getFill()
-                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');
-        } else {
-        	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($context['sandbox']['line'])) {
-	            $sheet->getStyleByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $context['sandbox']['line'])
-	                ->getFill()
-	                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-	                ->getStartColor()->setARGB('FFFFFFFF');
-        	}
-        }
-
-    if (isset($ind['water body type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['water body type']]))
-        $sheet->setCellValueByColumnAndRow($ind['water body type'],$context['sandbox']['line'], $uwwtp[$ind['water body type']]);
-    if (isset($ind['In case of discharge on land please specify the purpose']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['In case of discharge on land please specify the purpose']]))
-        $sheet->setCellValueByColumnAndRow($ind['In case of discharge on land please specify the purpose'],$context['sandbox']['line'], $uwwtp[$ind['In case of discharge on land please specify the purpose']]);
-    if (isset($ind['Id code of the water body WFD']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Id code of the water body WFD']]))
-        $sheet->setCellValueByColumnAndRow($ind['Id code of the water body WFD'],$context['sandbox']['line'], $uwwtp[$ind['Id code of the water body WFD']]);
-    if (isset($ind['ID of WFD river basin district']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['ID of WFD river basin district']]))
-        $sheet->setCellValueByColumnAndRow($ind['ID of WFD river basin district'],$context['sandbox']['line'], $uwwtp[$ind['ID of WFD river basin district']]);
-    if (isset($ind['entirely discharging into coastal waters?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['entirely discharging into coastal waters?']]))
-        $sheet->setCellValueByColumnAndRow($ind['entirely discharging into coastal waters?'],$context['sandbox']['line'], $uwwtp[$ind['entirely discharging into coastal waters?']]);
-    if (isset($ind['type of receiving water']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['type of receiving water']]))
-        $sheet->setCellValueByColumnAndRow($ind['type of receiving water'],$context['sandbox']['line'], $uwwtp[$ind['type of receiving water']]);
-    if (isset($ind['ID of the SA or LSA']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['ID of the SA or LSA']]))
-        $sheet->setCellValueByColumnAndRow($ind['ID of the SA or LSA'],$context['sandbox']['line'], $uwwtp[$ind['ID of the SA or LSA']]);
-    if (isset($ind['rcaname']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['rcaname']]))
-        $sheet->setCellValueByColumnAndRow($ind['rcaname'],$context['sandbox']['line'], $uwwtp[$ind['rcaname']]);
-    if (isset($ind['Starting date of application 5.8.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application 5.8.']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application 5.8.'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application 5.8.']]);
-    if (isset($ind['Starting date of application 5.4.']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application 5.4.']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application 5.4.'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application 5.4.']]);
-    if (isset($ind['Starting date of application a N']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application a N']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application a N'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application a N']]);
-    if (isset($ind['Starting date of application a P']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application a P']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application a P'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application a P']]);
-    if (isset($ind['Starting date of application b']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application b']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application b'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application b']]);
-    if (isset($ind['Starting date of application c']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Starting date of application c']]))
-        $sheet->setCellValueByColumnAndRow($ind['Starting date of application c'],$context['sandbox']['line'], $uwwtp[$ind['Starting date of application c']]);
-    if (isset($ind['treatment required']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['treatment required']]))
-        $sheet->setCellValueByColumnAndRow($ind['treatment required'],$context['sandbox']['line'], $uwwtp[$ind['treatment required']]);
-    if (isset($ind['treatment type in place (4)']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['treatment type in place (4)']]))
-        $sheet->setCellValueByColumnAndRow($ind['treatment type in place (4)'],$context['sandbox']['line'], $uwwtp[$ind['treatment type in place (4)']]);
-    if (isset($ind['Monitoring results - BOD5']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results - BOD5']]))
-        $sheet->setCellValueByColumnAndRow($ind['Monitoring results - BOD5'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results - BOD5']]);
-    if (isset($ind['Monitoring results -COD']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -COD']]))
-        $sheet->setCellValueByColumnAndRow($ind['Monitoring results -COD'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -COD']]);
-    if (isset($ind['Monitoring results -Ntot']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -Ntot']]))
-        $sheet->setCellValueByColumnAndRow($ind['Monitoring results -Ntot'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -Ntot']]);
-    if (isset($ind['Monitoring results -Ptot']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -Ptot']]))
-        $sheet->setCellValueByColumnAndRow($ind['Monitoring results -Ptot'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -Ptot']]);
-    if (isset($ind['Monitoring results -other']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Monitoring results -other']]))
-        $sheet->setCellValueByColumnAndRow($ind['Monitoring results -other'],$context['sandbox']['line'], $uwwtp[$ind['Monitoring results -other']]);
-    if (isset($ind['In cause of failure (3)']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['In cause of failure (3)']]))
-        $sheet->setCellValueByColumnAndRow($ind['In cause of failure (3)'],$context['sandbox']['line'], $uwwtp[$ind['In cause of failure (3)']]);
-    if (isset($ind['difference between monitoring result N and P and treatment in place']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['difference between monitoring result N and P and treatment in place']]))
-        $sheet->setCellValueByColumnAndRow($ind['difference between monitoring result N and P and treatment in place'],$context['sandbox']['line'], $uwwtp[$ind['difference between monitoring result N and P and treatment in place']]);
-
-//         $sheet->setCellValueByColumnAndRow($ind['Number of discharge points for this UWWTP'],$context['sandbox']['line'], $uwwtp[$ind['Number of discharge points for this UWWTP']]);
-//         $sheet->setCellValueByColumnAndRow($ind['DCP ID'],$context['sandbox']['line'], $uwwtp[$ind['DCP ID']]);
-//         $sheet->setCellValueByColumnAndRow($ind['ID of receiving water body 2'],$context['sandbox']['line'], $uwwtp[$ind['ID of receiving water body 2']]);
-//         $sheet->setCellValueByColumnAndRow($ind['water body type 2'],$context['sandbox']['line'], $uwwtp[$ind['water body type 2']]);
-//         $sheet->setCellValueByColumnAndRow($ind['ID of the SA or LSA 2'],$context['sandbox']['line'], $uwwtp[$ind['ID of the SA or LSA 2']]);
-//         $sheet->setCellValueByColumnAndRow($ind['rcaname 2'],$context['sandbox']['line'], $uwwtp[$ind['rcaname 2']]);
-//         $sheet->setCellValueByColumnAndRow($ind['designation date 2'],$context['sandbox']['line'], $uwwtp[$ind['designation date 2']]);
-
-
-    if (isset($ind['art4_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_treatment type']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art4_treatment type']]);
-    if (isset($ind['art4_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art4_monitoring']]);
-    if (isset($ind['art4_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_final'],$context['sandbox']['line'], $uwwtp[$ind['art4_final']]);
-    if (isset($ind['art5_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_treatment type']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art5_treatment type']]);
-    if (isset($ind['art5_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art5_monitoring']]);
-    if (isset($ind['art5_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_final'],$context['sandbox']['line'], $uwwtp[$ind['art5_final']]);
-    if (isset($ind['art4_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_treatment type']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_treatment type']]);
-    if (isset($ind['art4_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_monitoring']]);
-    if (isset($ind['art4_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art4_expired_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['art4_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['art4_expired_final']]);
-    if (isset($ind['art5_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_treatment type']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_treatment type']]);
-    if (isset($ind['art5_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_monitoring']]);
-    if (isset($ind['art5_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['art5_expired_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['art5_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['art5_expired_final']]);
-    if (isset($ind['previous_art4_expired_treatment']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_treatment']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_treatment'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_treatment']]);
-    if (isset($ind['previous_art4_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_monitoring']]);
-    if (isset($ind['previous_art4_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art4_expired_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art4_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['previous_art4_expired_final']]);
-    if (isset($ind['previous_art5_expired_treatment type']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_treatment type']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_treatment type'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_treatment type']]);
-    if (isset($ind['previous_art5_expired_monitoring']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_monitoring']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_monitoring'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_monitoring']]);
-    if (isset($ind['previous_art5_expired_final']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_final']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_final'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_final']]);
-    if (isset($ind['previous_art5_expired_difference between the previous situation and now']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['previous_art5_expired_difference between the previous situation and now']]))
-        $sheet->setCellValueByColumnAndRow($ind['previous_art5_expired_difference between the previous situation and now'],$context['sandbox']['line'], $uwwtp[$ind['previous_art5_expired_difference between the previous situation and now']]);
-    if (isset($ind['Secondary: installed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary: installed?']]))
-        $sheet->setCellValueByColumnAndRow($ind['Secondary: installed?'],$context['sandbox']['line'], $uwwtp[$ind['Secondary: installed?']]);
-    if (isset($ind['Secondary:  monitoring passed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary:  monitoring passed?']]))
-        $sheet->setCellValueByColumnAndRow($ind['Secondary:  monitoring passed?'],$context['sandbox']['line'], $uwwtp[$ind['Secondary:  monitoring passed?']]);
-    if (isset($ind['Secondary:  FINAL']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Secondary:  FINAL']]))
-        $sheet->setCellValueByColumnAndRow($ind['Secondary:  FINAL'],$context['sandbox']['line'], $uwwtp[$ind['Secondary:  FINAL']]);
-    if (isset($ind['More stringent:  installed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent:  installed?']]))
-        $sheet->setCellValueByColumnAndRow($ind['More stringent:  installed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  installed?']]);
-    if (isset($ind['More stringent: monitoring passed?']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent: monitoring passed?']]))
-        $sheet->setCellValueByColumnAndRow($ind['More stringent: monitoring passed?'],$context['sandbox']['line'], $uwwtp[$ind['More stringent: monitoring passed?']]);
-    if (isset($ind['More stringent:  FINAL']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['More stringent:  FINAL']]))
-        $sheet->setCellValueByColumnAndRow($ind['More stringent:  FINAL'],$context['sandbox']['line'], $uwwtp[$ind['More stringent:  FINAL']]);
-    if (isset($ind['Volume of waste water treated m3/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Volume of waste water treated m3/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Volume of waste water treated m3/y'],$context['sandbox']['line'], round($uwwtp[$ind['Volume of waste water treated m3/y']]));
-    if (isset($ind['Incoming loads BOD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming loads BOD-tot  t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Incoming loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads BOD-tot  t/y']]));
-    if (isset($ind['Discharged loads BOD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged loads BOD-tot  t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Discharged loads BOD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads BOD-tot  t/y']]));
-    if (isset($ind['BOD rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['BOD rate of removal %']]))
-        $sheet->setCellValueByColumnAndRow($ind['BOD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['BOD rate of removal %']], 1));
-    if (isset($ind['average Incoming concentration BOD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration BOD mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration BOD mg/l']], 1));
-    if (isset($ind['average Discharge concentration BOD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration BOD mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration BOD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration BOD mg/l']], 1));
-    if (isset($ind['Incoming cocentration COD-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming cocentration COD-tot   t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration COD-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration COD-tot   t/y']]));
-    if (isset($ind['Discharged concentration COD-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged concentration COD-tot  t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration COD-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration COD-tot  t/y']]));
-    if (isset($ind['COD rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['COD rate of removal %']]))
-        $sheet->setCellValueByColumnAndRow($ind['COD rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['COD rate of removal %']], 1));
-    if (isset($ind['average Incoming concentration COD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration COD mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration COD mg/l']], 1));
-    if (isset($ind['average Discharge concentration COD mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration COD mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration COD mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration COD mg/l']], 1));
-    if (isset($ind['Incoming loads N-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming loads N-tot   t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Incoming loads N-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming loads N-tot   t/y']]));
-    if (isset($ind['Discharged loads N-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged loads N-tot  t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Discharged loads N-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged loads N-tot  t/y']]));
-    if (isset($ind['N rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['N rate of removal %']]))
-        $sheet->setCellValueByColumnAndRow($ind['N rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['N rate of removal %']], 1));
-    if (isset($ind['average Incoming concentration N mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration N mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration N mg/l']], 1));
-    if (isset($ind['average Discharge concentration N mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration N mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration N mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration N mg/l']], 1));
-    if (isset($ind['Incoming cocentration P-tot   t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Incoming cocentration P-tot   t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Incoming cocentration P-tot   t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Incoming cocentration P-tot   t/y']]));
-    if (isset($ind['Discharged concentration P-tot  t/y']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['Discharged concentration P-tot  t/y']]))
-        $sheet->setCellValueByColumnAndRow($ind['Discharged concentration P-tot  t/y'],$context['sandbox']['line'], round($uwwtp[$ind['Discharged concentration P-tot  t/y']]));
-    if (isset($ind['P rate of removal %']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['P rate of removal %']]))
-        $sheet->setCellValueByColumnAndRow($ind['P rate of removal %'],$context['sandbox']['line'], round($uwwtp[$ind['P rate of removal %']], 1));
-    if (isset($ind['average Incoming concentration P mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Incoming concentration P mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Incoming concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Incoming concentration P mg/l']], 1));
-    if (isset($ind['average Discharge concentration P mg/l']) && isset($context['sandbox']['line']) && isset($uwwtp[$ind['average Discharge concentration P mg/l']]))
-        $sheet->setCellValueByColumnAndRow($ind['average Discharge concentration P mg/l'],$context['sandbox']['line'], round($uwwtp[$ind['average Discharge concentration P mg/l']], 1));
-
-        $context['sandbox']['line']++;
-    	if (isset($context['sandbox']['line']))
-        	$sheet->insertNewRowBefore($context['sandbox']['line'], 1);
-//         }
+        $lines[$j] = $line;
         $j++;
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+        
     }
+    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+    
+    //Special rules for cell's style
+    if(!empty($lines)){
+        uwwtd_trace('set style');
+        foreach($lines as $lid=>$line){
+            $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
+            if(isset($line[$idx]) && abs((float)$line[$idx])>20){
+                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                        ->getFill()
+                        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFFFC000');
+            }
+            $idx = $ind['previous_Percentage of change of capacity (2) %']['k'];
+            if (isset($line[$idx]) && $line[$idx] != 'NI' && abs((float)$line[$idx])>0  ) {
+                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                    ->getFill()
+                    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+                    ->getStartColor()->setARGB('FFFFC000');
+            }
+            //est-ce nécessaire ? 
+            /*
+            else{
+                    $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                        ->getFill()
+                        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+                        ->getStartColor()->setARGB('FFFFFFFF');
+            }
+            */
+        }
+        uwwtd_trace('end style');
+    }   
+    
+    $context['sandbox']['line']=$context['sandbox']['line']+$j;
     uwwtd_trace('end loop');
     fclose($ruwwtpfile);
 
@@ -3189,7 +3008,8 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
     } else {
         fseek($ruwwtpfile, $context['sandbox']['file_position']);
     }
-    $induwwtp = $GLOBALS['uwwtd']['sheet2_uwwtp'];
+    $induwwtp = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
+    
 
     $j = 0;
     while ($j < 20 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
@@ -3310,14 +3130,14 @@ function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
 
                 $list_id_agglo = '';
                 $list_name_agglo = '';
-
-                foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
-                    $agg = node_load($nidagg['nid']);
-                    $list_id_agglo = ($list_id_agglo == '' ? '' : ';') . $agg->field_inspireidlocalid['und'][0]['value'];
-                    $list_name_agglo = ($list_name_agglo == '' ? '' : ';') . $agg->title;
-                    unset($agg);
+                if(isset($uwwtp->field_uwwaggliste['und'])){
+                    foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
+                        $agg = node_load($nidagg['nid']);
+                        $list_id_agglo = ($list_id_agglo == '' ? '' : ';') . $agg->field_inspireidlocalid['und'][0]['value'];
+                        $list_name_agglo = ($list_name_agglo == '' ? '' : ';') . $agg->title;
+                        unset($agg);
+                    }
                 }
-
                 $line = array(
                     $ind['id_of_uwwtp'] => $previousuwwtp->field_inspireidlocalid['und'][0]['value'],
                     $ind['name_of_uwwtp'] => $previousuwwtp->title,
@@ -3398,13 +3218,13 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['id_of_agglomeration']])
+    	if (isset($ind['id_of_agglomeration'])&& $agglo[$ind['id_of_agglomeration']])
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['name_of_agglomeration']])
+    	if (isset($ind['name_of_agglomeration'])&& $agglo[$ind['name_of_agglomeration']])
         	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_agglomeration']) && isset($context['sandbox']['line']) && $agglo[$ind['size_of_agglomeration']])
+    	if (isset($ind['size_of_agglomeration'])&& $agglo[$ind['size_of_agglomeration']])
         	$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-    	if (isset($ind['reason']) && isset($context['sandbox']['line']) && $agglo[$ind['reason']])
+    	if (isset($ind['reason'])&& $agglo[$ind['reason']])
         	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $agglo[$ind['reason']]);
 
         $context['sandbox']['line']++;
@@ -3509,13 +3329,13 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['id_of_agglomeration']]))
+    	if (isset($ind['id_of_agglomeration'])&& isset($agglo[$ind['id_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['name_of_agglomeration']]))
+    	if (isset($ind['name_of_agglomeration'])&& isset($agglo[$ind['name_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_agglomeration']) && isset($context['sandbox']['line']) && isset($agglo[$ind['size_of_agglomeration']]))
+    	if (isset($ind['size_of_agglomeration'])&& isset($agglo[$ind['size_of_agglomeration']]))
        		$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-    	if (isset($ind['remarks']) && isset($context['sandbox']['line']) && isset($agglo[$ind['remarks']]))
+    	if (isset($ind['remarks'])&& isset($agglo[$ind['remarks']]))
         	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $agglo[$ind['remarks']]);
 
         $context['sandbox']['line']++;
@@ -3616,17 +3436,17 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
     while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
-    	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
+    	if (isset($ind['id_of_uwwtp'])&& isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-    	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
+    	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_agglomeration']]))
+    	if (isset($ind['id_of_agglomeration']) && isset($line[$ind['id_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_agglomeration']]))
+    	if (isset($ind['name_of_agglomeration']) && isset($line[$ind['name_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['size_of_uwwtp']]))
+    	if (isset($ind['size_of_uwwtp']) && isset($line[$ind['size_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-    	if (isset($ind['reason']) && isset($context['sandbox']['line']) && isset($line[$ind['reason']]))
+    	if (isset($ind['reason']) && isset($line[$ind['reason']]))
         	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $line[$ind['reason']]);
 
         $context['sandbox']['line']++;
@@ -3728,17 +3548,17 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
     while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
-    	if (isset($ind['id_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_uwwtp']]))
+    	if (isset($ind['id_of_uwwtp']) && isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-    	if (isset($ind['name_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_uwwtp']]))
+    	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-    	if (isset($ind['id_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['id_of_agglomeration']]))
+    	if (isset($ind['id_of_agglomeration']) && isset($line[$ind['id_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($context['sandbox']['line']) && isset($line[$ind['name_of_agglomeration']]))
+    	if (isset($ind['name_of_agglomeration']) && isset($line[$ind['name_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_uwwtp']) && isset($context['sandbox']['line']) && isset($line[$ind['size_of_uwwtp']]))
+    	if (isset($ind['size_of_uwwtp']) && isset($line[$ind['size_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-    	if (isset($ind['remarks']) && isset($context['sandbox']['line']) && isset($line[$ind['remarks']]))
+    	if (isset($ind['remarks']) && isset($line[$ind['remarks']]))
         	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $line[$ind['remarks']]);
 
         $context['sandbox']['line']++;
@@ -3786,7 +3606,6 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
 
     //all agglo NC on art3 or 4 or5
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    $induww = $GLOBALS['uwwtd']['sheet2_uwwtp'];
     $agglo_breach = array();
 
 //     $i = 0;
@@ -5605,7 +5424,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    $induww = $GLOBALS['uwwtd']['sheet2_uwwtp'];
+    $induww = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
     $listtypestat = array('expired', 'pending');
     $list_type_rca = array('all', 'na', 'sa_csa');
     if (!isset($context['sandbox']['progress'])) {
@@ -6780,7 +6599,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                                     $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
                                                     $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
 
-
+                        if(isset($dcp->field_dcprcaliste['und'])){
 			                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
 			                    $rca = node_load($rcanid['nid']);
 
@@ -6798,14 +6617,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 			                    // 		  $rca->field_rcadateart54['und'][0]['value'],
 			                    // 		  $rca->field_rcadateart5854['und'][0]['value'])) {
 
-				        $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
-				        $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
-				        $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
-				        $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+                                $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+                                $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
+                                $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+                                $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
 
-				        unset($rca);
+                                unset($rca);
 			                    // }
 			                }
+                        }
 				}
 		                unset($dcp);
 		            }
@@ -6899,7 +6719,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['monitoring_results_f._more_string._ok_(p._e.)']] =$morestringent_passed_pe;
 
 
-        if (isset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']])) {
+        if (isset($agg->field_inspireidlocalid['und']) && isset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']])) {
             unset($context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und']]);
         }
 
@@ -7376,7 +7196,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         $context['results']['uwwtp_other_morestringent_pe'] = 0;
 //      dsm($context);
     }
-    $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
+    //$ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
+    $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] .'.csv';
@@ -7562,7 +7383,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         $uwwtpCompliance5x = uwwtd_get_compliance_5abc_uwwtp($uwwtp);
 
         if (!isset($context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']])) {
-            $context['results']['country_volume_waste_water'] += $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
+            if(isset($uwwtp->field_uwwwastewatertreated['und'])){
+                $context['results']['country_volume_waste_water'] += $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
+            }
         }
 
         $context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']] = 1;
@@ -7578,7 +7401,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'name',
             $line[$ind['aggname']] = $agg->title;
             //'status',
-            $line[$ind['aggstatus']] = $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
+            $line[$ind['aggstatus']] = (isset($agg->field_status['und']) && $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive');
             //'generated load  p. e.',
             $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
             //'deadline for Art. 3 compliance',
@@ -7729,9 +7552,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $startingDateOfApplication_ap = '';
             $startingDateOfApplication_b = '';
             $startingDateOfApplication_c = '';
-            foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
-                $dcp = node_load($dcpnid['nid']);
-
+            if(!empty($dcp->field_uwwdcpliste)){
+             foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
+              $dcp = node_load($dcpnid['nid']);
+              if(!empty($dcp->field_dcprcaliste)){
                 foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
                     $rca = node_load($rcanid['nid']);
 
@@ -7791,7 +7615,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
                     unset($rca);
                 }
-                unset($dcp);
+              }
+              unset($dcp);
+             }
             }
             unset($rcatreated);
 
@@ -8184,14 +8010,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //                     "C";
             //                     "EXIT")))
             $art4_final = '';
-            if ($line[$ind['art4_treatment type']] == 'NC' || $line[$ind['art4_monitoring']] == 'NC') {
-                $art4_final = 'NC';
-            } elseif ($line[$ind['art4_treatment type']] == 'NR' || $line[$ind['art4_monitoring']] == 'NR') {
-                $art4_final = 'NR';
-            } elseif ($line[$ind['art4_treatment type']] == 'C' && $line[$ind['art4_monitoring']] == 'C') {
-                $art4_final = 'C';
+            if(isset($line[$ind['art4_treatment type']]) || $line[$ind['art4_monitoring']]){
+                if ($line[$ind['art4_treatment type']] == 'NC' || $line[$ind['art4_monitoring']] == 'NC') {
+                    $art4_final = 'NC';
+                } elseif ($line[$ind['art4_treatment type']] == 'NR' || $line[$ind['art4_monitoring']] == 'NR') {
+                    $art4_final = 'NR';
+                } elseif ($line[$ind['art4_treatment type']] == 'C' && $line[$ind['art4_monitoring']] == 'C') {
+                    $art4_final = 'C';
+                }
             }
-
 
             //compliance Art. 5   //more stringent treatment in place
             //'treatment type',
@@ -8207,7 +8034,22 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($previous_treatment_required, $monitoring_Ntot, $monitoring_Ptot, $line[$ind['Monitorig results -other']], $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
+                if(!isset($ind['Monitorig results -other']) && !isset($line[$ind['Monitorig results -other']])){
+                    $monit = null;
+                }
+                else{
+                    $monit = $line[$ind['Monitorig results -other']];
+                }
+                $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance(
+                    $previous_treatment_required, 
+                    $monitoring_Ntot, 
+                    $monitoring_Ptot, 
+                    $monit, 
+                    $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], 
+                    $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], 
+                    $uwwtp->field_uwww_required_rcaap['und'][0]['value'], 
+                    $uwwtp->field_uwww_required_rcaan['und'][0]['value']
+                );
             }
 
             //'final',
@@ -8660,7 +8502,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'COD rate of removal %',   round(( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%'
-            if ($uwwtp->field_uwwcoddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwcodincoming['und'][0]['value'] > 0) {
+            if (isset($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE]) && isset($uwwtp->field_uwwcodincoming[LANGUAGE_NONE]) && $uwwtp->field_uwwcoddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwcodincoming['und'][0]['value'] > 0) {
                 $line[$ind['COD rate of removal %']] =  ( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100);
             } else {
                 $line[$ind['COD rate of removal %']] = '';
@@ -8995,8 +8837,8 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
         $context['sandbox']['max'] = count($context['sandbox']['id']);
 
     }
-    $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
-
+    $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
+    
 
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
     $r = fopen($filename, 'ab');
