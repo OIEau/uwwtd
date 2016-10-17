@@ -67,7 +67,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    
     $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
@@ -82,10 +81,13 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
     
-    //excel  ===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib. 
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
+    //excel   
+	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+    //optimize : ok
+	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
+	//optimize : ok
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
@@ -134,8 +136,10 @@ function uwwtd_register_finished($success, $results, $operations)
 function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 {
     //$debug_times=array();
-    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-
+	uwwtd_trace(__FUNCTION__);
+    $indConf = $GLOBALS['uwwtd']['sheet3_agglo'];
+	//Keep compatibility
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
     $ragglofile = fopen($filename, 'rb');
@@ -149,7 +153,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $agglo = fgetcsv($ragglofile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['line'] = 4; //start line
+        $context['sandbox']['line'] = 5; //start line
 
         $path_xlsx = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
@@ -161,195 +165,84 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
     fseek($ragglofile, $context['sandbox']['file_position']);
 
-//      if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
-//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
-//     $model_path = $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
-//     $model_path = uwwtd_getregister_modelfile_path();
-    //change to public://
-//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'] .'.xlsx';
-//     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
-
-
-//     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
-//     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
-    //$debug_times['start'] = time();
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
 
     $objReader->setLoadSheetsOnly( array(
-                                         $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'],
-                                        ) );
+		$GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'],
+	) );
 
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
-    //$debug_times['load_xls'] = time()-$debug_times['start'];
-//     dsm(444);
-//     return '111';
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
-
+	uwwtd_trace('init xlsx sheet');
 //     $start_line = 4;
-//     $sheet->insertNewRowBefore(5, count($listagglo));
 
-//     $i = $start_line;
-//     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);//$path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
-//     dsm($filename);
-//     $ragglofile = fopen($filename, 'rb');
-//     dsm($ragglofile);
-    //ignore header //decomment for debug on xls final file
-//     $agglo = fgetcsv($ragglofile, 5000, ';');
-
-//     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
-    $j = 0;
-    
-    /**
-    * nd@oieau.fr ===> need test
-    *http://stackoverflow.com/questions/5983845/phpexcel-very-slow-ways-to-improve/5984286#5984286
-    *@javiniar.leonard - insertNewRowBefore() is always expensive, and more so when inserting at the top of the sheet than near the bottom: Always try to avoid using it in a loop; you can specify a number of rows to insert as a second argument, and that's a lot more efficient than inserting each row individually
-    */
-    //try to test this
-    //$sheet->insertNewRowBefore($context['sandbox']['line'], 1000);
-    //$debug_times['start_loop'] = time()-$debug_times['start'];
-    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-//         dsm($agglo);
-//         break;
-//     foreach($listagglo as $agglo) {
-//         } else {
-        $sheet->setCellValueByColumnAndRow($ind['aggcode'], $context['sandbox']['line'], $agglo[$ind['aggcode']]);
-        $sheet->setCellValueByColumnAndRow($ind['aggname'], $context['sandbox']['line'], $agglo[$ind['aggname']]);
-        $sheet->setCellValueByColumnAndRow($ind['generated_load_p.e.'], $context['sandbox']['line'], round($agglo[$ind['generated_load_p.e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._3_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._3_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._4_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._4_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['deadline_for_art._5_compliance'], $context['sandbox']['line'], $agglo[$ind['deadline_for_art._5_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['pending_or_expired_deadline_exp/pd/exp-pd'], $context['sandbox']['line'], $agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]);
-        $sheet->setCellValueByColumnAndRow($ind['nuts_1_code'], $context['sandbox']['line'], $agglo[$ind['nuts_1_code']]);
-        $sheet->setCellValueByColumnAndRow($ind['nuts_2_code'], $context['sandbox']['line'], $agglo[$ind['nuts_2_code']]);
-        $sheet->setCellValueByColumnAndRow($ind['nuts_3_code'], $context['sandbox']['line'], $agglo[$ind['nuts_3_code']]);
-        $sheet->setCellValueByColumnAndRow($ind['bccode'], $context['sandbox']['line'], $agglo[$ind['bccode']]);
-        $sheet->setCellValueByColumnAndRow($ind['bcname'], $context['sandbox']['line'], $agglo[$ind['bcname']]);
-        $sheet->setCellValueByColumnAndRow($ind['number_of_uwwtps/_collecting_systems_without_treatment_serving_the_agglomeration'], $context['sandbox']['line'], $agglo[$ind['number_of_uwwtps/_collecting_systems_without_treatment_serving_the_agglomeration']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_reported_?'], $context['sandbox']['line'], $agglo[$ind['previous_reported_?']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_aggcode'], $context['sandbox']['line'], $agglo[$ind['previous_aggcode']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_gen._load_p.e.'], $context['sandbox']['line'], round($agglo[$ind['previous_gen._load_p.e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'], round($agglo[$ind['previous_percentage_of_change_of_size_(1)']], 1));
-
-        if (abs((float)$agglo[$ind['previous_percentage_of_change_of_size_(1)']]) > 20) {
-            $sheet->getStyleByColumnAndRow($ind['previous_percentage_of_change_of_size_(1)'], $context['sandbox']['line'])
-                ->getFill()
-                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');
-        }
-
-        $sheet->setCellValueByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'], round($agglo[$ind['total_%_(2)']], 1));
-
-        if ($agglo[$ind['total_%_(2)']] < 100) {
-            $sheet->getStyleByColumnAndRow($ind['total_%_(2)'], $context['sandbox']['line'])
-                ->getFill()
-                ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                ->getStartColor()->setARGB('FFFFC000');
-        }
-
-        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['connected_to_collecting_system_p._e.'], $context['sandbox']['line'], round($agglo[$ind['connected_to_collecting_system_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['addressed_through_ias_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['addressed_through_ias_p._e.'], $context['sandbox']['line'], round($agglo[$ind['addressed_through_ias_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['neither_collecting_system_nor_ias_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['neither_collecting_system_nor_ias_p._e.'], $context['sandbox']['line'], round($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['dist_art3_%_of_gen._load_(3)'], $context['sandbox']['line'], round($agglo[$ind['dist_art3_%_of_gen._load_(3)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['dist_art3_in_p.e.'], $context['sandbox']['line'], round($agglo[$ind['dist_art3_in_p.e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['art3_compliance'], $context['sandbox']['line'], $agglo[$ind['art3_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_art3_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art3_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['total_entering_load_p._e.'], $context['sandbox']['line'], round($agglo[$ind['total_entering_load_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['ratio_connected/enentering_%'], $context['sandbox']['line'], round($agglo[$ind['ratio_connected/enentering_%']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['total_treatment_plant_design_capacity_p._e.'], $context['sandbox']['line'], round($agglo[$ind['total_treatment_plant_design_capacity_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['ratio_total_entering_load/total_design_capacity_%'], $context['sandbox']['line'], round($agglo[$ind['ratio_total_entering_load/total_design_capacity_%']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_compliant_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliant_p._e.'], $context['sandbox']['line'], round($agglo[$ind['art4_compliant_p._e.']]));
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_not_compliant_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_compliant'], $context['sandbox']['line'], round($agglo[$ind['art4_not_compliant']]));
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['art4_not_relevant_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['art4_not_relevant'], $context['sandbox']['line'], round($agglo[$ind['art4_not_relevant']]));
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliance_art._4_(only)'], $context['sandbox']['line'], $agglo[$ind['art4_compliance_art._4_(only)']]);
-        $sheet->setCellValueByColumnAndRow($ind['art4_compliance_art._4_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_art4_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art4_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat__%_of_connected_load'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_treat__%_of_connected_load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_treat_in_p.e._(4)'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_treat_in_p.e._(4)']]));
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_%_of_connected_load'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_perf_%_of_connected_load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['dist_art4_perf_in_p.e._(5)'], $context['sandbox']['line'], round($agglo[$ind['dist_art4_perf_in_p.e._(5)']]));
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_a_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_a_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_a_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_a_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_a_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_a_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_a_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5a_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5a_(only)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5a_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5a_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_b_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_b_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_b_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_b_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_b_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_b_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_b_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5b_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5b_(only)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5b_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5b_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_c_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['compliant_5_c__(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_5_c__(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_c_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_5_c_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_5_c_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_c_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['not_relevant_5_c_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_relevant_5_c_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5c_(only)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5c_(only)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5c_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5c_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliant_art._5_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['compliant_art._5_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['not_compliant_art._5_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['not_compliant_art._5_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['art._5_not_relevant_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['art._5_not_relevant_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5_(whole_agglo)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5_(whole_agglo)']]);
-        $sheet->setCellValueByColumnAndRow($ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)'], $context['sandbox']['line'], $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]);
-        $sheet->setCellValueByColumnAndRow($ind['previous_art5_compliance'], $context['sandbox']['line'], $agglo[$ind['previous_art5_compliance']]);
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_treat_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_treat_in_p.e._(6)'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_treat_in_p.e._(6)']]));
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_%_of_gen._load'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_perf_%_of_gen._load']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['distance_art5_perf_in_p.e._(7)'], $context['sandbox']['line'], round($agglo[$ind['distance_art5_perf_in_p.e._(7)']]));
-        $sheet->setCellValueByColumnAndRow($ind['water_body_type'], $context['sandbox']['line'], $agglo[$ind['water_body_type']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_code_of_the_water_body_wfd'], $context['sandbox']['line'], $agglo[$ind['id_code_of_the_water_body_wfd']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_of_wfd_river_basin_district'], $context['sandbox']['line'], $agglo[$ind['id_of_wfd_river_basin_district']]);
-        $sheet->setCellValueByColumnAndRow($ind['entirely_discharging_into_coastal_waters?'], $context['sandbox']['line'], $agglo[$ind['entirely_discharging_into_coastal_waters?']]);
-        $sheet->setCellValueByColumnAndRow($ind['type_of_receiving_water'], $context['sandbox']['line'], $agglo[$ind['type_of_receiving_water']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_of_the_sa_or_lsa'], $context['sandbox']['line'], $agglo[$ind['id_of_the_sa_or_lsa']]);
-        $sheet->setCellValueByColumnAndRow($ind['rca_name'], $context['sandbox']['line'], $agglo[$ind['rca_name']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_5.8.'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_5.8.']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_5.4.'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_5.4.']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_a_n'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_a_n']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_a_p'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_a_p']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_b'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_b']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_c'], $context['sandbox']['line'], $agglo[$ind['starting_date_of_application_c']]);
-        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['secondary_treatment_installed_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['secondary_treatment_installed_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['secondary_treatment_installed_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._secondary_ok_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._secondary_ok'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._secondary_ok']]));
-        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['more_str._treatment_installed_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['more_str._treatment_installed_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['more_str._treatment_installed_(p._e.)']]));
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(%_of_gen._load)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(%_of_gen._load)']], 1));
-        $sheet->setCellValueByColumnAndRow($ind['monitoring_results_f._more_string._ok_(p._e.)'], $context['sandbox']['line'], round($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]));
-
-        //debug data info
-        //$sheet->setCellValueByColumnAndRow($ind['debug_compliance_agglo_from_algo'], $context['sandbox']['line'], $agglo[$ind['debug_compliance_agglo_from_algo']]);
-//         }
-//         $i++;
-//         break;
-        $context['sandbox']['line']++;
+	
+	$j = 0;
+    //uwwtd_trace('start loop');
+    $lines = array();
+	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
+    while ($j < 3000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+        //uwwtd_trace($j);
+        $line = array();
         
-
+        foreach($indConf as $k=>$conf){
+            if($conf['xls']){
+                if(isset($agglo[$conf['k']])){
+                    $val = $agglo[$conf['k']];
+                    //If we have a format wrapper
+                    if(isset($conf['wrapper'])){
+                        switch($conf['wrapper']){
+                            case 'round':
+                                $val = round($val);
+                              break;
+                            case 'round1':
+                                $val = round($val,1);
+                              break;
+                            
+                        }
+                    }
+                }else{
+                    $val = null;
+                }
+                //Other condition on field ?
+                $line[$conf['k']] = $val;
+            }
+        }
+        $lines[$j] = $line;
         $j++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+        
     }
-    //$debug_times['end_loop'] = time()-$debug_times['start'];
+    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+
+	//Special rules for cell's style
+	
+    if(!empty($lines)){
+        //uwwtd_trace('set style');
+        foreach($lines as $lid=>$line){
+            $idx = $indConf['previous_percentage_of_change_of_size_(1)']['k'];
+            if(isset($line[$idx]) && abs((float)$line[$idx])>20){
+                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                        ->getFill()
+                        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFFFC000');
+            }
+            $idx = $indConf['total_%_(2)']['k'];
+            if (isset($line[$idx]) && $line[$idx] < 100) {
+                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                    ->getFill()
+                    ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+                    ->getStartColor()->setARGB('FFFFC000');
+            }
+            
+        }
+        //uwwtd_trace('end style');
+    }   
+    
+    $context['sandbox']['line']=$context['sandbox']['line']+$j;
+	
     fclose($ragglofile);
     unset($ragglofile);
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
@@ -479,9 +372,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     unset($objWriter);
     unset($objReader);
     gc_collect_cycles();
-//     $context['sandbox']['progress']++;
-    //$debug_times['end'] = time()-$debug_times['start'];
-    //watchdog('uwwtd debug', '<pre>'.print_r($debug_times, true).'</pre>');
+
+	$context['sandbox']['progress']++;
+	
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
@@ -492,22 +385,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 {
     uwwtd_trace(__FUNCTION__);
-//  if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'] . '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
 
-//     dsm($filename);
-//  if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['file_position'] = 0;
-//         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-//         $context['sandbox']['max'] = filesize($filename);
-//     }
 
     $ruwwtpfile = fopen($filename, 'rb');
 
@@ -544,27 +424,17 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $objReader->setLoadSheetsOnly( array(
                                          $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'],
                                         ) );
-    uwwtd_trace('start load');
+    //uwwtd_trace('start load');
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
-    uwwtd_trace('end load');
-    uwwtd_trace('start getSheetByName');
+    //uwwtd_trace('end load');
+    //uwwtd_trace('start getSheetByName');
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
-    uwwtd_trace('end getSheetByName');
-
-//     $sheet->insertNewRowBefore(5, count($listuwwtp));
-
-//     $i = $context['sandbox']['line'];
-
-
-    //ignore header //decomment for debug on xls final file
-//     $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
-
-//     while ($uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
     $j = 0;
-    uwwtd_trace('start loop');
+    //uwwtd_trace('start loop');
     $lines = array();
+	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
     while ($j < 3000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
-        uwwtd_trace($j);
+        //uwwtd_trace($j);
         $line = array();
         
         foreach($ind as $k=>$conf){
@@ -600,8 +470,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
     
     //Special rules for cell's style
+	
     if(!empty($lines)){
-        uwwtd_trace('set style');
+        //uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
             $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
@@ -618,21 +489,22 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                     ->getStartColor()->setARGB('FFFFC000');
             }
             //est-ce nécessaire ? 
-            /*
-            else{
-                    $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
-                        ->getFill()
-                        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
-                        ->getStartColor()->setARGB('FFFFFFFF');
-            }
-            */
+            // else{
+                    // $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                        // ->getFill()
+                        // ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
+                        // ->getStartColor()->setARGB('FFFFFFFF');
+            // }
+            
         }
-        uwwtd_trace('end style');
+        //uwwtd_trace('end style');
     }   
     
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
-    uwwtd_trace('end loop');
+    //uwwtd_trace('end loop');
+	//uwwtd_trace('Progress : '.$context['sandbox']['progress'].' / '.$context['sandbox']['max']);
     fclose($ruwwtpfile);
+	//uwwtd_trace('Start Total data');
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
@@ -651,24 +523,26 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                      $line_to_fill = $context['sandbox']['line'] + 4;
                 break;
             }
-    		if (isset($ind['uww_entering this UWWTP % of gen. load']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_entering this UWWTP % of gen. load']]))
-            	$sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']], 1));
-	   		if (isset($ind['uww_entering load  p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_entering load  p. e.']]))
-	            $sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.'], $line_to_fill, round($uwwtp[$ind['uww_entering load  p. e.']]));
-	    	if (isset($ind['uww_capacity p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['uww_capacity p. e.']]))
-	            $sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['uww_capacity p. e.']]));
-	    	if (isset($ind['previous_entering load p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_entering load p. e.']]))
-	            $sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']]));
-	    	if (isset($ind['previous_capacity p. e.']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_capacity p. e.']]))
-	            $sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']]));
-	    	if (isset($ind['previous_Percentage of change of entering load (1) %']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']]))
-	            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']], 1));
-	    	if (isset($ind['previous_Percentage of change of capacity (2) %']) && isset($line_to_fill) && isset($uwwtp[$ind['previous_Percentage of change of capacity (2) %']]))
-	            $sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']], 1));
+			if(isset($line_to_fill)){
+				if (isset($ind['uww_entering this UWWTP % of gen. load']['k']) && isset($uwwtp[$ind['uww_entering this UWWTP % of gen. load']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['uww_entering this UWWTP % of gen. load']['k'], $line_to_fill, round($uwwtp[$ind['uww_entering this UWWTP % of gen. load']['k']], 1));
+				if (isset($ind['uww_entering load  p. e.']['k']) && isset($uwwtp[$ind['uww_entering load  p. e.']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['uww_entering load  p. e.']['k'], $line_to_fill, round($uwwtp[$ind['uww_entering load  p. e.']['k']]));
+				if (isset($ind['uww_capacity p. e.']['k']) && isset($uwwtp[$ind['uww_capacity p. e.']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['uww_capacity p. e.']['k'], $line_to_fill, round($uwwtp[$ind['uww_capacity p. e.']['k']]));
+				if (isset($ind['previous_entering load p. e.']['k']) && isset($uwwtp[$ind['previous_entering load p. e.']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.']['k'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']['k']]));
+				if (isset($ind['previous_capacity p. e.']['k']) && isset($uwwtp[$ind['previous_capacity p. e.']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.']['k'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']['k']]));
+				if (isset($ind['previous_Percentage of change of entering load (1) %']['k']) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %']['k'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']['k']], 1));
+				if (isset($ind['previous_Percentage of change of capacity (2) %']['k']) && isset($uwwtp[$ind['previous_Percentage of change of capacity (2) %']['k']]))
+					$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %']['k'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']['k']], 1));
+			}
         }
         fclose($r);
     }
-
+	//uwwtd_trace('End Total data');
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -680,7 +554,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     unset($objWriter);
     unset($objReader);
 
-//     $context['sandbox']['progress']++;
+     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
@@ -786,7 +660,8 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
-
+	
+	//In order to finish the script 
     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
@@ -1158,7 +1033,7 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
 {
     //get all agglo
     //group by nuts2 code
-    $indagglo = $GLOBALS['uwwtd']['sheet3_agglo'];
+	$indagglo = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $filenameagglo = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
     $ragglofile = fopen($filenameagglo, 'rb');
 
@@ -2813,7 +2688,8 @@ function uwwtd_create_register_2015_new_agglomerations_sheet12($annee, &$context
     } else {
         fseek($ragglofile, $context['sandbox']['file_position']);
     }
-    $indagglo = $GLOBALS['uwwtd']['sheet3_agglo'];
+    $indagglo = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
+	
 
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
@@ -3605,7 +3481,7 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     }
 
     //all agglo NC on art3 or 4 or5
-    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $agglo_breach = array();
 
 //     $i = 0;
@@ -3845,8 +3721,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
 
 
 //     $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
     $ragglofile = fopen($filename, 'rb');
@@ -4163,8 +4038,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-   $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
    $ragglofile = fopen($filename, 'rb');
@@ -4650,8 +4524,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //         $context['sandbox']['max'] = 1;
 //     }
 
-    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
-
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
     $ragglofile = fopen($filename, 'rb');
@@ -5423,7 +5296,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
  */
 function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 {
-    $ind = $GLOBALS['uwwtd']['sheet3_agglo'];
+	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $induww = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
     $listtypestat = array('expired', 'pending');
     $list_type_rca = array('all', 'na', 'sa_csa');
