@@ -1902,7 +1902,7 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
         
         $i = $context['sandbox']['progress'];
         $j=0;
-        while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
+        while($j<50 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
             $data = $context['sandbox']['ids'][$k];
             $node = uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i);
@@ -2488,7 +2488,7 @@ function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $tim
         }
         $i = $context['sandbox']['progress'];
         $j=0;
-        while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
+        while($j<50 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
             $data = $context['sandbox']['ids'][$k];
             $node = uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $k);
@@ -4288,7 +4288,7 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
         
         $i = $context['sandbox']['progress'];
         $j=0;
-        while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
+        while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
             $k=$i+$j;
             $data = $context['sandbox']['ids'][$k];
 
