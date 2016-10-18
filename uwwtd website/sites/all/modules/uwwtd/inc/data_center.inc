@@ -4252,7 +4252,7 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
 
     $i = $context['sandbox']['progress'];
     $j=0;
-    while($j<15 && $context['sandbox']['progress']<$context['sandbox']['max']){
+    while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
         $k=$i+$j;
         if($node = node_load($context['sandbox']['ids'][$k]['nid'])){
             // Check and add dcp <-> rca
@@ -4514,7 +4514,7 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
         else{
             $i = $context['sandbox']['progress'];
             $j=0;
-            while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
+            while($j<20 && $context['sandbox']['progress']<$context['sandbox']['max']){
                 $k=$i+$j;
                 $node = node_load($context['sandbox']['ids'][$k]['nid']);
                 // Check bcId exists
@@ -4577,7 +4577,7 @@ function uwwtd_bc_position_batch_process($newFile, $annee, $timestamp, &$context
     if($context['sandbox']['max'] > 0){
         $i = $context['sandbox']['progress'];
         $j=0;
-        while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
+        while($j<20 && $context['sandbox']['progress'] < $context['sandbox']['max']){
             $k=$i+$j;
             //dsm($k);
             //dsm($context['sandbox']['ids']);
@@ -4656,7 +4656,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
     }
     $i = $context['sandbox']['progress'];
     $j=0;
-    while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
+    while($j<20 && $context['sandbox']['progress'] < $context['sandbox']['max']){
         $k=$i+$j;
         $data = $context['sandbox']['ids'][$k];
         $dcpnid = $data['nid'];
@@ -4785,7 +4785,7 @@ function uwwtd_rca_extra_batch_process($newFile, $annee, $timestamp, &$context){
     }
     $i = $context['sandbox']['progress'];
     $j=0;
-    while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
+    while($j<20 && $context['sandbox']['progress'] < $context['sandbox']['max']){
         $k=$i+$j;
         $data = $context['sandbox']['ids'][$k];
         $node = node_load($data['nid']);
