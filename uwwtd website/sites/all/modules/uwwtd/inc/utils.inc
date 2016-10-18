@@ -1035,7 +1035,8 @@ function uwwtd_check_numeric($value)
 
 function uwwtd_check_decimal($value){
     $value = str_replace(",",".",trim($value));
-	if(is_numeric($value) && $value < bcpow(10,8)) {
+	//in fact what is the max value for a real type in postgresql ?
+	if(is_numeric($value) && $value < bcpow(10,9)) {
 		return (float)$value;	
 	}
 //     else{
