@@ -3461,6 +3461,9 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
     
 }
 
+
+
+//TODO optimize this process in order to treat 10/50 dcp per iteration
 function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
     global $language;
     if(isset($datas)){
@@ -3471,8 +3474,38 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             $_SESSION['totDcp'] = $context['sandbox']['max'];
         }
         $i = $context['sandbox']['progress'];
-        $data = $context['sandbox']['ids'][$i];
+        $j=0;
+        while($j<50 && $context['sandbox']['progress']<$context['sandbox']['max']){
+            $k=$i+$j;
+            $data = $context['sandbox']['ids'][$k];
+            $node = uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $k);
+            if($node){
+                $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+            }
+            else{
+                $context['results'][] = t('Failed to import a DCP.');
+            }
+            $context['sandbox']['progress']++;
+            $j++;
+        }
+        uwwtd_flush_errors();
+        if($node){
+			$context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+        }
+        else{
+            $context['message'] = '(' .$annee . ') ' . t('Failed to import a DCP.');
+        }
+        
+        if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        }
+    } else {
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
+    }
+}
 
+function uwwtd_update_dcp_node($data, $newFile, $repCode, $annee, $timestamp, $i){
+	global $language;
         // Check basic elements exist
         // errors
         $e = 0;
@@ -3842,22 +3875,15 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             
             if (empty($node->nid)) {
                 uwwtd_trace('discharge_point ' . $siteId . ' node_save() error2');
-            }             
-        } else {
-            uwwtd_trace('import discharge_point error ' . var_export($data, true));
-        }
-        uwwtd_flush_errors();
-        $context['sandbox']['progress']++;
-        $context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-        $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
-        
-        if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-        }
-    } else {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
-    }
+            }
+			else return $node;
+	} else {
+		uwwtd_trace('import discharge_point error ' . var_export($data, true));
+	}
+    uwwtd_flush_errors();
+	return false;
 }
+
 
 /*DG 15/12/2015 import Contact*/
 function uwwtd_import_contact_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
@@ -4226,7 +4252,7 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
 
     $i = $context['sandbox']['progress'];
     $j=0;
-    while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
+    while($j<15 && $context['sandbox']['progress']<$context['sandbox']['max']){
         $k=$i+$j;
         if($node = node_load($context['sandbox']['ids'][$k]['nid'])){
             // Check and add dcp <-> rca
