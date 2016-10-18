@@ -181,7 +181,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     //uwwtd_trace('start loop');
     $lines = array();
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
-    while ($j < 3000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 6000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         //uwwtd_trace($j);
         $line = array();
         
@@ -433,7 +433,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //uwwtd_trace('start loop');
     $lines = array();
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
-    while ($j < 3000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
+    while ($j < 6000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
         //uwwtd_trace($j);
         $line = array();
         
