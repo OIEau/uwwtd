@@ -71,11 +71,8 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    
     $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    
     $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-
     $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
@@ -181,7 +178,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     //uwwtd_trace('start loop');
     $lines = array();
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
-    while ($j < 6000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 10000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         //uwwtd_trace($j);
         $line = array();
         
@@ -433,7 +430,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //uwwtd_trace('start loop');
     $lines = array();
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
-    while ($j < 6000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
+    while ($j < 10000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
         //uwwtd_trace($j);
         $line = array();
         
@@ -672,41 +669,17 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 }
 
 /**
- *
+ * Generate the "Big Cities" Sheet
+ * since the 9th report (2016), BigCitiesDischarger node was suppress so we have to use "bigcitiesid" field in agglomeration node 
+ * note : a big citie is an agglo with field_agggenerated_value > 150 000. A Big city can only have one agglomeration
  */
 function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 {
     if (!isset($context['sandbox']['progress'])) {
 
         $context['sandbox']['progress'] = 0;
-        $context['sandbox']['progressbc'] = 0;
         $context['sandbox']['progressagg'] = 0;
-        $context['sandbox']['idbc']  = array();
         $context['sandbox']['idagg'] = array();
-
-        $query = 'select n.nid
-        from {node} n
-            left join
-                {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id
-        where n.type = :typenode
-            and f_annee.field_anneedata_value = :annee
-        ';
-
-        $param = array(
-            ':typenode' => 'big_city',
-            ':annee' => $annee,
-            );
-
-        try {
-            $result = db_query($query, $param);
-            while($row = $result->fetchAssoc()) {
-                $context['sandbox']['idbc'][] = $row['nid'];
-            }
-            unset($result, $row);
-        }catch(Exception $e) {
-            dsm($e->getMessage());
-        }
 
        //get all agglo > 150 000
         $query = 'select n.nid, a.field_agggenerated_value
@@ -720,6 +693,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and a.field_agggenerated_value::integer > :agggenerated
+        order by n.title
         ';
 
         $param = array(
@@ -731,25 +705,17 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         try {
             $result = db_query($query, $param);
             while($row = $result->fetchAssoc()) {
-                if (false === in_array($row['nid'], $agglotreated)) {
-                    $context['sandbox']['idagg'][] = $row['nid'];
-                }
+                $context['sandbox']['idagg'][] = $row['nid'];
             }
             unset($result, $row);
         }catch(Exception $e) {
             dsm($e->getMessage());
         }
-
-        $context['sandbox']['maxbc'] = count($context['sandbox']['idbc']);
-        $context['sandbox']['maxagg'] = count($context['sandbox']['idagg']);
-        $context['sandbox']['max'] = $context['sandbox']['maxbc'] + $context['sandbox']['maxagg'];
-//         dsm($context['sandbox']);
+        $context['sandbox']['max'] = count($context['sandbox']['idagg']);
+        $context['sandbox']['progressagg'] =0;
     }
 
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'] .'.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
 
     if ($context['sandbox']['progress'] == 0) {
@@ -778,113 +744,15 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         $r = fopen($filename, 'ab');
     }
 
+
+
     $j = 0;
-    while ($j < 20 && $context['sandbox']['progressbc'] < $context['sandbox']['maxbc']) {
-//     foreach($id as $nid_bc) {
-//         dsm($j + $context['sandbox']['progressbc']);
-//         dsm($context['sandbox']['idbc'][$context['sandbox']['progressbc']]);
-        $bc = node_load($context['sandbox']['idbc'][$context['sandbox']['progressbc']]);
-//         dsm($bc);
+    while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['max']) {
+//     foreach($id as $nidagglo) {
         $line = array();
-
-        $generated_load = 0;
-        $collecting_system = 0;
-        $ias = 0;
-        $no_collecting_system_nor_ias = 0;
-        $treatment_0 = 0;
-        $treatment_1 = 0;
-        $treatment_2 = 0;
-        $treatment_3np_3n_3p = 0;
-        $treat_3np_3n_3p_pe = 0;
-        $treat_3np_3n_3p_agggenerated = 0;
-        $type_of_receiving_area = '';
-
-        $line[$ind['id']] = $bc->field_inspireidlocalid['und'][0]['value'];
-//         dsm($bc);
-//         dsm($line);
-        $line[$ind['name']] = $bc->title;
-        $dcptype = array();
-        $agglotreated = array();
-//         dsm($bc->field_bcaggliste['und']);
-        foreach($bc->field_bcaggliste['und'] as $nidagglo) {
-            $agglotreated[] = $nidagglo['nid'];
-            $agg = node_load($nidagglo['nid']);
+        
+        if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
-            unset($agg);
-            $generated_load += $agg_detail['generated_load'];
-            $collecting_system +=  $agg_detail['collecting_system'];
-            $ias +=  $agg_detail['ias'];
-            $no_collecting_system_nor_ias +=  $agg_detail['no_collecting_system_nor_ias'];
-
-            $dcptype = array_merge($dcptype, $agg_detail['dcptype']);
-//             dsm($dcptype);
-            $treat_3np_3n_3p_pe +=   $agg_detail['treat_3np_3n_3p_pe'];
-            $treat_3np_3n_3p_agggenerated += $agg_detail['treat_3np_3n_3p_agggenerated'];
-            $treat_2_pe +=           $agg_detail['treat_2_pe'];
-            $treat_2_agggenerated += $agg_detail['treat_2_agggenerated'];
-            $treat_1_pe +=           $agg_detail['treat_1_pe'];
-            $treat_1_agggenerated += $agg_detail['treat_1_agggenerated'];
-            $treat_0_pe +=           $agg_detail['treat_0_pe'];
-            $treat_0_agggenerated += $agg_detail['treat_0_agggenerated'];
-        }
-
-
-//         dsm("treat_3np_3n_3p_pe = $treat_3np_3n_3p_pe");
-//         dsm("treat_3np_3n_3p_agggenerated = $treat_3np_3n_3p_agggenerated");
-//         dsm("treat_2_pe = $treat_2_pe");
-//         dsm("treat_2_agggenerated = $treat_2_agggenerated");
-//         dsm("treat_1_pe = $treat_1_pe");
-//         dsm("treat_1_agggenerated = $treat_1_agggenerated");
-//         dsm("treat_0_pe = $treat_0_pe");
-//         dsm("treat_0_agggenerated = $treat_0_agggenerated");
-
-        $treatment_3np_3n_3p = $treat_3np_3n_3p_pe * 100/ $treat_3np_3n_3p_agggenerated;
-        $treatment_2 = $treat_2_pe * 100 / $treat_2_agggenerated;
-        $treatment_1 = $treat_1_pe * 100 / $treat_1_agggenerated;
-        $treatment_0 = $treat_0_pe * 100 / $treat_0_agggenerated;
-
-//         dsm("treatment_0 = $treatment_0");
-//         dsm("treatment_1 = $treatment_1");
-//         dsm("treatment_2 = $treatment_2");
-//         dsm("treatment_3np_3n_3p = $treatment_3np_3n_3p");
-
-        $type_of_receiving_area = implode(';', array_keys($dcptype));
-//         dsm($type_of_receiving_area);
-
-        $collecting_system_percent =  $collecting_system * 100 / $generated_load;
-        $ias_percent =  $ias * 100 / $generated_load;
-        $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
-
-        $line[$ind['generated_load']] = $generated_load;
-        $line[$ind['collecting_system']] = $collecting_system_percent;
-        $line[$ind['ias']] = $ias_percent;
-        $line[$ind['no_collecting_system_nor_ias']] = $no_collecting_system_nor_ias_percent;
-
-        //if max treatement in place = 0
-        $line[$ind['treatment_0']] = $treatment_0;
-        //if max treatement in place = 1
-        $line[$ind['treatment_1']] = $treatment_1;
-        //if max treatement in place = 2
-        $line[$ind['treatment_2']] = $treatment_2;
-        //if max treatement in place = 3n,3npn3p,3other
-        $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p; //tood
-//         $line[$ind['treatment_3n']] = $treatment_3n;
-//         $line[$ind['treatment_3p']] = $treatment_3p;
-//         $line[$ind['treatment_3np']] = $treatment_3np;
-        $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
-        $line[$ind['type_of_receiving_area']] = $type_of_receiving_area;
-        fputcsv($r, $line, ';');
-//         dsm($line);
-        $context['sandbox']['progressbc']++;
-        $context['sandbox']['progress']++;
-        $j++;
-    }
-
-    if ($context['sandbox']['progressbc'] >= $context['sandbox']['maxbc']) {
-        $j = 0;
-        while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['maxagg']) {
-    //     foreach($id as $nidagglo) {
-            $line = array();
             
             $generated_load = 0;
             $collecting_system = 0;
@@ -898,8 +766,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $treat_3np_3n_3p_agggenerated = 0;
             $type_of_receiving_area = '';
 
-            $agg = node_load($nidagglo['nid']);
-            $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
+            
 
             $treatment_0 = $agg_detail['treat_0'];
             $treatment_1 = $agg_detail['treat_1'];
@@ -928,13 +795,12 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p;
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
             $line[$ind['type_of_receiving_area']] = implode(';', $dcptype);
+            
             unset($agg);
             fputcsv($r, $line, ';');
-
-            $context['sandbox']['progressagg']++;
-            $context['sandbox']['progress']++;
-            $j++;
         }
+        $context['sandbox']['progressagg']++;
+        $j++;
     }
 
 
