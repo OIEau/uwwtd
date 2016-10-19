@@ -1674,6 +1674,13 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (false === $previous_year) {
         $replaceyearby = 'N/A';
     }
+    $years_cells = array('B3','D3','B21','B74','AB48','A62','AA41','AB41','AB62','AC41','AD41','AE41','AF41',
+    'A54','A55','A57','A58','A60','A61','A64','A65','A67','A68','A70','A71','AA65','AA66','AA68','AA69','AA71','AA72');
+    foreach($years_cells as $yc){
+        $cell = $sheet->getCell($yc);
+        $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
+    }
+    /*
     $cell = $sheet->getCell('A54');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A55');
@@ -1698,7 +1705,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     $cell = $sheet->getCell('A71');
     $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-
+    */
 	if (isset($context['results']['graph']['art3_C']['number'])) {
     	$sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
 	}
