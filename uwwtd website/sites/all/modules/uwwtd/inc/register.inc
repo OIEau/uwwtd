@@ -2966,7 +2966,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'] . '.csv';
 
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
     	if (isset($ind['id_of_agglomeration'])&& $agglo[$ind['id_of_agglomeration']])
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
     	if (isset($ind['name_of_agglomeration'])&& $agglo[$ind['name_of_agglomeration']])
@@ -3077,7 +3077,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 //     $ragglofile = fopen($filename, 'rb');
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
+    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
     	if (isset($ind['id_of_agglomeration'])&& isset($agglo[$ind['id_of_agglomeration']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
     	if (isset($ind['name_of_agglomeration'])&& isset($agglo[$ind['name_of_agglomeration']]))
@@ -3184,7 +3184,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
+    while ($j < 1000 && $line = fgetcsv($rfile, 5000, ';')) {
     	if (isset($ind['id_of_uwwtp'])&& isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
     	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
@@ -3296,7 +3296,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 //     $rfile = fopen($filename, 'rb');
 //     while ($line = fgetcsv($rfile, 5000, ';')) {
     $j = 0;
-    while ($j < 20 && $line = fgetcsv($rfile, 5000, ';')) {
+    while ($j < 1000 && $line = fgetcsv($rfile, 5000, ';')) {
     	if (isset($ind['id_of_uwwtp']) && isset($line[$ind['id_of_uwwtp']]))
         	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
     	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
