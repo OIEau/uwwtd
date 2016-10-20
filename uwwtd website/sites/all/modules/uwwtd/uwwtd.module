@@ -987,7 +987,7 @@ function uwwtd_block_view($delta = ''){
     }
 }
 
-
+//nd@oieau.fr 20/10/2016 . There is a bug in this function for building the link
 function uwwtd_get_url_path($type, $param = array())
 {
     $path = '';
@@ -999,6 +999,15 @@ function uwwtd_get_url_path($type, $param = array())
             $path .= $type;
             foreach ($param as $value) {
                 $path.= '/' . str_replace('_', '',$value);
+            }
+            if(drupal_valid_path($path)) return $path;
+            else{
+                $path = '';
+                $path .= $type;
+                foreach ($param as $value) {
+                    $path.= '/' . $value;
+                }
+                return $path;
             }
             break;
     }
