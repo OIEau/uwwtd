@@ -620,7 +620,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     }
 
     if (!empty($imports)) {
-    	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        $batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
         
     //BigCityDischargers
@@ -898,17 +898,17 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // BB 22/08 added elseif for 9th report
         // BeginLife date is set and is before report date
         if (isset($data['rcaBeginLife']) && date("Y", strtotime($data['rcaBeginLife'])) < $annee) {
-        	$rcaState9thReport = '1';
-        	// If EndLife date before report date, rca is inactive
-        	if (isset($data['rcaEndLife']) && date("Y", strtotime($data['rcaEndLife'])) < $annee) {
-        		$rcaState9thReport = '0';
-        	}
+            $rcaState9thReport = '1';
+            // If EndLife date before report date, rca is inactive
+            if (isset($data['rcaEndLife']) && date("Y", strtotime($data['rcaEndLife'])) < $annee) {
+                $rcaState9thReport = '0';
+            }
         } 
 
         if(isset($data['rcaState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['rcaState']);
         } elseif(isset($rcaState9thReport)) {
-        	$node->field_status['und'][0]['value'] = $rcaState9thReport;
+            $node->field_status['und'][0]['value'] = $rcaState9thReport;
         } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area status found.', $timestamp, $i, $node);
         
         //text
@@ -1658,36 +1658,36 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         //BB - 22/08 - 9th report changes
         if(isset($data['ReceivingAreasSAParameter'])) {
-        	$node->field_rcaanitro['und'][0]['value'] = '0';
-        	$node->field_rcaaphos['und'][0]['value'] = '0';
-        	$node->field_rcab['und'][0]['value'] = '0';
-        	$node->field_rcac['und'][0]['value'] = '0';
-        	foreach ($data['ReceivingAreasSAParameter'] as $rcaSAParameter) {
-        		switch ($rcaSAParameter['rcaParameter']) {
-        			case 'aN':
-        				$node->field_rcaanitro['und'][0]['value'] = '1';
-        				$node->field_rcaanstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
-        				$node->field_rcaandatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
-        				break;
-        			case 'aP':
-        				$node->field_rcaaphos['und'][0]['value'] = '1';
-        				$node->field_rcaapstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
-        				$node->field_rcaapdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
-        				break;
-        			case 'b':
-        				$node->field_rcab['und'][0]['value'] = '1';
-        				$node->field_rcabstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
-        				$node->field_rcabdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
-        				break;
-        			case 'c':
-        				$node->field_rcac['und'][0]['value'] = '1';
-        				$node->field_rcacstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
-        				$node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
-        				break;
-        			default:
-        				break;
-        		}
-        	}
+            $node->field_rcaanitro['und'][0]['value'] = '0';
+            $node->field_rcaaphos['und'][0]['value'] = '0';
+            $node->field_rcab['und'][0]['value'] = '0';
+            $node->field_rcac['und'][0]['value'] = '0';
+            foreach ($data['ReceivingAreasSAParameter'] as $rcaSAParameter) {
+                switch ($rcaSAParameter['rcaParameter']) {
+                    case 'aN':
+                        $node->field_rcaanitro['und'][0]['value'] = '1';
+                        $node->field_rcaanstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+                        $node->field_rcaandatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+                        break;
+                    case 'aP':
+                        $node->field_rcaaphos['und'][0]['value'] = '1';
+                        $node->field_rcaapstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+                        $node->field_rcaapdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+                        break;
+                    case 'b':
+                        $node->field_rcab['und'][0]['value'] = '1';
+                        $node->field_rcabstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+                        $node->field_rcabdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+                        break;
+                    case 'c':
+                        $node->field_rcac['und'][0]['value'] = '1';
+                        $node->field_rcacstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+                        $node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         // TODO : improve this test
@@ -1696,50 +1696,50 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             
             //fix cn@oieau.fr le 11/10/2016
             switch ($data['ReceivingAreasSA54']['rcaMethod54']) {
-            	case 'M':
-            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
-            		break;
-            	case 'C':
-            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
-            		break;
-            	case 'E':
-            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNIncoming54'];
-        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaNDischarged54'];
-        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPIncoming54'];
-        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54']['rcaPDischarged54'];
-            		break;
-         		default:
-         			break;
+                case 'M':
+                    $node->field_rcanincomingmeasured['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNIncoming54'];
+                    $node->field_rcandischargedmeasured['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNDischarged54'];
+                    $node->field_rcapincomingmeasured['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPIncoming54'];
+                    $node->field_rcapdischargedmeasured['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPDischarged54'];
+                    break;
+                case 'C':
+                    $node->field_rcanincomingcalculated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNIncoming54'];
+                    $node->field_rcandischargedcalculated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNDischarged54'];
+                    $node->field_rcapincomingcalculated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPIncoming54'];
+                    $node->field_rcapdischargedcalculated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPDischarged54'];
+                    break;
+                case 'E':
+                    $node->field_rcanincomingestimated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNIncoming54'];
+                    $node->field_rcandischargedestimated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaNDischarged54'];
+                    $node->field_rcapincomingestimated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPIncoming54'];
+                    $node->field_rcapdischargedestimated['und'][0]['value']    = $data['ReceivingAreasSA54']['rcaPDischarged54'];
+                    break;
+                 default:
+                     break;
             }
             //fin fix
             /*
             switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
-            	case 'M':
-            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-            	case 'C':
-            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-            	case 'E':
-            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-         		default:
-         			break;
+                case 'M':
+                    $node->field_rcanincomingmeasured['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+                    $node->field_rcandischargedmeasured['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+                    $node->field_rcapincomingmeasured['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+                    $node->field_rcapdischargedmeasured['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+                    break;
+                case 'C':
+                    $node->field_rcanincomingcalculated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+                    $node->field_rcandischargedcalculated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+                    $node->field_rcapincomingcalculated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+                    $node->field_rcapdischargedcalculated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+                    break;
+                case 'E':
+                    $node->field_rcanincomingestimated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+                    $node->field_rcandischargedestimated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+                    $node->field_rcapincomingestimated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+                    $node->field_rcapdischargedestimated['und'][0]['value']    = $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+                    break;
+                 default:
+                     break;
             }
             */
         }
@@ -3490,7 +3490,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
         }
         uwwtd_flush_errors();
         if($node){
-			$context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+            $context['message'] = '(' .$annee . ') ' . t('Processing discharge point').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
         }
         else{
             $context['message'] = '(' .$annee . ') ' . t('Failed to import a DCP.');
@@ -3505,7 +3505,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
 }
 
 function uwwtd_update_dcp_node($data, $newFile, $repCode, $annee, $timestamp, $i){
-	global $language;
+    global $language;
         // Check basic elements exist
         // errors
         $e = 0;
@@ -3876,12 +3876,12 @@ function uwwtd_update_dcp_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (empty($node->nid)) {
                 uwwtd_trace('discharge_point ' . $siteId . ' node_save() error2');
             }
-			else return $node;
-	} else {
-		uwwtd_trace('import discharge_point error ' . var_export($data, true));
-	}
+            else return $node;
+    } else {
+        uwwtd_trace('import discharge_point error ' . var_export($data, true));
+    }
     uwwtd_flush_errors();
-	return false;
+    return false;
 }
 
 
@@ -5576,8 +5576,26 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
         $context['sandbox']['ids'] = $ids;
     }
     $i = $context['sandbox']['progress'];
-    
-    $data = $context['sandbox']['ids'][$i];
+    $j=0;
+    $messages=array();
+    while($j<25 && $context['sandbox']['progress']<$context['sandbox']['max']){
+        $k=$i+$j;
+        $data = $context['sandbox']['ids'][$k];
+        if($node = uwwtd_station_conformity_node($data, $timestamp)){
+            $context['results'][] = $node->nid . ' : ' . $node->title;
+            $context['sandbox']['progress']++;
+            $messages[] = l($node->title.' '.t('with a drupal id of: ').$node->nid, 'node/'.$node->nid, array('html'=>true));
+        }
+        $j++;
+    }
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for stations').' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].'): '. theme('item_list', array('items'=>$messages));
+        
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+function uwwtd_station_conformity_node($data, $timestamp){
     $node = node_load($data['nid']);
 
     uwwtd_trace('calculate compliance uwwtp ' . $node->field_inspireidlocalid['und'][0]['value']);
@@ -5639,14 +5657,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     $node->field_compliance_explication['und'][0]['value'] = $compliance_info->reason;
     
     node_save($node);
-
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
-
-    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }
+    return $node;
 }
 
 //Function change by nd@oieau.fr in order to fix errors on not provided data : Collective system + IAS + D without treatement = 100
@@ -5675,9 +5686,30 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['ids'] = $ids;
     }
-    $i = $context['sandbox']['progress'];
     
-    $data = $context['sandbox']['ids'][$i];
+    
+    $i = $context['sandbox']['progress'];
+    $j=0;
+    $messages=array();
+    while($j<25 && $context['sandbox']['progress']<$context['sandbox']['max']){
+        $k=$i+$j;
+        $data = $context['sandbox']['ids'][$k];
+        if($node = uwwtd_agglo_conformity_node($data, $timestamp)){
+            $context['results'][] = $node->nid . ' : ' . $node->title;
+            $context['sandbox']['progress']++;
+            $messages[] = l($node->title.' '.t('with a drupal id of: ').$node->nid, 'node/'.$node->nid, array('html'=>true));
+        }
+        $j++;
+    }
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for agglomerations').' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].'): '. theme('item_list', array('items'=>$messages));
+    
+
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+function uwwtd_agglo_conformity_node($data, $timestamp){
     $node = node_load($data['nid']);
     
     
@@ -5812,8 +5844,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
             }
         }
     } else {
-    	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
-    		if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+        if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+            if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
                 $node->field_aggart4compliance['und'][0]['value'] = 'NC';
                 $node->field_aggart5compliance['und'][0]['value'] = 'NC';
                 $node->field_aggart6compliance['und'][0]['value'] = 'NR';
@@ -5821,22 +5853,16 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
                 $node->field_aggart4compliance['und'][0]['value'] = 'NC';
                 $node->field_aggart6compliance['und'][0]['value'] = 'NR';
             }
-    	}
+        }
     }
 
     unset($infoAllAggUww);    
 
     node_save($node);
-
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
-    
-
-    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }
+    return $node;  
 }
+
+
 
 /**
  * Get the agglomeration compliance base on the agglomeration art4,5,6 compliance
@@ -5936,7 +5962,7 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     }
 
     // If the country has a lot of IAS
-	if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']
         && $node->field_aggc2['und'][0]['value'] >= 98) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
@@ -7687,17 +7713,17 @@ function uwwtd_zipped_csvs_to_array($files){
  */ 
 
 function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
-	uwwtd_trace(__FUNCTION__);
+    uwwtd_trace(__FUNCTION__);
     $required_treatment->reason = '';
     if ($maxgen < 2000) {
-    	$required_treatment->required = 'Appropriate';
+        $required_treatment->required = 'Appropriate';
         return $required_treatment;
     }
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
         'A51523' => 1, //biggest priority
-    	'A523' => 1, //biggest priority
+        'A523' => 1, //biggest priority
         'SA'   => 1, 
         'CSA'  => 2,
         'A54'  => 3,
@@ -7722,10 +7748,10 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
     }
     
     switch ($dcp['rcatype']) {
-		case 'LSA':
+        case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 if ($maxgen > 150000) {
-       				$required_treatment->required = 'S';
+                       $required_treatment->required = 'S';
                 } else {
                     $required_treatment->required = 'P';
                 }
@@ -7761,16 +7787,16 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         case 'SA':
         case 'CSA':
             if ($maxgen <= 10000) {
-        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
-                	$required_treatment->required = 'Appropriate';
+                if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                    $required_treatment->required = 'Appropriate';
                 } else {
                     $required_treatment->required = 'S';                    
                 }
             } else {
-            	if (true === uwwtd_rca_art54_applies($dcp)) {
+                if (true === uwwtd_rca_art54_applies($dcp)) {
                     $required_treatment->required = 'S';                    
                 } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
-        			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+                    uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
                 } else {
                     uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);              
                 }                              
@@ -7785,28 +7811,28 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         case 'A58523':
         case 'A54523':
         case 'A5854523':
-        	if ($maxgen <= 10000) {
-        		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
-                	$required_treatment->required = 'Appropriate';
+            if ($maxgen <= 10000) {
+                if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+                    $required_treatment->required = 'Appropriate';
                 } else {
                     $required_treatment->required = 'S';                    
                 }
             } else {
-            	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
-            		if (true === uwwtd_rca_art54_applies($dcp)) {
-                    	$required_treatment->required = 'S';                    
-                	}
-            	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
-            		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
-            	} elseif ($dcp['rcatype'] == 'A51523' || $dcp['rcatype'] == 'A523') {
-            		if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
-            			uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
-            		} else {
-            			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
-            		}
-            	} else {
-            		$required_treatment->required = '?'; 
-            	}
+                if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
+                    if (true === uwwtd_rca_art54_applies($dcp)) {
+                        $required_treatment->required = 'S';                    
+                    }
+                } elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
+                    uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+                } elseif ($dcp['rcatype'] == 'A51523' || $dcp['rcatype'] == 'A523') {
+                    if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
+                        uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+                    } else {
+                        uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
+                    }
+                } else {
+                    $required_treatment->required = '?'; 
+                }
             }
             break;
         default:
