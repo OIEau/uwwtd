@@ -1,3 +1,4 @@
+
 <?php
 
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
@@ -67,18 +68,17 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    $batch['operations'][]=array('uwwtd_create_register_2015_rca_sheet1', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    
-    $batch['operations'][]=array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
-    
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+ 
     //excel   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
@@ -8690,20 +8690,18 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
  */
 function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 {
-//     dsm('la');
     if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['max'] = 1;
         $context['sandbox']['progress'] = 0;
     }
+
     $ind = $GLOBALS['uwwtd']['sheet1_rca'];
 
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['rca']['csv_name']. '.csv';
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['csv_name'], $annee);
 
     $r = fopen($filename, 'wb');
 
-    //create sensitive area register
+    // Create sensitive area register sheet
     $header = array(
         $ind['id_of_sensitive_area'] => 'ID of Sensitive Area', //; rcaCode
         $ind['name_of_sensitive_area'] => 'Name of Sensitive Area', //; rcaName
@@ -8750,302 +8748,145 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
     );
 
     $rca = uwwtd_get_all_rca($annee);
-//     dsm($rca);
-//     return;
 
     fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
     fputcsv($r, $header, ';');
 
-//     $allline = array();
     for ($i = 0, $max = count($rca); $i < $max; $i++) {
-        if (false === in_array($rca[$i]['field_specialisedzonetype_value'], array('SA', 'LSA', 'CSA', 'A58'))) {
+
+        if (false === in_array($rca[$i]->field_specialisedzonetype['und'][0]['value'], array('A51523', 'A523', 'SA', 'CSA', 'A54', 'A5854', 'A5154', 'A58', 'A58523', 'A54523', 'A5854523', 'LSA'))) {
             continue;
         }
+
         $line = array(
             //'ID of Sensitive Area', //;       rcaCode
-            $ind['id_of_sensitive_area'] => $rca[$i]['field_inspireidlocalid_value'],
+            $ind['id_of_sensitive_area'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
             //'Name of Sensitive Area', //;     rcaName
-            $ind['name_of_sensitive_area'] => $rca[$i]['title'],
+            $ind['name_of_sensitive_area'] => $rca[$i]->title,
             //'Zone Type Code', //;             rcaType
-            $ind['zone_type_code'] => $rca[$i]['field_specialisedzonetype_value'],
+            $ind['zone_type_code'] => $rca[$i]->field_zonetype['und'][0]['value'],
             //'Specialised Zone type Code', //;   ?rcaType
-            $ind['specialised_zone_type_code'] => 'TODO',
+            $ind['specialised_zone_type_code'] => $rca[$i]->field_specialisedzonetype['und'][0]['value'],
             //'Parameters subject to More Stringent Treatment: N', //;      rcaParameterN
-            $ind['parameters_subject_to_more_stringent_treatment:_n'] => $rca[$i]['field_rca_parameter_n_value'],
+            $ind['parameters_subject_to_more_stringent_treatment:_n'] => $rca[$i]->field_rca_parameter_n['und'][0]['value'],
             //'Parameters subject to More Stringent Treatment: P', //;      rcaParameterP
-            $ind['parameters_subject_to_more_stringent_treatment:_p'] => $rca[$i]['field_rca_parameter_p_value'],
+            $ind['parameters_subject_to_more_stringent_treatment:_p'] => $rca[$i]->field_rca_parameter_p['und'][0]['value'],
            // 'Parameters subject to More Stringent Treatment: m', //;      ?
-            $ind['parameters_subject_to_more_stringent_treatment:_m'] => 'TODO',
+            $ind['parameters_subject_to_more_stringent_treatment:_m'] => '',
             //'Parameters subject to More Stringent Treatment: other', //;   rcaParameterOther
-            $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]['field_rca_parameter_other_value'],
+            $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]->field_rca_parameter_other['und'][0]['value'],
             //'Date of designation of Art. 5(8)', //;                  ?
-            $ind['date_of_designation_of_art._5(8)'] => 'TODO',
-//             $ind['date_of_designation_of_art._5(8)'] => ('' != $rca[$i]['field_rcadateart5854_value'] ?  substr($rca[$i]['field_rcadateart5854_value'], 0, 10) - 7 : ''),
+            $ind['date_of_designation_of_art._5(8)'] => substr($rca[$i]->field_rcaart58datedesign['und'][0]['value'], 0, 10),
             //'Starting date of application of Art. 5(8)', //;         rcaDateArt58
-            $ind['starting_date_of_application_of_art._5(8)'] => $rca[$i]['field_rcadateart5854_value'],
+            $ind['starting_date_of_application_of_art._5(8)'] => substr($rca[$i]->field_rcadateart5854['und'][0]['value'], 0, 10),
             //'Starting date of application of Art. 5(4)', //;         rcaDateArt54
-            $ind['starting_date_of_application_of_art._5(4)'] => $rca[$i]['field_rcadateart54_value'],
+            $ind['starting_date_of_application_of_art._5(4)'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
             //'Designation criteria  a N', //;                         rcaANitro
-            $ind['designation_criteria_a_n'] => ($rca[$i]['field_rcaanitro_value'] == 0) ? '' : $rca[$i]['field_rcaanitro_value'],
+            $ind['designation_criteria_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaanitro['und'][0]['value'],
             //'Starting date of designation a N', //;                  ?
-//             $ind['starting_date_of_designation_a_n'] => 'TODO',  rcaDateDesignation  $node->field_rcaapdatedesignation['und'][0]['value']
-            $ind['starting_date_of_designation_a_n'] => ($rca[$i]['field_rcaanitro_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
+            $ind['starting_date_of_designation_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application a N', //;                  ?
-            $ind['starting_date_of_application_a_n'] => 'TODO', // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_a_n'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
+            $ind['starting_date_of_application_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  a P', //;                         rcaAPhos
-            $ind['designation_criteria_a_p'] => ($rca[$i]['field_rcaaphos_value'] == 0) ? '' : $rca[$i]['field_rcaanitro_value'],
+            $ind['designation_criteria_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaanitro['und'][0]['value'],
             //'Starting date of designation a P', //;                  ?
-//             $ind['starting_date_of_designation_a_p'] => 'TODO',   rcaDateDesignation
-            $ind['starting_date_of_designation_a_p'] => ($rca[$i]['field_rcaaphos_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
+            $ind['starting_date_of_designation_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] != 0) ?  substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application a P', //;                  ?
-            $ind['starting_date_of_application_a_p'] => 'TODO', // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_a_p'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
+            $ind['starting_date_of_application_a_p'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  b', //;                           rcaB
-            $ind['designation_criteria_b'] => ($rca[$i]['field_rcab_value'] == 0) ? '' : $rca[$i]['field_rcab_value'],
+            $ind['designation_criteria_b'] => ($rca[$i]->field_rcab['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcab['und'][0]['value'],
             //'Starting date of designation', //;                      ?
-//             $ind['starting_date_of_designation_b'] => 'TODO',       rcaDateDesignation
-            $ind['starting_date_of_designation_b'] => ($rca[$i]['field_rcab_value'] != 0) ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) : '',
+            $ind['starting_date_of_designation_b'] => ($rca[$i]->field_rcab['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcabdatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application', //;                      ?
-            $ind['starting_date_of_application_b'] => 'TODO',     // =rcaDateDesignation + 7 years
-//             $ind['starting_date_of_application_b'] => ('' != $rca[$i]['field_rcaapdatedesignation_value'] ?  substr($rca[$i]['field_rcaapdatedesignation_value'], 0, 10) + 7 : ''),
+            $ind['starting_date_of_application_b'] => ($rca[$i]->field_rcab['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcabstartdate['und'][0]['value'], 0, 10) : '',     // =rcaDateDesignation + 7 years
             //'Designation criteria  c', //;                           rcaC
-            $ind['designation_criteria_c'] => ($rca[$i]['field_rcac_value'] == 0) ? '' : $rca[$i]['field_rcac_value'],
+            $ind['designation_criteria_c'] => ($rca[$i]->field_rcac['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcac['und'][0]['value'],
             //'Starting date of designation', //;                      ?
-//             $ind['starting_date_of_designation_c'] => 'TODO',    rcaCDateOtherDirective       field_rcacdateotherdirective
-            $ind['starting_date_of_designation_c'] => ($rca[$i]['field_rcac_value'] != 0) ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : '',
+            $ind['starting_date_of_designation_c'] => ($rca[$i]->field_rcac['und'][0]['value'] != 0) ?  substr($rca[$i]->field_rcacdatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application', //;                      ?
-            $ind['starting_date_of_application_c'] => 'TODO',   // =rcaCDateOtherDirective + 7 years
-//             $ind['starting_date_of_application_c'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) + 7 : ''),
+            $ind['starting_date_of_application_c'] => ($rca[$i]->field_rcac['und'][0]['value'] != 0) ?  substr($rca[$i]->field_rcacstardate['und'][0]['value'], 0, 10) : '',   // =rcaCDateOtherDirective + 7 years
             //'Designation criteria c - relevant EU-Directives and related parameters', //;            ?
 //             $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => 'TODO',    rcaCRelevantDirective        field_rcacrelevantdirective
-            $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => $rca[$i]['field_rcacrelevantdirective_value'] ,
+            $ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'] => $rca[$i]->field_rcacrelevantdirective['und'][0]['value'],
             //'Designation criteria c - ID applied to the area according to this Directive', //;       ?
 //             $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => 'TODO',  rcaCIDOtherDirective    field_rcacidotherdirective
-            $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => $rca[$i]['field_rcacidotherdirective_value'],
+            $ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'] => $rca[$i]->field_rcacidotherdirective['und'][0]['value'],
             //'Designation criteria c - reference date of the area according to this Directive', //;   ?
 //             $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => 'TODO',  rcaCDateOtherDirective   field_rcacdateotherdirective
-            $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => ('' != $rca[$i]['field_rcacdateotherdirective_value'] ?  substr($rca[$i]['field_rcacdateotherdirective_value'], 0, 10) : ''),
+            $ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'] => ('' != $rca[$i]->field_rcacdateotherdirective['und'][0]['value'] ?  substr($rca[$i]->field_rcacdateotherdirective['und'][0]['value'], 0, 10) : ''),
             //'Number of UWWTPs of the article 5.4 area (1)', //;                                      ?rcaPlants
-            $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplants_value'],
+            $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => $rca[$i]->field_rcaplants['und'][0]['value'],
             //'Total organic design capacity of the UWWTPs (p.e.) of the article 5.4 area (1)', //;    ?rcaPlantsCapacity
-            $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => $rca[$i]['field_rcaplantscapacity_value'],
+            $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => $rca[$i]->field_rcaplantscapacity['und'][0]['value'],
 
             //'Incoming loads (t/y) N-tot (1)', //;    rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
-            $ind['incoming_loads_(t/y)_n-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']) : '',
+            $ind['incoming_loads_(t/y)_n-tot_(1)'] => ($rca[$i]->field_rcanincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcanincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcanincomingestimated['und'][0]['value']),
             //'Rate of Removal N-tot', //;              ?
             //$ind['rate_of_removal_n-tot'] => 'TODO',         =discharged loads Ntot/incoming loads Ntot
-            $ind['rate_of_removal_n-tot'] =>  ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value'])
-                                                /
-                                               ($rca[$i]['field_rcanincomingmeasured_value'] + $rca[$i]['field_rcanincomingcalculated_value'] + $rca[$i]['field_rcanincomingestimated_value']),
+            $ind['rate_of_removal_n-tot'] =>  ($rca[$i]->field_rcandischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcandischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcandischargedestimated['und'][0]['value']) / ($rca[$i]->field_rcanincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcanincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcanincomingestimated['und'][0]['value']),
             //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
-            $ind['discharged_loads_(t/y)_n-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcandischargedmeasured_value'] + $rca[$i]['field_rcandischargedcalculated_value'] + $rca[$i]['field_rcandischargedestimated_value']) : '',
+            $ind['discharged_loads_(t/y)_n-tot_(1)'] => ($rca[$i]->field_rcandischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcandischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcandischargedestimated['und'][0]['value']),
 
             //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
-            $ind['incoming_loads_(t/y)_p-tot_(1)'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']) : '',
+            $ind['incoming_loads_(t/y)_p-tot_(1)'] => ($rca[$i]->field_rcapincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcapincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcapincomingestimated['und'][0]['value']),
             //'Rate of Removal P-tot', //;              ?
-//             $ind['rate_of_removal_p-tot'] => 'TODO',  =discharged loads Ptot/incoming loads Ptot
-            $ind['rate_of_removal_p-tot'] => ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value'])
-                                             /
-                                             ($rca[$i]['field_rcapincomingmeasured_value'] + $rca[$i]['field_rcapincomingcalculated_value'] + $rca[$i]['field_rcapincomingestimated_value']),
+            $ind['rate_of_removal_p-tot'] => ($rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value']) / ($rca[$i]->field_rcapincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcapincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcapincomingestimated['und'][0]['value']),
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
-            $ind['discharged_loads_(t/y)_p-tot:_'] => (!is_null($rca[$i]['field_rcaplants_value'])) ? ($rca[$i]['field_rcapdischargedmeasured_value'] + $rca[$i]['field_rcapdischargedcalculated_value'] +$rca[$i]['field_rcapdischargedestimated_value']) : '',
+            $ind['discharged_loads_(t/y)_p-tot:_'] => ($rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value']),
 
             //'general Remark', //;                   rcaRemarks
-            $ind['general_remark'] => $rca[$i]['field_rcaremarks_value'],
+            $ind['general_remark'] => $rca[$i]->field_rcaremarks['und'][0]['value'],
 
             //'rcaBeginLife', //;                        ?
-            $ind['rcabeginlife'] => 'TODO',     //new reporting format?
+            $ind['rcabeginlife'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),     //new reporting format?
             //'rcaEndLife', //;                          ?
-            $ind['rcaendlife'] => 'TODO',     //new reporting format?
+            $ind['rcaendlife'] => substr($rca[$i]->field_rcaendlife['und'][0]['value'], 0, 10),     //new reporting format?
             //'ID code of successor (2)', //;            ?
-            $ind['id_code_of_successor_(2)'] => 'TODO',       //new reporting format?
+            $ind['id_code_of_successor_(2)'] => $rca[$i]->field_rcasuccessor['und'][0]['value'],       //new reporting format?
             //'ID code of predecessor (2)', //;          ?
-            $ind['id_code_of_predecessor_(2)'] => 'TODO',   //new reporting format?
+            $ind['id_code_of_predecessor_(2)'] => $rca[$i]->field_rcacodepredecessor['und'][0]['value'],   //new reporting format?
             //'remark Successor/Predecessor SA', //;     ?
-            $ind['remark_successor/predecessor_sa'] => 'TODO',   //new reporting format?
+            $ind['remark_successor/predecessor_sa'] => '',   //new reporting format?
             //'Related sensitive area (2)', //;          ?
 //             $ind['related_sensitive_area_(2)'] => 'TODO',       si CSA, voir rcaSensitiveArea field_rca_sensitive_area
-            $ind['related_sensitive_area_(2)'] => ($rca[$i]['field_specialisedzonetype_value'] != 'CSA' ? '' : $rca[$i]['field_rca_sensitive_area_value']),
+            $ind['related_sensitive_area_(2)'] => ($rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? '' : $rca[$i]->field_rca_sensitive_area['und'][0]['value']),
             //'Remark Related sensitive area (2)', //;   ?
-            $ind['remark_related_sensitive_area_(2)'] => 'TODO',
+            $ind['remark_related_sensitive_area_(2)'] => $rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
         );
+
         fputcsv($r, $line, ';');
-//         $allline[] = $line;
     }
+
     fclose($r);
 
     $context['sandbox']['progress']++;
-//     $context['results'][] = 'sheet 1 rca create';
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 }
 
 function uwwtd_get_all_rca($annee)
 {
-    $query = 'select n.title,
-                     f_rcacode.field_inspireidlocalid_value,
-                     f_rcatype.field_specialisedzonetype_value,
-                     f_rca_param_n.field_rca_parameter_n_value,
-                     f_rca_param_p.field_rca_parameter_p_value,
-                     f_rca_param_o.field_rca_parameter_other_value,
-                     f_art58.field_rcadateart5854_value,
-                     f_art54.field_rcadateart54_value,
-                     f_datedesign.field_rcaapdatedesignation_value,
-                     f_dateotherdir.field_rcacdateotherdirective_value,
-
-                     f_relevantdir.field_rcacrelevantdirective_value,
-                     f_idotherdir.field_rcacidotherdirective_value,
-                     f_rca_sensitivearea.field_rca_sensitive_area_value,
-
-                     f_rcaan.field_rcaanitro_value,
-                     f_rcaap.field_rcaaphos_value,
-                     f_rcab.field_rcab_value,
-                     f_rcac.field_rcac_value,
-                     f_rcaplant.field_rcaPlants_value,
-
-                     f_capacity.field_rcaplantscapacity_value,
-                     f_nincoming_m.field_rcanincomingmeasured_value,
-                     f_nincoming_c.field_rcanincomingcalculated_value,
-                     f_nincoming_e.field_rcanincomingestimated_value,
-
-                     f_ndischarged_m.field_rcandischargedmeasured_value,
-                     f_ndischarged_c.field_rcandischargedcalculated_value,
-                     f_ndischarged_e.field_rcandischargedestimated_value,
-
-                     f_pincoming_m.field_rcapincomingmeasured_value,
-                     f_pincoming_c.field_rcapincomingcalculated_value,
-                     f_pincoming_e.field_rcapincomingestimated_value,
-
-                     f_pdischarged_m.field_rcapdischargedmeasured_value,
-                     f_pdischarged_c.field_rcapdischargedcalculated_value,
-                     f_pdischarged_e.field_rcapdischargedestimated_value,
-
-                     f_remarks.field_rcaremarks_value
-    from {node} n
-        left join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-        left join
-            {field_data_field_inspireidlocalid} f_rcacode
-                ON n.nid = f_rcacode.entity_id
-        left join
-            {field_data_field_specialisedzonetype} f_rcatype
-                ON n.nid = f_rcatype.entity_id
-        left join
-            {field_data_field_rca_parameter_n} f_rca_param_n
-                ON n.nid = f_rca_param_n.entity_id
-        left join
-            {field_data_field_rca_parameter_p} f_rca_param_p
-                ON n.nid = f_rca_param_p.entity_id
-        left join
-            {field_data_field_rca_parameter_other} f_rca_param_o
-                ON n.nid = f_rca_param_o.entity_id
-        left join
-            {field_data_field_rcadateart5854} f_art58
-                ON n.nid = f_art58.entity_id
-        left join
-            {field_data_field_rcadateart54} f_art54
-                ON n.nid = f_art54.entity_id
-        left join
-            {field_data_field_rcaapdatedesignation} f_datedesign
-                ON n.nid = f_datedesign.entity_id
-        left join
-            {field_data_field_rcacdateotherdirective} f_dateotherdir
-                ON n.nid = f_dateotherdir.entity_id
-        left join
-            {field_data_field_rcacrelevantdirective} f_relevantdir
-                ON n.nid = f_relevantdir.entity_id
-        left join
-            {field_data_field_rcacidotherdirective} f_idotherdir
-                ON n.nid = f_idotherdir.entity_id
-        left join
-            {field_data_field_rca_sensitive_area} f_rca_sensitivearea
-                ON n.nid = f_rca_sensitivearea.entity_id
-
-        left join
-            {field_data_field_rcaanitro} f_rcaan
-                ON n.nid = f_rcaan.entity_id
-        left join
-            {field_data_field_rcaaphos} f_rcaap
-                ON n.nid = f_rcaap.entity_id
-        left join
-            {field_data_field_rcab} f_rcab
-                ON n.nid = f_rcab.entity_id
-        left join
-            {field_data_field_rcac} f_rcac
-                ON n.nid = f_rcac.entity_id
-        left join
-            {field_data_field_rcaplants} f_rcaplant
-                ON n.nid = f_rcaplant.entity_id
-        left join
-            {field_data_field_rcaplantscapacity} f_capacity
-                ON n.nid = f_capacity.entity_id
-        left join
-            {field_data_field_rcanincomingmeasured} f_nincoming_m
-                ON n.nid = f_nincoming_m.entity_id
-        left join
-            {field_data_field_rcanincomingcalculated} f_nincoming_c
-                ON n.nid = f_nincoming_c.entity_id
-        left join
-            {field_data_field_rcanincomingestimated} f_nincoming_e
-                ON n.nid = f_nincoming_e.entity_id
-        left join
-            {field_data_field_rcandischargedmeasured} f_ndischarged_m
-                ON n.nid = f_ndischarged_m.entity_id
-        left join
-            {field_data_field_rcandischargedcalculated} f_ndischarged_c
-                ON n.nid = f_ndischarged_c.entity_id
-        left join
-            {field_data_field_rcandischargedestimated} f_ndischarged_e
-                ON n.nid = f_ndischarged_e.entity_id
-        left join
-            {field_data_field_rcapincomingmeasured} f_pincoming_m
-                ON n.nid = f_pincoming_m.entity_id
-        left join
-            {field_data_field_rcapincomingcalculated} f_pincoming_c
-                ON n.nid = f_pincoming_c.entity_id
-        left join
-            {field_data_field_rcapincomingestimated} f_pincoming_e
-                ON n.nid = f_pincoming_e.entity_id
-        left join
-            {field_data_field_rcapdischargedmeasured} f_pdischarged_m
-                ON n.nid = f_pdischarged_m.entity_id
-        left join
-            {field_data_field_rcapdischargedcalculated} f_pdischarged_c
-                ON n.nid = f_pdischarged_c.entity_id
-        left join
-            {field_data_field_rcapdischargedestimated} f_pdischarged_e
-                ON n.nid = f_pdischarged_e.entity_id
-        left join
-            {field_data_field_rcaremarks} f_remarks
-                ON n.nid = f_remarks.entity_id
-    where n.type = :typenode
-        and f_annee.field_anneedata_value = :annee
-    order by
-            CASE
-                WHEN f_rcatype.field_specialisedzonetype_value = \'CSA\' THEN 1
-                WHEN f_rcatype.field_specialisedzonetype_value = \'SA\'  THEN 2
-                WHEN f_rcatype.field_specialisedzonetype_value = \'LSA\' THEN 3
-                WHEN f_rcatype.field_specialisedzonetype_value = \'A58\' THEN 4
-                ELSE 99
-            END
-        asc
+    $query = '
+        SELECT n.nid
+        FROM {node} n
+        LEFT JOIN {field_data_field_anneedata} f_annee
+        ON n.nid = f_annee.entity_id
+        WHERE n.type = :typenode
+        AND f_annee.field_anneedata_value = :annee
     ';
 
-//     dsm($query);
     $param = array(
         ':typenode' => 'receiving_area',
         ':annee' => $annee,
-        );
+    );
 
     $data = array();
     try {
         $result = db_query($query, $param);
-        while($row = $result->fetchAssoc()) {
-            $data[] = $row;
+        while ($row = $result->fetchAssoc()) {
+            $data[] = node_load($row['nid']);
         }
-    }catch(Exception $e) {
+    } catch (Exception $e) {
         dsm($e->getMessage());
     }
 
