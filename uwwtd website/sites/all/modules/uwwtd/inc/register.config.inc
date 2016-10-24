@@ -4,7 +4,7 @@
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2015_register_model_20160208_1.xlsx',
+    'model' => '2015_register_model_20161018_1.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
@@ -273,6 +273,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'compliance5a' => array('k'=>$i++, 'xls'=>false),
     'compliance5b' => array('k'=>$i++, 'xls'=>false),
     'compliance5c' => array('k'=>$i++, 'xls'=>false),
+    'treatment_met' => array('k'=>$i++, 'xls'=>false),
     
     //debug info
     'debug_pending_or_expired' => array('k'=>$i++, 'xls'=>false),
@@ -406,6 +407,10 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'monitoring_results_f._secondary_ok' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'more_str._treatment_installed_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'more_str._treatment_installed_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
+    'more_str._treatment_installed_treatment_met_(%_of_gen._load)'  => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
+    'more_str._treatment_installed_treatment_met_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
+    
+
     'monitoring_results_f._more_string._ok_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'monitoring_results_f._more_string._ok_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
