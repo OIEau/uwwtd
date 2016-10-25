@@ -1550,7 +1550,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
     $cell_to_repalce = array('B3','D3','AA51','AA52','AA54','AA55','AA57','AA58','AA65','AA66','AA68','AA69','AA71','AA72',
                            'AA41','AB41','AC41','AD41','AE41','AF41','AB48','AB62','B74','A54','A55','A57','A58','A60','A61',
-                           'A64','A65','A67','A68','A70','A71');
+                           'A64','A65','A67','A68','A70','A71','AA31');
     foreach ($cell_to_repalce as $x){
         $cell = $sheet->getCell($x);
         $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
