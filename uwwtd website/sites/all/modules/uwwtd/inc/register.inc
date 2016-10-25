@@ -78,7 +78,8 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
- 
+
+    
     //excel   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
@@ -754,7 +755,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         
         if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
-            
+
             $generated_load = 0;
             $collecting_system = 0;
             $ias = 0;
@@ -795,7 +796,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
 
             $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p;
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
-            $line[$ind['type_of_receiving_area']] = implode(';', $dcptype);
+            $line[$ind['type_of_receiving_area']] = implode(';', $agg_detail['dcptype']);
             
             unset($agg);
             fputcsv($r, $line, ';');
@@ -877,7 +878,7 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
 
         foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
             $dcp = node_load($dcpnid['nid']);
-            $result['dcptype'][$dcp->field_rcatype['und'][0]['value']] = 0;
+            $result['dcptype'][] = $dcp->field_rcatype['und'][0]['value'];
             unset($dcp);
         }
         unset($uwwtp);
