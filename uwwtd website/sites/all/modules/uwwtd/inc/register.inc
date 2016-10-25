@@ -4635,6 +4635,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //             dsm('art3');
 //             dsm($ind['art3_compliance']);
                                 //compliance art3
+            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
+            if (isset($agglo[$ind['generated_load_p.e.']]))
+                $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
             if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']++;
                 if (isset($agglo[$ind['generated_load_p.e.']]))
@@ -4686,10 +4689,6 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 if (isset($agglo[$ind['generated_load_p.e.']]))
                 	$context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
             }
-
-            $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
-            if (isset($agglo[$ind['generated_load_p.e.']]))
-            	$context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
 
             $NA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'NA'));
             $CSA = false !== (strpos($agglo[ $ind['type_of_receiving_water']], 'CSA'));
