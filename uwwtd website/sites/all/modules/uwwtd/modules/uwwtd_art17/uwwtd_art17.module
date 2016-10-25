@@ -85,29 +85,6 @@ function uwwtd_art17_form($form, &$form_state){
 
 	$uwwtd_year = uwwtd_get_max_annee();//date("Y");
 	$uwwtd_years = uwwtd_get_all_year();
-//     array(
-// 		'2000' => '2000', 
-// 		'2001' => '2001', 
-// 		'2002' => '2002', 
-// 		'2003' => '2003', 
-// 		'2004' => '2004', 
-// 		'2005' => '2005', 
-// 		'2006' => '2006', 
-// 		'2007' => '2007', 
-// 		'2008' => '2008', 
-// 		'2009' => '2009', 
-// 		'2010' => '2010', 
-// 		'2011' => '2011', 
-// 		'2012' => '2012', 
-// 		'2013' => '2013', 
-// 		'2014' => '2014', 
-// 		'2015' => '2015', 
-// 		'2016' => '2016', 
-// 		'2017' => '2017', 
-// 		'2018' => '2018', 
-// 		'2019' => '2019', 
-// 		'2020' => '2020'
-// 	);
 	
 	// definition du champ input de type select pour l'annee
 	$form['uwwtd_year'] = array(     
@@ -2216,19 +2193,19 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         $field_art17_flaggloanname = $agglomeration['flaggLoanName'];
 
         // Checking for required fields
-        if(empty($field_art17agg_aggcode)){
+        if(!isset($field_art17agg_aggcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_flaggstatus)){
+		if(!isset($field_art17_flaggstatus)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17agg_flarepcode)){
+		if(!isset($field_art17agg_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
@@ -2402,19 +2379,19 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         $field_art17_flatploanname = $uwwtp['flatpLoanName'];
 
         // Checking for required fields
-        if(empty($field_art17uwwtp_uwwcode)){
+        if(!isset($field_art17uwwtp_uwwcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "uwwCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_flatpstatus)){
+		if(!isset($field_art17_flatpstatus)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17uwwtp_flarepcode)){
+		if(!isset($field_art17uwwtp_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
@@ -2589,49 +2566,49 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 		$field_art17_soecPop = $investment['soecPop'];
 
 		// Checking for required fields
-        if(empty($field_art17inves_flarepcode)){
+        if(!isset($field_art17inves_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "repCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecCode)){
+		if(!isset($field_art17_soecCode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecStartDate)){
+		if(!isset($field_art17_soecStartDate)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecStartYear" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecEndYear)){
+		if(!isset($field_art17_soecEndYear)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecEndYear" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecPeriod)){
+		if(!isset($field_art17_soecPeriod)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecPeriod" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecCapacity)){
+		if(!isset($field_art17_soecCapacity)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecCapacity" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecInvCol)){
+		if(!isset($field_art17_soecInvCol)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecInvCol" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
-		if(empty($field_art17_soecInvTp)){
+		if(!isset($field_art17_soecInvTp)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecInvTp" column in the Agglomerations article 17 doesn\'t contain an identifier');
 			uwwtd_set_error($line, $emes);
