@@ -81,6 +81,8 @@ function uwwtd_preprocess_field(&$variables){
       $tt = $variables['items'][0]['#markup'];
     }
 
+
+
     if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
       $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
     }

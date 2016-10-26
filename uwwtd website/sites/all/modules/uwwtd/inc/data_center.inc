@@ -634,7 +634,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports BigCityDischargers');
         uwwtd_trace(var_export($imports, true));
-        $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     } 
     
     //Agglomerations
@@ -648,7 +648,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports Agglomerations');
         uwwtd_trace(var_export($imports, true));        
-        $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
     //UWWTPs
@@ -662,7 +662,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports UWWTPs');
         uwwtd_trace(var_export($imports, true));        
-        $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
     //DischargePoints
@@ -676,7 +676,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports DischargePoints');
         uwwtd_trace(var_export($imports, true));        
-        $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
     //link_dcp_rca
@@ -691,7 +691,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $imports, $timestamp));
         */       
-        $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
+        // $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
     
     //UwwtpAgglos
@@ -705,7 +705,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports UwwtpAgglos');
         uwwtd_trace(var_export($imports, true));        
-        $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
+        // $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
     
     //BigCityDischargers
@@ -719,7 +719,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports BigCityDischargers');
         uwwtd_trace(var_export($imports, true));        
-        $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
+        // $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
     
     /*DG 15/12/2015 Contact*/
@@ -733,7 +733,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports Contacts');
         uwwtd_trace(var_export($imports, true));
-        $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
     /*DG 15/12/2015 Industry*/
@@ -747,17 +747,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports Industries');
         uwwtd_trace(var_export($imports, true));
-        $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        // $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
    //bc_position
-   $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
+   // $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
    //mega_links
-   $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
+   // $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
    //rca_extra
-   $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
-   $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
-   $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
+   // $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
+   // $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
+   // $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
+
     
     batch_set($batch);
     batch_process('data/import');
@@ -802,6 +803,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
     }else{
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
     }
+
 }
 
 function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i){
@@ -1421,10 +1423,10 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         $node->field_rca52applied['und'][0]['value'] = '1';
 
-        if($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'){
+        if ($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'
+            || $node->field_specialisedzonetype['und'][0]['value'] == 'A58523' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854523') {
             $node->field_rca58applied['und'][0]['value'] = '1';
-        }
-        else{
+        } else {
             $node->field_rca58applied['und'][0]['value'] = '0';
         }
         

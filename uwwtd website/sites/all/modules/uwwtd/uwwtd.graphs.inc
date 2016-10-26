@@ -243,7 +243,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
             if($sum>0){
                 $rows[] = array(
                     'uwwtd_load_ent_and_dis_p', t("Total phosphorus load entering and discharged"), $frontAndBackGraphs['P'][0],  $frontAndBackGraphs['P'][1], false,
-                    'per_ent_and_dis_p', t("phosphorus concentration"), $frontAndBackGraphs['P'][2], $frontAndBackGraphs['P'][3], false
+                    'per_ent_and_dis_p', t("Phosphorus concentration"), $frontAndBackGraphs['P'][2], $frontAndBackGraphs['P'][3], false
                 );
             }
         }
@@ -935,7 +935,6 @@ function getRow6Graphs($results){
             $graph2FrontRows = array();
             $graph1Back = "";
             $graph2Back = "";
-            
             if(isset($data['data'])){
                 foreach($data['data'] as $key=>$item){
                     if(is_array($item)){
@@ -951,16 +950,22 @@ function getRow6Graphs($results){
                             uwwtd_format_number($item['out']['q']*100/$item['in']['q'] ,1) .'%'
                         );
                         
+                        // BB - 26/10/16
                         $graph2Front['data'][] = array(
                             (string)$key,
-                            $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):0,
-                            $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):0,
+                            // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):0,
+                            // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):0,
+                            round($item['in']['c'], 3),
+                            round($item['out']['c'], 3),
                         );
                         $graph2FrontRows[] = array(
                             (string)$key,
-                            $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):'-',
-                            $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):'-',
-                            $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
+                            // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):'-',
+                            // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):'-',
+                            // $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
+                            $item['in']['c'] > 0 ? round($item['in']['c'], 3) : '-',
+                            $item['out']['c'] > 0 ? round($item['out']['c'], 3) : '-',
+                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number($item['out']['c'] * 100 / $item['in']['c'], 1) . '%' : '-'
 
                         );
                         

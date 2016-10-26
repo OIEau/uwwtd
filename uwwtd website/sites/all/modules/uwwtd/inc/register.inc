@@ -6486,8 +6486,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['more_str._treatment_installed_(p._e.)']] = $morestringent_install_pe;
         
         //cn@oireau 20/10/2016 'more str. treatment installed_treatment_met (%_of_gen._load),
-        $morestringent_install_treatment_met_pe      = '';
-        $morestringent_install_treatment_met_percent = '';
+        $morestringent_install_treatment_met_pe      = 0;
+        $morestringent_install_treatment_met_percent = 0;
         if ($uwwtpinfo_for_agglo['morestringent_installed'] == 1) {
             $morestringent_install_treatment_met_pe = $uwwtpinfo_for_agglo['morestringent_treatement_met_pe'];
             $morestringent_install_treatment_met_percent = $uwwtpinfo_for_agglo['morestringent_treatement_met_percent'];
@@ -6501,8 +6501,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
 
         //'monitoring results f. more string. OK (% of gen. load)',
-        $morestringent_passed_pe      = '';
-        $morestringent_passed_percent = '';
+        $morestringent_passed_pe      = 0;
+        $morestringent_passed_percent = 0;
         if ($uwwtpinfo_for_agglo['morestringent_passed'] == 1) {
             $morestringent_passed_pe = $uwwtpinfo_for_agglo['morestringent_monitoring_pe'];
             $morestringent_passed_percent = $uwwtpinfo_for_agglo['morestringent_monitoring_percent'];
