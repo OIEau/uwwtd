@@ -3965,46 +3965,11 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
     fseek($ragglofile, $context['sandbox']['file_position']);
 
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo']['csv_name'] . '.csv';
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
-
-//     $ragglofile = fopen($filename, 'rb');
-
-//     $agglo = fgetcsv($ragglofile, 5000, ';');
-
-//     $data = array();
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         foreach($listtypestat as $typedeadline) {
-//test
-// if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
-//     $context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
-// }
-// if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
-//     $context['sandbox']['data']['total']['target_connection']['collected_system_inplace'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-//     $context['sandbox']['data']['total']['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];
-// }
-//
-// if (true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
-//     $context['sandbox']['data']['total']['secondary_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-// }
-// if ($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
-//     $context['sandbox']['data']['total']['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
-//     $context['sandbox']['data']['total']['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
-// }
-//
-// if (true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {
-//     $context['sandbox']['data']['total']['morestringent_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
-// }
-//
-// if ($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
-//     $context['sandbox']['data']['total']['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
-//     $context['sandbox']['data']['total']['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
-// }
-//test
 
-            //chekc if expired or pending
+            // Check if expired or pending.
             if ($typedeadline == 'expired' && isset($agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]) &&
             	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'EXP' ) {
                 continue;
@@ -5899,19 +5864,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	        }
         }
 
-//         if (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
-//              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
-//             {
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if (false === $deadline_before
-	             && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' || $agg->field_aggcompliance['und'][0]['value'] == 'NR'))
 	            {
 	            $pending_or_expired = 'PD';
 	        }
         }
-//         dsm($pending_or_expired);
+
 		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd']))
         	$line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
         //'NUTS 1 code',
