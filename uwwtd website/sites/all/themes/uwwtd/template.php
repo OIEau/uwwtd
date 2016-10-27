@@ -361,7 +361,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
         }
       }
 
-      //dsm($field);
+      // dsm($output);
       if(empty($output[$field_name]['#items'])){
         $output[$field_name] = array(
           '#theme' => 'field',
@@ -376,6 +376,23 @@ function uwwtd_field_attach_view_alter(&$output, $context){
           '#weight' => $display['weight'],
           0 => array('#markup' => '<p>'.t('Not provided').'</p>'),
         );
+
+        // Customizing display for special fields
+        if ($field_name === 'field_rca54applied') {
+          $output[$field_name] = array(
+            '#theme' => 'field',
+            '#title' => $instance['label'],
+            '#label_display' => 'inline',
+            '#field_type' => $field['type'],
+            '#field_name' => $field_name,
+            '#bundle' => $node->type,
+            '#object' => $node,
+            '#items' => array(0 => array('value' => '')),
+            '#entity_type' => 'node',
+            '#weight' => $display['weight'],
+            0 => array('#markup' => '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>'),
+          );
+        }
       }
       //dsm($field);
     }
