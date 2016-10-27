@@ -2254,9 +2254,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('receiving-area', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
             'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
             'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
-            'zonetype_format'=>$row['zonetype_format'],
+            // 'zonetype_format'=>$row['zonetype_format'],
             'rca52_format'=>$row['rca52_format'],
-            'rca54_format'=>$row['rca54_format'],
+            // 'rca54_format'=>$row['rca54_format'],
             'rca58_format'=>$row['rca58_format'],
             'uwwtps'=>$row['uwwtps'],
             'tot_design_capacity_format'=>$row['tot_design_capacity_format'],
@@ -2264,7 +2264,6 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         ));
 
     }
-
     $header = array();
     $header_export = array();
     foreach($GLOBALS['uwwtd']['ui']['field']['rca'] as $field => $info) {
