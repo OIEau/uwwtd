@@ -9245,14 +9245,14 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     $art5_treatment = '';
     switch($treatment_required) {
         case '3N':
-            if (false !== strpos($treatmenttypeinplace, '3N')) {
+            if (false !== strpos($treatmenttypeinplace, '3N') || false !== strpos($treatmenttypeinplace, '3NP')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
             }
             break;
         case '3P':
-            if (false !== strpos($treatmenttypeinplace, '3P')) {
+            if (false !== strpos($treatmenttypeinplace, '3P') || false !== strpos($treatmenttypeinplace, '3NP')) {
                 $art5_treatment = 'C';
             } else {
                 $art5_treatment = 'NC';
