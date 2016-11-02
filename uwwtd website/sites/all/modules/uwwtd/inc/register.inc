@@ -5774,16 +5774,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $r = fopen($filename, 'ab');
     }
 
-
-//     $allline = array();
-//     foreach($listagg as $nidagg) {
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         $line = array();
-//         $agg = node_load($nidagg);
-//         dsm($context['sandbox']['id'][$context['sandbox']['progress'] + $j]);
-//         dsm($context['sandbox']['id']);
-//         break;
+
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 
@@ -5796,10 +5790,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         	$context['results']['uwwtp_total_load_generated_nb']++;
         }
 
-
-//         dsm($uwwtpinfo_for_agglo);
-//         dsm($uwwtpinfo_for_agglo);
-//         break;
         //Agglomeration info',
         //'code',
         if (isset($agg->field_inspireidlocalid['und'][0]['value']))
@@ -5820,28 +5810,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
         //'Pending or expired deadline EXP/PD/EXP-PD',
         $pending_or_expired = '';
-//         dsm($annee);
-//         dsm($line[$ind['deadline_for_art._3_compliance']]);
-//         dsm(substr($line[$ind['deadline_for_art._3_compliance']], 0, 4));
-//         dsm($line[$ind['deadline_for_art._4_compliance']]);
-//         dsm(substr($line[$ind['deadline_for_art._4_compliance']], 0, 4));
-//         dsm($line[$ind['deadline_for_art._5_compliance']]);
-//         dsm(substr($line[$ind['deadline_for_art._5_compliance']], 0, 4));
-//         dsm($agg->field_aggcompliance['und'][0]['value']);
-//         dsm(substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee);
-//         dsm(substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee);
-//         dsm(substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee);
-//
-//         dsm(substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee);
-//
-//         dsm(($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ));
-//         dsm((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) >= $annee
-//              && substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) >= $annee
-//              && ($agg->field_aggcompliance['und'][0]['value'] == 'PD' || $agg->field_aggcompliance['und'][0]['value'] == 'C' )));
-
 
 //         if ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee

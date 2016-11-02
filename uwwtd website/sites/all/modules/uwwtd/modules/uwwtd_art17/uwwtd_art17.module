@@ -2640,9 +2640,24 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			
 			// Mapping required fields
 			$art->field_soeccode['und'][0]['value'] = $field_art17_soecCode;
-			$art->field_soecstartyear['und'][0]['value'] = $field_art17_soecStartDate;
-			$art->field_soecendyear['und'][0]['value'] = $field_art17_soecEndYear;
 			$art->field_soecperiod['und'][0]['value'] = $field_art17_soecPeriod;
+            
+            $check = uwwtd_check_date($field_art17_soecStartDate, $message );
+            if ($check === false) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+            } else {                 
+                $art->field_soecstartyear['und'][0]['value'] = $check;
+            }
+
+            $check = uwwtd_check_date($field_art17_soecEndYear, $message );
+            if ($check === false) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+            } else {                 
+                $art->field_soecendyear['und'][0]['value'] = $check;
+            }
+
+            // $art->field_soecstartyear['und'][0]['value'] = $field_art17_soecStartDate;
+            // $art->field_soecendyear['und'][0]['value'] = $field_art17_soecEndYear;
 
 			$check = uwwtd_check_numeric($field_art17_soecCapacity);
             if ($check === false) {
