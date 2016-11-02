@@ -3982,7 +3982,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
-            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
+            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC', 'PD'))) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
             }
             if (isset($agglo[$ind['art3_compliance']]) &&
@@ -3995,21 +3995,22 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
-            	true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC'))) {
+            	true === in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('C', 'NC', 'PD'))) {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
             }
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._secondary_ok']]) &&
             	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C' ||
-            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NC' ||
+            	$agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD') {
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
             }
 
             if (isset($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
-            	true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC'))) {            
+            	true === in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('C', 'NC', 'PD'))) {            
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
             }
 
@@ -4017,7 +4018,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	isset($agglo[$ind['more_str._treatment_installed_(p._e.)']]) &&
             	isset($agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']]) &&
             	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C' ||
-            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
+            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC' ||
+            	$agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
                 //$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_(p._e.)']];
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_treatment_met_(p._e.)']];
                 
