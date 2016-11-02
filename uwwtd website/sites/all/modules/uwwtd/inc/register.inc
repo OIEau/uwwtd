@@ -172,6 +172,15 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
+
+    $dataArray = $sheet->rangeToArray(
+        'A6:CV40',
+        NULL,
+        FALSE,
+        TRUE,
+        FALSE
+    );
+
 	uwwtd_trace('init xlsx sheet');
 //     $start_line = 4;
 
@@ -211,11 +220,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+        $sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    // $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
-
 	//Special rules for cell's style
 	
     if(!empty($lines)){
@@ -249,6 +257,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
         $r = fopen($filename, 'rb');
         $line_to_fill = 0;
+
+        // Adding bottom tables
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+
         for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
 //             dsm($agglo);
@@ -428,6 +440,15 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //uwwtd_trace('end load');
     //uwwtd_trace('start getSheetByName');
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
+    
+    $dataArray = $sheet->rangeToArray(
+        'A6:CQ12',
+        NULL,
+        FALSE,
+        TRUE,
+        FALSE
+    );
+
     $j = 0;
     //uwwtd_trace('start loop');
     $lines = array();
@@ -464,8 +485,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         
+        $sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    // $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
     
     //Special rules for cell's style
@@ -509,6 +531,10 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
         $r = fopen($filename, 'rb');
         $line_to_fill = 0;
+
+        // Adding bottom tables
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+
         for ($i = 0; $i < 3; $i++) {
             $uwwtp = fgetcsv($r, 5000, ';');
             switch($uwwtp[0]) {
