@@ -15,7 +15,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     'rca' => array(
         'csv_name' => '_rca.csv',
         'xlsx_name' => '_rca.xlsx',
-        'xlsx_model_sheet_name' => 'Sensitive Areas_reference',
+        'xlsx_model_sheet_name' => 'Information on sensitive area',
     ),
     'uwwtp' => array(
         'csv_name' => '_uwwtp.csv',
