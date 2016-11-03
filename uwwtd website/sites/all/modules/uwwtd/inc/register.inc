@@ -3364,7 +3364,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
-    $objWriter->setPreCalculateFormulas(false);
+    // $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
     $objPHPExcel->__destruct();
@@ -4410,7 +4410,6 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //         $context['sandbox']['progress'] = 0;
 //         $context['sandbox']['max'] = 1;
 //     }
-
 	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
@@ -4687,7 +4686,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $NA = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'NA'));
             $CSA = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'CSA'));
             $LSA = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'LSA'));
-            $SA = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'SA') == 0 && !$CSA && !$LSA);
+            $SA = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'SA') === 0 && !$CSA && !$LSA);
             $A58 = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'A58'));
             $A54 = false !== (strpos($agglo[$ind['type_of_receiving_water']], 'A54'));
 
@@ -4777,6 +4776,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 }
 
                 //   - size > 10000 p.e., but discharge    …  …..into NA
+
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $NA && !$LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']++;
@@ -4835,6 +4835,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
 //     dsm($compliance);
+
     fclose($ragglofile);
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {

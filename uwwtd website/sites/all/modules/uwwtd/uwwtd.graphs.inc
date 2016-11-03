@@ -1254,7 +1254,7 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 	// Vérification qu'il y a des données :
 	$isEmptyGraph1 = isEmptyGraph($graph1Front, $yearsPossibles);
 	$isEmptyGraph2 = isEmptyGraph($graph2Front, $yearsPossibles);
-			
+
 	if (!$isEmptyGraph1 || !$isEmptyGraph2) {
 		$html.='<h2 style="clear:both;">'. $rowTitle .'</h2>';
 	}
