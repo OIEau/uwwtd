@@ -68,39 +68,39 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
     
     //excel   
-	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+	// $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	//optimize : ok
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
 }
 
@@ -477,7 +477,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                     $val = null;
                 }
                 //Other condition on field ?
-                $line[$conf['k']] = $val;
+                $line[$conf['k']] = (string)$val;
             }
         }
         $lines[$j] = $line;
