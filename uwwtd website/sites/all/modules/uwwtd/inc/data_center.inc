@@ -7748,6 +7748,8 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $dcp = $oneDcp;
         }
     }
+
+    
     
     switch ($dcp['rcatype']) {
         case 'LSA':
@@ -7841,6 +7843,27 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $required_treatment->required = 'NI';
             $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';
             break;
+    }
+
+    // BB - 04/11 - Adding a step for 9th report format
+    if ($dcp['rcazonetype'] === 'UWWTDLSA') {
+        if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+            if ($maxgen > 150000) {
+                $required_treatment->required = 'S';
+            } else {
+                $required_treatment->required = 'P';
+            }
+        } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
+            if ($maxgen >= 2000 && $maxgen <= 10000) {
+                $required_treatment->required = 'P';
+            } else {
+                $required_treatment->required = 'S';
+            }
+        } else {
+            // Problem
+            $required_treatment->required = 'NI';
+            $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
+        }
     }
 }
 
