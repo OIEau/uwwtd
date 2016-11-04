@@ -559,9 +559,9 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 					$sheet->setCellValueByColumnAndRow($ind['previous_entering load p. e.']['k'], $line_to_fill, round($uwwtp[$ind['previous_entering load p. e.']['k']]));
 				if (isset($ind['previous_capacity p. e.']['k']) && isset($uwwtp[$ind['previous_capacity p. e.']['k']]))
 					$sheet->setCellValueByColumnAndRow($ind['previous_capacity p. e.']['k'], $line_to_fill, round($uwwtp[$ind['previous_capacity p. e.']['k']]));
-				if (isset($ind['previous_Percentage of change of entering load (1) %']['k']) && isset($uwwtp[$ind['previous_Percentage of change of entering load (1) %']['k']]))
+				if (isset($ind['previous_Percentage of change of entering load (1) %']['k']) )
 					$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of entering load (1) %']['k'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of entering load (1) %']['k']], 1));
-				if (isset($ind['previous_Percentage of change of capacity (2) %']['k']) && isset($uwwtp[$ind['previous_Percentage of change of capacity (2) %']['k']]))
+				if (isset($ind['previous_Percentage of change of capacity (2) %']['k']) )
 					$sheet->setCellValueByColumnAndRow($ind['previous_Percentage of change of capacity (2) %']['k'], $line_to_fill, round($uwwtp[$ind['previous_Percentage of change of capacity (2) %']['k']], 1));
 			}
         }
@@ -7255,27 +7255,20 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 dsm($previousagglo_uwwtp);
 //                 dsm($previousagglo);
                 $previous_reference_year = $context['sandbox']['previous_year'];
-//                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
-                //$previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($previousagglo->field_aggc1['und'][0]['value']/ 100 * $previousagglo->field_agggenerated['und'][0]['value']);
                 $previous_entering_load_pe = $previousagglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $previousagglo->field_agggenerated['und'][0]['value'];
                 $previous_capacity_pe = $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'];
-                if (isset($line[$ind['uww_entering load  p. e.']]) && $previous_entering_load_pe > 0) {
-//                     $previous_percentage_of_change_of_entering_load = $previous_entering_load_pe * 100 / $line[$ind['uww_entering load  p. e.']];
-                    $previous_percentage_of_change_of_entering_load =  ($line[$ind['uww_entering load  p. e.']] -  $previous_entering_load_pe) / $previous_entering_load_pe * 100;
+                
+                if (isset($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]) && $previous_entering_load_pe > 0) {
+                    $previous_percentage_of_change_of_entering_load =  ($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] - $previous_entering_load_pe) / $previous_entering_load_pe * 100;
                 } else {
                     $previous_percentage_of_change_of_entering_load = 'NI';
                 }
 
                 if (isset($line[$ind['uww_capacity p. e.']]) && $previous_capacity_pe > 0) {
-//                     $previous_percentage_of_change_of_capacity = $previous_capacity_pe * 100 / $line[$ind['uww_capacity p. e.']];
-
                     $previous_percentage_of_change_of_capacity = ($line[$ind['uww_capacity p. e.']] - $previous_capacity_pe) / $previous_capacity_pe* 100;
                 } else {
                     $previous_percentage_of_change_of_capacity = 'NI';
                 }
-//                 unset($previousuwwtp);
-//                 unset($previousagglo_uwwtp);
-//                 unset($previousagglo);
             }
 
             //'reference year',
@@ -7288,7 +7281,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['previous_Percentage of change of entering load (1) %']] = $previous_percentage_of_change_of_entering_load;
             //'Percentage of change of capacity (2) %',
             $line[$ind['previous_Percentage of change of capacity (2) %']] = $previous_percentage_of_change_of_capacity;
-
             //current RCA details
             //a uwwtp can have multiple dcp and rca, thi case is not documented, so we put all info
             //on each rca separated by a ';'
