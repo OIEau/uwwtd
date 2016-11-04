@@ -15,8 +15,6 @@ require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/P
  */
 function uwwtd_register_form($form, &$form_state){
 
-//  $uwwtd_year = date("Y");
-
  // definition du champ input de type select pour l'annee
  $form['uwwtd_year'] = array(
   '#type' => 'select',
@@ -68,39 +66,39 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
     
     //excel   
-	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+	// $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	//optimize : ok
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
 }
 
@@ -157,7 +155,6 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $path_xlsx = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
     } else {
-//         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
         $target_path = $path_xlsx;
     }
@@ -186,11 +183,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
 	
 	$j = 0;
-    //uwwtd_trace('start loop');
     $lines = array();
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
     while ($j < 10000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-        //uwwtd_trace($j);
         $line = array();
         
         foreach($indConf as $k=>$conf){
@@ -227,7 +222,6 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 	//Special rules for cell's style
 	
     if(!empty($lines)){
-        //uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
             $idx = $indConf['previous_percentage_of_change_of_size_(1)']['k'];
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
@@ -243,9 +237,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                     ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                     ->getStartColor()->setARGB('FFFFC000');
             }
-            
         }
-        //uwwtd_trace('end style');
     }   
     
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
@@ -253,7 +245,6 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     fclose($ragglofile);
     unset($ragglofile);
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
-//         dsm($context['sandbox']['line']);
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
         $r = fopen($filename, 'rb');
         $line_to_fill = 0;
@@ -263,7 +254,6 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
         for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
-//             dsm($agglo);
             switch($agglo[0]) {
                 case 'TOTAL':
                     $line_to_fill = $context['sandbox']['line'] + 2;
@@ -7287,7 +7277,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $startingDateOfApplication_ap = '';
             $startingDateOfApplication_b = '';
             $startingDateOfApplication_c = '';
-            if(!empty($dcp->field_uwwdcpliste)){
+            if(!empty($uwwtp->field_uwwdcpliste)){
              foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
               $dcp = node_load($dcpnid['nid']);
               if(!empty($dcp->field_dcprcaliste)){
@@ -7332,7 +7322,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                             break;
                     }
 
-                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $field_dcpwaterbodytype;
+                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
                     $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
                     $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
                     $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
