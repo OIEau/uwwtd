@@ -6274,6 +6274,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $rcaName = '';
         $rcaDateArt54 = '';
         $rcaDateArt58 = '';
+        $rcaDateAN = '';
+        $rcaDateAP = '';
+        $rcaDateB = '';
+        $rcaDateC = '';
         $rcatreated = array();
         if (isset($agg->field_agguwwliste['und'])) {
 	        foreach($agg->field_agguwwliste['und'] as $uwwtpnid) {
@@ -6347,7 +6351,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                 $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
                                 $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
                                 $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
-
+                                $rcaDateAN .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaanstartdate['und'][0]['value'], 0, 10);
+                                $rcaDateAP .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
+                                $rcaDateB .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
+                                $rcaDateC .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcacstartdate['und'][0]['value'], 0, 10);
                                 unset($rca);
 			                    // }
 			                }
@@ -6384,17 +6391,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'name',         ?title
         $line[$ind['rca_name']] = $rcaName;
         //'Starting date of application 5.8.',
-        $line[$ind['starting_date_of_application_5.8.']] = $rcaDateArt58;
+        $line[$ind['starting_date_of_application_5.8.']] = (is_null($rcaDateArt58) ? '-' : $rcaDateArt58);
         //'Starting date of application 5.4.',
-        $line[$ind['starting_date_of_application_5.4.']] = $rcaDateArt54;
+        $line[$ind['starting_date_of_application_5.4.']] = (is_null($rcaDateArt54) ? '-' : $rcaDateArt54);
         //'Starting date of application a N',
-        $line[$ind['starting_date_of_application_a_n']] = 'TODO';
+        $line[$ind['starting_date_of_application_a_n']] = (is_null($rcaDateAN) ? '-' : $rcaDateAN);
         //'Starting date of application a P',
-        $line[$ind['starting_date_of_application_a_p']] = 'TODO';
+        $line[$ind['starting_date_of_application_a_p']] = (is_null($rcaDateAP) ? '-' : $rcaDateAP);
         //'Starting date of application b',
-        $line[$ind['starting_date_of_application_b']] = 'TODO';
+        $line[$ind['starting_date_of_application_b']] = (is_null($rcaDateB) ? '-' : $rcaDateB);
         //'Starting date of application c',
-        $line[$ind['starting_date_of_application_c']] = 'TODO';
+        $line[$ind['starting_date_of_application_c']] = (is_null($rcaDateC) ? '-' : $rcaDateC);
 
         //Installations for wastewater treatment in place',
         //'secondary treatment installed (% of gen. load)',
