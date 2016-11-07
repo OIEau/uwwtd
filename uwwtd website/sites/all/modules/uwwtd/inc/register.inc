@@ -66,24 +66,24 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    // $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
     
     //excel   
-	// $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
-	// $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
+	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	//optimize : ok
-    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
@@ -4001,6 +4001,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC', 'PD'))) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
             }
+
             if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
@@ -4042,6 +4043,12 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                 
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
                 
+            }
+
+            // BB - 07/11 - New to calculate Art 5 monitoring DTC
+            if (isset($agglo[$ind['distance_art5_perf_in_p.e._(7)']]) &&
+                is_numeric($agglo[$ind['distance_art5_perf_in_p.e._(7)']])) {
+                $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] += $agglo[$ind['distance_art5_perf_in_p.e._(7)']];
             }
 
         }
@@ -4137,14 +4144,18 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
 			}
-			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
-			}
+
+            // BB - 07/11 - Removing this as the DTC is calculated before
+			// if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
+   //          	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
+			// }
+
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'];
+                // Changing this - See above
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
         }
 
