@@ -66,39 +66,39 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee)
 {
     //CSV
-    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
     
     //excel   
-	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+	// $batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     //optimize : ok
-	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
+	// $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	//optimize : ok
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_installation_in_place_sheet6', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_breach_list_sheet7', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    // $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
 }
 
@@ -730,7 +730,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             dsm($e->getMessage());
         }
         $context['sandbox']['max'] = count($context['sandbox']['idagg']);
-        $context['sandbox']['progressagg'] =0;
+        $context['sandbox']['progressagg'] = 0;
     }
 
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
@@ -750,23 +750,18 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $ind['treatment_1'] => 'best treatment provided 1',
             $ind['treatment_2'] => 'best treatment provided 2',
             $ind['treatment_3n_p_np'] => 'best treatment provided 3N',
-//             $ind['treatment_3p'] => 'best treatment provided 3P',
-//             $ind['treatment_3np'] => 'best treatment provided 3NP',
             $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)',
             $ind['type_of_receiving_area'] => 'Type of receiving area',
         );
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
-//         dsm($header);
     } else {
         $r = fopen($filename, 'ab');
     }
 
 
 
-    $j = 0;
-    while ($j < 20 && $context['sandbox']['progressagg'] < $context['sandbox']['max']) {
-//     foreach($id as $nidagglo) {
+    while ($context['sandbox']['progressagg'] < $context['sandbox']['max']) {
         $line = array();
         
         if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
@@ -818,7 +813,6 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             fputcsv($r, $line, ';');
         }
         $context['sandbox']['progressagg']++;
-        $j++;
     }
 
 
@@ -4041,7 +4035,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] += $agglo[$ind['more_str._treatment_installed_treatment_met_(p._e.)']];
                 
                 
-                $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
+                // $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] += $agglo[$ind['monitoring_results_f._more_string._ok_(p._e.)']];
                 
             }
 
@@ -4138,17 +4132,18 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
-            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
-            }
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
 			}
 
             // BB - 07/11 - Removing this as the DTC is calculated before
-			// if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
-   //          	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
-			// }
+			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'];
+			}
+
+			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            }
 
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
@@ -8100,60 +8095,52 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //     )
 //             */
 //cn@oieau 20/10/2016 modified 
-            $morestringentpassed = '';
-            if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
+            // $morestringentpassed = '';
+             
+			if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentpassed = 'NR';
+            } elseif ($art5_monitoring == 'NC') {
+				$morestringentpassed = '0';
+            } else {
+            	if (false !== strpos($treatmenttypeinplace, '3NP')) {
+                	if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
+                    	$line[$ind['Monitoring results -Ptot']] == 'Pass' &&
+                    	$secondarypass == '1') {
+                    		$morestringentpassed = '1';
+	                } else {
+	                    $morestringentpassed = '0';
+	                }
+	            } elseif (false !== strpos($treatmenttypeinplace, '3P')) {
+	                if ($line[$ind['Monitoring results -Ptot']] == 'Pass' &&
+	                    $secondarypass == '1') {
+	                    $morestringentpassed = '1';
+	                } else {
+	                    $morestringentpassed = '0';
+	                }
+	            } elseif (false !== strpos($treatmenttypeinplace, '3N')) {
+	                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
+	                    $secondarypass == '1') {
+	                    $morestringentpassed = '1';
+	                } else {
+	                    $morestringentpassed = '0';
+	                }
+	            } elseif (false !== strpos($treatmenttypeinplace, '3other')) {
+	                if ($secondarypass == '1') {
+	                    $morestringentpassed = '1';
+	                } else {
+	                    $morestringentpassed = '0';
+	                }
+	            } elseif ($secondarypass == '1') {
+	                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' ||
+	                    $line[$ind['Monitoring results -Ptot']] == 'Pass') {
+	                    $morestringentpassed = '1';
+	                } else {
+	                    $morestringentpassed = '0';
+	                }
+	            } else {
+	                $morestringentpassed = '0';
+	            }
             }
-            if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3NP')) {
-                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
-                    $line[$ind['Monitoring results -Ptot']] == 'Pass' &&
-                    $secondarypass == '1'){
-                    $morestringentpassed = '1';
-                } else {
-                    $morestringentpassed = '0';
-                }
-            }
-            if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3P')) {
-                if ($line[$ind['Monitoring results -Ptot']] == 'Pass' &&
-                    $line[$ind['Monitoring results -Ntot']] !== 'Fail' &&
-                    $secondarypass == '1'){
-                    $morestringentpassed = '1';
-                } else {
-                    $morestringentpassed = '0';
-                }
-            }
-            if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3N')) {
-                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
-                    $line[$ind['Monitoring results -Ptot']] !== 'Fail' &&
-                    $secondarypass == '1'){
-                    $morestringentpassed = '1';
-                } else {
-                    $morestringentpassed = '0';
-                }
-            }
-            if ($morestringentpassed == '' && false !== strpos($treatmenttypeinplace, '3other')) {
-                if ($secondarypass == '1' &&
-                    $line[$ind['Monitoring results -Ntot']] !== 'Fail' &&
-                    $line[$ind['Monitoring results -Ptot']] !== 'Fail'){
-                    $morestringentpassed = '1';
-                } else {
-                    $morestringentpassed = '0';
-                }
-            }
-            if ($morestringentpassed == '' && $secondarypass == '1') {
-                if (($line[$ind['Monitoring results -Ntot']] == 'Pass' ||
-                    $line[$ind['Monitoring results -Ptot']] == 'Pass') &&
-                    $line[$ind['Monitoring results -Ntot']] !== 'Fail' &&
-                    $line[$ind['Monitoring results -Ptot']] !== 'Fail'){
-                    $morestringentpassed = '1';
-                } else {
-                    $morestringentpassed = '0';
-                }
-            }
-            if ($morestringentpassed == '') {
-                $morestringentpassed = '0';
-            }
-
 
             $line[$ind['More stringent: monitoring passed?']] = $morestringentpassed;
             //'More stringent:  FINAL',

@@ -405,8 +405,8 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'secondary_treatment_installed_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'monitoring_results_f._secondary_ok_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'monitoring_results_f._secondary_ok' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'more_str._treatment_installed_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
-    'more_str._treatment_installed_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
+    'more_str._treatment_installed_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>false, 'wrapper'=>'round1'),
+    'more_str._treatment_installed_(p._e.)' => array('k'=>$i++, 'xls'=>false, 'wrapper'=>'round'),
     'more_str._treatment_installed_treatment_met_(%_of_gen._load)'  => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'more_str._treatment_installed_treatment_met_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
