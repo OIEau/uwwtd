@@ -3993,13 +3993,19 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
             	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC', 'PD'))) {
-                $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']];
+                $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] += $agglo[$ind['connected_to_collecting_system_p._e.']] + $agglo[$ind['addressed_through_ias_p._e.']] + $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+
+                // Distance connection p.e.
+                $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
             }
+
+            // Distance connection p.e.
+
 
             if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
-            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
+            	true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC', 'PD'))) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] += $agglo[$ind['connected_to_collecting_system_p._e.']];
                 $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] += $agglo[$ind['addressed_through_ias_p._e.']];
             }
@@ -4099,12 +4105,15 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	$context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
         	}
 
-        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
-            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  100 - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%']);
-        	}
-        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
-            	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
-        	}
+        	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
+                $context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  (100 * $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+            }
+         //    if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
+         //    	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  100 - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%']);
+        	// }
+        	// if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
+         //    	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
+        	// }
 
             //secondary % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
