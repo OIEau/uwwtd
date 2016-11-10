@@ -4641,6 +4641,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
             if (isset($agglo[$ind['generated_load_p.e.']]))
                 $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
+
+            //compliance art3
+            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
+                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']++;
+                if (isset($agglo[$ind['generated_load_p.e.']]))
+                    $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
+            }
+
             if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC'))) {
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number']++;
                 if (isset($agglo[$ind['generated_load_p.e.']]))
@@ -4650,42 +4658,37 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
               	if (isset($agglo[$ind['connected_to_collecting_system_p._e.']]) && $agglo[$ind['connected_to_collecting_system_p._e.']] > 0) {
                   $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                   $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']++;
-                  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
                 }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
               	}
 
               	if (isset($agglo[$ind['addressed_through_ias_p._e.']]) && $agglo[$ind['addressed_through_ias_p._e.']] > 0) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] += $agglo[$ind['addressed_through_ias_p._e.']];
                   $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']++;
-                  $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                  $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
                 }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage']  =
                          $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
               	}
 
               	if (isset($agglo[$ind['neither_collecting_system_nor_ias_p._e.']]) && $agglo[$ind['neither_collecting_system_nor_ias_p._e.']] > 0) {
                   $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number']++;
-                  $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                  $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
                   $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                 }
               	if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'])) {
                 	$context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage']   =
                          $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100
-                            /  $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
+                            /  $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
               	}
             }
-                                  //compliance art3
-            if (true === in_array($agglo[$ind['art3_compliance']], array('C', 'QC', 'NC'))) {
-                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']++;
-                if (isset($agglo[$ind['generated_load_p.e.']]))
-                	$context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] += $agglo[$ind['generated_load_p.e.']]; //generated load p.e.
-            }
+            
                                   //compliance art3
             if (true === in_array($agglo[$ind['art3_compliance']], array('NR', 'PD'))) {
                 $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number']++;
@@ -4867,7 +4870,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
             //calcul percentage art4
             if ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
 
