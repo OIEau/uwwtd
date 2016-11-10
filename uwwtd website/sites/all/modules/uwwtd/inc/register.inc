@@ -4882,7 +4882,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
             //calcul percentage art4
             if ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
 
