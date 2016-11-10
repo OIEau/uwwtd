@@ -681,9 +681,9 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
 
-//     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-//     }
+    }
 }
 
 /**
@@ -1091,10 +1091,15 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
 
         //foreach nuts write line
         foreach ($context['sandbox']['nuts2'] as $nuts2) {
-
-            $nuts2[$ind['art3_rate']] = $nuts2[$ind['art3_compliant_pe']] * 100 / $nuts2[$ind['art3_target_load']];
-            $nuts2[$ind['art4_rate']] = $nuts2[$ind['art4_compliant_pe']] * 100 / $nuts2[$ind['art4_target_load']];
-            $nuts2[$ind['art5_rate']] = $nuts2[$ind['art5_compliant_pe']] * 100 / $nuts2[$ind['art5_target_load']];
+            if (isset($nuts2[$ind['art3_compliant_pe']]) && isset($nuts2[$ind['art3_target_load']])) {
+                $nuts2[$ind['art3_rate']] = $nuts2[$ind['art3_compliant_pe']] * 100 / $nuts2[$ind['art3_target_load']];
+            }
+            if (isset($nuts2[$ind['art4_compliant_pe']]) && isset($nuts2[$ind['art4_target_load']])) {
+                $nuts2[$ind['art4_rate']] = $nuts2[$ind['art4_compliant_pe']] * 100 / $nuts2[$ind['art4_target_load']];
+            }
+            if (isset($nuts2[$ind['art5_compliant_pe']]) && isset($nuts2[$ind['art5_target_load']])) {
+                $nuts2[$ind['art5_rate']] = $nuts2[$ind['art5_compliant_pe']] * 100 / $nuts2[$ind['art5_target_load']];
+            }
 
             $line = array(
                 $nuts2[$ind['nuts2_code']],
