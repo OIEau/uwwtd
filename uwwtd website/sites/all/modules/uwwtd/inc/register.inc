@@ -65,7 +65,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 
 function uwwtd_register_set_operation(&$batch, $annee)
 {
-    //CSV
+ //    //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
@@ -78,11 +78,11 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
     
-    //excel   
+ //    //excel   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
-    //optimize : ok
+ //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
-	//optimize : ok
+	// //optimize : ok
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
@@ -4629,6 +4629,10 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             } elseif ($type == 'CSA/SA') {
                 //todo A58 ?
                 if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
+                    continue;
+                }
+            } elseif ($type == 'all') {
+                if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype) && false === in_array('NA', $listrcatype)) {
                     continue;
                 }
             }
