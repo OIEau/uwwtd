@@ -2171,26 +2171,26 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
     	$e = 0;
 
     	// Retrieving values from XML file
-    	$field_art17agg_flarepcode = $agglomeration['flarepCode'];
-    	$field_art17agg_aggcode = $agglomeration['aggCode'];
-        $field_art17agg_aggname = $agglomeration['aggName'];
-        $field_art17_flaggstatus = $agglomeration['flaggStatus'];
-        $field_art17_flaggreasons = $agglomeration['flaggReasons'];
-        $field_art17_flaggmeasures = $agglomeration['flaggMeasures'];
-        $field_art17_flaggexpecdatestart = $agglomeration['flaggExpecDateStart'];       		
-        $field_art17_flaggexpecdatestartw = $agglomeration['flaggExpecDateStartWork'];       		
-        $field_art17_flaggexpecdatecomple = $agglomeration['flaggExpecDateCompletion '];
-        $field_art17_flagginv = $agglomeration['flaggInv'];
-        $field_art17_flaggeufundname = $agglomeration['flaggEUFundName'];
-        $field_art17_flaggeufund = $agglomeration['flaggEUFund'];
-        $field_art17_flaggcomments = $agglomeration['flaggComments'];
-        $field_art17_flaggexpload = $agglomeration['flaggExpLoad'];
-        $field_art17_flaggexploadcoll = $agglomeration['flaggExpLoadColl'];
-        $field_art17_flaggexploadias = $agglomeration['flaggExpLoadIAS'];
-        $field_art17_flaggotherfund = $agglomeration['flaggOtherFund'];
-        $field_art17_flaggotherfundname = $agglomeration['flaggOtherFundName'];
-        $field_art17_flaggloan = $agglomeration['flaggLoan'];
-        $field_art17_flaggloanname = $agglomeration['flaggLoanName'];
+    	$field_art17agg_flarepcode = isset($agglomeration['flarepCode']) ? $agglomeration['flarepCode'] : null;
+    	$field_art17agg_aggcode = isset($agglomeration['aggCode']) ? $agglomeration['aggCode'] : null;
+        $field_art17agg_aggname = isset($agglomeration['aggName']) ? $agglomeration['aggName'] : null;
+        $field_art17_flaggstatus = isset($agglomeration['flaggStatus']) ? $agglomeration['flaggStatus'] : null;
+        $field_art17_flaggreasons = isset($agglomeration['flaggReasons']) ? $agglomeration['flaggReasons'] : null;
+        $field_art17_flaggmeasures = isset($agglomeration['flaggMeasures']) ? $agglomeration['flaggMeasures'] : null;
+        $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null	
+        $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null	
+        $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion ']) ? $agglomeration['flaggExpecDateCompletion '] : null;
+        $field_art17_flagginv = isset($agglomeration['flaggInv']) ? $agglomeration['flaggInv'] : null;
+        $field_art17_flaggeufundname = isset($agglomeration['flaggEUFundName']) ? $agglomeration['flaggEUFundName'] : null;
+        $field_art17_flaggeufund = isset($agglomeration['flaggEUFund']) ? $agglomeration['flaggEUFund'] : null;
+        $field_art17_flaggcomments = isset($agglomeration['flaggComments']) ? $agglomeration['flaggComments'] : null;
+        $field_art17_flaggexpload = isset($agglomeration['flaggExpLoad']) ? $agglomeration['flaggExpLoad'] : null;
+        $field_art17_flaggexploadcoll = isset($agglomeration['flaggExpLoadColl']) ? $agglomeration['flaggExpLoadColl'] : null;
+        $field_art17_flaggexploadias = isset($agglomeration['flaggExpLoadIAS']) ? $agglomeration['flaggExpLoadIAS'] : null;
+        $field_art17_flaggotherfund = isset($agglomeration['flaggOtherFund']) ? $agglomeration['flaggOtherFund'] : null;
+        $field_art17_flaggotherfundname = isset($agglomeration['flaggOtherFundName']) ? $agglomeration['flaggOtherFundName'] : null;
+        $field_art17_flaggloan = isset($agglomeration['flaggLoan']) ? $agglomeration['flaggLoan'] : null;
+        $field_art17_flaggloanname = isset($agglomeration['flaggLoanName']) ? $agglomeration['flaggLoanName'] : null;
 
         // Checking for required fields
         if(!isset($field_art17agg_aggcode)){
@@ -2352,28 +2352,28 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
     	$e = 0;
 
     	// Retrieving values from XML file
-    	$field_art17uwwtp_flarepcode = $uwwtp['flarepCode'];
-    	$field_art17uwwtp_uwwcode = $uwwtp['uwwCode'];
-		$field_art17uwwtp_uwwname = $uwwtp['uwwName'];
-		$field_art17_flatpstatus = $uwwtp['flatpStatus'];
-		$field_art17_flatpreasons = $uwwtp['flatpReasons'];
-		$field_art17_flatpmeasures = $uwwtp['flatpMeasures'];
-		$field_art17_flatpexpload = $uwwtp['flatpExpLoad'];
-		$field_art17_flatpexpcapacity = $uwwtp['flatpExpCapacity'];
-		$field_art17_flatptexpectreatment = $uwwtp['flatpExpecTreatment'];
-        $field_art17_flatpexpecdatestart = $uwwtp['flatpExpecDateStart'];
-		$field_art17_flatpexpecdatestartw = $uwwtp['flatpExpecDateStartWork'];
-		$field_art17_flatpexpecdatecomple = $uwwtp['flatpExpecDateCompletion'];
-		$field_art17_flatpexpecdateperfor = $uwwtp['flatpExpecDatePerformance'];
-		$field_art17_flatpinv = $uwwtp['flatpInv'];
-		$field_art17_flatpeufundname = $uwwtp['flatpEUFundName'];
-		$field_art17_flatpeufund = $uwwtp['flatpEUFund'];
-		$field_art17_flatpcomments = $uwwtp['flatpComments'];
-		$field_art17_flatpexploadtruck = $uwwtp['flatpExpLoadTruck'];
-		$field_art17_flatpotherfund = $uwwtp['flatpOtherFund'];
-		$field_art17_flatpotherfundname = $uwwtp['flatpOtherFundName'];
-		$field_art17_flatploan = $uwwtp['flatpLoan'];
-        $field_art17_flatploanname = $uwwtp['flatpLoanName'];
+    	$field_art17uwwtp_flarepcode = isset($uwwtp['flarepCode']) ? $uwwtp['flarepCode'] : null;
+    	$field_art17uwwtp_uwwcode = isset($uwwtp['uwwCode']) ? $uwwtp['uwwCode'] : null;
+		$field_art17uwwtp_uwwname = isset($uwwtp['uwwName']) ? $uwwtp['uwwName'] : null;
+		$field_art17_flatpstatus = isset($uwwtp['flatpStatus']) ? $uwwtp['flatpStatus'] : null;
+		$field_art17_flatpreasons = isset($uwwtp['flatpReasons']) ? $uwwtp['flatpReasons'] : null;
+		$field_art17_flatpmeasures = isset($uwwtp['flatpMeasures']) ? $uwwtp['flatpMeasures'] : null;
+		$field_art17_flatpexpload = isset($uwwtp['flatpExpLoad']) ? $uwwtp['flatpExpLoad'] : null;
+		$field_art17_flatpexpcapacity = isset($uwwtp['flatpExpCapacity']) ? $uwwtp['flatpExpCapacity'] : null;
+		$field_art17_flatptexpectreatment = isset($uwwtp['flatpExpecTreatment']) ? $uwwtp['flatpExpecTreatment'] : null;
+        $field_art17_flatpexpecdatestart = isset($uwwtp['flatpExpecDateStart']) ? $uwwtp['flatpExpecDateStart'] : null;
+		$field_art17_flatpexpecdatestartw = isset($uwwtp['flatpExpecDateStartWork']) ? $uwwtp['flatpExpecDateStartWork'] : null;
+		$field_art17_flatpexpecdatecomple = isset($uwwtp['flatpExpecDateCompletion']) ? $uwwtp['flatpExpecDateCompletion'] : null;
+		$field_art17_flatpexpecdateperfor = isset($uwwtp['flatpExpecDatePerformance']) ? $uwwtp['flatpExpecDatePerformance'] : null;
+		$field_art17_flatpinv = isset($uwwtp['flatpInv']) ? $uwwtp['flatpInv'] : null;
+		$field_art17_flatpeufundname = isset($uwwtp['flatpEUFundName']) ? $uwwtp['flatpEUFundName'] : null;
+		$field_art17_flatpeufund = isset($uwwtp['flatpEUFund']) ? $uwwtp['flatpEUFund'] : null;
+		$field_art17_flatpcomments = isset($uwwtp['flatpComments']) ? $uwwtp['flatpComments'] : null;
+		$field_art17_flatpexploadtruck = isset($uwwtp['flatpExpLoadTruck']) ? $uwwtp['flatpExpLoadTruck'] : null;
+		$field_art17_flatpotherfund = isset($uwwtp['flatpOtherFund']) ? $uwwtp['flatpOtherFund'] : null;
+		$field_art17_flatpotherfundname = isset($uwwtp['flatpOtherFundName']) ? $uwwtp['flatpOtherFundName'] : null;
+		$field_art17_flatploan = isset($uwwtp['flatpLoan']) ? $uwwtp['flatpLoan'] : null;
+        $field_art17_flatploanname = isset($uwwtp['flatpLoanName']) ? $uwwtp['flatpLoanName'] : null;
 
         // Checking for required fields
         if(!isset($field_art17uwwtp_uwwcode)){
@@ -2540,24 +2540,24 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
     	$e = 0;
 
     	// Retrieving values from XML file
-    	$field_art17inves_flarepcode = $investment['flarepCode'];
-    	$field_art17_soecCode = $investment['soecCode'];
-		$field_art17_soecStartDate = $investment['soecStartYear'];
-		$field_art17_soecEndYear = $investment['soecEndYear'];
-		$field_art17_soecPeriod = $investment['soecPeriod'];
-		$field_art17_soecCapacity = $investment['soecCapacity'];
-		$field_art17_soecInvCol = $investment['soecInvCol'];
-		$field_art17_soecInvTp = $investment['soecInvTp'];
-        $field_art17_soeInvComments = $investment['soeInvComments'];
-		$field_art17_soecInvIAS = $investment['soecInvIAS'];
-		$field_art17_soecOpCosts = $investment['soecOpCosts'];
-		$field_art17_soecEUFunds = $investment['soecEUFunds'];
-		$field_art17_soecJobs = $investment['soecJobs'];
-		$field_art17_soecLenghtCoCs = $investment['soecLenghtCoCs'];
-		$field_art17_soecLenghtSaCs = $investment['soecLenghtSaCs'];
-		$field_art17_soecLenghtStCs = $investment['soecLenghtStCs'];
-		$field_art17_soecNumbIAS = $investment['soecNumbIAS'];
-		$field_art17_soecPop = $investment['soecPop'];
+    	$field_art17inves_flarepcode = isset($investment['flarepCode']) ? $investment['flarepCode'] : null;
+    	$field_art17_soecCode = isset($investment['soecCode']) ? $investment['soecCode'] : null;
+		$field_art17_soecStartDate = isset($investment['soecStartYear']) ? $investment['soecStartYear'] : null;
+		$field_art17_soecEndYear = isset($investment['soecEndYear']) ? $investment['soecEndYear'] : null;
+		$field_art17_soecPeriod = isset($investment['soecPeriod']) ? $investment['soecPeriod'] : null;
+		$field_art17_soecCapacity = isset($investment['soecCapacity']) ? $investment['soecCapacity'] : null;
+		$field_art17_soecInvCol = isset($investment['soecInvCol']) ? $investment['soecInvCol'] : null;
+		$field_art17_soecInvTp = isset($investment['soecInvTp']) ? $investment['soecInvTp'] : null;
+        $field_art17_soeInvComments = isset($investment['soeInvComments']) ? $investment['soeInvComments'] : null;
+		$field_art17_soecInvIAS = isset($investment['soecInvIAS']) ? $investment['soecInvIAS'] : null;
+		$field_art17_soecOpCosts = isset($investment['soecOpCosts']) ? $investment['soecOpCosts'] : null;
+		$field_art17_soecEUFunds = isset($investment['soecEUFunds']) ? $investment['soecEUFunds'] : null;
+		$field_art17_soecJobs = isset($investment['soecJobs']) ? $investment['soecJobs'] : null;
+		$field_art17_soecLenghtCoCs = isset($investment['soecLenghtCoCs']) ? $investment['soecLenghtCoCs'] : null;
+		$field_art17_soecLenghtSaCs = isset($investment['soecLenghtSaCs']) ? $investment['soecLenghtSaCs'] : null;
+		$field_art17_soecLenghtStCs = isset($investment['soecLenghtStCs']) ? $investment['soecLenghtStCs'] : null;
+		$field_art17_soecNumbIAS = isset($investment['soecNumbIAS']) ? $investment['soecNumbIAS'] : null;
+		$field_art17_soecPop = isset($investment['soecPop']) ? $investment['soecPop'] : null;
 
 		// Checking for required fields
         if(!isset($field_art17inves_flarepcode)){
