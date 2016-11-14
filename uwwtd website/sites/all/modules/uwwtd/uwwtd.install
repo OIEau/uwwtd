@@ -4369,29 +4369,27 @@ function uwwtd_update_7150(&$context = null) {
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	//throw new DrupalUpdateException(__FUNCTION__);
-}  
+}
+
 function uwwtd_update_7151(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);    
     variable_set('siif_eru_version', __FUNCTION__);
-    /*
-    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
     
-    // Mise à jour de la base :
-    db_query('ALTER TABLE drupal_field_data_field_uwwhistorie ALTER COLUMN field_uwwhistorie_value TYPE character varying(2500)');
-    db_query('ALTER TABLE drupal_field_revision_field_uwwhistorie ALTER COLUMN field_uwwhistorie_value TYPE character varying(2500)');
-    
-    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
-    
+    setDecimalAccuracy('field_soecinvcol', 15, 2);
+
+    db_query('ALTER TABLE drupal_field_data_field_soecinvcol ALTER COLUMN field_soecinvcol_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_soecinvcol ALTER COLUMN field_soecinvcol_value TYPE NUMERIC(15,2)');
+
     drupal_flush_all_caches();
    
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     } 
-    */
+    
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
 	throw new DrupalUpdateException(__FUNCTION__);
-}  
+}
 
 
    
