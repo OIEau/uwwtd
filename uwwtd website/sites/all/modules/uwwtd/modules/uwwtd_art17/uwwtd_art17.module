@@ -2177,8 +2177,8 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         $field_art17_flaggstatus = isset($agglomeration['flaggStatus']) ? $agglomeration['flaggStatus'] : null;
         $field_art17_flaggreasons = isset($agglomeration['flaggReasons']) ? $agglomeration['flaggReasons'] : null;
         $field_art17_flaggmeasures = isset($agglomeration['flaggMeasures']) ? $agglomeration['flaggMeasures'] : null;
-        $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null	
-        $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null	
+        $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null;
+        $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null;
         $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion ']) ? $agglomeration['flaggExpecDateCompletion '] : null;
         $field_art17_flagginv = isset($agglomeration['flaggInv']) ? $agglomeration['flaggInv'] : null;
         $field_art17_flaggeufundname = isset($agglomeration['flaggEUFundName']) ? $agglomeration['flaggEUFundName'] : null;
