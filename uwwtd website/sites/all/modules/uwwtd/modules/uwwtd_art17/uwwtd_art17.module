@@ -2196,19 +2196,16 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         if(!isset($field_art17agg_aggcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_flaggstatus)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17agg_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 
@@ -2238,28 +2235,28 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 				////////
                 $check = uwwtd_check_date($field_art17_flaggexpecdatestart, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
                     $art->field_art17_flaggexpecdatestart['und'][0]['value'] = $check;
 				}
                 ////////
                 $check = uwwtd_check_date($field_art17_flaggexpecdatestartw, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
                     $art->field_art17_flaggexpecdatestartw['und'][0]['value'] = $check;
 				}
                 ////////
                 $check = uwwtd_check_date($field_art17_flaggexpecdatecomple, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
                     $art->field_art17_flaggexpecdatecomple['und'][0]['value'] = $check;
 				}
                 ////////
                 $check = uwwtd_check_decimal($field_art17_flagginv);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                  
                     $art->field_art17_flagginv['und'][0]['value'] = $check;
 				}
@@ -2282,7 +2279,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if (!empty($field_art17_flaggexpload)) {
                     $check = uwwtd_check_numeric($field_art17_flaggexpload );
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                     } else {                
     				    $art->field_art17_flaggexpload['und'][0]['value'] = $check;
                     }
@@ -2291,7 +2288,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if (!empty($field_art17_flaggexploadcoll)) {
                     $check = uwwtd_check_decimal($field_art17_flaggexploadcoll);
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                     } else {                  
                         $art->field_art17_flaggexploadcoll['und'][0]['value'] = $check;
                     }
@@ -2300,7 +2297,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if (!empty($field_art17_flaggexploadias)) {
                     $check = uwwtd_check_decimal($field_art17_flaggexploadias);
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                     } else {                  
                         $art->field_art17_flaggexploadias['und'][0]['value'] = $check;
                     }
@@ -2309,7 +2306,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if (!empty($field_art17_flaggotherfund)) { 
                     $check = uwwtd_check_numeric($field_art17_flaggotherfund );
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                     } else {                
                         $art->field_art17_flaggotherfund['und'][0]['value'] = $check;
                     }
@@ -2320,7 +2317,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if (!empty($field_art17_flaggloan)) {
                     $check = uwwtd_check_numeric($field_art17_flaggloan );
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                     } else {                
                         $art->field_art17_flaggloan['und'][0]['value'] = $check;
                     }
@@ -2382,19 +2379,16 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         if(!isset($field_art17uwwtp_uwwcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "uwwCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_flatpstatus)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flatpStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17uwwtp_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 
@@ -2424,14 +2418,14 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 
                 $check = uwwtd_check_numeric($field_art17_flatpexpload );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else { 
 				    $art->field_art17_flatpexpload['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_numeric($field_art17_flatpexpcapacity );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else {                 
 				    $art->field_art17_flatpexpcapacity['und'][0]['value'] = $check;
 				}
@@ -2440,35 +2434,35 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdatestart, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                
 				    $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdatestartw, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
 				    $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdatecomple, $message );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
 				    $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdateperfor, $message  );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
                 } else {                 
 				    $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_numeric($field_art17_flatpinv );
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);                       
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);                       
                 } else {                 
 				    $art->field_art17_flatpinv['und'][0]['value'] = $check;
                 }
@@ -2476,7 +2470,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 
                 $check = uwwtd_check_numeric($field_art17_flatpeufund);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else {                
 				    $art->field_art17_flatpeufund['und'][0]['value'] = $check;
                 }
@@ -2488,7 +2482,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if(!empty($field_art17_flatpexploadtruck)) {
                     $check = uwwtd_check_decimal($field_art17_flatpexploadtruck);
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                     } else {                 
     				    $art->field_art17_flatpexploadtruck['und'][0]['value'] = $check;
                     }
@@ -2497,7 +2491,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if(!empty($field_art17_flatpotherfund)) {
                     $check = uwwtd_check_numeric($field_art17_flatpotherfund);
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                     } else {                
     				    $art->field_art17_flatpotherfund['und'][0]['value'] = $check;
                     }
@@ -2508,7 +2502,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
                 if(!empty($field_art17_flatploan )) {
                     $check = uwwtd_check_numeric($field_art17_flatploan );
                     if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                     } else {                
     				    $art->field_art17_flatploan['und'][0]['value'] = $check;
                     }
@@ -2569,49 +2563,41 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
         if(!isset($field_art17inves_flarepcode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "repCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecCode)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecStartDate)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecStartYear" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecEndYear)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecEndYear" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecPeriod)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecPeriod" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecCapacity)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecCapacity" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecInvCol)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecInvCol" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 		if(!isset($field_art17_soecInvTp)){
 			$e = 1;
 			$emes = t('The data you are trying to add for the "soecInvTp" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_set_error($line, $emes);
 			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
 		}
 
@@ -2644,14 +2630,14 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
             
             $check = uwwtd_check_date($field_art17_soecStartDate, $message );
             if ($check === false) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
             } else {                 
                 $art->field_soecstartyear['und'][0]['value'] = $check;
             }
 
             $check = uwwtd_check_date($field_art17_soecEndYear, $message );
             if ($check === false) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
             } else {                 
                 $art->field_soecendyear['und'][0]['value'] = $check;
             }
@@ -2661,21 +2647,21 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 
 			$check = uwwtd_check_numeric($field_art17_soecCapacity);
             if ($check === false) {
-               	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+               	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
             } else {                
         		$art->field_soeccapacity['und'][0]['value'] = $check;
             }
 
             $check = uwwtd_check_decimal($field_art17_soecInvCol);
             if ($check === false) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
             } else {                 
     			$art->field_soecinvcol['und'][0]['value'] = round($check, 2);
             }
 
             $check = uwwtd_check_decimal($field_art17_soecInvTp);
             if ($check === false) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
             } else {                 
     			$art->field_soecinvtp['und'][0]['value'] = $check;
             }
@@ -2686,7 +2672,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecInvIAS)) {
 				$check = uwwtd_check_decimal($field_art17_soecInvIAS);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soecinvias['und'][0]['value'] = $check;
                 }
@@ -2695,7 +2681,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecOpCosts)) {
 				$check = uwwtd_check_decimal($field_art17_soecOpCosts);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soecopcosts['und'][0]['value'] = $check;
                 }
@@ -2704,7 +2690,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecEUFunds)) {
 				$check = uwwtd_check_decimal($field_art17_soecEUFunds);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soeceufunds['und'][0]['value'] = $check;
                 }
@@ -2713,7 +2699,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecJobs)) {
 				$check = uwwtd_check_numeric($field_art17_soecJobs);
                 if ($check === false) {
-                	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else {                
         			$art->field_soecjobs['und'][0]['value'] = $check;
                 }					
@@ -2722,7 +2708,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecLenghtCoCs)) {
 				$check = uwwtd_check_decimal($field_art17_soecLenghtCoCs);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soeclenghtcocs['und'][0]['value'] = $check;
                 }
@@ -2731,7 +2717,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecLenghtSaCs)) {
 				$check = uwwtd_check_decimal($field_art17_soecLenghtSaCs);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soeclenghtsacs['und'][0]['value'] = $check;
                 }
@@ -2740,7 +2726,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecLenghtStCs)) {
 				$check = uwwtd_check_decimal($field_art17_soecLenghtStCs);
                 if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $line);    
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
                 } else {                 
     				$art->field_soeclenghtstcs['und'][0]['value'] = $check;
                 }
@@ -2749,7 +2735,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecNumbIAS)) {
 				$check = uwwtd_check_numeric($field_art17_soecNumbIAS);
                 if ($check === false) {
-                		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                		uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else {                
         			$art->field_soecnumbias['und'][0]['value'] = $check;
                 }		
@@ -2758,7 +2744,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 			if (!empty($field_art17_soecPop)) {
 				$check = uwwtd_check_numeric($field_art17_soecPop);
                 if ($check === false) {
-                	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
+                	uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['articlformat'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
                 } else {                
         			$art->field_soecpop['und'][0]['value'] = $check;
                 }	
