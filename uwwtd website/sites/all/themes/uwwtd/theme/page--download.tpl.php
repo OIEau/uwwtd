@@ -90,7 +90,8 @@
 		$server = $_SERVER['HTTP_HOST'];
 		$pays = variable_get('siif_eru_country_name');
 		$paysM = strtolower($pays);
-		if($server == "webnuxdev.rnde.tm.fr"){
+        //nd@oieau.fr : Magnific !!! --> i think we can't do worst
+		if($server == "webnuxdev.rnde.tm.fr" ||$server == "dev.oieau.fr"){
 			$typeName = "UWWTD:UWWTD_recette_".$pays;
 			$name= "UWWTD:<br>UWWTD_recette_".$pays;
 		}else{
@@ -201,7 +202,7 @@
 			<td style="text-align:center;"><b>Download</b></td>
 			<td style="text-align:center;"><b>View</b></td>
 		</tr>
-
+        <?php if(variable_get('metadataAggloUid')): ?>
 		<tr>
 			<td>Agglomerations</td>
 			<td>Country</td>
@@ -215,6 +216,8 @@
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" target="_blank">pdf</a>
 			</td>
 		</tr>
+        <?php endif; ?>
+        <?php if(variable_get('metadataUwwtpUid')): ?>
 		<tr>
 			<td>Urban Waste Water Treatment plants</td>
 			<td>Country</td>
@@ -228,6 +231,8 @@
 				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" target="_blank">pdf</a>
 			</td>
 		</tr>
+        <?php endif; ?>
+        <?php if(variable_get('metadataDpUid')): ?>
 		<tr>
 			<td>Discharge points</td>
 			<td>Country</td>
@@ -241,6 +246,8 @@
 				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" target="_blank">pdf</a>
 			</td>
 		</tr>
+        <?php endif; ?>
+        <?php if(variable_get('metadataRcaUid')): ?>
 		<tr>
 			<td>Sensitive areas</td>
 			<td>Country</td>
@@ -254,6 +261,7 @@
 				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" target="_blank">pdf</a>
 			</td>
 		</tr>
+        <?php endif; ?>
  </table>
 </div>
 
