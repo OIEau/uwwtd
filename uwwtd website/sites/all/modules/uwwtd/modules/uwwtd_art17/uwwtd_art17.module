@@ -2663,7 +2663,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
             if ($check === false) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
             } else {                 
-    			$art->field_soecinvtp['und'][0]['value'] = $check;
+    			$art->field_soecinvtp['und'][0]['value'] = round($check, 2);
             }
 
 			// Mapping optional fields

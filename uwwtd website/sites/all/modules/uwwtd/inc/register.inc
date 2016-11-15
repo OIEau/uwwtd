@@ -4631,16 +4631,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
                     continue;
                 }
-            } elseif ($type == 'all') {
-                if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype) && false === in_array('NA', $listrcatype)) {
-                    continue;
-                }
-            }
+            } 
 
-            //art 3
-//             dsm('art3');
-//             dsm($ind['art3_compliance']);
-                                //compliance art3
+            //compliance art3
             
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
             if (isset($agglo[$ind['generated_load_p.e.']]))
