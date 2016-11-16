@@ -360,5 +360,48 @@ It was then implemented in 2014 through the current website that give access to 
 	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
 	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
 	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
-	),                               
+	),
+
+    'dk' => array(   //Ljubljana
+        'website_mail' => 'bfb@oieau.fr',
+        'contact_mail' => 'bfb@oieau.fr',
+//         'rptFormRA'    => '3',
+        'name' => 'Denmark',
+        'openlayers_maps' => array(
+              'center' => array(                        
+                'initial' => array(
+                  'centerpoint' => '14.797346, 46.136272',
+                  'zoom' => '8',           
+                ),
+                'restrict' => array(
+                  'restrictextent' => 0,
+                  'restrictedExtent' => '',
+                ),
+              ),
+              'behaviors' => array(
+                'openlayers_behavior_gazetteer' => array(
+                  'restriction_query' => 'country=DK',
+                ),              
+              ),
+            ),
+        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
+        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Denmark !',
+        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
+        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Denmark. 
+The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
+- the citizens to know the status of implementation of the Directive,
+- water stakeholders to access most up to date datasets.
+For more details on the UWWTD SIIF framework, look at [URL to concept paper]
+The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
+It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
+It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                         
+    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5',
+	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7',
+	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
+	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
+	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
+	),                              
 );      
