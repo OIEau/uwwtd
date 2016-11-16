@@ -4880,10 +4880,11 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             }
 
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
             }
+
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] != 0) {
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
@@ -5877,12 +5878,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
 //             )
-        if (isset($ind['deadline_for_art._3_compliance'],
-        		$ind['deadline_for_art._4_compliance'],
-        		$ind['deadline_for_art._5_compliance'],
-        		$line[$ind['deadline_for_art._3_compliance']],
-        		$line[$ind['deadline_for_art._4_compliance']],
-        		$line[$ind['deadline_for_art._5_compliance']])) {
+        if (isset($line[$ind['deadline_for_art._3_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._4_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._5_compliance']])) {
         	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
@@ -5891,7 +5889,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if ( true === $deadline_before
-	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' || $agg->field_aggcompliance['und'][0]['value'] == 'NR'))
 	            {
 	            $pending_or_expired = 'EXP';
 	        }
