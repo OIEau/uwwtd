@@ -375,14 +375,13 @@ function uwwtd_menu(){
 	//MENUS FOR CONFIGURATION
 
   	$items['admin/config/uwwtd'] = array(
-      'title' => 'uwwtd configuration',
-      'description' => 'Settings for the uwwtd application',
-      'page callback' => 'system_admin_menu_block_page',
-      'access arguments' => array('Data-management access'),
-      'type' => MENU_LOCAL_TASK,
-      'file' => 'system.admin.inc',
-      'file path' => drupal_get_path('module', 'system'),
-  	);
+    'title' => 'General settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('uwwtd_general_config'),
+    'access arguments' => array('Data-management access'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'inc/uwwtd.admin.config.inc'
+    );
 
     $items['admin/config/uwwtd/extlinks'] = array(
     'title' => 'Set external links',

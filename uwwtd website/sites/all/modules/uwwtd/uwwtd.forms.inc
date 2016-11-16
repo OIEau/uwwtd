@@ -1,7 +1,7 @@
 <?php
 
 function construct_extlinks_form($form, $form_state){
-
+/*
 	dsm("
 			BLOCK CODE ( DISPLAY EXTERNAL LINKS ):
 		if (arg(0) == 'node' && is_numeric(arg(1))){
@@ -27,7 +27,7 @@ function construct_extlinks_form($form, $form_state){
 		}
 
 	");
-
+*/
 	$form['form_extlinks']['form_extlinks_agglomeration_url'] = array(
 			'#type' => 'textarea',
 			'#title' => t('Agglomeration url'),
