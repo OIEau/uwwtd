@@ -5864,12 +5864,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
 //             )
-        if (isset($ind['deadline_for_art._3_compliance'],
-        		$ind['deadline_for_art._4_compliance'],
-        		$ind['deadline_for_art._5_compliance'],
-        		$line[$ind['deadline_for_art._3_compliance']],
-        		$line[$ind['deadline_for_art._4_compliance']],
-        		$line[$ind['deadline_for_art._5_compliance']])) {
+        if (isset($line[$ind['deadline_for_art._3_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._4_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._5_compliance']])) {
         	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
@@ -5878,7 +5875,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if ( true === $deadline_before
-	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' || $agg->field_aggcompliance['und'][0]['value'] == 'NR'))
 	            {
 	            $pending_or_expired = 'EXP';
 	        }
