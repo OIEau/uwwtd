@@ -63,8 +63,7 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee)
-{
+function uwwtd_register_set_operation(&$batch, $annee){
  //    //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
@@ -76,7 +75,6 @@ function uwwtd_register_set_operation(&$batch, $annee)
     $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
-
     
  //    //excel   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
@@ -154,6 +152,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
         $path_xlsx = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
+        //Remove the old file, if needed
+        drupal_unlink($target_path);
     } else {
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
         $target_path = $path_xlsx;
@@ -215,9 +215,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
+        //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    // $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
 	//Special rules for cell's style
 	
@@ -386,9 +386,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 {
     uwwtd_trace(__FUNCTION__);
+    $start_time = time();
     $ind = $GLOBALS['uwwtd']['sheet2_uwwtp'];
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
-
+    uwwtd_trace('Open file: '.$filename);
 
     $ruwwtpfile = fopen($filename, 'rb');
 
@@ -403,15 +404,19 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['line'] = 5; //start line
-
-
-
+        uwwtd_trace('-- file size : '.$context['sandbox']['max']);
+        
+        
         $path_xlsx = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
+         //Remove the old file, if needed
+         uwwtd_trace('Open xlsx: '.$target_path);
+        drupal_unlink($target_path);
     } else {
 //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
         $path_xlsx = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
         $target_path = $path_xlsx;
+        uwwtd_trace('ReOpen xlsx: '.$target_path);
     }
 
 //     dsm($context);
@@ -440,11 +445,19 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     );
 
     $j = 0;
-    //uwwtd_trace('start loop');
+    uwwtd_trace('start loop');
     $lines = array();
-	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
+    $trace = 0;
+	//Warning if the csv file contain more than 10000 lines => the system can probably never re-open the excel file
     while ($j < 10000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
-        //uwwtd_trace($j);
+        
+        //if($trace == 10){
+            uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
+        //}
+        //else{
+        //    $trace = 0;
+        //}
+        //$trace ++;
         $line = array();
         
         foreach($ind as $k=>$conf){
@@ -475,15 +488,15 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         
-        $sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
+        //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    // $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
     
     //Special rules for cell's style
 	
     if(!empty($lines)){
-        //uwwtd_trace('set style');
+        uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
             $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
@@ -508,14 +521,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
             // }
             
         }
-        //uwwtd_trace('end style');
+        uwwtd_trace('end style');
     }   
     
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
-    //uwwtd_trace('end loop');
+    uwwtd_trace('end loop');
 	//uwwtd_trace('Progress : '.$context['sandbox']['progress'].' / '.$context['sandbox']['max']);
     fclose($ruwwtpfile);
-	//uwwtd_trace('Start Total data');
+	uwwtd_trace('Start Total data');
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
@@ -4867,10 +4880,11 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             }
 
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
                 $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
             }
+
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] != 0) {
                 $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
@@ -5864,12 +5878,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
 //              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
 //             )
-        if (isset($ind['deadline_for_art._3_compliance'],
-        		$ind['deadline_for_art._4_compliance'],
-        		$ind['deadline_for_art._5_compliance'],
-        		$line[$ind['deadline_for_art._3_compliance']],
-        		$line[$ind['deadline_for_art._4_compliance']],
-        		$line[$ind['deadline_for_art._5_compliance']])) {
+        if (isset($line[$ind['deadline_for_art._3_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._4_compliance']]) 
+        	|| isset($line[$ind['deadline_for_art._5_compliance']])) {
         	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
              || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
@@ -5878,7 +5889,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
 	        if ( true === $deadline_before
-	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' ))
+	             && ($agg->field_aggcompliance['und'][0]['value'] == 'NC' || $agg->field_aggcompliance['und'][0]['value'] == 'C' || $agg->field_aggcompliance['und'][0]['value'] == 'NR'))
 	            {
 	            $pending_or_expired = 'EXP';
 	        }

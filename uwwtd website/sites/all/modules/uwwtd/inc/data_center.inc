@@ -1683,7 +1683,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                         break;
                     case 'c':
                         $node->field_rcac['und'][0]['value'] = '1';
-                        $node->field_rcacstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+                        $node->field_rcacstardate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
                         $node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
                         break;
                     default:
@@ -2417,6 +2417,13 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }
             if($check !== false){
                 $node->field_aggforecast['und'][0]['value'] = $check;
+
+                $node->field_aggperiodover3['und'][0] = array(
+                    'value'=> $check,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);
