@@ -1020,40 +1020,40 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
         //art4
         if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] != 'NR' && 
             $agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] != 'PD') {
-            $context['sandbox']['nuts2'][$nuts2][$ind['art4_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art4_target_load']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art4_compliant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'NC') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_notcompliant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art4_notcompliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art4_notcompliant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' ||
             $agglo[$indagglo['art4_compliance_art._4_(hierarchical_approach)']] == 'PD') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art4_notrelevant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
 //         $context['sandbox']['nuts2'][$nuts2][$ind['art4_rate']]= 'TODO';//+=
 
         //art5
         if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] != 'NR' &&
             $agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] != 'PD') {
-            $context['sandbox']['nuts2'][$nuts2][$ind['art5_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art5_target_load']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art5_compliant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NC') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notcompliant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art5_notcompliant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art5_notcompliant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
         if ($agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' ||
             $agglo[$indagglo['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_number_agglo']]++;
-            $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_pe']] += $agglo[$indagglo['generated_load_p.e.']];
+            $context['sandbox']['nuts2'][$nuts2][$ind['art5_notrelevant_pe']] += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         }
 //         $context['sandbox']['nuts2'][$nuts2][$ind['art5_rate']] = 'TODO';//+=
 
