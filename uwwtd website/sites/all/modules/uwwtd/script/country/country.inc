@@ -360,7 +360,6 @@ It was then implemented in 2014 through the current website that give access to 
 	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
 	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
 	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
-<<<<<<< HEAD
 	),
 
     'dk' => array(   //Ljubljana
