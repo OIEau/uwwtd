@@ -1716,6 +1716,9 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
          		default:
          			break;
             }
+
+        if(isset($data['ReceivingAreasSASA'])) {
+
         }
         // dsm($node);
         
@@ -2410,6 +2413,13 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }
             if($check !== false){
                 $node->field_aggforecast['und'][0]['value'] = $check;
+
+                $node->field_aggperiodover3['und'][0] = array(
+                    'value'=> $check,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);

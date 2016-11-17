@@ -2888,7 +2888,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                 }
                 
                 //Style of the feature 
-                $style_name = $option['style_prefix'].strtolower($row[ $option['color']['field'] ]);
+                $style_name = (isset($option['style_prefix'])?$option['style_prefix']:'').strtolower($row[ $option['color']['field'] ]);
                 if(isset($styles[$style_name])){
                     $style = $style_name;
                 }

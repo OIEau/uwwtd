@@ -4385,6 +4385,11 @@ function uwwtd_update_7151(&$context = null) {
     db_query('ALTER TABLE drupal_field_data_field_soecinvtp ALTER COLUMN field_soecinvtp_value TYPE NUMERIC(15,2)');
     db_query('ALTER TABLE drupal_field_revision_field_soecinvtp ALTER COLUMN field_soecinvtp_value TYPE NUMERIC(15,2)');
 
+    setDecimalAccuracy('field_art17_flagginv', 15, 2);
+
+    db_query('ALTER TABLE drupal_field_data_field_art17_flagginv ALTER COLUMN field_art17_flagginv_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_art17_flagginv ALTER COLUMN field_art17_flagginv_value TYPE NUMERIC(15,2)');
+
     drupal_flush_all_caches();
    
     if (isset($context)) {

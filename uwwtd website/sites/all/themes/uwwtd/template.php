@@ -1972,7 +1972,7 @@ function uwwtd_table($vars) {
   $rows= $vars['rows'];
   $attributes= $vars['attributes'];
   $caption= $vars['caption'];
-  $rows_multiple= $vars['rows_multiple'];
+  $rows_multiple= (isset($vars['rows_multiple'])?$vars['rows_multiple']:false);
  
   
   // Add sticky headers, if applicable.
@@ -1997,7 +1997,7 @@ function uwwtd_table($vars) {
       // Format the table header:
       if (count($header)) {
       $output .=' <thead>';
-        $ts = tablesort_init($head);
+        $ts = tablesort_init($header);
           foreach($header as $number => $head){
             
             // HTML requires that the thead tag has tr tags in it followed by tbody
