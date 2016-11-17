@@ -1717,6 +1717,8 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
          			break;
             }
 
+        }
+
         if(isset($data['ReceivingAreasSASA'])) {
 
         }
