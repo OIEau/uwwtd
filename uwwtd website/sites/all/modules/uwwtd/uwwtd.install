@@ -4411,8 +4411,10 @@ function uwwtd_update_7152(&$context = null) {
 
     // Correction de la précision du champs "field_uwwpdischargeestimated" :
     setDecimalAccuracy('field_uwwpdischargeestimated', 15, 2);
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
     db_query('ALTER TABLE drupal_field_data_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
     db_query('ALTER TABLE drupal_field_revision_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
 
     // Correction de la précision du champs "field_uwwbodincoming" :
     setDecimalAccuracy('field_uwwbodincoming', 15, 2);
