@@ -50,7 +50,7 @@ function uwwtd_statistics_agglomeration_compliance($year = 'all', $groupby = '')
   $query .= " GROUP BY name, fdfa.field_aggcompliance_value";
   $query .= " ORDER BY name";
   
-  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '2000'));
+  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '1999'));
   
   if($year != 'all') {
     $param[':year'] = $year;
@@ -122,7 +122,7 @@ function uwwtd_statistics_agglomeration_treatment($year = 'all', $groupby = '') 
   $query .= " GROUP BY name";
   $query .= " ORDER BY name";
 
-  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '2000'));
+  $param = array(':agggenerated' => variable_get('min_aggenerated_display', '1999'));
   
   if($year != 'all') {
     $param[':year'] = $year;

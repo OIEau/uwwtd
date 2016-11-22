@@ -30,7 +30,7 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
     }   
 	$params = array(
 		':typenode' => 'agglomeration',
-		':agggenerated' => variable_get('min_aggenerated_display', '2000'), 
+		':agggenerated' => variable_get('min_aggenerated_display', '1999'),
 	);  
 
 	$result = db_query("
@@ -95,7 +95,7 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	}
 	$params = array(
 		':typenode' => 'agglomeration',
-		':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+		':agggenerated' => variable_get('min_aggenerated_display', '1999'),
 	);
 	try {
 		$result = db_query("
@@ -218,7 +218,7 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
 
     $param = array(
     	':typenode' => 'agglomeration',
-    	':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+    	':agggenerated' => variable_get('min_aggenerated_display', '1999'),
     );
     try {
     	$result = db_query($query,$param);
@@ -390,7 +390,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 
     $param = array(
         ':typenode' => 'uwwtp',
-        ':min_agg' => variable_get('min_aggenerated_display', '2000'),
+        ':min_agg' => variable_get('min_aggenerated_display', '1999'),
     );
     try {
 //     	dsm($query);
@@ -487,7 +487,7 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
     ' . $conditions;
 	$param = array(
 		':typenode' => 'agglomeration',
-		':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+		':agggenerated' => variable_get('min_aggenerated_display', '1999'),
 	);
 	try {
 		foreach ($aConditions as $libelle => $condition) {
@@ -664,7 +664,7 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	' group by f_annee.field_anneedata_value order by f_annee.field_anneedata_value';
 	$param = array(
         ':typenode' => 'uwwtp',
-        ':min_agg' => variable_get('min_aggenerated_display', '2000'),
+        ':min_agg' => variable_get('min_aggenerated_display', '1999'),
 	);
     //dsm($query);
     
@@ -1028,7 +1028,7 @@ function uwwtd_stat_national_uwwtp_agglo($options)
 //     dsm($param);
 	$param = array(
 			':typenode' => 'agglomeration',
-            ':agggenerated' => variable_get('min_aggenerated_display', '2000'),
+            ':agggenerated' => variable_get('min_aggenerated_display', '1999'),
             
 	);
 

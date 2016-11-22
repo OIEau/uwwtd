@@ -709,7 +709,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force = array();
     $filter_force['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }
@@ -1083,7 +1083,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force = array();
     $filter_force['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }    
@@ -2205,7 +2205,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     /*
     
     $filter_force['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }
@@ -2420,7 +2420,7 @@ function uwwtd_dcp_page($type_export = ''){
     /*
     
     $filter_force['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
     }

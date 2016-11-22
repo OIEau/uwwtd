@@ -2424,7 +2424,7 @@ function uwwtd_update_7123(&$context = null)
     ////////////////////////////////////////////////////////////////
     //set new config variable
     variable_set('display_only_active', '1');
-    variable_set('min_aggenerated_display', '2000');
+    variable_set('min_aggenerated_display', '1999');
     variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
     
     //configure openlayers with local OpenLayers.js (2.13.1) version patched!
@@ -4398,7 +4398,41 @@ function uwwtd_update_7151(&$context = null) {
     } 
     
 	//==========DEBUG : permet de relancer la mise à jour si besoin.
-	throw new DrupalUpdateException(__FUNCTION__);
+//	throw new DrupalUpdateException(__FUNCTION__);
+}
+
+
+function uwwtd_update_7152(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+
+    // Mise à jour de la variable "min_aggenerated_display" :
+    variable_set('min_aggenerated_display', '1999');
+
+    // Correction de la précision du champs "field_uwwpdischargeestimated" :
+    setDecimalAccuracy('field_uwwpdischargeestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
+
+    // Correction de la précision du champs "field_uwwbodincoming" :
+    setDecimalAccuracy('field_uwwbodincoming', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwbodincoming ALTER COLUMN field_uwwbodincoming_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwbodincoming ALTER COLUMN field_uwwbodincoming_value TYPE NUMERIC(15,2)');
+
+    // Correction de la précision du champs "field_uwwwastewatertreated" :
+    setDecimalAccuracy('field_uwwwastewatertreated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwwastewatertreated ALTER COLUMN field_uwwwastewatertreated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwwastewatertreated ALTER COLUMN field_uwwwastewatertreated_value TYPE NUMERIC(15,2)');
+
+    drupal_flush_all_caches();
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
 }
 
 
@@ -5307,7 +5341,7 @@ function uwwtd_install_configure(&$context)
 
     //configure uwwtd display
     variable_set('display_only_active', '1');
-    variable_set('min_aggenerated_display', '2000');
+    variable_set('min_aggenerated_display', '1999');
     variable_set('openlayers_gazetteer_geonames_username', 'uwwtd');
     
     //////////////////////////////////////////////////    

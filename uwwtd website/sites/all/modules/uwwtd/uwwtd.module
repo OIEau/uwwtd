@@ -928,7 +928,7 @@ function uwwtd_block_view($delta = ''){
                 $filter['filter'] = array();
                 $filter_force = array();
                 $filter_force['filter']['field_agggenerated_value_op'] = '>';
-                $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '2000');
+                $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
                 if (variable_get('display_only_active', '1') == 1) {
                     $filter_force['filter']['field_status_value'] = '1';
                 }
