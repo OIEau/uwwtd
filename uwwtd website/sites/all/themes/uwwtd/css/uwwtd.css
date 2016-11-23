@@ -318,7 +318,7 @@ article.node h1 small{
 .uwwcontainer{
 	width: 100%; /* 1140px */
 	clear: both;
-	overflow: auto;
+	overflow: visible;
 	margin-bottom: 15px;
     margin-left: 5px;
 	margin-right: 5px;
@@ -1045,7 +1045,7 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 }
 
 .panel-body td {
-    padding-right: 20px;
+    padding-right: 5px;
 }
 
 .dispo-annee.receiving-area {
