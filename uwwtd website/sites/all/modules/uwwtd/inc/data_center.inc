@@ -582,16 +582,16 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         //Case of country with more of one RCA
         else{
             $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
-        }  
+        }
     }
     //New report Format (9th)
     elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
         //ReceivingAreaSAMain
         //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
-        
+
         if(!isset($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain']['rcaCode'])){
             foreach($datas['UWWTD_Report']['ReceivingAreasSAMain']['ReceivingAreaSAMain'] as $rca){
-                $imports[$rca['rcaCode']] = $rca; 
+                $imports[$rca['rcaCode']] = $rca;
             }
         }
         else{
@@ -613,7 +613,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                         //ajout d'un tableau
                         $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
                     }
-                    
+
                 }
             }
         }
@@ -635,7 +635,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace('$imports BigCityDischargers');
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
-    } 
+    }
     
     //Agglomerations
     $imports  = array();
@@ -647,7 +647,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
         }
         uwwtd_trace('$imports Agglomerations');
-        uwwtd_trace(var_export($imports, true));        
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
@@ -661,7 +661,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['UWWTPs']['UWWTP'];
         }
         uwwtd_trace('$imports UWWTPs');
-        uwwtd_trace(var_export($imports, true));        
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
@@ -675,7 +675,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
         }
         uwwtd_trace('$imports DischargePoints');
-        uwwtd_trace(var_export($imports, true));        
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
@@ -1723,7 +1723,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         }
         // dsm($node);
-        
+
         // save node
         node_save($node);
 
@@ -2464,6 +2464,9 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
     return false;
 }
 
+/**
+ * Traitement de 10 stations d'épurations.
+ */
 function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $timestamp, &$context){
     if(!empty($datas)){
         if (!isset($context['sandbox']['progress'])) {
@@ -3431,7 +3434,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date end life found.', $timestamp, $i, $node);
-        
+
         // save node
         node_save($node);
         

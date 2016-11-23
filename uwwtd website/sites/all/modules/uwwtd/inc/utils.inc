@@ -1002,24 +1002,28 @@ function uwwtd_check_text($text){
 }
 
 function uwwtd_check_bool($bool){
-	// check format
-    $bool = trim($bool);
-	$bool = check_plain($bool);
-	
-	if(($bool == "False")|| ($bool == "false")|| ($bool == "0"))
-	{
-		$bool = 0;
-		return $bool;
-	}elseif(($bool == "True")|| ($bool == "true")|| ($bool == "1"))
-	{
-		$bool = 1;
-		return $bool;
-	}
+    if (!empty($bool)) {
+        // check format
+        $bool = trim($bool);
+        $bool = check_plain($bool);
+
+        if(($bool == "False")|| ($bool == "false")|| ($bool == "0"))
+        {
+            $bool = 0;
+            return $bool;
+        }elseif(($bool == "True")|| ($bool == "true")|| ($bool == "1"))
+        {
+            $bool = 1;
+            return $bool;
+        }
 //     else{
 // 		uwwtd_add_error(2, 4, 'The input data is not in boolean format (true or false).', $timestamp, $index, $node);
-		return false;
+        return false;
 // 	}
-}    
+    } else {
+        return FALSE;
+    }
+}
 
 function uwwtd_check_numeric($value) 
 {

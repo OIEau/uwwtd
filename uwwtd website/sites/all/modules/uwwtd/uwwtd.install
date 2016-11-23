@@ -4409,7 +4409,140 @@ function uwwtd_update_7152(&$context = null) {
     // Mise à jour de la variable "min_aggenerated_display" :
     variable_set('min_aggenerated_display', '1999');
 
-//    drupal_flush_all_caches();
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+
+    // uwwBODIncomingMeasured :
+    setDecimalAccuracy('field_uwwbodincoming', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwbodincoming ALTER COLUMN field_uwwbodincoming_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwbodincoming ALTER COLUMN field_uwwbodincoming_value TYPE NUMERIC(15,2)');
+
+    // uwwCODIncomingMeasured :
+    setDecimalAccuracy('field_uwwcodincoming', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcodincoming ALTER COLUMN field_uwwcodincoming_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcodincoming ALTER COLUMN field_uwwcodincoming_value TYPE NUMERIC(15,2)');
+
+    // uwwNIncomingMeasured :
+    setDecimalAccuracy('field_uwwnincoming', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwnincoming ALTER COLUMN field_uwwnincoming_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwnincoming ALTER COLUMN field_uwwnincoming_value TYPE NUMERIC(15,2)');
+
+    // uwwPIncomingMeasured :
+    setDecimalAccuracy('field_uwwpincoming', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpincoming ALTER COLUMN field_uwwpincoming_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpincoming ALTER COLUMN field_uwwpincoming_value TYPE NUMERIC(15,2)');
+
+    // uwwBODDischargeMeasured :
+    setDecimalAccuracy('field_uwwboddischarge', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwboddischarge ALTER COLUMN field_uwwboddischarge_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwboddischarge ALTER COLUMN field_uwwboddischarge_value TYPE NUMERIC(15,2)');
+
+    // uwwCODDischargeMeasured :
+    setDecimalAccuracy('field_uwwcoddischarge', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcoddischarge ALTER COLUMN field_uwwcoddischarge_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcoddischarge ALTER COLUMN field_uwwcoddischarge_value TYPE NUMERIC(15,2)');
+
+    // uwwNDischargeMeasured :
+    setDecimalAccuracy('field_uwwndischarge', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwndischarge ALTER COLUMN field_uwwndischarge_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwndischarge ALTER COLUMN field_uwwndischarge_value TYPE NUMERIC(15,2)');
+
+    // uwwPDischargeMeasured :
+    setDecimalAccuracy('field_uwwpdischarge', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpdischarge ALTER COLUMN field_uwwpdischarge_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpdischarge ALTER COLUMN field_uwwpdischarge_value TYPE NUMERIC(15,2)');
+
+    // uwwWasteWaterTreated :
+    setDecimalAccuracy('field_uwwwastewatertreated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwwastewatertreated ALTER COLUMN field_uwwwastewatertreated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwwastewatertreated ALTER COLUMN field_uwwwastewatertreated_value TYPE NUMERIC(15,2)');
+
+    // --
+
+    // uwwBODDischargeCalculated :
+    setDecimalAccuracy('field_uwwboddischargecalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwboddischargecalculated ALTER COLUMN field_uwwboddischargecalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwboddischargecalculated ALTER COLUMN field_uwwboddischargecalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwBODDischargeEstimated :
+    setDecimalAccuracy('field_uwwboddischargeestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwboddischargeestimated ALTER COLUMN field_uwwboddischargeestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwboddischargeestimated ALTER COLUMN field_uwwboddischargeestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwBODIncomingCalculated :
+    setDecimalAccuracy('field_uwwbodincomingcalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwbodincomingcalculated ALTER COLUMN field_uwwbodincomingcalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwbodincomingcalculated ALTER COLUMN field_uwwbodincomingcalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwBODIncomingEstimated :
+    setDecimalAccuracy('field_uwwbodincomingestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwbodincomingestimated ALTER COLUMN field_uwwbodincomingestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwbodincomingestimated ALTER COLUMN field_uwwbodincomingestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwCODDischargeCalculated :
+    setDecimalAccuracy('field_uwwcoddischargecalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcoddischargecalculated ALTER COLUMN field_uwwcoddischargecalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcoddischargecalculated ALTER COLUMN field_uwwcoddischargecalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwCODDischargeEstimated :
+    setDecimalAccuracy('field_uwwcoddischargeestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcoddischargeestimated ALTER COLUMN field_uwwcoddischargeestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcoddischargeestimated ALTER COLUMN field_uwwcoddischargeestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwCODIncomingCalculated :
+    setDecimalAccuracy('field_uwwcodincomingcalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcodincomingcalculated ALTER COLUMN field_uwwcodincomingcalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcodincomingcalculated ALTER COLUMN field_uwwcodincomingcalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwCODIncomingEstimated :
+    setDecimalAccuracy('field_uwwcodincomingestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwcodincomingestimated ALTER COLUMN field_uwwcodincomingestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwcodincomingestimated ALTER COLUMN field_uwwcodincomingestimated_value TYPE NUMERIC(15,2)');
+
+    // --
+
+    // uwwNDischargeCalculated :
+    setDecimalAccuracy('field_uwwndischargecalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwndischargecalculated ALTER COLUMN field_uwwndischargecalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwndischargecalculated ALTER COLUMN field_uwwndischargecalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwNDischargeEstimated :
+    setDecimalAccuracy('field_uwwndischargeestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwndischargeestimated ALTER COLUMN field_uwwndischargeestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwndischargeestimated ALTER COLUMN field_uwwndischargeestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwNIncomingCalculated :
+    setDecimalAccuracy('field_uwwnincomingcalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwnincomingcalculated ALTER COLUMN field_uwwnincomingcalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwnincomingcalculated ALTER COLUMN field_uwwnincomingcalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwNIncomingEstimated :
+    setDecimalAccuracy('field_uwwnincomingestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwnincomingestimated ALTER COLUMN field_uwwnincomingestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwnincomingestimated ALTER COLUMN field_uwwnincomingestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwPDischargeCalculated :
+    setDecimalAccuracy('field_uwwpdischargecalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpdischargecalculated ALTER COLUMN field_uwwpdischargecalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpdischargecalculated ALTER COLUMN field_uwwpdischargecalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwPDischargeEstimated :
+    setDecimalAccuracy('field_uwwpdischargeestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpdischargeestimated ALTER COLUMN field_uwwpdischargeestimated_value TYPE NUMERIC(15,2)');
+
+    // uwwPIncomingCalculated :
+    setDecimalAccuracy('field_uwwpincomingcalculated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpincomingcalculated ALTER COLUMN field_uwwpincomingcalculated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpincomingcalculated ALTER COLUMN field_uwwpincomingcalculated_value TYPE NUMERIC(15,2)');
+
+    // uwwPIncomingEstimated :
+    setDecimalAccuracy('field_uwwpincomingestimated', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_uwwpincomingestimated ALTER COLUMN field_uwwpincomingestimated_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_uwwpincomingestimated ALTER COLUMN field_uwwpincomingestimated_value TYPE NUMERIC(15,2)');
+
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+
+    drupal_flush_all_caches();
 
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
