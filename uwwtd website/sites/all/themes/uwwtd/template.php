@@ -1104,8 +1104,15 @@ function uwwtd_get_uww_graphic($node){
         'performance' => (isset($node->field_uwwotherperf['und'][0]['value']) ? $node->field_uwwotherperf['und'][0]['value'] : '')
     );
 
+    $linkedAgglomerations = array();
+    if (isset($node->field_linked_agglomerations) && !empty($node->field_linked_agglomerations[LANGUAGE_NONE])) {
+        $linkedAgglomerations = $node->field_linked_agglomerations[LANGUAGE_NONE];
+    } elseif (isset($node->field_uwwaggliste) && !empty($node->field_uwwaggliste[LANGUAGE_NONE])) {
+        $linkedAgglomerations = $node->field_uwwaggliste[LANGUAGE_NONE];
+    }
+
     $reseau['agglos'] = array();
-    foreach ($node->field_linked_agglomerations['und'] as $aggs) {
+    foreach ($linkedAgglomerations as $aggs) {
         $nbAgglos++;
         $agg = node_load($aggs['nid']);
         if ($agg->field_aggart3compliance['und'][0]['value'] == 'NC') {
@@ -1393,7 +1400,15 @@ function uwwtd_get_agglo_graphic($node){
 
     $nbPlants = 0;
     $reseau = array();
-    foreach ($node->field_linked_treatment_plants['und'] as $uwws) {
+
+    $linkedTreamentPlants = array();
+    if (isset($node->field_linked_treatment_plants) && !empty($node->field_linked_treatment_plants[LANGUAGE_NONE])) {
+        $linkedTreamentPlants = $node->field_linked_treatment_plants[LANGUAGE_NONE];
+    } elseif (isset($node->field_agguwwliste) && !empty($node->field_agguwwliste[LANGUAGE_NONE])) {
+        $linkedTreamentPlants = $node->field_agguwwliste[LANGUAGE_NONE];
+    }
+
+    foreach ($linkedTreamentPlants as $uwws) {
         $nbPlants++;
         $uww = node_load($uwws['nid']);
         //get station entering sums

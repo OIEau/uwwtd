@@ -813,16 +813,17 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $header_export = array();
     $keys = array_keys($rows[0]['data']);
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $info) {
-        if(in_array($field, $keys)){
-            $header[$field] = array(
-                'data' => $info['label'],
-                'field' => $field,
-                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
-                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
-            );
-            $header_export[] = $info['label'];
+        if (!empty($field) && !empty($keys)) {
+            if(in_array($field, $keys)){
+                $header[$field] = array(
+                    'data' => $info['label'],
+                    'field' => $field,
+                    'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+                    'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+                );
+                $header_export[] = $info['label'];
+            }
         }
-        
     }
 
     //here export data and exit
