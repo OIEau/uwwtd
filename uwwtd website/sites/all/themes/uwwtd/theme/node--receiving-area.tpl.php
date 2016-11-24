@@ -168,6 +168,22 @@ echo uwwtd_insert_errors_tab($node);
                     <div class="panel-title fieldset-legend"><?php print t('Characteristics').' '.$node->field_anneedata['und'][0]['value']; ?></div>
                 </legend>
                 <div class="panel-body">
+<!--                    <table class="characteristics-sentitive-area">-->
+<!--                        <tr>-->
+<!--                            <td class="align-right"><b>Type of sensitive area:</b></td>-->
+<!--                            <td class="align-left">--><?php //print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="align-right"><b>All the country:</b></td>-->
+<!--                            <td class="align-left">--><?php //print $node->field_rca58applied[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
+<!--                            <td class="align-right"><b>Date of designation:</b></td>-->
+<!--                            <td class="align-left">--><?php //print $node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
+<!--                            <td class="align-right"><b>Strating date of designation:</b></td>-->
+<!--                            <td class="align-left">--><?php //print $node->field_rcadateart5854[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
+<!--                        </tr>-->
+<!--                    </table>-->
+
+
                     <table>
                         <tr>
                             <td><?php print render($content['field_rca58applied']); ?></td>

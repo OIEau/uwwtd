@@ -6875,3 +6875,16 @@ footer.container .region {
 footer.container .region a {
 	color: #8DC7F9;
 }
+
+/** vgo */
+.characteristics-sentitive-area {
+
+}
+
+.align-right {
+	text-align: right;
+}
+
+.align-left {
+	text-align: left;
+}
