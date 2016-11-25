@@ -467,74 +467,74 @@ function uwwtd_render_article17_aglo($nid){
 }
 
 function uwwtd_render_article17_uwwtp($nid){
-  $art17 = node_load($nid);
+    $art17 = node_load($nid);
 
-  $output = '';
-  //field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
-  if(isset($art17->field_art17_flatpreasons['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpreasons', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpmeasures['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpmeasures', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpecdatestartw['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpecdatecomple['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpinv['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpinv', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpeufundname['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpeufundname', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpeufund['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpeufund', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpcomments['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpcomments', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpload['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpload', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpcapacity['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpcapacity', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatptexpectreatment['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatptexpectreatment', array('display' => 'inline'));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpecdateperfor['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
-    $output .= render($champ);
-  }
-
-  if(isset($art17->field_art17_flatpexpecdatestart['und'][0]['value'])){
-    $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array('display' => 'inline', 'settings' => array('format_type' => 'custom_siif')));
-    $output .= render($champ);
-  }
+    $output = '';
+    //field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+    if (isset($art17->field_art17_flatpreasons['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpreasons', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpmeasures['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpmeasures', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpload['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpload', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpcapacity['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpcapacity', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatptexpectreatment['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatptexpectreatment', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpecdatestart['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestart', array(
+            'display' => 'inline',
+            'settings' => array('format_type' => 'custom_siif')
+        ));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpecdatestartw['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatestartw', array(
+            'display' => 'inline',
+            'settings' => array('format_type' => 'custom_siif')
+        ));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpecdatecomple['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdatecomple', array(
+            'display' => 'inline',
+            'settings' => array('format_type' => 'custom_siif')
+        ));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpexpecdateperfor['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpexpecdateperfor', array(
+            'display' => 'inline',
+            'settings' => array('format_type' => 'custom_siif')
+        ));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpinv['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpinv', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpeufundname['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpeufundname', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpeufund['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpeufund', array('display' => 'inline'));
+        $output .= render($champ);
+    }
+    if (isset($art17->field_art17_flatpcomments['und'][0]['value'])) {
+        $champ = field_view_field('node', $art17, 'field_art17_flatpcomments', array('display' => 'inline'));
+        $output .= render($champ);
+    }
 
   return $output;
 }
