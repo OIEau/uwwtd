@@ -2129,3 +2129,14 @@ function uwwtd_tablesort_header($cell, $header, $ts){
   }
   return $cell;
 }
+
+/**
+ * Return cross or checked image for boolean given.
+ */
+function _get_boolean_image($boolean) {
+    $imgReturn = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
+    if (!empty($boolean) && $boolean == 1) {
+        $boolean = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
+    }
+    return $imgReturn;
+}

@@ -168,81 +168,36 @@ echo uwwtd_insert_errors_tab($node);
                     <div class="panel-title fieldset-legend"><?php print t('Characteristics').' '.$node->field_anneedata['und'][0]['value']; ?></div>
                 </legend>
                 <div class="panel-body">
-<!--                    <table class="characteristics-sentitive-area">-->
-<!--                        <tr>-->
-<!--                            <td class="align-right"><b>Type of sensitive area:</b></td>-->
-<!--                            <td class="align-left">--><?php //print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
-<!--                        </tr>-->
-<!--                        <tr>-->
-<!--                            <td class="align-right"><b>All the country:</b></td>-->
-<!--                            <td class="align-left">--><?php //print $node->field_rca58applied[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
-<!--                            <td class="align-right"><b>Date of designation:</b></td>-->
-<!--                            <td class="align-left">--><?php //print $node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
-<!--                            <td class="align-right"><b>Strating date of designation:</b></td>-->
-<!--                            <td class="align-left">--><?php //print $node->field_rcadateart5854[LANGUAGE_NONE][0]['value']; ?><!--</td>-->
-<!--                        </tr>-->
-<!--                    </table>-->
-
-
-                    <table>
+                    <table class="characteristics-sentitive-area">
                         <tr>
-                            <td><?php print render($content['field_rca58applied']); ?></td>
-                            <td><?php print render($content['field_rcaart58datedesign']); ?></td>
-                            <td><?php print render($content['field_rcadateart5854']);?></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering) &&
-                                          !empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) : ?>
-                                    <?php
-                                        $ratePhosphorus = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
-                                            $node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) /
-                                            $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
-                                        $rateNitrogen = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
-                                            $node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) /
-                                            $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
-                                    ?>
-                                    <strong><?php print t('75% removal Nitrogen and Phosphorus:'); ?></strong>
-                                    <?php print ($ratePhosphorus >= 75 && $rateNitrogen >= 75) ? $validImg : $noValidImg; ?>
-                                <?php endif; ?>
-                            </td>
+                            <td><b>Type of sensitive area:</b></td>
+                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td><?php print render($content['field_rca52applied']); ?></td>
+                            <td><b>Total load entering:</b></td>
+                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td><?php print render($content['field_rcaanitro']); ?></td>
-                            <td><?php print render($content['field_rcaadatedesignation']); ?></td>
-                            <td><?php print render($content['field_rcaanstartdate']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php print render($content['field_rcaaphos']); ?></td>
-                            <td><?php print render($content['field_rcaapdatedesignation']); ?></td>
-                            <td><?php print render($content['field_rcaapstartdate']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php print render($content['field_rcab']); ?></td>
-                            <td><?php print render($content['field_rcabdatedesignation']); ?></td>
-                            <td><?php print render($content['field_rcabstartdate']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php print render($content['field_rcac']); ?></td>
-                            <td><?php print render($content['field_rcacdatedesignation']); ?></td>
-                            <td><?php print render($content['field_rcacstardate']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php print render($content['field_rca_parameter_other']); ?></td>
+                            <td><b>Total design capacity:</b></td>
+                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td><?php print render($content['field_rca54applied']); ?></td>
                             <td></td>
                             <td></td>
+                            <td><b>Date of designation</b></td>
+                            <td><b>Date of designation</b></td>
+                        </tr>
+                        <tr>
+                            <td><b>All territory covered (5.8):</b></td>
+                            <td><?php print _get_boolean_image($node->field_rca58applied[LANGUAGE_NONE][0]['value']); ?></td>
+                            <td><?php print $node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']; ?></td>
+                            <td><?php print $node->field_rcadateart5854[LANGUAGE_NONE][0]['value']; ?></td>
                         </tr>
                     </table>
                 </div>

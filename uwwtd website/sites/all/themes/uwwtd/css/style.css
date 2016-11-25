@@ -6878,13 +6878,14 @@ footer.container .region a {
 
 /** vgo */
 .characteristics-sentitive-area {
-
+	width: 100%;
 }
 
-.align-right {
+.characteristics-sentitive-area td:nth-child(1) {
 	text-align: right;
 }
 
-.align-left {
+.characteristics-sentitive-area td:nth-child(2) {
 	text-align: left;
+	padding-left: 10px;
 }
