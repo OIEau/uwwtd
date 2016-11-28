@@ -6877,14 +6877,33 @@ footer.container .region a {
 }
 
 /** vgo */
-.characteristics-sentitive-area {
-
+.characteristics-sentitive-area, .characteristics-sentitive-area-header, .under-characteristics-sentitive-area {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
 }
 
-.align-right {
+.characteristics-sentitive-area div {
+	float: left;
+}
+
+.characteristics-sentitive-area td {
+	width: 20%;
+	text-align: center;
+}
+
+.characteristics-sentitive-area td:nth-child(1) {
+	width: 50%;
+}
+
+.characteristics-sentitive-area-header td {
+	width: 50%;
+}
+.characteristics-sentitive-area-header td:nth-child(1) {
 	text-align: right;
 }
 
-.align-left {
+.characteristics-sentitive-area-header td:nth-child(2) {
 	text-align: left;
 }

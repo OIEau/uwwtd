@@ -4550,6 +4550,38 @@ function uwwtd_update_7152(&$context = null) {
     }
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
+//    throw new DrupalUpdateException(__FUNCTION__);
+}
+
+
+function uwwtd_update_7153(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+
+    setFieldLabel('field_rca58applied', 'All territory covered (5.8)');
+    setFieldLabel('field_rcaanitro', 'Eutrophication - Nitrogen');
+    setFieldLabel('field_rcaaphos', 'Eutrophication - Phosphorus');
+    setFieldLabel('field_rcab', 'Drinking water - Nitrogen');
+    setFieldLabel('field_rcac', 'Other directives');
+    setFieldLabel('field_rca_parameter_n', 'Nitrogen');
+    setFieldLabel('field_rca_parameter_m', 'Microbiology');
+    setFieldLabel('field_rca_parameter_p', 'Phosphorus');
+    setFieldLabel('field_rca_parameter_other', 'Other');
+    setFieldLabel('field_rcaremarks', 'General comment');
+    setFieldLabel('field_rcacodepredecessor', 'Predecessor');
+    setFieldLabel('field_rcaevolutiontype', 'Evolution Type');
+    setFieldLabel('rcasalsaRemark', 'Comment');
+    setFieldLabel('field_rcaendlife', 'Endlife of the SA');
+    setFieldLabel('field_rcabeginlife', 'Beginlife of the SA');
+
+    drupal_flush_all_caches();
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
     throw new DrupalUpdateException(__FUNCTION__);
 }
 
