@@ -419,9 +419,36 @@ function uwwtd_menu(){
     'file' => 'correction.inc',
     'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
     );
-
+    //Provide set compliance link on agglomeration page
+    $items['node/%node/compliance'] = array(
+		'title'=>t('Compliance'),	
+		'page callback' => 'uwwtd_run_compliance_page',
+        'page arguments' => array(1),
+		'access callback'=>'uwwtd_check_node_compliance',
+        'access arguments' => array(1),
+		'type' => MENU_LOCAL_TASK,
+        'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd').'/inc/',
+        'weight' => 102,
+    );
+    
   return $items;
 }
+
+//Define if user is allowed to view the "compliance" tab on agglomeration page
+function uwwtd_check_node_compliance($node){
+    global $user;
+    if(user_access('Data-management access', $user)){
+        if($node->type=='agglomeration'){
+           return true;
+        }
+        if($node->type=='uwwtp'){
+           return true;
+        }
+        
+    }
+}
+
 
 function uwwtd_node_redirect($annee, $id, $action = null){
 	$query = db_select('field_data_field_siteid', 's');

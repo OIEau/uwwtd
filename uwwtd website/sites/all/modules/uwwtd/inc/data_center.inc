@@ -45,6 +45,35 @@ function uwwtd_data_form_submit($form, &$form_state){
 }
 
 
+function uwwtd_run_compliance_page($node){
+    if($node->type=='agglomeration'){
+        if(!empty($node->field_linked_treatment_plants['und'])){
+            foreach($node->field_linked_treatment_plants['und'] as $u){
+                if($uww = node_load($u['nid'])){
+                    uwwtd_station_set_conformity($uww);
+                    drupal_set_message("Processing conformity for the UWWTP ".$uww->title." : Ok");
+                    dsm($uww);
+                }else{
+                    drupal_set_message("Can't load a linked UWWTP for the agglomeration ".$node->title, 'warning');
+                }
+            }
+        }
+        else{
+            drupal_set_message("There is no linked UWWTP for the agglomeration ".$node->title, 'warning');
+        }
+        
+        uwwtd_agglo_set_conformity($node);
+        drupal_set_message("Processing conformity for the agglomeration ".$node->title." : Ok");
+    }
+    elseif($node->type=='uwwtp'){
+        uwwtd_station_set_conformity($node);
+        drupal_set_message("Processing conformity for the UWWTP ".$node->title." : Ok");
+    }
+    dsm($node);
+    drupal_goto('node/'.$node->nid);
+}
+
+
 ################################ DATA INPUT ################################
 function uwwtd_import_form($form, &$form_state){
 
@@ -5532,19 +5561,31 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     
     $data = $context['sandbox']['ids'][$i];
     $node = node_load($data['nid']);
+    uwwtd_station_set_conformity($node);
 
+
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+function uwwtd_station_set_conformity(&$node){
     uwwtd_trace('calculate compliance uwwtp ' . $node->field_inspireidlocalid['und'][0]['value']);
     // Function that checks the required treatment, the compliance and the reason for the compliance in the following form array(requiredTreatment, compliance, reason)
-//     $compliance_info = new stdClass();
-//     $compliance_info->required = '';
-//     $compliance_info->required_rcaan = '';
-//     $compliance_info->required_rcaap = '';
-//     $compliance_info->required_rcab  = '';
-//     $compliance_info->required_rcac  = '';  
-//     $compliance_info->compliance = '';
-//     $compliance_info->reason = '';
-//     $compliance_info->treatment_met = '';
-//     $compliance_info->performance_met = '';
+    //     $compliance_info = new stdClass();
+    //     $compliance_info->required = '';
+    //     $compliance_info->required_rcaan = '';
+    //     $compliance_info->required_rcaap = '';
+    //     $compliance_info->required_rcab  = '';
+    //     $compliance_info->required_rcac  = '';  
+    //     $compliance_info->compliance = '';
+    //     $compliance_info->reason = '';
+    //     $compliance_info->treatment_met = '';
+    //     $compliance_info->performance_met = '';
     $compliance_info = uwwtd_station_compliance_algo($node, $timestamp); //ALGO2 (et ALGO1)
     
     uwwtd_trace('calculate compliance uwwtp result : ' . var_export($compliance_info, true));
@@ -5592,15 +5633,9 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     $node->field_compliance_explication['und'][0]['value'] = $compliance_info->reason;
     
     node_save($node);
-
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
-
-    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }
 }
+
+
 
 //Function change by nd@oieau.fr in order to fix errors on not provided data : Collective system + IAS + D without treatement = 100
 // and fix infinite loop in uwwtd_article3_compliance()
@@ -5632,8 +5667,21 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     
     $data = $context['sandbox']['ids'][$i];
     $node = node_load($data['nid']);
+    uwwtd_agglo_set_conformity($node);
     
     
+
+    $context['sandbox']['progress']++;
+    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
+    
+
+    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+function uwwtd_agglo_set_conformity(&$node){
     //We need to fix error due to not provided data : Collective system + IAS + D without treatement = 100
     if(!isset($node->field_aggc1['und']) || !isset($node->field_aggc2['und']) || !isset($node->field_aggpercwithouttreatment['und'])){
         if(isset($node->field_aggc1['und'])){
@@ -5780,16 +5828,9 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     unset($infoAllAggUww);    
 
     node_save($node);
-
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
-    
-
-    if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    }
 }
+
+
 
 /**
  * Get the agglomeration compliance base on the agglomeration art4,5,6 compliance
