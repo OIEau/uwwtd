@@ -534,69 +534,8 @@ function uwwtd_get_data_sensitive_areas($option){
     $data = array();
     
     //field_rca_sensitive_area
-    
-    $query = '
-        SELECT 
-            n.nid,
-            n.title,
-            f_annee.field_anneedata_value,
-            id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value as zonetype,
-            rca52.field_rca52applied_value as rca52,
-            rca54.field_rca54applied_value as rca54,
-            rca58.field_rca58applied_value as rca58,
-            st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
-            st_area(st_transform(f_geo.the_geom, 3035)) area,
-            COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
-            SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
-            SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
-        FROM {node} n
-        LEFT join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-        LEFT join
-            {field_data_field_inspireidlocalid} id
-                ON n.nid = id.entity_id
-        LEFT join
-            {field_data_field_specialisedzonetype} zt
-                ON n.nid = zt.entity_id
-        LEFT join
-            {field_data_field_rca52applied} rca52
-                ON n.nid = rca52.entity_id
-        LEFT join
-            {field_data_field_rca54applied} rca54
-                ON n.nid = rca54.entity_id
-        LEFT join
-            {field_data_field_rca58applied} rca58
-                ON n.nid = rca58.entity_id
-        LEFT JOIN 
-            {field_data_field_position_geo} f_geo 
-                ON n.nid = f_geo.entity_id
-        LEFT join
-            {field_data_field_linked_treatment_plants} uwwtp
-                ON n.nid = uwwtp.entity_id
-        LEFT join
-            {field_data_field_physicalcapacityactivity} capa
-                ON uwwtp.field_linked_treatment_plants_nid = capa.entity_id
-        LEFT join
-            {field_data_field_uwwloadenteringuwwtp} entering
-                ON uwwtp.field_linked_treatment_plants_nid = entering.entity_id
-              
-        WHERE n.type = :typenode
-            AND f_annee.field_anneedata_value = :annee
-        GROUP BY 
-            n.nid,
-            n.title,
-            f_annee.field_anneedata_value,
-            id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value,
-            rca52.field_rca52applied_value,
-            rca54.field_rca54applied_value,
-            rca58.field_rca58applied_value,
-            f_geo.the_geom
-        ORDER BY n.title
-    ';
-    
+    $query = uwwtd_get_query_data_sensitive_areas();
+
     // add rca state
     
     $param = array(
@@ -633,6 +572,7 @@ function uwwtd_get_data_sensitive_areas($option){
     return $data;
     
 }
+
 
 //======================================================================PAGES ====================================================
 
@@ -811,6 +751,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 
     $header = array();
     $header_export = array();
+
+
     $keys = array_keys($rows[0]['data']);
     foreach($GLOBALS['uwwtd']['ui']['field']['agglomeration'] as $field => $info) {
         if (!empty($field) && !empty($keys)) {

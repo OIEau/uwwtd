@@ -168,36 +168,161 @@ echo uwwtd_insert_errors_tab($node);
                     <div class="panel-title fieldset-legend"><?php print t('Characteristics').' '.$node->field_anneedata['und'][0]['value']; ?></div>
                 </legend>
                 <div class="panel-body">
-                    <table class="characteristics-sentitive-area">
+                    <table class="characteristics-sentitive-area-header">
                         <tr>
                             <td><b>Type of sensitive area:</b></td>
-                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
-                            <td></td>
-                            <td></td>
+                            <td><?php print $variables['typeSensitiveArea']; ?></td>
                         </tr>
                         <tr>
                             <td><b>Total load entering:</b></td>
-                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
-                            <td></td>
-                            <td></td>
+                            <td><?php print $variables['totalLoadEntering']; ?></td>
                         </tr>
                         <tr>
                             <td><b>Total design capacity:</b></td>
-                            <td><?php print $node->field_zonetype[LANGUAGE_NONE][0]['value']; ?></td>
+                            <td><?php print $variables['totalDesigncapacity']; ?></td>
+                        </tr>
+                    </table>
+                    <table class="characteristics-sentitive-area">
+                        <tr>
+                            <td></td>
+                            <td><b>Date of designation</b></td>
+                            <td><b>Starting date of application</b></td>
+                        </tr>
+                        <tr>
+                            <td ><?php print render($content['field_rca58applied']); ?></td>
+                            <td><?php print ($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcadateart5854[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart5854[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>
+                                    <b>75% removal nitrogen and phosphorus (5.4):</b>
+                                    <?php if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering) &&
+                                              !empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) : ?>
+                                        <?php
+                                        $ratePhosphorus = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
+                                                $node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) /
+                                            $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
+                                        $rateNitrogen = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
+                                                $node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) /
+                                            $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
+                                        ?>
+                                        <?php print ($ratePhosphorus >= 75 && $rateNitrogen >= 75) ? $validImg : $noValidImg; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rca52applied']); ?></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
+                            <td><br/></td>
                             <td></td>
                             <td></td>
-                            <td><b>Date of designation</b></td>
-                            <td><b>Date of designation</b></td>
                         </tr>
                         <tr>
-                            <td><b>All territory covered (5.8):</b></td>
-                            <td><?php print _get_boolean_image($node->field_rca58applied[LANGUAGE_NONE][0]['value']); ?></td>
-                            <td><?php print $node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']; ?></td>
-                            <td><?php print $node->field_rcadateart5854[LANGUAGE_NONE][0]['value']; ?></td>
+                            <td><b>Criteria</b></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcaanitro']); ?></td>
+                            <td><?php print ($node->field_rcaadatedesignation[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaadatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcaaphos']); ?></td>
+                            <td><?php print ($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcab']); ?></td>
+                            <td><?php print ($node->field_rcabstartdate[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcabdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcac']); ?></td>
+                            <td><?php print ($node->field_rcacstartdate[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                        </tr>
+                        <tr>
+                            <td><div><b>Comment other directive:</b></div></td>
+                            <td colspan="2"><?php print $node->field_rcacrelevantdirective[LANGUAGE_NONE][0]['value']; ?></td>
+                        </tr>
+                        <tr>
+                            <td><br/></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>Parameter (s) subject to more stringent treatment</b></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rca_parameter_n']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rca_parameter_m']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rca_parameter_p']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rca_parameter_other']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <div class="under-characteristics-sentitive-area">
+                        <p><b>General comment:</b></p>
+                        <?php print $node->field_rcaremarks[LANGUAGE_NONE][0]['value']; ?></td>
+                    </div>
+                    <table class="characteristics-sentitive-area">
+                        <tr>
+                            <td><?php print render($content['field_rcabeginlife']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcacodepredecessor']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcaevolutiontype']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['rcasalsaRemark']); ?></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><?php print render($content['field_rcaendlife']); ?></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </table>
                 </div>

@@ -411,8 +411,161 @@ function uwwtd_preprocess_node(&$vars){
       
       // Envoie au template :
       $vars['htmlGraph'] = $htmlGraph;
+    } elseif ($vars['node']->type === 'receiving_area') {
+        $totalLoadEntering = '';
+        $totalDesigncapacity = '';
+        if (isset($vars['node']->field_anneedata) && !empty($vars['node']->field_anneedata[LANGUAGE_NONE][0]['value'])) {
+            // Get year and nid :
+            $year = $vars['node']->field_anneedata[LANGUAGE_NONE][0]['value'];
+            $nid = $vars['node']->nid;
+
+            $query = uwwtd_get_query_data_sensitive_areas(TRUE);
+            $param = array(
+                ':typenode' => 'receiving_area',
+                ':annee' => $year,
+                ':nid' => $nid,
+            );
+            try {
+                $result = db_query($query, $param);
+                while ($row = $result->fetchAssoc()) {
+                    if (!empty($row['tot_entering_load'])) {
+                        $totalLoadEntering = uwwtd_format_number($row['tot_entering_load']);
+                    }
+                    if (!empty($row['tot_design_capacity'])) {
+                        $totalDesigncapacity = uwwtd_format_number($row['tot_design_capacity']);
+                    }
+                }
+            } catch(Exception $e) {
+                dsm($e->getMessage());
+            }
+        }
+
+        $typeSensitiveArea = '';
+        if (isset($vars['node']->field_zonetype) && !empty($vars['node']->field_zonetype[LANGUAGE_NONE][0]['value'])) {
+            switch ($vars['node']->field_zonetype[LANGUAGE_NONE][0]['value']) {
+                case 'UWW55CMSA':
+                    $typeSensitiveArea = 'Catchment of Sensitive';
+                    break;
+                case 'UWWCASA':
+                    $typeSensitiveArea = 'Sensitive area';
+                    break;
+                case 'UWWCLSA':
+                    $typeSensitiveArea = 'Sensitive area';
+                    break;
+                case 'UWWCMSA':
+                    $typeSensitiveArea = 'Catchment of Sensitive area';
+                    break;
+                case 'UWWLKSA':
+                    $typeSensitiveArea = 'Sensitive area';
+                    break;
+                case 'UWWRISA':
+                    $typeSensitiveArea = 'Sensitive area';
+                    break;
+                case 'UWWTDLSA':
+                    $typeSensitiveArea = 'Sensitive area';
+                    break;
+                case 'UWWTWSA':
+                    $typeSensitiveArea = 'Transitional water Sensitive area';
+                    break;
+            }
+        }
+
+        // Envoie au template :
+        $vars['totalLoadEntering'] = $totalLoadEntering;
+        $vars['totalDesigncapacity'] = $totalDesigncapacity;
+        $vars['typeSensitiveArea'] = $typeSensitiveArea;
     }
 }
+
+
+/**
+ * Converts given string like 2015-12-01T00:00:00 to 01/12/2015
+ */
+function uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($date) {
+    $return = '';
+    if (!empty($date)) {
+        if (strlen($date) > 10) {
+            $date = substr($date, 0, 10);
+        }
+        $dateObj = new DateTime($date);
+        $return = $dateObj->format('d/m/Y');
+    }
+    return $return;
+}
+
+
+/**
+ * Return DQL query to get datas ensitive areas.
+ */
+function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
+    $sqlWithNid = '';
+    if ($isWithNid) {
+        $sqlWithNid = ' AND n.nid = :nid ';
+    }
+
+    return '
+        SELECT 
+            n.nid,
+            n.title,
+            f_annee.field_anneedata_value,
+            id.field_inspireidlocalid_value,
+            zt.field_specialisedzonetype_value as zonetype,
+            rca52.field_rca52applied_value as rca52,
+            rca54.field_rca54applied_value as rca54,
+            rca58.field_rca58applied_value as rca58,
+            st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+            st_area(st_transform(f_geo.the_geom, 3035)) area,
+            COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
+            SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
+            SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
+        FROM {node} n
+        LEFT join
+            {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+        LEFT join
+            {field_data_field_inspireidlocalid} id
+                ON n.nid = id.entity_id
+        LEFT join
+            {field_data_field_specialisedzonetype} zt
+                ON n.nid = zt.entity_id
+        LEFT join
+            {field_data_field_rca52applied} rca52
+                ON n.nid = rca52.entity_id
+        LEFT join
+            {field_data_field_rca54applied} rca54
+                ON n.nid = rca54.entity_id
+        LEFT join
+            {field_data_field_rca58applied} rca58
+                ON n.nid = rca58.entity_id
+        LEFT JOIN 
+            {field_data_field_position_geo} f_geo 
+                ON n.nid = f_geo.entity_id
+        LEFT join
+            {field_data_field_linked_treatment_plants} uwwtp
+                ON n.nid = uwwtp.entity_id
+        LEFT join
+            {field_data_field_physicalcapacityactivity} capa
+                ON uwwtp.field_linked_treatment_plants_nid = capa.entity_id
+        LEFT join
+            {field_data_field_uwwloadenteringuwwtp} entering
+                ON uwwtp.field_linked_treatment_plants_nid = entering.entity_id
+              
+        WHERE n.type = :typenode
+            AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
+        GROUP BY 
+            n.nid,
+            n.title,
+            f_annee.field_anneedata_value,
+            id.field_inspireidlocalid_value,
+            zt.field_specialisedzonetype_value,
+            rca52.field_rca52applied_value,
+            rca54.field_rca54applied_value,
+            rca58.field_rca58applied_value,
+            f_geo.the_geom
+        ORDER BY n.title
+    ';
+}
+
 
 function uwwtd_render_article17_aglo($nid){
   $art17 = node_load($nid);
