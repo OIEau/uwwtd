@@ -62,7 +62,7 @@ function uwwtd_run_compliance_page($node){
             drupal_set_message("There is no linked UWWTP for the agglomeration ".$node->title, 'warning');
         }
         
-        uwwtd_agglo_set_conformity($node);
+        uwwtd_agglo_set_conformity($node, true);
         drupal_set_message("Processing conformity for the agglomeration ".$node->title." : Ok");
     }
     elseif($node->type=='uwwtp'){
@@ -5681,9 +5681,14 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     }
 }
 
-function uwwtd_agglo_set_conformity(&$node){
+function uwwtd_agglo_set_conformity(&$node, $verbose = false){
+    $verbose_msg = '';
     //We need to fix error due to not provided data : Collective system + IAS + D without treatement = 100
     if(!isset($node->field_aggc1['und']) || !isset($node->field_aggc2['und']) || !isset($node->field_aggpercwithouttreatment['und'])){
+        //debug
+        if($verbose){
+            $verbose_msg.="fix error due to not provided data : Collective system + IAS + D without treatement = 100 \n";
+        }
         if(isset($node->field_aggc1['und'])){
             $aggc1=$node->field_aggc1['und'][0]['value'];
             $f_aggc1=true;
@@ -5736,9 +5741,19 @@ function uwwtd_agglo_set_conformity(&$node){
     $yearReporting = $node->field_anneedata['und'][0]['value'];
     //ALGO4
     list($art3comp, $art3compAdditionnal, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
+    //debug
+    if($verbose){
+        $verbose_msg.="uwwtd_article3_compliance \n";
+        $verbose_msg.=" - art3comp : $art3comp \n";
+        $verbose_msg.=" - art3compAdditionnal : $art3compAdditionnal \n";
+        $verbose_msg.=" - art4comp : $art4comp \n";
+        $verbose_msg.=" - art5comp : $art5comp \n";
+        $verbose_msg.=" - art6comp : $art6comp \n";
+        $verbose_msg.=" - reason : $reason \n";
+    }
+    
     
     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
-    
     $bDone = false; 
     if($art3comp == 'NI'){ //ALGO4 too
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
@@ -5746,6 +5761,9 @@ function uwwtd_agglo_set_conformity(&$node){
         $node->field_aggart5compliance['und'][0]['value'] = 'NI';
         $node->field_aggart6compliance['und'][0]['value'] = 'NI';
         $bDone = true;
+        if($verbose){
+            $verbose_msg.=" -- art3comp == NI (Algo 4) => bDone = TRUE \n";
+        }
 
     }
     //case < 2000p.e  algo4 too
@@ -5756,6 +5774,9 @@ function uwwtd_agglo_set_conformity(&$node){
         $node->field_aggart6compliance['und'][0]['value'] = $art6comp;
         $node->field_compliance_explication['und'][0]['value'] = $reason;
         $bDone = true;  
+        if($verbose){
+            $verbose_msg.=" -- case < 2000p.e (Algo 4) => bDone = TRUE \n";
+        }
     }
     
     if($bDone === false) {
@@ -5763,15 +5784,27 @@ function uwwtd_agglo_set_conformity(&$node){
         if (false === is_null($art3compAdditionnal)) {
             $node->field_aggart3addcompliance['und'][0]['value'] = $art3compAdditionnal;
             uwwtd_trace('field_aggart3addcompliance for agglo nid ' . $node->nid);
-        }        
+            if($verbose){
+                $verbose_msg.=" -- bDone = False && art3compAdditionnal IS NOT NULL ==> field_aggart3addcompliance = $art3compAdditionnal \n";
+            }
+        } 
+        else{
+            if($verbose){
+                $verbose_msg.=" -- bDone = False && art3compAdditionnal IS NULL\n";
+            }
+        }
     } 
 
     if($bDone === false){
         //ALGO5 too    
         if($node->field_aggc1['und'][0]['value'] > 0){  //algo5  
-            $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($infoAllAggUww);  //algo5
+            if($verbose){
+                $verbose_msg.=" --- Algo 5 : field_aggc1 = ".$node->field_aggc1['und'][0]['value']." run uwwtd_article4_5_6_agglomeration_compliance_step_a\n";
+            }
+            $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($infoAllAggUww, $verbose);  //algo5
         } else {             
            $aArtCompliance = array();  
+           $verbose_msg.=" X-- Algo 5 : field_aggc1 = 0 \n";
         }
                  
         if (false === empty($aArtCompliance)) {
@@ -5779,21 +5812,38 @@ function uwwtd_agglo_set_conformity(&$node){
             $node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
             $node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
             $node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
+            
+            if($verbose){
+                $verbose_msg.=" --- Algo 5 : field_aggart4compliance = ".$aArtCompliance['compArt4']."\n";
+                $verbose_msg.=" --- Algo 5 : field_aggart5compliance = ".$aArtCompliance['compArt5']."\n";
+                $verbose_msg.=" --- Algo 5 : field_aggart6compliance = ".$aArtCompliance['compArt6']."\n"; 
+            }
+            
         } else {  
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
             //ALGO6-algo7-algo8-algo9
-
+            if($verbose){
+                $verbose_msg.=" X-- Algo 5 : uwwtd_article4_5_6_agglomeration_compliance_step_a fail ==> run uwwtd_article4_5_6_agglomeration_compliance_step_b\n";
+            }
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
 
             $node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
             $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
             $node->field_aggart6compliance['und'][0]['value'] = $aggArt456Compliance['compArt6'];
+            if($verbose){
+                $verbose_msg.=" ---- uwwtd_article4_5_6_agglomeration_compliance_step_b \n";
+                $verbose_msg.=" ---- field_aggart4compliance = ".$aggArt456Compliance['compArt4']."\n";
+                $verbose_msg.=" ---- field_aggart5compliance = ".$aggArt456Compliance['compArt5']."\n";
+                $verbose_msg.=" ---- field_aggart6compliance = ".$aggArt456Compliance['compArt6']."\n"; 
+            }
         }
     }
     
     //ALGO10    
     $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
-
+    if($verbose){
+        $verbose_msg.=" -- ALGO10 : field_aggcompliance = ".$node->field_aggcompliance['und'][0]['value']." \n";
+    }
     // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
     if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
         if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
@@ -5824,10 +5874,22 @@ function uwwtd_agglo_set_conformity(&$node){
             }
     	}
     }
-
+    if($verbose){
+        $verbose_msg.=" FINAL : \n";
+        $verbose_msg.=" - field_aggart3compliance : ".$node->field_aggart3compliance['und'][0]['value']."\n";
+        $verbose_msg.=" - field_aggart4compliance : ".$node->field_aggart4compliance['und'][0]['value']."\n";
+        $verbose_msg.=" - field_aggart5compliance : ".$node->field_aggart5compliance['und'][0]['value']."\n";
+        $verbose_msg.=" - field_aggart6compliance : ".$node->field_aggart6compliance['und'][0]['value']."\n";
+        
+        
+    }
     unset($infoAllAggUww);    
 
     node_save($node);
+    
+    if($verbose) {
+        drupal_set_message('<pre>'.$verbose_msg.'</pre>');
+    }
 }
 
 
@@ -6922,23 +6984,25 @@ function uwwtd_article3_compliance($node, $yearReporting){
  * @return array        empty array if the cases must be treated later
  *                      array with key compArt3, compArt4, compArt5, compArt6      
  */ 
-function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww) 
+function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww, $verbose=false) 
 {
     uwwtd_trace(__FUNCTION__);
     $aResult = array();
-//     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
     if (count($infoAllAggUww['listUww']) == 0) {
 //      $aResult['compArt3'] = $art3comp;
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
-    }elseif (true === uwwtd_atleastone_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown']),
-                                                     $infoAllAggUww)
-        && true === uwwtd_all_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown'],
-                                                $GLOBALS['uwwtd_value']['compliance']['compliant'],
-                                                $GLOBALS['uwwtd_value']['compliance']['not_relevant'],
-                                                $GLOBALS['uwwtd_value']['compliance']['pending_deadline'],
-                                                ), $infoAllAggUww)) {
+    }
+    elseif (
+        true === uwwtd_atleastone_uwwtp_compliance_in(array($GLOBALS['uwwtd_value']['compliance']['unknown']),$infoAllAggUww)
+        && true === uwwtd_all_uwwtp_compliance_in(array(
+            $GLOBALS['uwwtd_value']['compliance']['unknown'],
+            $GLOBALS['uwwtd_value']['compliance']['compliant'],
+            $GLOBALS['uwwtd_value']['compliance']['not_relevant'],
+            $GLOBALS['uwwtd_value']['compliance']['pending_deadline'],
+        ), $infoAllAggUww)
+    ) {
 //      $aResult['compArt3'] = $art3comp;
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['unknown'];
@@ -7834,7 +7898,18 @@ function uwwtd_get_all_info_agguwww($node)
 
     $aResult['listUww'] = array();
     
-    foreach($node->field_agguwwliste['und'] as $agguwwlist){
+    //nd@oieau.fr : 28/11/2016 : Why we need to test between field_agguwwliste and field_linked_treatment_plants in theory field_agguwwliste must be filled
+    if(isset($node->field_agguwwliste['und'])){
+        $field = 'field_agguwwliste';
+    }
+    elseif(isset($node->field_linked_treatment_plants['und'])){
+        $field = 'field_linked_treatment_plants';
+    }
+    else{
+        drupal_set_message("There is no linked UWWTP define in field_agguwwliste or in field_linked_treatment_plants","warning");
+    }
+    
+    foreach($node->{$field}['und'] as $agguwwlist){
         $uww = node_load($agguwwlist['nid']);
         
         $aResult['listUww'][$uww->nid] = array(
