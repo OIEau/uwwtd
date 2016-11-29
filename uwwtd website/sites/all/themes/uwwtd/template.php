@@ -5,6 +5,10 @@
  * template.php
  */
 
+define('AGGS_WITHOUT_TP', 'aggs_without_tp');
+define('TPS_WITHOUT_AGG', 'tps_without_agg');
+define('DPS_WITHOUT_TP', 'dps_without_tp');
+
 function uwwtd_adjustBrightness($hex, $steps){
     // Steps should be between -255 and 255. Negative = darker, positive = lighter
     $steps = max(-255, min(255, $steps));

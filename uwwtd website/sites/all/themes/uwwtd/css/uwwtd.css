@@ -1079,3 +1079,7 @@ form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .form-control{
 .openlayers_map_fullscreen{
     position: fixed !important;
 }
+
+.view-error-list .clear {
+	margin-bottom: 50px;
+}

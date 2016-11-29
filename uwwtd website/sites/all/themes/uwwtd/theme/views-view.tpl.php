@@ -29,6 +29,48 @@
 ?>
 <div class="<?php print $classes; ?>">
   <?php print render($title_prefix); ?>
+    <?php if (!empty($variables['view']) && isset($variables['view']->name) && $variables['view']->name === 'error_list') : ?>
+        <h1>Agglomerations without treament plant</h1>
+        <?php
+        $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
+        ?>
+        <?php if (!empty($aggsWithoutTp)) : ?>
+            <p>
+                <?php foreach ($aggsWithoutTp as $aggWithoutTp) : ?>
+                    <?php print $aggWithoutTp; ?>,
+                <?php endforeach ?>
+            </p>
+        <?php else : ?>
+            <p>All agglomerations are linked to a treament plant.</p>
+        <?php endif; ?>
+        <h1>Treament plants without agglomeration</h1>
+        <?php
+        $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
+        ?>
+        <?php if (!empty($tpsWithoutAgg)) : ?>
+            <p>
+                <?php foreach ($tpsWithoutAgg as $tpWithoutAgg) : ?>
+                    <?php print $tpWithoutAgg; ?>,
+                <?php endforeach ?>
+            </p>
+        <?php else : ?>
+            <p>All treament plants are linked to an agglomerations.</p>
+        <?php endif; ?>
+        <h1>Discharging points without treament plant</h1>
+        <?php
+        $dpsWithoutTp = variable_get(DPS_WITHOUT_TP, array());
+        ?>
+        <?php if (!empty($dpsWithoutTp)) : ?>
+            <p>
+                <?php foreach ($dpsWithoutTp as $dpWithoutTp) : ?>
+                    <?php print $dpWithoutTp; ?>,
+                <?php endforeach ?>
+            </p>
+        <?php else : ?>
+            <p>All discharging points are linked to a treament plant.</p>
+        <?php endif; ?>
+        <p class="clear"></p>
+    <?php endif; ?>
   <?php if ($title): ?>
     <?php print $title; ?>
   <?php endif; ?>

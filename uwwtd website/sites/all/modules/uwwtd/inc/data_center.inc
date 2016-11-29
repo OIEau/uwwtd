@@ -677,6 +677,20 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports Agglomerations');
         uwwtd_trace(var_export($imports, true));
+        
+        // Save aggCodes :
+        if (!empty($imports)) {
+            $aggCodes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['aggCode'])) {
+                    $aggCodes[] = $import['aggCode'];
+                }
+            }
+            variable_set(AGGS_WITHOUT_TP, $aggCodes);
+            echo '<pre>';
+            var_dump(variable_get(AGGS_WITHOUT_TP, array()));
+            exit;
+        }
         $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
     
