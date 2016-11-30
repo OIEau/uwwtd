@@ -553,9 +553,19 @@ function uwwtd_get_data_sensitive_areas($option){
         $rcatype = array_flip($GLOBALS['uwwtd_value']['rcatype']);
         while($row = $result->fetchAssoc()) {
             
-            $row['tot_design_capacity_format'] =  ($row['tot_design_capacity']?uwwtd_format_number($row['tot_design_capacity']):'-');
-            $row['tot_entering_load_format'] =  ($row['tot_entering_load']?uwwtd_format_number($row['tot_entering_load']):'-');
-            $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
+            $row['tot_design_capacity_format'] =  ($row['tot_design_capacity'] ? uwwtd_format_number($row['tot_design_capacity']) : '-');
+            $row['tot_entering_load_format'] =  ($row['tot_entering_load'] ? uwwtd_format_number($row['tot_entering_load']) : '-');
+
+            $zonetype_formatA = '';
+            if (!empty($row['zonetype']) && !empty($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])) {
+                $zonetype_formatA = $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']];
+            }
+            $zonetype_formatB = '';
+            if (!empty($GLOBALS['uwwtd_value']['rcatype_labels']['default'])) {
+                $zonetype_formatB = $GLOBALS['uwwtd_value']['rcatype_labels']['default'];
+            }
+            $row['zonetype_format'] =  (!empty($row['zonetype']) && isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']]) ? $zonetype_formatA : $zonetype_formatB);
+
             $row['rca52_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca52']];
             $row['rca54_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca54']];
             $row['rca58_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca58']];

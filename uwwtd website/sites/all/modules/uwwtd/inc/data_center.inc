@@ -380,7 +380,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
                 
         return $node;
     } else {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No MsLevel found in the dataset ' . $annee, $timestamp, 0);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No MsLevel found in the dataset ' . $annee, $timestamp, 0);
     }   
 }
 
@@ -596,7 +596,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'import'));
-    
+
     /*DG 15/12/2015 Add type RCA*/
     /*Fix nd@oieau.fr 09/06/2016 : reprocess the ReceivingAreas import ==> the batch operation not working before*/
     //ReceivingAreas
@@ -651,7 +651,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-        
+
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -665,7 +665,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
+
     //Agglomerations
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Agglomerations'])){
@@ -677,23 +677,20 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports Agglomerations');
         uwwtd_trace(var_export($imports, true));
-        
-        // Save aggCodes :
+
+        // Save codes :
         if (!empty($imports)) {
-            $aggCodes = array();
+            $codes = array();
             foreach ($imports as $import) {
                 if (!empty($import['aggCode'])) {
-                    $aggCodes[] = $import['aggCode'];
+                    $codes[] = $import['aggCode'];
                 }
             }
-            variable_set(AGGS_WITHOUT_TP, $aggCodes);
-            echo '<pre>';
-            var_dump(variable_get(AGGS_WITHOUT_TP, array()));
-            exit;
+            variable_set(AGGS_WITHOUT_TP, $codes);
         }
         $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
+
     //UWWTPs
     $imports  = array();
     if(isset($datas['UWWTD_Report']['UWWTPs'])){
@@ -705,9 +702,21 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports UWWTPs');
         uwwtd_trace(var_export($imports, true));
+
+        // Save codes :
+        if (!empty($imports)) {
+            $codes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['uwwCode'])) {
+                    $codes[] = $import['uwwCode'];
+                }
+            }
+            variable_set(TPS_WITHOUT_AGG, $codes);
+            variable_set(TPS_WITHOUT_DP, $codes);
+        }
         $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
+
     //DischargePoints
     $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
@@ -719,9 +728,20 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports DischargePoints');
         uwwtd_trace(var_export($imports, true));
+
+        // Save codes :
+        if (!empty($imports)) {
+            $codes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['dcpCode'])) {
+                    $codes[] = $import['dcpCode'];
+                }
+            }
+            variable_set(DPS_WITHOUT_TP, $codes);
+        }
         $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
+
     //link_dcp_rca
     $imports  = array();
     if(isset($datas['UWWTD_Report']['DischargePoints'])){
@@ -736,7 +756,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         */
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
-    
+
     //UwwtpAgglos
     $imports  = array();
     if(isset($datas['UWWTD_Report']['UwwtpAgglos'])){
@@ -747,10 +767,10 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
         }
         uwwtd_trace('$imports UwwtpAgglos');
-        uwwtd_trace(var_export($imports, true));        
+        uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
-    
+
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -764,7 +784,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
-    
+
     /*DG 15/12/2015 Contact*/
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Contacts'])){
@@ -778,7 +798,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
+
     /*DG 15/12/2015 Industry*/
     $imports  = array();
     if(isset($datas['UWWTD_Report']['Industries'])){
@@ -792,16 +812,28 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
-    
-   //bc_position
-   $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
-   //mega_links
-   $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
-   //rca_extra
-   $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
-   $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
-   $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
-    
+
+    //bc_position
+//    $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
+    //mega_links
+//    $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
+    //rca_extra
+//    $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
+//    $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
+//    $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
+
+    // Create errors for agglomerations without treatment plant :
+    $batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
+
+    // Create errors for treatment plants without agglomeration :
+    $batch['operations'][]= array('uwwtd_set_errors_tps_without_agg', array($annee));
+
+    // Create errors for treatment plants without discharge point :
+    $batch['operations'][]= array('uwwtd_set_errors_tps_without_dp', array($annee));
+
+    // Create errors for discharging point without treatment plant :
+    $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
+
     batch_set($batch);
     batch_process('data/import');
 }
@@ -843,7 +875,7 @@ function uwwtd_import_rca_batch_process($newFile, $annee, $datas, $repCode, $tim
             $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
         }
     }else{
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving areas found in the dataset ' . $annee, $timestamp, $i);
     }
 }
 
@@ -935,7 +967,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         if(isset($data['rcaEnvDom'])){
             $node->field_rcaenvdom['und'][0]['value'] = uwwtd_check_text($data['rcaEnvDom']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa environmental domain found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa environmental domain found.', $timestamp, $i, $node);
         
         //text
         // BB 22/08 added elseif for 9th report
@@ -1974,24 +2006,24 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
     if(!isset($data['aggLatitude']) || empty($data['aggLatitude'])){
         $e = 1;
         $emes = t('The agglomeration does not have latitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
     if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
     }
     if($checkLatitude === false){
         $e = 1;
         $emes = t('The latitude for this agglomeration is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
 
     if(!isset($data['aggLongitude']) || empty($data['aggLongitude'])){
         // if check_coord == false e=1
         $e = 1;
         $emes = t('The agglomeration does not have longitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
@@ -3947,7 +3979,9 @@ function uwwtd_update_contact_node($data, $newFile, $repCode, $annee, $timestamp
     }
 
     // Check if no errors were found
-    uwwtd_trace('import contact : ' . $annee.'_contact_'.uwwtd_check_text($data['conName']));
+    if (!empty($data['conName'])) {
+        uwwtd_trace('import contact : ' . $annee.'_contact_'.uwwtd_check_text($data['conName']));
+    }
     if($e == 0){
 
         // Variables
@@ -4282,8 +4316,19 @@ function uwwtd_link_dcp_rca_uww_batch_process($newFile, $annee, $timestamp, &$co
                 if($uwwExists != false){
                     $node->field_dcpuwwliste['und'][]['nid'] = $uwwExists;
                     $uww = node_load($uwwExists);
+
+                    // Remove this discharge point from the list of discharge point without treatment plants :
+                    $dpsWithoutTp = variable_get(DPS_WITHOUT_TP, array());
+                    _remove_array_element_by_value($node->field_inspireidlocalid['und'][0]['value'], $dpsWithoutTp);
+                    variable_set(DPS_WITHOUT_TP, $dpsWithoutTp);
+
                     $uww->field_uwwdcpliste['und'][]['nid'] = $node->nid;
                     node_save($uww);
+
+                    // Remove this treatment plant from the list of treatment plants without discharge point :
+                    $tpsWithoutDp = variable_get(TPS_WITHOUT_DP, array());
+                    _remove_array_element_by_value($node->field_utilityfacilityreference['und'][0]['value'], $tpsWithoutDp);
+                    variable_set(TPS_WITHOUT_DP, $tpsWithoutDp);
                 }
                 else{
                     $emes = t('Cannot connect the discharge point').' \''.$node->field_inspireidlocalid['und'][0]['value'].'\' '.t('with drupal id').' \''.$node->nid.'\' '.t('to the waste water treatment plant').' \''.$node->field_utilityfacilityreference['und'][0]['value'].'\' '.t('because the waste water treatment plant does not exist.');
@@ -4350,7 +4395,7 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
             $aggNid = $aggExists;
             $tpNid = $uwwExists;
 
-            // If there are agglomeration and treament plant nids :
+            // If there are agglomeration and treatment plants nids :
             if (!empty($aggNid) && !empty($tpNid)) {
                 // Add agglomeration nid in treament plant :
                 $tpFull = node_load($tpNid);
@@ -4460,6 +4505,16 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 }
 
                 $context['results'][] = $aggTpLinkFull->nid . ' : ' . check_plain($aggTpLinkFull->title);
+
+                // Remove this agglomeration from the list of agglomeration without treatment plants :
+                $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
+                _remove_array_element_by_value($aggId, $aggsWithoutTp);
+                variable_set(AGGS_WITHOUT_TP, $aggsWithoutTp);
+
+                // Remove this treatment plant from the list of treatment plants without agglomeration :
+                $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
+                _remove_array_element_by_value($uwwId, $tpsWithoutAgg);
+                variable_set(TPS_WITHOUT_AGG, $tpsWithoutAgg);
             } else {
                 uwwtd_trace('agglo_uww error, agglo or uwwtp doesn\' exits $siteUwwId = ' . $siteUwwId . ' ("'.$uwwExists.'"), $siteAggId = ' . $siteAggId . '("'.$aggExists.'")');
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomeration ' . $siteAggId . ' and waste water treatment plant ' . $siteUwwId . '', $timestamp, $k);
@@ -4479,6 +4534,16 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and waste water treatment plant because no found agglomerations in the dataset', $timestamp);
     }
 }
+
+/**
+ * Remove an array element by value.
+ */
+function _remove_array_element_by_value($value, &$array) {
+    if (($key = array_search($value, $array)) !== FALSE) {
+        unset($array[$key]);
+    }
+}
+
 
 function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp, &$context){
     if(!empty($datas)){
@@ -5414,7 +5479,7 @@ function uwwtd_conformity_setup_batch($annee, $timestamp){
 function uwwtd_delete_error($annee, $type, &$context)
 {
 //     dsm(__FUNCTION__ . $annee . $type);
-    if (!isset($context['sandbox']['progress'])) {      
+    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['max'] = 1;
         $context['sandbox']['progress'] = 0;
     }
@@ -5422,12 +5487,12 @@ function uwwtd_delete_error($annee, $type, &$context)
 //     'import data input' => 0,
 //     'import data linking' => 1,
 //     'import data geometry' => 2,
-//     'conformity data' => 3,         
-//     'import data format' => 4,    
-//     'shape format' => 5, 
+//     'conformity data' => 3,
+//     'import data format' => 4,
+//     'shape format' => 5,
 //     'article17 format' => 6,   //ok
 //     'article17 input' => 7,   //ok
-// );   
+// );
     switch ($type) {
         case 'import':
                 db_delete('uwwtd_import_errors')
@@ -5436,7 +5501,7 @@ function uwwtd_delete_error($annee, $type, &$context)
                     $GLOBALS['uwwtd_errors_type']['category']['import data input'],
                     $GLOBALS['uwwtd_errors_type']['category']['import data linking'],
                     $GLOBALS['uwwtd_errors_type']['category']['import data geometry'],
-                    $GLOBALS['uwwtd_errors_type']['category']['import data format'],                
+                    $GLOBALS['uwwtd_errors_type']['category']['import data format'],
                     ), 'in'
                 )
                 ->execute();
@@ -5445,37 +5510,37 @@ function uwwtd_delete_error($annee, $type, &$context)
                 db_delete('uwwtd_import_errors')
                 ->condition('year', $annee, '=')
                 ->condition('category', array(
-                    $GLOBALS['uwwtd_errors_type']['category']['conformity data'],             
+                    $GLOBALS['uwwtd_errors_type']['category']['conformity data'],
                     ), 'in'
                 )
-                ->execute();        
+                ->execute();
             break;
         case 'shape':
                 db_delete('uwwtd_import_errors')
                 ->condition('year', $annee, '=')
                 ->condition('category', array(
-                    $GLOBALS['uwwtd_errors_type']['category']['shape format'],             
+                    $GLOBALS['uwwtd_errors_type']['category']['shape format'],
                     ), 'in'
                 )
-                ->execute();           
-            break; 
+                ->execute();
+            break;
         case 'article17':
-                $del = db_delete('uwwtd_import_errors')   
+                $del = db_delete('uwwtd_import_errors')
                 ->condition('year', $annee, '=')
                 ->condition('category', array(
-                    $GLOBALS['uwwtd_errors_type']['category']['article17 format'],             
+                    $GLOBALS['uwwtd_errors_type']['category']['article17 format'],
                     $GLOBALS['uwwtd_errors_type']['category']['article17 input'],
                     ), 'in'
                 ) ;
-//                 dsm($del->__toString()); 
+//                 dsm($del->__toString());
                 $result = $del->execute();
-//                 dsm($result);           
-            break;                                     
+//                 dsm($result);
+            break;
     }
-    
+
     $context['sandbox']['progress']++;
     $context['message'] = '(' .$annee . ') ' . t('previous error deleted.');
-    $context['results']['delete_error'] = 'previous error deleted'; 
+    $context['results']['delete_error'] = 'previous error deleted';
 
     $context['finished'] = 1;
 }
@@ -6044,7 +6109,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         //add field necessary for next function call
         $listStationArticleAndUwwtpCompliance[$niduwwtp]['agglo_uww_perc_ent_uw'] = $uwwtp['agglo_uww_perc_ent_uw'];
         $listStationArticleAndUwwtpCompliance[$niduwwtp]['treatmenttype'] = $uwwtp['treatmenttype'];
-    }                                            
+    }
 //     uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
     //ALGO7
     $aResult['compArt4'] = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
@@ -6103,7 +6168,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         uwwtd_add_error($agg->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $GLOBALS['uwwtd']['message']['total_load_entering_uwwtd_null'], time(), null, $agg);
         return $GLOBALS['uwwtd_value']['compliance']['no_information'];
     }
-            
+
     if (false === ($totalLoadenteringPE_P_NI < 2000 && $totalLoadenteringPercent_P_NI <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -6524,6 +6589,107 @@ function uwwtd_import_data_var($annee) {
     variable_set('import_data_'.$annee, time());
 }
 
+
+/**
+ *  Create errors for agglomerations without treatment plants.
+ */
+function uwwtd_set_errors_aggs_without_tp($annee) {
+    $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
+    if (!empty($aggsWithoutTp)) {
+        // Get nids of agglomerations :
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+        $query->leftJoin('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'agglomeration', '=');
+        $query->condition('a.field_inspireidlocalid_value', $aggsWithoutTp, 'IN');
+        $query->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $nodes = $query->execute();
+
+        // Create errors for each agglo :
+        foreach ($nodes as $node) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'],
+                'Agglomeration without treatment plants', time(), 0, $node);
+        }
+        uwwtd_flush_errors();
+    }
+}
+
+/**
+ * Create errors for treatment plants without agglomeration.
+ */
+function uwwtd_set_errors_tps_without_agg($annee) {
+    $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
+    if (!empty($tpsWithoutAgg)) {
+        // Get nids of treatment plants :
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+        $query->leftJoin('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'uwwtp', '=');
+        $query->condition('a.field_inspireidlocalid_value', $tpsWithoutAgg, 'IN');
+        $query->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $nodes = $query->execute();
+
+        // Create errors for each treatment plants :
+        foreach ($nodes as $node) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'],
+                'Treatment plants without agglomeration', time(), 0, $node);
+        }
+        uwwtd_flush_errors();
+    }
+}
+
+/**
+ * Create errors for treatment plants without discharge point.
+ */
+function uwwtd_set_errors_tps_without_dp($annee) {
+    $tpsWithoutDp = variable_get(TPS_WITHOUT_DP, array());
+    if (!empty($tpsWithoutDp)) {
+        // Get nids of treatment plants :
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+        $query->leftJoin('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'uwwtp', '=');
+        $query->condition('a.field_inspireidlocalid_value', $tpsWithoutDp, 'IN');
+        $query->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $nodes = $query->execute();
+
+        // Create errors for each treatment plants :
+        foreach ($nodes as $node) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'],
+                'Treatment plants without discharge point', time(), 0, $node);
+        }
+        uwwtd_flush_errors();
+    }
+}
+
+
+/**
+ * Create errors for discharge points without treatment plants.
+ */
+function uwwtd_set_errors_dps_without_tp($annee) {
+    $dpsWithoutTp = variable_get(DPS_WITHOUT_TP, array());
+    if (!empty($dpsWithoutTp)) {
+        // Get nids of treatment plants :
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
+        $query->leftJoin('field_data_field_siteid', 'r', 'r.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->condition('n.type', 'discharge_point', '=');
+        $query->condition('a.field_inspireidlocalid_value', $dpsWithoutTp, 'IN');
+        $query->condition('r.field_siteid_value', db_like($annee).'%', 'LIKE');
+        $nodes = $query->execute();
+
+        // Create errors for each agglo :
+        foreach ($nodes as $node) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'],
+                'Discharge points without treatment plants', time(), 0, $node);
+        }
+        uwwtd_flush_errors();
+    }
+}
 
 
 ################################ FUNCTIONS ################################

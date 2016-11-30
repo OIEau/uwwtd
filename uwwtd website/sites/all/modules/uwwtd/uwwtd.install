@@ -4582,9 +4582,26 @@ function uwwtd_update_7153(&$context = null) {
     }
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+//    throw new DrupalUpdateException(__FUNCTION__);
 }
 
+
+function uwwtd_update_7154(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+
+    db_query('ALTER TABLE drupal_uwwtd_import_errors ADD step int');
+
+    drupal_flush_all_caches();
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+}
 
    
 /**

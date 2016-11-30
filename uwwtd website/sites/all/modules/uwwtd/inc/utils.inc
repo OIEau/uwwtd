@@ -786,7 +786,7 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
 
 
 
-function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null){
+function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null, $step = ){
     if($node){
         $key = $node->nid;
     }
@@ -1282,7 +1282,25 @@ function uuwtd_get_distance_compliance($agg){
         // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
             $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
             // dsm($art5_treatment_compliance);
-            $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $uwwtp->field_uwwntotperf['und'][0]['value'], $uwwtp->field_uwwptotperf['und'][0]['value'], $uwwtp->field_uwwotherperf['und'][0]['value'], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'], $uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
+        $art5_perf_compliance = '';
+        if (!empty($treatment_required) &&
+            !empty($uwwtp->field_uwwntotperf['und'][0]['value']) &&
+            !empty($uwwtp->field_uwwptotperf['und'][0]['value']) &&
+            !empty($uwwtp->field_uwwotherperf['und'][0]['value']) &&
+            !empty($uwwtp->field_uwww_required_rcab['und'][0]['value']) &&
+            !empty($uwwtp->field_uwww_required_rcac['und'][0]['value']) &&
+            !empty($uwwtp->field_uwww_required_rcaap['und'][0]['value']) &&
+            !empty($uwwtp->field_uwww_required_rcaan['und'][0]['value'])) {
+            $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
+                $treatment_required,
+                $uwwtp->field_uwwntotperf['und'][0]['value'],
+                $uwwtp->field_uwwptotperf['und'][0]['value'],
+                $uwwtp->field_uwwotherperf['und'][0]['value'],
+                $uwwtp->field_uwww_required_rcab['und'][0]['value'],
+                $uwwtp->field_uwww_required_rcac['und'][0]['value'],
+                $uwwtp->field_uwww_required_rcaap['und'][0]['value'],
+                $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
+        }
             //dsm($uwwtp->title);
             //dsm($art5_treatment_compliance);
             //dsm($art5_perf_compliance);

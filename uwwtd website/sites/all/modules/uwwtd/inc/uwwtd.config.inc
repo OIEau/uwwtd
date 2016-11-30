@@ -41,9 +41,9 @@ $GLOBALS['uwwtd_errors_type']['category'] = array(
     'import data input' => 0,
     'import data linking' => 1,
     'import data geometry' => 2,
-    'conformity data' => 3,         
-    'import data format' => 4,    
-    'shape format' => 5, 
+    'conformity data' => 3,
+    'import data format' => 4,
+    'shape format' => 5,
     'article17 format' => 6,   //ok
     'article17 input' => 7,   //ok
 );

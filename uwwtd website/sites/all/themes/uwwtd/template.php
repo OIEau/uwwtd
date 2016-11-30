@@ -7,6 +7,7 @@
 
 define('AGGS_WITHOUT_TP', 'aggs_without_tp');
 define('TPS_WITHOUT_AGG', 'tps_without_agg');
+define('TPS_WITHOUT_DP', 'tps_without_dp');
 define('DPS_WITHOUT_TP', 'dps_without_tp');
 
 function uwwtd_adjustBrightness($hex, $steps){
@@ -2269,7 +2270,7 @@ function uwwtd_tablesort_header($cell, $header, $ts){
     elseif(isset($cell['field'])) $order = $cell['data'];
     else $order = $cell['data'];
     $title = t('sort by @s', array('@s' => $cell['data']));
-    if ($order == $ts['name'] || $order == $_REQUEST['order']) {
+    if ((!empty($ts['name']) && $order == $ts['name']) || (!empty($_REQUEST['order']) && $order == $_REQUEST['order'])) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
       $cell['class'][] = 'active';
       $image = theme('tablesort_indicator', array('style' => $ts['sort']));
