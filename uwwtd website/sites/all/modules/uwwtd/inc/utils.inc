@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Return years which defines 8th report.
+ */
+function _get_years_8th_report() {
+    return array(2011, 2012, 2013);
+}
+
+/**
+ * Return years which defines 9th report.
+ */
+function _get_years_9th_report() {
+    return array(2014, 2015);
+}
+
+
 if (!function_exists('array_column')) {
     /**
      * Returns the values from a single column of the input array, identified by
@@ -785,95 +800,98 @@ function uwwtd_debug_create_tag_from_array($array, $parentkey)
 }
 
 
-
-function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null, $step = ){
-    if($node){
-        $key = $node->nid;
-    }
-    else{
-        $key = 'all';
-    }
-	$GLOBALS['uwwtd_errors'][$key][]=array(
-        'year'=>$year,
-        'type'=>$type,
-        'category'=>$category,
-        'error'=>$error,
-        'timestamp'=>$timestamp,
-        'index'=>$index,
+/**
+ * Return list of errors messages only for 8th report.
+ */
+function _get_8th_report_errors() {
+    return array(
+        'No receiving area status found',
+        'No receiving area lsa article 61 date found',
+        'No receiving area Related Sensitive area found',
+        'No receiving area designation date found',
+        'No receiving area nitrogen information found',
+        'No receiving area phosphorus information found',
+        'No receiving area B information found',
+        'No receiving area C information found',
+        'No receiving area relevant directive information found',
+        'No receiving area morphology information found',
+        'No receiving area hydrology information found',
+        'No receiving area hydraulic information found',
+        'No receiving area absence risk information found',
+        'No receiving area plants information found',
+        'No receiving area plants capacity information found',
+        'No receiving area incoming N-tot measured information found',
+        'No receiving area incoming N-tot calculated information found',
+        'No receiving area incoming N-tot estimated information found',
+        'No receiving area incoming P-tot measured information found',
+        'No receiving area incoming P-tot calculated information found',
+        'No receiving area incoming P-tot estimated information found',
+        'No receiving area discharged N-tot measured information found',
+        'No receiving area discharged N-tot calculated information found',
+        'No receiving area discharged N-tot estimated information found',
+        'No receiving area discharged P-tot measured information found',
+        'No receiving area discharged P-tot calculated information found',
+        'No receiving area discharged P-tot estimated information found',
+        'No receiving area root of corresponding GIS-data file found',
+        'No receiving area other directive information found',
+        'No receiving area other directive information date found',
+        'No receiving area root of correspo GIS-data file found',
+        'No receiving area article 54 applied information found',
+        'No receiving area name parameter found',
+        'No receiving area starting date of application found',
+        'No receiving area lsa hyperlink found',
+        'No receiving area lsa begin life date found',
+        'No receiving area lsa end life date found',
+        'No big cities found in the dataset',
+        'No agglomeration big id information found',
     );
-    
-    /*
-    $error = trim($error);
+}
 
-	// get label for type
-	$field = field_info_field('field_uwwtd_err_type');
-	$typeText = $field['settings']['allowed_values'][$type];
 
-	// get label for category
-	$field = field_info_field('field_uwwtd_err_category');
-	$categoryText = $field['settings']['allowed_values'][$category];
+/**
+ * Return xml field name which exists only in 9th report.
+ */
+function _get_xml_fields_names_only_in_9th_report() {
+    return array(
+        'ReceivingAreaSAParameter',
+        'ReceivingAreaSAMain',
+        'ReceivingAreaSA54',
+        'ReceivingAreaLSA',
+        'ReceivingAreaSASA',
+        'ReceivingAreasSALSAPredecessor',
+    );
+}
 
-	// get errors file
-	$file = drupal_realpath('public://data_errors/uwwtd_errors.txt');
-	//$content = file_get_contents($file);
 
-	// get date
-	$dateError = date('m/d/Y h:i:s a');
+function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null, $xmlFieldName = '') {
+    $isShowed = TRUE;
 
-	//$content = $content.$categoryText.' '.$typeText.' '.$dateError.': '.$error;
-    $log_msg =$categoryText.' '.$typeText.' '.$dateError.': '.$error;
-	// clean sentences
-	if(substr($error, -1) != '.') $log_msg .= '. ';
-	else $log_msg .=  ' ';
-	
-	if($node !== null && !empty($node) && $node != ''){
-		$log_msg .= $type.' concerns data with a site id of '.$node->field_siteid['und'][0]['value'].' and a drupal id of '.$node->nid.'. ';
-	}
-	if($index !== null && !empty($index) && $index != ''){
-		$log_msg .= 'The corresponding row in the dataset used is at index '.$index.'.';
-	}
-	$log_msg .= "\r\n";
-
-	$fh = fopen($file, "a");
-	fwrite($fh, $log_msg);
-	fclose($fh);
-
-	// create error node
-	$errorNode = new StdClass();
-	$errorNode->type = 'uwwtd_error';
-    $errorNode->uid = 1;
-    $errorNode->translate = 0;
-    $errorNode->tnid = 0;
-    $errorNode->sticky = 0;
-    $errorNode->promote = 0;
-    $errorNode->comment = 0;
-	//node_save($errorNode); ===> pas de double insertion en base
-
-	$dateFormat = format_date($timestamp, 'custom', 'Y-m-d H:i:s', 'UTC');
-	$dateErrorFormat = format_date(strtotime('now'), 'custom', 'Y-m-d H:i:s', 'UTC');
-	$errorNode->title = $category.' '.$type.' '.$dateError;
-	$errorNode->field_uwwtd_err_identifier['und'][0]['value'] = $timestamp;
-	$errorNode->field_uwwtd_err_type['und'][0]['value'] = $type;
-	$errorNode->field_uwwtd_err_category['und'][0]['value'] = $category;
-
-	$errorNode->field_uwwtd_err_timestamp['und'][0]['value'] = $dateFormat;
-	$errorNode->field_uwwtd_err_timestamp['und'][0]['timezone'] = 'Europe/Paris';
-
-	$errorNode->field_uwwtd_err_time['und'][0]['value'] = $dateErrorFormat;
-	$errorNode->field_uwwtd_err_time['und'][0]['timezone'] = 'Europe/Paris';
-
-	$errorNode->field_uwwtd_err_message['und'][0]['value'] = $error;
-	if($node != NULL){
-		$errorNode->field_uwwtd_err_concern['und'][0]['nid'] = $node->nid;
-	}
-	if($index != NULL) $errorNode->field_uwwtd_err_index['und'][0]['value'] = $index;
-
-	node_save($errorNode);
-    if($node != NULL){
-        $node->field_uwwtd_error_link['und'][] = array('nid'=>$errorNode->nid);
-		node_save($node);
+    // If this is a 8th report :
+    if (in_array($year, _get_years_8th_report())) {
+        // If this field is about rca links :
+        if (!empty($xmlFieldName) && in_array($xmlFieldName, _get_xml_fields_names_only_in_9th_report())) {
+            $isShowed = FALSE;
+        }
+    // If this is a 9th report and the message is about:
+    } elseif (in_array($year, _get_years_9th_report()) && in_array($error, _get_8th_report_errors())) {
+        $isShowed = FALSE;
     }
-    */
+
+    if ($isShowed) {
+        if ($node) {
+            $key = $node->nid;
+        } else {
+            $key = 'all';
+        }
+        $GLOBALS['uwwtd_errors'][$key][]=array(
+            'year'=>$year,
+            'type'=>$type,
+            'category'=>$category,
+            'error'=>$error,
+            'timestamp'=>$timestamp,
+            'index'=>$index,
+        );
+    }
 }
 
 function uwwtd_flush_errors(){

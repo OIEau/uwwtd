@@ -642,7 +642,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                         //ajout d'un tableau
                         $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
                     }
-
                 }
             }
         }
@@ -998,14 +997,14 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                      $node->field_specialisedzonetype['und'][0]['value'] = uwwtd_check_text($data['rcaSpZTyp']);
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area specialised zone type found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area specialised zone type found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcaZtype for RCA SA MAIN, RCA LSA*/
         //text
         if(isset($data['rcaZtype'])){
             $node->field_zonetype['und'][0]['value'] = uwwtd_check_text($data['rcaZtype']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area zone type found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area zone type found.', $timestamp, $i, $node);
         
         
         /* DG 15/12/2015 add rca61DateDesignation for RCA LSA*/

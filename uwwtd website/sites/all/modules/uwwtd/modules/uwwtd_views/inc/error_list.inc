@@ -63,6 +63,15 @@ $handler->display->display_options['fields']['title']['id'] = 'title';
 $handler->display->display_options['fields']['title']['table'] = 'node';
 $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['title']['relationship'] = 'entity_id';
+/* Field: Content: Title */
+$handler->display->display_options['fields']['code']['id'] = 'field_inspireidlocalid';
+$handler->display->display_options['fields']['code']['table'] = 'field_data_field_inspireidlocalid';
+$handler->display->display_options['fields']['code']['field'] = 'field_inspireidlocalid';
+$handler->display->display_options['fields']['code']['relationship'] = 'entity_id';
+/* Field: Content: Bundle */
+$handler->display->display_options['fields']['bundle']['id'] = 'bundle';
+$handler->display->display_options['fields']['bundle']['table'] = 'uwwtd_import_errors';
+$handler->display->display_options['fields']['bundle']['field'] = 'bundle';
 /* Field: Bulk operations: uwwtd_import_errors */
 $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
 $handler->display->display_options['fields']['views_bulk_operations']['table'] = 'uwwtd_import_errors';
