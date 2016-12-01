@@ -1038,9 +1038,10 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rcadateart5854['und'][0]['value'] = $check;
             }            
-        }   
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 58 date found.', $timestamp, $i, $node);
-        
+        } elseif (!empty($data['rcaSpZTyp']) && ($data['rcaSpZTyp'] == 'A5854' || $data['rcaSpZTyp'] == 'A58523' || $data['rcaSpZTyp'] == 'A5854523')) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 58 date found.', $timestamp, $i, $node);
+        }
+
         //bool
         if(isset($data['rcaParameterN'])){
             $check = uwwtd_check_bool($data['rcaParameterN']);
@@ -1050,7 +1051,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_rca_parameter_n['und'][0]['value'] = $check;
             }
         }                                
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area nitrogen parameter found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area nitrogen parameter found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['rcaParameterP'])){
@@ -1061,7 +1062,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_rca_parameter_p['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area phosphorus parameter found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area phosphorus parameter found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcaParameterM for RCA main*/
         //bool
@@ -1073,7 +1074,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_rca_parameter_m['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area more stringent parameter found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area more stringent parameter found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['rcaParameterOther'])){
@@ -1084,7 +1085,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_rca_parameter_other['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other parameter found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other parameter found.', $timestamp, $i, $node);
 
         /* DG 15/12/2015 add rcaArt58DateDesign for RCA LSA*/
          //date
@@ -1097,8 +1098,9 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rcaart58datedesign['und'][0]['value'] = $check;
             }             
+        } elseif (!empty($data['rcaSpZTyp']) && ($data['rcaSpZTyp'] == 'A5854' || $data['rcaSpZTyp'] == 'A58523' || $data['rcaSpZTyp'] == 'A5854523')) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area designation date art 58 found.', $timestamp, $i, $node);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area designation date art 58 found.', $timestamp, $i, $node);
 
         //date
         if(isset($data['rcaDateDesignation'])){
@@ -1233,8 +1235,9 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_rcadateart54['und'][0]['value'] = $check;
             }              
-        }   
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 date found.', $timestamp, $i, $node);
+        } elseif (!empty($data['rcaSpZTyp']) && ($data['rcaSpZTyp'] == 'A54' || $data['rcaSpZTyp'] == 'A5854' || $data['rcaSpZTyp'] == 'A5854523')) {
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 date found.', $timestamp, $i, $node);
+        }
         
         /*DG 15/12/2015 Add rcaPlants54 for RCA SA 54*/
         //numeric
@@ -1696,7 +1699,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area method found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area method found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcaParameter for RCA SASA*/
         //text
@@ -1708,7 +1711,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         if(isset($data['rcaRelatedSARemark'])){
             $node->field_rcarelatedsaremark['und'][0]['value'] = uwwtd_check_text($data['rcaRelatedSARemark']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA remarks area found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA remarks area found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcaCodePredecessor for RCA SALSAPredecessor*/
         //text
@@ -1720,13 +1723,13 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //text
         if(isset($data['rcaEvolutionType'])){
             $node->field_rcaevolutiontype['und'][0]['value'] = uwwtd_check_text($data['rcaEvolutionType']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA reason area found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA reason area found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcasalsaRemark for RCA SALSAPredecessor*/
         //text
         if(isset($data['rcasalsaRemark'])){
             $node->field_rcasalsaremark['und'][0]['value'] = uwwtd_check_text($data['rcasalsaRemark']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA remarks area found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA remarks area found.', $timestamp, $i, $node);
         
         // dsm($node);
 
@@ -1981,7 +1984,7 @@ function uwwtd_import_agglo_batch_process($newFile, $annee, $datas, $repCode, $t
             $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
         }
     }else{
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Agglomerations found in the dataset ' . $annee, $timestamp);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Agglomerations found in the dataset ' . $annee, $timestamp);
     }
 }
 
@@ -2154,12 +2157,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
 //             //TODO delete!!
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration status information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration status information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggNUTS'])){
             $node->field_regionnuts['und'][0]['value'] = uwwtd_check_text($data['aggNUTS']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration nut code information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration nut code information found.', $timestamp, $i, $node);
         
         //decimal
         $node->field_agglatitude['und'][0]['value'] = $checkLatitude;
@@ -2179,7 +2182,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_agggenerated['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration generated load information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration generated load information found.', $timestamp, $i, $node);
         
         //text
         //add check for benoit 2015/11/17  
@@ -2204,17 +2207,17 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //memo
         if(isset($data['aggCalculation'])){
             $node->field_aggcalculation['und'][0]['value'] = uwwtd_check_text($data['aggCalculation']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration calculation information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration calculation information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggChanges'])){
             $node->field_aggchanges['und'][0]['value'] = uwwtd_check_text($data['aggChanges']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration changes information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration changes information found.', $timestamp, $i, $node);
 
         //memo
         if(isset($data['aggChangesComment'])){
             $node->field_aggchangescomment['und'][0]['value'] = uwwtd_check_text($data['aggChangesComment']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration changes comment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration changes comment information found.', $timestamp, $i, $node);
 
         //date
         if(isset($data['aggPeriodOver'])){
@@ -2264,12 +2267,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggc1['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c1 information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c1 information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggMethodC1'])){
             $node->field_aggmethodc1['und'][0]['value'] = uwwtd_check_text($data['aggMethodC1']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c1 method information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c1 method information found.', $timestamp, $i, $node);
 
         //decimal
         if(isset($data['aggC2'])){
@@ -2281,12 +2284,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggc2['und'][0]['value'] = $check;
             }        
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c2 information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c2 information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggMethodC2'])){
             $node->field_aggmethodc2['und'][0]['value'] = uwwtd_check_text($data['aggMethodC2']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c2 method information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration c2 method information found.', $timestamp, $i, $node);
 
         //decimal
         if(isset($data['aggPercWithoutTreatment'])){
@@ -2298,12 +2301,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggpercwithouttreatment['und'][0]['value'] = $check;
             }        
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage without treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage without treatment information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggMethodWithoutTreatment'])){
             $node->field_aggmethodwithouttreatment['und'][0]['value'] = uwwtd_check_text($data['aggMethodWithoutTreatment']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration method percentage without treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration method percentage without treatment information found.', $timestamp, $i, $node);
 
         //decimal
         if(isset($data['aggPercPrimTreatment'])){
@@ -2315,7 +2318,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggpercprimtreatment['und'][0]['value'] = $check;
             }        
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with primary treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with primary treatment information found.', $timestamp, $i, $node);
 
         //decimal
         if(isset($data['aggPercSecTreatment'])){
@@ -2327,7 +2330,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggpercsectreatment['und'][0]['value'] = $check;
             }        
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with secondary treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with secondary treatment information found.', $timestamp, $i, $node);
 
         //decimal
         if(isset($data['aggPercStringentTreatment'])){
@@ -2338,17 +2341,17 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if($check !== false){
                 $node->field_aggpercstringenttreatment['und'][0]['value'] = $check;
             }        
-        } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with more stringent treatment information found.', $timestamp, $i, $node);
+        } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration percentage with more stringent treatment information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggHaveRegistrationSystem'])){
             $node->field_agghaveregistrationsystem['und'][0]['value'] = uwwtd_check_text($data['aggHaveRegistrationSystem']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration registration system information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration registration system information found.', $timestamp, $i, $node);
 
         //text
         if(isset($data['aggExistMaintenancePlan'])){
             $node->field_aggexistmaintenanceplan['und'][0]['value'] = uwwtd_check_text($data['aggExistMaintenancePlan']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration maintenance plan information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration maintenance plan information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggPressureTest'])){
@@ -2359,7 +2362,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggpressuretest['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration pressure test information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration pressure test information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggVideoInspections'])){
@@ -2370,7 +2373,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggvideoinspections['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration video inspections information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration video inspections information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggOtherMeasures'])){
@@ -2381,22 +2384,22 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggothermeasures['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration other mesures information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration other mesures information found.', $timestamp, $i, $node);
 
         //memo
         if(isset($data['aggExplanationOther'])){
             $node->field_aggexplanationother['und'][0]['value'] = uwwtd_check_text($data['aggExplanationOther']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration explanation of other measures information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration explanation of other measures information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['aggSewageNetwork'])){
             $node->field_aggsewagenetwork['und'][0]['value'] = uwwtd_check_text($data['aggSewageNetwork']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration type of collecing system information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration type of collecing system information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['aggBestTechnicalKnowledge'])){
             $node->field_aggbesttechnicalknowledge['und'][0]['value'] = uwwtd_check_text($data['aggBestTechnicalKnowledge']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration best technical knowledge information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration best technical knowledge information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggDilutionRates'])){
@@ -2407,7 +2410,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_agg_dilution_rates['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Dilution rates information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Dilution rates information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggCapacity'])){
@@ -2418,7 +2421,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggcapacity['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Capacity in relation to dry weather flow information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Capacity in relation to dry weather flow information found.', $timestamp, $i, $node);
 
         //bool
         if(isset($data['aggAccOverflows'])){
@@ -2429,7 +2432,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggaccoverflows['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Acceptable number of overflows per year information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration the measures based on: Acceptable number of overflows per year information found.', $timestamp, $i, $node);
 
         //numeric
         if(isset($data['aggAccOverflowNumber'])){
@@ -2443,7 +2446,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggaccoverflownumber['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration indicate number of overflows information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration indicate number of overflows information found.', $timestamp, $i, $node);
 
         //numeric
         if(isset($data['aggSewerOverflows_m3'])){
@@ -2457,7 +2460,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggseweroverflows_m3['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration number of raw sewage discharged from combined sewer overflows (CSOs) in the reporting year : m3 / year found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration number of raw sewage discharged from combined sewer overflows (CSOs) in the reporting year : m3 / year found.', $timestamp, $i, $node);
     
         //numeric
         if(isset($data['aggSewerOverflows_pe'])){
@@ -2471,12 +2474,12 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_aggseweroverflows_pe['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration number of raw sewage has been discharged through combined sewer overflows (CSOs) in the year reported: p.e. found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration number of raw sewage has been discharged through combined sewer overflows (CSOs) in the year reported: p.e. found.', $timestamp, $i, $node);
         
         //memo
         if(isset($data['aggRemarks'])){
             $node->field_aggremarks['und'][0]['value'] = uwwtd_check_text($data['aggRemarks']);}
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration remarks information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration remarks information found.', $timestamp, $i, $node);
         
         //date
         if(isset($data['aggForecast'])){
@@ -2498,7 +2501,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 );
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);
         /*DG 15/12/2015 add aggBeginLife*/
         //date
         if(isset($data['aggBeginLife'])){
@@ -2576,7 +2579,7 @@ function uwwtd_import_uww_batch_process($newFile, $annee, $datas, $repCode, $tim
             $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
         }
     }else{
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTPs found in the dataset ' . $annee, $timestamp);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTPs found in the dataset ' . $annee, $timestamp);
     }
 }
 
@@ -2843,7 +2846,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             } else {
 //                 $node->field_status['und'][0]['value'] = 1;
 //             }            
-        }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTP status information found.', $timestamp, $i, $node);
+        }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No UWWTP status information found.', $timestamp, $i, $node);
         
         //text
         if(isset($datas['repCode'])) $node->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
@@ -2857,7 +2860,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwtdaggid['und'][0]['value'] = uwwtd_check_text($data['aggCode']);
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs ID of agglomeration information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs ID of agglomeration information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwCollectingSystem']))$node->field_uwwcollectingsystem['und'][0]['value'] = uwwtd_check_text($data['uwwCollectingSystem']);
@@ -2866,13 +2869,13 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwDateClosing'])){
             $node->field_validto['und'][0]['value'] = uwwtd_check_text($data['uwwDateClosing']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date of closing information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date of closing information found.', $timestamp, $i, $node);
         
         //memo
         if(isset($data['uwwHistorie'])){
             $node->field_uwwhistorie['und'][0]['value'] = uwwtd_check_text($data['uwwHistorie']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);
         
         //TODO pourquoi le refaire ?   peut être écraser par PL112 ? dans ce cas changer al condition plus haut non ?
         //text
@@ -2900,7 +2903,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwloadenteringuwwtp['und'][0]['value'] = $check;
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs load entering found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs load entering found.', $timestamp, $i, $node);
         
         //numeric
         if(isset($data['uwwCapacity'])){
@@ -2914,7 +2917,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_physicalcapacityactivity['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs physical capacity found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries status informations found.', $timestamp, $i, $node);
         
         //bool    
         if(isset($data['uwwPrimaryTreatment'])){
@@ -2925,7 +2928,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwprimarytreatment['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs Primary treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs Primary treatment information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwSecondaryTreatment'])){
@@ -2936,7 +2939,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwsecondarytreatment['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs Secondary treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs Secondary treatment information found.', $timestamp, $i, $node);
         
         //bool    
         if(isset($data['uwwOtherTreatment'])){
@@ -2951,7 +2954,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwothertreat['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs other treatment found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs other treatment found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwNRemoval'])){
@@ -2962,7 +2965,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwnremoval['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs N removal information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs N removal information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwPRemoval'])){
@@ -2973,7 +2976,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpremoval['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs P removal information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs P removal information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwUV'])){
@@ -3045,43 +3048,43 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwSpecification'])){
             $node->field_uwwspecification['und'][0]['value'] = uwwtd_check_text($data['uwwSpecification']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs specify other type of more stringent treatment information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs specify other type of more stringent treatment information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwBOD5Perf'])){
             $node->field_uwwbod5perf['und'][0]['value'] = uwwtd_check_text($data['uwwBOD5Perf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: BOD5 information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: BOD5 information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwCODPerf'])){
             $node->field_uwwcodperf['und'][0]['value'] = uwwtd_check_text($data['uwwCODPerf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: COD information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: COD information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwTSSPerf'])){
             $node->field_uwwtssperf['und'][0]['value'] = uwwtd_check_text($data['uwwTSSPerf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: TSS information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: TSS information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwNTotPerf'])){
             $node->field_uwwntotperf['und'][0]['value'] = uwwtd_check_text($data['uwwNTotPerf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: N information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: N information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwPTotPerf'])){
             $node->field_uwwptotperf['und'][0]['value'] = uwwtd_check_text($data['uwwPTotPerf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: P information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: P information found.', $timestamp, $i, $node);
         
         //text
         if(isset($data['uwwOtherPerf'])){
             $node->field_uwwotherperf['und'][0]['value'] = uwwtd_check_text($data['uwwOtherPerf']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: Others information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs treatment performance: Others information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwBadPerformance'])){
@@ -3092,7 +3095,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwbadperfdesign['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs bad performance information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs bad performance information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwAccidents'])){ 
@@ -3103,7 +3106,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwaccidents['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs accidents information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs accidents information found.', $timestamp, $i, $node);
         
         //bool
         if(isset($data['uwwBadDesign'])){  
@@ -3114,7 +3117,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwbaddesign['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs bad design or dimensioning information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs bad design or dimensioning information found.', $timestamp, $i, $node);
         
         //memo
         if(isset($data['uwwInformation'])){
@@ -3134,7 +3137,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwbodincoming['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwBODIncomingCalculated'])){
@@ -3148,7 +3151,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwbodincomingcalculated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwBODIncomingEstimated'])){
@@ -3162,7 +3165,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwbodincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads BOD-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODIncomingMeasured'])){
@@ -3176,7 +3179,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcodincoming['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODIncomingCalculated'])){
@@ -3190,7 +3193,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcodincomingcalculated['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODIncomingEstimated'])){
@@ -3204,7 +3207,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcodincomingestimated['und'][0]['value'] = round($check,2);
             }              
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads COD-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNIncomingMeasured'])){
@@ -3218,7 +3221,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwnincoming['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Nto information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Nto information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNIncomingCalculated'])){
@@ -3232,7 +3235,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwnincomingcalculated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNIncomingEstimated'])){
@@ -3246,7 +3249,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwnincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads N-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPIncomingMeasured'])){
@@ -3260,7 +3263,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpincoming['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Ptot information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads Ptot information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPIncomingCalculated'])){
@@ -3274,7 +3277,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpincomingcalculated['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPIncomingEstimated'])){
@@ -3288,7 +3291,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpincomingestimated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs incoming loads P-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwBODDischargeMeasured'])){
@@ -3302,7 +3305,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwboddischarge['und'][0]['value'] = round($check,2);
             }              
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwBODDischargeCalculated'])){
@@ -3316,7 +3319,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwboddischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwBODDischargeEstimated'])){
@@ -3330,7 +3333,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwboddischargeestimated['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads BOD-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODDischargeMeasured'])){
@@ -3344,7 +3347,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcoddischarge['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODDischargeCalculated'])){
@@ -3358,7 +3361,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcoddischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwCODDischargeEstimated'])){
@@ -3372,7 +3375,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwcoddischargeestimated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads COD-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNDischargeMeasured'])){
@@ -3386,7 +3389,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwndischarge['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ntot information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ntot information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNDischargeCalculated'])){
@@ -3400,7 +3403,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwndischargecalculated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwNDischargeEstimated'])){
@@ -3414,7 +3417,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwndischargeestimated['und'][0]['value'] = round($check,2);
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads N-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPDischargeMeasured'])){
@@ -3428,7 +3431,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpdischarge['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPDischargeCalculated'])){
@@ -3442,7 +3445,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpdischargecalculated['und'][0]['value'] = round($check,2);
             }              
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot calculated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads Ptot calculated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwPDischargeEstimated'])){
@@ -3456,7 +3459,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $node->field_uwwpdischargeestimated['und'][0]['value'] = round($check,2);
             }               
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads P-tot estimated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs discharged loads P-tot estimated information found.', $timestamp, $i, $node);
         
         //decimal
         if(isset($data['uwwWasteWaterTreated'])){
@@ -3476,13 +3479,13 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwMethodWasteWaterTreated'])){
             $node->field_uwwmethodwastewatertreated['und'][0]['value'] = uwwtd_check_text($data['uwwMethodWasteWaterTreated']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs method used to determine the volume of waste water treated information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs method used to determine the volume of waste water treated information found.', $timestamp, $i, $node);
         
         //memo
         if(isset($data['uwwRemarks'])){
             $node->field_uwwremarks['und'][0]['value'] = uwwtd_check_text($data['uwwRemarks']);
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs remarks information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs remarks information found.', $timestamp, $i, $node);
 
          /*DG 15/12/2015 add uwwBeginLife*/
         //date
@@ -3691,7 +3694,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             //text
             if(isset($data['dcpState'])){
                 $node->field_status['und'][0]['value'] = uwwtd_check_text($data['dcpState']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point status information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point status information found.', $timestamp, $i, $node);
 
             /*DG 15/12/2015 add uwwCode*/
             //text
@@ -3701,7 +3704,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 }elseif(isset($data['uwwCode'])){
                     $node->field_utilityfacilityreference['und'][0]['value'] = uwwtd_check_text($data['uwwCode']);
                 }
-        }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point waste water treatment plant connexion information found.', $timestamp, $i, $node);
+        }else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point waste water treatment plant connexion information found.', $timestamp, $i, $node);
 
             //text
             if(isset($data['dcpNUTS'])){
@@ -3717,17 +3720,17 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             //text
             if(isset($data['dcpWaterBodyType'])){
                 $node->field_dcpwaterbodytype['und'][0]['value'] = uwwtd_check_text($data['dcpWaterBodyType']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body type information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body type information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpIrrigation'])){
                 $node->field_dcpirrigation['und'][0]['value'] = uwwtd_check_text($data['dcpIrrigation']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point no discharge point en case of discharge on land please specify the purpose type information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No information about waste water reuse for irrigation found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpTypeOfReceivingArea'])){
                 $node->field_rcatype['und'][0]['value'] = uwwtd_check_text($data['dcpTypeOfReceivingArea']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point type of receiving area information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point type of receiving area information found.', $timestamp, $i, $node);
 
             /*DG 15/12/2015 add rcaCode*/
             //text
@@ -3737,8 +3740,9 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 }elseif(isset($data['rcaCode'])){
                      $node->field_rcaid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
                 }
+            } elseif (empty($data['dcpTypeOfReceivingArea']) || ($data['dcpTypeOfReceivingArea'] != 'NA' && $data['dcpTypeOfReceivingArea'] != 'na')) {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point receiving area connexion information found.', $timestamp, $i, $node);
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point receiving area connexion information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpSurfaceWaters'])){
@@ -3748,47 +3752,47 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             //text
             if(isset($data['dcpWaterbodyID'])){
                 $node->field_dcpwaterbodyid['und'][0]['value'] = uwwtd_check_text($data['dcpWaterbodyID']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body connexion information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body connexion information found.', $timestamp, $i, $node);
 
             //text
             if(isset($data['dcpNotAffect'])){
                 $node->field_dcpnotaffect['und'][0]['value'] = uwwtd_check_text($data['dcpNotAffect']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point information  do comprehensive studies indicate that the discharge does not adversely affect the environment found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point information  do comprehensive studies indicate that the discharge does not adversely affect the environment found.', $timestamp, $i, $node);
 
             //text
             if(isset($data['dcpMSProvide'])){
                 $node->field_dcpmsprovide['und'][0]['value'] = uwwtd_check_text($data['dcpMSProvide']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point has the Member State provided these studies to the Commission information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point has the Member State provided these studies to the Commission information found.', $timestamp, $i, $node);
 
             //text
             if(isset($data['dcpCOMAccept'])){
                 $node->field_ddcpcomaccept['und'][0]['value'] = uwwtd_check_text($data['dcpCOMAccept']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point Has the Commission formally accepts that the conditions of art. 6 (2) are met information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point Has the Commission formally accepts that the conditions of art. 6 (2) are met information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpGroundWater'])){
                 $node->field_dcpgroundwater['und'][0]['value'] = uwwtd_check_text($data['dcpGroundWater']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ID of WFD groundwater body type information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ID of WFD groundwater body type information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpReceivingWater'])){
                 $node->field_dcpreceivingwater['und'][0]['value'] = uwwtd_check_text($data['dcpReceivingWater']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body connexion information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body connexion information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpWFDSubUnit'])){
                 $node->field_dcpwfdsubunit['und'][0]['value'] = uwwtd_check_text($data['dcpWFDSubUnit']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ID of WFD sub-unit information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ID of WFD sub-unit information found.', $timestamp, $i, $node);
             
             //text
             if(isset($data['dcpWFDRBD'])){
                 $node->field_dcpwfdrbd['und'][0]['value'] = uwwtd_check_text($data['dcpWFDRBD']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD river basin district connexion information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD river basin district connexion information found.', $timestamp, $i, $node);
 
             //memo
             if(isset($data['dcpRemarks'])){
                 $node->field_dcpremarks['und'][0]['value'] = uwwtd_check_text($data['dcpRemarks']);}
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point remarks information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point remarks information found.', $timestamp, $i, $node);
             
             //date
             if(isset($data['dcpWaterBodyReferenceDate'])){
@@ -3805,7 +3809,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     );
                 }
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body reference date information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point water body reference date information found.', $timestamp, $i, $node);
 
             //date
             if(isset($data['dcpGroundWaterReferenceDate'])){
@@ -3822,7 +3826,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     );
                 }
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ground water reference date information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point ground water reference date information found.', $timestamp, $i, $node);
 
             //date
             if(isset($data['dcpReceivingWaterReferenceDate'])){
@@ -3839,7 +3843,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     );
                 }
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point receiving water reference date information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point receiving water reference date information found.', $timestamp, $i, $node);
             
             //date
             if(isset($data['dcpWFDSubUnitReferenceDate'])){
@@ -3856,7 +3860,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     );
                 }
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD sub unit reference date information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD sub unit reference date information found.', $timestamp, $i, $node);
 
             //date
             if(isset($data['dcpWFDRBDReferenceDate'])){
@@ -3873,7 +3877,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                     );
                 }
             }
-            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD reference date information found.', $timestamp, $i, $node);
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD reference date information found.', $timestamp, $i, $node);
 
              /*DG 15/12/2015 add dcpBeginLife*/
         //date
@@ -3898,7 +3902,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 $node->field_dcpendlife['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date end life found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point date end life found.', $timestamp, $i, $node);
         
             // save node
             node_save($node);
@@ -3918,7 +3922,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
         }
     } else {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No Discharge points found in the dataset ' . $annee, $timestamp);
     }
 }
 
@@ -4121,7 +4125,7 @@ function uwwtd_import_industry_batch_process($newFile, $annee, $datas, $repCode,
             $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
         }
     }else{
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries found in the dataset ' . $annee, $timestamp, $i);
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries found in the dataset ' . $annee, $timestamp, $i);
     }
 }
 
@@ -4214,7 +4218,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
                 $node->field_indstate['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs physical capacity found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries status informations found.', $timestamp, $i, $node);
         //text
         if(isset($datas['indCodePlant'])) $node->field_indcodeplant['und'][0]['value'] = uwwtd_check_text($datas['indCodePlant']);
         //text
@@ -4239,7 +4243,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
                 $node->field_indconditions['und'][0]['value'] = $check;
             }
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries conditions information found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries conditions information found.', $timestamp, $i, $node);
         //date
         if(isset($data['indDateCompliance'])){
             $check = uwwtd_check_date($data['indDateCompliance'], $message);
@@ -4250,7 +4254,7 @@ function uwwtd_update_industry_node($data, $newFile, $repCode, $annee, $timestam
                 $node->field_inddatecompliance['und'][0]['value'] = $check;
             }             
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries date compliance found.', $timestamp, $i, $node);
+        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No industries date compliance found.', $timestamp, $i, $node);
         
         
         
