@@ -4590,8 +4590,6 @@ function uwwtd_update_7154(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);
     variable_set('siif_eru_version', __FUNCTION__);
 
-    db_query('ALTER TABLE drupal_uwwtd_import_errors ADD step int');
-
     drupal_flush_all_caches();
 
     if (isset($context)) {
