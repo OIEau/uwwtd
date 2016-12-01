@@ -54,6 +54,10 @@
     </div>
   <?php endif; ?>
 
+    <?php if (!empty($variables['view']) && isset($variables['view']->name) && $variables['view']->name === 'error_list') : ?>
+        Export all results to xls : <?php print l('xls', 'error-list/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())); ?>
+    <?php endif; ?>
+
   <?php if ($rows): ?>
     <div class="view-content">
       <?php print $rows; ?>

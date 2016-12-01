@@ -63,7 +63,7 @@ $handler->display->display_options['fields']['title']['id'] = 'title';
 $handler->display->display_options['fields']['title']['table'] = 'node';
 $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['title']['relationship'] = 'entity_id';
-/* Field: Content: Title */
+/* Field: Content: Code */
 $handler->display->display_options['fields']['code']['id'] = 'field_inspireidlocalid';
 $handler->display->display_options['fields']['code']['table'] = 'field_data_field_inspireidlocalid';
 $handler->display->display_options['fields']['code']['field'] = 'field_inspireidlocalid';
@@ -376,6 +376,58 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
       'max' => '',
     ),
   ),
+);
+
+/* Filter criterion: bundle */
+$handler->display->display_options['filters']['bundle']['id'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['table'] = 'uwwtd_import_errors';
+$handler->display->display_options['filters']['bundle']['field'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['group'] = 1;
+$handler->display->display_options['filters']['bundle']['exposed'] = TRUE;
+$handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
+$handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
+$handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['is_grouped'] = TRUE;
+$handler->display->display_options['filters']['bundle']['group_info']['label'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['group_info']['identifier'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['group_info']['group_items'] = array(
+    1 => array(
+        'title' => 'Agglomeration',
+        'operator' => '=',
+        'value' => array(
+            'value' => '0',
+            'min' => '',
+            'max' => '',
+        ),
+    ),
+    2 => array(
+        'title' => 'UWWTP',
+        'operator' => '=',
+        'value' => array(
+            'value' => '1',
+            'min' => '',
+            'max' => '',
+        ),
+    ),
+    3 => array(
+        'title' => 'Discharge point',
+        'operator' => '=',
+        'value' => array(
+            'value' => '2',
+            'min' => '',
+            'max' => '',
+        ),
+    ),
+    4 => array(
+        'title' => 'Receiving Area',
+        'operator' => '=',
+        'value' => array(
+            'value' => '3',
+            'min' => '',
+            'max' => '',
+        ),
+    ),
 );
 
 /* Display: Page */

@@ -863,6 +863,21 @@ function _get_xml_fields_names_only_in_9th_report() {
 }
 
 
+/**
+ * Return true if one of 8th report errors contains the the given text.
+ */
+function _is_like_a_8th_report_errors($text) {
+    $isLike8thReportError = FALSE;
+    foreach (_get_8th_report_errors() as $errorText) {
+        if (strpos($errorText, $text) !== FALSE) {
+            $isLike8thReportError = TRUE;
+            break;
+        }
+    }
+    return $isLike8thReportError;
+}
+
+
 function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = null, $node = null, $xmlFieldName = '') {
     $isShowed = TRUE;
 
@@ -872,8 +887,9 @@ function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = n
         if (!empty($xmlFieldName) && in_array($xmlFieldName, _get_xml_fields_names_only_in_9th_report())) {
             $isShowed = FALSE;
         }
+        
     // If this is a 9th report and the message is about:
-    } elseif (in_array($year, _get_years_9th_report()) && in_array($error, _get_8th_report_errors())) {
+    } elseif (in_array($year, _get_years_9th_report()) && _is_like_a_8th_report_errors($error)) {
         $isShowed = FALSE;
     }
 

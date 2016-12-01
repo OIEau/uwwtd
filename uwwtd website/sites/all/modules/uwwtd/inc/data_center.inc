@@ -2008,7 +2008,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
     if(!isset($data['aggLatitude']) || empty($data['aggLatitude'])){
         $e = 1;
         $emes = t('The agglomeration does not have latitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
@@ -2025,17 +2025,17 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // if check_coord == false e=1
         $e = 1;
         $emes = t('The agglomeration does not have longitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
     if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
     }    
     if($checkLongitude === false){
         $e = 1;
         $emes = t('The longitude for this agglomeration is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     // Check if no errors were found
     uwwtd_trace('import agglomeration : ' . $annee.'_agg_'.uwwtd_check_text($data['aggCode']));
@@ -2093,11 +2093,11 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_aggart3addcompliance['und'][0]['value'] = '';
         $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
         }        
         $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
         }         
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
@@ -2604,12 +2604,12 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
     }
     $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
     if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
     }     
     if($checkLatitude === false){
         $e = 1;
         $emes = t('The latitude for this urban waste water treatment plant is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     if(!isset($data['uwwLongitude']) || empty($data['uwwLongitude'])){
@@ -2620,12 +2620,12 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
    
     $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
     if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
     }     
     if($checkLongitude === false){
         $e = 1;
         $emes = t('The longitude for this urban waste water treatment plan is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
     // Check if no errors were found
@@ -2783,11 +2783,11 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         //$node->field_uwwcompliance['und'][0]['value'] = 'NI';
         $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
         }         
         $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
         }         
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
@@ -3561,12 +3561,12 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
         
         $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
         }         
         if($checkLatitude === false){
             $e = 1;
             $emes = t('The latitude for this discharge point is invalid');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
         }
 
         if(!isset($data['dcpLongitude']) || empty($data['dcpLongitude'])){
@@ -3578,12 +3578,12 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
         
         $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
         if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);    
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
         }         
         if($checkLongitude === false){
             $e = 1;
             $emes = t('The longitude for this discharge point is invalid');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
         }
 
         // Check if no errors were found
@@ -3635,11 +3635,11 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             $node->field_anneedata['und'][0]['value'] = $annee;
             $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
             if ($message != '') {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
             }             
             $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
             if ($message != '') {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);    
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
             }             
             $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
             if($geoData != false){
