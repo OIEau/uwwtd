@@ -813,13 +813,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     }
 
     //bc_position
-//    $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
+    $batch['operations'][]= array('uwwtd_bc_position_batch_process', array($newFile, $annee, $timestamp));
     //mega_links
-//    $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
+    $batch['operations'][]= array('uwwtd_mega_links_batch_process', array($newFile, $annee, $timestamp));
     //rca_extra
-//    $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
-//    $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
-//    $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
+    $batch['operations'][]= array('uwwtd_rca_extra_batch_process', array($newFile, $annee, $timestamp));
+    $batch['operations'][]= array('uwwtd_update_cache_data', array(array($annee)));
+    $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
 
     // Create errors for agglomerations without treatment plant :
     $batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
@@ -2788,7 +2788,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
         if ($message != '') {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-        }         
+        }
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
             $node->field_position_geo['und'][0] = array(
