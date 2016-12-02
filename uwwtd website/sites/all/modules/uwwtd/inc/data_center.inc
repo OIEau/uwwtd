@@ -47,8 +47,8 @@ function uwwtd_data_form_submit($form, &$form_state){
 
 function uwwtd_run_compliance_page($node){
     if($node->type=='agglomeration'){
-        if(!empty($node->field_linked_treatment_plants['und'])){
-            foreach($node->field_linked_treatment_plants['und'] as $u){
+        if(!empty($node->field_agguwwliste['und'])){
+            foreach($node->field_agguwwliste['und'] as $u){
                 if($uww = node_load($u['nid'])){
                     uwwtd_station_set_conformity($uww);
                     drupal_set_message("Processing conformity for the UWWTP ".$uww->title." : Ok");
@@ -4764,7 +4764,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
 
                     // uww <-> agg
                     if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)) $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
-                    if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)) $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                    if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)) $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
 
                     // rca <-> agg
                     if(!uwwtd_in_array_r($aggnid, $rca->field_linked_agglomerations)) $rca->field_linked_agglomerations['und'][]['nid'] = $aggnid;
@@ -4801,7 +4801,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
 
                 // uww <-> agg
                 if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)) $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
-                if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)) $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)) $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
 
                 // dcp <-> agg
                 if(!uwwtd_in_array_r($aggnid, $dcp->field_linked_agglomerations)) $dcp->field_linked_agglomerations['und'][]['nid'] = $aggnid;

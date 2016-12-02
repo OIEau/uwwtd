@@ -413,7 +413,7 @@ echo uwwtd_insert_errors_tab($node);
           </legend>
           <div class="panel-body">
            <?php 
-            print render($content['field_linked_treatment_plants']);
+            print render($content['field_agguwwliste']);
             print render($content['field_linked_discharge_points']);
             print render($content['field_linked_receiving_areas']);
             //print render($content['field_agguwwliste']);
