@@ -899,7 +899,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
     uwwtd_trace('import receiving_area : ' . $annee.'_rca_'.uwwtd_check_text($data['rcaCode']));
     //dsm($data);
     if($e == 0){
-
         // Variables
         $siteId = $annee.'_rca_'.uwwtd_check_text($data['rcaCode']);
 
@@ -2005,42 +2004,9 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
 
-    if(!isset($data['aggLatitude']) || empty($data['aggLatitude'])){
-        $e = 1;
-        $emes = t('The agglomeration does not have latitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-    
-    $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
-    if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-    }
-    if($checkLatitude === false){
-        $e = 1;
-        $emes = t('The latitude for this agglomeration is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-
-    if(!isset($data['aggLongitude']) || empty($data['aggLongitude'])){
-        // if check_coord == false e=1
-        $e = 1;
-        $emes = t('The agglomeration does not have longitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-    
-    $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
-    if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-    }    
-    if($checkLongitude === false){
-        $e = 1;
-        $emes = t('The longitude for this agglomeration is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
     // Check if no errors were found
     uwwtd_trace('import agglomeration : ' . $annee.'_agg_'.uwwtd_check_text($data['aggCode']));
     if($e == 0){
-
         $siteId = $annee.'_agg_'.uwwtd_check_text($data['aggCode']);
         // Check if id exists
         $exists = uwwtd_check_exist($siteId);
@@ -2091,14 +2057,39 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_aggart5compliance['und'][0]['value'] = 'NI';
         $node->field_aggart6compliance['und'][0]['value'] = 'NI';
         $node->field_aggart3addcompliance['und'][0]['value'] = '';
-        $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-        }        
-        $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-        }         
+
+        // Check latitude :
+        if(!isset($data['aggLatitude']) || empty($data['aggLatitude'])){
+            $emes = t('The agglomeration does not have latitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+        } else {
+            $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+            }
+            if($checkLatitude === false){
+                $checkLatitude = '0';
+                $emes = t('The latitude for this agglomeration is invalid');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            }
+        }
+
+        // Check longitude :
+        if(!isset($data['aggLongitude']) || empty($data['aggLongitude'])){
+            $emes = t('The agglomeration does not have longitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+        } else {
+            $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+            }
+            if($checkLongitude === false){
+                $checkLongitude = '0';
+                $emes = t('The longitude for this agglomeration is invalid');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            }
+        }
+
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
             $node->field_position_geo['und'][0] = array(
@@ -2597,37 +2588,6 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
     }
     
-    if(!isset($data['uwwLatitude']) || empty($data['uwwLatitude'])){
-        $e = 1;
-        $emes = t('The urban waste water treatment plan does not have latitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-    $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
-    if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-    }     
-    if($checkLatitude === false){
-        $e = 1;
-        $emes = t('The latitude for this urban waste water treatment plant is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-    
-    if(!isset($data['uwwLongitude']) || empty($data['uwwLongitude'])){
-        $e = 1;
-        $emes = t('The urban waste water treatment plan does not have longitude information');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-   
-    $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
-    if ($message != '') {
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-    }     
-    if($checkLongitude === false){
-        $e = 1;
-        $emes = t('The longitude for this urban waste water treatment plan is invalid');
-        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-    }
-    
     // Check if no errors were found
     uwwtd_trace('import uwwtp : ' . $annee.'_uww_'.uwwtd_check_text($data['uwwCode']));
     if($e == 0){
@@ -2781,14 +2741,39 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         $node->field_valid['und'][0]['value'] = 0;
         $node->field_anneedata['und'][0]['value'] = $annee;
         //$node->field_uwwcompliance['und'][0]['value'] = 'NI';
-        $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-        }         
-        $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+
+        // Check latitude :
+        if(!isset($data['uwwLatitude']) || empty($data['uwwLatitude'])){
+            $emes = t('The urban waste water treatment plan does not have latitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+        } else {
+            $checkLatitude = uwwtd_check_coordinate($data['uwwLatitude'], 'latitude', $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+            }
+            if($checkLatitude === false){
+                $checkLatitude = '0';
+                $emes = t('The latitude for this urban waste water treatment plant is invalid');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            }
         }
+
+        // Check longitude
+        if(!isset($data['uwwLongitude']) || empty($data['uwwLongitude'])){
+            $emes = t('The urban waste water treatment plan does not have longitude information');
+            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+        } else {
+            $checkLongitude = uwwtd_check_coordinate($data['uwwLongitude'], 'longitude', $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+            }
+            if($checkLongitude === false){
+                $checkLongitude = '0';
+                $emes = t('The longitude for this urban waste water treatment plan is invalid');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            }
+        }
+
         $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
         if($geoData != false){
             $node->field_position_geo['und'][0] = array(
@@ -3553,39 +3538,6 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
         }
 
-        if(!isset($data['dcpLatitude']) || empty($data['dcpLatitude'])){
-            $e = 1;
-            $emes = t('The discharge point does not have latitude information');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-        }
-        
-        $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-        }         
-        if($checkLatitude === false){
-            $e = 1;
-            $emes = t('The latitude for this discharge point is invalid');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-        }
-
-        if(!isset($data['dcpLongitude']) || empty($data['dcpLongitude'])){
-            // if check_coord == false e=1
-            $e = 1;
-            $emes = t('The discharge point does not have longitude information');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-        }
-        
-        $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
-        if ($message != '') {
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i);
-        }         
-        if($checkLongitude === false){
-            $e = 1;
-            $emes = t('The longitude for this discharge point is invalid');
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i);
-        }
-
         // Check if no errors were found
         uwwtd_trace('import discharge_point : ' . $annee.'_dcp_'.uwwtd_check_text($data['dcpCode']));
         if($e == 0){
@@ -3633,14 +3585,39 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             $node->field_siteid['und'][0]['value'] = $siteId;
             $node->field_valid['und'][0]['value'] = 0;
             $node->field_anneedata['und'][0]['value'] = $annee;
-            $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
-            if ($message != '') {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-            }             
-            $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
-            if ($message != '') {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
-            }             
+
+            // Check latitude :
+            if(!isset($data['dcpLatitude']) || empty($data['dcpLatitude'])){
+                $emes = t('The discharge point does not have latitude information');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            } else {
+                $checkLatitude = uwwtd_check_coordinate($data['dcpLatitude'], 'latitude', $message);
+                if ($message != '') {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+                }
+                if($checkLatitude === false){
+                    $checkLatitude = '0';
+                    $emes = t('The latitude for this discharge point is invalid');
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+                }
+            }
+
+            // Check longitude :
+            if(!isset($data['dcpLongitude']) || empty($data['dcpLongitude'])){
+                $emes = t('The discharge point does not have longitude information');
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            } else {
+                $checkLongitude = uwwtd_check_coordinate($data['dcpLongitude'], 'longitude', $message);
+                if ($message != '') {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+                }
+                if($checkLongitude === false){
+                    $checkLongitude = '0';
+                    $emes = t('The longitude for this discharge point is invalid');
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+                }
+            }
+
             $geoData = uwwtd_coord_transform($checkLatitude, $checkLongitude);
             if($geoData != false){
                 $node->field_position_geo['und'][0] = array(
