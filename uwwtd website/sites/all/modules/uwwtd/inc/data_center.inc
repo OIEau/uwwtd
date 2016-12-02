@@ -8089,92 +8089,94 @@ function uwwtd_get_all_info_agguwww($node)
         $field = 'field_linked_treatment_plants';
     }
     else{
-        drupal_set_message("There is no linked UWWTP define in field_agguwwliste or in field_linked_treatment_plants","warning");
+        drupal_set_message("There is no linked UWWTP define in field_agguwwliste or in field_linked_treatment_plants", "warning");
     }
-    
-    foreach($node->{$field}['und'] as $agguwwlist){
-        $uww = node_load($agguwwlist['nid']);
-        
-        $aResult['listUww'][$uww->nid] = array(
+    if (!empty($field) && isset($node->{$field}) && !empty($node->{$field}['und'])) {
+        foreach($node->{$field}['und'] as $agguwwlist){
+            $uww = node_load($agguwwlist['nid']);
+
+            $aResult['listUww'][$uww->nid] = array(
 //          'node' => $uww,
-            'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
-            'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
-            'cod' => $uww->field_uwwcodperf['und'][0]['value'],
-            'collecting' => $uww->field_uwwloadenteringuwwtp['und'][0]['value'],
-            'compB' => $uww->field_uwwcompliance['und'][0]['value'],
-            'secondary' => $uww->field_uwwsecondarytreatment['und'][0]['value'],
-            'treatmenttype' => $uww->field_uwwtreatmenttype['und'][0]['value'],
-        );        
+                'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
+                'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
+                'cod' => $uww->field_uwwcodperf['und'][0]['value'],
+                'collecting' => $uww->field_uwwloadenteringuwwtp['und'][0]['value'],
+                'compB' => $uww->field_uwwcompliance['und'][0]['value'],
+                'secondary' => $uww->field_uwwsecondarytreatment['und'][0]['value'],
+                'treatmenttype' => $uww->field_uwwtreatmenttype['und'][0]['value'],
+            );
 
-        // get reste of information from node that collected joint information
-        $query = db_select('node', 'n');
-        $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
-        $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
-        $query->fields('n',array('title','created'))
-        ->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=')
-        ->condition('u.field_agglo_uww_uww_nid', $uww->nid, '=')        
-        ->fields('n',array('nid'));
+            // get reste of information from node that collected joint information
+            $query = db_select('node', 'n');
+            $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+            $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+            $query->fields('n',array('title','created'))
+                ->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=')
+                ->condition('u.field_agglo_uww_uww_nid', $uww->nid, '=')
+                ->fields('n',array('nid'));
 
-        $result = $query->execute();
-        $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = 0;
-        while($record = $result->fetchAssoc()){
-            $agguww = node_load($record['nid']);
-            $uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-            //$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
-            $aResult['total'] += $uwwperccollec;
-            $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-        }
-        
-        $aResult['rca']['art54applies'] = false;
-        $aResult['rca']['rca_n_incoming_measured']     = 0;
-        $aResult['rca']['rca_n_incoming_calculated']   = 0;
-        $aResult['rca']['rca_n_incoming_estimated']    = 0;
-        $aResult['rca']['rca_n_discharged_measured']   = 0;
-        $aResult['rca']['rca_n_discharged_calculated'] = 0;
-        $aResult['rca']['rca_n_discharged_estimated']  = 0;
-        
-        $aResult['rca']['rca_p_incoming_measured']     = 0;
-        $aResult['rca']['rca_p_incoming_calculated']   = 0;
-        $aResult['rca']['rca_p_incoming_estimated']    = 0;
-        $aResult['rca']['rca_p_discharged_measured']   = 0;
-        $aResult['rca']['rca_p_discharged_calculated'] = 0;
-        $aResult['rca']['rca_p_discharged_estimated']  = 0;        
-        foreach($uww->field_uwwdcpliste['und'] as $dcplist){
-            $dcp = node_load($dcplist['nid']);
-            /* Cas des pays avec l'ensemble du pays en zone sensible */
-            $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-            // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-            //     $rcaTypeid = 'SA';
-            // }            
-            foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-                $rca = node_load($rcalist['nid']);
-                $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                if (true === uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
-                    $aResult['rca']['art54applies'] = true;
-                    $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
-                    $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
-                    $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
-                    $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
-                    
-                    $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
-                    $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
-                    $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
-                    $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
-                    $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
-                    $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];                                        
-                    break 2;
-                }
-                unset($rca);
+            $result = $query->execute();
+            $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = 0;
+            while($record = $result->fetchAssoc()){
+                $agguww = node_load($record['nid']);
+                $uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                //$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+                $aResult['total'] += $uwwperccollec;
+                $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
             }
-            unset($dcp);
-        }
 
-        $aResult['listUww'][$uww->nid]['node'] = $uww;
-        
-        unset($uww);        
+            $aResult['rca']['art54applies'] = false;
+            $aResult['rca']['rca_n_incoming_measured']     = 0;
+            $aResult['rca']['rca_n_incoming_calculated']   = 0;
+            $aResult['rca']['rca_n_incoming_estimated']    = 0;
+            $aResult['rca']['rca_n_discharged_measured']   = 0;
+            $aResult['rca']['rca_n_discharged_calculated'] = 0;
+            $aResult['rca']['rca_n_discharged_estimated']  = 0;
+
+            $aResult['rca']['rca_p_incoming_measured']     = 0;
+            $aResult['rca']['rca_p_incoming_calculated']   = 0;
+            $aResult['rca']['rca_p_incoming_estimated']    = 0;
+            $aResult['rca']['rca_p_discharged_measured']   = 0;
+            $aResult['rca']['rca_p_discharged_calculated'] = 0;
+            $aResult['rca']['rca_p_discharged_estimated']  = 0;
+            foreach($uww->field_uwwdcpliste['und'] as $dcplist){
+                $dcp = node_load($dcplist['nid']);
+                /* Cas des pays avec l'ensemble du pays en zone sensible */
+                $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
+                // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+                //     $rcaTypeid = 'SA';
+                // }
+                foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                    $rca = node_load($rcalist['nid']);
+                    $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
+                    if (true === uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
+                        $aResult['rca']['art54applies'] = true;
+                        $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
+                        $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
+                        $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
+                        $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
+                        $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
+                        $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
+
+                        $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
+                        $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
+                        $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
+                        $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
+                        $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
+                        $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
+                        break 2;
+                    }
+                    unset($rca);
+                }
+                unset($dcp);
+            }
+
+            $aResult['listUww'][$uww->nid]['node'] = $uww;
+
+            unset($uww);
+        }
     }
+
     
     return $aResult;
 }
