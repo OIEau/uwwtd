@@ -1283,6 +1283,12 @@ function uuwtd_get_distance_compliance($agg){
     $totalLoadenteringPE_P_NI = 0;
     $totalLoadenteringPercent_P_NI = 0;
 
+
+    $art4complianceTreat = 0;
+    $art4compliancePerf = 0;
+    $art5complianceTreat = 0;
+    $art5compliancePerf = 0;
+
     foreach ($agg->field_agguwwliste['und'] as $uwwtpnid) {
         $uwwtp = node_load($uwwtpnid['nid']);
 

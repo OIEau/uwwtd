@@ -5646,7 +5646,7 @@ function uwwtd_station_set_conformity(&$node){
     //     $compliance_info->treatment_met = '';
     //     $compliance_info->performance_met = '';
     $compliance_info = uwwtd_station_compliance_algo($node, $timestamp); //ALGO2 (et ALGO1)
-    
+
     uwwtd_trace('calculate compliance uwwtp result : ' . var_export($compliance_info, true));
     
     $node->field_uwwtreatmentrequired['und'][0]['value'] = $compliance_info->required;
@@ -6128,9 +6128,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;
-
-
-
+    $totalLoadenteringPE_P_NI = 0;
+    $totalLoadenteringPercent_P_NI = 0;
     foreach($listUwwtpCompliance as $uwwtp) {
         $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
         $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
@@ -7174,6 +7173,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww, $ve
 }
 
 function uwwtd_station_compliance_algo($node, $timestamp){
+
     uwwtd_trace(__FUNCTION__);
     // Get all data needed to calculate compliance
     // Get aglo data first
@@ -7201,6 +7201,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             );
         }
     }
+
     if(count($agglos) == 0){
         $compliance_info->compliance = 'NI';
         $compliance_info->reason = 'Station found to have no information on agglomerations';
@@ -7275,7 +7276,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             );
         }
     }
-    
+
     uwwtd_trace('dcp and rca info use : ' . var_export($dcps, true));
     // If we cant find any discharge points attached to this station then we return no information to the user
     if(count($dcps) == 0){
@@ -7299,7 +7300,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $required_treatment->required_rcac = 0;
                                    
     uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen);
-    
+
     uwwtd_trace('result of uwwtd_get_required_treatment : ' . var_export($required_treatment, true));
     unset($dcps);
 
@@ -7312,8 +7313,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     unset($required_treatment);
     
     uwwtd_trace('$compliance_info become : ' . var_export($compliance_info, true));
-    
-    //same case as below for count($dcp), missing information on dcp    
+
+    //same case as below for count($dcp), missing information on dcp
     if($compliance_info->required == 'NI' || $compliance_info->required == '?'){        
         $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], $compliance_info->reason, $timestamp, null, $node);
@@ -7400,7 +7401,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         && $compliance_info->required_rcaap == 0
         && $compliance_info->required_rcab == 1
         && $compliance_info->required_rcac == 0) {
-        
+
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
         
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
@@ -7423,13 +7424,13 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['false'];
         }  
     }
-    
-    //more stringent nitrogen rcaanitro   
+
+    //more stringent nitrogen rcaanitro
     if ($compliance_info->required_rcaan == 1
         && $compliance_info->required_rcaap == 0
         && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 0) {
-        
+
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
         
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
@@ -7649,7 +7650,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         && $compliance_info->required_rcaap == 0
         && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 1) {
-        
+
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
@@ -7687,7 +7688,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         && $compliance_info->required_rcaap == 1
         && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 1) {
-        
+
        if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval', 'premoval'))
             && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
                             array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
@@ -7718,8 +7719,19 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
             }
         }        
-    }                                
-    
+    }
+
+
+    if ($compliance_info->required_rcaan == 0
+        && $compliance_info->required_rcaap == 1
+        && $compliance_info->required_rcab == 1
+        && $compliance_info->required_rcac == 0) {
+//        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
+//        $compliance_info->compliance = 'C';
+//        $compliance_info->reason = 'Station found to be not compliant because nitrogen treatment is not in place';
+//        $compliance_info->performance_met =  $GLOBALS['uwwtd_value']['performancemet']['true'];
+    }
+
     return $compliance_info;
 }
 
@@ -7952,22 +7964,22 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             } else {
                 // Problem
                 $required_treatment->required = 'NI';
-                $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
+                $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
             }
             break;
-        case 'NA':    
+        case 'NA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 if ($maxgen <= 10000) {
                     $required_treatment->required = 'Appropriate';
                 } else {
-                    $required_treatment->required = 'S';                    
+                    $required_treatment->required = 'S';
                 }
             } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
                 $required_treatment->required = 'S';
             } else {
                 // Problem
                 $required_treatment->required = 'NI';
-                $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';                
+                $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
             }
             break;
 
@@ -7978,16 +7990,16 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 	$required_treatment->required = 'Appropriate';
                 } else {
-                    $required_treatment->required = 'S';                    
+                    $required_treatment->required = 'S';
                 }
             } else {
             	if (true === uwwtd_rca_art54_applies($dcp)) {
-                    $required_treatment->required = 'S';                    
+                    $required_treatment->required = 'S';
                 } elseif ($dcp['rcatype'] == 'SA' || $dcp['rcatype'] == 'A58') {
         			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
                 } else {
-                    uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);              
-                }                              
+                    uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
+                }
             }
             break;
         case 'A51523':
@@ -8003,12 +8015,12 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 	$required_treatment->required = 'Appropriate';
                 } else {
-                    $required_treatment->required = 'S';                    
+                    $required_treatment->required = 'S';
                 }
             } else {
             	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
             		if (true === uwwtd_rca_art54_applies($dcp)) {
-                    	$required_treatment->required = 'S';                    
+                    	$required_treatment->required = 'S';
                 	}
             	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
             		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
@@ -8019,7 +8031,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
             		}
             	} else {
-            		$required_treatment->required = '?'; 
+            		$required_treatment->required = '?';
             	}
             }
             break;
