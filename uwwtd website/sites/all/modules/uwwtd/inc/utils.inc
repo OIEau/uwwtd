@@ -1283,7 +1283,6 @@ function uuwtd_get_distance_compliance($agg){
     $totalLoadenteringPE_P_NI = 0;
     $totalLoadenteringPercent_P_NI = 0;
 
-
     $art4complianceTreat = 0;
     $art4compliancePerf = 0;
     $art5complianceTreat = 0;
@@ -1320,17 +1319,9 @@ function uuwtd_get_distance_compliance($agg){
         // }
 
         // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
-            $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            // dsm($art5_treatment_compliance);
+        $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
         $art5_perf_compliance = '';
-        if (!empty($treatment_required) &&
-            !empty($uwwtp->field_uwwntotperf['und'][0]['value']) &&
-            !empty($uwwtp->field_uwwptotperf['und'][0]['value']) &&
-            !empty($uwwtp->field_uwwotherperf['und'][0]['value']) &&
-            !empty($uwwtp->field_uwww_required_rcab['und'][0]['value']) &&
-            !empty($uwwtp->field_uwww_required_rcac['und'][0]['value']) &&
-            !empty($uwwtp->field_uwww_required_rcaap['und'][0]['value']) &&
-            !empty($uwwtp->field_uwww_required_rcaan['und'][0]['value'])) {
+        if (!empty($treatment_required)) {
             $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
                 $treatment_required,
                 $uwwtp->field_uwwntotperf['und'][0]['value'],
@@ -1341,23 +1332,20 @@ function uuwtd_get_distance_compliance($agg){
                 $uwwtp->field_uwww_required_rcaap['und'][0]['value'],
                 $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
         }
-            //dsm($uwwtp->title);
-            //dsm($art5_treatment_compliance);
-            //dsm($art5_perf_compliance);
-            if ($art5_treatment_compliance == 'NC') {
-                $dist_art5_treatment_pe += $collected_by_uww_for_this_agglo;
-                $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art5complianceTreat = 'NC';
-            }
-            if ($art5_perf_compliance == 'NC') {
-                $dist_art5_perf_pe += $collected_by_uww_for_this_agglo;
-                $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art5compliancePerf = 'NC';
-            }
-            if ($art5_perf_compliance == 'NR') {
-                $dist_art5_perf_pe = '-';
-                $dist_art5_perf_percent = '-';
-            }
+        if ($art5_treatment_compliance == 'NC') {
+            $dist_art5_treatment_pe += $collected_by_uww_for_this_agglo;
+            $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+            $art5complianceTreat = 'NC';
+        }
+        if ($art5_perf_compliance == 'NC') {
+            $dist_art5_perf_pe += $collected_by_uww_for_this_agglo;
+            $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+            $art5compliancePerf = 'NC';
+        }
+        if ($art5_perf_compliance == 'NR') {
+            $dist_art5_perf_pe = '-';
+            $dist_art5_perf_percent = '-';
+        }
         // }
     }
 

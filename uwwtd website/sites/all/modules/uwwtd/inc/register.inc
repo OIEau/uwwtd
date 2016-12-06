@@ -9317,7 +9317,15 @@ function uwwtd_get_register_art5_treatement_type_compliance($treatment_required,
     return $art5_treatment;
 }
 
-function uwwtd_get_register_art5_monitoring_compliance($treatment_required, $monitoring_Ntot, $monitoring_Ptot, $monitoring_other, $required_rcaB, $required_rcaC, $required_rcaaP, $required_rcaaN)
+function uwwtd_get_register_art5_monitoring_compliance(
+    $treatment_required,
+    $monitoring_Ntot,
+    $monitoring_Ptot,
+    $monitoring_other,
+    $required_rcaB,
+    $required_rcaC,
+    $required_rcaaP,
+    $required_rcaaN)
 {
     //if treatment required is 3N, NP P Other (if not NR)then if 3n 'NtotPerf=pass = C if not =NC, if 3np NtotPerf=pass+PtotPerf=pass = C if not = NC, if 3p PtotPerf=pass = C if not = NC
     $art5_monitoring = '';
