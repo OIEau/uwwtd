@@ -3964,7 +3964,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
    $ragglofile = fopen($filename, 'rb');
-   $listtypestat = array('expired', 'pending');
+   $listtypestat = array('expired', 'pending', 'total');
 
    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['file_position'] = 0;
@@ -4072,7 +4072,6 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                 is_numeric($agglo[$ind['distance_art5_perf_in_p.e._(7)']])) {
                 $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] += $agglo[$ind['distance_art5_perf_in_p.e._(7)']];
             }
-
         }
 
         $j++;
@@ -4397,7 +4396,6 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
-
 	    if (isset($context['sandbox']['data']))
         	$context['results']['distance_to_compliance'] = $context['sandbox']['data'];
 
