@@ -7428,7 +7428,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     //more stringent nitrogen rcaanitro
     if ($compliance_info->required_rcaan == 1
         && $compliance_info->required_rcaap == 0
-        && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 0) {
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))) {
@@ -7502,7 +7501,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     //more stringent nitrogen and phosphorus rcaanitro + rcaapos   
     if ($compliance_info->required_rcaan == 1
         && $compliance_info->required_rcaap == 1
-        && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 0) {
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'premoval', 'nremoval'))) {
@@ -7648,7 +7646,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     //more stringent nitrogen an dother rcaanitro +rcac   
     if ($compliance_info->required_rcaan == 1
         && $compliance_info->required_rcaap == 0
-        && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 1) {
 
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval'))
@@ -7686,7 +7683,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     //more stringent nitrogen and phosphorus and other rcaanitro = rcaPhos + rcac   
     if ($compliance_info->required_rcaan == 1
         && $compliance_info->required_rcaap == 1
-        && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 1) {
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary', 'nremoval', 'premoval')) &&
            true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node, array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other'))) {
