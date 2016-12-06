@@ -678,6 +678,10 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     }
     fclose($rrcafile);
 
+    // Set "Rate of Removal N-tot" and "Rate of Removal P-tot" column in percent format :
+    $sheet->getStyle('AD6:AD10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
+    $sheet->getStyle('AG6:AG10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -8693,7 +8697,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         $ind['number_of_uwwtps_of_the_article_5.4_area_(1)'] => 'Number of UWWTPs of the article 5.4 area (1)', //; ?rcaPlants
         $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => 'Total organic design capacity of the UWWTPs (p.e.) of the article 5.4 area (1)', //; ?rcaPlantsCapacity
         $ind['incoming_loads_(t/y)_n-tot_(1)'] => 'Incoming loads (t/y) N-tot (1)', //; rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
-        $ind['rate_of_removal_n-tot'] => 'Rate of Removal N-tot', //; ?
+        $ind['rate_of_removal_n-tot'] => 'Rate of Removal N-tot (%)', //; ?
         $ind['discharged_loads_(t/y)_n-tot_(1)'] => 'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
         $ind['incoming_loads_(t/y)_p-tot_(1)'] => 'Incoming loads (t/y) P-tot (1)', //; rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
         $ind['rate_of_removal_p-tot'] => 'Rate of Removal P-tot', //; ?
@@ -8718,6 +8722,18 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         if (false === in_array($rca[$i]->field_specialisedzonetype['und'][0]['value'], array('A51523', 'A523', 'SA', 'CSA', 'A54', 'A5854', 'A5154', 'A58', 'A58523', 'A54523', 'A5854523', 'LSA'))) {
             continue;
         }
+
+        // Incoming loads (t/y) N-tot (1) :
+        $incomingLoadsNtot = $rca[$i]->field_rcanincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcanincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcanincomingestimated['und'][0]['value'];
+
+        // Discharged loads (t/y) N-tot :
+        $dischargedLoadsNtot = $rca[$i]->field_rcandischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcandischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcandischargedestimated['und'][0]['value'];
+
+        // Incoming loads (t/y) P-tot (1) :
+        $incomingLoadsPtot = $rca[$i]->field_rcapincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcapincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcapincomingestimated['und'][0]['value'];
+
+        // Discharged loads (t/y) P-tot :
+        $dischargedLoadsPtot = $rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value'];
 
         $line = array(
             //'ID of Sensitive Area', //;       rcaCode
@@ -8781,19 +8797,19 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'] => $rca[$i]->field_rcaplantscapacity['und'][0]['value'],
 
             //'Incoming loads (t/y) N-tot (1)', //;    rcaNIncomingMeasured + rcaNIncomingCalculated + rcaNIncomingEstimated
-            $ind['incoming_loads_(t/y)_n-tot_(1)'] => ($rca[$i]->field_rcanincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcanincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcanincomingestimated['und'][0]['value']),
+            $ind['incoming_loads_(t/y)_n-tot_(1)'] => $incomingLoadsNtot,
             //'Rate of Removal N-tot', //;              ?
             //$ind['rate_of_removal_n-tot'] => 'TODO',         =discharged loads Ntot/incoming loads Ntot
-            $ind['rate_of_removal_n-tot'] =>  ($rca[$i]->field_rcandischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcandischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcandischargedestimated['und'][0]['value']) / ($rca[$i]->field_rcanincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcanincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcanincomingestimated['und'][0]['value']),
+            $ind['rate_of_removal_n-tot'] =>  ($incomingLoadsNtot - $dischargedLoadsNtot) / $incomingLoadsNtot,
             //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
-            $ind['discharged_loads_(t/y)_n-tot_(1)'] => ($rca[$i]->field_rcandischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcandischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcandischargedestimated['und'][0]['value']),
+            $ind['discharged_loads_(t/y)_n-tot_(1)'] => $dischargedLoadsNtot,
 
             //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
-            $ind['incoming_loads_(t/y)_p-tot_(1)'] => ($rca[$i]->field_rcapincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcapincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcapincomingestimated['und'][0]['value']),
+            $ind['incoming_loads_(t/y)_p-tot_(1)'] => $incomingLoadsPtot,
             //'Rate of Removal P-tot', //;              ?
-            $ind['rate_of_removal_p-tot'] => ($rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value']) / ($rca[$i]->field_rcapincomingmeasured['und'][0]['value'] + $rca[$i]->field_rcapincomingcalculated['und'][0]['value'] + $rca[$i]->field_rcapincomingestimated['und'][0]['value']),
+            $ind['rate_of_removal_p-tot'] => ($incomingLoadsPtot - $dischargedLoadsPtot) / $incomingLoadsPtot,
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
-            $ind['discharged_loads_(t/y)_p-tot:_'] => ($rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value']),
+            $ind['discharged_loads_(t/y)_p-tot:_'] => $dischargedLoadsPtot,
 
             //'general Remark', //;                   rcaRemarks
             $ind['general_remark'] => $rca[$i]->field_rcaremarks['und'][0]['value'],
