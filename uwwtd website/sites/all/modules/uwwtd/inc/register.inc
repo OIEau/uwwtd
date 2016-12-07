@@ -3964,7 +3964,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
    $ragglofile = fopen($filename, 'rb');
-   $listtypestat = array('expired', 'pending', 'total');
+   $listtypestat = array('expired', 'pending');
 
    if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['file_position'] = 0;
@@ -4000,7 +4000,6 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
     $j = 0;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         foreach($listtypestat as $typedeadline) {
-
             // Check if expired or pending.
             if ($typedeadline == 'expired' && isset($agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']]) &&
             	$agglo[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] != 'EXP' ) {
@@ -4022,8 +4021,6 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             }
 
             // Distance connection p.e.
-
-
             if (isset($agglo[$ind['art3_compliance']]) &&
             	isset($agglo[$ind['connected_to_collecting_system_p._e.']]) &&
             	isset($agglo[$ind['addressed_through_ias_p._e.']]) &&
@@ -4129,12 +4126,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  (100 * $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
             }
-         //    if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'])) {
-         //    	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  100 - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias_%']);
-        	// }
-        	// if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
-         //    	$context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
-        	// }
+            if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
+                $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
+            }
 
             //secondary % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
@@ -4156,6 +4150,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
+            }
+
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'])) {
+                $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result'];
             }
 
             //more stringent % and distance
