@@ -1283,10 +1283,10 @@ function uuwtd_get_distance_compliance($agg){
     $totalLoadenteringPE_P_NI = 0;
     $totalLoadenteringPercent_P_NI = 0;
 
-    $art4complianceTreat = 0;
-    $art4compliancePerf = 0;
-    $art5complianceTreat = 0;
-    $art5compliancePerf = 0;
+    $art4complianceTreat = '';
+    $art4compliancePerf = '';
+    $art5complianceTreat = '';
+    $art5compliancePerf = '';
 
     foreach ($agg->field_agguwwliste['und'] as $uwwtpnid) {
         $uwwtp = node_load($uwwtpnid['nid']);
@@ -1304,18 +1304,17 @@ function uuwtd_get_distance_compliance($agg){
         // if($agg->field_aggart4compliance['und'][0]['value'] == 'NC') {
             // $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
         // dsm($treatment_required);
-        // dsm($treatmenttypeinplace);
-            if (false === strpos($treatmenttypeinplace, '2')) {
-                $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
-                $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art4complianceTreat = 'NC';
-            }
+        if (false === strpos($treatmenttypeinplace, '2')) {
+            $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
+            $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+            $art4complianceTreat = 'NC';
+        }
 
-            if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
-                $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
-                $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art4compliancePerf = 'NC';
-            }
+        if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
+            $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
+            $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+            $art4compliancePerf = 'NC';
+        }
         // }
 
         // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
@@ -1369,7 +1368,7 @@ function uuwtd_get_distance_compliance($agg){
     $dist_art4_treatment_percent += $percentage_lost;
     $dist_art4_perf_pe += $pe_lost;
     $dist_art4_perf_percent += $percentage_lost;
-    if (true === $percentage_lost > 1 || $pe_lost >= 2000) {
+    if ($percentage_lost > 1 || $pe_lost >= 2000) {
         $art4complianceTreat = 'NC';
         $art4compliancePerf = 'NC'; 
     }
@@ -1388,8 +1387,7 @@ function uuwtd_get_distance_compliance($agg){
         'art5_perf_pe' => $dist_art5_perf_pe,
         'art5_perf_percent' => $dist_art5_perf_percent,
         'art5_perf_compliance' => $art5compliancePerf,
-        );
-    // dsm($dtc);
+    );
 
     return $dtc;	
 }
