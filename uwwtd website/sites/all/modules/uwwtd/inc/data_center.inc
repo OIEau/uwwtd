@@ -2926,21 +2926,6 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs Secondary treatment information found.', $timestamp, $i, $node);
         
-        //bool    
-        if(isset($data['uwwOtherTreatment'])){
-            $check = uwwtd_check_bool($data['uwwOtherTreatment']);
-            // If $check === 0 and any of more str. field === true -> raise error
-            if ($check === 0 && ($data['uwwUV'] || $data['uwwChlorination'] || $data['uwwOzonation'] || $data['uwwSandFiltration'] || $data['uwwMicroFiltration'] || $data['uwwMicroFiltration'])) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['other_treatment_error'], $timestamp, 0 , $node);
-            }
-            if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
-            } else {
-                $node->field_uwwothertreat['und'][0]['value'] = $check;
-            }
-        }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs other treatment found.', $timestamp, $i, $node);
-        
         //bool
         if(isset($data['uwwNRemoval'])){
             $check = uwwtd_check_bool($data['uwwNRemoval']);
@@ -3024,7 +3009,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
             } else {
-                $node->field_uwwother['und'][0]['value'] = $check;
+                $node->field_uwwothertreat['und'][0]['value'] = $check;
             }
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs other type information found.', $timestamp, $i, $node);
