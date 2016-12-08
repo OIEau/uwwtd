@@ -635,12 +635,27 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             'ReceivingAreasSASA'=>'ReceivingAreaSASA',
             'ReceivingAreasSALSAPredecessor'=>'ReceivingAreaSALSAPredecessor'
         );
-        foreach($subkeys as $root=>$key){
-            if(isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])){
-                foreach($datas['UWWTD_Report'][$root][$key] as $rcaValue){
-                    if(isset($imports[$rcaValue['rcaCode']])){
-                        //ajout d'un tableau
-                        $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas['UWWTD_Report'][$root]) && isset($datas['UWWTD_Report'][$root][$key])) {
+                foreach ($datas['UWWTD_Report'][$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas['UWWTD_Report'][$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
+
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
                     }
                 }
             }
@@ -1485,15 +1500,20 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area root of correspo GIS-data file found.', $timestamp, $i, $node);
         
         //bool
-        if(isset($data['rcaArt54Applied'])){
+        // VGO: improved 2016 12 08
+        if (isset($data['rcaArt54Applied'])) {
             $check = uwwtd_check_bool($data['rcaArt54Applied']);
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
             } else {
                 $node->field_rca54applied['und'][0]['value'] = $check;
             }
+        } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 applied information found.', $timestamp, $i, $node);
+
+        if ($node->field_specialisedzonetype['und'][0]['value'] == 'A54' ||
+            $node->field_specialisedzonetype['und'][0]['value'] == 'A5854') {
+            $node->field_rca54applied['und'][0]['value'] = TRUE;
         }
-        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 applied information found.', $timestamp, $i, $node);
 
         $node->field_rca52applied['und'][0]['value'] = '1';
 
@@ -1768,8 +1788,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // TODO : improve this test
         if(isset($data['ReceivingAreasSA54'])) {
-            $node->field_rca54applied['und'][0]['value'] = '1';
-            
             switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
             	case 'M':
             		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
@@ -1794,11 +1812,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }
 
         }
-
-        if(isset($data['ReceivingAreasSASA'])) {
-
-        }
-        // dsm($node);
 
         // save node
         node_save($node);
@@ -6062,7 +6075,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];                                                        
         return $aResult;
     }    
-    
+
     $listStationArticleAndUwwtpCompliance = array();
     foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
         //ALGO6
@@ -6217,7 +6230,7 @@ function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompl
 function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo) 
 {
     uwwtd_trace(__FUNCTION__);
-    
+
     //art5(4) applies ?
     if (true === $rcainfo['art54applies']) {
         uwwtd_trace('art54applies applies to agglo');
@@ -6234,7 +6247,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         uwwtd_trace("pdischarged = $pdischarged");
         uwwtd_trace("n0.75 = " . (1 - ($ndischarged / $nincoming)));
         uwwtd_trace("p0.75 = " . (1 - ($pdischarged / $pincoming)));
-                        
+
         if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) > 0.75)
             &&
             ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) > 0.75)
@@ -6252,7 +6265,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             }              
         }
     }
-    
+
     if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
         return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
     }
@@ -8170,7 +8183,7 @@ function uwwtd_get_all_info_agguwww($node)
                 foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                     $rca = node_load($rcalist['nid']);
                     $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                    if (true === uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
+                    if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
                         $aResult['rca']['art54applies'] = true;
                         $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
                         $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
@@ -8197,7 +8210,6 @@ function uwwtd_get_all_info_agguwww($node)
             unset($uww);
         }
     }
-
     
     return $aResult;
 }
