@@ -1065,7 +1065,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         /* DG 15/12/2015 add rcaParameterM for RCA main*/
         //bool
-        $node->field_rca_parameter_m['und'][0]['value'] = FALSE;
         if(isset($data['rcaParameterM'])){
             $check = uwwtd_check_bool($data['rcaParameterM']);
             if (false === $check) {
