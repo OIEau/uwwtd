@@ -4590,6 +4590,10 @@ function uwwtd_update_7154(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);
     variable_set('siif_eru_version', __FUNCTION__);
 
+    // Delete field text and recreate in bool :
+    field_delete_field("field_rca_parameter_m");
+    addFieldToContentType('field_rca_parameter_m', 'list_boolean', 'Microbiology', 'receiving_area');
+
     drupal_flush_all_caches();
 
     if (isset($context)) {

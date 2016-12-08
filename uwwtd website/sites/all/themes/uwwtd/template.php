@@ -74,10 +74,46 @@ function uwwtd_preprocess_field(&$variables){
 
   // For booleans
   if (in_array($variables['element']['#field_name'], array(
-        'field_uwwprimarytreatment','field_uwwsecondarytreatment','field_uwwpremoval','field_uwwnremoval','field_uwwuv','field_uwwchlorination','field_uwwozonation','field_uwwsandfiltration','field_uwwmicrofiltration','field_uwwothertreat','field_uwwaccidents',
-        'field_dcpsurfacewaters',
-        'field_aggcritb','field_aggcritca','field_aggcritcb','field_aggchanges','field_aggbesttechnicalknowledge','field_agghaveregistrationsystem','field_aggexistmaintenanceplan','field_aggpressuretest','field_aggvideoinspections','field_aggothermeasures','field_aggaccoverflows','field_aggcapacity','field_agg_dilution_rates',
-        'field_rcaanitro','field_rcaaphos','field_rcab','field_rcac','field_rcamorphology','field_rcahydrologie','field_rcahydraulic','field_rcaabsencerisk','field_rca54applied','field_rca_parameter_n','field_rca_parameter_p','field_rca_parameter_other','field_rca52applied','field_rca58applied'
+      'field_uwwprimarytreatment',
+      'field_uwwsecondarytreatment',
+      'field_uwwpremoval',
+      'field_uwwnremoval',
+      'field_uwwuv',
+      'field_uwwchlorination',
+      'field_uwwozonation',
+      'field_uwwsandfiltration',
+      'field_uwwmicrofiltration',
+      'field_uwwothertreat',
+      'field_uwwaccidents',
+      'field_dcpsurfacewaters',
+      'field_aggcritb',
+      'field_aggcritca',
+      'field_aggcritcb',
+      'field_aggchanges',
+      'field_aggbesttechnicalknowledge',
+      'field_agghaveregistrationsystem',
+      'field_aggexistmaintenanceplan',
+      'field_aggpressuretest',
+      'field_aggvideoinspections',
+      'field_aggothermeasures',
+      'field_aggaccoverflows',
+      'field_aggcapacity',
+      'field_agg_dilution_rates',
+      'field_rcaanitro',
+      'field_rcaaphos',
+      'field_rcab',
+      'field_rcac',
+      'field_rcamorphology',
+      'field_rcahydrologie',
+      'field_rcahydraulic',
+      'field_rcaabsencerisk',
+      'field_rca54applied',
+      'field_rca_parameter_n',
+      'field_rca_parameter_p',
+      'field_rca_parameter_other',
+      'field_rca52applied',
+      'field_rca58applied',
+      'field_rca_parameter_m'
     ))){
     //check for custom tooltips
     $tt = '';
@@ -86,12 +122,10 @@ function uwwtd_preprocess_field(&$variables){
       $tt = $variables['items'][0]['#markup'];
     }
 
-
-
-    if($variables['element']['#items']['0']['value'] === '1' || $variables['element']['#items']['0']['value'] === 'P'){
+    if($variables['element']['#items']['0']['value'] == '1' || $variables['element']['#items']['0']['value'] === 'P'){
       $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
     }
-    elseif($variables['element']['#items']['0']['value'] === '0' || $variables['element']['#items']['0']['value'] === 'F'){
+    elseif($variables['element']['#items']['0']['value'] == '0' || $variables['element']['#items']['0']['value'] === 'F'){
       $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
     }
   }
