@@ -7283,7 +7283,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $required_treatment->required_rcaap = 0;
     $required_treatment->required_rcab = 0;
     $required_treatment->required_rcac = 0;
-                                   
+
     uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen);
 
     uwwtd_trace('result of uwwtd_get_required_treatment : ' . var_export($required_treatment, true));
@@ -7942,11 +7942,15 @@ function uwwtd_zipped_csvs_to_array($files){
 
 function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 	uwwtd_trace(__FUNCTION__);
+
     $required_treatment->reason = '';
     if ($maxgen < 2000) {
     	$required_treatment->required = 'Appropriate';
         return $required_treatment;
     }
+
+    // Default :
+    $required_treatment->required = 'X';
 
     //If more than one dcp, take the most contrianing SA > CSA > A58 > NA > LSA
     $typePriority = array(
@@ -8683,7 +8687,13 @@ function uwwtd_rca_art54_applies($dcp)
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace('rcatype = ' . $dcp['rcatype']);
     uwwtd_trace('rca54applied = ' . ($dcp['rca54applied'] === true ? 'true' : 'false'));
-    $result = (($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) || ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true));
+    $result = (
+        ($dcp['rcatype'] == 'A54' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true)
+    );
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
 }
