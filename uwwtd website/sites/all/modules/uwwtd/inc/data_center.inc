@@ -5895,8 +5895,8 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             $node->field_aggart5compliance['und'][0]['value'] = 'NR';
             $node->field_aggart6compliance['und'][0]['value'] = 'NC';
         } else {
-            if ($node->field_aggart4compliance['und'][0]['value'] != 'NR') {
-                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+            if ($node->field_aggart4compliance['und'][0]['value'] != 'NR' && $node->field_aggart4compliance['und'][0]['value'] != 'PD') {
+                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
                     $node->field_aggart4compliance['und'][0]['value'] = 'NC';
                     $node->field_aggart5compliance['und'][0]['value'] = 'NC';
                     $node->field_aggart6compliance['und'][0]['value'] = 'NR';
@@ -5908,7 +5908,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         }
     } else {
     	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
-    		if ($node->field_aggart5compliance['und'][0]['value'] != 'NR') {
+            if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
                 $node->field_aggart4compliance['und'][0]['value'] = 'NC';
                 $node->field_aggart5compliance['und'][0]['value'] = 'NC';
                 $node->field_aggart6compliance['und'][0]['value'] = 'NR';
