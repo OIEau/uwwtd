@@ -6389,7 +6389,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                     $rcaDateAN .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaanstartdate['und'][0]['value'], 0, 10);
                                     $rcaDateAP .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
                                     $rcaDateB .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
-                                    $rcaDateC .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcacstartdate['und'][0]['value'], 0, 10);
+                                    $rcaDateC .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcacstardate['und'][0]['value'], 0, 10);
                                     unset($rca);
 			                    }
                             }

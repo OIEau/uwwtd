@@ -1777,7 +1777,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         				break;
         			case 'c':
         				$node->field_rcac['und'][0]['value'] = '1';
-        				$node->field_rcacstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
+        				$node->field_rcacstardate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
         				$node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
         				break;
         			default:
@@ -1815,6 +1815,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // save node
         node_save($node);
+        dsm($node);
 
         if (empty($node->nid)) {
             uwwtd_trace('receiving_area ' . $siteId . ' node_save() error2');

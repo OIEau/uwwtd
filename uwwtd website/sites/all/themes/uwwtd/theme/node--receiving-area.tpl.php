@@ -254,8 +254,8 @@ echo uwwtd_insert_errors_tab($node);
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rcac']); ?></td>
-                            <td><?php print ($node->field_rcacstartdate[LANGUAGE_NONE][0]['value'] ?
-                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                            <td><?php print ($node->field_rcacstardate[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacstardate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                             <td><?php print ($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
