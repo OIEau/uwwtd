@@ -3,6 +3,9 @@
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/uwwtd.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 
+// Define treatment as Primary (required or in place)
+define('PRIMARY', 'Primary');
+
 ################################ DATA CENTER PAGE ################################
 function uwwtd_data_form($form, &$form_state){
 
@@ -2654,7 +2657,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, $i, $node);
             } elseif ($check == 1) {           
-                $treatment = 'P';
+                $treatment = PRIMARY;
             }
         }
         //bool        
@@ -7329,7 +7332,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         $compliance_info->reason = 'Treatment found to be appropriate, treatment to implement and performance can therefore not be calculated';
     }         
 
-    if($compliance_info->required == 'P'){
+    if($compliance_info->required == PRIMARY){
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('primary'))) {
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
 
@@ -7998,11 +8001,11 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 if ($maxgen > 150000) {
        				$required_treatment->required = 'S';
                 } else {
-                    $required_treatment->required = 'P';
+                    $required_treatment->required = PRIMARY;
                 }
             } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
                 if ($maxgen >= 2000 && $maxgen <= 10000) {
-                    $required_treatment->required = 'P';
+                    $required_treatment->required = PRIMARY;
                 } else {
                     $required_treatment->required = 'S';
                 }
