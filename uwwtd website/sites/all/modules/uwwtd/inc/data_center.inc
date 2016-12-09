@@ -1815,7 +1815,6 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         // save node
         node_save($node);
-        dsm($node);
 
         if (empty($node->nid)) {
             uwwtd_trace('receiving_area ' . $siteId . ' node_save() error2');
