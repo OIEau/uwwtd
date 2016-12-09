@@ -8857,7 +8857,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
                         $required_treatment->required_rcab = 0;
                         $required_treatment->required_rcac = 1;
                     } else {
-                        $required_treatment->required = 'P';  
+                        $required_treatment->required = 'MP';
                         $required_treatment->required_rcaan = 0;
                         $required_treatment->required_rcaap = 1;
                         $required_treatment->required_rcab = 0;
