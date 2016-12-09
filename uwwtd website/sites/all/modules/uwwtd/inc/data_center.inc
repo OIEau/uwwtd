@@ -1763,7 +1763,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         			case 'aN':
         				$node->field_rcaanitro['und'][0]['value'] = '1';
         				$node->field_rcaanstartdate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
-        				$node->field_rcaandatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+        				$node->field_rcaadatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
         				break;
         			case 'aP':
         				$node->field_rcaaphos['und'][0]['value'] = '1';

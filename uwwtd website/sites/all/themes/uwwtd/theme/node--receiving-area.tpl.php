@@ -214,7 +214,7 @@ echo uwwtd_insert_errors_tab($node);
                                 </div>
                             </td>
                             <td></td>
-                            <td>-</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rca52applied']); ?></td>
