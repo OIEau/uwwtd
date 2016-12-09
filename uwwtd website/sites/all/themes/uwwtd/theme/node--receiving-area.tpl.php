@@ -199,18 +199,15 @@ echo uwwtd_insert_errors_tab($node);
                             <td>
                                 <div>
                                     <b>75% removal nitrogen and phosphorus (5.4):</b>
-                                    <?php if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering) &&
-                                              !empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) : ?>
-                                        <?php
-                                        $ratePhosphorus = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
-                                                $node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) /
-                                            $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
-                                        $rateNitrogen = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
-                                                $node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) /
-                                            $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
-                                        ?>
-                                        <?php print ($ratePhosphorus >= 75 && $rateNitrogen >= 75) ? $validImg : $noValidImg; ?>
+                                    <?php $img75Percent = $noValidImg; ?>
+                                    <?php if (isset($node->field_specialisedzonetype) && !empty($node->field_specialisedzonetype[LANGUAGE_NONE][0]['value']) &&
+                                              ($node->field_specialisedzonetype[LANGUAGE_NONE][0]['value'] === 'A5854' ||
+                                               $node->field_specialisedzonetype[LANGUAGE_NONE][0]['value'] === 'A54' ||
+                                               $node->field_specialisedzonetype[LANGUAGE_NONE][0]['value'] === 'A5854523' ||
+                                               $node->field_specialisedzonetype[LANGUAGE_NONE][0]['value'] === 'A54523')) : ?>
+                                        <?php $img75Percent = $validImg; ?>
                                     <?php endif; ?>
+                                    <?php print $img75Percent; ?>
                                 </div>
                             </td>
                             <td></td>
