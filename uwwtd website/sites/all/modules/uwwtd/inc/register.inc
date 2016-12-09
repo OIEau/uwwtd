@@ -405,8 +405,8 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         $context['sandbox']['line'] = 5; //start line
         uwwtd_trace('-- file size : '.$context['sandbox']['max']);
-        
-        
+
+
         $path_xlsx = uwwtd_getregister_modelfile_path();
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
          //Remove the old file, if needed
@@ -435,7 +435,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //uwwtd_trace('end load');
     //uwwtd_trace('start getSheetByName');
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
-    
+
     $dataArray = $sheet->rangeToArray(
         'A6:CQ12',
         NULL,
@@ -450,7 +450,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $trace = 0;
 	//Warning if the csv file contain more than 10000 lines => the system can probably never re-open the excel file
     while ($j < 10000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
-        
+
         //if($trace == 10){
             uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
         //}
@@ -459,7 +459,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         //}
         //$trace ++;
         $line = array();
-        
+
         foreach($ind as $k=>$conf){
             if($conf['xls']){
                 if(isset($uwwtp[$conf['k']])){
@@ -473,7 +473,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                             case 'round1':
                                 $val = round($val,1);
                               break;
-                            
+
                         }
                     }
                 }else{
@@ -487,14 +487,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $j++;
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        
+
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
-    
+
     //Special rules for cell's style
-	
+
     if(!empty($lines)){
         uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
@@ -512,18 +512,18 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                     ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                     ->getStartColor()->setARGB('FFFFC000');
             }
-            //est-ce nécessaire ? 
+            //est-ce nécessaire ?
             // else{
                     // $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                         // ->getFill()
                         // ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                         // ->getStartColor()->setARGB('FFFFFFFF');
             // }
-            
+
         }
         uwwtd_trace('end style');
-    }   
-    
+    }
+
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
     uwwtd_trace('end loop');
 	//uwwtd_trace('Progress : '.$context['sandbox']['progress'].' / '.$context['sandbox']['max']);
@@ -576,7 +576,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $objWriter->setPreCalculateFormulas(false);
     //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
-    
+
     $objPHPExcel->__destruct();
     unset($objPHPExcel);
     unset($objWriter);
@@ -7374,10 +7374,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
                     $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
 
-                    $startingDateOfApplication_an = ($startingDateOfApplication_an == '' ? '' : ';') . (isset($rca->field_rcaapdatedesignation_value['und'][0]['value']) ? substr($rca->field_rcaapdatedesignation_value['und'][0]['value'], 0, 10)  : '-');
-                    $startingDateOfApplication_ap = $startingDateOfApplication_an;
-                    $startingDateOfApplication_b = $startingDateOfApplication_an;
-                    $startingDateOfApplication_c = ($startingDateOfApplication_c == '' ? '' : ';') . (isset($rca->field_rcacdateotherdirective['und'][0]['value']) ? substr($rca->field_rcacdateotherdirective['und'][0]['value'], 0, 10)  : '-');
+                    $startingDateOfApplication_an = ($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-');
+                    $startingDateOfApplication_ap = ($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-');
+                    $startingDateOfApplication_b = ($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
+                    $startingDateOfApplication_c = ($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
 
                     unset($rca);
                 }
