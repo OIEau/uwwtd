@@ -7175,7 +7175,20 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'name',
             $line[$ind['aggname']] = $agg->title;
             //'status',
-            $line[$ind['aggstatus']] = (isset($agg->field_status['und']) && $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive');
+            $line[$ind['aggstatus']] = '';
+            if (isset($agg->field_status['und'])) {
+                switch ($agg->field_status['und'][0]['value']) {
+                    case (0) :
+                        $line[$ind['aggstatus']] = 'inactive';
+                        break;
+                    case (1) :
+                        $line[$ind['aggstatus']] = 'active';
+                        break;
+                    case (2) :
+                        $line[$ind['aggstatus']] = 'inactive';
+                        break;
+                }
+            }
             //'generated load  p. e.',
             $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
             //'deadline for Art. 3 compliance',
@@ -7205,8 +7218,20 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'name',
             $line[$ind['uww_name']] = $uwwtp->title;
             //'status',
-            $line[$ind['uww_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
-
+            $line[$ind['uww_status']] = '';
+            if (isset($uwwtp->field_status['und'])) {
+                switch ($uwwtp->field_status['und'][0]['value']) {
+                    case (0) :
+                        $line[$ind['uww_status']] = 'inactive';
+                        break;
+                    case (1) :
+                        $line[$ind['uww_status']] = 'active';
+                        break;
+                    case (2) :
+                        $line[$ind['uww_status']] = 'inactive';
+                        break;
+                }
+            }
             //load the agg_uwwtp node to get the percentage enering the uwwtp for this agglo
 //             dsm($agg);
 //             dsm(array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
@@ -8605,7 +8630,20 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
         //'name',
         $line[$ind['aggname']] = $agg->title;
         //'status',
-        $line[$ind['aggstatus']] = $agg->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive';
+        $line[$ind['aggstatus']] = '';
+        if (isset($agg->field_status['und'])) {
+            switch ($agg->field_status['und'][0]['value']) {
+                case (0) :
+                    $line[$ind['aggstatus']] = 'inactive';
+                    break;
+                case (1) :
+                    $line[$ind['aggstatus']] = 'active';
+                    break;
+                case (2) :
+                    $line[$ind['aggstatus']] = 'inactive';
+                    break;
+            }
+        }
         //'generated load  p. e.',
         $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
         //'deadline for Art. 3 compliance',

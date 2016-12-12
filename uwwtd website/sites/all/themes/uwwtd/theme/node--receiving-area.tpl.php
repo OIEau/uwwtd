@@ -139,6 +139,9 @@ echo uwwtd_insert_errors_tab($node);
     if ($view_mode == 'full' && !empty($title)){
    		$printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
         $fieldstat = field_view_field('node', $node, 'field_status');
+        if (!empty($fieldstat[0]['#markup']) && $fieldstat[0]['#markup'] == '2') {
+            $fieldstat[0]['#markup'] = 'Inactive';
+        }
         ?>
         <div class="google-map-banner receiving-area <?php print (empty($printy)) ? 'empty' : ''; ?>">
         	<h1>
