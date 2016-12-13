@@ -8799,11 +8799,11 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Starting date of application a N', //;                  ?
             $ind['starting_date_of_application_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  a P', //;                         rcaAPhos
-            $ind['designation_criteria_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaanitro['und'][0]['value'],
+            $ind['designation_criteria_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaaphos['und'][0]['value'],
             //'Starting date of designation a P', //;                  ?
             $ind['starting_date_of_designation_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] != 0) ?  substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application a P', //;                  ?
-            $ind['starting_date_of_application_a_p'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
+            $ind['starting_date_of_application_a_p'] => ($rca[$i]->field_rcaaphos['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  b', //;                           rcaB
             $ind['designation_criteria_b'] => ($rca[$i]->field_rcab['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcab['und'][0]['value'],
             //'Starting date of designation', //;                      ?
@@ -8864,7 +8864,6 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Remark Related sensitive area (2)', //;   ?
             $ind['remark_related_sensitive_area_(2)'] => $rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
         );
-
         fputcsv($r, $line, ';');
     }
 
