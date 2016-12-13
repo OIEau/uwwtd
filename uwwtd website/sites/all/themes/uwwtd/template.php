@@ -532,6 +532,33 @@ function uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($date) {
     return $return;
 }
 
+/**
+ * Get array of sources files uri for entity matching with given $inspireIdLocalId
+ */
+function uwwtd_get_sourcesfilesuri($inspireIdLocalId, $type) {
+    $sourcesFilesUri = array();
+
+    $query = db_select('node', 'n');
+    $query->innerJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+    $query->leftJoin('field_data_field_sourcefile', 'i', 'n.nid = i.entity_id AND i.entity_type = \'node\'');
+    $query->leftJoin('file_managed', 'fm', 'i.field_sourcefile_fid = fm.fid');
+    $query->leftJoin('field_data_field_inspireidlocalid', 'ins', 'n.nid = ins.entity_id AND ins.entity_type = \'node\'');
+    $query->fields('a', array('field_anneedata_value'));
+    $query->fields('fm', array('uri'));
+    $query->condition('n.type', $type, '=');
+    $query->condition('n.status', 1, '=');
+    $query->condition('ins.field_inspireidlocalid_value', $inspireIdLocalId, '=');
+    $query->orderBy('a.field_anneedata_value', 'ASC');
+    $nodes = $query->execute()->fetchAllAssoc("field_anneedata_value");
+
+    if (!empty($nodes)) {
+        $sourcesFilesUri = $nodes;
+    }
+
+    return $sourcesFilesUri;
+}
+
+
 
 /**
  * Return DQL query to get datas ensitive areas.

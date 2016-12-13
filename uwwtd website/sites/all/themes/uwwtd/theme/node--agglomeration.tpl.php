@@ -433,25 +433,9 @@ echo uwwtd_insert_errors_tab($node);
           </div>
         </fieldset>
       </div>
-      <?php 
-      $option['field_anneedata_value'] = uwwtd_get_all_year();
-      $nbOptionannee = count($option['field_anneedata_value']);
-      $type = $content['field_sourcefile']['#bundle'];
-       foreach($option['field_anneedata_value'] as $optionAnnee){
-            $option['year'] = $optionAnnee;
-            $option['aggCode'] = $content['field_inspireidlocalid'][0]['#markup'];
-            $siteId = uwwtd_get_siteid($type, $option);
-            $entity = uwwtd_check_exist($siteId);
-            
-            if(isset($entity) && $entity!=""){
-                $sourceFile = uwwtd_get_sourcefile($entity);
-                $fileManaged = uwwtd_get_filemanaged($sourceFile);
-                $arrayFile[] = array(
-                    "year" => $option['year'],
-                    "file" => $fileManaged
-             );
-            }
-         }
+      <?php
+      // Get all agglomeration with this field_inspireidlocalid :
+      $sourcesFilesUri = uwwtd_get_sourcesfilesuri($node->field_inspireidlocalid[LANGUAGE_NONE][0]['value'], 'agglomeration');
       ?>
       <div class="uwwthird">
         <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
@@ -459,29 +443,26 @@ echo uwwtd_insert_errors_tab($node);
             <div class="panel-title fieldset-legend"><?php print t('Site information');?></div>
           </legend>
           <div class="panel-body">
-          <?php 
-            if(isset($arrayFile)){
-                foreach($arrayFile as $files){
-                    if($files['year'] == $content['field_anneedata'][0]['#markup']){
-                        if($files['file'] == $content['field_sourcefile'][0]['#file']->filename){
-                        }
-                    }else{
-                        
-                        $outputSiteInfo = '<br><b>'.t('Year of data').': </b>'.$files['year'].'<br>';
-                        $outputSiteInfo.= '<b>'.t('Source of data').': </b><img src="'.url('modules/file/icons/application-octet-stream.png').'" title="application/xml" alt="file"/>';
-                        $outputSiteInfo.= l(t('See sourcefile'), 'public://data_sources/'.$files['file']);
-                    }
-                } 
-            }
-            print render($content['field_anneedata']);
-            $content['field_sourcefile'][0]['#file']->filename = t('See sourcefile');
-            print render($content['field_sourcefile']).'<br/>';
-            if(isset($outputSiteInfo) && $outputSiteInfo !=""){
-                print '<b><i>'.t('Other years').' : </i></b>';
-            }
-            
-            print $outputSiteInfo;
-          ?>
+          <?php if (array_key_exists($content['field_anneedata'][0]['#markup'], $sourcesFilesUri)) : ?>
+              <b><?php print t('Year of data'); ?>:</b> <?php print $sourcesFilesUri[$content['field_anneedata'][0]['#markup']]->field_anneedata_value; ?>
+              <br/>
+              <b><?php print t('Source of data'); ?>:</b> <img src="<?php print url('modules/file/icons/application-octet-stream.png'); ?>" title="application/xml" alt="file"/>
+              <?php print l(t('See sourcefile'), file_create_url($sourcesFilesUri[$content['field_anneedata'][0]['#markup']]->uri)); ?>
+          <?php endif; ?>
+          <br/>
+          <br/>
+          <b><i><?php print t('Other years'); ?> :</i></b>
+          <br/>
+          <?php foreach ($sourcesFilesUri as $sourceFileUri) : ?>
+              <?php if ($sourceFileUri->field_anneedata_value != $content['field_anneedata'][0]['#markup']) : ?>
+                  <b><?php print t('Year of data'); ?>:</b> <?php print $sourceFileUri->field_anneedata_value; ?>
+                  <br/>
+                  <b><?php print t('Source of data'); ?>:</b> <img src="<?php print url('modules/file/icons/application-octet-stream.png'); ?>" title="application/xml" alt="file"/>
+                  <?php print l(t('See sourcefile'), file_create_url($sourceFileUri->uri)); ?>
+                  <br/>
+                  <br/>
+              <?php endif; ?>
+          <?php endforeach; ?>
           </div>
         </fieldset>
         <?php if(isset($node->field_article17_agglo['und'][0]['nid'])): ?>
