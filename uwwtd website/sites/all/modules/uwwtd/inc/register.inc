@@ -5105,84 +5105,86 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['F'].'28')->setValue($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['percentage']);
 
             //art5
-            $sheet->getCell($col['C'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']);
-            $sheet->getCell($col['D'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']);
+            if ($type != 'NA') {
+                $sheet->getCell($col['C'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number']);
+                $sheet->getCell($col['D'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']);
 
-            $sheet->getCell($col['C'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']);
-            $sheet->getCell($col['D'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage']);
+                $sheet->getCell($col['C'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']);
+                $sheet->getCell($col['D'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage']);
 
-            $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
-            $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
-
-
-
-            $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
-            $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
-
-            $sheet->getCell($col['C'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']);
-            $sheet->getCell($col['D'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage']);
-
-            $sheet->getCell($col['C'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']);
-            $sheet->getCell($col['D'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage']);
-
-            $sheet->getCell($col['C'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']);
-            $sheet->getCell($col['D'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage']);
-
-//             $sheet->getCell($col['C'].'36')->setValue('TODO');
-//             $sheet->getCell($col['D'].'36')->setValue('TODO');
-//             $sheet->getCell($col['E'].'36')->setValue('TODO');
-//             $sheet->getCell($col['F'].'36')->setValue('TODO');
-
-            $sheet->getCell($col['C'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']);
-            $sheet->getCell($col['D'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage']);
-
-//             $sheet->getCell($col['C'].'37')->setValue('TODO');
-//             $sheet->getCell($col['D'].'37')->setValue('TODO');
-//             $sheet->getCell($col['E'].'37')->setValue('TODO');
-//             $sheet->getCell($col['F'].'37')->setValue('TODO');
+                $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
+                $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
 
 
-            $sheet->getCell($col['C'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']);
-            $sheet->getCell($col['D'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage']);
 
-            $sheet->getCell($col['C'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']);
-            $sheet->getCell($col['D'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage']);
+                $sheet->getCell($col['C'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']);
+                $sheet->getCell($col['D'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'33')->setValue($context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage']);
 
-            $sheet->getCell($col['C'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']);
-            $sheet->getCell($col['D'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);
+                $sheet->getCell($col['C'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']);
+                $sheet->getCell($col['D'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'34')->setValue($context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage']);
 
-//             $sheet->getCell($col['C'].'40')->setValue('TODO (A58 ?, pending ?)');
-//             $sheet->getCell($col['D'].'40')->setValue('TODO (A58 ?, pending ?)');
-//             $sheet->getCell($col['E'].'40')->setValue('TODO (A58 ?, pending ?)');
-//             $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');
+                $sheet->getCell($col['C'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']);
+                $sheet->getCell($col['D'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'35')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage']);
+
+                $sheet->getCell($col['C'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number']);
+                $sheet->getCell($col['D'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'36')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage']);
+
+    //             $sheet->getCell($col['C'].'36')->setValue('TODO');
+    //             $sheet->getCell($col['D'].'36')->setValue('TODO');
+    //             $sheet->getCell($col['E'].'36')->setValue('TODO');
+    //             $sheet->getCell($col['F'].'36')->setValue('TODO');
+
+                $sheet->getCell($col['C'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']);
+                $sheet->getCell($col['D'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'37')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage']);
+
+    //             $sheet->getCell($col['C'].'37')->setValue('TODO');
+    //             $sheet->getCell($col['D'].'37')->setValue('TODO');
+    //             $sheet->getCell($col['E'].'37')->setValue('TODO');
+    //             $sheet->getCell($col['F'].'37')->setValue('TODO');
 
 
-            $sheet->getCell($col['C'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']);
-            $sheet->getCell($col['D'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['percentage']);
-            $sheet->getCell($col['E'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe']);
-            $sheet->getCell($col['F'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage']);
+                $sheet->getCell($col['C'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']);
+                $sheet->getCell($col['D'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'38')->setValue($context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage']);
+
+                $sheet->getCell($col['C'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']);
+                $sheet->getCell($col['D'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'39')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['percentage']);
+
+                $sheet->getCell($col['C'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']);
+                $sheet->getCell($col['D'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'40')->setValue($context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage']);
+
+    //             $sheet->getCell($col['C'].'40')->setValue('TODO (A58 ?, pending ?)');
+    //             $sheet->getCell($col['D'].'40')->setValue('TODO (A58 ?, pending ?)');
+    //             $sheet->getCell($col['E'].'40')->setValue('TODO (A58 ?, pending ?)');
+    //             $sheet->getCell($col['F'].'40')->setValue('TODO (A58 ?, pending ?)');
+
+
+                $sheet->getCell($col['C'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']);
+                $sheet->getCell($col['D'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['percentage']);
+                $sheet->getCell($col['E'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe']);
+                $sheet->getCell($col['F'].'41')->setValue($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage']);
+            }
 
     //         break;
             unset($context['sandbox']['compliance'][$type]);
