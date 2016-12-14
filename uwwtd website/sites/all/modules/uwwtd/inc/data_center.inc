@@ -335,7 +335,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         //numeric
 //         if(isset($datas['mslWWReusePerc'])) $node->field_mslwwreuseperc['und'][0]['value'] = uwwtd_check_numeric($datas['mslWWReusePerc'], $timestamp,  0 , $node);
         if(isset($datas['mslWWReusePerc'])) {
-            $check = uwwtd_check_numeric($datas['mslWWReusePerc']);
+            $check = uwwtd_check_decimal($datas['mslWWReusePerc']);
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, 0 , $node);
             } else {

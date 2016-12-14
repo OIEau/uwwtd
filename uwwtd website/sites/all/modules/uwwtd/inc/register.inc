@@ -5846,7 +5846,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
 
-
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$context['results']['uwwtp_total_load_generated_pe'] += $agg->field_agggenerated['und'][0]['value'];
