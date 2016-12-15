@@ -4417,6 +4417,23 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                             node_save($aggFull);
                         }
                     }
+                    if (isset($aggFull->field_linked_treatment_plants)) {
+                        $isFound = FALSE;
+                        if (!empty($aggFull->field_linked_treatment_plants[LANGUAGE_NONE])) {
+                            // Check if this aggNid already exists in this treament plant :
+                            foreach ($aggFull->field_linked_treatment_plants[LANGUAGE_NONE] as $nidElement) {
+                                if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $tpNid) {
+                                    $isFound = TRUE;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!$isFound) {
+                            // Add new nid :
+                            $aggFull->field_linked_treatment_plants[LANGUAGE_NONE][] = array('nid' => $tpNid);
+                            node_save($aggFull);
+                        }
+                    }
                 }
 
                 // Create/update link :
@@ -4778,6 +4795,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
                 // uww <-> agg
                 if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)) $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
                 if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)) $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
+                if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)) $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
 
                 // dcp <-> agg
                 if(!uwwtd_in_array_r($aggnid, $dcp->field_linked_agglomerations)) $dcp->field_linked_agglomerations['und'][]['nid'] = $aggnid;
