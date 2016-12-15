@@ -6068,9 +6068,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'compliant p. e.',
         $line[$ind['art4_compliant_p._e.']] = $uwwtpinfo_for_agglo['C']['pe'];
         //'not compliant % of gen. load',
-        $line[$ind['art4_not_compliant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NC']['percent'];
+        $line[$ind['art4_not_compliant_%_of_gen._load']] = _get_compliance_art_4_no_compliant_perc($uwwtpinfo_for_agglo['entering'], $line[$ind['ratio_connected/enentering_%']], $agg->field_agggenerated['und'][0]['value'], $uwwtpinfo_for_agglo['NC']['percent']);
         //'not compliant',
-        $line[$ind['art4_not_compliant']] = $uwwtpinfo_for_agglo['NC']['pe'];
+        $line[$ind['art4_not_compliant']] = _get_compliance_art_4_no_compliant_pe($uwwtpinfo_for_agglo['entering'], $line[$ind['ratio_connected/enentering_%']], $uwwtpinfo_for_agglo['NC']['pe']);
         //'not relevant % of gen. load',
         $line[$ind['art4_not_relevant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NR']['percent'];
         //'not relevant',
@@ -6920,6 +6920,37 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //     exit();
 //     return $allline;
 }
+
+/**
+ * Return value of Compliant Article 4 no compliant in p.e..
+ */
+function _get_compliance_art_4_no_compliant_pe($totalEnteringLoad, $ratioConnectedEntering, $defaultAmount) {
+    $noCompliancePe = 'Cannot be computed';
+    $amount = ($totalEnteringLoad * (100 - $ratioConnectedEntering)) / 100.0;
+    if ($amount > 2000) {
+        $noCompliancePe = $amount - 2000;
+    } else {
+        $noCompliancePe = $defaultAmount;
+    }
+    return $noCompliancePe;
+}
+
+
+/*
+ * Return value of Compliant Article 4 no compliant in percent
+ */
+function _get_compliance_art_4_no_compliant_perc($totalEnteringLoad, $ratioConnectedEntering, $generatedPe, $defaultAmount) {
+    $noCompliancePerc = 'Cannot be computed';
+    $amount = ($totalEnteringLoad * (100 - $ratioConnectedEntering)) / 100.0;
+    if ($amount > 2000) {
+        $noCompliancePe = $amount - 2000;
+        $noCompliancePerc = ($noCompliancePe * 100) / $generatedPe;
+    } else {
+        $noCompliancePerc = $defaultAmount;
+    }
+    return $noCompliancePerc;
+}
+
 
 /**
  *
