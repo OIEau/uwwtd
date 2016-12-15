@@ -1517,10 +1517,10 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
         $node->field_rca52applied['und'][0]['value'] = '1';
 
-        if($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'){
+        if ($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'
+            || $node->field_specialisedzonetype['und'][0]['value'] == 'A58523' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854523') {
             $node->field_rca58applied['und'][0]['value'] = '1';
-        }
-        else{
+        } else {
             $node->field_rca58applied['und'][0]['value'] = '0';
         }
         
@@ -6050,16 +6050,20 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         // uwwtd_trace(__LINE__);      
         // return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     // }   
-    
+
     if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
-        uwwtd_trace(__LINE__);      
+        //cn@oieau.fr || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+    )
+    {
+        uwwtd_trace(__LINE__);
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-    } 
-              
+    }
+
     if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        ||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']) {
-        uwwtd_trace(__LINE__);      
+        //cn@oieau.fr||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+    )
+    {
+        uwwtd_trace(__LINE__);
         return $GLOBALS['uwwtd_value']['compliance']['compliant'];
     }
 
@@ -8103,6 +8107,27 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $required_treatment->required = 'NI';
             $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';
             break;
+    }
+
+    // BB - 04/11 - Adding a step for 9th report format
+    if ($dcp['rcazonetype'] === 'UWWTDLSA') {
+        if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
+            if ($maxgen > 150000) {
+                $required_treatment->required = 'S';
+            } else {
+                $required_treatment->required = 'P';
+            }
+        } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
+            if ($maxgen >= 2000 && $maxgen <= 10000) {
+                $required_treatment->required = 'P';
+            } else {
+                $required_treatment->required = 'S';
+            }
+        } else {
+            // Problem
+            $required_treatment->required = 'NI';
+            $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
+        }
     }
 }
 
