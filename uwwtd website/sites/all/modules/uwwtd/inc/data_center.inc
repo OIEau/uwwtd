@@ -4740,6 +4740,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
                     // uww <-> agg
                     if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)) $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
                     if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)) $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
+                    if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)) $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
 
                     // rca <-> agg
                     if(!uwwtd_in_array_r($aggnid, $rca->field_linked_agglomerations)) $rca->field_linked_agglomerations['und'][]['nid'] = $aggnid;
@@ -7101,15 +7102,15 @@ function uwwtd_article3_compliance($node, $yearReporting){
 
     $aggpercwithouttreatment_percent = $node->field_aggpercwithouttreatment['und'][0]['value'];
     $aggc2_percent = $node->field_aggc2['und'][0]['value'];
-    
+
     // start calculations
     if (($aggpercwithouttreatment_pe + $aggc2_pe) <= 2000 && ($aggpercwithouttreatment_percent + $aggc2_percent) <= 2){
         $art3comp = 'C';
         $reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
         return array($art3comp, null, null, null, null, $reason);
     }
-    
-    
+
+
     if ( ! ($aggpercwithouttreatment_pe > 2000 || $aggpercwithouttreatment_percent > 2)) {
         $art3comp = $GLOBALS['uwwtd_value']['compliance']['compliantQC'];
         $reason = 'Article 3 compliance found to be compliantQC because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" is equal or less than 2% of total waste.';
