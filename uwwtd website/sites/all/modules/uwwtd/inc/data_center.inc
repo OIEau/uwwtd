@@ -5928,13 +5928,19 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             $node->field_aggart6compliance['und'][0]['value'] = 'NC';
         } else {
             if ($node->field_aggart4compliance['und'][0]['value'] != 'NR' && $node->field_aggart4compliance['und'][0]['value'] != 'PD') {
-                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
+                // In case of compliance and still under pending deadline (for art 4 and 5) :
+                if ($node->field_aggart4compliance['und'][0]['value'] == 'C' &&
+                    deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
                     $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-                    $node->field_aggart5compliance['und'][0]['value'] = 'NC';
-                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
                 } else {
-                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-                    $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+                    $node->field_aggart4compliance['und'][0]['value'] = 'PD';
+                }
+                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD' &&
+                    $node->field_aggart5compliance['und'][0]['value'] == 'C' &&
+                    deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+                    $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+                } else {
+                    $node->field_aggart5compliance['und'][0]['value'] = 'PD';
                 }
             }
         }
@@ -5950,6 +5956,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             }
     	}
     }
+
     if($verbose){
         $verbose_msg.=" FINAL : \n";
         $verbose_msg.=" - field_aggart3compliance : ".$node->field_aggart3compliance['und'][0]['value']."\n";
