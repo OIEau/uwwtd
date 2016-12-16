@@ -7853,15 +7853,15 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'monitoring',
-            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitorig results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
+            $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitoring results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
 
             $previous_art5_monitoring = '';
             if (isset($previousuwwtp)) {
-                if(!isset($ind['Monitorig results -other']) && !isset($line[$ind['Monitorig results -other']])){
+                if(!isset($ind['Monitoring results -other']) && !isset($line[$ind['Monitoring results -other']])){
                     $monit = null;
                 }
                 else{
-                    $monit = $line[$ind['Monitorig results -other']];
+                    $monit = $line[$ind['Monitoring results -other']];
                 }
                 $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance(
                     $previous_treatment_required, 
