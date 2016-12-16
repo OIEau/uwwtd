@@ -9174,7 +9174,12 @@ function uwwtd_get_register_treatmenttype_inplace($uwwtp)
     } elseif ($uwwtp->field_uwwpremoval['und'][0]['value'] == '0' && $uwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
         $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3N';
     }
-    if ($uwwtp->field_uwwothertreat['und'][0]['value'] == '1') {
+    if ($uwwtp->field_uwwsandfiltration['und'][0]['value'] == '1' ||
+        $uwwtp->field_uwwother['und'][0]['value'] == '1' ||
+        $uwwtp->field_uwwozonation['und'][0]['value'] == '1' ||
+        $uwwtp->field_uwwuv['und'][0]['value'] == '1' ||
+        $uwwtp->field_uwwchlorination['und'][0]['value'] == '1' ||
+        $uwwtp->field_uwwmicrofiltration['und'][0]['value'] == '1') {
         $treatmenttypeinplace .= ($treatmenttypeinplace == '' ? '': ';' ) .'3other';
     }
     if ($treatmenttypeinplace == '') {
