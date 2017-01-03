@@ -8757,6 +8757,7 @@ function uwwtd_rca_art54_applies($dcp)
         ($dcp['rcatype'] == 'SA' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'CSA' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true)
     );
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
