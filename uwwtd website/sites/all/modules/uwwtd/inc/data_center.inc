@@ -5923,41 +5923,97 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         $verbose_msg.=" -- ALGO10 : field_aggcompliance = ".$node->field_aggcompliance['und'][0]['value']." \n";
     }
     // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
+    // if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
+    //     if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
+    //         $node->field_aggart4compliance['und'][0]['value'] = 'NR';
+    //         $node->field_aggart5compliance['und'][0]['value'] = 'NR';
+    //         $node->field_aggart6compliance['und'][0]['value'] = 'NC';
+    //     } else {
+    //         if ($node->field_aggart4compliance['und'][0]['value'] != 'NR' && $node->field_aggart4compliance['und'][0]['value'] != 'PD') {
+    //             // In case of compliance and still under pending deadline (for art 4 and 5) :
+    //             if ($node->field_aggart4compliance['und'][0]['value'] == 'C' &&
+    //                 deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+    //                 $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+    //             } else {
+    //                 $node->field_aggart4compliance['und'][0]['value'] = 'PD';
+    //             }
+    //             if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD' &&
+    //                 $node->field_aggart5compliance['und'][0]['value'] == 'C' &&
+    //                 deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+    //                 $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+    //             } else {
+    //                 $node->field_aggart5compliance['und'][0]['value'] = 'PD';
+    //             }
+    //         }
+    //     }
+    // } else {
+    // 	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+    //         if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
+    //             $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+    //             $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+    //             $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+    //         } else {
+    //             $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+    //             $node->field_aggart6compliance['und'][0]['value'] = 'NR';
+    //         }
+    // 	}
+    // }
+
     if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
-        if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
-            $node->field_aggart4compliance['und'][0]['value'] = 'NR';
-            $node->field_aggart5compliance['und'][0]['value'] = 'NR';
-            $node->field_aggart6compliance['und'][0]['value'] = 'NC';
-        } else {
-            if ($node->field_aggart4compliance['und'][0]['value'] != 'NR' && $node->field_aggart4compliance['und'][0]['value'] != 'PD') {
-                // In case of compliance and still under pending deadline (for art 4 and 5) :
-                if ($node->field_aggart4compliance['und'][0]['value'] == 'C' &&
-                    deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
-                    $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-                } else {
-                    $node->field_aggart4compliance['und'][0]['value'] = 'PD';
-                }
-                if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD' &&
-                    $node->field_aggart5compliance['und'][0]['value'] == 'C' &&
-                    deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+        if ($node->field_aggart4compliance['und'][0]['value'] == 'C') {
+            if (deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
+            } else {
+                $node->field_aggart4compliance['und'][0]['value'] = 'PD';
+            }
+        }
+
+        if ($node->field_aggart5compliance['und'][0]['value'] == 'C') {
+            if (deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+                $node->field_aggart5compliance['und'][0]['value'] = 'NC';
+            } else {
+                $node->field_aggart5compliance['und'][0]['value'] = 'PD';
+            }
+        }
+
+        if ($node->field_aggart6compliance['und'][0]['value'] == 'C') {
+            if (deadline_beforeorequal_to_referenceyear($node->field_aggperiodover6['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+                $node->field_aggart6compliance['und'][0]['value'] = 'NC';
+            } else {
+                $node->field_aggart6compliance['und'][0]['value'] = 'PD';
+            }
+        }
+    } else {
+        if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
+            if ($node->field_aggart5compliance['und'][0]['value'] == 'C') {
+                if (deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
                     $node->field_aggart5compliance['und'][0]['value'] = 'NC';
                 } else {
                     $node->field_aggart5compliance['und'][0]['value'] = 'PD';
                 }
-            }
+            } 
         }
-    } else {
-    	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
-            if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
-                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-                $node->field_aggart5compliance['und'][0]['value'] = 'NC';
-                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
-            } else {
-                $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-                $node->field_aggart6compliance['und'][0]['value'] = 'NR';
-            }
-    	}
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     if($verbose){
         $verbose_msg.=" FINAL : \n";
