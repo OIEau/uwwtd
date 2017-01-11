@@ -6145,6 +6145,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
         $line[$ind['previous_art4_compliance']] = $previous_art4_compliance;
 
+        if ($line[$ind['art4_compliance_art._4_(only)']] == 'NR') {
+            $uwwtpinfo_for_agglo['distart4_treatment_%'] = 0;
+            $uwwtpinfo_for_agglo['distart4_treatment'] = 0;
+            $uwwtpinfo_for_agglo['distart4_monitoring_%'] = 0;
+            $uwwtpinfo_for_agglo['distart4_monitoring'] = 0;
+        }
 
         //Distance to compliance art. 4',
         //Treatment',
@@ -6157,6 +6163,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'];
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'];
+        
+        
 
         //Compliance Art. 5',
         //'compliant 5 a  (% of gen. load)',
@@ -6299,6 +6307,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Distance to compliance art. 5',
         //Treatment',
         //'% of gen. Load',
+        if ($line[$ind['compliance_art._5_(whole_agglo)']] == 'NR') {
+            $uwwtpinfo_for_agglo['distart5_treatment_%'] = 0;
+            $uwwtpinfo_for_agglo['distart5_treatment'] = 0;
+            $uwwtpinfo_for_agglo['distart5_monitoring_%'] = 0;
+            $uwwtpinfo_for_agglo['distart5_monitoring'] = 0;
+        }
+
         $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'];
         //'in p.e. (6)',
         $line[$ind['distance_art5_treat_in_p.e._(6)']] = $uwwtpinfo_for_agglo['distart5_treatment'];
@@ -6307,6 +6322,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'];
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'];
+        
 
         //current RCA details',
         $dcpWaterBodyType = '';
@@ -8076,8 +8092,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             */
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $secondarypass = 'NR';
-            } elseif ($secondaryinstalled == '0') {
-                $secondarypass = '0';
+            //  BB - 09/01
+            // Commented to fit with condition : Monitoring OK even if equipment missing (as long as bod5 and cod5 OK)
+            // } elseif ($secondaryinstalled == '0') {
+            //     $secondarypass = '0';
             } elseif ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' && $uwwtp->field_uwwcodperf['und'][0]['value'] == 'P') {
                 $secondarypass = '1';
             } else {

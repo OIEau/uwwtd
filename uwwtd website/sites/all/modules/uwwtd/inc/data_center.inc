@@ -2650,7 +2650,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         // site mapping
         // calculate treatment type
         $treatment = 'NI';
-        //bool          
+        //bool 
         if(isset($data['uwwPrimaryTreatment'])) {
             $check = uwwtd_check_bool($data['uwwPrimaryTreatment']);
             if (false === $check) {
@@ -5776,7 +5776,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             $f_aggc1=false;
         }
         if(isset($node->field_aggc2['und'])){
-            $aggc1=$node->field_aggc2['und'][0]['value'];
+            $aggc2=$node->field_aggc2['und'][0]['value'];
             $f_aggc2=true;
         }
         else{
@@ -5784,7 +5784,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             $f_aggc2=false;
         }
         if(isset($node->field_aggpercwithouttreatment['und'])){
-            $aggc1=$node->field_aggpercwithouttreatment['und'][0]['value'];
+            $wt=$node->field_aggpercwithouttreatment['und'][0]['value'];
             $f_wt=true;
         }
         else{

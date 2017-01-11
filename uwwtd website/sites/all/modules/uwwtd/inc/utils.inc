@@ -1040,13 +1040,12 @@ function uwwtd_check_bool($bool){
         // check format
         $bool = trim($bool);
         $bool = check_plain($bool);
+        $bool = strtolower($bool);
 
-        if(($bool == "False")|| ($bool == "false")|| ($bool == "0"))
-        {
+        if(($bool == "false") || ($bool == "0")) {
             $bool = 0;
             return $bool;
-        }elseif(($bool == "True")|| ($bool == "true")|| ($bool == "1"))
-        {
+        } elseif(($bool == "true")|| ($bool == "1")) {
             $bool = 1;
             return $bool;
         }
