@@ -812,6 +812,12 @@ function uwwtd_cron(){
         AS SELECT * from public."UWWTD_DischargePoint";
 	ALTER TABLE wfs."UWWTD_DischargePoint"
 	ADD PRIMARY KEY ("siteId");
+
+    DROP TABLE IF EXISTS wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'";
+    CREATE TABLE wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'"
+        AS SELECT * from public."UWWTD_Feed_MSLevel_'.$conf['siif_eru_country_code'].'";
+    ALTER TABLE wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'"
+    ADD PRIMARY KEY ("siteId");
     ');
 
     	variable_set('uwwtd_wfs_table', time());
