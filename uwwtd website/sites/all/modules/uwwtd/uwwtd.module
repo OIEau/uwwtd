@@ -787,6 +787,7 @@ function uwwtd_permission() {
 
 function uwwtd_cron(){
     $lastGen = variable_get('uwwtd_wfs_table', 0);
+    $mslevel_feed_table = 'UWWTD_FeedMSLevel_'.variable_get('siif_eru_country_code');
 // 	if((time() - $lastGen) > (60*60*24)){
 	// Requires postgres for DROP TABLE IF
 	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
@@ -813,14 +814,14 @@ function uwwtd_cron(){
 	ALTER TABLE wfs."UWWTD_DischargePoint"
 	ADD PRIMARY KEY ("siteId");
 
-    DROP TABLE IF EXISTS wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'";
-    CREATE TABLE wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'"
-        AS SELECT * from public."UWWTD_Feed_MSLevel_'.$conf['siif_eru_country_code'].'";
-    ALTER TABLE wfs."UWWTD_FeedMSLevel_'.$conf['siif_eru_country_code'].'"
+    DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
+    CREATE TABLE wfs."'.$mslevel_feed_table.'"
+        AS SELECT * from public."'.$mslevel_feed_table.'";
+    ALTER TABLE wfs."'.$mslevel_feed_table.'"
     ADD PRIMARY KEY ("siteId");
     ');
 
-    	variable_set('uwwtd_wfs_table', time());
+    variable_set('uwwtd_wfs_table', time());
 // 	}
 }
 
