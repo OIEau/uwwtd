@@ -1515,7 +1515,12 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->field_rca54applied['und'][0]['value'] = TRUE;
         }
 
-        $node->field_rca52applied['und'][0]['value'] = '1';
+        if ($node->field_specialisedzonetype['und'][0]['value'] == 'A523' || $node->field_specialisedzonetype['und'][0]['value'] == 'A54523'
+            || $node->field_specialisedzonetype['und'][0]['value'] == 'A58523' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854523') {
+            $node->field_rca52applied['und'][0]['value'] = '1';
+        } else {
+            $node->field_rca52applied['und'][0]['value'] = '0';
+        }
 
         if ($node->field_specialisedzonetype['und'][0]['value'] == 'A58' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'
             || $node->field_specialisedzonetype['und'][0]['value'] == 'A58523' || $node->field_specialisedzonetype['und'][0]['value'] == 'A5854523') {

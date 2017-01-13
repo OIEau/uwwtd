@@ -826,6 +826,17 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3np_3n_3p;
             $line[$ind['type_of_receiving_area']] = implode(';', $agg_detail['dcptype']);
             
+            // SAVING FOR EU PORTION
+            // Search for this string to find all the fields
+    
+            $agg->field_agg_bigcity_no_treatment_feed['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_0']]);
+            $agg->field_agg_bigcity_primary_feed['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_1']]);
+            $agg->field_agg_bigcity_secondary_feed['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_2']]);
+            $agg->field_agg_bigcity_morestringet_np_feed['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_3n_p_np']]);
+            $agg->field_agg_bigcity_morestringet_other_feed['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
+
+            node_save($agg);
+    
             unset($agg);
             fputcsv($r, $line, ';');
         }
@@ -5069,6 +5080,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['required_rcaaN'] => 'required_rcaaN',
             $ind['required_rcab'] => 'required_rcab',
             $ind['required_rcac'] => 'required_rcac',
+            $ind['agg_art_applied_from_rca'] => 'agg_art_applied_from_rca',
 
             //debug value
             $ind['debug_compliance_agglo_from_algo'] => 'debug_compliance_agglo_from_algo',
@@ -5082,6 +5094,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
     $j = 0;
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         $line = array();
+        $fieldsAndValues_EUFeed = array();
 
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
@@ -5647,6 +5660,17 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                     $rcaDateAP .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
                                     $rcaDateB .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
                                     $rcaDateC .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcacstardate['und'][0]['value'], 0, 10);
+                                    if ($dcp->field_rcatype['und'][0]['value'] == 'NA' || $dcp->field_rcatype['und'][0]['value'] == 'LSA') {
+                                        $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'NA/LSA';
+                                    } else {
+                                        if ($rca->field_rca52applied['und'][0]['value'] == '1') {
+                                            $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'A523';
+                                        }
+                                        if ($rca->field_rca54applied['und'][0]['value'] == '1') {
+                                            $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'A54';
+                                        }
+                                    }
+                                    
                                     unset($rca);
 			                    }
                             }
@@ -5664,6 +5688,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['id_code_of_the_water_body_wfd']] = $dcpWaterbodyID;
         //'ID of WFD river basin district',    ?dcpWFDRBD
         $line[$ind['id_of_wfd_river_basin_district']] = $dcpWFDRBD;
+        $line[$ind['agg_art_applied_from_rca']] = $rcaArtApplied;
         //'entirely discharging into coastal waters?',
         $WBT = explode(';', $dcpWaterBodyTypeCode);
         $entirely_discharge_in_CW = (false !== strpos($dcpWaterBodyTypeCode, 'CW') ? 'yes' : 'no');
@@ -5986,6 +6011,47 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
 
+        // SAVING FOR EU PORTION
+        // Search for this string to find all the fields
+
+        if (deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover6['und'][0]['value'], $annee)) {
+            $art6_compliance_EU_feed = $agg->field_aggart6compliance['und'][0]['value'];
+        } else {
+            $art6_compliance_EU_feed = 'PD';
+        }
+
+        if ($line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] == 'EXP') {
+            $agg_compliance_EU_feed = $agg->field_aggcompliance['und'][0]['value'];
+        } else {
+            $agg_compliance_EU_feed = 'PD';
+        }
+
+        $agg->field_region_nuts1_feed['und'][0]['value'] = $line[$ind['nuts_1_code']];
+        $agg->field_region_nuts2_feed['und'][0]['value'] = $line[$ind['nuts_2_code']];
+        $agg->field_region_nuts3_feed['und'][0]['value'] = $line[$ind['nuts_3_code']];
+
+        $agg->field_agg_connected_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['connected_to_collecting_system_p._e.']]);
+        $agg->field_agg_ias_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['addressed_through_ias_p._e.']]);
+        $agg->field_agg_without_treatment_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['neither_collecting_system_nor_ias_p._e.']]);
+
+        $agg->field_agg_art3_compliance_official_feed['und'][0]['value'] = $line[$ind['art3_compliance']];
+        $agg->field_agg_art4_compliance_official_feed['und'][0]['value'] = $line[$ind['art4_compliance_art._4_(hierarchical_approach)']];
+        $agg->field_agg_art5_compliance_official_feed['und'][0]['value'] = $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']];
+        $agg->field_agg_art6_compliance_official_feed['und'][0]['value'] = $art6_compliance_EU_feed;
+        $agg->field_agg_compliance_official_feed['und'][0]['value'] = $agg_compliance_EU_feed;
+
+        $agg->field_agg_secondary_equipement_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['secondary_treatment_installed_(p._e.)']]);
+        $agg->field_agg_secondary_performance_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['monitoring_results_f._secondary_ok']]);
+        $agg->field_agg_morestringent_treatment_met_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['more_str._treatment_installed_treatment_met_(p._e.)']]);
+        $agg->field_agg_morestringent_perf_met_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['connected_to_collecting_system_p._e.']] - $line[$ind['distance_art5_perf_in_p.e._(7)']]);
+        $agg->field_agg_morestringent_equipment_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['more_str._treatment_installed_(p._e.)']]);
+        $agg->field_agg_morestringent_performance_load_feed['und'][0]['value'] = uwwtd_format_number($line[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
+
+        $agg->field_agg_typeof_sa_feed['und'][0]['value'] = $line[$ind['type_of_receiving_water']];
+        $agg->field_agg_art_applied_sa_feed['und'][0]['value'] = $line[$ind['agg_art_applied_from_rca']];
+        $agg->field_agg_rbd_code_feed['und'][0]['value'] = $line[$ind['id_of_wfd_river_basin_district']];
+
+        node_save($agg);
 
         unset($agg);
         $j++;
@@ -8957,4 +9023,13 @@ function uwwtd_get_compliance_5abc_uwwtp($uwwtp)
     }
 
     return $compliance5x;
+}
+
+function save_for_EU_feed ($node, $fieldsAndValues) {
+
+
+
+    // node_save($node)
+
+    return $node->nid;
 }
