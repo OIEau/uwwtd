@@ -4591,31 +4591,31 @@ function uwwtd_update_7154(&$context = null) {
     variable_set('siif_eru_version', __FUNCTION__);
 
     // Ajout de 25 (Oui 25) nouveaux champs au contenu Agglomeration pour l'export vers le site Europe
-    addFieldToContentType('field_region_nuts1_feed', 'list_text', 'Region (NUTS1)', 'agglomeration');
-    addFieldToContentType('field_region_nuts2_feed', 'list_text', 'Region (NUTS2)', 'agglomeration');
-    addFieldToContentType('field_region_nuts3_feed', 'list_text', 'Region (NUTS3)', 'agglomeration');
-    addFieldToContentType('field_agg_connected_load_feed', 'number_integer', 'Connected load', 'agglomeration');
-    addFieldToContentType('field_agg_ias_load_feed', 'number_integer', 'Load treated through IAS', 'agglomeration');
-    addFieldToContentType('field_agg_without_treatment_load_feed', 'number_integer', 'Load discharged without treatment', 'agglomeration');
-    addFieldToContentType('field_agg_art3_compliance_official_feed', 'list_text', 'Connection compliance (Art 3) official', 'agglomeration');
-    addFieldToContentType('field_agg_art4_compliance_official_feed', 'list_text', '2nd treatment compliance (Art 4) official', 'agglomeration');
-    addFieldToContentType('field_agg_art5_compliance_official_feed', 'list_text', '3rd treatment compliance (Art 5) official', 'agglomeration');
-    addFieldToContentType('field_agg_art6_compliance_official_feed', 'list_text', 'Less sensitive area compliance (Art 6) official', 'agglomeration');
-    addFieldToContentType('field_agg_compliance_official_feed', 'list_text', 'Global compliance official', 'agglomeration');
-    addFieldToContentType('field_agg_secondary_equipement_load_feed', 'number_integer', 'Installation in place for secondary treatment', 'agglomeration');
-    addFieldToContentType('field_agg_secondary_performance_load_feed', 'number_integer', 'Monitoring results ok for secondary treatment', 'agglomeration');
-    addFieldToContentType('field_agg_morestringent_treatment_met_feed', 'number_integer', 'Installation in place for more stringent treatment', 'agglomeration');
-    addFieldToContentType('field_agg_morestringent_perf_met_feed', 'number_integer', 'Monitoring results ok for more stringent treatment', 'agglomeration');
-    addFieldToContentType('field_agg_morestringent_equipment_load_feed', 'number_integer', 'More stringent in place', 'agglomeration');
-    addFieldToContentType('field_agg_morestringent_performance_load_feed', 'number_integer', 'More stringent monitoring ok', 'agglomeration');    
-    addFieldToContentType('field_agg_bigcity_no_treatment_feed', 'number_decimal', 'Big city - Best treatment : No treatment', 'agglomeration');
-    addFieldToContentType('field_agg_bigcity_primary_feed', 'number_decimal', 'Big city - Best treatment : Primary', 'agglomeration');
-    addFieldToContentType('field_agg_bigcity_secondary_feed', 'number_decimal', 'Big city - Best treatment : Secondary', 'agglomeration');
-    addFieldToContentType('field_agg_bigcity_morestringet_np_feed', 'number_decimal', 'Big city - Best treatment : More stringent NP', 'agglomeration');
-    addFieldToContentType('field_agg_bigcity_morestringet_other_feed', 'number_decimal', 'Big city - Best treatment : More stringent other', 'agglomeration');
-    addFieldToContentType('field_agg_typeof_sa_feed', 'text', 'Type of sensitive area', 'agglomeration');
-    addFieldToContentType('field_agg_art_applied_sa_feed', 'text', 'Article applied for SA', 'agglomeration');
-    addFieldToContentType('field_agg_rbd_code_feed', 'text', 'RBD Code', 'agglomeration');
+    addFieldToContentType('field_region_nuts1', 'text', 'Region (NUTS1)', 'agglomeration');
+    addFieldToContentType('field_region_nuts2', 'text', 'Region (NUTS2)', 'agglomeration');
+    addFieldToContentType('field_region_nuts3', 'text', 'Region (NUTS3)', 'agglomeration');
+    addFieldToContentType('field_agg_connected_load_pe', 'number_integer', 'Connected load', 'agglomeration');
+    addFieldToContentType('field_agg_ias_load_pe', 'number_integer', 'Load treated through IAS', 'agglomeration');
+    addFieldToContentType('field_agg_discharge_pe', 'number_integer', 'Load discharged without treatment', 'agglomeration');
+    addFieldToContentType('field_agg_art3_comp_register', 'text', 'Connection compliance (Art 3) official', 'agglomeration');
+    addFieldToContentType('field_agg_art4_comp_register', 'text', '2nd treatment compliance (Art 4) official', 'agglomeration');
+    addFieldToContentType('field_agg_art5_comp_register', 'text', '3rd treatment compliance (Art 5) official', 'agglomeration');
+    addFieldToContentType('field_agg_art6_comp_register', 'text', 'Less sensitive area compliance (Art 6) official', 'agglomeration');
+    addFieldToContentType('field_agg_comp_register', 'text', 'Global compliance official', 'agglomeration');
+    addFieldToContentType('field_agg_equip_s', 'number_integer', 'Installation in place for secondary treatment', 'agglomeration');
+    addFieldToContentType('field_agg_perf_s', 'number_integer', 'Monitoring results ok for secondary treatment', 'agglomeration');
+    addFieldToContentType('field_agg_equip_met_ms', 'number_integer', 'Installation in place for more stringent treatment', 'agglomeration');
+    addFieldToContentType('field_agg_perf_met_ms', 'number_integer', 'Monitoring results ok for more stringent treatment', 'agglomeration');
+    addFieldToContentType('field_agg_equip_ms', 'number_integer', 'More stringent in place', 'agglomeration');
+    addFieldToContentType('field_agg_perf_ms', 'number_integer', 'More stringent monitoring ok', 'agglomeration');
+    addFieldToContentType('field_agg_bc_notreatment', 'number_decimal', 'Big city - Best treatment : No treatment', 'agglomeration');
+    addFieldToContentType('field_agg_bc_primary', 'number_decimal', 'Big city - Best treatment : Primary', 'agglomeration');
+    addFieldToContentType('field_agg_bc_secondary', 'number_decimal', 'Big city - Best treatment : Secondary', 'agglomeration');
+    addFieldToContentType('field_agg_bc_morestringet_np', 'number_decimal', 'Big city - Best treatment : More stringent NP', 'agglomeration');
+    addFieldToContentType('field_agg_bc_morestringet_other', 'number_decimal', 'Big city - Best treatment : More stringent other', 'agglomeration');
+    addFieldToContentType('field_agg_typeof_sa', 'text', 'Type of sensitive area', 'agglomeration');
+    addFieldToContentType('field_agg_art_applied_sa', 'text', 'Article applied for SA', 'agglomeration');
+    addFieldToContentType('field_agg_rbd_code', 'text', 'RBD Code', 'agglomeration');
 
     drupal_flush_all_caches();
 

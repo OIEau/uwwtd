@@ -193,7 +193,7 @@ echo uwwtd_insert_errors_tab($node);
             } else {
               print render($content['field_linked_receiving_areas']);
             }
-            print render($content['field_dcpreceivingwater']);
+            print render($content['field_dcpwfdrbd']);
             print render($content['field_dcpwaterbodyid']);
 		?>
           </div>
