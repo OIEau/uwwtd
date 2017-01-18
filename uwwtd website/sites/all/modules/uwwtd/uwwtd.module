@@ -1089,7 +1089,7 @@ function uwwtd_format_number($number, $precision = 0)
   if ($number === '-') {
     return $number;
   }
-    return number_format($number, $precision, '.', ' ');
+    return number_format($number, $precision, '.', '');
 }
 function uwwtd_format_decimal($number, $precision = 1)
 {
