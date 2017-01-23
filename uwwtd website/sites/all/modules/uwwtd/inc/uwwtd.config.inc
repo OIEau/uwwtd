@@ -385,6 +385,8 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
     'PD' => 'NR',
     'QC' => 'C',
+    'C' => 'C',
+    'NC' => 'NC',
 );
 
 $GLOBALS['uwwtd']['all_compliance']  = array(
