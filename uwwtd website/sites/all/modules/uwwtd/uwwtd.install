@@ -4617,6 +4617,13 @@ function uwwtd_update_7154(&$context = null) {
     addFieldToContentType('field_agg_art_applied_sa', 'text', 'Article applied for SA', 'agglomeration');
     addFieldToContentType('field_agg_rbd_code', 'text', 'RBD Code', 'agglomeration');
 
+    setDecimalAccuracy('field_agglatitude', 20, 8);
+    setDecimalAccuracy('field_agglongitude', 20, 8);
+    setDecimalAccuracy('field_uwwlatitude', 20, 8);
+    setDecimalAccuracy('field_uwwlongitude', 20, 8);
+    setDecimalAccuracy('field_dcplatitude', 20, 8);
+    setDecimalAccuracy('field_dcplongitude', 20, 8);
+
     drupal_flush_all_caches();
 
     if (isset($context)) {
