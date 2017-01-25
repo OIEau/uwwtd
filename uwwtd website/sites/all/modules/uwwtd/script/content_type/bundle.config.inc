@@ -399,8 +399,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
     ),
     'translatable' => '0',
     'storage' => 
@@ -445,8 +445,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'precision' => 20,
+        'scale' => 8,
         'not null' => false,
       ),
     ),
@@ -4929,8 +4929,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
     ),
     'translatable' => '0',
     'storage' => 
@@ -4975,8 +4975,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'precision' => 20,
+        'scale' => 8,
         'not null' => false,
       ),
     ),
@@ -11722,8 +11722,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
       'decimal_separator' => ',',
     ),
     'translatable' => '0',
@@ -11769,8 +11769,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'precision' => 20,
+        'scale' => 8,
         'not null' => false,
       ),
     ),
@@ -12760,8 +12760,8 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
       'decimal_separator' => ',',
     ),
     'translatable' => '0',
@@ -12807,8 +12807,8 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => 32,
-        'scale' => 2,
+        'precision' => 20,
+        'scale' => 8,
         'not null' => false,
       ),
     ),
@@ -19650,8 +19650,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
     ),
     'translatable' => '0',
     'storage' => 
@@ -19852,8 +19852,8 @@ $list_field = array (
     'settings' => 
     array (
       'decimal_separator' => ',',
-      'precision' => 32,
-      'scale' => 2,
+      'precision' => 20,
+      'scale' => 8,
     ),
     'translatable' => '0',
     'storage' => 
