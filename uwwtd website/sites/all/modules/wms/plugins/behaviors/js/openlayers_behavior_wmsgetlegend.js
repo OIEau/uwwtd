@@ -12,12 +12,24 @@
 (function ($) {
   // Initialize settings array.
   Drupal.openlayers.openlayers_behavior_wmsgetlegend = Drupal.openlayers.openlayers_behavior_wmsgetlegend || {};
+  //if(!Drupal.openlayers.openlayers_behavior_wmsgetlegend.memUrl){
+   //   Drupal.openlayers.openlayers_behavior_wmsgetlegend.memUrl = [];
+  //  }
   // Add the wmsgetlegend behavior.
   Drupal.openlayers.addBehavior('openlayers_behavior_wmsgetlegend', function (data, options) {
      
     var map = data.openlayers;
     var legend = {};
-    var container = $('<div class="legend legend-wms" />').appendTo($(options.getlegend_htmlelement));
+    var selector = '';
+    //FIX ME why in some conf we don't have the options.getlegend_htmlelement value but juste an array
+    if(options.getlegend_htmlelement){
+        selector = options.getlegend_htmlelement;
+    }else{
+        selector = options[0];
+    }
+    
+    
+    var container = $('<div class="legend legend-wms" />').appendTo($(selector));
     container.attr('id','openlayers-behavior-wmsgetlegend-target');
     /**
      * fetchLegend : Retrieve the legend for the visible layer.
@@ -47,7 +59,11 @@
                         LAYERS: '',
                         FORMAT: 'image/png'
                     };
-                    urls.push( wms_layers[layer].getFullRequestString(params));    
+                    //if(Drupal.openlayers.openlayers_behavior_wmsgetlegend.memUrl.indexOf(wms_layers[layer].getFullRequestString(params))===-1){
+                        urls.push( wms_layers[layer].getFullRequestString(params));
+                    //    Drupal.openlayers.openlayers_behavior_wmsgetlegend.memUrl.push(wms_layers[layer].getFullRequestString(params));  
+                    //}
+                                     
                 }
                 
             }
@@ -61,6 +77,7 @@
                   url: urls
                 },
                 success: function(result){
+                    container.html('');
                     if(result!=''){
                         container.append(result);
                     }

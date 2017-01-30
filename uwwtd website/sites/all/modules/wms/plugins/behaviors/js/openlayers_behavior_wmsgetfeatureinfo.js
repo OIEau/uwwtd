@@ -78,7 +78,9 @@
           }, 
 
           onClick: function(evt) {
-            //map = data.openlayers;
+            map = data.openlayers;
+            $(map.layerContainerDiv).css( 'cursor', 'progress');
+            
             if(wms_popup){
                 try{
                     wms_popup.destroy();
@@ -88,18 +90,21 @@
             var wmslayers = [];
             var params;
             var sublayers;
+            var layer_drupal_id;
             // TODO check if all layers have same projection
             // TODO check if all layers are from same server
+            
             for (layer in Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.layers) {
               if (wms_layers[layer].visibility && wms_layers[layer].displayInLayerSwitcher !== 0 && (wms_layers[layer].CLASS_NAME == "OpenLayers.Layer.WMS") && wms_layers[layer].isBaseLayer == false ) {
                 sublayers =  wms_layers[layer].params.LAYERS[0].split(',');
+                layer_drupal_id = wms_layers[layer].drupalID;
                 for(l in sublayers){
                     params = {
                         REQUEST: "GetFeatureInfo",
                         BBOX: wms_layers[layer].getExtent().toBBOX(),
                         I: Math.round(evt.xy.x),
                         J: Math.round(evt.xy.y),
-                        INFO_FORMAT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_info_format, 
+                        INFO_FORMAT: options['getfeatureinfo_layer_'+layer_drupal_id] ? options['getfeatureinfo_layer_'+layer_drupal_id]:Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_info_format, 
                         QUERY_LAYERS: sublayers[l],
                         LAYERS: wms_layers[layer].params.LAYERS,
                         FEATURE_COUNT: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_feature_count,
@@ -129,8 +134,10 @@
                    url : wmslayers 
                  },
                  success: function(result) {
+                     $(map.layerContainerDiv).css( 'cursor', 'auto');
                       //Test if we have just an html result or we have to start some js function
                       if(result!=''){
+                          //console.log($(result).html());
                           var pos = wms_layers[wms_layers.length-1].getExtent().getCenterLonLat();
                           wms_popup = new OpenLayers.Popup.FramedCloud(
                                "ol-wms-pop",
@@ -143,7 +150,11 @@
                           data.openlayers.addPopup(wms_popup);
                       }
                  },
-                 fail: Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.fillHTMLerror
+                 fail:function(result){
+                    $(map.layerContainerDiv).css( 'cursor', 'auto');
+                    //alert("La recherche d'information n'a pu aboutir à cause d'une erreur");
+                    //console.log(result);
+                 } 
                });
             }
             else {
@@ -179,10 +190,4 @@
   };
  
 
-  Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.fillHTMLerror = function(result) {
-    /*
-    $('#' + Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_htmlelement).html(result);
-    Drupal.attachBehaviors($('#' + Drupal.openlayers.openlayers_behavior_wmsgetfeatureinfo.getfeatureinfo_htmlelement));
-    */
-  };
 })(jQuery);

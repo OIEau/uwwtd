@@ -308,6 +308,7 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
         if ($count_max < 1 && $count_min < 1) {
           $max = 1;
         }
+        dsm($layer['features']);
         foreach ($layer['features'] as $j => $feature) {
           if ($field && isset($feature['attributes'][$field]) && $count = $feature['attributes'][$field]) {
             // For layers with only a single value always use the
@@ -349,7 +350,9 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
 				}
             }
 			//========================draw the pie chart
+            dsm($fields_series);
 			if(!empty($fields_series)){
+                
 				$data = array();
 				$sum = 0;
 				foreach($fields_series as $serie){
@@ -373,9 +376,10 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
       }
     }
 	
-	libraries_load('d3.drupal');
+	//libraries_load('d3.piechart');
 	//We just need the d3js lib
-	//drupal_add_js(libraries_get_path('d3').'/d3.js');
+    libraries_load('d3.drupal');
+	//drupal_add_js(libraries_get_path('d3').'/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'openlayers_plus') . '/behaviors/openlayers_plus_behavior_piechart.js');
     $options = array();
     $options['styles'] = $this->get_styles();

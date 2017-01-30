@@ -32,16 +32,18 @@ class openlayers_behavior_wmsgetlegend extends openlayers_behavior {
     return array();
   }
 
-  function options_form($defaults) {
+  function options_form($defaults = array()) {
     // TODO only return form when there is at least 1 WMS layer
-    return array(
-      'getlegend_htmlelement' => array(
+    if(is_string($defaults)){
+        $val = $defaults;
+        $defaults = array('getlegend_htmlelement'=>$val);
+    } 
+    return $defaults['getlegend_htmlelement'] = array(
         '#type' => 'textfield',
         '#description' => t("An HTML element that will be filled
           with the query result. Give the jQuery selector (#id or .class). If you use the GetLegend block, the value should be 'getlegend'"),
         '#default_value' => isset($defaults['getlegend_htmlelement']) ?
-          $defaults['getlegend_htmlelement'] : "getlegend",
-      ),
+          $defaults['getlegend_htmlelement'] : "getlegend"
     );
   }
 

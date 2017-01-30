@@ -53,11 +53,21 @@ class openlayers_behavior_wmsgetfeatureinfo extends openlayers_behavior {
       'application/geojson' => 'application/geojson',
       'application/vnd.esri.wms_featureinfo_xml' => 'application/vnd.esri.wms_featureinfo_xml',
       'application/vnd.esri.wms_raw_xml' => 'application/vnd.esri.wms_raw_xml',
-      
-      
     );
+    
+    $layers = array();
+    
+    foreach ($this->map['layers'] as $id => $name) {
+      $layer = openlayers_layer_load($id);
+      if ($layer->data['isBaseLayer'] != 1 && $layer->data['layer_handler']=='wms') { 
+        $layers[] = $layer->name;
+      }
+    }
+    
+    
+    
     // TODO only return form when there is at least 1 WMS layer
-    return array(
+    $configuration_form = array(
       'getfeatureinfo_usevisiblelayers' => array(
         '#title' => "Use All Visible Layers",
         '#type' => 'checkbox',
@@ -80,7 +90,7 @@ class openlayers_behavior_wmsgetfeatureinfo extends openlayers_behavior {
         ),
       ),
       'getfeatureinfo_info_format' => array(
-        '#title' => "Format ",
+        '#title' => "Default Format",
         '#type' => 'select',
         '#options' => $info_formats,
         '#description' => t("The format the server should return. text formats are displayed as-is. The Gml
@@ -122,6 +132,18 @@ class openlayers_behavior_wmsgetfeatureinfo extends openlayers_behavior {
           $defaults['getfeatureinfo_feature_count'] : 50,
       ),
     );
+    
+    foreach ($layers as $key => $layer_name) {
+      $configuration_form['getfeatureinfo_layer_' . $layer_name] = array(
+        '#title' => $layer_name,
+        '#type' => 'select',
+        '#options' => $info_formats,
+        '#default_value' =>  isset($defaults['getfeatureinfo_layer_' . $layer_name]) ? $defaults['getfeatureinfo_layer_' . $layer_name] : array(),
+        '#description' => t("The format the server should return. text formats are displayed as-is. The Gml and geoJson formats are displayed in a Drupal table, and themeable."),
+      );
+    }
+    
+    return $configuration_form;
   }
 
   /**
