@@ -85,9 +85,10 @@ class openlayers_plus_behavior_blockswitcher_plus extends openlayers_behavior {
    * Render.
    */
   public function render(&$map) {
-    drupal_add_js(drupal_get_path('module', 'openlayers_plus')
-      . '/behaviors/openlayers_plus_behavior_blockswitcher_plus.js');
-    drupal_add_js('misc/jquery.cookie.js', 'file');drupal_add_library('system', 'drupal.collapse');
+    drupal_add_js(drupal_get_path('module', 'openlayers_plus'). '/behaviors/openlayers_plus_behavior_blockswitcher_plus.js');
+    drupal_add_js('misc/jquery.cookie.js', 'file');
+    drupal_add_library('system', 'drupal.collapse');
+    drupal_add_library('system', 'ui.slider');
 
     // Format groups.
     $groups = array();

@@ -11,8 +11,8 @@
  */
 ?>
 <script type"text/javascript">
-  if(jQuery(".legend-item").length > 0 && jQuery(".toggleLegend").html() == "[ + ] Show") {
-    jQuery(".toggleLegend").html("[ - ] Hide");
+  if(jQuery(".legend-item").length > 0 && jQuery(".toggleLegend").html() == "[ + ]") {
+    jQuery(".toggleLegend").html("[ - ]");
   }
 
   removeDuplicateLegend();
@@ -30,16 +30,16 @@
   function toggleLegend() {
     removeDuplicateLegend();
     
-    if(jQuery(".toggleLegend").html() == "[ - ] Hide") {
-      jQuery(".toggleLegend").html("[ + ] Show");
+    if(jQuery(".toggleLegend").html() == "[ - ]") {
+      jQuery(".toggleLegend").html("[ + ]");
       jQuery("div.openlayers-legends .legend").hide("slow");
     } else {
-      jQuery(".toggleLegend").html("[ - ] Hide");
+      jQuery(".toggleLegend").html("[ - ]");
       jQuery("div.openlayers-legends .legend").show("slow");
     }
   }
 </script>
-<a onclick="toggleLegend();" class="toggleLegend">[ - ] Hide</a>
+<a onclick="toggleLegend();" class="toggleLegend">[ - ]</a>
 <div class='legend legend-count-<?php print count($legend) ?> clear-block' id='openlayers-legend-<?php print $layer_id ?>'>
   <?php foreach ($legend as $key => $item): ?>
     <?php if (!empty($item['data']['fillColor']) && !empty($item['data']['strokeColor']) && !isset($item['data']['externalGraphic'])): ?>    
@@ -57,4 +57,10 @@
       </div>      
     <?php endif; ?>
   <?php endforeach; ?>
+  <!--
+  <svg style="float:left" height="25" width="25">
+    <circle cx="12" cy="12" r="7" stroke="black" stroke-width="1" fill="white" />
+  </svg>
+  <div style="height: 30px;padding: 3px 0 0 27px;">Périmètre non disponible</div>
+  -->
 </div>

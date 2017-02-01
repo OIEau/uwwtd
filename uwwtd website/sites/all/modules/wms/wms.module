@@ -57,8 +57,8 @@ function wms_menu() {
  */
 function wms_ajax_wmsgetfeatureinfo() {
   $urls = $_POST['url'];
-  $output='';
   //krumo($urls);
+  $output='';
   foreach((array)$urls as $url){
       $url_array = parse_url($url);
       $query = $url_array['query'];
@@ -78,7 +78,7 @@ function wms_ajax_wmsgetfeatureinfo() {
         'request_uri' => $url,
       );  
       $content_object = proxy($requesturl);
-      //krumo($content_object);
+      
     if (is_array($content_object)) {
         if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
           print $content_object[0] . t("Check the proxy module settings.");
@@ -108,6 +108,8 @@ function wms_ajax_wmsgetfeatureinfo() {
         }
     }
     elseif ($content_object) {
+        //krumo($content_object);
+        //krumo($params['INFO_FORMAT']);
         if ($content_object->code == 200) {
           $return = (string) $content_object->data;
           $resultarray =array();
@@ -133,9 +135,15 @@ function wms_ajax_wmsgetfeatureinfo() {
                 }
             }
           }
-          //XML Case
+          //GML Case
+          elseif($params['INFO_FORMAT'] == 'application/vnd.ogc.gml'){
+            $resultarray = wms_process_wmsgetfeatureinfo_gml_result($return, $layers);
+            //krumo($resultarray);
+          }
+          //other Case (XML) --> good luck !
           else{
-            $resultarray = wms_process_wmsgetfeatureinfo_result($return, $layers);
+            $resultarray = wms_process_wmsgetfeatureinfo_gml_result($return, $layers);
+            //krumo($resultarray);
           }
           //module_invoke_all('wms_getfeatureinfo', $resultarray);
           drupal_alter('wms_getfeatureinfo', $resultarray, $url_array);
@@ -148,7 +156,7 @@ function wms_ajax_wmsgetfeatureinfo() {
         $output.= t('Something went wrong');
     }
   }
-  exit($output); 
+  exit('<div class="layers-container">'.$output.'</div>'); 
 }
 
 /**
@@ -355,7 +363,7 @@ function wms_preprocess_wms_getfeatureinfo(&$variables) {
  * @return Array
  * Array of fields + values
   */
-function wms_process_wmsgetfeatureinfo_result($rawxml, $layers) {
+function wms_process_wmsgetfeatureinfo_gml_result($rawxml, $layers) {
   module_load_include('inc', 'wms', 'includes/gml_to_wkt');
   $xmlresult = simplexml_load_string($rawxml);
   $errors = libxml_get_errors();
@@ -365,34 +373,46 @@ function wms_process_wmsgetfeatureinfo_result($rawxml, $layers) {
   }
   libxml_clear_errors();
   $namespaces = $xmlresult->getNameSpaces(true);
-
+  
   $gml = $xmlresult;
   $result = array();
-  foreach ($layers as $layer) {
-    $layername = $layer['layer'];
-    $namespace = $layer['namespace'];
-    $features = $gml->{$layername . '_layer'};
-    foreach ($features as $feature) {
-      $featuredetails = $feature;
-      foreach ((array) $featuredetails as $key => $value) {
-        if (!isset($layerresult)) {
-          $layerresult = array();
+  
+  //TODO : Test if root element == "msGMLOutput" ?
+  //krumo($gml->getName());
+  $gml_child = $gml->children();
+  if(isset($gml_child{0})){
+    $layer_key = $gml_child{0}->getName();
+      foreach ($layers as $layer) {
+        $namespace = $layer['namespace'];
+        $layername ='';
+        if(isset($gml_child{0}->children($namespaces['gml'])->name)){
+            $layername = (string)$gml_child{0}->children($namespaces['gml'])->name;
         }
-        if (is_string($value)) {
-          $layerresult[$key] = $value;
+        else{
+            $layername =$layer['layer'];
         }
-        else {
-          $the_geom = $value->children($namespaces['gml']);
-          if ((isset($the_geom)) && ($wkt = wms_getwkt($the_geom))) {
-            $layerresult[$key] = $wkt;
+        $features = $gml->{$layer_key};
+        $feature_key =str_replace('_layer', '_feature', $layer_key);
+        
+        foreach ($features->{$feature_key} as $feature) {
+          $layerresult = array();  
+          foreach ((array) $feature as $key => $value) {
+            if (is_string($value)) {
+              $layerresult[(string)$key] = (string)$value;
+            }
+            else {
+              $the_geom = $value->children($namespaces['gml']);
+              if ((isset($the_geom)) && ($wkt = wms_getwkt($the_geom))) {
+                $layerresult[$key] = $wkt;
+              }
+            }
           }
+          if (!empty($layerresult)) {
+            $result[$layername][] = $layerresult;
+          }
+          unset($layerresult);
         }
       }
-      if (isset($layerresult)) {
-        $result[$namespace . ":" . $layername][] = $layerresult;
-      }
-      unset($layerresult);
-    }
   }
   return $result;
 }

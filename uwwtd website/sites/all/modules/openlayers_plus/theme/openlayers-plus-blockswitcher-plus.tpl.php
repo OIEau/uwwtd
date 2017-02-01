@@ -1,5 +1,5 @@
 <div class="openlayers_plus-blockswitcher">
-  <a onclick="Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();" class="toggle-button-layerswitcher">[ - ] Hide</a>
+  <h3><a onclick="Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();" class="toggle-button-layerswitcher">[ - ]</a> <?php print t('Legend'); ?></h3>
   <div class='layer-switcher'>
     <div class='layers base'>
         <?php 
@@ -18,7 +18,7 @@
         <?php 
           $fieldset = theme_fieldset(
             array('element' => 
-              array('#title' => t('Data layers'),
+              array('#title' => t('Overlay'),
                 '#children' => '<div class="layers-content"></div>', 
                 '#collapsible' => true
                 )

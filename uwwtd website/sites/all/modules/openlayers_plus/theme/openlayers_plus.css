@@ -97,6 +97,17 @@ div.openlayers-map .openlayers_plus-blockswitcher.sw {
   padding: 3px 0 3px 25px;
 }
 
+div.ol-layer-slider{
+    width:180px;
+}
+
+div.ol-layer-slider .ui-slider-handle{
+    width: 2.1em;
+    font-size:0.7em;
+    text-align:center;
+    color:#999;
+}
+
 /**
  * Blocktoggle ========================================================
  */

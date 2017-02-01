@@ -6,8 +6,8 @@
    
   $(document).ready(function() {
     // Init.
-    if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && $(".toggle-button-layerswitcher").html() == "[ + ] Show") {
-       $(".toggle-button-layerswitcher").html("[ - ] Hide");
+    if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && $(".toggle-button-layerswitcher").html() == "[ + ]") {
+       $(".toggle-button-layerswitcher").html("[ - ]");
      }
      $('.layer-switcher fieldset legend').prepend('<span class="fieldset-toggle"> - </span>');
 
@@ -43,7 +43,7 @@
           for (var i = 0; i < len; i++) {
             var layer = this.map.layers[i];
             if (layer.displayInLayerSwitcher) {
-              cookie_string = cookie_string + layer.drupalID + ":" + layer.visibility;
+              cookie_string = cookie_string + layer.drupalID + ":" + layer.visibility+ ":" + layer.opacity;
               if(i <= len - 2) {
                 cookie_string = cookie_string + ",";
               } else if (i == len - 1) {
@@ -56,13 +56,13 @@
         }
 
         Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher = function() {
-            if($(".toggle-button-layerswitcher").html() == "[ - ] Hide") {
-              $(".toggle-button-layerswitcher").html("[ + ] Show");
+            if($(".toggle-button-layerswitcher").html() == "[ - ]") {
+              $(".toggle-button-layerswitcher").html("[ + ]");
               $("div.openlayers_plus-blockswitcher .layer-switcher").hide("slow");
               $("div.openlayers_plus-blockswitcher").css('width', 'auto');
               $("div.openlayers_plus-blockswitcher").css('height', 'auto');
             } else {
-              $(".toggle-button-layerswitcher").html("[ - ] Hide");
+              $(".toggle-button-layerswitcher").html("[ - ]");
               $("div.openlayers_plus-blockswitcher .layer-switcher").show("slow");
               $("div.openlayers_plus-blockswitcher").css('width', '250px');
               $("div.openlayers_plus-blockswitcher").css('height', '400px');
@@ -83,10 +83,14 @@
           if (cookie_array != undefined) {
             for(var i = 0; i < cookie_array.length; i++) {
               temp = cookie_array[i].split(":");
-              layerSettings[temp[0]] = (temp[1] == "true");
+              layerSettings[temp[0]] ={
+                'visibility':(temp[1] == "true"),
+                'opacity' : temp[2]
+              };
             }
             for(var i = 0; i < this.map.layers.length; i++) {
-              visible = layerSettings[this.map.layers[i].drupalID];
+              visible = layerSettings[this.map.layers[i].drupalID].visibility;
+              opacity = layerSettings[this.map.layers[i].drupalID].opacity;
               if (this.map.layers[i].isBaseLayer) {
                 if ((visible) && (this.map.baseLayer.id != this.map.layers[i].id)) {
                   this.map.setBaseLayer(this.map.layers[i]);
@@ -96,6 +100,8 @@
                 if (this.map.layers[i].displayInLayerSwitcher) {
                   if (this.map.layers[i].visibility != visible) {
                     this.map.layers[i].setVisibility(visible);
+                    this.map.layers[i].setOpacity(opacity);
+                    
                   }
                 }
               }
@@ -143,9 +149,11 @@
             this.layerStates = new Array(len);
             for (var i = 0; i < len; i++) {
               var layerState = this.map.layers[i];
-              this.layerStates[i] = {'name': layerState.name, 'visibility': layerState.visibility, 'inRange': layerState.inRange, 'id': layerState.id};
+              this.layerStates[i] = {'name': layerState.name, 'visibility': layerState.visibility, 'inRange': layerState.inRange, 'id': layerState.id, 'opacity':layerState.opacity};
             }
-
+            //console.log(this.layerStates);
+            
+            
             // Retrieve groups configuration.
             var groups = Drupal.settings.OpenLayersPlusBlockswitcherPlus;
 
@@ -187,6 +195,9 @@
 
                 // Set label text
                 $('label', inputElem).append((layer.title !== undefined) ? layer.title : layer.name);
+                
+                
+                
 
                 //Give specific class to layer checkbox or radio
                 inputElem.addClass(layer.id);
@@ -200,7 +211,36 @@
                     $(inputElem).addClass('activated');
                   }
                 }
+                //Case of overlay layer
                 else {
+                    
+                  // Set slider element
+                  // data-layer-name="'+layer.name+'" data-layer-id="'+layer.id+'"
+                    var layer_slider = $('<div class="ol-layer-slider slider"></div>');
+                    layer_slider.data('layer', layer);
+                    var cursor = $('<div class="ui-slider-handle" id="ui-slider-handle-'+layer.id+'"></div>');
+                    layer_slider.append(cursor);    
+                    $(inputElem).append(layer_slider);
+                    $(layer_slider).slider({
+                        'min':0,
+                        'max':100,
+                        'value': layer.opacity?(layer.opacity*100):100,
+                        'change': function(event, ui) {
+                            var opacity = ui.value/100;
+                            Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.layerOpacity(this, opacity);                            
+                        },
+                        'create': function() {
+                            var l = $(this).data('layer');
+                            var handle = $('#ui-slider-handle-'+l.id);
+                            handle.text( $( this ).slider( "value" ) );
+                        },
+                        'slide':function(event, ui){
+                            var l = $(this).data('layer');
+                            var handle = $('#ui-slider-handle-'+l.id);
+                            handle.text( ui.value );
+                        }
+                    });  
+                    
                   if (this.overlay_style == 'checkbox') {
                     $('input', inputElem)
                     .click(function() { Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.layerClick(this); })
@@ -236,7 +276,16 @@
             }
           }
         };
-
+        
+        /**
+        * Change the opacity of a layer
+        */
+        Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.layerOpacity = function(element, opacity) {            
+            var layer = $(element).data('layer');
+            layer.setOpacity(opacity);
+            Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.setLayers()            
+        };
+        
         /**
          * Click handler that activates or deactivates a layer.
          */
@@ -333,7 +382,11 @@
           //this.getLayers();
           this.redraw();
           
-          $('#openlayers-map').append(this.blockswitcher);
+          
+          //$('#openlayers-map').append(this.blockswitcher); ==> add in the map
+          var map = $(this.map.div);
+          //$('#openlayers-map').after(this.blockswitcher);
+          $(map.parent()).after(this.blockswitcher);
           //this.blockswitcher.show()
           
         }

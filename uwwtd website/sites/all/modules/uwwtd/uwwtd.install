@@ -4617,6 +4617,13 @@ function uwwtd_update_7154(&$context = null) {
     addFieldToContentType('field_agg_art_applied_sa', 'text', 'Article applied for SA', 'agglomeration');
     addFieldToContentType('field_agg_rbd_code', 'text', 'RBD Code', 'agglomeration');
 
+    setDecimalAccuracy('field_agglatitude', 20, 8);
+    setDecimalAccuracy('field_agglongitude', 20, 8);
+    setDecimalAccuracy('field_uwwlatitude', 20, 8);
+    setDecimalAccuracy('field_uwwlongitude', 20, 8);
+    setDecimalAccuracy('field_dcplatitude', 20, 8);
+    setDecimalAccuracy('field_dcplongitude', 20, 8);
+
     drupal_flush_all_caches();
 
     if (isset($context)) {
@@ -4625,9 +4632,26 @@ function uwwtd_update_7154(&$context = null) {
     }
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+    //throw new DrupalUpdateException(__FUNCTION__);
 }
 
+//nd@oieau.fr Update for maps
+function uwwtd_update_7155(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+    drupal_flush_all_caches();
+
+    
+    
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+}
    
 /**
  * Redéfinit la précision et le scale du champs donné.
