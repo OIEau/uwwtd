@@ -837,16 +837,16 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
 
     // Create errors for agglomerations without treatment plant :
-    $batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
+    //$batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
 
     // Create errors for treatment plants without agglomeration :
-    $batch['operations'][]= array('uwwtd_set_errors_tps_without_agg', array($annee));
+    //$batch['operations'][]= array('uwwtd_set_errors_tps_without_agg', array($annee));
 
     // Create errors for treatment plants without discharge point :
-    $batch['operations'][]= array('uwwtd_set_errors_tps_without_dp', array($annee));
+    //$batch['operations'][]= array('uwwtd_set_errors_tps_without_dp', array($annee));
 
     // Create errors for discharging point without treatment plant :
-    $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
+    //$batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
 
     batch_set($batch);
     batch_process('data/import');
@@ -2195,7 +2195,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         //add check for benoit 2015/11/17  
-        /*DG 15/12/2015 add bigCityID*/     
+        //DG 15/12/2015 add bigCityID     
         if(isset($data['bigID']) || isset($data['aggBigID']) || isset($data['bigCityID'])){
             if(isset($data['bigID'])){
                 $node->field_aggbigid['und'][0]['value'] = uwwtd_check_text($data['bigID']);
@@ -2513,7 +2513,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration when the total generated load of the agglomeration will be collected by the collection system or sent by IAS found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add aggBeginLife*/
+        //DG 15/12/2015 add aggBeginLife
         //date
         if(isset($data['aggBeginLife'])){
             $check = uwwtd_check_date($data['aggBeginLife'], $message);
@@ -2525,7 +2525,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add aggEndLife*/        
+        //DG 15/12/2015 add aggEndLife        
         //date
         if(isset($data['aggEndLife'])){
             $check = uwwtd_check_date($data['aggEndLife'], $message);
@@ -3477,7 +3477,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs remarks information found.', $timestamp, $i, $node);
 
-         /*DG 15/12/2015 add uwwBeginLife*/
+         //DG 15/12/2015 add uwwBeginLife
         //date
         if(isset($data['uwwBeginLife'])){
             $check = uwwtd_check_date($data['uwwBeginLife'], $message);
@@ -3489,7 +3489,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add uwwEndLife*/        
+        //DG 15/12/2015 add uwwEndLife       
         //date
         if(isset($data['uwwEndLife'])){
             $check = uwwtd_check_date($data['uwwEndLife'], $message);
@@ -3678,7 +3678,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 $node->field_status['und'][0]['value'] = uwwtd_check_text($data['dcpState']);}
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point status information found.', $timestamp, $i, $node);
 
-            /*DG 15/12/2015 add uwwCode*/
+            //DG 15/12/2015 add uwwCode
             //text
             if(isset($data['uwwID']) || isset($data['uwwCode'])){
                 if(isset($data['uwwID'])){
@@ -3714,7 +3714,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
                 $node->field_rcatype['und'][0]['value'] = uwwtd_check_text($data['dcpTypeOfReceivingArea']);}
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point type of receiving area information found.', $timestamp, $i, $node);
 
-            /*DG 15/12/2015 add rcaCode*/
+            //DG 15/12/2015 add rcaCode
             //text
             if(isset($data['rcaID']) || isset($data['rcaCode'])){
                 if(isset($data['rcaID'])){
@@ -3861,7 +3861,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point WFD reference date information found.', $timestamp, $i, $node);
 
-             /*DG 15/12/2015 add dcpBeginLife*/
+             //DG 15/12/2015 add dcpBeginLife
         //date
         if(isset($data['dcpBeginLife'])){
             $check = uwwtd_check_date($data['dcpBeginLife'], $message);
@@ -3873,7 +3873,7 @@ function uwwtd_import_dcp_batch_process($newFile, $annee, $datas, $repCode, $tim
             }             
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No discharge point date begin life found.', $timestamp, $i, $node);
-        /*DG 15/12/2015 add dcpEndLife*/        
+        //DG 15/12/2015 add dcpEndLife       
         //date
         if(isset($data['dcpEndLife'])){
             $check = uwwtd_check_date($data['dcpEndLife'], $message);
