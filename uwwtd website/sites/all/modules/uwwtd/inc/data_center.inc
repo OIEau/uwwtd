@@ -837,16 +837,16 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     $batch['operations'][]= array('uwwtd_import_data_var', array($annee));
 
     // Create errors for agglomerations without treatment plant :
-    //$batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
+    $batch['operations'][]= array('uwwtd_set_errors_aggs_without_tp', array($annee));
 
     // Create errors for treatment plants without agglomeration :
-    //$batch['operations'][]= array('uwwtd_set_errors_tps_without_agg', array($annee));
+    $batch['operations'][]= array('uwwtd_set_errors_tps_without_agg', array($annee));
 
     // Create errors for treatment plants without discharge point :
-    //$batch['operations'][]= array('uwwtd_set_errors_tps_without_dp', array($annee));
+    $batch['operations'][]= array('uwwtd_set_errors_tps_without_dp', array($annee));
 
     // Create errors for discharging point without treatment plant :
-    //$batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
+    $batch['operations'][]= array('uwwtd_set_errors_dps_without_tp', array($annee));
 
     batch_set($batch);
     batch_process('data/import');
