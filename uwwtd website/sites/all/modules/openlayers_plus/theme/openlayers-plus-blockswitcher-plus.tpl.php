@@ -1,4 +1,4 @@
-<div class="openlayers_plus-blockswitcher">
+<div class="openlayers_plus-blockswitcher" style="display:none;">
   <h3><a onclick="Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();" class="toggle-button-layerswitcher">[ - ]</a> <?php print t('Legend'); ?></h3>
   <div class='layer-switcher'>
     <div class='layers base'>

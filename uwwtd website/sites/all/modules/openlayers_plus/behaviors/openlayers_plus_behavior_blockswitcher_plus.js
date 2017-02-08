@@ -5,6 +5,9 @@
 (function($) {
    
   $(document).ready(function() {
+    //Display the block content
+    $('.openlayers_plus-blockswitcher').show();
+    
     // Init.
     if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && $(".toggle-button-layerswitcher").html() == "[ + ]") {
        $(".toggle-button-layerswitcher").html("[ - ]");
