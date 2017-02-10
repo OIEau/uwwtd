@@ -219,11 +219,13 @@
                     
                   // Set slider element
                   // data-layer-name="'+layer.name+'" data-layer-id="'+layer.id+'"
+                    var container = $('<div class="ol-layer-slider-container"><div class="ol-layer-slider-label">Opacity : </div></div>');
                     var layer_slider = $('<div class="ol-layer-slider slider"></div>');
                     layer_slider.data('layer', layer);
                     var cursor = $('<div class="ui-slider-handle" id="ui-slider-handle-'+layer.id+'"></div>');
-                    layer_slider.append(cursor);    
-                    $(inputElem).append(layer_slider);
+                    layer_slider.append(cursor); 
+                    container.append(layer_slider);                     
+                    $(inputElem).append(container);
                     $(layer_slider).slider({
                         'min':0,
                         'max':100,

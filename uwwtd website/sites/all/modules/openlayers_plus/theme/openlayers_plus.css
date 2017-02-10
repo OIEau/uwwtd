@@ -108,6 +108,16 @@ div.ol-layer-slider .ui-slider-handle{
     color:#999;
 }
 
+div.ol-layer-slider-container div{
+    display:inline-block;
+}
+div.ol-layer-slider-label{
+    font-size:0.8em;
+    font-weight:normal;
+}
+.openlayers_plus-blockswitcher .layers-content .option{
+    font-weight:bold;
+}
 /**
  * Blocktoggle ========================================================
  */
