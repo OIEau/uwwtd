@@ -53,10 +53,13 @@ div.geospatial-award div{
     display:inline-block;
     padding : 14px;
     width:49%;
-    text-align:center;
+}
+div.geospatial-award-img{
+    text-align:right;
 }
 div.geospatial-award-img img{
-    width:250px;
+    width:85px;
 }div.geospatial-award-txt{
+    text-align:left;
     font-weight:bold;
 }
