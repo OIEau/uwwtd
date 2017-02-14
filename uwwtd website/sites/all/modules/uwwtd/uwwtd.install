@@ -4635,14 +4635,44 @@ function uwwtd_update_7154(&$context = null) {
     //throw new DrupalUpdateException(__FUNCTION__);
 }
 
-//nd@oieau.fr Update for maps
+//nd@oieau.fr Update for maps && footer content
 function uwwtd_update_7155(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);
     variable_set('siif_eru_version', __FUNCTION__);
     drupal_flush_all_caches();
 
     
+    /**
+     * Mets à jour le texte du footer.
+     */
+	$pathbock = drupal_get_path('module', 'uwwtd') . '/script/block/footer7117.inc';
+    uwwtd_install_trace($pathbock);
+    //update block
+    _block_rehash('uwwtd'); //theme name here
     
+    //find the bid of the footer block
+	$query = db_select('block_custom', 'bc');
+    $query->fields('bc', array('bid'));             
+    $query->condition('bc.info', 'Footer content', '=');
+	$result = $query->execute();
+    $bidfooter = -1;
+	foreach($result as $row){
+        $bidfooter = $row->bid;
+        break;
+	}
+    
+    if ($bidfooter == -1) {
+        throw new DrupalUpdateException('Error, can\'t find bid id for footer block');
+    }        
+    uwwtd_install_trace('find bid footer in block_custom table : ' . $bidfooter);
+    //Change block settings old view
+      db_update('block_custom')
+      ->fields(array(
+          'body' => file_get_contents($pathbock),
+      ))
+      ->condition('bid', $bidfooter)
+      ->execute();
+      
     
     if (isset($context)) {
         $context['message'] = __FUNCTION__;

@@ -43,3 +43,20 @@
 .content-table, .content-table td {
     text-align: center;
 }
+
+div.geospatial-award{
+    background-color:#fff;
+    color:#4f4f4f;
+    margin:7px;
+}
+div.geospatial-award div{
+    display:inline-block;
+    padding : 14px;
+    width:49%;
+    text-align:center;
+}
+div.geospatial-award-img img{
+    width:250px;
+}div.geospatial-award-txt{
+    font-weight:bold;
+}
