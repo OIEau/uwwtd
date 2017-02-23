@@ -1,5 +1,5 @@
 <div class="openlayers_plus-blockswitcher" style="display:none;">
-  <h3><a onclick="Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();" class="toggle-button-layerswitcher">[ - ]</a> <?php print t('Legend'); ?></h3>
+  <div class="toggle-button-layerswitcher-container"><a class="toggle-button-layerswitcher" title="<?php print t('Layer switcher'); ?>" data-state="-">&nbsp;</a><div class="ol-plus-label"></div></div>
   <div class='layer-switcher'>
     <div class='layers base'>
         <?php 
