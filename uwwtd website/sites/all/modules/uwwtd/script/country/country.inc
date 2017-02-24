@@ -71,8 +71,8 @@ The SIIF concept was initially introduced in 2012 through the Commission Communi
 It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
 It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.');
 define('website_mail','bfb@oieau.fr');
-define('contact_mail','bfb@oieau.fr'),
-define('metadata_catalog_url','http://www.uwwtd.oieau.fr/catalogue/srv'),
+define('contact_mail','bfb@oieau.fr');
+define('metadata_catalog_url','http://www.uwwtd.oieau.fr/catalogue/srv');
 
 $country_config = array();
 
@@ -110,13 +110,13 @@ foreach($country_list as $cc=>$p){
         'page_credits' => str_replace($search, $replace, page_credits_mask),
         'block_homepage' => str_replace($search, $replace, block_homepage_mask),      
         'metadataAgglo' => metadata_catalog_url,
-        'metadataAggloUid' => $p['metadataAggloUid'],
+        'metadataAggloUid' => isset($p['metadataAggloUid'])?$p['metadataAggloUid']:'',
         'metadataUwwtp' => metadata_catalog_url,
-        'metadataUwwtpUid' => $p['metadataUwwtpUid'],
+        'metadataUwwtpUid' => isset($p['metadataUwwtpUid'])?$p['metadataUwwtpUid']:'',
         'metadataDp' => metadata_catalog_url,
-        'metadataDpUid' => $p['metadataDpUid'],
+        'metadataDpUid' => isset($p['metadataDpUid'])?$p['metadataDpUid']:'',
         'metadataRca' => metadata_catalog_url,
-        'metadataRcaUid' => $p['metadataRcaUid'],
+        'metadataRcaUid' => isset($p['metadataRcaUid'])?$p['metadataRcaUid']:'',
 	);
 }
 

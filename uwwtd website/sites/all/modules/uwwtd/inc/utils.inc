@@ -139,10 +139,6 @@ function uwwtd_debug(){
         }
     }
     */
-    $preset = openlayers_map_load('waste_water_treatment_network_map', true);
-    dsm($preset);
-    openlayers_map_save($preset);
-    ctools_export_load_object_reset('openlayers_maps');
     return 'debug';
 }
 

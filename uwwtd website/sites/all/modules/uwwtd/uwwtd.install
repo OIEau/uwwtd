@@ -1360,18 +1360,6 @@ function uwwtd_update_7121(&$context = null)
     menu_delete(array('menu_name' => $menu['menu_name']));    
     menu_save($menu);        
     uwwtd_install_menu($menu, 'main-menu7121.json');  
-    
-//     //install new menu 
-//     $menu = array(
-//         'menu_name' => 'menu-editorial-menu', // Drupal menu machine name
-//         'title' => 'Editorial menu', // Drupal menu display name
-//         'description' => '', // Optional menu description
-//     );
-//     menu_delete(array('menu_name' => $menu['menu_name']));    
-//     menu_save($menu);        
-//     uwwtd_install_menu($menu, 'menu-editorial-menu7121.json');   
-
-    //$plid = 8;    //2 is the id of menu management/Configuration on all site where we want to insert the new link
     $list = menu_load_links('menu-editorial-menu');
 //     dsm($list);
     $bexist = false;
@@ -4485,7 +4473,7 @@ function uwwtd_update_7155(&$context = null) {
     }
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+    //throw new DrupalUpdateException(__FUNCTION__);
 }
    
 /**
