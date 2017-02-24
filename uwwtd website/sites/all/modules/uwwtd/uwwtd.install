@@ -4921,8 +4921,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         } else {
             uwwtd_install_trace('Error, $openlayers_layers not found');          
         }
-    }
-    ctools_export_load_object_reset('openlayers_layers');   
+    }  
     
     foreach($list_map as $filename) {
         if (false === empty($map) && false === in_array($filename, $map)) {
@@ -4956,7 +4955,6 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             uwwtd_install_trace('Error, $openlayers_maps not found');          
         }
     }
-    ctools_export_load_object_reset('openlayers_maps');
     
     foreach($list_style as $filename) {
         if (false === empty($style) && false === in_array($filename, $style)) {
@@ -4982,7 +4980,6 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             uwwtd_install_trace('Error, $openlayers_styles not found');          
         }
     }    
-    ctools_export_load_object_reset('openlayers_styles');
     if ($msgexception != '') {
         throw new DrupalUpdateException($msgexception);
     } 
