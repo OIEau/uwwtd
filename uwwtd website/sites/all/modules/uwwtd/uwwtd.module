@@ -1457,8 +1457,6 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
 //hook_wms_getfeatureinfo_alter
 function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     //Uncomment for debug
-    //krumo($url);
-    //krumo($result);
     foreach($result as $layer=>$features){
         //Natura 2000
         if($url['host']=='bio.discomap.eea.europa.eu'){

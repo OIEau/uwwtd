@@ -4640,7 +4640,33 @@ function uwwtd_update_7155(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);
     variable_set('siif_eru_version', __FUNCTION__);
     drupal_flush_all_caches();
-
+    
+    //Remove old module --> fix error message for drupal > 7.50
+    $modules = array(
+        'openlayers_geosearch',
+        'datatables',
+        'uwwtd_edtiorial_menu',
+        'view_settings__agglo_conformity',
+        'view_settings__uwwtp_treatment',
+        'uwwtd_content_types',
+        'article_17_content_type',
+        'types_de_contenu',
+        'view_settings__agglomeration',
+        'statistics_uwwtd',
+        'uwwtd_bulk_data_deletion_view',
+        'view_settings__uwwtp_map',
+      );
+      db_delete('system')
+        ->condition('name', $modules, 'IN')
+        ->condition('type', 'module')
+        ->execute();
+    
+    //Update maps
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code); 
+    
     
     /**
      * Mets à jour le texte du footer.
@@ -5046,8 +5072,14 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts_1.inc',
         'oieau_nuts_2.inc',
         'oieau_nuts_3.inc',
+        
         'oieau_rbd.inc',
         'oieau_rbdsu.inc',
+        
+        'oieau_eprtr_ntot.inc',
+        'oieau_eprtr_ptot.inc',
+        'oieau_eprtr_toc.inc',
+        
         'bathing_water.inc',
         'oieau_nuts.inc',
         'oieau_rbd_rbdsu.inc',
@@ -5061,14 +5093,13 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'soe_nh3.inc',
         'soe_nitrate.inc',
         'soe_phosphorus.inc',
-        
-        
-        
     ); 
     $list_style = array(
         'agglomerations_style.inc',
         'carr_bleu.inc',
         'triangle_violet.inc',
+        'discharge_points_style.inc',
+        'waste_water_treatment_plant_style.inc'
     );        
     $path = drupal_get_path('module', 'uwwtd') . '/script/openlayers/';
     $pathtomap     = $path . 'map/'; 
