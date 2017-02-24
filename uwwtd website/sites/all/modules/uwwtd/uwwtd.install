@@ -4476,6 +4476,31 @@ function uwwtd_update_7155(&$context = null) {
     //throw new DrupalUpdateException(__FUNCTION__);
 }
    
+//nd@oieau.fr Update for maps
+function uwwtd_update_7156(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    
+    //Update maps
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code); 
+    
+    
+      
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+}   
+   
+   
 /**
  * Redéfinit la précision et le scale du champs donné.
  */
