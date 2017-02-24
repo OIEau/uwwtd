@@ -5084,6 +5084,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'oieau_nuts.inc',
         'oieau_rbd_rbdsu.inc',
         'natura2000.inc',
+        'clc_2012.inc',
         
         'soe_monitoring_stations.inc',  //deprecated
         'soe_nitrates_2011.inc',        //deprecated
