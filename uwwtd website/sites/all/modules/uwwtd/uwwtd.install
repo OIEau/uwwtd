@@ -1,34 +1,5 @@
 <?php 
 
-/*
-======================Debug code for fields && bundles install
-include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
-$t = get_t();   
-$content_type_name= 'uwwtp';
-$contenttypeinfo = $list_contenttype[$content_type_name];
-            
-foreach ($contenttypeinfo['field_info_instance'] as $fieldinstance) {
-
-    //don't create old error link
-    if ($fieldinstance['field_name'] == 'field_uwwtd_error_link') {
-        continue;
-    }
-                    
-    $instance_exist = field_info_instance('node', $fieldinstance['field_name'], $content_type_name);
-    if (! $instance_exist ) {
-        $result = field_create_instance($fieldinstance);
-        $t_args = array('%name' => $fieldname, '%bundle' => $content_type_name);
-        watchdog('node', 'Added field %name to bundle %bundle.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));                
-    }       
-} 
-
-
-
-*/
-
-
-
-
 /***************************************************************************/
 // HOOK
 /***************************************************************************/
@@ -591,26 +562,13 @@ function uwwtd_update_7105(&$context = null)
     
     $list_map = array(
         'agg_compliance_map.inc',  //agglomeration/compliance
-//         'agglomeration.inc',
-//         'receiving_area_test.inc',
-//         'uwwtd_network_map.inc',
-//         'uwwtp_compliance_map.inc',
-//         'uwwtp_treatment_map.inc',
         'waste_water_treatment_network_map.inc', //block home       
     );
     $list_overlay = array(
-//         'agglomeration_conformity_openlayers_1.inc',
-//         'agglomeration_openlayers_1.inc',
         'agglomerations.inc', //home
         'compliance_map.inc', //agglomeration/compliance
         'dcp.inc',            //home
-//         'test_receiving_areas_openlayers_1.inc',
         'uwwtp.inc',         //home
-//         'uwwtp_map_openlayers_1.inc',
-//         'uwwtp_treatment_openlayers_2.inc',
-//         'waste_water_network_openlayers_1.inc',
-//         'waste_water_network_openlayers_2.inc',
-//         'waste_water_network_openlayers_3.inc',
     ); 
     $list_style = array(
         'agglomerations_style.inc',
@@ -635,10 +593,6 @@ function uwwtd_update_7105(&$context = null)
         }  
         
         if (isset($openlayers_layers)) {
-//             $s .=  $filename.'<br>';
-//             $b = openlayers_preset_save($openlayers_layers);
-//             $s.=':'.var_export($b, true).'<br>';
-//              check all table openlayer _style, projection
             $row = array();
             $row['name'] = $openlayers_layers->name;
             $row['title'] = $openlayers_layers->title;
@@ -653,18 +607,6 @@ function uwwtd_update_7105(&$context = null)
                 $msgresult = 'error';
                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
             }
-// 
-//             if ($result == 1) {
-//                 $msgresult = 'insert';
-//             } elseif ($result == 2) {
-//                 $msgresult = 'update';
-//             } elseif ($result == false) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
-//             } else { //unknown
-//                 $msgresult = 'unknown';
-//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
-//             }
             uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
         }
     }
@@ -672,9 +614,6 @@ function uwwtd_update_7105(&$context = null)
     foreach($list_map as $filename) {
         include($pathtomap . $filename);
         if (isset($openlayers_maps)) {
-//             $s .= $filename.'<br>';
-//             $b = openlayers_preset_save($openlayers_maps);
-//             $s.=':'.var_export($b, true).'<br>';
             $row = array();
             $row['name'] = $openlayers_maps->name;
             $row['title'] = $openlayers_maps->title;
@@ -688,19 +627,6 @@ function uwwtd_update_7105(&$context = null)
                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
             }
                         
-//             $result = drupal_write_record('openlayers_maps', $row, 'name');
-//             
-//             if ($result == 1) {
-//                 $msgresult = 'insert';
-//             } elseif ($result == 2) {
-//                 $msgresult = 'update';
-//             } elseif ($result == false) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
-//             } else { //unknown
-//                 $msgresult = 'unknown';
-//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
-//             }
             uwwtd_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
         }
     }
@@ -708,9 +634,6 @@ function uwwtd_update_7105(&$context = null)
     foreach($list_style as $filename) {
         include($pathtostyle . $filename);
         if (isset($openlayers_styles)) {
-//             $s .= $filename.'<br>';
-//             $b = openlayers_preset_save($openlayers_maps);
-//             $s.=':'.var_export($b, true).'<br>';
             $row = array();
             $row['name'] = $openlayers_styles->name;
             $row['title'] = $openlayers_styles->title;
@@ -724,19 +647,6 @@ function uwwtd_update_7105(&$context = null)
                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
             }
                         
-//             $result = drupal_write_record('openlayers_styles', $row, 'name');
-//             
-//             if ($result == 1) {
-//                 $msgresult = 'insert';
-//             } elseif ($result == 2) {
-//                 $msgresult = 'update';
-//             } elseif ($result == false) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
-//             } else { //unknown
-//                 $msgresult = 'unknown';
-//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
-//             }
             uwwtd_install_trace('style ' . $filename . ' result : ' . $msgresult);                             
         }
     }    
@@ -785,15 +695,6 @@ function uwwtd_update_7106(&$context = null)
         ))
         ->execute();
                   
-//     //new module
-//     table block
-//     module       uwwtd                  views
-//     delta        map_home               waste_water_network-block_1
-//     theme        uwwtd                  uwwtd
-//     status       1                      1                          
-//     pages        <front>                ''
-//     region      content                 content
-//     weight      -13
     drupal_flush_all_caches();
     if (isset($context)) {
         $context['message'] = __FUNCTION__;
@@ -830,13 +731,6 @@ function uwwtd_update_7107(&$context = null)
         throw new DrupalUpdateException($error_message);    
     }
     
-//     uwwtd_install_trace(var_export($conf['siif_eru_country_code'], true));
-//     uwwtd_install_trace(var_export($country_config, true));
-//     uwwtd_install_trace(var_export(array_keys($country_config), true));
-//     uwwtd_install_trace(var_export(in_array($conf['siif_eru_country_code'], array_keys($country_config)), true));
-    
-//     throw new DrupalUpdateException('test' . $error_message);  
-    
     $country_code_to_save = strtolower($conf['siif_eru_country_code']);
     variable_set('siif_eru_country_code', $country_code_to_save);
     $country_code = variable_get('siif_eru_country_code', '-1');
@@ -845,123 +739,7 @@ function uwwtd_update_7107(&$context = null)
         throw new DrupalUpdateException('An error occured when saving the country code from settings.php');    
     }
     
-    uwwtd_update_map_overlay($country_config, $country_code);
-    //////////////////////////////////////////////////////////////    
-    // home            map     waste_water_treatment_network_map
-    //                 layer     agglomerations        
-    //                             uwwtp       
-    //                             dcp
-    // agg/compliance  map       agg_compliance_map
-    //                 layer     compliance_map
-    // agg/treatement  map       agglomeration
-    //                 layer    agglomeration_treatment
-    // uwwtp/compliance  map     uwwtp_compliance_map
-    //                 layer     uwwtp_compliance_map
-    // uwwtp/treatement  map     uwwtp_treatment_map
-    //                    layer   uwwtp_treatment
-    //                        
-//     $list_map = array(
-//         'waste_water_treatment_network_map.inc',
-//         'agg_compliance_map.inc',
-//         'agglomeration.inc',
-//         'uwwtp_compliance_map.inc',
-//         'uwwtp_treatment_map.inc',
-//     );
-//     $list_overlay = array(
-//         'agglomerations.inc',
-//         'uwwtp.inc',
-//         'dcp.inc',
-//         'compliance_map.inc',
-//         'agglomeration_treatment.inc',
-//         'uwwtp_compliance_map.inc',
-//         'uwwtp_treatment.inc',
-//     ); 
-//     $list_style = array(
-//         'agglomerations_style.inc',
-//         'carr_bleu.inc',
-//         'triangle_violet.inc',
-//     );        
-//     $path = drupal_get_path('module', 'uwwtd') . '/script/openlayers/';
-//     $pathtomap     = $path . 'map/'; 
-//     $pathtooverlay = $path . 'overlay/';
-//     $pathtostyle = $path . 'style/';
-//     $msgexception = ''; 
-//     foreach($list_overlay as $filename) {
-//         include($pathtooverlay . $filename);
-//         if (isset($openlayers_layers)) {
-//             $row = array();
-//             $row['name'] = $openlayers_layers->name;
-//             $row['title'] = $openlayers_layers->title;
-//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_layers->description;
-//             $row['data'] = $openlayers_layers->data;
-//             $msgresult = 'ok';
-//             try {
-//                 uwwtd_insert_openlayers('openlayers_layers', $row);
-//             } catch (Exception $e) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers layer ' . $filename . '('.$msgresult.')'."\n";
-//             }
-//             uwwtd_install_trace('layer ' . $filename . ' result : ' . $msgresult);            
-//         } else {
-//             uwwtd_install_trace('Error, $openlayers_layers not found');          
-//         }
-//     }
-//        
-//     foreach($list_map as $filename) {
-//         include($pathtomap . $filename);
-//         if (isset($openlayers_maps)) {
-// //             uwwtd_install_trace(var_export($openlayers_maps , true));
-//             $row = array();
-//             $row['name'] = $openlayers_maps->name;
-//             $row['title'] = $openlayers_maps->title;            
-//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_maps->description;
-//             $openlayers_maps->data['center'] = $country_config[$country_code]['openlayers_maps']['center'];
-//             $openlayers_maps->data['behaviors']['openlayers_behavior_gazetteer'] = $country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'];
-//             $row['data'] = $openlayers_maps->data;
-// //             uwwtd_install_trace(var_export($openlayers_maps , true));
-// //             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['center'] , true));
-// //             uwwtd_install_trace(var_export($country_config[$country_code]['openlayers_maps']['behaviors']['openlayers_behavior_gazetteer'] , true));
-//                  
-//             $msgresult = 'ok';
-//             try {
-//                 uwwtd_insert_openlayers('openlayers_maps', $row);
-//             } catch (Exception $e) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
-//             }
-// //             throw new DrupalUpdateException('test7108'); 
-//             uwwtd_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
-//         }  else {
-//             uwwtd_install_trace('Error, $openlayers_maps not found');          
-//         }
-//     }
-//     
-//     foreach($list_style as $filename) {
-//         include($pathtostyle . $filename);
-//         if (isset($openlayers_styles)) {
-//             $row = array();
-//             $row['name'] = $openlayers_styles->name;
-//             $row['title'] = $openlayers_styles->title;
-//             $row['description'] = date('Y/m/d H:i:s') . "\n" . $openlayers_styles->description;
-//             $row['data'] = $openlayers_styles->data;
-//             $msgresult = 'ok';
-//             try {
-//                 uwwtd_insert_openlayers('openlayers_styles', $row);
-//             } catch (Exception $e) {
-//                 $msgresult = 'error';
-//                 $msgexception .= 'Error : can\'t create openlayers style ' . $filename . '('.$msgresult.')'."\n";
-//             }
-//                     
-//             uwwtd_install_trace('style ' . $filename . ' result : ' . $msgresult);                             
-//         }  else {
-//             uwwtd_install_trace('Error, $openlayers_styles not found');          
-//         }
-//     }    
-// 
-//     if ($msgexception != '') {
-//         throw new DrupalUpdateException($msgexception);
-//     } 
-    //////////////////////////   
+    uwwtd_update_map_overlay($country_config, $country_code); 
     
     //set version
     variable_set('siif_eru_version', __FUNCTION__);
@@ -4655,6 +4433,7 @@ function uwwtd_update_7155(&$context = null) {
         'statistics_uwwtd',
         'uwwtd_bulk_data_deletion_view',
         'view_settings__uwwtp_map',
+        'foobartable'
       );
       db_delete('system')
         ->condition('name', $modules, 'IN')
@@ -5130,7 +4909,8 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             uwwtd_install_trace('Error, $openlayers_layers not found');          
         }
     }
-       
+    ctools_export_load_object_reset('openlayers_layers');   
+    
     foreach($list_map as $filename) {
         if (false === empty($map) && false === in_array($filename, $map)) {
             continue;
@@ -5152,6 +4932,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             $msgresult = 'ok';
             try {
                 uwwtd_insert_openlayers('openlayers_maps', $row);
+                
             } catch (Exception $e) {
                 $msgresult = 'error';
                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
@@ -5162,6 +4943,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             uwwtd_install_trace('Error, $openlayers_maps not found');          
         }
     }
+    ctools_export_load_object_reset('openlayers_maps');
     
     foreach($list_style as $filename) {
         if (false === empty($style) && false === in_array($filename, $style)) {
@@ -5187,7 +4969,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
             uwwtd_install_trace('Error, $openlayers_styles not found');          
         }
     }    
-
+    ctools_export_load_object_reset('openlayers_styles');
     if ($msgexception != '') {
         throw new DrupalUpdateException($msgexception);
     } 
