@@ -4,15 +4,28 @@
 .openlayers-legends {
   background: #fff;
   border-radius: 3px;
-  bottom: 5px;
+  
+  top: 112px;
   right: 5px;
+  
   -moz-border-radius: 3px;
   padding: 5px;
   position: absolute;
   -webkit-border-radius: 3px;
   z-index: 3000;
 }
-
+.toggleLegend-container {
+    height:50px;
+}
+.toggleLegend-container a{
+    display:inline-block;
+    background:  url(right-panel-open.svg)no-repeat -160px top;
+    height:50px;
+    width:50px;
+}
+.toggleLegend-container div.ol-plus-label{
+    display:inline-block; 
+}
 .openlayers-legends .legend {
   background: #fff;
   -moz-border-radius: 3px;
@@ -38,6 +51,19 @@
 /**
  * Blockswitcher ======================================================
  */
+.toggle-button-layerswitcher-container{
+    height:50px;
+}
+.toggle-button-layerswitcher-container a{
+    display:inline-block;
+    background:  url(right-panel-open.svg) no-repeat left top;
+    height:50px;
+    width:50px;
+}
+ .toggle-button-layerswitcher-container div.ol-plus-label{
+display:inline-block; 
+}
+ 
 .openlayers-blockswitcher span.key {
   display: block;
   float: left;
@@ -108,6 +134,16 @@ div.ol-layer-slider .ui-slider-handle{
     color:#999;
 }
 
+div.ol-layer-slider-container div{
+    display:inline-block;
+}
+div.ol-layer-slider-label{
+    font-size:0.8em;
+    font-weight:normal;
+}
+.openlayers_plus-blockswitcher .layers-content .option{
+    font-weight:bold;
+}
 /**
  * Blocktoggle ========================================================
  */

@@ -5,7 +5,7 @@ $openlayers_styles->disabled = FALSE; /* Edit this to true to make a default ope
 $openlayers_styles->api_version = 1;
 $openlayers_styles->name = 'waste_water_treatment_plant_style';
 $openlayers_styles->title = 'Waste water treatment plant style';
-$openlayers_styles->description = date('Y-m-d H:i:s');
+$openlayers_styles->description = '';
 $openlayers_styles->data = array(
   'pointRadius' => 6,
   'fillColor' => '#79e0fa',
@@ -18,3 +18,4 @@ $openlayers_styles->data = array(
   'graphicOpacity' => 1,
   'labelAlign' => 'cm',
 );
+

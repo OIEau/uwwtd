@@ -5,13 +5,12 @@
 (function($) {
    
   $(document).ready(function() {
-    // Init.
-    if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && $(".toggle-button-layerswitcher").html() == "[ + ]") {
-       $(".toggle-button-layerswitcher").html("[ - ]");
-     }
-     $('.layer-switcher fieldset legend').prepend('<span class="fieldset-toggle"> - </span>');
-
+    //Display the block content
+    $('.openlayers_plus-blockswitcher').show();
+    
     // Custom fieldset handler.
+    
+     $('.layer-switcher fieldset legend').prepend('<span class="fieldset-toggle"> - </span>');
      $('.layer-switcher fieldset legend').on('click', function(e) {
         var toggleButton = $(this).find('.fieldset-toggle');
         if(toggleButton.html() == ' - ') {
@@ -22,6 +21,25 @@
           $(this).parent().find('.fieldset-wrapper').show('slow');
         }
      });
+     
+    // Init.
+    var state = $(".toggle-button-layerswitcher").data("state");
+    if($("div.openlayers_plus-blockswitcher .layer-switcher").length > 0 && state == "+") {
+       $(".toggle-button-layerswitcher").data("state", "-");
+    }
+    else if(state == '-'){
+        $(".toggle-button-layerswitcher").data("state", "+");
+        $("div.openlayers_plus-blockswitcher .layer-switcher").hide("slow");
+        $("div.openlayers_plus-blockswitcher").css('width', 'auto');
+        $("div.openlayers_plus-blockswitcher").css('height', 'auto');
+    }
+    
+    $(".toggle-button-layerswitcher").click(
+        function(){
+            Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher();
+        }
+    );
+    
   });
 
   /**
@@ -56,13 +74,17 @@
         }
 
         Drupal.behaviors.OpenLayersPlusBlockswitcherPlus.toggleLayerSwitcher = function() {
-            if($(".toggle-button-layerswitcher").html() == "[ - ]") {
-              $(".toggle-button-layerswitcher").html("[ + ]");
+            var state = $(".toggle-button-layerswitcher").data("state");
+            //console.log(state);
+            if(state == "-") {
+              $(".toggle-button-layerswitcher").data("state", "+");
+              $(".toggle-button-layerswitcher-container .ol-plus-label").html("");
               $("div.openlayers_plus-blockswitcher .layer-switcher").hide("slow");
               $("div.openlayers_plus-blockswitcher").css('width', 'auto');
               $("div.openlayers_plus-blockswitcher").css('height', 'auto');
             } else {
-              $(".toggle-button-layerswitcher").html("[ - ]");
+              $(".toggle-button-layerswitcher").data("state", "-");
+              $(".toggle-button-layerswitcher-container .ol-plus-label").html($(".toggle-button-layerswitcher").attr("title"));
               $("div.openlayers_plus-blockswitcher .layer-switcher").show("slow");
               $("div.openlayers_plus-blockswitcher").css('width', '250px');
               $("div.openlayers_plus-blockswitcher").css('height', '400px');
@@ -216,11 +238,13 @@
                     
                   // Set slider element
                   // data-layer-name="'+layer.name+'" data-layer-id="'+layer.id+'"
+                    var container = $('<div class="ol-layer-slider-container"><div class="ol-layer-slider-label">Opacity : </div></div>');
                     var layer_slider = $('<div class="ol-layer-slider slider"></div>');
                     layer_slider.data('layer', layer);
                     var cursor = $('<div class="ui-slider-handle" id="ui-slider-handle-'+layer.id+'"></div>');
-                    layer_slider.append(cursor);    
-                    $(inputElem).append(layer_slider);
+                    layer_slider.append(cursor); 
+                    container.append(layer_slider);                     
+                    $(inputElem).append(container);
                     $(layer_slider).slider({
                         'min':0,
                         'max':100,
@@ -383,10 +407,11 @@
           this.redraw();
           
           
-          //$('#openlayers-map').append(this.blockswitcher); ==> add in the map
+          
           var map = $(this.map.div);
           //$('#openlayers-map').after(this.blockswitcher);
-          $(map.parent()).after(this.blockswitcher);
+          //$(map.parent()).after(this.blockswitcher); // ==> add after the map
+          $(map).append(this.blockswitcher); // ==> add in the map
           //this.blockswitcher.show()
           
         }

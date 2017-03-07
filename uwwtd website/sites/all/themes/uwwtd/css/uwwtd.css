@@ -969,16 +969,14 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 	overflow-x: hidden;
 	overflow-y: auto;
 	background: #ffffff;
-    width: 100%!important;
-    clear:both;
-  /*
-  width: 250px!important;
+  
+  max-width: 250px!important;
   position: absolute;
   right: 0;
   top:35px;
   z-index: 800;
-  padding: 10px!important;
-  */
+  padding: 7px;
+  
   box-shadow: -3px 0px 20px #888888!important;
   border-radius: 5px 0 0 5px!important;
   
@@ -989,9 +987,11 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     padding-bottom:20px;
 }
 .openlayers_plus-blockswitcher div.layer-switcher div.layers{
+    /*
     width:48%;
     display: inline-block;
     vertical-align:top;
+    */
     margin:auto;
 }
 
@@ -1012,8 +1012,8 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
 
 .openlayers-legends {
   box-shadow: -3px 0px 20px #888888!important;
-  bottom: 16px;
-  right: 0px;
+  padding:7px;
+  right:0;
 }
 
 /* Toggle Elements */

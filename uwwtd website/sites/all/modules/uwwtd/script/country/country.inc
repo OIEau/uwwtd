@@ -1,15 +1,97 @@
 <?php
 
-$country_config = array(
-    'cy' => array(      //nicosie
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Cyprus',
+
+
+$country_list = array(
+    'at'=>array('CountryName'=>'Austria', 'centerpoint' => '16.372 48.208'),
+    'be'=>array(
+        'CountryName'=>'Belgium', 'centerpoint' => '4.352042 50.845200'
+    ),
+    'bg'=>array('CountryName'=>'Bulgaria'),
+    'cy'=>array(
+        'CountryName'=>'Cyprus', 'centerpoint' => '33.388320, 35.190170', 
+        'metadataAggloUid'=> 'e3dcd08579cd958bcaa5028b7b5fc99c5b62dcec', 'metadataUwwtpUid'=> '0b3d405f94cca841715d2d679a595b0a74bf07d6', 'metadataDpUid'=> '395eab5983b1e859a4493559e90de24d47cae488', 'metadataRcaUid'=> '5227395618eb647493f2a8c68d06d7cf2449455c', 
+    ),
+    'cz'=>array('CountryName'=>'Czech Republic'),
+    'de'=>array('CountryName'=>'Germany'),
+    'dk'=>array(
+        'CountryName'=>'Denmark', 'centerpoint' => '14.797346, 46.136272',
+        'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5',	'metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7',	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
+    ),
+    'ee'=>array('CountryName'=>'Estonia'),
+    'es'=>array('CountryName'=>'Spain'),
+    'fi'=>array('CountryName'=>'Finland'),
+    'fr'=>array(
+        'CountryName'=>'France', 'centerpoint' => '2.4609374564489412, 45.95114971020651',
+    ),
+    'gr'=>array('CountryName'=>'Greece'),
+    'hr'=>array(
+        'CountryName'=>'Croatia','centerpoint' => '15.971885, 45.825365',
+        'metadataAggloUid' => '5b628e65b4c29115ad48a7213bddfa93f05c3352','metadataUwwtpUid' => 'a5ab0d56d60c781b39856299d5a8baaaed3cd1fc','metadataDpUid' => '912a27a10bff193276a5f4fde6422b5ce90a05d7','metadataRcaUid' => '0f7832c51afc43cac0c89899781a399de0b0e04a',
+    ),
+    'hu'=>array('CountryName'=>'Hungary'),
+    'ie'=>array(
+        'CountryName'=>'Ireland','centerpoint' => '-6.261830, 53.348971',
+        'metadataAggloUid' => '1c6b1704fd655459b15dde46aa59f9fb9e89d84b',	'metadataUwwtpUid' => 'd15eb23f5bf40de2dea26471b38e68dca0939ade','metadataDpUid' => '891cbde1a01d7e2b4f3c64e7aa04d99f8b92314f','metadataRcaUid' => 'b581c2b264061fc51302685940452b3d436e12bb',
+    ),
+    'it'=>array('CountryName'=>'Italia'),
+    'lt'=>array(
+        'CountryName'=>'Lithuania', 'centerpoint' => '25.244692, 54.693822',
+    ),
+    'lu'=>array('CountryName'=>'Luxembourg'),
+    'lv'=>array('CountryName'=>'Latvia'),
+    'mt'=>array('CountryName'=>'Malta'),
+    'nl'=>array('CountryName'=>'Netherlands'),
+    'pl'=>array(
+        'CountryName'=>'Poland','centerpoint' => '19.995117147985514, 52.26815738901357',
+        'metadataAggloUid' => 'e91553b13416af37cb1c1af4b41df0a69d95af2b','metadataUwwtpUid' => 'fb878c358115854197a77f9771463e8830711aee','metadataDpUid' => '38705496d51f2973e95172657504683dac92580e','metadataRcaUid' => '3b014692338d54a94ee9892afeae6abb90a7d765',
+    ),
+    'pt'=>array('CountryName'=>'Portugal'),
+    'ro'=>array(
+        'CountryName'=>'Romania','centerpoint' => '26.27929681280725, 46.012223874093685',
+        'metadataAggloUid' => '0279b40fdf6e847eee8795ec343d9f3f3826bf70',	'metadataUwwtpUid' => 'e7cf223294aa2298837fc5c56f139e7f4c4225ae',	'metadataDpUid' => '8995e1257d8df55075c82ec7dc26a18801d96351',	'metadataRcaUid' => '36503f6d796b7e29c7d96b09ef8c14f400f81dd9',
+    ),
+    'se'=>array('CountryName'=>'Sweden'),
+    'si'=>array(
+        'CountryName'=>'Slovenia','centerpoint' => '14.797346, 46.136272',
+        'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5','metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7','metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf','metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
+    ),
+    'sk'=>array('CountryName'=>'Slovakia'),
+    'uk'=>array('CountryName'=>'United Kindom'), 
+);
+define('page_regulations_mask','<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>');
+define('page_homepage_mask','Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for :cn !');
+define('page_credits_mask','<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>');
+define('block_homepage_mask','Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for :cn . 
+The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
+- the citizens to know the status of implementation of the Directive,
+- water stakeholders to access most up to date datasets.
+For more details on the UWWTD SIIF framework, look at [URL to concept paper]
+The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
+It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
+It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.');
+define('website_mail','bfb@oieau.fr');
+define('contact_mail','bfb@oieau.fr');
+define('metadata_catalog_url','http://www.uwwtd.oieau.fr/catalogue/srv');
+
+$country_config = array();
+
+foreach($country_list as $cc=>$p){
+    $mask =array(
+        ':cn'=>$p['CountryName'],
+        ':cc'=>$cc
+    );
+    $search = array_keys($mask);
+    $replace = array_values($mask);
+    
+    $country_config[$cc] = array(      //nicosie
+        'website_mail' => website_mail,
+        'contact_mail' => contact_mail,
+        'name' => $p['CountryName'],
         'openlayers_maps' => array(
               'center' => array(
                 'initial' => array(
-                  'centerpoint' => '33.388320, 35.190170',  //longitude, latitude
+                  'centerpoint' => isset($p['centerpoint'])?$p['centerpoint']:'4.352042 50.845200',  //longitude, latitude
                   'zoom' => '8',         
                 ),
                 'restrict' => array(
@@ -19,389 +101,24 @@ $country_config = array(
               ),
               'behaviors' => array(
                 'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=CY',
+                  'restriction_query' => 'country='.strtoupper($cc),
                 ),              
               ),
             ),        
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Cyprus/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/cyprus/agglomeration/cy11-agglo/2011</li><li>http://uwwtd.oieau.fr/cyprus/treatment-plant/cy11_3_uwwtp/2011</li><li>http://uwwtd.oieau.fr/cyprus/discharge-point/cy11_3-dispoint2/2011</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Cyprus</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Cyprus !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Cyprus . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
-	'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => 'e3dcd08579cd958bcaa5028b7b5fc99c5b62dcec',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => '0b3d405f94cca841715d2d679a595b0a74bf07d6',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '395eab5983b1e859a4493559e90de24d47cae488',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '5227395618eb647493f2a8c68d06d7cf2449455c',
-	),
-    'fr' => array(      //Paris
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'France',
-        'openlayers_maps' => array(
-              'center' => array(
-                'initial' => array(
-                  'centerpoint' => '2.4609374564489412, 45.95114971020651',  //longitude, latitude
-                  'zoom' => '6',         
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=FR',
-                ),              
-              ),
-            ),        
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Cyprus_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Cyprus/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/cyprus/agglomeration/cy11-agglo/2011</li><li>http://uwwtd.oieau.fr/cyprus/treatment-plant/cy11_3_uwwtp/2011</li><li>http://uwwtd.oieau.fr/cyprus/discharge-point/cy11_3-dispoint2/2011</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Cyprus</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for France !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for France . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',      
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => '',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '',
-	),    
-    'hr' => array(      //zagreb
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Croatia',
-        'openlayers_maps' => array(
-              'center' => array(                         
-                'initial' => array(
-                  'centerpoint' => '15.971885, 45.825365',
-                  'zoom' => '7',        
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=HR',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Croatia_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Croatia_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Croatia/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/croatia/agglomeration/hrag_0001116/2012</li><li>http://uwwtd.oieau.fr/croatia/treatment-plant/hruwwtp_0001116_001/2012</li><li>http://uwwtd.oieau.fr/croatia/discharge-point/hrdp_0001116_001/2012</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Croatia</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Croatia !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Croatia . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '5b628e65b4c29115ad48a7213bddfa93f05c3352',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => 'a5ab0d56d60c781b39856299d5a8baaaed3cd1fc',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '912a27a10bff193276a5f4fde6422b5ce90a05d7',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '0f7832c51afc43cac0c89899781a399de0b0e04a',
-	),
-    'ie' => array(    //Dublin
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Ireland',
-        'openlayers_maps' => array(
-              'center' => array(
-                'initial' => array(
-                  'centerpoint' => '-6.261830, 53.348971', //'-6.32812500605299, 53.33087298053941',
-                  'zoom' => '6',      
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=IE',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Ireland_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Ireland_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://www.uwwtd.oieau.fr/agglomeration/ieag_308/2012</li><li>http://www.uwwtd.oieau.fr/treatment-plant/ietp_289/2012</li><li>http://www.uwwtd.oieau.fr/discharge-point/iedp_289_01/2012</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Generic platform</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Ireland !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Ireland . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '1c6b1704fd655459b15dde46aa59f9fb9e89d84b',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => 'd15eb23f5bf40de2dea26471b38e68dca0939ade',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '891cbde1a01d7e2b4f3c64e7aa04d99f8b92314f',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => 'b581c2b264061fc51302685940452b3d436e12bb',
-	),    
-    'lt' => array(    //Vilnius
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Lithuania',
-        'openlayers_maps' => array(
-              'center' => array(
-                'initial' => array(
-                  'centerpoint' => '25.244692, 54.693822',
-                  'zoom' => '6',      
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=LT',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Lithuania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Lithuania/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/lithuania/agglomeration/lt-ag-005/2011</li><li>http://uwwtd.oieau.fr/lithuania/treatment-plant/lt-ag-005-wwtp-01/2011</li><li>http://uwwtd.oieau.fr/lithuania/discharge-point/lt-ag-005-wwtp-01-dp-01/2011</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Lithuania</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Lithuania !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Lithuania . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => '',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '',
-	),
-    'pl' => array(    // 	Varsovie 
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Poland',
-        'openlayers_maps' => array(
-              'center' => array(
-                'initial' => array(
-                  'centerpoint' => '19.995117147985514, 52.26815738901357',
-                  'zoom' => '5',           
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=PL',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Poland_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Poland_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Poland/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/poland/agglomeration/plwl001/2013</li><li>http://uwwtd.oieau.fr/poland/treatment-plant/plwl0011/2013</li><li>http://uwwtd.oieau.fr/poland/discharge-point/plwl0011/2013</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Poland</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Poland !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Poland . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-	'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => 'e91553b13416af37cb1c1af4b41df0a69d95af2b',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => 'fb878c358115854197a77f9771463e8830711aee',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '38705496d51f2973e95172657504683dac92580e',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '3b014692338d54a94ee9892afeae6abb90a7d765',
-   ),
-    'ro' => array(     //Bucarest
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3', 
-        'name' => 'Romania',
-        'openlayers_maps' => array(
-              'center' => array(
-                'initial' => array(
-                  'centerpoint' => '26.27929681280725, 46.012223874093685',
-                  'zoom' => '6',          
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=RO',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Romania_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Romania_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/Romania/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/romania/agglomeration/roag_143469/2012</li><li>http://uwwtd.oieau.fr/romania/treatment-plant/ro7sb_51/2012</li><li>http://uwwtd.oieau.fr/romania/discharge-point/rodp_143469_01_001/2012</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Romania</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Slovenia: <a href="http://uwwtd.oieau.fr/slovenia/" target="_blank">http://uwwtd.oieau.fr/slovenia/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Romania !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Romania . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                      
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '0279b40fdf6e847eee8795ec343d9f3f3826bf70',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => 'e7cf223294aa2298837fc5c56f139e7f4c4225ae',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => '8995e1257d8df55075c82ec7dc26a18801d96351',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '36503f6d796b7e29c7d96b09ef8c14f400f81dd9',
-	),
-    'si' => array(   //Ljubljana
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Slovenia',
-        'openlayers_maps' => array(
-              'center' => array(                        
-                'initial' => array(
-                  'centerpoint' => '14.797346, 46.136272',
-                  'zoom' => '8',           
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=SI',
-                ),              
-              ),
-            ),
-//         'page_ressources' => '<p><strong><em>TO BE COMPLETED.</em> </strong></p><h3>Get the datasets</h3><p>On this page you will find the useful links to get the datasets used on this platform in various formats (<strong>xls</strong>, <strong>csv</strong>, <strong>kml</strong>, shp, WFS…) in order to use these data on other softwares for your own purpose.</p><p>&nbsp;</p><h3>Webservices - WFS</h3><p><strong>DescribeFeatureType</strong>: description of the information layers, name and type of fields.</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_ReceivingArea" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_ReceivingArea</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_UrbanWasteWaterTreatmentPlant" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=DescribeFeatureType&amp;TypeName=UWWTD:UWWTD_Slovenia_UrbanWasteWaterTreatmentPlant</a></li></ul><p>&nbsp;</p><p><strong>GetFeature</strong>: access to data in GML format</p><ul><li>Agglomeration<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_Agglomeration&amp;MaxFeature=5</a></li></ul><ul><li>DischargePoint<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_DischargePoint&amp;MaxFeature=5</a></li></ul><ul><li>ReceivingArea<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_ReceivingArea&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_ReceivingArea&amp;MaxFeature=5</a></li></ul><ul><li>UrbanWasteWaterTreatmentPlant<br /><a href="http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5" target="_blank">http://www.uwwtd.oieau.fr/services/wfs/?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;TypeName=UWWTD:UWWTD_Slovenia_UrbanWasteWaterTreatmentPlant&amp;MaxFeature=5</a></li></ul><p>&nbsp;</p><p>&nbsp;</p><h3>How to make references to this website ?</h3><p>All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.</p><p>This can be done by using the following URL pattern: http://uwwtd.oieau.fr/slovenia/[year]/[name of the element]/[ID of the element];<br />For instance:</p><ul><li>http://uwwtd.oieau.fr/slovenia/agglomeration/si16481/2012</li><li>http://uwwtd.oieau.fr/slovenia/treatment-plant/si_kcn_00085/2012</li><li>http://uwwtd.oieau.fr/slovenia/discharge-point/si_dp_kcn_00085/2012</li></ul><p>&nbsp;</p>',
-//         'page_useful_links' => '<h3><strong>Europe</strong></h3><h4>Directorate General Environment</h4><ul><li>DGENV website&nbsp; : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li></ul><ul><li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li></ul><h4>European Environment Agency</h4><p><strong>Reporting Obligation Database (ROD):</strong></p><ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul><p><strong>Access to data and visualisation</strong></p><ul><li>Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul><h3><br />Slovenia</h3><ul><li>to be completed</li></ul><p style="padding-left: 30px;">&nbsp;</p><h3>Other National UWWTD SIIF</h3><ul><li>Generic platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li><li>Croatia: <a href="http://uwwtd.oieau.fr/croatia/" target="_blank">http://uwwtd.oieau.fr/croatia/</a></li><li>Cyprus: <a href="http://uwwtd.oieau.fr/cyprus/" target="_blank">http://uwwtd.oieau.fr/cyprus/</a></li><li>Lithuania : <a href="http://uwwtd.oieau.fr/lithuania/" target="_blank">http://uwwtd.oieau.fr/lithuania/</a></li><li>Poland: <a href="http://uwwtd.oieau.fr/poland/" target="_blank">http://uwwtd.oieau.fr/poland/</a></li><li>Romania: <a href="http://uwwtd.oieau.fr/romania/" target="_blank">http://uwwtd.oieau.fr/romania/</a></li></ul><p style="padding-left: 30px;">&nbsp;</p>',
-//         'page_contact' => 'Contact to be added here.',
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Slovenia !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Slovenia . 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                         
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
-	),
+        'page_regulations' => str_replace($search, $replace, page_regulations_mask),
+        'page_homepage' => str_replace($search, $replace, page_homepage_mask),
+        'page_credits' => str_replace($search, $replace, page_credits_mask),
+        'block_homepage' => str_replace($search, $replace, block_homepage_mask),      
+        'metadataAgglo' => metadata_catalog_url,
+        'metadataAggloUid' => isset($p['metadataAggloUid'])?$p['metadataAggloUid']:'',
+        'metadataUwwtp' => metadata_catalog_url,
+        'metadataUwwtpUid' => isset($p['metadataUwwtpUid'])?$p['metadataUwwtpUid']:'',
+        'metadataDp' => metadata_catalog_url,
+        'metadataDpUid' => isset($p['metadataDpUid'])?$p['metadataDpUid']:'',
+        'metadataRca' => metadata_catalog_url,
+        'metadataRcaUid' => isset($p['metadataRcaUid'])?$p['metadataRcaUid']:'',
+	);
+}
 
-    'dk' => array(   //Ljubljana
-        'website_mail' => 'bfb@oieau.fr',
-        'contact_mail' => 'bfb@oieau.fr',
-//         'rptFormRA'    => '3',
-        'name' => 'Denmark',
-        'openlayers_maps' => array(
-              'center' => array(                        
-                'initial' => array(
-                  'centerpoint' => '14.797346, 46.136272',
-                  'zoom' => '8',           
-                ),
-                'restrict' => array(
-                  'restrictextent' => 0,
-                  'restrictedExtent' => '',
-                ),
-              ),
-              'behaviors' => array(
-                'openlayers_behavior_gazetteer' => array(
-                  'restriction_query' => 'country=DK',
-                ),              
-              ),
-            ),
-        'page_regulations' => '<h2>European legislation</h2><ul><li><a href="http://eur-lex.europa.eu/LexUriServ/LexUriServ.do?uri=CONSLEG:1991L0271:20081211:EN:PDF" target="_blank">Directive 91/271/EC Consolidated version </a></li><li><a href="http://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=CELEX:31991L0271&amp;from=en" target="_blank">Directive 91/271/EC legal version</a></li><li><a href="http://ec.europa.eu/environment/water/water-urbanwaste/legislation/pdf/transitional_periods_eu10_eu2.pdf" target="_blank">Deadlines of transitional periods for new Member States-EU-12</a></li></ul><h2>National regulations</h2><ul><li>...</li></ul>',           
-        'page_homepage' => 'Welcome to the Urban Waste Water Treatment Directive (UWWTD) site for Denmark !',
-        'page_credits' => '<p>This website was developed by Office International de l’Eau (OIEau) for The <strong>European Commission Directorate General Environment</strong> under Specific contract n°<em>07.0307/2012/638595/D2</em> implementing Framework Service Contract n°ENV.D.2/FRA/2012/0013 It is developed using <em>open source softwares</em>.</p><p>A generic version together with instruction for installation and use can be found here <a href="http://uwwtd.oieau.fr" target="_blank">http://uwwtd.oieau.fr</a></p><p>Copyrights UWWTD-SIIF platform by <strong>Office International de l\'Eau</strong> is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</p>',
-        'block_homepage' => 'Welcome to the Urban Waste Water Directive (UWWTD) Structured Information and Implementation Framework (SIIF) website for Denmark. 
-The main aim of UWWTD SIIF is to ensure the production and the online dissemination of information allowing:
-- the citizens to know the status of implementation of the Directive,
-- water stakeholders to access most up to date datasets.
-For more details on the UWWTD SIIF framework, look at [URL to concept paper]
-The SIIF concept was initially introduced in 2012 through the Commission Communication COM/2012/095 on “Improving the delivery of benefits from EU environment measures: building confidence through better knowledge and responsiveness”. 
-It was further elaborated in 2013 for the specific case of Urban Waste Water Directive through a concept paper and its technical annexes.
-It was then implemented in 2014 through the current website that give access to information on agglomerations, Urban Waste Water treatment plants, discharge points and sensitive areas, and the associated datasets.',                         
-    'metadataAgglo' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataAggloUid' => '8bbb2d949392820fdc973afe131eebd7e29d0bb5',
-	'metadataUwwtp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataUwwtpUid' => '8e17c822fbe18debbc0243bebc2399026f7d40d7',
-	'metadataDp' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataDpUid' => 'd136df0a0bc78cb717e13aab577afdaa21f3dccf',
-	'metadataRca' => 'http://www.uwwtd.oieau.fr/catalogue/srv',
-	'metadataRcaUid' => '9f0200694092610e51a3a186f79c157a8a14c3fe',
-	),                              
-);      
+
+   

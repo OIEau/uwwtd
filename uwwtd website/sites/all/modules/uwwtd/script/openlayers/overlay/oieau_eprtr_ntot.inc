@@ -3,18 +3,35 @@
 $openlayers_layers = new stdClass();
 $openlayers_layers->disabled = FALSE; /* Edit this to true to make a default openlayers_layers disabled initially */
 $openlayers_layers->api_version = 1;
-$openlayers_layers->name = 'rca';
-$openlayers_layers->title = 'Receiving areas';
-$openlayers_layers->description = '2015/10/07 15:01:37
-2015-09-22 14:57:05';
+$openlayers_layers->name = 'oieau_eprtr_ntot';
+$openlayers_layers->title = 'EPRTR / Total Nitrogen';
+$openlayers_layers->description = '';
 $openlayers_layers->data = array(
+  'base_url' => 'http://maps.oieau.fr/services/eprtr',
+  'params' => array(
+    'buffer' => '2',
+    'ratio' => '1.5',
+    'singleTile' => 0,
+  ),
+  'options' => array(
+    'TRANSPARENT' => 'true',
+    'exceptions' => 'application/vnd.ogc.se_inimage',
+    'format' => 'image/png',
+    'layers' => array(
+      0 => 'EPRTR_NTOT',
+    ),
+    'styles' => '',
+  ),
   'projection' => array(
-    0 => 'EPSG:4326',
+    0 => 'EPSG:3857',
+    1 => 'EPSG:4326',
+    2 => 'EPSG:900913',
   ),
   'isBaseLayer' => 0,
-  'layer_type' => 'openlayers_layer_type_raw',
-  'layer_handler' => 'openlayers_raw',
-  'vector' => TRUE,
+  'layer_type' => 'openlayers_layer_type_wms',
+  'layer_handler' => 'wms',
+  'transitionEffect' => 'resize',
+  'weight' => 0,
   'serverResolutions' => array(
     0 => 156543.0339,
     1 => 78271.51695,
@@ -63,7 +80,5 @@ $openlayers_layers->data = array(
     20 => 0.1492910708487,
     21 => 0.074645535424352,
   ),
-  'base_url' => NULL,
-  'transitionEffect' => 'resize',
-  'weight' => 0,
 );
+

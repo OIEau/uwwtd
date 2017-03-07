@@ -123,7 +123,7 @@ function uwwtd_debug(){
         break;
     }
     */
-    
+    /*
     $maps = openlayers_maps(true);
     foreach($maps as $name=>$old_map){
         $map = clone $old_map;
@@ -138,9 +138,7 @@ function uwwtd_debug(){
             }
         }
     }
-    
-    
-    
+    */
     return 'debug';
 }
 

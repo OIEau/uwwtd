@@ -2799,7 +2799,7 @@ function uwwtd_page_render_column($id, $legend, $color, $rows, $stacked=false){
     
 }
 
-function uwwtd_build_feature($data, $option, &$returnvalue){
+function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
     
     //Sort data by area
     if(isset($data[0]['area'])){
@@ -2813,8 +2813,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
     }
     //Load openlayers styles 
     $styles = openlayers_styles();
-    
-    
     $feature = array();
     $i = 0;
     $returnvalue = '';
@@ -2860,14 +2858,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                  }
                }
             }
-            /*
-            print_r($option['weight']['field']).'<br>';
-            print '<pre>'.print_r($row,true).'</pre>';
-            
-            print $weight.'<br>';
-            
-            if($i>20) exit();
-            */
             $chart = array();
             //Pie chart def ===> FIX ME : is it really used ?
             if (isset($option['piechart'])) {
@@ -2892,7 +2882,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue){
                     'weight' => $weight,
                     'color' => $color,//'#000000',
                     'data' => $chart,
-                    'piechartid' => 'pie_' .$i,
+                    'piechartid' => 'pie_'.$type .$i,
                 ),
                 'style' => ($style?$styles[$style]->data:null),
                 'style_name' => $style,

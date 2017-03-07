@@ -953,7 +953,7 @@ function uwwtd_block_view($delta = ''){
             //we always need to build the map because openlayer set some css and js
             $preset_name = 'waste_water_treatment_network_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
             $preset = openlayers_preset_load($preset_name);
-            $map    = openlayers_build_map($preset->data);
+            
             $put_in_cache = uwwtd_is_user_anonymous();
             if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
                 $cache = cache_get($cache_name, 'cache_block');
@@ -978,6 +978,8 @@ function uwwtd_block_view($delta = ''){
                 //     uwwtd_filter_data($filter, $data);
                 //     dsm($data);
                 $optionstyle = array();
+                $optionstyle['default_color'] = '#F2EB0C';
+                //$optionstyle['color']['field'] = 'field_aggcompliance_value_format';
                 $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
                 $optionstyle['weight']['field'] = 'field_agggenerated_value';
                 $optionstyle['popup_title_type'] = 'agglomeration';
@@ -988,9 +990,10 @@ function uwwtd_block_view($delta = ''){
                     'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
                     'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
                 );
-
-                $features['agglomerations'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+                //dsm($data);
+                $features['agglomerations'] = uwwtd_build_feature($data, $optionstyle, $returnvalue, 'agglomerations');
                 unset($data);
+                
                 $data = uwwtd_get_data_uwwtp($option);
                 $filter = array();
                 $filter['filter'] = array();
@@ -1000,6 +1003,7 @@ function uwwtd_block_view($delta = ''){
                 }
                 uwwtd_filter_data($filter, $data, $filter_force);
                 $optionstyle = array();
+                $optionstyle['default_color'] = '#6495ed';
                 $optionstyle['popup_title_type'] = 'treatment-plant';
                 $optionstyle['popup'] = array(
                     'field_uwwcompliance_value_format' => array('label' => 'Compliance'),
@@ -1008,15 +1012,20 @@ function uwwtd_block_view($delta = ''){
                     'field_uwwnremoval_value_format' => array('label' => 'N-removal'),
                     'field_uwwpremoval_value_format' => array('label' => 'P-removal'),
                 );
-                $features['uwwtp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+                $features['uwwtp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue, 'uwwtp');
                 unset($data);
+                
                 $data = uwwtd_get_data_dcp($option);
                 $optionstyle = array();
+                $optionstyle['default_color'] = '#ff5656';
                 $optionstyle['popup_title_type'] = 'discharge-point';
-                $features['dcp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+                $features['dcp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue, 'dcp');
                 unset($data);
-
+                
+                $map    = openlayers_build_map($preset->data);
                 $block['content'] =  uwwtd_build_map($map, $features);
+                unset($map);
+                unset($features);
                 if (true === $put_in_cache) {
                     cache_set($cache_name, $block['content'], 'cache_block', CACHE_PERMANENT);
                 }
@@ -1448,8 +1457,6 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
 //hook_wms_getfeatureinfo_alter
 function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     //Uncomment for debug
-    //krumo($url);
-    //krumo($result);
     foreach($result as $layer=>$features){
         //Natura 2000
         if($url['host']=='bio.discomap.eea.europa.eu'){
