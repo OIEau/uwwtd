@@ -193,7 +193,7 @@ Noinformation|No information|#6b6b6b',
       'zoomtolayer_scale' => '1',
     ),
   ),
-  'default_layer' => 'google_normal',
+  'default_layer' => 'osm_mapnik',
   'layers' => array(
     'google_satellite' => 'google_satellite',
     'google_normal' => 'google_normal',
