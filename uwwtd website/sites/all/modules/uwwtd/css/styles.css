@@ -55,10 +55,11 @@ div.geospatial-award div{
     width:49%;
 }
 div.geospatial-award-img{
-    text-align:right;
+    text-align:center;
 }
 div.geospatial-award-img img{
     width:85px;
+    margin:auto;
 }
 div.geospatial-award-txt{
     text-align:left;

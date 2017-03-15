@@ -1097,3 +1097,11 @@ form#views-exposed-form-uwwtp-pressure-page .views-exposed-form .form-control{
 .view-error-list .clear {
 	margin-bottom: 50px;
 }
+
+
+img.bool-img{
+    position: relative; 
+    top: 4px; 
+    margin-left: 5px;
+    height:10px;
+}

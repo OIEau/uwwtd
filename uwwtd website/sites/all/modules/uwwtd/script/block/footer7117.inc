@@ -4,7 +4,17 @@
 ?>
 <div class="region col-sm-2">
     <div class="uwwtd_footer_div uwwtd_logo">
-        <img class="uwwtd_logo_commission" src="<?php echo url(drupal_get_path('theme', $theme_key).'/images/LOGO-CE_Vertical_EN_quadri_LR-150.png'); ?>" alt="Commission European logo" />
+        <?php 
+            print theme('image', 
+                array(
+                    'path'=>path_to_theme().'/images/LOGO-CE_Vertical_EN_quadri_LR-150.png',
+                    'title'=>"European Commission",
+                    'alt'=>"European Commission logo",
+                    'attributes' => array('class' => array('uwwtd_logo_commission')),
+                    'getsize'=>false
+                )
+            );
+        ?>
     </div>
 </div>
 
@@ -15,7 +25,17 @@
         <div class="geospatial-award">
             <div class="geospatial-award-img">
                 <a href="//www.geospatialworld.net/news-posts/geospatial-media-communications-announces-winners-geospatial-excellence-award" title="Geospatial Media and Communications announces winners for Geospatial Excellence Award"/>
-                <img class="uwwtd_logo_commission" src="<?php echo url(drupal_get_path('theme', $theme_key).'/images/geospatial_world.png'); ?>" alt="Geospatial World" />
+                <?php 
+                    print theme('image', 
+                        array(
+                            'path'=>path_to_theme().'/images/geospatial_world.png',
+                            'title'=>"Geospatial World",
+                            'alt'=>"Geospatial World",
+                            'attributes' => array('class' => array('uwwtd_logo_geospatial_world')),
+                            'getsize'=>false
+                        )
+                    );
+                ?>
                 </a>
             </div>
             <div class="geospatial-award-txt">
