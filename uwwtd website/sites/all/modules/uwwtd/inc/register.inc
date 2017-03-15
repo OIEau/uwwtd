@@ -9303,10 +9303,10 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
          || deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)
          || deadline_beforeorequal_to_referenceyear($deadlineart5, $annee)
         );
-
+	//cn@oieau 14-02-2017 add the condition  """$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'""" in order to force the value of the result
     if (
         true === $deadline_before
-         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
         ) {
         $pending_or_expired = 'EXP';
     }

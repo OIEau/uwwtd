@@ -1320,6 +1320,8 @@ function uuwtd_get_distance_compliance($agg){
         if (!empty($treatment_required)) {
             $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
                 $treatment_required,
+                $uwwtp->field_uwwcodperf['und'][0]['value'],
+                $uwwtp->field_uwwbod5perf['und'][0]['value'],
                 $uwwtp->field_uwwntotperf['und'][0]['value'],
                 $uwwtp->field_uwwptotperf['und'][0]['value'],
                 $uwwtp->field_uwwotherperf['und'][0]['value'],
