@@ -39,7 +39,7 @@
                 </a>
             </div>
             <div class="geospatial-award-txt">
-                UWWTD-SIIF: <a href="//www.oieau.org/oieau/notre-actualite-et-avancement-de/article/la-commission-europeenne-remporte" title="UWWTD-SIIF : winner of the geospatial policy implementation excellence award 2017">winner of the geospatial policy implementation excellence award 2017</a>
+                UWWTD-SIIF: <a href="//www.oieau.org/iowater/our-projects-news-and-update/article/european-commission-wins-the?lang=en" title="UWWTD-SIIF : winner of the geospatial policy implementation excellence award 2017">winner of the geospatial policy implementation excellence award 2017</a>
 
             </div>
             

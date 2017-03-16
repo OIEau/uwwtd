@@ -4531,6 +4531,179 @@ function uwwtd_update_7156(&$context = null) {
     //==========DEBUG : permet de relancer la mise à jour si besoin.
     //throw new DrupalUpdateException(__FUNCTION__);
 }   
+
+
+//nd@oieau.fr Update page
+function uwwtd_update_7157(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    if ($country_code == '-1') {
+        throw new DrupalUpdateException('Can\'t detect country code.');    
+    } 
+    
+    /**
+     * Mets à jour le texte du footer.
+     */
+	$pathbock = drupal_get_path('module', 'uwwtd') . '/script/block/footer7117.inc';
+    uwwtd_install_trace($pathbock);
+    //update block
+    _block_rehash('uwwtd'); //theme name here
+    
+    //find the bid of the footer block
+	$query = db_select('block_custom', 'bc');
+    $query->fields('bc', array('bid'));             
+    $query->condition('bc.info', 'Footer content', '=');
+	$result = $query->execute();
+    $bidfooter = -1;
+	foreach($result as $row){
+        $bidfooter = $row->bid;
+        break;
+	}
+    
+    if ($bidfooter == -1) {
+        throw new DrupalUpdateException('Error, can\'t find bid id for footer block');
+    }        
+    uwwtd_install_trace('find bid footer in block_custom table : ' . $bidfooter);
+    //Change block settings old view
+      db_update('block_custom')
+      ->fields(array(
+          'body' => file_get_contents($pathbock),
+      ))
+      ->condition('bid', $bidfooter)
+      ->execute();
+    
+    
+    //Useful links page 
+    $countries = array(
+        'Austria',
+        'Belgium',
+        'Bulgaria',
+        'Cyprus',
+        'Czech Republic',
+        'Germany',
+        'Denmark',
+        'Estonia',
+        'Spain',
+        'Finland',
+        'France',
+        'Greece',
+        'Croatia',
+        'Hungary',
+        'Ireland',
+        'Italia',
+        'Lithuania',
+        'Luxembourg',
+        'Latvia',
+        'Malta',
+        'Netherlands',
+        'Poland',
+        'Portugal',
+        'Romania',
+        'Sweden',
+        'Slovenia',
+        'Slovakia',
+        'United Kindom'
+    );
+    $cstr = '' ;
+    foreach($countries as $c){
+       $cstr.= '<li>'.$c.': <a href="http://uwwtd.oieau.fr/'.str_replace(' ', '-', $c).'/" target="_blank">http://uwwtd.oieau.fr/'.str_replace(' ', '-', $c).'/</a></li>'; 
+    }
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'Useful links', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = '<h2>European Commission - Directorate General Environment</h2>
+            <ul>
+                <li>DGENV website : <a href="http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/index_en.html</a></li>
+                <li>Implementation reports <a href="http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm" target="_blank">http://ec.europa.eu/environment/water/water-urbanwaste/implementation/implementationreports_en.htm</a></li>
+                <li><a href="http://uwwtd.oieau.fr/docs/III.2_Evaluation_information_Q2013_rev1_20141031.pdf">Evaluation of reporting information 2014</a></li>
+                <li><a href="http://uwwtd.oieau.fr/docs/Point_5_legal_compliance_assessment_methodology_document.pdf">Legal compliance assessment 2014</a></li>
+            </ul>
+            <h2>European Environment Agency</h2>
+            <h3><strong>Reporting Obligation Database (ROD):</strong></h3>
+            <ul><li>UWWT Directive fiche <a href="http://rod.eionet.europa.eu/instruments/543" target="_blank">http://rod.eionet.europa.eu/instruments/543</a></li><li>National Implementation Programme for UWWT Directive - Article 17&nbsp; <a href="http://rod.eionet.europa.eu/obligations/524" target="_blank">http://rod.eionet.europa.eu/obligations/524</a></li><li>UWWT Directive - Article 16 - Situation report&nbsp;&nbsp; <a href="http://rod.eionet.europa.eu/obligations/387" target="_blank">http://rod.eionet.europa.eu/obligations/387</a></li><li>UWWT Directive - Article 15 - implementation&nbsp; <a href="http://rod.eionet.europa.eu/obligations/613" target="_blank">http://rod.eionet.europa.eu/obligations/613</a></li></ul>
+            <h3><strong>Access to data and visualisation</strong></h3>
+            <ul><li>European Waterbase UWWTD <a href="http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive" target="_blank">http://www.eea.europa.eu/data-and-maps/data/waterbase-uwwtd-urban-waste-water-treatment-directive</a></li><li>UWWTD EU data viewer <a href="http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps" target="_blank">http://www.eea.europa.eu/data-and-maps/uwwtd/interactive-maps/urban-waste-water-treatment-maps</a></li></ul>
+            
+            <h2>European funds and loans</h2>
+            <ul><li>DG Regio :&nbsp; <a href="http://ec.europa.eu/regional_policy/" target="_blank">http:://ec.europa.eu/regional_policy/</a></li><li>Funding LIFE projects : <a href="http://ec.europa.eu/environment/life/funding/life.htm" target="_blank">http://ec.europa.eu/environment/life/funding/life.htm</a></li><li>Water life project : <a href="http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75" target="_blank">http://ec.europa.eu/environment/life/project/Projects/index.cfm?fuseaction=home.getProjects&amp;themeID=75</a></li><li>European Investment Bank : <a href="http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en" target="_blank">http://www.eib.org/projects/sectors/water-and-waste-water-management/index.htm?lang=en</a></li></ul><p>&nbsp;</p>
+            <h2>SIIF European and national platform</h2>
+            <ul>
+                <li>Generic open-source platform: <a href="http://uwwtd.oieau.fr/" target="_blank">http://uwwtd.oieau.fr/</a></li>
+                '.$cstr.'
+            </ul>
+            <p style="padding-left: 30px;">&nbsp;</p>
+            
+            <h2>Other national data viewers</h2>
+                <ul>
+                    <li>French urban waste water website: <a href="http://assainissement.developpement-durable.gouv.fr/" target="_blank">http://assainissement.developpement-durable.gouv.fr/</a></li>
+                    <li>Greek urban waste water website: <a href="http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx">http://astikalimata.ypeka.gr/Services/Pages/Browse.aspx</a></li>
+                    <li type="_moz">Luxembourg water geoportail: <a href="http://eau.geoportail.lu/">http://eau.geoportail.lu/</a></li>
+                </ul><p style="padding-left: 30px;">&nbsp;</p>
+        <h2>Good practices</h2>
+        <ul><li>Natural Water Retention Measures: <a href="http://nwrm.eu/" target="_blank">http://nwrm.eu/</a></li></ul>
+        <h2>Documents</h2>
+        <ul>
+            <li><a href="http://uwwtd.oieau.fr/docs/UWWTD_SIIF_compliance-algorithms-v21.pdf" target="_blank">Compliance rules schema</a></li>
+            <li><a href="http://uwwtd.oieau.fr/docs/Website_functionnalities_Version_1.pdf" target="_blank">Website functionnalities</a></li>
+            <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-Administration-guide-vf.pdf" target="_blank">Website administration-guide</a></li>
+            <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-installation-guide-vf.pdf" target="_blank">Website installation guide on unix system</a></li>
+            <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-installation-guide-Windows-vf.pdf" target="_blank">Website installation guide on windows system</a></li>
+        </ul>
+        ';
+        node_save($node);
+        break;
+	}
+    
+
+    //SIIF for developers page
+    $query = db_select('node', 'n');
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'page', '=');
+    $query->condition('n.title', 'SIIF for developers', '=');
+    $query->condition('n.language', 'und', '=');
+	$result = $query->execute();
+	foreach($result as $row){
+		$node = node_load($row->nid);
+        $node->body['und'][0]['value'] = '
+            <div>
+                <h2>GIT Space</h2>
+                <ul>
+                    <li><a href="https://github.com/OIEau/uwwtd" target="_blank" title="https://github.com/OIEau/uwwtd">The development platform with the toolbox and its documentation</a></li>
+                    <li><a href="https://github.com/OIEau/uwwtd/issues" target="_blank" title="https://github.com/OIEau/uwwtd/issues">The bug tracker section</a></li>
+                </ul>
+                <h2>Documents</h2>
+                <ul>
+                    <li><a href="http://uwwtd.oieau.fr/docs/UWWTD_SIIF_compliance-algorithms-v21.pdf" target="_blank">Compliance rules schema</a></li>
+                    <li><a href="http://uwwtd.oieau.fr/docs/Website_functionnalities_Version_1.pdf" target="_blank">Website functionnalities</a></li>
+                    <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-Administration-guide-vf.pdf" target="_blank">Website administration-guide</a></li>
+                    <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-installation-guide-vf.pdf" target="_blank">Website installation guide on unix system</a></li>
+                    <li><a href="http://uwwtd.oieau.fr/docs/UWWTD-SIIF-Toolbox-2015-installation-guide-Windows-vf.pdf" target="_blank">Website installation guide on windows system</a></li>
+                </ul>
+            </div>
+        
+        ';
+        node_save($node);
+        break;
+	}
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    //throw new DrupalUpdateException(__FUNCTION__);
+}   
    
    
 /**
