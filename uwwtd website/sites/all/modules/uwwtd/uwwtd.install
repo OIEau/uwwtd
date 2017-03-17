@@ -4941,10 +4941,11 @@ function addFieldToContentType($fieldName, $fieldType, $fieldLabel, $contentType
 /***************************************************************************/
 function uwwtd_install_trace($message) 
 {                   
-    $file = drupal_realpath('public://data_errors/install_trace.log');
-    $r = fopen($file, 'a');
-    fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
-    fclose($r);
+    if($file = drupal_realpath('public://data_errors/install_trace.log')){
+        $r = fopen($file, 'a');
+        fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+        fclose($r);
+    }
 }
 
 /**
@@ -6253,4 +6254,3 @@ rights|Copyright|http://creativecommons.org/licenses/by-nc-sa/2.0/fr',
 );
     variable_set('wkhtmltopdf_configurations', $config_wkhtml);            
 }
-    
