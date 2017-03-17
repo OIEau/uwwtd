@@ -166,6 +166,9 @@ footer{
 }
 
 /* ac 22/09/14 */
+nav ul.navbar-nav{
+    background-color:#281c60;
+}
 .navbar-nav > li > a{
 	padding-top: 6px;
 	padding-bottom: 6px;
@@ -1105,7 +1108,6 @@ img.bool-img{
     margin-left: 5px;
     height:10px;
 }
-
 ul.website-links{
     padding:0;
     margin:0;
@@ -1118,7 +1120,6 @@ ul.website-links li{
     padding:8px;
     position:relative;
 }
-
 div.geospatial-award{
     background-color:#fff;
     color:#4f4f4f;
