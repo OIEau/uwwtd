@@ -4537,14 +4537,14 @@ function uwwtd_update_7156(&$context = null) {
 function uwwtd_update_7157(&$context = null) {
     uwwtd_install_trace(__FUNCTION__);
     variable_set('siif_eru_version', __FUNCTION__);
-    
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
     $country_code = variable_get('siif_eru_country_code', '-1');
-    
     if ($country_code == '-1') {
         throw new DrupalUpdateException('Can\'t detect country code.');    
     } 
+    
+    variable_set('site_name', 'European Commission urban waste water website: '.$country_list[$country_code]['CountryName']);
     
     /**
      * Mets à jour le texte du footer.

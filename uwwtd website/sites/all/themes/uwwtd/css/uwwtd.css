@@ -18,7 +18,7 @@ body{
 }
 .navbar-brand {
   /*color:#281c60 !important;*/
-  font-size:32px;
+  font-size:25px;
   height: 50px;
   padding: 15px 15px;
   margin-left:40px!important;
@@ -913,7 +913,7 @@ figure:focus{
 
 article.node-front{
 	font-weight:bold;
-	font-size:15px;
+	font-size:1em;
 }
 div#block-block-1{
 	font-size:14px;
@@ -1104,6 +1104,19 @@ img.bool-img{
     top: 4px; 
     margin-left: 5px;
     height:10px;
+}
+
+ul.website-links{
+    padding:0;
+    margin:0;
+    position:relative;
+}
+ul.website-links li{
+    display:inline-block;
+    width:15%;
+    margin:0;
+    padding:8px;
+    position:relative;
 }
 
 div.geospatial-award{

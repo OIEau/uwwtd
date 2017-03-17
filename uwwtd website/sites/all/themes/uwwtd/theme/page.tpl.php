@@ -76,10 +76,10 @@
 <?php 
     /* 
         region--navigation.tpl.php 
-        <div style="font-size:20px;font-weight:bold;width:100%;background-color:yellow;text-align:center;color:red;"> DRAFT VERSION - NOT FOR OFFICIAL USE </div>
+        
     */ 
 ?>
-
+<div style="font-size:18px;width:100%;background-color:#b22222;text-align:center;padding:5px;text-shadow: 1px 1px #343d43;color:#fff;"><b>Beta Version :</b> <span style="font-size:16px;">remaining inconsistencies are possible. They will be corrected during the next reporting exercise</span></div>
 
 
 
