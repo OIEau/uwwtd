@@ -479,7 +479,7 @@ function uwwtd_init(){
     //$d3 = d3_get_libraries();
     //dsm($d3);
     //drupal_add_library('d3', 'd3.drupal');
-  ini_set('max_execution_time', '3600');
+  ini_set('max_execution_time', '500');
 
 }
 
@@ -955,6 +955,7 @@ function uwwtd_block_view($delta = ''){
             $preset = openlayers_preset_load($preset_name);
             
             $put_in_cache = uwwtd_is_user_anonymous();
+            $put_in_cache = false;//uwwtd_is_user_anonymous();
             if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
                 $cache = cache_get($cache_name, 'cache_block');
             }

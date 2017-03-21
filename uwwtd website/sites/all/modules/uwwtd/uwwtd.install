@@ -5987,6 +5987,11 @@ function  uwwtd_install_enable_module(&$context)
         'D3 Views' => 'd3_views',
         'Translation template extractor'=>'potx',
         'Localization client'=>'l10n_client',
+        'XML sitemap'=>'xmlsitemap',
+        'XML sitemap node'=>'xmlsitemap_node',
+        'XML sitemap menu'=>'xmlsitemap_menu',
+        'XML sitemap engines'=>'xmlsitemap_engines',
+        
         
         // 'UWWTD' => 'uwwtd',
         'Statistics for UWWTD' => 'uwwtd_statistics',
