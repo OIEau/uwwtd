@@ -198,10 +198,10 @@ function uwwtd_get_data_agglomeration($option){
 				$row['field_article17_agglo_value_format'] = 'Yes';
 			}
 			
-			if (isset($GLOBALS['uwwtd']['ui']['field']['agglomeration'][$row['field_regionnuts_value']])) {
+			if (isset($row['field_regionnuts_value']) && isset($GLOBALS['uwwtd']['ui']['field']['agglomeration'][$row['field_regionnuts_value']])) {
                 $row['field_regionnuts_value'] = $GLOBALS['uwwtd']['ui']['agglomeration'][ $row['field_regionnuts_value'] ];
             }
-			if (isset($GLOBALS['uwwtd']['ui']['field']['agglomeration'][$row['field_dcpreceivingwater_value']])) {
+			if (isset($row['field_dcpreceivingwater_value']) && isset($GLOBALS['uwwtd']['ui']['field']['agglomeration'][$row['field_dcpreceivingwater_value']])) {
                 $row['field_dcpreceivingwater_value'] = $GLOBALS['uwwtd']['ui']['agglomeration'][ $row['field_dcpreceivingwater_value'] ];
             }
             $data[] = $row;
