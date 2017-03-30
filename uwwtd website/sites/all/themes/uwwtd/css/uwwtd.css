@@ -1,6 +1,7 @@
 /*================Mettre ici toutes les mises en forme spécifique pour le site du UWWTD========================*/
 
 
+
 body{
     font-family: 'Open Sans', sans-serif;
 	font-size: 14px;
@@ -1140,4 +1141,110 @@ div.geospatial-award-img img{
 div.geospatial-award-txt{
     text-align:left;
     font-weight:bold;
+}
+
+/*================= Responsive =====================*/
+
+@media screen and (max-width: 767px) {
+    body{
+        font-size: 16px;
+    }
+    div#printer{
+        display:none;
+    }
+    /*
+    div.uwwcontainer{
+        overflow:auto!important;
+    }
+    */
+    div.uwwcontainer h1{
+        clear:both;
+    }
+    fieldset.group-uwwdescription, fieldset.group-aggdescription, fieldset.group-dcdescription, fieldset.group-rcadescription, fieldset.group-bcdescription{
+        float:none;
+    }
+    
+    .google-map-banner{
+        margin-bottom:0;
+        padding-top:0;
+    }
+    .google-map-banner h1 {
+        color:#4f4f4f;
+        background:none;
+    }
+    .google-map-banner h1 span.white-title, article.node h1 small{
+        color:#4f4f4f;
+    }
+    .uwwcontainer .field-type-geofield {
+        float: none;
+        clear:both;
+    }
+    a.navbar-brand{
+        display:none;
+    }
+    ul.navbar-nav {
+        margin: 7.5px 5px;
+    }
+    ul.navbar-nav div.menu_level ul{
+        margin-left: 20px;
+    }
+    .navbar-collapse .navbar-nav .menu-item--depth-1{
+        width:100%;
+        text-align:left;
+    }
+    .navbar-default ul.menu.nav li{
+        width:100%;
+        background-color: #6a5acd;
+        padding-left:8px;
+    }
+    ul.menu.nav li a.menu-link{
+        width:100%;
+    }
+    .navbar-default .navbar-toggle {
+        border-color: #fff;
+        float: left;
+        margin-left:25px;
+    }
+    .navbar-default .navbar-toggle .icon-bar {
+        background-color: #fff;
+    }
+    #block-lang-dropdown-language{
+        float: left;
+    }
+  div.views-exposed-widgets{
+      width:100%;
+      max-width:100%;
+  }
+    div.views-exposed-form .views-exposed-widget{
+        width:100%;
+        max-width:100%;
+        float:none;
+    }
+    .views-exposed-form label, .views-exposed-form div.views-widget{
+        max-width:50%;
+        display:inline-block;
+    }
+    div.charts-rows-cell, div.charts-rows-cell {
+        width:100%!important;
+    }
+    .cell-content{
+        max-width:100%!important;
+    }
+    div.data-table-row{
+        display:none;
+    }
+    div.charts-row div.container{
+        height: 360px;
+        overflow-x: auto!important;
+        overflow-y: auto!important;
+        
+    }
+    .uwwrealthird, .uwwthird {
+        display:block;
+        width:100%;
+        float:none;
+    }
+    fieldset legend.panel-heading{
+        float:none;
+    }
 }
