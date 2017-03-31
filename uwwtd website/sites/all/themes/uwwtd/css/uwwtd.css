@@ -1247,4 +1247,14 @@ div.geospatial-award-txt{
     fieldset legend.panel-heading{
         float:none;
     }
+    .btnHomePage {
+        margin: auto;
+        padding:1em;
+        width: 100%;
+    }
+    .btnContent, .btnProject{
+        width:100%;
+        margin:1em 0;
+        
+    }
 }
