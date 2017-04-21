@@ -6196,6 +6196,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO8
     $aResult['compArt6'] = uwwtd_article6_agglomeration_compliance($agg, 'compArt6', $listStationArticleAndUwwtpCompliance);
     //ALGO9                                                          
+
     $aResult['compArt5'] = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
 //     uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
@@ -6205,6 +6206,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
 
 function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
+
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace(var_export($listUwwtpCompliance, true));
     
@@ -8121,6 +8123,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 } else {
                     $required_treatment->required = 'S';
                 }
+
             } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') {
                 $required_treatment->required = 'S';
             } else {
@@ -8129,6 +8132,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
             }
             break;
+
 
         // If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
         case 'SA':
