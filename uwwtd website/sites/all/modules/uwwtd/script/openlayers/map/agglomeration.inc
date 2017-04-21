@@ -189,7 +189,7 @@ field_aggpercwithouttreatment|Discharge without treatment|#d93c3c',
       'zoomtolayer_scale' => '1',
     ),
   ),
-  'default_layer' => 'google_normal',
+  'default_layer' => 'osm_mapnik',
   'layers' => array(
     'google_satellite' => 'google_satellite',
     'google_normal' => 'google_normal',

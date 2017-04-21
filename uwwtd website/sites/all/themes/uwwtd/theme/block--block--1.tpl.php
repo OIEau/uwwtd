@@ -63,10 +63,11 @@
 
   <div class="content"<?php print $content_attributes; ?>>
     <?php
-	$year = uwwtd_get_max_annee();
-	$nat_stat_str = uwwtd_get_national_stat_str($year);
-	
-	
+    $nat_stat_str = '';
+    if(function_exists("uwwtd_get_max_annee")){
+        $year = uwwtd_get_max_annee();
+        $nat_stat_str = uwwtd_get_national_stat_str($year);
+    }
 	
 	?>
 	<div class ="txtHomePage"><?php print $nat_stat_str; ?></div>

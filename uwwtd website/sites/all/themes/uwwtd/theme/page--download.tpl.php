@@ -89,7 +89,8 @@
 		$codeDcp = $dcp->field_inspireidlocalid['und'][0]['value'];
 		$server = $_SERVER['HTTP_HOST'];
 		$pays = variable_get('siif_eru_country_name');
-		$paysM = strtolower($pays);
+        //Case of compound name : UK / CZ
+		$pays = str_replace(' ', '-', $pays);
         //nd@oieau.fr : Magnific !!! --> i think we can't do worst
 		if($server == "webnuxdev.rnde.tm.fr" ||$server == "dev.oieau.fr"){
 			$typeName = "UWWTD:UWWTD_recette_".$pays;

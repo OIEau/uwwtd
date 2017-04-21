@@ -147,7 +147,7 @@ echo uwwtd_insert_errors_tab($node);
         	<h1>
 	            <span class="white-title"><?php echo $nodetype; ?> : </span><?php echo $node->title; ?>
 	            <span class="white-title"> - Identifier : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
-	            <span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?>
+	            <!-- <span class="white-title"> - Status : </span><?php echo $fieldstat[0]['#markup']; ?> -->
 	            <span class="white-title"> - Reporting year : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
             </h1>
         </div>

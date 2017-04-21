@@ -55,7 +55,7 @@ $openlayers_maps->data = array(
       'zoomToCluster' => 0,
     ),
   ),
-  'default_layer' => 'google_normal',
+  'default_layer' => 'osm_mapnik',
   'layers' => array(
     'google_satellite' => 'google_satellite',
     'google_hybrid' => 'google_hybrid',

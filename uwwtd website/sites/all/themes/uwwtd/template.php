@@ -123,10 +123,28 @@ function uwwtd_preprocess_field(&$variables){
     }
 
     if($variables['element']['#items']['0']['value'] == '1' || $variables['element']['#items']['0']['value'] === 'P'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
+      $variables['items']['0']['#markup'] = $tt .theme('image', 
+            array(
+                'path'=>path_to_theme().'/images/tick.png',
+                'title'=>t("Yes"),
+                'alt'=>t("Yes"),
+                'attributes' => array('class' => array('bool-img', 'bool-img-yes')),
+                'getsize'=>false
+            )
+        );
+      //'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(, array('absolute'=>true)). '"/>';
     }
     elseif($variables['element']['#items']['0']['value'] == '0' || $variables['element']['#items']['0']['value'] === 'F'){
-      $variables['items']['0']['#markup'] = $tt.'<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
+      //$variables['items']['0']['#markup'] = $tt.'<img style="" height="10px" src="'.url(path_to_theme().'/images/cross.png', array('absolute'=>true)). '"/>';
+      $variables['items']['0']['#markup'] = $tt .theme('image', 
+            array(
+                'path'=>path_to_theme().'/images/cross.png',
+                'title'=>t("No"),
+                'alt'=>t("No"),
+                'attributes' => array('class' => array('bool-img','bool-img-no')),
+                'getsize'=>false
+            )
+        );
     }
   }
 
@@ -429,7 +447,7 @@ function uwwtd_field_attach_view_alter(&$output, $context){
             '#items' => array(0 => array('value' => '')),
             '#entity_type' => 'node',
             '#weight' => $display['weight'],
-            0 => array('#markup' => '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>'),
+            0 => array('#markup' => '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png', array('absolute'=>true)). '"/>'),
           );
         }
       }
@@ -2353,9 +2371,9 @@ function uwwtd_tablesort_header($cell, $header, $ts){
  * Return cross or checked image for boolean given.
  */
 function _get_boolean_image($boolean) {
-    $imgReturn = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png'). '"/>';
+    $imgReturn = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/cross.png', array('absolute'=>true)). '"/>';
     if (!empty($boolean) && $boolean == 1) {
-        $boolean = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png'). '"/>';
+        $imgReturn = '<img style="position: relative; top: -2px; margin-left: 5px;" height="10px" src="'.url(path_to_theme().'/images/tick.png', array('absolute'=>true)). '"/>';
     }
     return $imgReturn;
 }
