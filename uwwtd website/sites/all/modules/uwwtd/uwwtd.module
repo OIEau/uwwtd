@@ -479,7 +479,7 @@ function uwwtd_init(){
     //$d3 = d3_get_libraries();
     //dsm($d3);
     //drupal_add_library('d3', 'd3.drupal');
-  ini_set('max_execution_time', '500');
+  ini_set('max_execution_time', '3600');
 
 }
 
@@ -954,14 +954,15 @@ function uwwtd_block_view($delta = ''){
             $preset_name = 'waste_water_treatment_network_map';   //layer agglomeration_treatment 'Agglomeration connection map and list'
             $preset = openlayers_preset_load($preset_name);
             
-            $put_in_cache = uwwtd_is_user_anonymous();
+            //$put_in_cache = uwwtd_is_user_anonymous();
             $put_in_cache = false;//uwwtd_is_user_anonymous();
             if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
                 $cache = cache_get($cache_name, 'cache_block');
             }
-            if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
+            if (!empty($cache) && isset($cache->data) && !empty($cache->data)) { 
                 $block['content'] = $cache->data;
-            } else {
+            } 
+            else {
                 $option['field_anneedata_value'] = uwwtd_get_max_annee();
 
                 $data = uwwtd_get_data_agglomeration($option);
@@ -1375,25 +1376,31 @@ function uwwtd_get_national_stat_str($year){
 	$nbOtherTreatement = 0;
 	$nbPhysicalCapacity = 0;
 	$nbIAS = 0;
+    $nbUrban = 0;
 	foreach($dataAggl as $agglo){
-		$nbGeneratedLoad = $agglo['field_agggenerated_value']+ $nbGeneratedLoad;
-		$aggloCollectingSystem = ($agglo['field_aggc1_value'] /100) * $agglo['field_agggenerated_value'];
-		$nbCollectingSystem = $aggloCollectingSystem + $nbCollectingSystem;
+        if($agglo['field_agggenerated_value']>=2000 && $agglo['field_status_value']==1){
+            $nbGeneratedLoad = $agglo['field_agggenerated_value']+ $nbGeneratedLoad;
+            $aggloCollectingSystem = ($agglo['field_aggc1_value'] /100) * $agglo['field_agggenerated_value'];
+            $nbCollectingSystem = $aggloCollectingSystem + $nbCollectingSystem;
 
-		$aggloIAS = ($agglo['field_aggc2_value'] /100) * $agglo['field_agggenerated_value'];
-		$nbIAS = $aggloIAS + $nbIAS;
+            $aggloIAS = ($agglo['field_aggc2_value'] /100) * $agglo['field_agggenerated_value'];
+            $nbIAS = $aggloIAS + $nbIAS;
+            $nbUrban++;
+        }
 	}
 
 	foreach($dataUwwtp as $uwwtp){
 		// dsm($uwwtp);
-		if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
-			$nbPrimaryTreatement = $nbPrimaryTreatement+1;
-		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
-			$nbSecondaryTreatement = $nbSecondaryTreatement +1;
-		}elseif($uwwtp['field_uwwtreatmenttype_value'] == "MS"){
-			$nbOtherTreatement = $nbOtherTreatement+1;
-		}
-		$nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
+        if($uwwtp['field_status_value']==1){
+            if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
+                $nbPrimaryTreatement = $nbPrimaryTreatement+1;
+            }elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
+                $nbSecondaryTreatement = $nbSecondaryTreatement +1;
+            }elseif($uwwtp['field_uwwtreatmenttype_value'] == "MS"){
+                $nbOtherTreatement = $nbOtherTreatement+1;
+            }
+            $nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
+        }
 	}
 	$nbCollectingSystem = $nbCollectingSystem *100 / $nbGeneratedLoad;
 	$totalCollectingSystem= number_format($nbCollectingSystem, 0, ".", " ");
@@ -1401,7 +1408,7 @@ function uwwtd_get_national_stat_str($year){
 	$totalIAS = number_format($nbIAS, 0, ".", " ");
 
 	$annee = $option['field_anneedata_value'];
-	$nbUrban = count($dataAggl);
+	//$nbUrban = count($dataAggl);
 	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
 	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
 
