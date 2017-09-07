@@ -4,11 +4,3 @@ sites/*/settings*.php
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
-
-# Ignore paths that contain user-generated content.
-/.project
-/.buildpath
-/.settings/org.eclipse.php.core.prefs
-/.settings/org.eclipse.wst.common.project.facet.core.xml
-com.antimatterstudios.esftp.prefs
-phpinfo.php
