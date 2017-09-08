@@ -2422,17 +2422,20 @@ function uwwtd_update_7124(&$context = null)
     } 
     
     //update field_uwwtreatmentrequired with new values NPO, PO, NO
-    try {
-        field_update_field($list_field['field_uwwtreatmentrequired']);
-        $t_args = array('%name' => 'field_uwwtreatmentrequired');
-        watchdog('node', 'Update field %name with new values.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));        
-    } catch (Exception $e) {
-        $msg = "Error update field : field_uwwtreatmentrequired\n";
-        $msg .= $e->getMessage() . "\n"; 
-        uwwtd_install_trace($msg);
-        throw $e;           
+    uwwtd_install_trace('field_update_field :: field_uwwtreatmentrequired'); 
+    if (1 !== variable_get('uwwtd_install_from_scratch')) {
+        try {
+            uwwtd_install_trace('update 24 : Update field %name with new values.');
+            field_update_field($list_field['field_uwwtreatmentrequired']);
+            $t_args = array('%name' => 'field_uwwtreatmentrequired');
+            watchdog('node', 'Update field %name with new values.', $t_args, WATCHDOG_NOTICE, l($t('view'), 'admin/structure/types'));        
+        } catch (Exception $e) {
+            $msg = "Error update field : field_uwwtreatmentrequired\n";
+            $msg .= $e->getMessage() . "\n"; 
+            uwwtd_install_trace($msg);
+            throw $e;           
+        }
     }
-    
     $list_field_to_update = array(
         'field_aggsewagenetwork' => array(
                 'tooltip' => 'separated/combine/separated and combine',
@@ -2520,7 +2523,7 @@ function uwwtd_update_7124(&$context = null)
                 'type' => 'uwwtp',
                 ),  
     );  
-    
+    uwwtd_install_trace('update 24 : uwwtd_delete_view');
     uwwtd_delete_view('UWWTD_Agglomeration');
     uwwtd_delete_view('UWWTD_BigCity');
     uwwtd_delete_view('UWWTD_Compliance_Agglo');
@@ -2531,39 +2534,40 @@ function uwwtd_update_7124(&$context = null)
     uwwtd_delete_view('UWWTD_UWWTPs_Agglo'); 
          
     $msg_error = '';
-    foreach($list_field_to_update as $fieldname => $detail) {
-    
-        if (isset($detail['tooltip'])) {
-            $infofield = field_info_field($fieldname);
-            
-            $infofield['custom_tooltip'] = $detail['tooltip'];
-            try {
-                field_update_field($infofield);
+    if (1 !== variable_get('uwwtd_install_from_scratch')) {
+        foreach($list_field_to_update as $fieldname => $detail) {
+            uwwtd_install_trace('update 24 : '.$fieldname);
+            if (isset($detail['tooltip'])) {
+                $infofield = field_info_field($fieldname);
+                
+                $infofield['custom_tooltip'] = $detail['tooltip'];
+                try {
+                    field_update_field($infofield);
+                }
+                catch (Exception $e) {
+                    $msg = "Error update field : ".$infofield['field_name']."\n";
+                    $msg .= $e->getMessage() . "\n"; 
+                    uwwtd_install_trace($msg);
+                    $msg_error .= $msg . "\n";          
+                }             
             }
-            catch (Exception $e) {
-                $msg = "Error update field : ".$infofield['field_name']."\n";
-                $msg .= $e->getMessage() . "\n"; 
-                uwwtd_install_trace($msg);
-                $msg_error .= $msg . "\n";          
-            }             
+            
+            if (isset($detail['label'])) {
+                $infoinstancefield = field_info_instance('node', $fieldname, $detail['type']);
+                
+                $infoinstancefield['label'] = $detail['label'];
+                try {
+                    field_update_instance($infoinstancefield);
+                }
+                catch (Exception $e) {
+                    $msg = "Error update field : ".$infoinstancefield['field_name']."\n";
+                    $msg .= $e->getMessage() . "\n"; 
+                    uwwtd_install_trace($msg);
+                    $msg_error .= $msg . "\n";          
+                }             
+            }  
         }
-        
-        if (isset($detail['label'])) {
-            $infoinstancefield = field_info_instance('node', $fieldname, $detail['type']);
-            
-            $infoinstancefield['label'] = $detail['label'];
-            try {
-                field_update_instance($infoinstancefield);
-            }
-            catch (Exception $e) {
-                $msg = "Error update field : ".$infoinstancefield['field_name']."\n";
-                $msg .= $e->getMessage() . "\n"; 
-                uwwtd_install_trace($msg);
-                $msg_error .= $msg . "\n";          
-            }             
-        }  
-    }
-        
+    }   
     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
     uwwtd_create_or_replace_view('UWWTD_BigCity');
     uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
