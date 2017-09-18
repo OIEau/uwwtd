@@ -1427,7 +1427,7 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
 
         }
         elseif($url['host']=='bio.discomap.eea.europa.eu'){
-            if($params['LAYER']=='8'){
+            if($params['LAYER']=='7'){
                 $result = '<div class="legend-label">'.t('Natura 2000').'</div><div  class="legend-img">'.$result.'</div>';
             }else{
                 $result ='';
@@ -1468,7 +1468,7 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     foreach($result as $layer=>$features){
         //Natura 2000
         if($url['host']=='bio.discomap.eea.europa.eu'){
-            if($layer=='8'){
+            if($layer=='7'){
                 $new_layer = t('Natura 2000');
 
                 $data =array();

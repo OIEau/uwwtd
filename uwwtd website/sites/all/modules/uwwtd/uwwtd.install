@@ -4734,6 +4734,31 @@ function uwwtd_update_7158(&$context = null) {
     //==========DEBUG : permet de relancer la mise à jour si besoin.
     //throw new DrupalUpdateException(__FUNCTION__);
 }   
+//nd@oieau.fr Update page
+function uwwtd_update_7159(&$context = null) {
+    uwwtd_install_trace(__FUNCTION__);
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+    //force update for maps
+    //Add new layers
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');  
+    $new_overlays = array(
+        'natura2000.inc'
+    );
+    uwwtd_update_map_overlay($country_config, $country_code, array(), $new_overlays, array('-'));
+    
+    
+
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    //throw new DrupalUpdateException(__FUNCTION__);
+}   
    
    
 /**
