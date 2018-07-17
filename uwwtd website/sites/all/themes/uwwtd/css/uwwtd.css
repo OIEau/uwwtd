@@ -1143,6 +1143,11 @@ div.geospatial-award-txt{
     font-weight:bold;
 }
 
+div.data-table-header table thead tr th:first-child,
+div.data-table-header table tbody tr td:first-child {
+  max-width: 30%;
+  word-break: break-all;
+}
 /*================= Responsive =====================*/
 
 @media screen and (max-width: 767px) {
@@ -1188,6 +1193,9 @@ div.geospatial-award-txt{
     ul.navbar-nav div.menu_level ul{
         margin-left: 20px;
     }
+    ul.nav.secondary{
+        display:none;
+    }                 
     .navbar-collapse .navbar-nav .menu-item--depth-1{
         width:100%;
         text-align:left;

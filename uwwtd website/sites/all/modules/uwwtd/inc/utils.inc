@@ -14,6 +14,13 @@ function _get_years_9th_report() {
     return array(2014, 2015);
 }
 
+/**
+ * Return years which defines 10th report.
+ */
+function _get_years_10th_report() {
+    return array(2016);
+}
+
 
 if (!function_exists('array_column')) {
     /**
@@ -1071,7 +1078,9 @@ function uwwtd_check_numeric($value)
 function uwwtd_check_decimal($value){
     $value = str_replace(",",".",trim($value));
 	//in fact what is the max value for a real type in postgresql ?
-	if(is_numeric($value) && $value < bcpow(10,9)) {
+	//if(is_numeric($value) && $value < bcpow(10,9)) {
+        //nd@oieau.fr 17/07/2018  : bcpow is not include by default in php7
+	if(is_numeric($value) && $value < 1000000000) {
 		return (float)$value;	
 	}
 //     else{

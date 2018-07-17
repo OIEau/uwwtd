@@ -163,6 +163,10 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     if(isset($datas['UWWTD_Report']['ReportPeriod']['repCode'])){
         $repCode =  uwwtd_check_text($datas['UWWTD_Report']['ReportPeriod']['repCode']);
     }
+    //10th report
+    elseif(isset($datas['MSLevel']['Row']['repCode'])){
+        $repCode =  uwwtd_check_text($datas['MSLevel']['Row']['repCode']);
+    }
     else{
         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No repCode found for this dataset :'.$file->uri, $timestamp, 0);
         $repCode = null;
@@ -171,6 +175,10 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     //On profite de l'occasion pour creer le noeud sur le MSLevel
     if(!empty($datas['UWWTD_Report']['MSLevel'])){
         uwwtd_update_mslevel($newFile, $annee, $datas['UWWTD_Report']['MSLevel'], $repCode, $timestamp);
+    }
+    //10th report
+    elseif(!empty($datas['MSLevel'])){
+        uwwtd_update_mslevel($newFile, $annee, $datas['MSLevel'], $repCode, $timestamp);
     }
     uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);  
 }
@@ -601,7 +609,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
     /*Fix nd@oieau.fr 09/06/2016 : reprocess the ReceivingAreas import ==> the batch operation not working before*/
     //ReceivingAreas
     $imports  = array();
-    //Old reporting format (until the 8th)
+    //Old reporting format (8th)
     if(isset($datas['UWWTD_Report']['ReceivingAreas'])){
         //Case of country with only one RCA
 
@@ -613,7 +621,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['ReceivingAreas']['ReceivingArea'];
         }
     }
-    //New report Format (9th)
+    //Old reporting format (9th)
     elseif(isset($datas['UWWTD_Report']['ReceivingAreasSAMain'])){
         //ReceivingAreaSAMain
         //fix nd@oieau.fr le 10/08/2016 : import des rca pour les pays avec plusieurs RCA
@@ -661,6 +669,52 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
         }
     }
+    //Case of the 10th report
+    elseif(isset($datas['ReceivingAreasSAMain'])){
+        if(!isset($datas['ReceivingAreasSAMain']['Row']['rcaCode'])){
+            foreach($datas['ReceivingAreasSAMain']['Row'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        //nd@oieau.fr 17/07/2018 : check how this tag appear in $datas when we have only one item
+        else{
+            foreach($datas['ReceivingAreasSAMain'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        $subkeys = array(
+            'ReceivingAreasSAParameter'=>'Row',
+            'ReceivingAreasSA54'=>'Row',
+            'ReceivingAreasLSA'=>'Row',
+            'ReceivingAreasSASA'=>'Row',
+            'ReceivingAreasSALSAPredecessor'=>'Row'
+        );
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas[$root]) && isset($datas[$root][$key])) {
+                foreach ($datas[$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas[$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
+
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     if (!empty($imports)) {
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
@@ -679,6 +733,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    //10th report
+    elseif(isset($datas['BigCityDischargers'])){
+        if(isset($datas['BigCityDischargers']['Row']['bigCityID'])){
+            $imports[0] = $datas['BigCityDischargers']['Row'];
+        }
+        else{
+            $imports = $datas['BigCityDischargers']['Row'];
+        }
+        uwwtd_trace('$imports BigCityDischargers v10th report');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
 
     //Agglomerations
     $imports  = array();
@@ -690,6 +756,29 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['Agglomerations']['Agglomeration'];
         }
         uwwtd_trace('$imports Agglomerations');
+        uwwtd_trace(var_export($imports, true));
+
+        // Save codes :
+        if (!empty($imports)) {
+            $codes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['aggCode'])) {
+                    $codes[] = $import['aggCode'];
+                }
+            }
+            variable_set(AGGS_WITHOUT_TP, $codes);
+        }
+        $batch['operations'][]=array('uwwtd_import_agglo_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
+    //10th report
+    elseif(isset($datas['Agglomerations'])){
+        if(isset($datas['Agglomerations']['Row']['aggCode'])){
+            $imports[0] = $datas['Agglomerations']['Row'];
+        }
+        else{
+            $imports = $datas['Agglomerations']['Row'];
+        }
+        uwwtd_trace('imports Agglomerations v10th report');
         uwwtd_trace(var_export($imports, true));
 
         // Save codes :
@@ -730,6 +819,29 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    elseif(isset($datas['UWWTPs'])){
+        if(isset($datas['UWWTPs']['Row']['uwwCode'])){
+            $imports[0] = $datas['UWWTPs']['Row'];
+        }
+        else{
+            $imports = $datas['UWWTPs']['Row'];
+        }
+        uwwtd_trace('$imports UWWTPs v10th report');
+        uwwtd_trace(var_export($imports, true));
+
+        // Save codes :
+        if (!empty($imports)) {
+            $codes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['uwwCode'])) {
+                    $codes[] = $import['uwwCode'];
+                }
+            }
+            variable_set(TPS_WITHOUT_AGG, $codes);
+            variable_set(TPS_WITHOUT_DP, $codes);
+        }
+        $batch['operations'][]=array('uwwtd_import_uww_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
 
     //DischargePoints
     $imports  = array();
@@ -741,6 +853,29 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['DischargePoints']['DischargePoint'];
         }
         uwwtd_trace('$imports DischargePoints');
+        uwwtd_trace(var_export($imports, true));
+
+        // Save codes :
+        if (!empty($imports)) {
+            $codes = array();
+            foreach ($imports as $import) {
+                if (!empty($import['dcpCode'])) {
+                    $codes[] = $import['dcpCode'];
+                }
+            }
+            variable_set(DPS_WITHOUT_TP, $codes);
+        }
+        $batch['operations'][]=array('uwwtd_import_dcp_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
+    //10th report
+    elseif(isset($datas['DischargePoints'])){
+        if(isset($datas['DischargePoints']['Row']['dcpCode'])){
+            $imports[0] = $datas['DischargePoints']['Row'];
+        }
+        else{
+            $imports = $datas['DischargePoints']['Row'];
+        }
+        uwwtd_trace('imports DischargePoints v10th report');
         uwwtd_trace(var_export($imports, true));
 
         // Save codes :
@@ -770,6 +905,19 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         */
         $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
     }
+    //10th report
+    elseif(isset($datas['DischargePoints'])){
+        /*
+        if(isset($datas['DischargePoints']['DischargePoint']['dcpCode'])){
+            $imports[0] = $datas['UWWTD_Report']['DischargePoints'];
+        }
+        else{
+            $imports = $datas['DischargePoints']['DischargePoint'];
+        }
+        $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $imports, $timestamp));
+        */
+        $batch['operations'][]=array('uwwtd_link_dcp_rca_uww_batch_process', array($newFile, $annee, $timestamp));
+    }
 
     //UwwtpAgglos
     $imports  = array();
@@ -781,6 +929,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['UwwtpAgglos']['UwwtpAgglo'];
         }
         uwwtd_trace('$imports UwwtpAgglos');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
+    }
+    //10th report
+    elseif(isset($datas['UwwtpAgglos'])){
+        if(isset($datas['UwwtpAgglos']['Row']['aucUwwCode'])){
+            $imports[0] = $datas['UwwtpAgglos']['Row'];
+        }
+        else{
+            $imports = $datas['UwwtpAgglos']['Row'];
+        }
+        uwwtd_trace('imports UwwtpAgglos v10th report');
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
@@ -798,6 +958,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
+    //10th report
+    elseif(isset($datas['BigCityDischargers'])){
+        if(isset($datas['BigCityDischargers']['Row']['bigCityID'])){
+            $imports[0] = $datas['BigCityDischargers']['Row'];
+        }
+        else{
+            $imports = $datas['BigCityDischargers']['Row'];
+        }
+        uwwtd_trace('imports BigCityDischargers v10th report');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_link_bc_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
+    }
 
     /*DG 15/12/2015 Contact*/
     $imports  = array();
@@ -812,6 +984,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
+    //10th report
+    elseif(isset($datas['Contacts'])){
+        if(isset($datas['Contacts']['Row']['repCode'])){
+            $imports[0] = $datas['Contacts']['Row'];
+        }
+        else{
+            $imports = $datas['Contacts']['Row'];
+        }
+        uwwtd_trace('imports Contacts v10th report');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
 
     /*DG 15/12/2015 Industry*/
     $imports  = array();
@@ -823,6 +1007,18 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             $imports = $datas['UWWTD_Report']['Industries']['Industry'];
         }
         uwwtd_trace('$imports Industries');
+        uwwtd_trace(var_export($imports, true));
+        $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+    }
+    //10th report
+    elseif(isset($datas['Industries'])){
+        if(isset($datas['Industries']['Row']['repCode'])){
+            $imports[0] = $datas['Industries']['Row'];
+        }
+        else{
+            $imports = $datas['Industries']['Row'];
+        }
+        uwwtd_trace('imports Industries v10th report');
         uwwtd_trace(var_export($imports, true));
         $batch['operations'][]=array('uwwtd_import_contact_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
