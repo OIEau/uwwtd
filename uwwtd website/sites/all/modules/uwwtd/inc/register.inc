@@ -866,7 +866,7 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
 //     $result['collecting_system'] = 0;
 //     $result['ias'] = 0;
 //     $result['no_collecting_system_nor_ias'] = 0;
-    $result['dcptype'] = '';
+    $result['dcptype'] = array();
 //     $agg = node_load($nidagglo);
 //     dsm($agg);
     $result['generated_load'] = $agg->field_agggenerated['und'][0]['value'];
