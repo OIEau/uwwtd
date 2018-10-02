@@ -52,7 +52,7 @@ function uwwtd_run_compliance_page($node){
                 if($uww = node_load($u['nid'])){
                     uwwtd_station_set_conformity($uww);
                     drupal_set_message("Processing conformity for the UWWTP ".$uww->title." : Ok");
-                    dsm($uww);
+                    //dsm($uww);
                 }else{
                     drupal_set_message("Can't load a linked UWWTP for the agglomeration ".$node->title, 'warning');
                 }
@@ -69,7 +69,7 @@ function uwwtd_run_compliance_page($node){
         uwwtd_station_set_conformity($node);
         drupal_set_message("Processing conformity for the UWWTP ".$node->title." : Ok");
     }
-    dsm($node);
+    //dsm($node);
     drupal_goto('node/'.$node->nid);
 }
 
@@ -177,15 +177,14 @@ function uwwtd_import_submit_handler($form, &$form_state) {
         uwwtd_update_mslevel($newFile, $annee, $datas['UWWTD_Report']['MSLevel'], $repCode, $timestamp);
     }
     //10th report
-    elseif(!empty($datas['MSLevel'])){
-        uwwtd_update_mslevel($newFile, $annee, $datas['MSLevel'], $repCode, $timestamp);
+    elseif(!empty($datas['MSLevel']) && isset($datas['MSLevel']['Row'])){
+        uwwtd_update_mslevel($newFile, $annee, $datas['MSLevel']['Row'], $repCode, $timestamp);
     }
     uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);  
 }
 
 function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
     global $language;
-    
     if(!empty($datas)){
 //         dsm($datas);
         // Variables
@@ -232,6 +231,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         $node->field_siteid['und'][0]['value'] = $siteId;
         //$node->field_valid['und'][0]['value'] = 0;
         $node->field_anneedata['und'][0]['value'] = $annee;
+        /*
         $node->field_sourcefile = array(
             'und' => array(
                 0 => array(
@@ -242,7 +242,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
                     'display' => 1
                 )
             )
-        );
+        );*/
 
         // data mapping
         $node->field_repcode['und'][0]['value'] = $repCode;

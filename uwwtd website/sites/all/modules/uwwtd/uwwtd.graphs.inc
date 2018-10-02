@@ -107,8 +107,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 	// Récupération des données des graphs :
     $frontAndBackGraph1 = getRow1Graph1($yearSelected, $yearsPossibles);
     $frontAndBackGraph2 = getRow1Graph2($yearSelected, $yearsPossibles);
-    
     // Création du code html pour ces graphs :
+    
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t('Agglomeration : Generated load by collection'), 
     	t("Generated Load by collection type (population equivalent – p.e.)"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Generated Load by sewage network type (population equivalent – p.e.)"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
@@ -469,6 +469,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 		// Pour un graph avec plusieurs années :
 		if ($yearSelected == ALL_YEARS) {
 			// Pour chaque Network type :
+            
 			foreach ($frontTmp as $newtworkTypeName => $networkType) {
 				if (array_key_exists('data', $networkType)) {
 					// Pour chaque annéee :
@@ -480,7 +481,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 					}
 				}
 			}
-			
+            
 			// Remplacement des keys par des 0, 1, 2 ... (nécessaire pour le traceurs de graph) :
 			foreach ($front['data'] as $year => $groupElements) {
 				$front['data'][$year] = array_values($groupElements);

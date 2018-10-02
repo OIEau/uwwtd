@@ -115,25 +115,48 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 		GROUP BY f_annee.field_anneedata_value, s.field_aggsewagenetwork_value
 		ORDER BY f_annee.field_anneedata_value"
 				, $params);
-
+        
+        $years = array();
 		$out = array();
 		while ($row = $result->fetchAssoc()) {
 			if ($row['type'] == '') {
 				$row['type'] = 'NI';
 			}
-			$networkTypeName = $GLOBALS['ms_level']['sewage_network'][$row['type']]['label'];
-			$out[$networkTypeName]['data'][$row['year']] = array(
+			
+			$out[$row['type']]['data'][$row['year']] = array(
 				'equValue' => $row['sn_sum'],
 				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']). ' pe',
 				'aggValue' => $row['sn_count'],
 				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']) . ' na',
 				'color' => $GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
 			);
+            if(!in_array($row['year'], $years)) {
+                $years[] =$row['year'];
+            }
 		}
+        if(!empty($out) && !empty($years) ){
+            sort($years);
+            foreach($out as $nt=>$values){
+                $networkTypeName = $GLOBALS['ms_level']['sewage_network'][$nt]['label'];
+                foreach($years as $year){
+                    if(empty($values['data'][$year])){
+                        $out[$nt]['data'][$year] = array(
+                            'equValue' => null,
+                            'equFormated' =>'',
+                            'aggValue'=>null,
+                            'aggFormated' =>'',
+                            'color' =>$GLOBALS['ms_level']['sewage_network'][$nt]['color'], 
+                        );
+                    }  
+                }
+                ksort($out[$nt]['data']);
+                $out[$networkTypeName] = $out[$nt];
+                unset($out[$nt]);
+            }
+        }
 	} catch(Exception $e) {
 		dsm($e->getMessage());
 	}
-	
 	return $out;
 }
 

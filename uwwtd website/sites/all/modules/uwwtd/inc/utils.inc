@@ -115,7 +115,6 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    
 //dsm(array_keys(openlayers_styles()));
     //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
     /*
@@ -1041,12 +1040,12 @@ function uwwtd_check_text($text){
 }
 
 function uwwtd_check_bool($bool){
-    if (!empty($bool)) {
+    //nd@oieau.fr : 02/10/2018 : fix bug on value "0" with "empty" function
+    if (!empty($bool) || $bool == '0') {
         // check format
         $bool = trim($bool);
         $bool = check_plain($bool);
         $bool = strtolower($bool);
-
         if(($bool == "false") || ($bool == "0")) {
             $bool = 0;
             return $bool;
@@ -1059,6 +1058,7 @@ function uwwtd_check_bool($bool){
         return false;
 // 	}
     } else {
+        dsm("==== uwwtd_check_bool : empty");
         return FALSE;
     }
 }
