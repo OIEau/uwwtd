@@ -2555,7 +2555,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
                     $art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
                 }
                 else{
-                    $art->field_art17_flatpeufundname['und'][0]['value'] = '';
+                    $art->field_art17_flatpeufundname['und'][0]['value'] = null;
                 }
                 
                 $check = uwwtd_check_decimal($field_art17_flatpeufund);
@@ -2720,7 +2720,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
                 if (!empty($field_art17_flaggeufundname)){
                     $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
                 } else{
-                    $art->field_art17_flaggeufundname['und'][0]['value'] = '';
+                    $art->field_art17_flaggeufundname['und'][0]['value'] = null;
                 }
 				////////
                 if (!empty($field_art17_flaggeufund)) {
