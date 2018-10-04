@@ -1000,7 +1000,7 @@ function uwwtd_art17_import_submit_handler_xlsx($form, &$form_state) {
 	
 // 	$datas = uwwtd_csv_to_array($uri, ';');
 	//$datas = uwwtd_xml_to_array($uri);
-	
+	//dsm($newFile);
 	uwwtd_art17_setup_batch_xlsx($newFile, $annee);	
 }
 
@@ -1025,15 +1025,14 @@ function uwwtd_art17_setup_batch_xlsx($newFile, $annee){
 	unset($_SESSION['uwwtd_warnings']);
     
 	$ext = pathinfo($newFile->filename, PATHINFO_EXTENSION);
-
 	if ($ext == 'xlsx') {
 		$operations = array(
 			array('uwwtd_delete_error', array($annee, 'article17')),    
 			array('uwwtd_art17_import_article17_uwwtp', array($newFile, $annee)),
         	array('uwwtd_art17_import_article17_agglo', array($newFile, $annee))
     	);
-	} elseif ($ext == 'xml') {
-        //
+	} 
+    elseif ($ext == 'xml') {
 		$operations = array(
 			array('uwwtd_delete_error', array($annee, 'article17')),    
 			array('uwwtd_art17_import_article17_9th', array($newFile, $annee)),
@@ -2142,15 +2141,13 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
     }
     
     $data_format =  '10th-report';
-    
 	$timestamp= time();
 
 	$datas = uwwtd_xml_to_array($newFile->uri);
-	$datas = $datas['UWWTD_Report'];
-    
     //Test if we are in case of 9th report format
-    if(isset($datas['FLAAgglomerations']['FLAAgglomeration']) || isset($datas['FLAUWWTPs']['FLAUWWTP']) ){
+    if(isset($datas['UWWTD_Report']) ){
         $data_format =  '9th-report';
+        $datas = $datas['UWWTD_Report'];
     }
 
     
@@ -2183,26 +2180,27 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
     }
     //Default case of the 10th report
     else{
-                // Processing agglomerations
-        foreach ($datas['FLAAgglomerations']['Row'] as $agglomeration) {
-            uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
-
-            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+         // Processing agglomerations
+         if(isset($datas['FLAAgglomerations']['Row'])){
+            foreach ($datas['FLAAgglomerations']['Row'] as $agglomeration) {
+                uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
+                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            } 
+         }
+        
+        // Processing UWWTP
+        if(isset($datas['FLAUWWTPs']['Row'])){
+            foreach ($datas['FLAUWWTPs']['Row'] as $uwwtp) {
+                uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
+                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            }
         }
-
-        // Processing stations
-        foreach ($datas['FLAUWWTPs']['Row'] as $uwwtp) {
-            uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
-
-            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-        }
-
         // Processing investments
-        foreach ($datas['FLAInvestments']['Row'] as $investment) {
-            uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
-            
-            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-            
+        if(isset($datas['FLAInvestments']['Row'])){
+            foreach ($datas['FLAInvestments']['Row'] as $investment) {
+                uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
+                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            }
         }
     }
     $context['sandbox']['progress']++;
@@ -2553,7 +2551,12 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
                 } else {                 
 				    $art->field_art17_flatpinv['und'][0]['value'] = round($check);
                 }
-				$art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
+				if(!empty($field_art17_flatpeufundname)){
+                    $art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
+                }
+                else{
+                    $art->field_art17_flatpeufundname['und'][0]['value'] = '';
+                }
                 
                 $check = uwwtd_check_decimal($field_art17_flatpeufund);
                 if ($check === false) {
@@ -2714,7 +2717,11 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
                     $art->field_art17_flagginv['und'][0]['value'] = $check;
 				}
                 ////////
-                $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
+                if (!empty($field_art17_flaggeufundname)){
+                    $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
+                } else{
+                    $art->field_art17_flaggeufundname['und'][0]['value'] = '';
+                }
 				////////
                 if (!empty($field_art17_flaggeufund)) {
                     $check = uwwtd_check_decimal($field_art17_flaggeufund );
