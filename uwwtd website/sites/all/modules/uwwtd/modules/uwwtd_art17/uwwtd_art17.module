@@ -1033,6 +1033,7 @@ function uwwtd_art17_setup_batch_xlsx($newFile, $annee){
         	array('uwwtd_art17_import_article17_agglo', array($newFile, $annee))
     	);
 	} elseif ($ext == 'xml') {
+        //
 		$operations = array(
 			array('uwwtd_delete_error', array($annee, 'article17')),    
 			array('uwwtd_art17_import_article17_9th', array($newFile, $annee)),
@@ -1160,31 +1161,7 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                 $line++;
                 $context['sandbox']['progress']++;        
                 continue;
-        }
-        
-// dsm($field_art17uwwtp_uwwcode );
-// dsm($field_art17uwwtp_uwwname );
-// dsm($field_art17uwwtp_aggcode );
-// dsm($field_art17uwwtp_aggname );
-// dsm($field_art17_flatpstatus );
-// dsm($field_art17_flatpreasons );
-// dsm($field_art17_flatpmeasures );
-// dsm($field_art17_flatpexpload );
-// dsm($field_art17_flatpexpcapacity );
-// dsm($field_art17_flatptexpectreatment );
-// dsm($field_art17_flatpexpecdatestart );
-// dsm($field_art17_flatpexpecdatestartw );
-// dsm($field_art17_flatpexpecdatecomple );
-// dsm($field_art17_flatpexpecdateperfor );
-// dsm($field_art17_flatpinv );
-// dsm($field_art17_flatpeufundname );
-// dsm($field_art17_flatpeufund );
-// dsm($field_art17_flatpcomments );
-// dsm($field_art17_flatpexploadtruck );
-// dsm($field_art17_flatpotherfund );
-// dsm($field_art17_flatpotherfundname );
-// dsm($field_art17_flatploan );
-// dsm($field_art17_flatploanname );        
+        }  
     
 		// article 17 Station
 		if(empty($field_art17uwwtp_uwwcode)){
@@ -1371,19 +1348,23 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
 				    $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
                 }
                 
-                $check = uwwtd_check_numeric($field_art17_flatpinv );
+                //fix nd@oieau.fr : 04/10/2018 : 10th report use a float value
+                //$check = uwwtd_check_numeric($field_art17_flatpinv );
+                $check = uwwtd_check_decimal($field_art17_flatpinv );
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);                       
                 } else {                 
-				    $art->field_art17_flatpinv['und'][0]['value'] = $check;
+				    $art->field_art17_flatpinv['und'][0]['value'] = round($check);
                 }
 				$art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
                 
-                $check = uwwtd_check_numeric($field_art17_flatpeufund);
+                //fix nd@oieau.fr : 04/10/2018 : 10th report use a float value
+                //$check = uwwtd_check_numeric($field_art17_flatpeufund );
+                $check = uwwtd_check_decimal($field_art17_flatpeufund);
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                 } else {                
-				    $art->field_art17_flatpeufund['und'][0]['value'] = $check;
+				    $art->field_art17_flatpeufund['und'][0]['value'] = round($check);
                 }
                 ///////////////////////////////////////////
                 //optional  
@@ -1400,22 +1381,24 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                 }
                 ///////////////////////////////////////////
                 if(!empty($field_art17_flatpotherfund)) {
-                    $check = uwwtd_check_numeric($field_art17_flatpotherfund);
+                    //$check = uwwtd_check_numeric($field_art17_flatpotherfund);
+                    $check = uwwtd_check_decimal($field_art17_flatpotherfund);
                     if ($check === false) {
                         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                     } else {                
-    				    $art->field_art17_flatpotherfund['und'][0]['value'] = $check;
+    				    $art->field_art17_flatpotherfund['und'][0]['value'] = round($check);
                     }
                 }
                 /////////////////////////////////////////// 
 				if(!empty($field_art17_flatpotherfundname )) $art->field_art17_flatpotherfundname['und'][0]['value'] = $field_art17_flatpotherfundname ;
                 ///////////////////////////////////////////
                 if(!empty($field_art17_flatploan )) {
-                    $check = uwwtd_check_numeric($field_art17_flatploan );
+                    //$check = uwwtd_check_numeric($field_art17_flatploan );
+                    $check = uwwtd_check_decimal($field_art17_flatploan);
                     if ($check === false) {
                         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                     } else {                
-    				    $art->field_art17_flatploan['und'][0]['value'] = $check;
+    				    $art->field_art17_flatploan['und'][0]['value'] = round($check);
                     }
                 }
                 ///////////////////////////////////////////
@@ -2149,394 +2132,85 @@ function uwwtd_art17_import_finished($success, $results, $operations){
 	}
 }
 
-function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
-{
+//Function use for importing Article 17 data from xml file
+//Notice : data format change between 9th and 10th report
+function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
 	$GLOBALS['uwwtd_errors'] = array();
+    if (!isset($context['sandbox']['progress'])) {
+		$context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
+    }
+    
+    $data_format =  '10th-report';
+    
 	$timestamp= time();
 
 	$datas = uwwtd_xml_to_array($newFile->uri);
 	$datas = $datas['UWWTD_Report'];
-
-	// Calculating the total of elements to be treated, adding + 1 for the contact
-	$max = 	count($datas['FLAAgglomerations']['FLAAgglomeration']) + count($datas['FLAUWWTPs']['FLAUWWTP'])
-			+ count($datas['FLAInvestments']['FLAInvestment']) + 1;
-
-	if (!isset($context['sandbox']['progress'])) {
-		$context['sandbox']['progress'] = 0;
-        $context['sandbox']['max'] = $max;
-    }
-
-    // Processing agglomerations
-    foreach ($datas['FLAAgglomerations']['FLAAgglomeration'] as $agglomeration) {
-    	$e = 0;
-
-    	// Retrieving values from XML file
-    	$field_art17agg_flarepcode = isset($agglomeration['flarepCode']) ? $agglomeration['flarepCode'] : null;
-    	$field_art17agg_aggcode = isset($agglomeration['aggCode']) ? $agglomeration['aggCode'] : null;
-        $field_art17agg_aggname = isset($agglomeration['aggName']) ? $agglomeration['aggName'] : null;
-        $field_art17_flaggstatus = isset($agglomeration['flaggStatus']) ? $agglomeration['flaggStatus'] : null;
-        $field_art17_flaggreasons = isset($agglomeration['flaggReasons']) ? $agglomeration['flaggReasons'] : null;
-        $field_art17_flaggmeasures = isset($agglomeration['flaggMeasures']) ? $agglomeration['flaggMeasures'] : null;
-        $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null;
-        $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null;
-        $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion ']) ? $agglomeration['flaggExpecDateCompletion '] : null;
-        $field_art17_flagginv = isset($agglomeration['flaggInv']) ? $agglomeration['flaggInv'] : null;
-        $field_art17_flaggeufundname = isset($agglomeration['flaggEUFundName']) ? $agglomeration['flaggEUFundName'] : null;
-        $field_art17_flaggeufund = isset($agglomeration['flaggEUFund']) ? $agglomeration['flaggEUFund'] : null;
-        $field_art17_flaggcomments = isset($agglomeration['flaggComments']) ? $agglomeration['flaggComments'] : null;
-        $field_art17_flaggexpload = isset($agglomeration['flaggExpLoad']) ? $agglomeration['flaggExpLoad'] : null;
-        $field_art17_flaggexploadcoll = isset($agglomeration['flaggExpLoadColl']) ? $agglomeration['flaggExpLoadColl'] : null;
-        $field_art17_flaggexploadias = isset($agglomeration['flaggExpLoadIAS']) ? $agglomeration['flaggExpLoadIAS'] : null;
-        $field_art17_flaggotherfund = isset($agglomeration['flaggOtherFund']) ? $agglomeration['flaggOtherFund'] : null;
-        $field_art17_flaggotherfundname = isset($agglomeration['flaggOtherFundName']) ? $agglomeration['flaggOtherFundName'] : null;
-        $field_art17_flaggloan = isset($agglomeration['flaggLoan']) ? $agglomeration['flaggLoan'] : null;
-        $field_art17_flaggloanname = isset($agglomeration['flaggLoanName']) ? $agglomeration['flaggLoanName'] : null;
-
-        // Checking for required fields
-        if(!isset($field_art17agg_aggcode)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-		if(!isset($field_art17_flaggstatus)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-		if(!isset($field_art17agg_flarepcode)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-
-		// If no error found
-		if ($e == 0) {
-			$siteId = $annee.'_agg_'.uwwtd_check_text($field_art17agg_aggcode);
-			$exists = uwwtd_check_exist($siteId);
-			if ($exists != false) {
-				$element = node_load($exists);
-    			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
-    			
-				if (isset($element->field_article17_agglo['und'][0]['nid']) && $element->field_article17_agglo['und'][0]['nid']!= "") {
-					$art = node_load($element->field_article17_agglo['und'][0]['nid']);
-				} else {
-					// Create new article 17 node
-					$art = new StdClass();
-					$art->type = 'article_17_agglomeration';
-					$art->title = $art17_title;
-				}
-			
-				// Article 17 mapping for UWWTP
-				$art->field_art17agg_aggcode['und'][0]['value'] = $field_art17agg_aggcode;
-				$art->field_art17agg_aggname['und'][0]['value'] = $field_art17agg_aggname;
-				$art->field_art17_flaggstatus['und'][0]['value'] = $field_art17_flaggstatus;
-				$art->field_art17_flaggreasons['und'][0]['value'] = $field_art17_flaggreasons;
-				$art->field_art17_flaggmeasures['und'][0]['value'] = $field_art17_flaggmeasures;
-				////////
-                $check = uwwtd_check_date($field_art17_flaggexpecdatestart, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-                    $art->field_art17_flaggexpecdatestart['und'][0]['value'] = $check;
-				}
-                ////////
-                $check = uwwtd_check_date($field_art17_flaggexpecdatestartw, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-                    $art->field_art17_flaggexpecdatestartw['und'][0]['value'] = $check;
-				}
-                ////////
-                $check = uwwtd_check_date($field_art17_flaggexpecdatecomple, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-                    $art->field_art17_flaggexpecdatecomple['und'][0]['value'] = $check;
-				}
-                ////////
-                $check = uwwtd_check_decimal($field_art17_flagginv);
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
-                } else {                  
-                    $art->field_art17_flagginv['und'][0]['value'] = $check;
-				}
-                ////////
-                $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
-				////////
-                if (!empty($field_art17_flaggeufund)) {
-                    $check = uwwtd_check_numeric($field_art17_flaggeufund );
-                    if ($check === false) {
-                        $art->field_art17_flaggeufund['und'][0]['value'] = 0;
-                    } else {                
-                        $art->field_art17_flaggeufund['und'][0]['value'] = $check;
-                    }
-                }
-                /////////////////////////////////////////////
-                //optionnal
-                /////////////////////////////////////////////
-				if (!empty($field_art17_flaggcomments)) $art->field_art17_flaggcomments['und'][0]['value'] = $field_art17_flaggcomments;
-                ////////
-                if (!empty($field_art17_flaggexpload)) {
-                    $check = uwwtd_check_numeric($field_art17_flaggexpload );
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                    } else {                
-    				    $art->field_art17_flaggexpload['und'][0]['value'] = $check;
-                    }
-                }
-				////////
-                if (!empty($field_art17_flaggexploadcoll)) {
-                    $check = uwwtd_check_decimal($field_art17_flaggexploadcoll);
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
-                    } else {                  
-                        $art->field_art17_flaggexploadcoll['und'][0]['value'] = $check;
-                    }
-                }
-				////////
-                if (!empty($field_art17_flaggexploadias)) {
-                    $check = uwwtd_check_decimal($field_art17_flaggexploadias);
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
-                    } else {                  
-                        $art->field_art17_flaggexploadias['und'][0]['value'] = $check;
-                    }
-                }
-				////////
-                if (!empty($field_art17_flaggotherfund)) { 
-                    $check = uwwtd_check_numeric($field_art17_flaggotherfund );
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                    } else {                
-                        $art->field_art17_flaggotherfund['und'][0]['value'] = $check;
-                    }
-                }
-				////////
-                if (!empty($field_art17_flaggotherfundname)) $art->field_art17_flaggotherfundname['und'][0]['value'] = $field_art17_flaggotherfundname;
-				////////
-                if (!empty($field_art17_flaggloan)) {
-                    $check = uwwtd_check_numeric($field_art17_flaggloan );
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                    } else {                
-                        $art->field_art17_flaggloan['und'][0]['value'] = $check;
-                    }
-                }
-				////////
-                if (!empty($field_art17_flaggloanname)) $art->field_art17_flaggloanname['und'][0]['value'] = $field_art17_flaggloanname;
-				////////                
-                $art->field_anneedata['und'][0]['value'] = $annee;
-				$art->uid = 1;
-				$art->language = $element->language;
-				// Article 17 link to element
-                $art->field_art17agg_link_agglo['und'][0]['nid'] = $element->nid;
-    			
-    			// Save the article 17 element
-    			node_save($art);
-    			// Link element tot Article 17
-                $element->field_article17_agglo['und'][0]['nid'] = $art->nid;
-    			// Save the element
-    			node_save($element);
-			} else {
-				$emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
-    			uwwtd_set_warning(1, $emes);
-			}
-		}
-
-    	$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-    	$context['sandbox']['progress']++;
-    }
-
-    // Processing stations
-    foreach ($datas['FLAUWWTPs']['FLAUWWTP'] as $uwwtp) {
-    	$e = 0;
-
-    	// Retrieving values from XML file
-    	$field_art17uwwtp_flarepcode = isset($uwwtp['flarepCode']) ? $uwwtp['flarepCode'] : null;
-    	$field_art17uwwtp_uwwcode = isset($uwwtp['uwwCode']) ? $uwwtp['uwwCode'] : null;
-		$field_art17uwwtp_uwwname = isset($uwwtp['uwwName']) ? $uwwtp['uwwName'] : null;
-		$field_art17_flatpstatus = isset($uwwtp['flatpStatus']) ? $uwwtp['flatpStatus'] : null;
-		$field_art17_flatpreasons = isset($uwwtp['flatpReasons']) ? $uwwtp['flatpReasons'] : null;
-		$field_art17_flatpmeasures = isset($uwwtp['flatpMeasures']) ? $uwwtp['flatpMeasures'] : null;
-		$field_art17_flatpexpload = isset($uwwtp['flatpExpLoad']) ? $uwwtp['flatpExpLoad'] : null;
-		$field_art17_flatpexpcapacity = isset($uwwtp['flatpExpCapacity']) ? $uwwtp['flatpExpCapacity'] : null;
-		$field_art17_flatptexpectreatment = isset($uwwtp['flatpExpecTreatment']) ? $uwwtp['flatpExpecTreatment'] : null;
-        $field_art17_flatpexpecdatestart = isset($uwwtp['flatpExpecDateStart']) ? $uwwtp['flatpExpecDateStart'] : null;
-		$field_art17_flatpexpecdatestartw = isset($uwwtp['flatpExpecDateStartWork']) ? $uwwtp['flatpExpecDateStartWork'] : null;
-		$field_art17_flatpexpecdatecomple = isset($uwwtp['flatpExpecDateCompletion']) ? $uwwtp['flatpExpecDateCompletion'] : null;
-		$field_art17_flatpexpecdateperfor = isset($uwwtp['flatpExpecDatePerformance']) ? $uwwtp['flatpExpecDatePerformance'] : null;
-		$field_art17_flatpinv = isset($uwwtp['flatpInv']) ? $uwwtp['flatpInv'] : null;
-		$field_art17_flatpeufundname = isset($uwwtp['flatpEUFundName']) ? $uwwtp['flatpEUFundName'] : null;
-		$field_art17_flatpeufund = isset($uwwtp['flatpEUFund']) ? $uwwtp['flatpEUFund'] : null;
-		$field_art17_flatpcomments = isset($uwwtp['flatpComments']) ? $uwwtp['flatpComments'] : null;
-		$field_art17_flatpexploadtruck = isset($uwwtp['flatpExpLoadTruck']) ? $uwwtp['flatpExpLoadTruck'] : null;
-		$field_art17_flatpotherfund = isset($uwwtp['flatpOtherFund']) ? $uwwtp['flatpOtherFund'] : null;
-		$field_art17_flatpotherfundname = isset($uwwtp['flatpOtherFundName']) ? $uwwtp['flatpOtherFundName'] : null;
-		$field_art17_flatploan = isset($uwwtp['flatpLoan']) ? $uwwtp['flatpLoan'] : null;
-        $field_art17_flatploanname = isset($uwwtp['flatpLoanName']) ? $uwwtp['flatpLoanName'] : null;
-
-        // Checking for required fields
-        if(!isset($field_art17uwwtp_uwwcode)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "uwwCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-		if(!isset($field_art17_flatpstatus)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "flatpStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-		if(!isset($field_art17uwwtp_flarepcode)){
-			$e = 1;
-			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
-			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
-		}
-
-		// If no error found
-    	if($e == 0) {
-  			$siteId = $annee.'_uww_'.uwwtd_check_text($field_art17uwwtp_uwwcode);
-    		$exists = uwwtd_check_exist($siteId);
-    		if ($exists != false) {
-    			$element = node_load($exists);
-    			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
-
-				if (isset($element->field_article17_uwwtp['und'][0]['nid']) && ($element->field_article17_uwwtp['und'][0]['nid']!= "" || $element->field_article17_uwwtp['und'][0]['nid']!= NULL)) {
-					$art = node_load($element->field_article17_uwwtp['und'][0]['nid']);
-				} else {
-					// Create new article 17 node
-					$art = new StdClass();
-					$art->type = 'article_17_uwwtp';
-					$art->title = $art17_title;
-				}
-			
-				// Article 17 mapping for UWWTP
-				$art->field_art17uwwtp_uwwcode['und'][0]['value'] = $field_art17uwwtp_uwwcode;
-				$art->field_art17uwwtp_uwwname['und'][0]['value'] = $field_art17uwwtp_uwwname;
-				$art->field_art17_flatpstatus['und'][0]['value'] = $field_art17_flatpstatus;
-				$art->field_art17_flatpreasons['und'][0]['value'] = $field_art17_flatpreasons;
-				$art->field_art17_flatpmeasures['und'][0]['value'] = $field_art17_flatpmeasures ;
-                
-                $check = uwwtd_check_numeric($field_art17_flatpexpload );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                } else { 
-				    $art->field_art17_flatpexpload['und'][0]['value'] = $check;
-                }
-                
-                $check = uwwtd_check_numeric($field_art17_flatpexpcapacity );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                } else {                 
-				    $art->field_art17_flatpexpcapacity['und'][0]['value'] = $check;
-				}
-                
-                $art->field_art17_flatptexpectreatment['und'][0]['value'] = $field_art17_flatptexpectreatment;
-                
-                $check = uwwtd_check_date($field_art17_flatpexpecdatestart, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                
-				    $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
-                }
-                
-                $check = uwwtd_check_date($field_art17_flatpexpecdatestartw, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-				    $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
-                }
-                
-                $check = uwwtd_check_date($field_art17_flatpexpecdatecomple, $message );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-				    $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
-                }
-                
-                $check = uwwtd_check_date($field_art17_flatpexpecdateperfor, $message  );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
-                } else {                 
-				    $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
-                }
-                
-                $check = uwwtd_check_numeric($field_art17_flatpinv );
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);                       
-                } else {                 
-				    $art->field_art17_flatpinv['und'][0]['value'] = $check;
-                }
-				$art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
-                
-                $check = uwwtd_check_numeric($field_art17_flatpeufund);
-                if ($check === false) {
-                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                } else {                
-				    $art->field_art17_flatpeufund['und'][0]['value'] = $check;
-                }
-                ///////////////////////////////////////////
-                //optional  
-                ///////////////////////////////////////////              
-				if(!empty($field_art17_flatpcomments)) $art->field_art17_flatpcomments['und'][0]['value'] = $field_art17_flatpcomments ;
-                ///////////////////////////////////////////
-                if(!empty($field_art17_flatpexploadtruck)) {
-                    $check = uwwtd_check_decimal($field_art17_flatpexploadtruck);
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
-                    } else {                 
-    				    $art->field_art17_flatpexploadtruck['und'][0]['value'] = $check;
-                    }
-                }
-                ///////////////////////////////////////////
-                if(!empty($field_art17_flatpotherfund)) {
-                    $check = uwwtd_check_numeric($field_art17_flatpotherfund);
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                    } else {                
-    				    $art->field_art17_flatpotherfund['und'][0]['value'] = $check;
-                    }
-                }
-                /////////////////////////////////////////// 
-				if(!empty($field_art17_flatpotherfundname )) $art->field_art17_flatpotherfundname['und'][0]['value'] = $field_art17_flatpotherfundname ;
-                ///////////////////////////////////////////
-                if(!empty($field_art17_flatploan )) {
-                    $check = uwwtd_check_numeric($field_art17_flatploan );
-                    if ($check === false) {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
-                    } else {                
-    				    $art->field_art17_flatploan['und'][0]['value'] = $check;
-                    }
-                }
-                ///////////////////////////////////////////
-				if(!empty($field_art17_flatploanname )) $art->field_art17_flatploanname['und'][0]['value'] = $field_art17_flatploanname ;
-                ///////////////////////////////////////////
-                				
-                $art->field_anneedata['und'][0]['value'] = $annee;
-				$art->uid = 1;
-				$art->language = $element->language;
-				// Article 17 link to element
-				$art->field_art17uwwtp_link_uwwtp['und'][0]['nid'] = $element->nid;
-    			
-    			// Save the article 17 element
-    			node_save($art);
-    			
-    			// Link element tot Article 17
-    			$element->field_article17_uwwtp['und'][0]['nid'] = $art->nid;
-    			// Save the element
-    			node_save($element);
-    		} else {
-    			$emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
-    			uwwtd_set_warning(0, $emes);
     
-    		}
-    	}
-
-    	$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-    	$context['sandbox']['progress']++;
+    //Test if we are in case of 9th report format
+    if(isset($datas['FLAAgglomerations']['FLAAgglomeration']) || isset($datas['FLAUWWTPs']['FLAUWWTP']) ){
+        $data_format =  '9th-report';
     }
 
-    // Processing investments
-    foreach ($datas['FLAInvestments']['FLAInvestment'] as $investment) {
+    
+   
+
+    if($data_format ==  '9th-report'){
+        // Processing agglomerations
+        foreach ($datas['FLAAgglomerations']['FLAAgglomeration'] as $agglomeration) {
+            uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
+
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            $context['sandbox']['progress']++;
+        }
+
+        // Processing stations
+        foreach ($datas['FLAUWWTPs']['FLAUWWTP'] as $uwwtp) {
+            uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
+
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            $context['sandbox']['progress']++;
+        }
+
+        // Processing investments
+        foreach ($datas['FLAInvestments']['FLAInvestment'] as $investment) {
+            uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
+            
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            $context['sandbox']['progress']++;
+        }
+    }
+    //Default case of the 10th report
+    else{
+                // Processing agglomerations
+        foreach ($datas['FLAAgglomerations']['Row'] as $agglomeration) {
+            uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
+
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+        }
+
+        // Processing stations
+        foreach ($datas['FLAUWWTPs']['Row'] as $uwwtp) {
+            uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
+
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+        }
+
+        // Processing investments
+        foreach ($datas['FLAInvestments']['Row'] as $investment) {
+            uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
+            
+            $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            
+        }
+    }
+    $context['sandbox']['progress']++;
+    $context['finished'] = 1;
+}
+
+
+function uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee){
     	$e = 0;
 
     	// Retrieving values from XML file
@@ -2756,14 +2430,375 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context)
 
     		// Save the article 17 element
     		node_save($art);
+            return $art;
 		}
-    	
-    	$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-    	$context['sandbox']['progress']++;
-    }
+    return false;
+}
 
-    // End of process
-	if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
-		$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	}
+function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
+        $e = 0;
+
+    	// Retrieving values from XML file
+    	$field_art17uwwtp_flarepcode = isset($uwwtp['flarepCode']) ? $uwwtp['flarepCode'] : null;
+    	$field_art17uwwtp_uwwcode = isset($uwwtp['uwwCode']) ? $uwwtp['uwwCode'] : null;
+		$field_art17uwwtp_uwwname = isset($uwwtp['uwwName']) ? $uwwtp['uwwName'] : null;
+		$field_art17_flatpstatus = isset($uwwtp['flatpStatus']) ? $uwwtp['flatpStatus'] : null;
+		$field_art17_flatpreasons = isset($uwwtp['flatpReasons']) ? $uwwtp['flatpReasons'] : null;
+		$field_art17_flatpmeasures = isset($uwwtp['flatpMeasures']) ? $uwwtp['flatpMeasures'] : null;
+		$field_art17_flatpexpload = isset($uwwtp['flatpExpLoad']) ? $uwwtp['flatpExpLoad'] : null;
+		$field_art17_flatpexpcapacity = isset($uwwtp['flatpExpCapacity']) ? $uwwtp['flatpExpCapacity'] : null;
+		$field_art17_flatptexpectreatment = isset($uwwtp['flatpExpecTreatment']) ? $uwwtp['flatpExpecTreatment'] : null;
+        $field_art17_flatpexpecdatestart = isset($uwwtp['flatpExpecDateStart']) ? $uwwtp['flatpExpecDateStart'] : null;
+		$field_art17_flatpexpecdatestartw = isset($uwwtp['flatpExpecDateStartWork']) ? $uwwtp['flatpExpecDateStartWork'] : null;
+		$field_art17_flatpexpecdatecomple = isset($uwwtp['flatpExpecDateCompletion']) ? $uwwtp['flatpExpecDateCompletion'] : null;
+		$field_art17_flatpexpecdateperfor = isset($uwwtp['flatpExpecDatePerformance']) ? $uwwtp['flatpExpecDatePerformance'] : null;
+		$field_art17_flatpinv = isset($uwwtp['flatpInv']) ? $uwwtp['flatpInv'] : null;
+		$field_art17_flatpeufundname = isset($uwwtp['flatpEUFundName']) ? $uwwtp['flatpEUFundName'] : null;
+		$field_art17_flatpeufund = isset($uwwtp['flatpEUFund']) ? $uwwtp['flatpEUFund'] : null;
+		$field_art17_flatpcomments = isset($uwwtp['flatpComments']) ? $uwwtp['flatpComments'] : null;
+		$field_art17_flatpexploadtruck = isset($uwwtp['flatpExpLoadTruck']) ? $uwwtp['flatpExpLoadTruck'] : null;
+		$field_art17_flatpotherfund = isset($uwwtp['flatpOtherFund']) ? $uwwtp['flatpOtherFund'] : null;
+		$field_art17_flatpotherfundname = isset($uwwtp['flatpOtherFundName']) ? $uwwtp['flatpOtherFundName'] : null;
+		$field_art17_flatploan = isset($uwwtp['flatpLoan']) ? $uwwtp['flatpLoan'] : null;
+        $field_art17_flatploanname = isset($uwwtp['flatpLoanName']) ? $uwwtp['flatpLoanName'] : null;
+
+        // Checking for required fields
+        if(!isset($field_art17uwwtp_uwwcode)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "uwwCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+		if(!isset($field_art17_flatpstatus)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flatpStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+		if(!isset($field_art17uwwtp_flarepcode)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+
+		// If no error found
+    	if($e == 0) {
+  			$siteId = $annee.'_uww_'.uwwtd_check_text($field_art17uwwtp_uwwcode);
+    		$exists = uwwtd_check_exist($siteId);
+    		if ($exists != false) {
+    			$element = node_load($exists);
+    			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
+
+				if (isset($element->field_article17_uwwtp['und'][0]['nid']) && ($element->field_article17_uwwtp['und'][0]['nid']!= "" || $element->field_article17_uwwtp['und'][0]['nid']!= NULL)) {
+					$art = node_load($element->field_article17_uwwtp['und'][0]['nid']);
+				} else {
+					// Create new article 17 node
+					$art = new StdClass();
+					$art->type = 'article_17_uwwtp';
+					$art->title = $art17_title;
+				}
+			
+				// Article 17 mapping for UWWTP
+				$art->field_art17uwwtp_uwwcode['und'][0]['value'] = $field_art17uwwtp_uwwcode;
+				$art->field_art17uwwtp_uwwname['und'][0]['value'] = $field_art17uwwtp_uwwname;
+				$art->field_art17_flatpstatus['und'][0]['value'] = $field_art17_flatpstatus;
+				$art->field_art17_flatpreasons['und'][0]['value'] = $field_art17_flatpreasons;
+				$art->field_art17_flatpmeasures['und'][0]['value'] = $field_art17_flatpmeasures ;
+                
+                $check = uwwtd_check_numeric($field_art17_flatpexpload );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                } else { 
+				    $art->field_art17_flatpexpload['und'][0]['value'] = $check;
+                }
+                
+                $check = uwwtd_check_numeric($field_art17_flatpexpcapacity );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                } else {                 
+				    $art->field_art17_flatpexpcapacity['und'][0]['value'] = $check;
+				}
+                
+                $art->field_art17_flatptexpectreatment['und'][0]['value'] = $field_art17_flatptexpectreatment;
+                
+                $check = uwwtd_check_date($field_art17_flatpexpecdatestart, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                
+				    $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
+                }
+                
+                $check = uwwtd_check_date($field_art17_flatpexpecdatestartw, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+				    $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
+                }
+                
+                $check = uwwtd_check_date($field_art17_flatpexpecdatecomple, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+				    $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
+                }
+                
+                $check = uwwtd_check_date($field_art17_flatpexpecdateperfor, $message  );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+				    $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
+                }
+                
+                $check = uwwtd_check_decimal($field_art17_flatpinv );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);                       
+                } else {                 
+				    $art->field_art17_flatpinv['und'][0]['value'] = round($check);
+                }
+				$art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
+                
+                $check = uwwtd_check_decimal($field_art17_flatpeufund);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                } else {                
+				    $art->field_art17_flatpeufund['und'][0]['value'] = round($check);
+                }
+                ///////////////////////////////////////////
+                //optional  
+                ///////////////////////////////////////////              
+				if(!empty($field_art17_flatpcomments)) $art->field_art17_flatpcomments['und'][0]['value'] = $field_art17_flatpcomments ;
+                ///////////////////////////////////////////
+                if(!empty($field_art17_flatpexploadtruck)) {
+                    $check = uwwtd_check_decimal($field_art17_flatpexploadtruck);
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
+                    } else {                 
+    				    $art->field_art17_flatpexploadtruck['und'][0]['value'] = $check;
+                    }
+                }
+                ///////////////////////////////////////////
+                if(!empty($field_art17_flatpotherfund)) {
+                    $check = uwwtd_check_decimal($field_art17_flatpotherfund);
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                    } else {                
+    				    $art->field_art17_flatpotherfund['und'][0]['value'] = round($check);
+                    }
+                }
+                /////////////////////////////////////////// 
+				if(!empty($field_art17_flatpotherfundname )) $art->field_art17_flatpotherfundname['und'][0]['value'] = $field_art17_flatpotherfundname ;
+                ///////////////////////////////////////////
+                if(!empty($field_art17_flatploan )) {
+                    $check = uwwtd_check_decimal($field_art17_flatploan );
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                    } else {                
+    				    $art->field_art17_flatploan['und'][0]['value'] = round($check);
+                    }
+                }
+                ///////////////////////////////////////////
+				if(!empty($field_art17_flatploanname )) $art->field_art17_flatploanname['und'][0]['value'] = $field_art17_flatploanname ;
+                ///////////////////////////////////////////
+                				
+                $art->field_anneedata['und'][0]['value'] = $annee;
+				$art->uid = 1;
+				$art->language = $element->language;
+				// Article 17 link to element
+				$art->field_art17uwwtp_link_uwwtp['und'][0]['nid'] = $element->nid;
+    			
+    			// Save the article 17 element
+    			node_save($art);
+    			
+    			// Link element tot Article 17
+    			$element->field_article17_uwwtp['und'][0]['nid'] = $art->nid;
+    			// Save the element
+    			node_save($element);
+                return $art;
+    		} else {
+    			$emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
+    			uwwtd_set_warning(0, $emes);
+    
+    		}
+    	}
+    return false;
+}
+
+function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
+    $e = 0;
+
+    	// Retrieving values from XML file
+    	$field_art17agg_flarepcode = isset($agglomeration['flarepCode']) ? $agglomeration['flarepCode'] : null;
+    	$field_art17agg_aggcode = isset($agglomeration['aggCode']) ? $agglomeration['aggCode'] : null;
+        $field_art17agg_aggname = isset($agglomeration['aggName']) ? $agglomeration['aggName'] : null;
+        $field_art17_flaggstatus = isset($agglomeration['flaggStatus']) ? $agglomeration['flaggStatus'] : null;
+        $field_art17_flaggreasons = isset($agglomeration['flaggReasons']) ? $agglomeration['flaggReasons'] : null;
+        $field_art17_flaggmeasures = isset($agglomeration['flaggMeasures']) ? $agglomeration['flaggMeasures'] : null;
+        $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null;
+        $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null;
+        $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion ']) ? $agglomeration['flaggExpecDateCompletion '] : null;
+        $field_art17_flagginv = isset($agglomeration['flaggInv']) ? $agglomeration['flaggInv'] : null;
+        $field_art17_flaggeufundname = isset($agglomeration['flaggEUFundName']) ? $agglomeration['flaggEUFundName'] : null;
+        $field_art17_flaggeufund = isset($agglomeration['flaggEUFund']) ? $agglomeration['flaggEUFund'] : null;
+        $field_art17_flaggcomments = isset($agglomeration['flaggComments']) ? $agglomeration['flaggComments'] : null;
+        $field_art17_flaggexpload = isset($agglomeration['flaggExpLoad']) ? $agglomeration['flaggExpLoad'] : null;
+        $field_art17_flaggexploadcoll = isset($agglomeration['flaggExpLoadColl']) ? $agglomeration['flaggExpLoadColl'] : null;
+        $field_art17_flaggexploadias = isset($agglomeration['flaggExpLoadIAS']) ? $agglomeration['flaggExpLoadIAS'] : null;
+        $field_art17_flaggotherfund = isset($agglomeration['flaggOtherFund']) ? $agglomeration['flaggOtherFund'] : null;
+        $field_art17_flaggotherfundname = isset($agglomeration['flaggOtherFundName']) ? $agglomeration['flaggOtherFundName'] : null;
+        $field_art17_flaggloan = isset($agglomeration['flaggLoan']) ? $agglomeration['flaggLoan'] : null;
+        $field_art17_flaggloanname = isset($agglomeration['flaggLoanName']) ? $agglomeration['flaggLoanName'] : null;
+
+        // Checking for required fields
+        if(!isset($field_art17agg_aggcode)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "aggCode" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+		if(!isset($field_art17_flaggstatus)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flaggStatus" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+		if(!isset($field_art17agg_flarepcode)){
+			$e = 1;
+			$emes = t('The data you are trying to add for the "flarepcode" column in the Agglomerations article 17 doesn\'t contain an identifier');
+			uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 input'], $emes, $timestamp);
+		}
+		// If no error found
+		if ($e == 0) {
+			$siteId = $annee.'_agg_'.uwwtd_check_text($field_art17agg_aggcode);
+			$exists = uwwtd_check_exist($siteId);
+			if ($exists != false) {
+				$element = node_load($exists);
+    			$art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
+    			
+				if (isset($element->field_article17_agglo['und'][0]['nid']) && $element->field_article17_agglo['und'][0]['nid']!= "") {
+					$art = node_load($element->field_article17_agglo['und'][0]['nid']);
+				} else {
+					// Create new article 17 node
+					$art = new StdClass();
+					$art->type = 'article_17_agglomeration';
+					$art->title = $art17_title;
+				}
+			
+				// Article 17 mapping for UWWTP
+				$art->field_art17agg_aggcode['und'][0]['value'] = $field_art17agg_aggcode;
+				$art->field_art17agg_aggname['und'][0]['value'] = $field_art17agg_aggname;
+				$art->field_art17_flaggstatus['und'][0]['value'] = $field_art17_flaggstatus;
+				$art->field_art17_flaggreasons['und'][0]['value'] = $field_art17_flaggreasons;
+				$art->field_art17_flaggmeasures['und'][0]['value'] = $field_art17_flaggmeasures;
+				////////
+                $check = uwwtd_check_date($field_art17_flaggexpecdatestart, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+                    $art->field_art17_flaggexpecdatestart['und'][0]['value'] = $check;
+				}
+                ////////
+                $check = uwwtd_check_date($field_art17_flaggexpecdatestartw, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+                    $art->field_art17_flaggexpecdatestartw['und'][0]['value'] = $check;
+				}
+                ////////
+                $check = uwwtd_check_date($field_art17_flaggexpecdatecomple, $message );
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
+                } else {                 
+                    $art->field_art17_flaggexpecdatecomple['und'][0]['value'] = $check;
+				}
+                ////////
+                $check = uwwtd_check_decimal($field_art17_flagginv);
+                if ($check === false) {
+                    uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
+                } else {                  
+                    $art->field_art17_flagginv['und'][0]['value'] = $check;
+				}
+                ////////
+                $art->field_art17_flaggeufundname['und'][0]['value'] = $field_art17_flaggeufundname;
+				////////
+                if (!empty($field_art17_flaggeufund)) {
+                    $check = uwwtd_check_decimal($field_art17_flaggeufund );
+                    if ($check === false) {
+                        $art->field_art17_flaggeufund['und'][0]['value'] = 0;
+                    } else {                
+                        $art->field_art17_flaggeufund['und'][0]['value'] = round($check);
+                    }
+                }
+                /////////////////////////////////////////////
+                //optionnal
+                /////////////////////////////////////////////
+				if (!empty($field_art17_flaggcomments)) $art->field_art17_flaggcomments['und'][0]['value'] = $field_art17_flaggcomments;
+                ////////
+                if (!empty($field_art17_flaggexpload)) {
+                    $check = uwwtd_check_numeric($field_art17_flaggexpload );
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                    } else {                
+    				    $art->field_art17_flaggexpload['und'][0]['value'] = $check;
+                    }
+                }
+				////////
+                if (!empty($field_art17_flaggexploadcoll)) {
+                    $check = uwwtd_check_decimal($field_art17_flaggexploadcoll);
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
+                    } else {                  
+                        $art->field_art17_flaggexploadcoll['und'][0]['value'] = $check;
+                    }
+                }
+				////////
+                if (!empty($field_art17_flaggexploadias)) {
+                    $check = uwwtd_check_decimal($field_art17_flaggexploadias);
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp);    
+                    } else {                  
+                        $art->field_art17_flaggexploadias['und'][0]['value'] = $check;
+                    }
+                }
+				////////
+                if (!empty($field_art17_flaggotherfund)) { 
+                    $check = uwwtd_check_decimal($field_art17_flaggotherfund );
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                    } else {                
+                        $art->field_art17_flaggotherfund['und'][0]['value'] = round($check);
+                    }
+                }
+				////////
+                if (!empty($field_art17_flaggotherfundname)) $art->field_art17_flaggotherfundname['und'][0]['value'] = $field_art17_flaggotherfundname;
+				////////
+                if (!empty($field_art17_flaggloan)) {
+                    $check = uwwtd_check_decimal($field_art17_flaggloan );
+                    if ($check === false) {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
+                    } else {                
+                        $art->field_art17_flaggloan['und'][0]['value'] = round($check);
+                    }
+                }
+				////////
+                if (!empty($field_art17_flaggloanname)) $art->field_art17_flaggloanname['und'][0]['value'] = $field_art17_flaggloanname;
+				////////                
+                $art->field_anneedata['und'][0]['value'] = $annee;
+				$art->uid = 1;
+				$art->language = $element->language;
+				// Article 17 link to element
+                $art->field_art17agg_link_agglo['und'][0]['nid'] = $element->nid;
+    			
+    			// Save the article 17 element
+                //dsm($art);
+    			node_save($art);
+    			// Link element tot Article 17
+                $element->field_article17_agglo['und'][0]['nid'] = $art->nid;
+    			// Save the element
+                //dsm($element);
+    			node_save($element);
+                
+                return $art;
+			} 
+            else {
+				$emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
+    			uwwtd_set_warning(1, $emes);
+			}
+		}
+    return false;
 }

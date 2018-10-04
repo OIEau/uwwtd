@@ -115,6 +115,27 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    //Loading Art 17 xml file
+    /*
+    module_load_include('inc','uwwtd','inc/data_center');
+    $uri = 'public://data_sources/uwwtdart17tablesfinal190118final200718_1538643292.xml';
+    $datas = uwwtd_xml_to_array($uri);
+    $newFile = new stdclass();
+    $newFile->uri = $uri;
+    $newFile->fid = 925;
+    //dsm($datas);
+    foreach($datas['FLAInvestments']['Row'] as $investment){
+        uwwtd_art17_import_FLAInvestment($investment, $newFile, 2016);
+    }
+    foreach($datas['FLAAgglomerations']['Row'] as $agglomeration){
+        uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, 2016);
+    }
+
+    foreach($datas['FLAUWWTPs']['Row'] as $uwwtp){
+        uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, 2016);
+    }*/
+    
+   
 //dsm(array_keys(openlayers_styles()));
     //require_once(drupal_get_path('module', 'uwwtd') . '/inc/ShapeFile.inc.php');
     /*
