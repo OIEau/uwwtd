@@ -5865,7 +5865,7 @@ function uwwtd_station_set_conformity(&$node){
     //     $compliance_info->reason = '';
     //     $compliance_info->treatment_met = '';
     //     $compliance_info->performance_met = '';
-    $compliance_info = uwwtd_station_compliance_algo($node, $timestamp); //ALGO2 (et ALGO1)
+    $compliance_info = uwwtd_station_compliance_algo($node, time()); //ALGO2 (et ALGO1)
 
     uwwtd_trace('calculate compliance uwwtp result : ' . var_export($compliance_info, true));
     
@@ -6195,26 +6195,6 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             } 
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if($verbose){
         $verbose_msg.=" FINAL : \n";
