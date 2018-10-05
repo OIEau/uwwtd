@@ -1747,7 +1747,10 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         /* DG 15/12/2015 add rcaHyperlink for RCA LSA*/
         //text
         if(isset($data['rcaHyperlink'])){
-            $node->field_rcahyperlink['und'][0]['value'] = uwwtd_check_text($data['rcaHyperlink']);}
+            $node->field_rcahyperlink['und'][0]['value'] = uwwtd_check_text($data['rcaHyperlink']);
+            //debug IT 10th report : 
+            //$node->field_rcaremarks['und'][0]['value'] = uwwtd_check_text($data['rcaHyperlink']);
+        }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa hyperlink found.', $timestamp, $i, $node);
         
         /* DG 15/12/2015 add rcaBeginLife for RCA LSA*/
@@ -2276,6 +2279,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(!isset($data['aggLatitude']) || empty($data['aggLatitude'])){
             $emes = t('The agglomeration does not have latitude information');
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            $checkLatitude = '0';
         } else {
             $checkLatitude = uwwtd_check_coordinate($data['aggLatitude'], 'latitude', $message);
             if ($message != '') {
@@ -2292,6 +2296,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(!isset($data['aggLongitude']) || empty($data['aggLongitude'])){
             $emes = t('The agglomeration does not have longitude information');
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $i, $node);
+            $checkLongitude = '0';
         } else {
             $checkLongitude = uwwtd_check_coordinate($data['aggLongitude'], 'longitude', $message);
             if ($message != '') {
@@ -2317,6 +2322,15 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 'geohash'=>$geoData['geohash']
             );
         }
+                
+        //decimal
+        $node->field_agglatitude['und'][0]['value'] = $checkLatitude;
+        
+        //decimal
+        $node->field_agglongitude['und'][0]['value'] = $checkLongitude;
+        
+        
+        
         $node->field_sourcefile = array(
             'und' => array(
                 0 => array(
@@ -2368,12 +2382,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['aggNUTS'])){
             $node->field_regionnuts['und'][0]['value'] = uwwtd_check_text($data['aggNUTS']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration nut code information found.', $timestamp, $i, $node);
-        
-        //decimal
-        $node->field_agglatitude['und'][0]['value'] = $checkLatitude;
-        
-        //decimal
-        $node->field_agglongitude['und'][0]['value'] = $checkLongitude;
+
         
         //numeric
         if(isset($data['aggGenerated'])){
