@@ -145,7 +145,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
     //==============================================
-    
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
@@ -551,6 +550,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 
 /**
  * Retourne les données pour les graphes "Total generated load by compliance" et "Number of agglomerations by compliance".
+ * && Waste water treatement plant : Load entering by treatment type
  */
 function getRow2Graph1and2($results, $yearSelected) {
 	// Variables du graph 1 :
