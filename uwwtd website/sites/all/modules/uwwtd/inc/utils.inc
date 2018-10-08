@@ -118,8 +118,12 @@ function uwwtd_debug(){
     //Loading Art 17 xml file
     /*
     module_load_include('inc','uwwtd','inc/data_center');
-    $uri = 'public://data_sources/uwwtdart17tablesfinal190118final200718_1538643292.xml';
+    //$uri = 'public://data_sources/uwwtdart17tablesfinal190118final200718_1538643292.xml';
+    $uri = 'public://data_sources/hruwwtdart17ref_1539000349.xml';
     $datas = uwwtd_xml_to_array($uri);
+    dsm($datas);
+    
+    
     $newFile = new stdclass();
     $newFile->uri = $uri;
     $newFile->fid = 925;
