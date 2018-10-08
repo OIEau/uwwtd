@@ -3076,13 +3076,13 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwCollectingSystem']))$node->field_uwwcollectingsystem['und'][0]['value'] = uwwtd_check_text($data['uwwCollectingSystem']);
         
         //text
-        if(isset($data['uwwDateClosing'])){
+        if(isset($data['uwwDateClosing']) && $data['uwwDateClosing']!=''){
             $node->field_validto['und'][0]['value'] = uwwtd_check_text($data['uwwDateClosing']);
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date of closing information found.', $timestamp, $i, $node);
         
         //memo
-        if(isset($data['uwwHistorie'])){
+        if(isset($data['uwwHistorie']) && $data['uwwHistorie']!=''){
             $node->field_uwwhistorie['und'][0]['value'] = uwwtd_check_text($data['uwwHistorie']);
         }
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs information found.', $timestamp, $i, $node);

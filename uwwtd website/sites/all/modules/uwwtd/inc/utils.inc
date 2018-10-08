@@ -1080,11 +1080,10 @@ function uwwtd_check_bool($bool){
         }
 //     else{
 // 		uwwtd_add_error(2, 4, 'The input data is not in boolean format (true or false).', $timestamp, $index, $node);
-        return false;
+        return 0;
 // 	}
     } else {
-        dsm("==== uwwtd_check_bool : empty");
-        return FALSE;
+        return 0;
     }
 }
 
