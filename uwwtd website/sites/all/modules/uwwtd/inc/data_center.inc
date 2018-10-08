@@ -4924,7 +4924,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
     }
     $i = $context['sandbox']['progress'];
     $j=0;
-    while($j<10 && $context['sandbox']['progress'] < $context['sandbox']['max']){
+    while($j<5 && $context['sandbox']['progress'] < $context['sandbox']['max']){
         $k=$i+$j;
         $data = $context['sandbox']['ids'][$k];
         $dcpnid = $data['nid'];
