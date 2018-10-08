@@ -4930,7 +4930,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
         $data = $context['sandbox']['ids'][$k];
         $dcpnid = $data['nid'];
         $dcp = node_load($dcpnid);
-
+        $flag_dcp = false;
         $rcas = array();
         // creat list of rcas
         //todo normal don't exist ?
@@ -4945,51 +4945,90 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
         foreach($rcas as $rcanid){
             // load rca
             $rca = node_load($rcanid);
+            $flag_rca = false;
             // dcp <-> rca
-            if(!uwwtd_in_array_r($rcanid, $dcp->field_linked_receiving_areas)) $dcp->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
-            if(!uwwtd_in_array_r($dcpnid, $rca->field_linked_discharge_points)) $rca->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
+            if(!uwwtd_in_array_r($rcanid, $dcp->field_linked_receiving_areas)){
+                $dcp->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
+                $flag_dcp = true;
+            }
+            if(!uwwtd_in_array_r($dcpnid, $rca->field_linked_discharge_points)){
+                $rca->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
+                $flag_rca = true;
+            }
 
             // uwwtps
             if(isset($dcp->field_dcpuwwliste['und'])){
                 foreach($dcp->field_dcpuwwliste['und'] as $uwwitem){
                     $uwwnid = $uwwitem['nid'];
                     $uww = node_load($uwwnid);
-
+                    $flag_uww = false;
                     // rca <-> uwwtp
-                    if(!uwwtd_in_array_r($uwwnid, $rca->field_linked_treatment_plants)) $rca->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
-                    if(!uwwtd_in_array_r($rcanid, $uww->field_linked_receiving_areas)) $uww->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
-
+                    if(!uwwtd_in_array_r($uwwnid, $rca->field_linked_treatment_plants)){
+                        $rca->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                        $flag_rca = true;
+                    }
+                    if(!uwwtd_in_array_r($rcanid, $uww->field_linked_receiving_areas)){
+                        $uww->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
+                        $flag_uww = true;
+                    }
                     // dcp <-> uwwtp
-                    if(!uwwtd_in_array_r($uwwnid, $dcp->field_linked_treatment_plants)) $dcp->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
-                    if(!uwwtd_in_array_r($dcpnid, $uww->field_linked_discharge_points)) $uww->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
+                    if(!uwwtd_in_array_r($uwwnid, $dcp->field_linked_treatment_plants)){
+                        $dcp->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                        $flag_dcp = true;
+                    }
+                    if(!uwwtd_in_array_r($dcpnid, $uww->field_linked_discharge_points)){
+                        $uww->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
+                        $flag_uww = true;
+                    }
 
                     // agglomerations
                     if(isset($uww->field_uwwaggliste['und'])){
                         foreach($uww->field_uwwaggliste['und'] as $aggitem){
                             $aggnid = $aggitem['nid'];
                             $agg = node_load($aggnid);
-
+                            $flag_agg = false;
                             // uww <-> agg
-                            if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)) $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
-                            if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)) $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
-                            if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)) $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                            if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)){
+                                $uww->field_linked_agglomerations['und'][]['nid'] = $aggnid;
+                                $flag_uww = true;
+                            }
+                            if(!uwwtd_in_array_r($uwwnid, $agg->field_agguwwliste)){
+                                $agg->field_agguwwliste['und'][]['nid'] = $uwwnid;
+                                $flag_agg = true;
+                            }
+                            if(!uwwtd_in_array_r($uwwnid, $agg->field_linked_treatment_plants)){
+                                $agg->field_linked_treatment_plants['und'][]['nid'] = $uwwnid;
+                                $flag_agg = true;
+                            }
 
                             // rca <-> agg
-                            if(!uwwtd_in_array_r($aggnid, $rca->field_linked_agglomerations)) $rca->field_linked_agglomerations['und'][]['nid'] = $aggnid;
-                            if(!uwwtd_in_array_r($rcanid, $agg->field_linked_receiving_areas)) $agg->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
+                            if(!uwwtd_in_array_r($aggnid, $rca->field_linked_agglomerations)){
+                                $rca->field_linked_agglomerations['und'][]['nid'] = $aggnid;
+                                $flag_rca = true;
+                            }
+                            if(!uwwtd_in_array_r($rcanid, $agg->field_linked_receiving_areas)){
+                                $agg->field_linked_receiving_areas['und'][]['nid'] = $rcanid;
+                                $flag_agg = true;
+                            }
 
                             // dcp <-> agg
-                            if(!uwwtd_in_array_r($aggnid, $dcp->field_linked_agglomerations)) $dcp->field_linked_agglomerations['und'][]['nid'] = $aggnid;
-                            if(!uwwtd_in_array_r($dcpnid, $agg->field_linked_discharge_points)) $agg->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
-                            node_save($agg);
+                            if(!uwwtd_in_array_r($aggnid, $dcp->field_linked_agglomerations)){
+                                $dcp->field_linked_agglomerations['und'][]['nid'] = $aggnid;
+                                $flag_dcp = true;
+                            }
+                            if(!uwwtd_in_array_r($dcpnid, $agg->field_linked_discharge_points)){
+                                $agg->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
+                                $flag_agg = true;
+                            }
+                            if($flag_agg){node_save($agg);}
                         }
                     }
-                    node_save($uww);
+                    if($flag_uww){node_save($uww);}
                 }
-                node_save($rca);
+                if($flag_rca){node_save($rca);}
             }
         }
-        node_save($dcp);
+        if($flag_dcp){node_save($dcp);}
         $flag_dcp = false;
         // Sometimes rcadata is not given or incorrectly inserted so we now go from the treatment plants
         $uwws = array();
