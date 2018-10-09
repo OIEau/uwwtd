@@ -4760,6 +4760,25 @@ function uwwtd_update_7159(&$context = null) {
     //throw new DrupalUpdateException(__FUNCTION__);
 }   
    
+function uwwtd_update_7160(&$context = null){
+    //Change type definition for field_soeceufunds
+    setDecimalAccuracy('field_soeceufunds', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_soeceufunds ALTER COLUMN field_soeceufunds_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_soeceufunds ALTER COLUMN field_soeceufunds_value TYPE NUMERIC(15,2)');
+
+    
+    
+    /*
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+    */
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+    
+}
+
    
 /**
  * Redéfinit la précision et le scale du champs donné.
