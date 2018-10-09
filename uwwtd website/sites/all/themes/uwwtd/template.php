@@ -1278,7 +1278,10 @@ function uwwtd_get_uww_graphic($node){
     $reseau['nid'] = $node->nid;
     $reseau['title'] = $node->title;
     $reseau['id'] = $node->field_siteid['und'][0]['value'];
-    if ($node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+    if ($node->field_uwwcompliance['und'][0]['value'] == 'NR' ) {
+         $reseau['compliance'] = 'NR';
+    } 
+    elseif ($node->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
         $node->field_uwwcodperf['und'][0]['value'] == 'P' &&
         $node->field_uwwbod5perf['und'][0]['value'] == 'P') {
       $reseau['compliance'] = 'C';
@@ -1289,7 +1292,12 @@ function uwwtd_get_uww_graphic($node){
     } else {
       $reseau['compliance'] = 'NR';
     }
-    $reseau['collectingSystem'] = $node->field_uwwcollectingsystem['und'][0]['value'];
+    if($node->field_status['und'][0]['value']==1){
+        $reseau['collectingSystem'] = $node->field_uwwcollectingsystem['und'][0]['value'];
+    }else{
+        $reseau['collectingSystem'] ='NOTCON';
+    }
+    
     $reseau['load'] = $node->field_uwwloadenteringuwwtp['und'][0]['value'];
     $reseau['required'] = $node->field_uwwtreatmentrequired['und'][0]['value'];
 
@@ -1721,19 +1729,28 @@ function uwwtd_get_agglo_graphic($node){
         $reseau[$uwws['nid']]['mstype'] = $msType;
         $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
         $reseau[$uwws['nid']]['title'] = $uww->title;
-        if ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
+        if ($uww->field_uwwcompliance['und'][0]['value'] == 'NR' ) {
+          $reseau[$uwws['nid']]['compStation'] = 'NR';
+        } 
+        elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
             $uww->field_uwwcodperf['und'][0]['value'] == 'P' &&
             $uww->field_uwwbod5perf['und'][0]['value'] == 'P') {
           $reseau[$uwws['nid']]['compStation'] = 'C';
-        } elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '0' ||
+        } 
+        elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '0' ||
             $uww->field_uwwcodperf['und'][0]['value'] == 'F' ||
             $uww->field_uwwbod5perf['und'][0]['value'] == 'F') {
             $reseau[$uwws['nid']]['compStation'] = 'NC';
-        } else {
+        } 
+        else {
           $reseau[$uwws['nid']]['compStation'] = 'NR';
         }
 
-        $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
+        if($uww->field_status['und'][0]['value']==1){
+            $reseau[$uwws['nid']]['collectingSystem'] = $uww->field_uwwcollectingsystem['und'][0]['value'];
+        }else{
+            $reseau[$uwws['nid']]['collectingSystem'] ='NOTCON';
+        }
 
         foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
             $loadedDcp = node_load($dcps['nid']);
