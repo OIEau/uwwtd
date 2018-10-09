@@ -31736,7 +31736,7 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
+      'precision' => '15',
       'scale' => '2',
       'decimal_separator' => '.',
     ),
@@ -31789,7 +31789,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
+        'precision' => '15',
         'scale' => '2',
         'not null' => false,
       ),
@@ -32377,7 +32377,7 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
+      'precision' => '15',
       'scale' => '2',
       'decimal_separator' => '.',
     ),
@@ -32430,7 +32430,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
+        'precision' => '15',
         'scale' => '2',
         'not null' => false,
       ),
@@ -32447,7 +32447,7 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
+      'precision' => '15',
       'scale' => '2',
       'decimal_separator' => '.',
     ),
@@ -32500,7 +32500,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
+        'precision' => '15',
         'scale' => '2',
         'not null' => false,
       ),
@@ -32852,7 +32852,7 @@ $list_field = array (
     ),
     'settings' => 
     array (
-      'precision' => '10',
+      'precision' => '15',
       'scale' => '2',
       'decimal_separator' => '.',
     ),
@@ -32905,7 +32905,7 @@ $list_field = array (
       'value' => 
       array (
         'type' => 'numeric',
-        'precision' => '10',
+        'precision' => '15',
         'scale' => '2',
         'not null' => false,
       ),
