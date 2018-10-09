@@ -1041,8 +1041,11 @@ div.ol-wms-content-popup table td, div.ol-wms-content-popup table th{
     color: white;
     z-index: 4;
     min-height: 40px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
-
+.google-map-banner h1 span.status-inactive{
+    color:orange;
+}
 .uwwtp-list {
     margin-top: 5px;
 }
