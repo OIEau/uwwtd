@@ -213,7 +213,6 @@ function uwwtd_get_data_agglomeration($option){
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
-    
     return $data;
 }
 
@@ -666,7 +665,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 	// dsm($filter);
     uwwtd_filter_data($filter, $data, $filter_force);        
 //     uwwtd_filter_data($filter, $data);
-    
+    $exists = array();
 	foreach($data as $art17){
 		if(isset($art17['field_article17_agglo_value_format']) && ($art17['field_article17_agglo_value_format']== 'Yes')){
 			$exists[] = array('Yes' => $art17['field_article17_agglo_nid']);
