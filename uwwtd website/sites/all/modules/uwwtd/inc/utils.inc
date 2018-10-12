@@ -1296,7 +1296,7 @@ function uwwtd_get_array_from_conf($value){
     return $result;
 }
 
-function uuwtd_get_distance_compliance($agg){
+function uwwtd_get_distance_compliance($agg){
     require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
     $annee = $agg->field_anneedata['und'][0]['value'];
     $dist_art4_treatment_pe = 0;
@@ -1404,9 +1404,21 @@ function uuwtd_get_distance_compliance($agg){
         $art4complianceTreat = 'NC';
         $art4compliancePerf = 'NC'; 
     }
-
+    $dist_art3_treatment_percent = 100 * $agg->field_aggpercwithouttreatment['und'][0]['value']/$agg->field_agggenerated['und'][0]['value'];
 
     $dtc = array(
+        'art3'=>[
+            'Equipment'=>['pe'=>$agg->$node->field_aggpercwithouttreatment['und'][0]['value'], 'percent'=>$dist_art3_treatment_percent, 'compliance'=>$agg->field_aggart3compliance['und'][0]['value'], 'color'=>$GLOBALS['uwwtd']['compliance_color'][$agg->field_aggart3compliance['und'][0]['value']]],
+        ],
+        'art4'=>[
+            'Equipment'=>['pe'=>$dist_art4_treatment_pe, 'percent'=>$dist_art4_treatment_percent, 'compliance'=>$art4complianceTreat, 'color'=>$GLOBALS['uwwtd']['compliance_color'][$art4complianceTreat]],
+            'Performance'=>['pe'=>$dist_art4_perf_pe, 'percent'=>$dist_art4_perf_percent, 'compliance'=>$art4compliancePerf, 'color'=>$GLOBALS['uwwtd']['compliance_color'][$art4compliancePerf]],
+        ],
+        'art5'=>[
+            'Equipment'=>['pe'=>$dist_art5_treatment_pe, 'percent'=>$dist_art5_treatment_percent, 'compliance'=>$art5complianceTreat, 'color'=>$GLOBALS['uwwtd']['compliance_color'][$art5complianceTreat]],
+            'Performance'=>['pe'=>$dist_art5_perf_pe, 'percent'=>$dist_art5_perf_percent, 'compliance'=>$art5compliancePerf, 'color'=>$GLOBALS['uwwtd']['compliance_color'][$art5compliancePerf]],
+        ],
+
         'art4_treat_pe' => $dist_art4_treatment_pe,
         'art4_treat_percent' => $dist_art4_treatment_percent,
         'art4_treatment_compliance' => $art4complianceTreat,
@@ -1419,10 +1431,12 @@ function uuwtd_get_distance_compliance($agg){
         'art5_perf_pe' => $dist_art5_perf_pe,
         'art5_perf_percent' => $dist_art5_perf_percent,
         'art5_perf_compliance' => $art5compliancePerf,
+        
     );
 
     return $dtc;	
 }
+
 
 /**
  * Check if the first parameter year is before or equal the second parameter year

@@ -84,7 +84,7 @@ function uwwtd_stats_graphs_form_submit(&$form, &$form_state) {
  * Retourne le code html du contenu de la page stats/graphs.
  */
 function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles = array()) {
-	drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+	drupal_add_js('sites/all/libraries/d3/d3.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
 
@@ -1517,4 +1517,117 @@ function isEmptyGraph($graphFront, $yearsPossibles) {
  */
 function isEmptyText($text) {
 	return empty($text) || strstr($text, 'No information</div>');
+}
+
+
+//====================================================================== PAGES HISTORY ==========================
+//nd@oieau.fr 10/10/2018
+//This new page display historical information on agglomeration 
+function uwwtd_agg_history_page($inspireIdLocalId){
+    $data = uwwtd_getAggHistoryData($inspireIdLocalId);
+    dsm($data);
+    drupal_set_title($data['last_node']->title.' - history');
+            drupal_add_js('sites/all/libraries/d3/d3.js');
+            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    libraries_load('d3.drupal');
+    
+    $html ='';
+    $html.= '<div class="uwwcontainer">';
+        $fieldstat = field_view_field('node', $data['last_node'], 'field_status');
+        if (!empty($fieldstat[0]['#markup']) && $fieldstat[0]['#markup'] == '2') {
+            $fieldstat[0]['#markup'] = 'Inactive';
+        }
+        $fieldnuts = field_view_field('node', $data['last_node'], 'field_regionnuts');
+        $html.= '<div class="google-map-banner"><h1><span class="white-title">'. t('Agglomeration').' : </span><span class="node-title">'. $data['last_node']->title.'</span><span class="white-title"> - '.t("Identifier").' : </span><span class="inspireidlocalid">'. $data['last_node']->field_inspireidlocalid['und'][0]['value'].'</span><span class="white-title"> - '. t("Status").' : </span><span class="status status-'.drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])).'">'.$fieldstat[0]['#markup'].'</span><br /><small>'. t("Region (NUTS) Code").' : '. $data['last_node']->field_regionnuts['und'][0]['value'].' - '. t("Region (NUTS) Name").' : '.$fieldnuts[0]['#markup'].'</small></h1></div>';
+        $html.= render(field_view_field('node',  $data['last_node'], 'field_position_geo', 'openlayers_map'));
+        $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node']).'</div>';
+    $html.= '</div>';
+    if(!empty($data['years'])){
+
+        //==================Graph sur le generated load
+        $genload_graph=array(
+            'data'=>array(),
+            'color'=>array(
+                $GLOBALS['ms_level']['connection']['cs']['color'],
+                $GLOBALS['ms_level']['connection']['ias']['color'],
+                $GLOBALS['ms_level']['connection']['wot']['color'],
+            ),
+            'legend'=>array(
+                $GLOBALS['ms_level']['connection']['cs']['label'],
+                $GLOBALS['ms_level']['connection']['ias']['label'],
+                $GLOBALS['ms_level']['connection']['wot']['label'],
+            ),
+        );
+        $genload_table_rows = array();
+        foreach($data['years'] as $y=>$info){
+            //==========Generated load
+            $genload_graph['data'][] = array(
+                (string)$y,
+                (float)$info['cs'],
+                (float)$info['ias'],
+                (float)$info['wot'],
+            );
+            $genload_table_rows[] = array(
+                '<b>'.$y.'</b>',
+                uwwtd_format_number((float)$info['cs']),
+                uwwtd_format_number((float)$info['ias']),
+                uwwtd_format_number((float)$info['wot']),
+                uwwtd_format_number((float)$info['Generated load']),
+            );
+            
+            //============= Distance to compliance
+            
+        }
+        $genload_table = theme(
+            'table', array(
+                'rows' => $genload_table_rows, 
+                'header' => array(t('Year'), t($GLOBALS['ms_level']['connection']['cs']['label']),t($GLOBALS['ms_level']['connection']['ias']['label']), t($GLOBALS['ms_level']['connection']['wot']['label']), '<b>'.t('Total').'</b>'))
+        );
+        //dsm( $genload_graph);
+        $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
+		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
+		'', '', array(), '',
+		false, []);
+    }
+
+    return '<article>'.$html.'</article>';
+}
+
+function uwwtd_getAggHistoryData($inspireIdLocalId){
+    $inspireIdLocalId = strtolower($inspireIdLocalId);
+    $query = db_select('node', 'n');
+    $query->innerJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+    $query->leftJoin('field_data_field_inspireidlocalid', 'ins', 'n.nid = ins.entity_id AND ins.entity_type = \'node\'');
+    $query->fields('a', array('field_anneedata_value'));
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'agglomeration', '=');
+    $query->condition('n.status', 1, '=');
+    $query->where("lower(ins.field_inspireidlocalid_value) = :id", array(':id'=>strtolower($inspireIdLocalId)));
+    $query->orderBy('a.field_anneedata_value', 'ASC');
+    $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
+    if(!empty($ids)){
+        $data = array();
+        foreach($ids as $y=>$id){
+            $node = node_load($id->nid);
+            $wrapper =  entity_metadata_wrapper('node', $node);
+            $data[$y] = array(
+                'Year'=>$y,
+                'agg'=>$node,
+                'Generated load'=>$wrapper->field_agggenerated->value(),
+                'cs'=>$wrapper->field_agg_connected_load_pe->value(),
+                'ias'=>$wrapper->field_agg_ias_load_pe->value(),
+                'wot'=>$wrapper->field_agg_discharge_pe->value(),
+                'uwwtps'=>array(),
+                'dtc'=>uwwtd_get_distance_compliance($node),
+            );
+            $uwwtps = $wrapper->field_agguwwliste->value();
+            if(!empty($uwwtps)){
+                foreach($uwwtps as $uwwtp){
+                     $data[$y]['uwwtps'][$uwwtp->nid] = l($uwwtp->title, 'node/'.$uwwtp->nid);
+                }
+            }
+        }
+    }
+    return array('last_node'=>$node, 'years'=>$data);
 }
