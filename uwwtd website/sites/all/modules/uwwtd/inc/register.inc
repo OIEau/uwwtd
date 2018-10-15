@@ -6809,10 +6809,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg->field_region_nuts1['und'][0]['value'] = $line[$ind['nuts_1_code']];
         $agg->field_region_nuts2['und'][0]['value'] = $line[$ind['nuts_2_code']];
         $agg->field_region_nuts3['und'][0]['value'] = $line[$ind['nuts_3_code']];
-        
-        $agg->field_agg_connected_load_pe['und'][0]['value'] = uwwtd_format_number($line[$ind['connected_to_collecting_system_p._e.']]);
-        $agg->field_agg_ias_load_pe['und'][0]['value'] = uwwtd_format_number($line[$ind['addressed_through_ias_p._e.']]);
-        $agg->field_agg_discharge_pe['und'][0]['value'] = uwwtd_format_number($line[$ind['neither_collecting_system_nor_ias_p._e.']]);
+        $agg->field_agg_connected_load_pe['und'][0]['value'] = number_format($line[$ind['connected_to_collecting_system_p._e.']], 0,'.','');
+        $agg->field_agg_ias_load_pe['und'][0]['value'] = number_format($line[$ind['addressed_through_ias_p._e.']], 0,'.','');
+        $agg->field_agg_discharge_pe['und'][0]['value'] = number_format($line[$ind['neither_collecting_system_nor_ias_p._e.']], 0,'.','');
 
         $agg->field_agg_art3_comp_register['und'][0]['value'] = $line[$ind['art3_compliance']];
         $agg->field_agg_art4_comp_register['und'][0]['value'] = $line[$ind['art4_compliance_art._4_(hierarchical_approach)']];
@@ -6820,12 +6819,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg->field_agg_art6_comp_register['und'][0]['value'] = $art6_compliance_EU_feed;
         $agg->field_agg_comp_register['und'][0]['value'] = $agg_compliance_EU_feed;
 
-        $agg->field_agg_equip_s['und'][0]['value'] = uwwtd_format_number($line[$ind['secondary_treatment_installed_(p._e.)']]);
-        $agg->field_agg_perf_s['und'][0]['value'] = uwwtd_format_number($line[$ind['monitoring_results_f._secondary_ok']]);
-        $agg->field_agg_equip_met_ms['und'][0]['value'] = uwwtd_format_number($line[$ind['more_str._treatment_installed_treatment_met_(p._e.)']]);
-        $agg->field_agg_perf_met_ms['und'][0]['value'] = uwwtd_format_number($line[$ind['connected_to_collecting_system_p._e.']] - $line[$ind['distance_art5_perf_in_p.e._(7)']]);
-        $agg->field_agg_equip_ms['und'][0]['value'] = uwwtd_format_number($line[$ind['more_str._treatment_installed_(p._e.)']]);
-        $agg->field_agg_perf_ms['und'][0]['value'] = uwwtd_format_number($line[$ind['monitoring_results_f._more_string._ok_(p._e.)']]);
+        $agg->field_agg_equip_s['und'][0]['value'] = number_format($line[$ind['secondary_treatment_installed_(p._e.)']], 0,'.','');
+        $agg->field_agg_perf_s['und'][0]['value'] = number_format($line[$ind['monitoring_results_f._secondary_ok']], 0,'.','');
+        $agg->field_agg_equip_met_ms['und'][0]['value'] = number_format($line[$ind['more_str._treatment_installed_treatment_met_(p._e.)']], 0,'.','');
+        $agg->field_agg_perf_met_ms['und'][0]['value'] = number_format($line[$ind['connected_to_collecting_system_p._e.']] - $line[$ind['distance_art5_perf_in_p.e._(7)']], 0,'.','');
+        $agg->field_agg_equip_ms['und'][0]['value'] = number_format($line[$ind['more_str._treatment_installed_(p._e.)']], 0,'.','');
+        $agg->field_agg_perf_ms['und'][0]['value'] = number_format($line[$ind['monitoring_results_f._more_string._ok_(p._e.)']], 0,'.','');
 
         $agg->field_agg_typeof_sa['und'][0]['value'] = $line[$ind['type_of_receiving_water']];
         $agg->field_agg_art_applied_sa['und'][0]['value'] = $line[$ind['agg_art_applied_from_rca']];
