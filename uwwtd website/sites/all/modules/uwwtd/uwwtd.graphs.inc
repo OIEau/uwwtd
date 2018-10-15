@@ -87,7 +87,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 	drupal_add_js('sites/all/libraries/d3/d3.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-
+    libraries_load('d3.drupal');
+    
 	// Valeur par défaut :
 	if (empty($yearSelected)) {
 		$yearSelected = uwwtd_get_max_annee();
