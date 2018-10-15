@@ -246,26 +246,6 @@ echo uwwtd_insert_errors_tab($node);
                     $colorart4P = '#a2a2a2';
                 } 
 
-                // If art 3 not compliant because discharged without treatment too important
-                // we add it to art 4 and 5 if relevant
-                // if ($node->field_aggpercwithouttreatment['und'][0]['value'] > 0
-                //   && $node->field_aggart3compliance['und'][0]['value'] == 'NC') {
-                //     $distanceToCompliance['art4_treat_pe'] += uwwtd_field_pe($content['field_aggpercwithouttreatment'], false);
-                //     $distanceToCompliance['art4_perf_pe'] += uwwtd_field_pe($content['field_aggpercwithouttreatment'], false);
-                //     $distanceToCompliance['art4_treat_percent'] += $node->field_aggpercwithouttreatment['und'][0]['value'];
-                //     $distanceToCompliance['art4_perf_percent'] += $node->field_aggpercwithouttreatment['und'][0]['value'];
-                //     $colorart4T = '#d93c3c';
-                //     $colorart4P = '#d93c3c';
-                //     if ($distanceToCompliance['art5_treat_compliance'] != 'NR') {
-                //       $distanceToCompliance['art5_treat_pe'] += uwwtd_field_pe($content['field_aggpercwithouttreatment'], false);
-                //       $distanceToCompliance['art5_perf_pe'] += uwwtd_field_pe($content['field_aggpercwithouttreatment'], false);
-                //       $distanceToCompliance['art5_treat_percent'] += $node->field_aggpercwithouttreatment['und'][0]['value'];
-                //       $distanceToCompliance['art5_perf_percent'] += $node->field_aggpercwithouttreatment['und'][0]['value'];
-                //       $colorart5T = '#d93c3c';
-                //       $colorart5P = '#d93c3c';
-                //     }
-                // }
-
                 // Article 5
                 if ($distanceToCompliance['art5_treat_compliance'] == 'NC' &&
                     deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === true &&
