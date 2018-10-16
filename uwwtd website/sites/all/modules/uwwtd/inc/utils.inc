@@ -1410,11 +1410,10 @@ function uwwtd_get_distance_compliance($agg){
                 } else {
                     $colorart3 = '#a2a2a2';
                 }
-
                 // Article 4
                 if ($art4complianceTreat == 'NC' &&
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
-                    $distanceToCompliance['art4_treat_pe'] > 0) {
+                    $dist_art4_perf_pe > 0) {
                     $colorart4T = '#d93c3c';
                 } elseif ($art4complianceTreat == 'NC' && 
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
@@ -1422,12 +1421,13 @@ function uwwtd_get_distance_compliance($agg){
                 } else {
                     $colorart4T = '#4f91e1';
                 }
-                if ($art4compliancePerf == 'NC' &&
-                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
-                    $distanceToCompliance['art4_perf_pe'] > 0) {
+                
+               if ($art4compliancePerf == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == true &&
+                    $dist_art4_perf_pe > 0) {
                     $colorart4P = '#d93c3c';
                 } elseif ($art4compliancePerf == 'NC' && 
-                        deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
+                        deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == false) {
                     $colorart4P = '#FF5200';
                 } else {
                     $colorart4P = '#4f91e1';
@@ -1454,7 +1454,7 @@ function uwwtd_get_distance_compliance($agg){
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
                     $dist_art5_perf_pe > 0) {
                     $colorart5P = '#d93c3c';
-                } elseif ($distanceToCompliance['art5_perf_compliance'] == 'NC' &&
+                } elseif ($art5compliancePerf == 'NC' &&
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
                     $colorart5P = '#FF5200';
                 } else {

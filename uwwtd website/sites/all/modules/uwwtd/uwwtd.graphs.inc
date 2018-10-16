@@ -1544,7 +1544,15 @@ function uwwtd_agg_history_page($inspireIdLocalId){
         $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node']).'</div>';
     $html.= '</div>';
     if(!empty($data['years'])){
-
+        $years = array_keys($data['years']);
+        sort($years);
+        
+        $dtc_equipment =[];
+            $dtc_equipment[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>';
+        $dtc_performance =[];
+            $dtc_performance[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>'; 
+        
+        
         //==================Graph sur le generated load
         $genload_graph=array(
             'data'=>array(),
@@ -1560,24 +1568,57 @@ function uwwtd_agg_history_page($inspireIdLocalId){
             ),
         );
         $genload_table_rows = array();
-        foreach($data['years'] as $y=>$info){
-            //==========Generated load
-            $genload_graph['data'][] = array(
-                (string)$y,
-                (float)$info['cs'],
-                (float)$info['ias'],
-                (float)$info['wot'],
-            );
-            $genload_table_rows[] = array(
-                '<b>'.$y.'</b>',
-                uwwtd_format_number((float)$info['cs']),
-                uwwtd_format_number((float)$info['ias']),
-                uwwtd_format_number((float)$info['wot']),
-                uwwtd_format_number((float)$info['Generated load']),
-            );
-            
-            //============= Distance to compliance
-            
+        foreach($years as $y){
+            if(isset($data['years'][$y])){
+                $info = $data['years'][$y];
+                //==========Generated load
+                $genload_graph['data'][] = array(
+                    (string)$y,
+                    (float)$info['cs'],
+                    (float)$info['ias'],
+                    (float)$info['wot'],
+                );
+                $genload_table_rows[] = array(
+                    '<b>'.$y.'</b>',
+                    uwwtd_format_number((float)$info['cs']),
+                    uwwtd_format_number((float)$info['ias']),
+                    uwwtd_format_number((float)$info['wot']),
+                    uwwtd_format_number((float)$info['Generated load'])
+                );
+                
+                //============= Distance to compliance
+                $dtc_equipment[]= '
+                    <tr>
+                        <td rowspan="2"><b>'.$y.'</b></td>
+                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['pe']).' pe</td>
+                    </tr>
+                    <tr>
+                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['percent'], 1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['percent'], 1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['percent'], 1).'%</td>
+                    </tr>';
+                    
+                //=========== TODO pour art 3 : voir les perf réseaux en cas de perte : delta entre collective load et entering load 
+                $dtc_performance[]= '
+                    <tr>
+                        <td rowspan="2"><b>'.$y.'</b></td>
+                        <td>-</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['pe']).' pe</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['percent'],1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['percent'],1).'%</td>
+                    </tr>';
+                
+            }
+            else{
+                $genload_graph['data'][] = array((string)$y,null,null,null);
+                $genload_table_rows[] = array('<b>'.$y.'</b>', '-', '-', '-');
+            }
         }
         $genload_table = theme(
             'table', array(
@@ -1589,6 +1630,11 @@ function uwwtd_agg_history_page($inspireIdLocalId){
 		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
 		'', '', array(), '',
 		false, []);
+        $html .='<div class="row">';
+            $html .='<div class="clear dtc dtc-equipment"> <h3>'.t("Distance to compliance on equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div>';
+            $html .='<div class="clear dtc dtc-performance"><h3>'.t("Distance to compliance on performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div>';
+        $html .='</div>';
+        
     }
 
     return '<article>'.$html.'</article>';
@@ -1622,9 +1668,16 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
                 'dtc'=>uwwtd_get_distance_compliance($node),
             );
             $uwwtps = $wrapper->field_agguwwliste->value();
+            dsm($uwwtps);
             if(!empty($uwwtps)){
                 foreach($uwwtps as $uwwtp){
-                     $data[$y]['uwwtps'][$uwwtp->nid] = l($uwwtp->title, 'node/'.$uwwtp->nid);
+                     $data[$y]['uwwtps'][$uwwtp->nid] =[
+                        'link' =>  l($uwwtp->title .' ['.$uwwtp->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$uwwtp->nid),
+                        'inspireidlocalid'=>$uwwtp->field_inspireidlocalid['und'][0]['value'],
+                        'physicalcapacityinput'=>field_physicalcapacityinput['und'][0]['value'],
+                        'physicalcapacityactivity'=>field_physicalcapacityactivity['und'][0]['value'],
+                        
+                     ];
                 }
             }
         }
