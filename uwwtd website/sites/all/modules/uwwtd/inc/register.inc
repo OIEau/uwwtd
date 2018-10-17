@@ -148,9 +148,9 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $agglo = fgetcsv($ragglofile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['line'] = 5; //start line
+        $context['sandbox']['line'] = 5; //start line   //5 -> 6
 
-        $path_xlsx = uwwtd_getregister_modelfile_path();
+        $path_xlsx = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
         //Remove the old file, if needed
         drupal_unlink($target_path);
@@ -171,7 +171,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
 
     $dataArray = $sheet->rangeToArray(
-        'A6:CV40',
+        'A7:CV41',   //A6:CV40        A7:CV41
         NULL,
         FALSE,
         TRUE,
@@ -217,7 +217,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+//     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
 	//Special rules for cell's style
 	
@@ -316,13 +317,13 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
             switch($i) {
                 case 0:
-                    $line_to_fill = $context['sandbox']['line'] + 7;
+                    $line_to_fill = $context['sandbox']['line'] + 7; 
                 break;
                 case 1:
-                     $line_to_fill = $context['sandbox']['line'] + 17;
+                     $line_to_fill = $context['sandbox']['line'] + 17;  
                 break;
                 case 2:
-                     $line_to_fill = $context['sandbox']['line'] + 27;
+                     $line_to_fill = $context['sandbox']['line'] + 27; 
                 break;
             }
 
@@ -403,11 +404,11 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $uwwtp = fgetcsv($ruwwtpfile, 5000, ';');
         $context['sandbox']['file_position'] = ftell($ruwwtpfile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['line'] = 5; //start line
+        $context['sandbox']['line'] = 5; //start line   5 -> 6
         uwwtd_trace('-- file size : '.$context['sandbox']['max']);
 
 
-        $path_xlsx = uwwtd_getregister_modelfile_path();
+        $path_xlsx = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $annee);
          //Remove the old file, if needed
          uwwtd_trace('Open xlsx: '.$target_path);
@@ -437,7 +438,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
 
     $dataArray = $sheet->rangeToArray(
-        'A6:CQ12',
+        'A7:CQ13',   //A6:CQ12   A7:CQ13
         NULL,
         FALSE,
         TRUE,
@@ -490,7 +491,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
+    $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour éviter de copier le style de la première ligne! et copier la ligne blanche vide
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
 
     //Special rules for cell's style
@@ -600,7 +601,7 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $model_path = uwwtd_getregister_modelfile_path();
+    $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'], $annee);
@@ -1202,7 +1203,7 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $model_path = uwwtd_getregister_modelfile_path();
+    $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_name'], $annee);
@@ -1223,7 +1224,7 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 
     $rbcfile = fopen($filename, 'rb');
 
-    $start_line = 4;
+    $start_line = 5;   //4 -> 5
     //ignore header //decomment for debug on xls final file
     $bc = fgetcsv($rbcfile, 5000, ';');
     $i = $start_line;
@@ -1302,9 +1303,9 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
         $agglo = fgetcsv($rnuts, 5000, ';');
         $context['sandbox']['file_position'] = ftell($rnuts);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['line'] = 4; //start line
+        $context['sandbox']['line'] = 5; //start line   4 -> 5
 
-        $path_xlsx = uwwtd_getregister_modelfile_path();
+        $path_xlsx = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_name'], $annee);
     } else {
 //         $path_xlsx = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'] .'.xlsx';
@@ -1396,7 +1397,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $model_path = uwwtd_getregister_modelfile_path();
+    $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['sewage_sludge']['xlsx_name'], $annee);
@@ -1514,7 +1515,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $model_path = uwwtd_getregister_modelfile_path();
+    $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'], $annee);
@@ -3007,7 +3008,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
 
         $context['sandbox']['line'] = 6;
 
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
@@ -3017,7 +3018,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     fseek($ragglofile, $context['sandbox']['file_position']);
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-//     $model_path = uwwtd_getregister_modelfile_path();
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
@@ -3051,7 +3052,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
         	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $agglo[$ind['reason']]);
 
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);   //0 -> +1
 
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
@@ -3108,7 +3109,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 
         $context['sandbox']['line'] = 6;
 
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
@@ -3124,7 +3125,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-//     $model_path = uwwtd_getregister_modelfile_path();
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
@@ -3162,7 +3163,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
         	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $agglo[$ind['remarks']]);
 
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1); //0 -> +1
 
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
@@ -3217,7 +3218,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 
         $context['sandbox']['line'] = 5;
 
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
@@ -3233,7 +3234,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-//     $model_path = uwwtd_getregister_modelfile_path();
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
@@ -3273,7 +3274,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
         	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $line[$ind['reason']]);
 
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);  //0 -> +1
 
         $j++;
         $context['sandbox']['file_position'] = ftell($rfile);
@@ -3328,7 +3329,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 
         $context['sandbox']['line'] = 6;
 
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
     } else {
         $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
@@ -3345,7 +3346,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-//     $model_path = uwwtd_getregister_modelfile_path();
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'] .'.xlsx';
 //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
@@ -3385,7 +3386,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
         	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $line[$ind['remarks']]);
 
         $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'], 1);
+        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);  // 0 -> +1
 
         $j++;
         $context['sandbox']['file_position'] = ftell($rfile);
@@ -3569,7 +3570,7 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $model_path = uwwtd_getregister_modelfile_path();
+    $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_name'] .'.xlsx';
     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['breach_list']['xlsx_name'], $annee);
@@ -3601,8 +3602,8 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
     // art5_collected_load
     $sheet->getCell('M6')->setValue($art5_collected_load);
 
-    $start_line = 7;
-    $sheet->insertNewRowBefore(8, count($agglo_breach));
+    $start_line = 8;   //7 -> 8
+    $sheet->insertNewRowBefore(10, count($agglo_breach));  // 8 -> 10
 
     foreach($agglo_breach as $breach) {
         $col = 1;
@@ -3830,7 +3831,7 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
 
     //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_installation_in_place']['xlsx_name'], $annee);
@@ -4265,7 +4266,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         }
 
         //build excel sheet
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['distance_to_comp']['xlsx_name'], $annee);
@@ -4638,7 +4639,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] = 0;
             $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['percentage'] = 100;
         }
-    //     $path_xlsx = uwwtd_getregister_modelfile_path();
+    //     $path_xlsx = uwwtd_getregister_modelfile_path($annee);
     //     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_name'], $annee);
     }
     fseek($ragglofile, $context['sandbox']['file_position']);
@@ -4942,7 +4943,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //     dsm($compliance);
 //     return $compliance;
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-        $model_path = uwwtd_getregister_modelfile_path();
+        $model_path = uwwtd_getregister_modelfile_path($annee);
         //change to public://
     //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'] .'.xlsx';
         $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $annee);
@@ -8816,7 +8817,7 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
 
     fclose($r);
 
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' (second pass for aggloemration without uwwtp) ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'])) . ' (second pass for agglomeration without uwwtp) ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
@@ -8913,6 +8914,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['id_of_sensitive_area'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
             //'Name of Sensitive Area', //;     rcaName
             $ind['name_of_sensitive_area'] => $rca[$i]->title,
+//             $ind['name_of_sensitive_area'] => htmlspecialchars_decode($rca[$i]->title),
+            
             //'Zone Type Code', //;             rcaType
             $ind['zone_type_code'] => $rca[$i]->field_zonetype['und'][0]['value'],
             //'Specialised Zone type Code', //;   ?rcaType
@@ -8986,6 +8989,8 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 
             //'general Remark', //;                   rcaRemarks
             $ind['general_remark'] => $rca[$i]->field_rcaremarks['und'][0]['value'],
+//             $ind['general_remark'] => htmlspecialchars_decode($rca[$i]->field_rcaremarks['und'][0]['value']),
+            //
 
             //'rcaBeginLife', //;                        ?
             $ind['rcabeginlife'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),     //new reporting format?
@@ -9124,9 +9129,19 @@ function uwwtd_getregister_file_path($filename, $annee)
     return $GLOBALS['uwwtd']['sheet']['path_created_file'] . $annee . $filename;
 }
 
-function uwwtd_getregister_modelfile_path()
+/**
+ * From 2016 reporting, the model xlsx has some changed 
+ */
+function uwwtd_getregister_modelfile_path($annee)
 {
-    return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+    uwwtd_trace($annee);
+    if ($annee >= 2016) {
+      uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
+    } else {
+      uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+    }
 }
 
 function uwwtd_getregister_finalfile_path($annee)
