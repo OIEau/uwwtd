@@ -9136,7 +9136,7 @@ function uwwtd_getregister_modelfile_path($annee)
     uwwtd_trace($annee);
     if ($annee >= 2016) {
       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
-      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
     } else {
       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
