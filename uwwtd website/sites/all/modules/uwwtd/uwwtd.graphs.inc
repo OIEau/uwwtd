@@ -1525,9 +1525,9 @@ function isEmptyText($text) {
 //nd@oieau.fr 10/10/2018
 //This new page display historical information on agglomeration 
 function uwwtd_agg_history_page($inspireIdLocalId){
-    dsm($inspireIdLocalId);
+    //dsm($inspireIdLocalId);
     $data = uwwtd_getAggHistoryData($inspireIdLocalId);
-    dsm($data);
+    //dsm($data);
     if(empty($data)) return "Error in data. We can't display this page";
     
     drupal_set_title($data['last_node']->title.' - history');
@@ -1620,10 +1620,10 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 
                 $uwwtp_data[]=[
                     $y,
-                    'Total design capa',
-                    'Total entering load',
+                    uwwtd_format_number(array_sum (array_column($info['uwwtps'], 'physicalcapacityactivity'))) .' pe',
+                    uwwtd_format_number(array_sum (array_column($info['uwwtps'], 'uwwloadenteringuwwtp'))) .' pe',
                     theme('item_list', ['items'=>array_column($info['uwwtps'], 'link')])
-                ]
+                ];
             }
             else{
                 $genload_graph['data'][] = array((string)$y,null,null,null);
@@ -1649,7 +1649,10 @@ function uwwtd_agg_history_page($inspireIdLocalId){
         
         //List of UWWTP
         $html .='<div class="rows">';
-        $html .='<div>'.theme('table', []).'</div>';
+        $html .='<div><br/><h3>'.t('Treatment plants').'</h3>'.theme('table', [
+            'rows'=>$uwwtp_data,
+            'header'=>[t('Year'), t('Total design capacity'), t('Total entering load'),t('Linked Treatment Plant(s)')]
+        ]).'</div>';
         $html .='</div>';
     }
 
@@ -1690,8 +1693,8 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
                      $data[$y]['uwwtps'][$uwwtp->nid] =[
                         'link' =>  l($uwwtp->title .' ['.$uwwtp->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$uwwtp->nid),
                         'inspireidlocalid'=>$uwwtp->field_inspireidlocalid['und'][0]['value'],
-                        'physicalcapacityinput'=>field_physicalcapacityinput['und'][0]['value'],
-                        'physicalcapacityactivity'=>field_physicalcapacityactivity['und'][0]['value'],
+                        'uwwloadenteringuwwtp'=>$uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'],
+                        'physicalcapacityactivity'=>$uwwtp->field_physicalcapacityactivity['und'][0]['value'],
                         
                      ];
                 }
