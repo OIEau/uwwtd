@@ -1058,7 +1058,7 @@ function uwwtd_check_text($text){
         return $text;
     }
     $text = trim($text);
-    $text = check_plain($text);
+//     $text = check_plain($text); //on ne veut pas tranformer en entité les caractère, sinon dans le registre et les export csv/xls, le title on les voit
     
     //return finished value
     return $text;
