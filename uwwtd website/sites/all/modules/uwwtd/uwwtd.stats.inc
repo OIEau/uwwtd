@@ -300,11 +300,14 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 	switch ($groupBy){
 		case 'compliance' :
 			$group_by = 'f_comp.field_uwwcompliance_value';
+            $table_key_label = t("Compliance state");
 			break;
 		case 'treatmenttype' :
 			$group_by = 'f_uwwtreatmenttype.field_uwwtreatmenttype_value';
+            $table_key_label = t("Treatment type");
 			break;
 		default:
+            $table_key_label = t("Compliance state");
 			$group_by = 'f_comp.field_uwwcompliance_value';
 	}
 	$data = array();
@@ -431,7 +434,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     			default:
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
     		}
-    		$data[$complianceState]['data']['Compliance state'] = $complianceState;
+    		$data[$complianceState]['data'][$table_key_label] = $complianceState;
     		if (is_null($row['loadentering_sum']) || is_null($row['total_count'])) {
     			// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
     			$data[$complianceState]['data'][(string)$row['year']] = array('pe'=>0, 'pe_format'=>'0', 'nb'=>0, 'nb_format'=>'0', 'color'=>$color);
