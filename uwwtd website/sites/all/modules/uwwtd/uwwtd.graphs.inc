@@ -1525,8 +1525,11 @@ function isEmptyText($text) {
 //nd@oieau.fr 10/10/2018
 //This new page display historical information on agglomeration 
 function uwwtd_agg_history_page($inspireIdLocalId){
+    dsm($inspireIdLocalId);
     $data = uwwtd_getAggHistoryData($inspireIdLocalId);
     dsm($data);
+    if(empty($data)) return "Error in data. We can't display this page";
+    
     drupal_set_title($data['last_node']->title.' - history');
             drupal_add_js('sites/all/libraries/d3/d3.js');
             drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -1547,7 +1550,7 @@ function uwwtd_agg_history_page($inspireIdLocalId){
     if(!empty($data['years'])){
         $years = array_keys($data['years']);
         sort($years);
-        
+        $uwwtp_data = [];
         $dtc_equipment =[];
             $dtc_equipment[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>';
         $dtc_performance =[];
@@ -1615,6 +1618,12 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                         <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['percent'],1).'%</td>
                     </tr>';
                 
+                $uwwtp_data[]=[
+                    $y,
+                    'Total design capa',
+                    'Total entering load',
+                    theme('item_list', ['items'=>array_column($info['uwwtps'], 'link')])
+                ]
             }
             else{
                 $genload_graph['data'][] = array((string)$y,null,null,null);
@@ -1631,11 +1640,17 @@ function uwwtd_agg_history_page($inspireIdLocalId){
 		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
 		'', '', array(), '',
 		false, []);
-        $html .='<div class="row">';
-            $html .='<div class="clear dtc dtc-equipment"> <h3>'.t("Distance to compliance on equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div>';
-            $html .='<div class="clear dtc dtc-performance"><h3>'.t("Distance to compliance on performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div>';
+        
+        //Distance to compliance
+        $html .='<div class="rows">';
+            $html .='<div class="charts-rows-cell cell dtc dtc-equipment"> <h3>'.t("Distance to compliance on equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div>';
+            $html .='<div class="charts-rows-cell cell dtc dtc-performance"><h3>'.t("Distance to compliance on performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div>';
         $html .='</div>';
         
+        //List of UWWTP
+        $html .='<div class="rows">';
+        $html .='<div>'.theme('table', []).'</div>';
+        $html .='</div>';
     }
 
     return '<article>'.$html.'</article>';
@@ -1650,7 +1665,7 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'agglomeration', '=');
     $query->condition('n.status', 1, '=');
-    $query->where("lower(ins.field_inspireidlocalid_value) = :id", array(':id'=>strtolower($inspireIdLocalId)));
+    $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>strtolower($inspireIdLocalId)));
     $query->orderBy('a.field_anneedata_value', 'ASC');
     $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
     if(!empty($ids)){
@@ -1669,7 +1684,7 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
                 'dtc'=>uwwtd_get_distance_compliance($node),
             );
             $uwwtps = $wrapper->field_agguwwliste->value();
-            dsm($uwwtps);
+            //dsm($uwwtps);
             if(!empty($uwwtps)){
                 foreach($uwwtps as $uwwtp){
                      $data[$y]['uwwtps'][$uwwtp->nid] =[
