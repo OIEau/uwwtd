@@ -1792,20 +1792,21 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
             if(!empty($uwwtps)){
                 foreach($uwwtps as $uwwtp){
                     //dsm($uwwtp);
-                    
-                     $data[$y]['uwwtps'][$uwwtp->nid] =[
-                        'link' =>'<span class="'.strtolower($uwwtp->field_uwwcompliance['und'][0]['value']).'"> '.$GLOBALS['uwwtd']['all_compliance'][$uwwtp->field_uwwcompliance['und'][0]['value']].' </span> '.  l($uwwtp->title .' ['.$uwwtp->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$uwwtp->nid),
-                        'inspireidlocalid'=>$uwwtp->field_inspireidlocalid['und'][0]['value'],
-                        'compliance'=>$uwwtp->field_uwwcompliance['und'][0]['value'],
-                        'uwwloadenteringuwwtp'=>$uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'],
-                        'physicalcapacityactivity'=>$uwwtp->field_physicalcapacityactivity['und'][0]['value'],
-                        'entering_load_pe'=>0
-                    ];
-                    
-                    $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $y, 'aggCode' => $node->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
-                    if ('' !== $agglo_uwwtpnid) {
-                        $agglo_uwwtp = node_load($agglo_uwwtpnid);
-                        $data[$y]['uwwtps'][$uwwtp->nid]['entering_load_pe'] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value'];
+                    if($uwwtp->field_status['und'][0]['value']==1){
+                        $data[$y]['uwwtps'][$uwwtp->nid] =[
+                            'link' =>'<span class="'.strtolower($uwwtp->field_uwwcompliance['und'][0]['value']).'"> '.$GLOBALS['uwwtd']['all_compliance'][$uwwtp->field_uwwcompliance['und'][0]['value']].' </span> '.  l($uwwtp->title .' ['.$uwwtp->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$uwwtp->nid),
+                            'inspireidlocalid'=>$uwwtp->field_inspireidlocalid['und'][0]['value'],
+                            'compliance'=>$uwwtp->field_uwwcompliance['und'][0]['value'],
+                            'uwwloadenteringuwwtp'=>$uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'],
+                            'physicalcapacityactivity'=>$uwwtp->field_physicalcapacityactivity['und'][0]['value'],
+                            'entering_load_pe'=>0
+                        ];
+                        
+                        $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $y, 'aggCode' => $node->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
+                        if ('' !== $agglo_uwwtpnid) {
+                            $agglo_uwwtp = node_load($agglo_uwwtpnid);
+                            $data[$y]['uwwtps'][$uwwtp->nid]['entering_load_pe'] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value'];
+                        }
                     }
                 }
             }
