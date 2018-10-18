@@ -31,7 +31,7 @@ $openlayers_maps->data = array(
     ),
     'openlayers_behavior_wmsgetfeatureinfo' => array(
       'getfeatureinfo_usevisiblelayers' => 1,
-      'getfeatureinfo_layers' => 'google_satellite',
+      'getfeatureinfo_layers' => 'osm_mapnik',
       'getfeatureinfo_info_format' => 'application/geojson',
       'getfeatureinfo_highlight' => 0,
       'getfeatureinfo_htmlelement' => 'getfeatureinfo',
@@ -168,8 +168,6 @@ Noinformation|No information|#6b6b6b',
     'openlayers_behavior_zoomtolayer' => array(
       'zoomtolayer' => array(
         'dcp' => 'dcp',
-        'google_satellite' => 0,
-        'google_normal' => 0,
         'osm_mapnik' => 0,
         'osm_cycle' => 0,
         'oieau_rbd' => 0,
@@ -195,8 +193,6 @@ Noinformation|No information|#6b6b6b',
   ),
   'default_layer' => 'osm_mapnik',
   'layers' => array(
-    'google_satellite' => 'google_satellite',
-    'google_normal' => 'google_normal',
     'osm_mapnik' => 'osm_mapnik',
     'osm_cycle' => 'osm_cycle',
     'dcp' => 'dcp',
