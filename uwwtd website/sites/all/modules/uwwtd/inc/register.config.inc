@@ -5,6 +5,8 @@
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
     'model' => '2015_register_model_20161214.xlsx',
+    'model_reporting_2014' => '2015_register_model_20161214.xlsx',
+    'model_reporting_2016' => '2018_register_model_20181015.xlsx',
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',

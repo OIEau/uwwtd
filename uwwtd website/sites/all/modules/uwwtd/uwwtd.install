@@ -4760,6 +4760,43 @@ function uwwtd_update_7159(&$context = null) {
     //throw new DrupalUpdateException(__FUNCTION__);
 }   
    
+function uwwtd_update_7160(&$context = null){
+    //Change type definition for field_soeceufunds
+    setDecimalAccuracy('field_soeceufunds', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_soeceufunds ALTER COLUMN field_soeceufunds_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_soeceufunds ALTER COLUMN field_soeceufunds_value TYPE NUMERIC(15,2)');
+
+    //field_soecinvias
+    setDecimalAccuracy('field_soecinvias', 15, 2);
+    db_query('ALTER TABLE drupal_field_data_field_soecinvias ALTER COLUMN field_soecinvias_value TYPE NUMERIC(15,2)');
+    db_query('ALTER TABLE drupal_field_revision_field_soecinvias ALTER COLUMN field_soecinvias_value TYPE NUMERIC(15,2)');
+
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    
+    //Change base layer from google map to OSM
+    //Update natura 2000 layer 
+    //Update OIEau layers
+    //$maps = array('waste_water_treatment_network_map.inc');
+    //,  array('waste_water_treatment_network_map.inc'), array('-'), array('-')
+    uwwtd_update_map_overlay($country_config, $country_code);   
+    
+    
+    
+    
+    
+    /*
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    }
+    */
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);
+    
+}
+
    
 /**
  * Redéfinit la précision et le scale du champs donné.
