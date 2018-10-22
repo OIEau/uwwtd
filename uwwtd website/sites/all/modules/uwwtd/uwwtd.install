@@ -4793,7 +4793,7 @@ function uwwtd_update_7160(&$context = null){
     }
     */
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);
+//     throw new DrupalUpdateException(__FUNCTION__);
     
 }
 
@@ -4814,7 +4814,7 @@ function uwwtd_update_7161(&$context = null){
 
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
-    throw new DrupalUpdateException(__FUNCTION__);    
+//     throw new DrupalUpdateException(__FUNCTION__);    
 }
 
    
