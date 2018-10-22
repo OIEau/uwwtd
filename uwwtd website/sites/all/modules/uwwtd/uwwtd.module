@@ -1437,12 +1437,21 @@ function uwwtd_wms_getlegend_alter(&$result, &$url){
 
         }
         elseif($url['host']=='bio.discomap.eea.europa.eu'){
-            if($params['LAYER']=='7'){
-                $result = '<div class="legend-label">'.t('Natura 2000').'</div><div  class="legend-img">'.$result.'</div>';
-            }else{
-                $result ='';
+            $out = '';
+            if($params['LAYER']=='0'){
+                $out.= '<div class="legend-label">'.t('Natura 2000').'</div><div  class="legend-img">'.$result.'</div>';
             }
+            if($params['LAYER']=='1'){
+                $out.= '<div class="legend-label">'.t('Birds Directive Sites (SPA)').'</div><div  class="legend-img">'.$result.'</div>';
+            }
+            if($params['LAYER']=='2'){
+                $out.= '<div class="legend-label">'.t('Habitats Directive Sites (pSCI, SCI or SAC)').'</div><div  class="legend-img">'.$result.'</div>';
+            }/*
+            else{
+                $result.='';
+            }*/
            //krumo($result);
+           $out=$result;
         }
         elseif($url['host']=='water.discomap.eea.europa.eu'){
             if($params['LAYER']=='4' && strpos($url['path'], 'BathingWater')>0){
@@ -1477,14 +1486,28 @@ function uwwtd_wms_getfeatureinfo_alter(&$result, &$url){
     //Uncomment for debug
     foreach($result as $layer=>$features){
         //Natura 2000
-        if($url['host']=='bio.discomap.eea.europa.eu'){
-            if($layer=='7'){
+        
+        if($url['host']=='bio.discomap.eea.europa.eu'){           
+            if($layer=='0'){
                 $new_layer = t('Natura 2000');
-
+                /*
+                print "<pre>";
+                print_r($features);
+                print "</pre>";
+                */
                 $data =array();
                 $keys = array('SITECODE','SITENAME','MS','SITETYPE', 'RELEASE_DATE');
                 foreach($features as $feature){
-                    $data[] = array_intersect_key($feature, array_flip($keys));
+                    $line = array_intersect_key($feature, array_flip($keys));
+                    $line['SITECODE']  = '<a target="_blank" href="http://natura2000.eea.europa.eu/Natura2000/SDF.aspx?site='.$line['SITECODE'].'">'.$line['SITECODE'].'</a>';
+                    if($line['SITETYPE']=='A'){
+                        $line['SITETYPE']  ='Habitats Directive Sites (pSCI, SCI or SAC) ['.$line['SITETYPE'].']';
+                    }
+                    elseif($line['SITETYPE']=='B'){
+                        $line['SITETYPE']  ='Birds Directive Sites (SPA) ['.$line['SITETYPE'].']';
+                    }
+                    else {$line['SITETYPE']  =$line['SITETYPE'];}
+                    $data[] = $line;
                 }
                 $result[$new_layer] = $data;
                 unset($result[$layer]);
@@ -1760,6 +1783,10 @@ function uwwtd_timeline_output($node){
       // }
     }
       $output.='<td class="dispo-after"><div></div></td>';
+      if($node->type == 'agglomeration'){
+          $output.='<td class="history-link">'.l('View history', 'agglomeration/'.str_replace('_', '', strtolower($node->field_inspireidlocalid['und'][0]['value'])).'/history', ['attributes'=>['target'=>'_blank']]).'</td>';
+       }
+      
           $output.='</tr>';
         $output.='</table>';
     $output.='<div class="dispo-legend">';

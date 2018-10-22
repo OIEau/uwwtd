@@ -1545,3 +1545,9 @@ function uwwtd_get_ind($conf){
     }
     return $ind;
 }
+
+function uwwtd_get_percent($val1, $val2){
+    if(is_null($val2) || $val2==0) return false;
+    $pc = round(($val1-$val2)/$val2 *100, 1);
+    return  ($val1>$val2?'+':'').$pc.' %';
+}
