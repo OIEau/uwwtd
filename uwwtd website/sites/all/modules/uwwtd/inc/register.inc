@@ -76,7 +76,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
     
- //    //excel   
+ //    //excel
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
@@ -95,6 +96,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+    
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
@@ -209,7 +211,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                 }
                 //Other condition on field ?
                 $line[$conf['k']] = $val;
+                $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
             }
+
+            
         }
         $lines[$j] = $line;
         $j++;
@@ -482,7 +487,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                 }
                 //Other condition on field ?
                 $line[$conf['k']] = (string)$val;
+                $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
             }
+
+            
+            
+
+   
+            
         }
         $lines[$j] = $line;
         $j++;
@@ -590,6 +602,50 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
+}
+
+
+function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
+{
+//     if (!isset($context['sandbox']['progress'])) {
+//         $context['sandbox']['progress'] = 0;
+//         $context['sandbox']['max'] = 1;
+//     }
+
+//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
+
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    //change to public://
+//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setLoadSheetsOnly( array(
+                                         $GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name'],
+                                        ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name']);
+
+    //write
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+    $objWriter->setPreCalculateFormulas(false);
+    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
+    unset($objWriter);
+    unset($objReader);
+	
+	//In order to finish the script 
+//     $context['sandbox']['progress']++;
+
+//     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
+
+//     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+//     }
 }
 
 function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
@@ -3541,7 +3597,18 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
             // Type of Receiving Area NA/ SA/ CSA
             'type_of_receiving_water' => $agglo[$ind['type_of_receiving_water']],
         );
-
+//         uwwtd_trace($agglo_breach[$i]['type_of_receiving_water']);
+//         uwwtd_trace($agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art3_compliance']);
+        $agglo_breach[$i]['type_of_receiving_water'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['type_of_receiving_water'], $agglo_breach[$i]['type_of_receiving_water']);
+        $agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['compliance_art._5_(whole_agglo)_(hierarchical_approach)'], $agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+        $agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['art4_compliance_art._4_(hierarchical_approach)'], $agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+        $agglo_breach[$i]['art3_compliance'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['art3_compliance'], $agglo_breach[$i]['art3_compliance']);
+//         uwwtd_trace($agglo_breach[$i]['type_of_receiving_water']);
+//         uwwtd_trace($agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art3_compliance']);
 //         // art3_count
 //         $agglo_breach[$i][] = $art3_count;
 //         // art3_generated_load
@@ -9054,7 +9121,9 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     }
 
     $configsheet = $GLOBALS['uwwtd']['sheet'];
-    $listesheet = array('rca',
+    $listesheet = array(
+                        'glossary',
+                        'rca',
                         'uwwtp',
                         'agglo',
                         'summary_legal_comp',
@@ -9914,4 +9983,29 @@ function agglo_leak_pe($compliance, $connected_load, $entering_load){
 	}elseif ($compliance == 'NR'){
 		return 0;
 	}
+}
+
+/**
+ * Format the Acronym in the register
+ */
+function uwwtd_register_get_glossary_label($conf, $val) {
+//   uwwtd_trace('-->'.var_export($conf, true));
+//   uwwtd_trace('-->'.$val);           
+  if (isset($conf['glossary']) && true === $conf['glossary'] && isset($GLOBALS['glossary'][ $val ])) {              
+    $val = $val . ' [' . $GLOBALS['glossary'][ $val ] . ']';
+  }    
+
+  if (isset($conf['glossary_composed']) && true === $conf['glossary_composed']) {              
+    $explode = explode(';', $val);
+    $implode = '';
+    foreach($explode as $element) {
+      if (isset($GLOBALS['glossary'][ $element ])) {              
+        $implode .= (empty($implode) ? '' : ';') . $element . ' [' . $GLOBALS['glossary'][ $element ] . ']';
+      }
+    }
+    
+    $val = $implode;
+  }
+//   uwwtd_trace('----->'.$val);
+  return $val;
 }
