@@ -4787,6 +4787,26 @@ function uwwtd_update_7160(&$context = null){
     
 }
 
+/**
+ * Correction of HTML entites in node title 
+ *         &#039;  &amp;  &gt;   &lt;  &quot; 
+ */
+function uwwtd_update_7161(&$context = null){
+
+    $path = drupal_get_path('module', 'uwwtd') . '/script/html_entities_correction/html_entities_correction.inc.php';
+    include($path);
+
+    foreach ($request as $query) {
+       dsm($query);
+       uwwtd_trace($query);
+//        $result = db_query($query);
+    }
+
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+    throw new DrupalUpdateException(__FUNCTION__);    
+}
+
    
 /**
  * Redéfinit la précision et le scale du champs donné.
