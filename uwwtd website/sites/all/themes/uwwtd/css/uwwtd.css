@@ -710,12 +710,12 @@ table.dispo-annee tr td.dispo-annee{
 .treatmentPerformance .field-name-field-uwwbod5perf.clearfix::after, .treatmentPerformance .field-name-field-uwwbod5perf.clearfix::before{display:block!important;}
 .clearfix::before, .clearfix::after{display:block!important;}
 
-#UwwtpDescription, #dtcomp {border: 1px solid #000; margin-top: 3px;}
-#UwwtpDescription tr td, #dtcomp tr td, #dtcomp tr th{padding: 5px;height: 29px;border-left: 1px solid #000;}
+#UwwtpDescription, .dtcomp {border: 1px solid #000; margin-top: 3px;}
+#UwwtpDescription tr td, .dtcomp tr td, .dtcomp tr th{padding: 5px;height: 29px;border-left: 1px solid #000;}
 #UwwtpDescription tr .light{border-left: 1px solid #ddd;border-right: 1px solid #ddd;}
 #UwwtpDescription tr .black{border-top: 1px solid #000;border-left: 1px solid #000;}
-#UwwtpDescription tr:nth-child(2n+1), #dtcomp tr:nth-child(2n+1){border-bottom: 1px solid #000;}
-#UwwtpDescription tr:nth-child(2n+1) td, #dtcomp tr:nth-child(2n+1) td{border-top: 1px solid #ddd;}
+#UwwtpDescription tr:nth-child(2n+1), .dtcomp tr:nth-child(2n+1){border-bottom: 1px solid #000;}
+#UwwtpDescription tr:nth-child(2n+1) td, .dtcomp tr:nth-child(2n+1) td{border-top: 1px solid #ddd;}
 .btnContent {
 	-moz-box-shadow: 3px 4px 0px 1px #3dc21b;
 	-webkit-box-shadow: 3px 4px 0px 1px #3dc21b;
