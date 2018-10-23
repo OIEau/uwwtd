@@ -84,10 +84,11 @@ function uwwtd_stats_graphs_form_submit(&$form, &$form_state) {
  * Retourne le code html du contenu de la page stats/graphs.
  */
 function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles = array()) {
-	drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
+	drupal_add_js('sites/all/libraries/d3/d3.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
 	drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-
+    libraries_load('d3.drupal');
+    
 	// Valeur par défaut :
 	if (empty($yearSelected)) {
 		$yearSelected = uwwtd_get_max_annee();
@@ -145,7 +146,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
     //==============================================
-    
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
@@ -551,6 +551,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 
 /**
  * Retourne les données pour les graphes "Total generated load by compliance" et "Number of agglomerations by compliance".
+ * && Waste water treatement plant : Load entering by treatment type
  */
 function getRow2Graph1and2($results, $yearSelected) {
 	// Variables du graph 1 :
@@ -869,8 +870,7 @@ function getRow6Graph1And2($results) {
         }
         $graph1Rows[$rowName]['data'] = $line;
 	}
-    
-    
+        
     //=====================Graph 2
 	// Pour chaque ligne :
 	foreach ($graph2Rows as $rowName => $row) {
@@ -1275,7 +1275,7 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 			} elseif (array_key_exists('data', $graph1Front) && 
 				array_key_exists('color', $graph1Front) && 
 				array_key_exists('legend', $graph1Front)) {
-				$front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+				$front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], isset($graph1Front['stacked'])?$graph1Front['stacked']:true);
 			}
 			$html.= '<div class="cell charts-rows-cell"><div class="cell-content'. $classCustom .'">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back).'</div></div>';
 		}
@@ -1289,10 +1289,11 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 				$keys = array_keys($graph2Front);
 				$graph2Front = $graph2Front[$keys[0]];
 				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
-			} elseif (array_key_exists('data', $graph2Front) &&
+			} 
+            elseif (array_key_exists('data', $graph2Front) &&
 				array_key_exists('color', $graph2Front) &&
 				array_key_exists('legend', $graph2Front)) {
-				$front .= uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], true);
+				$front .= uwwtd_graph_render_column($graph2Id, $graph2Front['legend'], $graph2Front['color'], $graph2Front['data'], isset($graph2Front['stacked'])?$graph2Front['stacked']:true);
 			}
 			$html.= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph2Title, $front, $graph2Back).'</div></div>';
 		}
@@ -1517,4 +1518,299 @@ function isEmptyGraph($graphFront, $yearsPossibles) {
  */
 function isEmptyText($text) {
 	return empty($text) || strstr($text, 'No information</div>');
+}
+
+
+//====================================================================== PAGES HISTORY ==========================
+//nd@oieau.fr 10/10/2018
+//This new page display historical information on agglomeration 
+function uwwtd_agg_history_page($inspireIdLocalId){
+    //dsm($inspireIdLocalId);
+    $data = uwwtd_getAggHistoryData($inspireIdLocalId);
+    //dsm($data);
+    if(empty($data)) return "Error in data. We can't display this page";
+    
+    drupal_set_title($data['last_node']->title.' - history');
+            drupal_add_js('sites/all/libraries/d3/d3.js');
+            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    libraries_load('d3.drupal');
+    
+    $html ='';
+    $html.= '<div class="uwwcontainer">';
+        $fieldstat = field_view_field('node', $data['last_node'], 'field_status');
+        if (!empty($fieldstat[0]['#markup']) && $fieldstat[0]['#markup'] == '2') {
+            $fieldstat[0]['#markup'] = 'Inactive';
+        }
+        $fieldnuts = field_view_field('node', $data['last_node'], 'field_regionnuts');
+        $html.= '<div class="google-map-banner"><h1><span class="white-title">'. t('Agglomeration').' : </span><span class="node-title">'. $data['last_node']->title.'</span><span class="white-title"> - '.t("Identifier").' : </span><span class="inspireidlocalid">'. $data['last_node']->field_inspireidlocalid['und'][0]['value'].'</span><span class="white-title"> - '. t("Status").' : </span><span class="status status-'.drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])).'">'.$fieldstat[0]['#markup'].'</span><br /><small>'. t("Region (NUTS) Code").' : '. $data['last_node']->field_regionnuts['und'][0]['value'].' - '. t("Region (NUTS) Name").' : '.$fieldnuts[0]['#markup'].'</small></h1></div>';
+        $html.= render(field_view_field('node',  $data['last_node'], 'field_position_geo', 'openlayers_map'));
+        $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node']).'</div>';
+    $html.= '</div>';
+    if(!empty($data['years'])){
+        $years = array_keys($data['years']);
+        sort($years);
+        $uwwtp_data = [];
+        $uwwtp_list = [];
+        $dtc_equipment =[];
+            $dtc_equipment[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>';
+        $dtc_performance =[];
+            $dtc_performance[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>'; 
+        
+        
+        //==================Graph sur le generated load
+        $genload_graph=array(
+            'data'=>array(),
+            'color'=>array(
+                $GLOBALS['ms_level']['connection']['cs']['color'],
+                $GLOBALS['ms_level']['connection']['ias']['color'],
+                $GLOBALS['ms_level']['connection']['wot']['color'],
+            ),
+            'legend'=>array(
+                $GLOBALS['ms_level']['connection']['cs']['label'],
+                $GLOBALS['ms_level']['connection']['ias']['label'],
+                $GLOBALS['ms_level']['connection']['wot']['label'],
+            ),
+        );
+        $genload_table_rows = array();
+        $collection_table_rows = array();
+        $collection_graph = array(
+            'data'=>array(),
+            'legend'=>array(t($GLOBALS['ms_level']['connection']['cs']['label']),t("Agglomeration's Entering load")),
+            'color'=>array($GLOBALS['ms_level']['connection']['cs']['color'], '#87ceeb'),
+            'stacked'=>false
+        );
+        $prev_y = null;
+        foreach($years as $y){
+            if(isset($data['years'][$y])){
+                $info = $data['years'][$y];
+                //==========Generated load
+                $genload_graph['data'][] = array(
+                    (string)$y,
+                    (float)$info['cs'],
+                    (float)$info['ias'],
+                    (float)$info['wot'],
+                );
+                $genload_table_rows[] = array(
+                    '<b>'.$y.'</b>',
+                    uwwtd_format_number((float)$info['cs']) .' pe',
+                    uwwtd_format_number((float)$info['ias']) .' pe',
+                    uwwtd_format_number((float)$info['wot']) .' pe',
+                    uwwtd_format_number((float)$info['Generated load']) .' pe'
+                );
+                //Collection
+                $ent_load = array_sum (array_column($info['uwwtps'], 'entering_load_pe'));
+                $collection_graph['data'][] = array(
+                    (string)$y,
+                    round((float)$info['cs']),
+                    round((float)$ent_load),
+                );
+                $collection_delta = round((float)$info['cs']-(float)$ent_load);
+                $collection_color = '#4f4f4f';
+                if($collection_delta!=0){
+                    $collection_color = '#ffa500';
+                    //TODO : raise warning on delta
+                }
+                if($collection_delta>=2000){
+                    $collection_color = '#d93c3c';
+                    //TODO : raise warning on delta
+                }elseif((float)$info['cs']>0 && $collection_delta>0 && ($collection_delta/(float)$info['cs']) >= 0.01 ){
+                    $collection_color = '#d93c3c';
+                    //TODO : raise warning on delta
+                }
+                
+                $collection_table_rows[$y] = array(
+                    'year'=>'<b>'.$y.'</b>',
+                    'cs'=>uwwtd_format_number(round((float)$info['cs'])) .' pe',
+                    'ent'=>uwwtd_format_number(round((float)$ent_load)) .' pe',
+                    'delta'=>'<b style="color:'.$collection_color.'">'.uwwtd_format_number($collection_delta) .' pe</b> ('.uwwtd_get_percent((float)$info['cs'], (float)$ent_load).')'
+                );
+                
+                
+                //============= Distance to compliance
+                $dtc_equipment[]= '
+                    <tr>
+                        <td rowspan="2"><b>'.$y.'</b></td>
+                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['pe']).' pe</td>
+                    </tr>
+                    <tr>
+                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['percent'], 1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['percent'], 1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['percent'], 1).'%</td>
+                    </tr>';
+                $dtc_performance[]= '
+                    <tr>
+                        <td rowspan="2"><b>'.$y.'</b></td>
+                        <td>-</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['pe']).' pe</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['percent'],1).'%</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['percent'],1).'%</td>
+                    </tr>';
+                    
+                $capa = array_sum (array_column($info['uwwtps'], 'physicalcapacityactivity'));
+                    $capa_str = '<b>'.uwwtd_format_number($capa) .' pe</b>';
+                $ent = array_sum (array_column($info['uwwtps'], 'uwwloadenteringuwwtp'));
+                    $ent_str = '<b>'.uwwtd_format_number($ent) .' pe</b>';
+                if(!is_null($prev_y)){
+                    $prev_capa = array_sum (array_column($data['years'][$prev_y]['uwwtps'], 'physicalcapacityactivity'));
+                        $capa_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($capa-$prev_capa) .' pe ('.uwwtd_get_percent($capa, $prev_capa).')</div>';
+                    $prev_ent = array_sum (array_column($data['years'][$prev_y]['uwwtps'], 'uwwloadenteringuwwtp'));
+                        $ent_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($ent-$prev_ent) .' pe ('.uwwtd_get_percent($ent, $prev_ent).')</div>';
+                }
+                
+                $uwwtp_data[$y]=[
+                    'year'=>'<b>'.$y.'</b>',
+                    'links'=>theme('item_list', ['items'=>array_column($info['uwwtps'], 'link')]),
+                    'capa'=> $capa_str,
+                    'ent'=>$ent_str
+                    
+                ];
+                $uwwtp_list[$y]=array_column($info['uwwtps'], 'inspireidlocalid');
+            }
+            else{
+                $genload_graph['data'][] = array((string)$y,null,null,null);
+                $genload_table_rows[] = array('<b>'.$y.'</b>', '-', '-', '-');
+            }
+            $prev_y = $y;
+        }
+        $genload_table = theme(
+            'table', array(
+                'rows' => $genload_table_rows, 
+                'header' => array(t('Year'), t($GLOBALS['ms_level']['connection']['cs']['label']),t($GLOBALS['ms_level']['connection']['ias']['label']), t($GLOBALS['ms_level']['connection']['wot']['label']), '<b>'.t('Total').'</b>'))
+        );
+        
+        //dsm($collection_table_rows);
+        $collection_table = theme(
+            'table', array(
+                'rows' => $collection_table_rows, 
+                'header' => array(t('Year'),t($GLOBALS['ms_level']['connection']['cs']['label']),t("Agglomeration's Entering load"), t('Delta'))
+        ));
+        //dsm( $genload_graph);
+        $rowTitle = t("Generateg load and collection");
+        $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
+		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
+		'Collection leaks', 'collection-leaks', $collection_graph, $collection_table,
+		false, []);
+        
+        
+        //Distance to compliance
+        $html .='<div class="rows">';
+            $html .='<h2>'.t("Distance to compliance").'</h2>';
+            $html .='<div class="charts-rows-cell cell dtc dtc-equipment"><div class="cell-content"><h3>'.t("On equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div></div>';
+            $html .='<div class="charts-rows-cell cell dtc dtc-performance"><div class="cell-content"><h3>'.t("On performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div></div>';
+        $html .='</div>';
+        
+        //List of UWWTP
+        $html .='<div class="rows">';
+        $html .='<h2>'.t('Treatment plants').'</h2>';
+            //dsm($uwwtp_list);
+            $html .=uwwtd_compare_idlist($uwwtp_list);
+            //Mettre un message s'il y a un nombre différent et ou des id qui change au fil du temps
+            $html .=theme('table', [
+                'rows'=>$uwwtp_data,
+                'header'=>[t('Year'), t('Linked Treatment Plant(s)'), t('Total design capacity'), t('Total entering load')]
+            ]);
+        $html .='</div>';
+    }
+
+    return '<article>'.$html.'</article>';
+}
+function uwwtd_compare_idlist($ids){
+    $output = '';
+    $msg =[]; 
+    if(!empty($ids)){
+        $nb = null;
+        $prev_id = null;
+        $prev_list = null;
+        foreach($ids as $id=>$list){
+            if(!is_null($nb)){
+                if($nb!=count($list)){
+                    $msg[] = t("There is a change in number of elements between :previous and :current", [':previous'=>$prev_id, ':current'=>$id]);
+                }
+                //Check if we have change in list               
+                $diff_new = array_diff_key (array_flip($list), array_flip($prev_list));
+                if(!empty($diff_new)){
+                    $msg[] = t("There are new elements between :previous and :current", [':previous'=>$prev_id, ':current'=>$id]) .': '.implode(',', array_keys($diff_new)).'.';
+                }
+                $diff_miss= array_diff_key (array_flip($prev_list), array_flip($list));
+                if(!empty($diff_miss)){
+                    $msg[] = t("There are missing elements between :previous and :current", [':previous'=>$prev_id, ':current'=>$id]) .': '.implode(',', array_keys($diff_miss)).'.';
+                }
+                unset($diff_new, $diff_miss);
+            }
+            $nb=count($list);
+            $prev_id = $id;
+            $prev_list =$list;
+        }
+    }
+    if(!empty($msg)){
+        $output.= '<div class="alert alert-block alert-danger messages error">';
+        $output.= theme('item_list', array('items'=>$msg));
+        $output.= '</div>';
+    }
+    return $output;
+}
+function uwwtd_getAggHistoryData($inspireIdLocalId){
+    $inspireIdLocalId = strtolower($inspireIdLocalId);
+    $query = db_select('node', 'n');
+    $query->innerJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+    $query->leftJoin('field_data_field_inspireidlocalid', 'ins', 'n.nid = ins.entity_id AND ins.entity_type = \'node\'');
+    $query->fields('a', array('field_anneedata_value'));
+    $query->fields('n', array('nid'));
+    $query->condition('n.type', 'agglomeration', '=');
+    $query->condition('n.status', 1, '=');
+    $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>strtolower($inspireIdLocalId)));
+    $query->orderBy('a.field_anneedata_value', 'ASC');
+    $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
+    if(!empty($ids)){
+        $data = array();
+        foreach($ids as $y=>$id){
+            $node = node_load($id->nid);
+            $wrapper =  entity_metadata_wrapper('node', $node);
+            $data[$y] = array(
+                'Year'=>$y,
+                'agg'=>$node,
+                'Generated load'=>$wrapper->field_agggenerated->value(),
+                'cs'=>$wrapper->field_agg_connected_load_pe->value(),
+                'ias'=>$wrapper->field_agg_ias_load_pe->value(),
+                'wot'=>$wrapper->field_agg_discharge_pe->value(),
+                //$agg_leak = ($connected_load - $entering_load);
+                //        - connected_load (float) : load connected to collectiong system
+                //        - entering_load (float) : total load entering in the WWTP linked to the agglomeration
+                'leak'=>0, 
+                'uwwtps'=>array(),
+                'dtc'=>uwwtd_get_distance_compliance($node),
+            );
+            $uwwtps = $wrapper->field_agguwwliste->value();
+            //dsm($uwwtps);
+            if(!empty($uwwtps)){
+                foreach($uwwtps as $uwwtp){
+                    //dsm($uwwtp);
+                    if($uwwtp->field_status['und'][0]['value']==1){
+                        $data[$y]['uwwtps'][$uwwtp->nid] =[
+                            'link' =>'<span class="'.strtolower($uwwtp->field_uwwcompliance['und'][0]['value']).'"> '.$GLOBALS['uwwtd']['all_compliance'][$uwwtp->field_uwwcompliance['und'][0]['value']].' </span> '.  l($uwwtp->title .' ['.$uwwtp->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$uwwtp->nid),
+                            'inspireidlocalid'=>$uwwtp->field_inspireidlocalid['und'][0]['value'],
+                            'compliance'=>$uwwtp->field_uwwcompliance['und'][0]['value'],
+                            'uwwloadenteringuwwtp'=>$uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'],
+                            'physicalcapacityactivity'=>$uwwtp->field_physicalcapacityactivity['und'][0]['value'],
+                            'entering_load_pe'=>0
+                        ];
+                        
+                        $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $y, 'aggCode' => $node->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
+                        if ('' !== $agglo_uwwtpnid) {
+                            $agglo_uwwtp = node_load($agglo_uwwtpnid);
+                            $data[$y]['uwwtps'][$uwwtp->nid]['entering_load_pe'] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value'];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return array('last_node'=>$node, 'years'=>$data);
 }

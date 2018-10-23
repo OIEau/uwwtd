@@ -11,7 +11,9 @@ Drupal.openlayers.addBehavior('openlayers_behavior_gazetteer', function (data, o
     if(Drupal.settings.openlayers_gazetteer.geonames_username == '') {
       console.log('Configure your GeoNames username to activate the Gazetteer Behavior.')
     } else {
-      var serviceURL = 'http://api.geonames.org/searchJSON';
+      //nd@oieau.fr : this URL not work on HTTPS pages ==> need to use proxy
+      //http://api.geonames.org/searchJSON
+      var serviceURL = Drupal.settings.basePath +'openlayers/gazetteer/geonames'; 
 
       // Create text input.
       var input = $('<input/>',
@@ -43,6 +45,7 @@ Drupal.openlayers.addBehavior('openlayers_behavior_gazetteer', function (data, o
           $.ajax({
             url: serviceURL,
             data: 'name_startsWith=' + encodeURIComponent(request.term) + query + '&maxRows=10&username=' + encodeURIComponent(Drupal.settings.openlayers_gazetteer.geonames_username),
+            dataType: "json",
             success: function (data) {
               response($.map(data.geonames, function(item) {
                 return {
