@@ -1055,10 +1055,20 @@ function uwwtd_check_text($text){
 	// check format
     //FIX ME : why sometime we have array in uwwtp import
     if(is_array($text)){
+//         dsm('uwwtd_check_text ARRAY $text = ');
+//         dsm($text);
+        if (empty($text)) {
+          watchdog('uwwtd_checktext_notice', 'uwwtd_check_text array empty for value', array(), WATCHDOG_NOTICE);
+          return '';      
+        } else {
+          watchdog('uwwtd_checktext', 'uwwtd_check_text array not empty for value : ' . var_export($text, true), array(), WATCHDOG_WARNING);
+          //TODO delete
+          file_put_contents(DRUPAL_ROOT . '/sites/all/modules/uwwtd/uwwtd_check_text.log', 'uwwtd_check_text array not empty for value : ' . var_export($text, true) . "\n", FILE_APPEND);
+        }
         return $text;
     }
     $text = trim($text);
-    $text = check_plain($text);
+//     $text = check_plain($text); //on ne veut pas tranformer en entité les caractère, sinon dans le registre et les export csv/xls, le title on les voit
     
     //return finished value
     return $text;
@@ -1410,11 +1420,10 @@ function uwwtd_get_distance_compliance($agg){
                 } else {
                     $colorart3 = '#a2a2a2';
                 }
-
                 // Article 4
                 if ($art4complianceTreat == 'NC' &&
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
-                    $distanceToCompliance['art4_treat_pe'] > 0) {
+                    $dist_art4_perf_pe > 0) {
                     $colorart4T = '#d93c3c';
                 } elseif ($art4complianceTreat == 'NC' && 
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
@@ -1422,12 +1431,13 @@ function uwwtd_get_distance_compliance($agg){
                 } else {
                     $colorart4T = '#4f91e1';
                 }
-                if ($art4compliancePerf == 'NC' &&
-                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
-                    $distanceToCompliance['art4_perf_pe'] > 0) {
+                
+               if ($art4compliancePerf == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == true &&
+                    $dist_art4_perf_pe > 0) {
                     $colorart4P = '#d93c3c';
                 } elseif ($art4compliancePerf == 'NC' && 
-                        deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
+                        deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == false) {
                     $colorart4P = '#FF5200';
                 } else {
                     $colorart4P = '#4f91e1';
@@ -1454,7 +1464,7 @@ function uwwtd_get_distance_compliance($agg){
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
                     $dist_art5_perf_pe > 0) {
                     $colorart5P = '#d93c3c';
-                } elseif ($distanceToCompliance['art5_perf_compliance'] == 'NC' &&
+                } elseif ($art5compliancePerf == 'NC' &&
                     deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
                     $colorart5P = '#FF5200';
                 } else {
@@ -1534,4 +1544,10 @@ function uwwtd_get_ind($conf){
         }
     }
     return $ind;
+}
+
+function uwwtd_get_percent($val1, $val2){
+    if(is_null($val2) || $val2==0) return false;
+    $pc = round(($val1-$val2)/$val2 *100, 1);
+    return  ($val1>$val2?'+':'').$pc.' %';
 }
