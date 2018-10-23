@@ -1055,10 +1055,20 @@ function uwwtd_check_text($text){
 	// check format
     //FIX ME : why sometime we have array in uwwtp import
     if(is_array($text)){
+//         dsm('uwwtd_check_text ARRAY $text = ');
+//         dsm($text);
+        if (empty($text)) {
+          watchdog('uwwtd_checktext_notice', 'uwwtd_check_text array empty for value', array(), WATCHDOG_NOTICE);
+          return '';      
+        } else {
+          watchdog('uwwtd_checktext', 'uwwtd_check_text array not empty for value : ' . var_export($text, true), array(), WATCHDOG_WARNING);
+          //TODO delete
+          file_put_contents(DRUPAL_ROOT . '/sites/all/modules/uwwtd/uwwtd_check_text.log', 'uwwtd_check_text array not empty for value : ' . var_export($text, true) . "\n", FILE_APPEND);
+        }
         return $text;
     }
     $text = trim($text);
-    $text = check_plain($text);
+//     $text = check_plain($text); //on ne veut pas tranformer en entité les caractère, sinon dans le registre et les export csv/xls, le title on les voit
     
     //return finished value
     return $text;
@@ -1296,7 +1306,7 @@ function uwwtd_get_array_from_conf($value){
     return $result;
 }
 
-function uuwtd_get_distance_compliance($agg){
+function uwwtd_get_distance_compliance($agg){
     require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
     $annee = $agg->field_anneedata['und'][0]['value'];
     $dist_art4_treatment_pe = 0;
@@ -1386,15 +1396,6 @@ function uuwtd_get_distance_compliance($agg){
     $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
 
-    // $collected = $agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'] / 100;
-    // $onePercentOfCollected = $collected / 100;
-    // $disappearing = $collected - $totalLoadenteringPE;
-    // if ($onePercentOfCollected < 2000) {
-    //     $difference = $disappearing - $onePercentOfCollected;
-    // } else {
-    //     $difference = $disappearing - 2000;
-    // }
-    // $difference_pe = ($difference * 100) / $collected;
 
     $dist_art4_treatment_pe +=  $pe_lost;
     $dist_art4_treatment_percent += $percentage_lost;
@@ -1404,9 +1405,104 @@ function uuwtd_get_distance_compliance($agg){
         $art4complianceTreat = 'NC';
         $art4compliancePerf = 'NC'; 
     }
+    //$dist_art3_treatment_percent = 100 * $agg->field_aggpercwithouttreatment['und'][0]['value']/$agg->field_agggenerated['und'][0]['value'];
 
+    // Set the colors of "Distance to compliance" table
+                // Article 3
+                if ($agg->field_aggart3compliance['und'][0]['value'] == 'C' || $agg->field_aggart3compliance['und'][0]['value'] == 'QC') {
+                    $colorart3 = '#4f91e1';
+                } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'NC') {
+                    $colorart3 = '#d93c3c';
+                } elseif ($agg->field_aggart3compliance['und'][0]['value'] == 'PD' 
+                    && $agg->field_aggpercwithouttreatment['und'][0]['value'] > 0) 
+                {
+                    $colorart3 = '#FF5200';
+                } else {
+                    $colorart3 = '#a2a2a2';
+                }
+                // Article 4
+                if ($art4complianceTreat == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
+                    $dist_art4_perf_pe > 0) {
+                    $colorart4T = '#d93c3c';
+                } elseif ($art4complianceTreat == 'NC' && 
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
+                    $colorart4T = '#FF5200';
+                } else {
+                    $colorart4T = '#4f91e1';
+                }
+                
+               if ($art4compliancePerf == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == true &&
+                    $dist_art4_perf_pe > 0) {
+                    $colorart4P = '#d93c3c';
+                } elseif ($art4compliancePerf == 'NC' && 
+                        deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) == false) {
+                    $colorart4P = '#FF5200';
+                } else {
+                    $colorart4P = '#4f91e1';
+                }
 
+                if ($agg->field_aggart4compliance['und'][0]['value'] == 'NR') {
+                    $colorart4T = '#a2a2a2';
+                    $colorart4P = '#a2a2a2';
+                } 
+
+                // Article 5
+                if ($art5complianceTreat == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
+                    $dist_art5_treatment_pe > 0) {
+                    $colorart5T = '#d93c3c';
+                } elseif ($art5complianceTreat == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
+                    $colorart5T = '#FF5200';
+                } else {
+                    $colorart5T = '#4f91e1';
+                }
+
+                if ($art5compliancePerf == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === true &&
+                    $dist_art5_perf_pe > 0) {
+                    $colorart5P = '#d93c3c';
+                } elseif ($art5compliancePerf == 'NC' &&
+                    deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value']) === false) {
+                    $colorart5P = '#FF5200';
+                } else {
+                    $colorart5P = '#4f91e1';
+                }
+
+                if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR') {
+                    $colorart5T = '#a2a2a2';
+                    $colorart5P = '#a2a2a2';
+                }
+
+                if ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
+                    $colorart5P = '#FF5200';
+                }
+
+                if ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
+                    $colorart5T = '#FF5200';
+                }
+
+                if ($dist_art5_treatment_pe == '-') {
+                    $colorart5P = '#a2a2a2';
+                }
+    
+    
+    
     $dtc = array(
+        'art3'=>[
+            'Equipment'=>['pe'=>$agg->field_aggpercwithouttreatment['und'][0]['value']*field_agggenerated['und'][0]['value'], 'percent'=>$agg->field_aggpercwithouttreatment['und'][0]['value'], 'compliance'=>$agg->field_aggart3compliance['und'][0]['value'], 'color'=>$colorart3],
+        ],
+        'art4'=>[
+            'Equipment'=>['pe'=>$dist_art4_treatment_pe, 'percent'=>$dist_art4_treatment_percent, 'compliance'=>$art4complianceTreat, 'color'=>$colorart4T],
+            'Performance'=>['pe'=>$dist_art4_perf_pe, 'percent'=>$dist_art4_perf_percent, 'compliance'=>$art4compliancePerf, 'color'=>$colorart4P],
+        ],
+        'art5'=>[
+            'Equipment'=>['pe'=>$dist_art5_treatment_pe, 'percent'=>$dist_art5_treatment_percent, 'compliance'=>$art5complianceTreat, 'color'=>$colorart5T],
+            'Performance'=>['pe'=>$dist_art5_perf_pe, 'percent'=>$dist_art5_perf_percent, 'compliance'=>$art5compliancePerf, 'color'=>$colorart5P],
+        ],
+
         'art4_treat_pe' => $dist_art4_treatment_pe,
         'art4_treat_percent' => $dist_art4_treatment_percent,
         'art4_treatment_compliance' => $art4complianceTreat,
@@ -1419,10 +1515,12 @@ function uuwtd_get_distance_compliance($agg){
         'art5_perf_pe' => $dist_art5_perf_pe,
         'art5_perf_percent' => $dist_art5_perf_percent,
         'art5_perf_compliance' => $art5compliancePerf,
+        
     );
 
     return $dtc;	
 }
+
 
 /**
  * Check if the first parameter year is before or equal the second parameter year
@@ -1446,4 +1544,10 @@ function uwwtd_get_ind($conf){
         }
     }
     return $ind;
+}
+
+function uwwtd_get_percent($val1, $val2){
+    if(is_null($val2) || $val2==0) return false;
+    $pc = round(($val1-$val2)/$val2 *100, 1);
+    return  ($val1>$val2?'+':'').$pc.' %';
 }

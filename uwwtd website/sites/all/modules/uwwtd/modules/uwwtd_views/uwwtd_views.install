@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * update view error_list 
+ */ 
+function uwwtd_views_update_7100(&$context = null) 
+{
+    uwwtd_views_install_trace(__FUNCTION__);
+    $path = drupal_get_path('module', 'uwwtd_views') . '/script/uwwtd_views_update_7100/error_list.view.export.php';
+    include($path);
+
+    if (isset($view) && is_object($view)) {
+      views_save_view($view);
+    }
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+//     throw new DrupalUpdateException(__FUNCTION__);    
+}
+
+/***************************************************************************/
+// Function utils
+/***************************************************************************/
+function uwwtd_views_install_trace($message) 
+{                   
+    if($file = drupal_realpath('public://data_errors/install_trace.log')){
+        $r = fopen($file, 'a');
+        fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+        fclose($r);
+    }
+}
