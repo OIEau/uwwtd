@@ -743,7 +743,8 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
         uwwtd_trace('$imports BigCityDischargers v10th report');
         uwwtd_trace(var_export($imports, true));
-        $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+        //e.v 2018/10/22 => BigCityDischargers are not big city, but city of p.e > 150 000 without bigCityID
+//         $batch['operations'][]=array('uwwtd_import_bigcity_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
     }
 
     //Agglomerations
@@ -4753,6 +4754,7 @@ function _remove_array_element_by_value($value, &$array) {
 
 
 function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp, &$context){
+//     uwwtd_trace(__FUNCTION__);     
     if(!empty($datas)){
         if(!isset($context['sandbox']['progress'])){
             $ids = array();
@@ -4785,14 +4787,46 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
             while($j<10 && $context['sandbox']['progress']<$context['sandbox']['max']){
                 $k=$i+$j;
                 $node = node_load($context['sandbox']['ids'][$k]['nid']);
+//                 uwwtd_trace($node->nid);
                 // Check bcId exists
                 if(isset($node->field_aggbigid['und'][0]['value'])){
+//                     uwwtd_trace($node->field_aggbigid['und'][0]['value']);
+//                     uwwtd_trace($annee.'_big_'.uwwtd_check_text($node->field_aggbigid['und'][0]['value']));
                     $exists = uwwtd_check_exist($annee.'_big_'.uwwtd_check_text($node->field_aggbigid['und'][0]['value']));
-                    
+//                     uwwtd_trace($exists);
                     if($exists != false){
-                        $node->field_aggbcliste['und'][]['nid'] = $exists;
+                        if (!isset($node->field_aggbcliste['und'])) {
+                          $node->field_aggbcliste['und'][]['nid'] = $exists;
+                        } else {
+                          $find = false;
+                          foreach($node->field_aggbcliste['und'] as $field) {
+                             if ($field['nid'] == $exists) {
+                               $find = true; 
+                               break;
+                             }
+                          }
+                          if (!$find) {
+                            $node->field_aggbcliste['und'][]['nid'] = $exists;
+                          }
+                        }
+
                         $bc = node_load($exists);
-                        $bc->field_bcaggliste['und'][]['nid'] = $node->nid;
+
+                        if (!isset($bc->field_bcaggliste['und'])) {
+                          $bc->field_bcaggliste['und'][]['nid'] = $node->nid;
+                        } else {
+                          $find = false;
+                          foreach($bc->field_bcaggliste['und'] as $field) {
+                             if ($field['nid'] == $node->nid) {
+                               $find = true; 
+                               break;
+                             }
+                          }
+                          if (!$find) {
+                            $bc->field_bcaggliste['und'][]['nid'] = $node->nid;
+                          }
+                        }
+
                         node_save($bc);
                     }
                     else{
@@ -4800,7 +4834,7 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
                         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], $emes, $timestamp, $k);
                     }
                 }
-                //node_save($node);
+                node_save($node);
             
                 $context['sandbox']['progress']++;
                 $j++;
@@ -4811,6 +4845,8 @@ function uwwtd_link_bc_agglo_batch_process($newFile, $annee, $datas, $timestamp,
                 
             if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
                 $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+            } else {
+               $context['finished'] = 1;
             }
         }
     }else{
