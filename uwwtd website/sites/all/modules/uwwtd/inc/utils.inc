@@ -1055,10 +1055,20 @@ function uwwtd_check_text($text){
 	// check format
     //FIX ME : why sometime we have array in uwwtp import
     if(is_array($text)){
+//         dsm('uwwtd_check_text ARRAY $text = ');
+//         dsm($text);
+        if (empty($text)) {
+          watchdog('uwwtd_checktext_notice', 'uwwtd_check_text array empty for value', array(), WATCHDOG_NOTICE);
+          return '';      
+        } else {
+          watchdog('uwwtd_checktext', 'uwwtd_check_text array not empty for value : ' . var_export($text, true), array(), WATCHDOG_WARNING);
+          //TODO delete
+          file_put_contents(DRUPAL_ROOT . '/sites/all/modules/uwwtd/uwwtd_check_text.log', 'uwwtd_check_text array not empty for value : ' . var_export($text, true) . "\n", FILE_APPEND);
+        }
         return $text;
     }
     $text = trim($text);
-    $text = check_plain($text);
+//     $text = check_plain($text); //on ne veut pas tranformer en entité les caractère, sinon dans le registre et les export csv/xls, le title on les voit
     
     //return finished value
     return $text;
@@ -1534,4 +1544,10 @@ function uwwtd_get_ind($conf){
         }
     }
     return $ind;
+}
+
+function uwwtd_get_percent($val1, $val2){
+    if(is_null($val2) || $val2==0) return false;
+    $pc = round(($val1-$val2)/$val2 *100, 1);
+    return  ($val1>$val2?'+':'').$pc.' %';
 }
