@@ -155,17 +155,17 @@ echo uwwtd_insert_errors_tab($node);
 			?>
             <div class="google-map-banner">
                 <h1>
-                	<span class="white-title"><?php echo t($nodetype); ?> : </span><?php echo $node->title; ?>
-                    <span class="white-title"> - <?php echo t("Identifier"); ?> : </span><?php echo $node->field_inspireidlocalid['und'][0]['value']; ?>
-                    <span class="white-title"> - <?php echo t("Status"); ?> : </span><?php echo $fieldstat[0]['#markup']; ?>
-                    <span class="white-title"> - <?php echo t("Reporting year"); ?> : </span><?php echo $node->field_anneedata['und'][0]['value']; ?>
+                	<span class="white-title"><?php print t($nodetype); ?> : </span><span class="node-title"><?php print $node->title; ?></span>
+                    <span class="white-title"> - <?php print t("Identifier"); ?> : </span><span class="inspireidlocalid"><?php print $node->field_inspireidlocalid['und'][0]['value']; ?></span>
+                    <span class="white-title"> - <?php print t("Status"); ?> : </span><span class="status status-<?php print drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup']));?>"><?php print $fieldstat[0]['#markup']; ?></span>
+                    <span class="white-title"> - <?php print t("Reporting year"); ?> : </span><span class="reporting-year"><?php print $node->field_anneedata['und'][0]['value']; ?></span>
                 	<br />
                 	<small>
                 		<?php 
                 		if (!empty($node->field_regionnuts['und'][0]['value'])) {
                 			?>
-                			<?php echo t("Region (NUTS) Code") ;?>: <?php echo $node->field_regionnuts['und'][0]['value']; ?> -
-                			<?php echo t("Region (NUTS) Name") ;?> : <?php echo $fieldnuts[0]['#markup'];
+                			<?php print t("Region (NUTS) Code") ;?>: <?php print $node->field_regionnuts['und'][0]['value']; ?> -
+                			<?php print t("Region (NUTS) Name") ;?> : <?php print $fieldnuts[0]['#markup'];
                 		}
                 		?>
                 	</small>
@@ -173,10 +173,10 @@ echo uwwtd_insert_errors_tab($node);
             </div>
             <?php 
 		}
-		echo render($printy);
+		print render($printy);
 
       print '<div class="uwwhalf" style="clear:left;">';
-        echo uwwtd_timeline_output($node);
+        print uwwtd_timeline_output($node);
       print '</div>';
     print '</div>';
     print '<div class="uwwcontainer" style="float:left;overflow:visible;">';

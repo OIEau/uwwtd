@@ -59,15 +59,16 @@
           .attr("dy", ".71em")
           .attr("text-anchor", "end")
           .attr('transform', function(d,i) { return "rotate(-15)"; })
-          .html(function(d,i){ 
-           var content = '';
+          .text(function(d,i){
+            var content = '';
             var label = d3.splitString(xLabels[i],20);
             d3.selectAll(label)
               .each(function(d, i) {
-                content = content+'<tspan text-anchor="end" x="0" y="'+ (20 * i) +'">'+label[i]+'</tspan>';
+                content = content +' '+ label[i];  
+                //content = content+'<tspan text-anchor="end" x="0" y="'+ (20 * i) +'">'+label[i]+'</tspan>';
               });
-            return content;
-        });
+            return content;  
+          });
         
         
     /* LINES */

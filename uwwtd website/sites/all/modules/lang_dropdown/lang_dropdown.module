@@ -157,7 +157,10 @@ function lang_dropdown_block_configure($delta = '') {
   );
 
   if (!module_exists('languageicons')) {
-    $form['lang_dropdown']['msdropdown']['#description'] = t('This looks better with !languageicons module.', array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL)));
+    $form['lang_dropdown']['msdropdown']['#description'] = t(
+      'This looks better with !languageicons module.',
+      array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL))
+    );
   }
 
   if (_lang_dropdown_get_msdropdown_path()) {
@@ -227,11 +230,22 @@ function lang_dropdown_block_configure($delta = '') {
     '#weight' => 1,
     '#states' => array(
       'visible' => array(
-        ':input[name="lang_dropdown[widget]"]' => array('value' => LANGDROPDOWN_SIMPLE_SELECT),
+        ':input[name="lang_dropdown[widget]"]' => array(
+          'OR',
+          array('value' => LANGDROPDOWN_SIMPLE_SELECT),
+          array('value' => LANGDROPDOWN_CHOSEN)
+        ),
       ),
     ),
   );
 
+  $form['lang_dropdown']['languageicons']['enable_icons'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable language icons'),
+    '#default_value' => module_exists('languageicons') && !empty($settings['languageicons']['enable_icons']),
+    '#disabled' => !module_exists('languageicons'),
+    '#description' => !module_exists('languageicons') ? t('Enable !languageicons module to get opportunity show a flag of the selected language before or after the select box.', array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL))) : '',
+  );
   if (module_exists('languageicons')) {
     $form['lang_dropdown']['languageicons']['flag_position'] = array(
       '#type' => 'select',
@@ -241,10 +255,12 @@ function lang_dropdown_block_configure($delta = '') {
         LANGDROPDOWN_FLAG_POSITION_AFTER => t('After'),
       ),
       '#default_value' => $settings['languageicons']['flag_position'],
+      '#states' => array(
+        'visible' => array(
+          ':input[name="lang_dropdown[languageicons][enable_icons]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
-  }
-  else {
-    $form['lang_dropdown']['languageicons']['#description'] = t('Enable !languageicons module to show a flag of the selected language before or after the select box.', array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL)));
   }
 
   $form['lang_dropdown']['chosen'] = array(
@@ -259,7 +275,7 @@ function lang_dropdown_block_configure($delta = '') {
   );
 
   if (module_exists('chosen')) {
-    $form['lang_dropdown']['chosen']['#description'] = t('If you are already using the !chosenmod you must just choose to output language dropdown as a simple HTML select and allow !chosenmod to turn it into a chosen style select.', array('!chosenmod' => l(t('Chosen module'), CHOSEN_MOD_URL)));    
+    $form['lang_dropdown']['chosen']['#description'] = t('If you are already using the !chosenmod you must just choose to output language dropdown as a simple HTML select and allow !chosenmod to turn it into a chosen style select.', array('!chosenmod' => l(t('Chosen module'), CHOSEN_MOD_URL)));
   }
   else if (_lang_dropdown_get_chosen_path()) {
     $form['lang_dropdown']['chosen']['disable_search'] = array(
@@ -386,10 +402,10 @@ function _lang_dropdown_validate_output_value($element, &$form_state, $form) {
           form_error($element, t('You can\'t use !chosen output. You don\'t have !chosen library installed.', array('!chosen' => l(t('Chosen'), CHOSEN_WEB_URL))));
         }
         if (!module_exists('jquery_update')) {
-          form_error($element, t('Chosen needs jquery 1.7.2 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
+          form_error($element, t('Chosen needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
         }
-        if (module_exists('jquery_update') && ((float) variable_get('jquery_update_jquery_version', '1.5') < 1.7)) {
-          form_error($element, t('Chosen needs jquery 1.7.2 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
+        if (module_exists('jquery_update') && (version_compare(variable_get('jquery_update_jquery_version', '1.10'), '1.7', '<'))) {
+          form_error($element, t('Chosen needs jquery 1.7 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
         }
       }
       break;
@@ -399,16 +415,52 @@ function _lang_dropdown_validate_output_value($element, &$form_state, $form) {
         form_error($element, t('You can\'t use !ddslick output. You don\'t have !ddslick library installed.', array('!ddslick' => l(t('ddSlick'), DDSLICK_WEB_URL))));
       }
       if (!module_exists('jquery_update')) {
-        form_error($element, t('ddSlick needs jquery 1.7.2 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
+        form_error($element, t('ddSlick needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
       }
-      if (module_exists('jquery_update') && ((float) variable_get('jquery_update_jquery_version', '1.5') < 1.7)) {
-        form_error($element, t('ddSlick needs jquery 1.7.2 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
+      if (module_exists('jquery_update') && (version_compare(variable_get('jquery_update_jquery_version', '1.10'), '1.7', '<'))) {
+        form_error($element, t('ddSlick needs jquery 1.7 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
       }
       break;
-    
+
     default:
       break;
 
+  }
+
+}
+
+/**
+ * Implements hook_language_switch_links_alter().
+ */
+function lang_dropdown_language_switch_links_alter(&$links, $type, $path) {
+
+  if ($type !== LANGUAGE_TYPE_CONTENT || empty($links)) {
+    return;
+  }
+
+  $menu_item = menu_get_item($path);
+  if (empty($menu_item) || !isset($menu_item['page_arguments'])) {
+    return;
+  }
+
+  $page_arguments = is_array($menu_item['page_arguments']) ? array_shift($menu_item['page_arguments']) : NULL;
+  if (empty($page_arguments) || !isset($page_arguments->translations) || !isset($page_arguments->translations->data)) {
+    return;
+  }
+
+  $translations_data = $page_arguments->translations->data;
+  foreach ($links as $langcode => $link) {
+
+    $translation_access  = FALSE;
+    if (module_exists('entity_translation')) {
+      $translation_access = entity_translation_access(
+        $translations_data[$langcode]['entity_type'],
+        $translations_data[$langcode]);
+    }
+    if (!isset($translations_data[$langcode]) || !$translation_access) {
+      unset($links[$langcode]['href']);
+      $links[$langcode]['attributes']['class'][] = 'locale-untranslated';
+    }
   }
 
 }
@@ -492,6 +544,7 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
     $domain_languages = domain_locale_lookup($_domain['domain_id']);
   }
 
+  $language_objects = language_list();
   // Now we iterate on $languages to build the needed options for the select element.
   foreach ($languages->links as $lang_code => $lang_options) {
 
@@ -525,11 +578,11 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
     }
     $hidden_elements[$lang_code] = array(
       '#type' => 'hidden',
-      '#default_value' => url($href, $lang_options),
+      '#default_value' => url($href, $lang_options + array('language' => $language_objects[$lang_code])),
     );
 
     // Handle flags with Language icons module using JS widget.
-    if (module_exists('languageicons') && $settings['widget']) {
+    if (module_exists('languageicons') && !empty($settings['languageicons']['enable_icons']) && $settings['widget']) {
       $languageicons_path = variable_get('languageicons_path', drupal_get_path('module', 'languageicons') . '/flags/*.png');
       $js_settings['languageicons'][$lang_code] = file_create_url(str_replace('*', $lang_code, $languageicons_path));
     }
@@ -540,7 +593,9 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
   $selected_option = ($language_session_selected == '') ? $language_selected : $language_session_selected;
 
   // Icon for the selected language
-  if (module_exists('languageicons') && !$settings['widget']) {
+  if (module_exists('languageicons') && !empty($selected_option)
+    && !empty($settings['languageicons']['enable_icons'])
+    && in_array($settings['widget'], array(LANGDROPDOWN_CHOSEN, LANGDROPDOWN_SIMPLE_SELECT))) {
     $selected_option_language_icon = theme('languageicons_icon', array(
       'language' => (object) array('language' => $selected_option),
       'title' => $language_names[$selected_option],
@@ -627,20 +682,23 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
     '#default_value' => isset($selected_option) ? $selected_option : key($options),
     '#options' => $options,
     '#attributes' => array(
-      'style' => 'width:' . $settings['width'] . 'px',
       'class' => array('lang-dropdown-select-element'),
       'id' => 'lang-dropdown-select-' . $type,
     ),
     '#attached' => array(
       'js' => array($module_path . '/lang_dropdown.js'),
-      'css' => ($settings['widget']) ? array() : array($module_path . '/lang_dropdown.css'),
+      'css' => (in_array($settings['widget'], array(LANGDROPDOWN_CHOSEN, LANGDROPDOWN_SIMPLE_SELECT))) ? array($module_path . '/lang_dropdown.css') : array(),
     ),
   );
+
+  if (!empty($settings['width'])) {
+    $form['lang_dropdown_select']['#attributes']['style'] = 'width:' . $settings['width'] . 'px';
+  }
 
   if (empty($hidden_elements)) return array();
 
   $form += $hidden_elements;
-  if (module_exists('languageicons')) {
+  if (module_exists('languageicons') && !empty($settings['languageicons']['enable_icons'])) {
     $form['lang_dropdown_select'][$flag_position] = $selected_option_language_icon;
   }
 
@@ -700,7 +758,7 @@ function _lang_dropdown_get_defaults() {
   return array(
     'showall' => 0,
     'tohome' => 0,
-    'width' => 165,
+    'width' => 148,
     'display' => LANGDROPDOWN_DISPLAY_NATIVE,
     'widget' => LANGDROPDOWN_SIMPLE_SELECT,
     'msdropdown' => array(
@@ -731,7 +789,7 @@ function _lang_dropdown_get_defaults() {
 /**
  * Helper function to get Language switcher dropdown settings
  */
-function _lang_dropdown_get_settings($type, $settings = NULL) {
+function _lang_dropdown_get_settings($type) {
 
   $defaults = _lang_dropdown_get_defaults();
 
@@ -971,8 +1029,8 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
         $new_values[$key] = $value;
       else {
         // if both are arrays, do the recursive process.
-        if ( is_array( $new_values[ $key ] ) && is_array( $value ) ) 
-          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );            
+        if ( is_array( $new_values[ $key ] ) && is_array( $value ) )
+          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );
       }
     }
 
@@ -982,11 +1040,19 @@ if ( ! function_exists( 'array_replace_recursive' ) ) {
         $new_values[$key] = $value;
       else {
         // if both are arrays, do the recursive process.
-        if ( is_array( $new_values[ $key ] ) && is_array( $value ) ) 
-          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );            
+        if ( is_array( $new_values[ $key ] ) && is_array( $value ) )
+          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );
       }
     }
 
     return $new_values;
   }
+}
+
+/**
+ * Implements hook_ctools_block_info().
+ */
+function lang_dropdown_ctools_block_info($module, $delta, &$info) {
+  $info['icon'] = drupal_get_path('module', 'ctools') . '/plugins/content_types/block/icon_core_languageswitcher.png';
+  $info['category'] = t('Widgets');
 }

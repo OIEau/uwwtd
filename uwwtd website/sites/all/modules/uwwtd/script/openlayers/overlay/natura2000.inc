@@ -7,7 +7,8 @@ $openlayers_layers->name = 'natura_2000';
 $openlayers_layers->title = 'Natura 2000';
 $openlayers_layers->description = 'Natura 2000 is the key instrument to protect biodiversity in the European Union. It is an ecological network of protected areas, set up to ensure the survival of Europe\'s most valuable species and habitats. Natura 2000 is based on the 1979 Birds Directive and the 1992 Habitats Directive. The green infrastructure it provides safeguards numerous ecosystem services and ensures that Europe\'s natural systems remain healthy and resilient.';
 $openlayers_layers->data = array(
-  'base_url' => 'http://bio.discomap.eea.europa.eu/arcgis/services/ProtectedSites/Natura2000_Dyna_WM/MapServer/WMSServer',
+  //'base_url' => 'http://bio.discomap.eea.europa.eu/arcgis/services/ProtectedSites/EUNIS_Website_Dyna_WM/MapServer/WMSServer',
+  'base_url' => 'http://bio.discomap.eea.europa.eu/arcgis/services/ProtectedSites/Natura2000Sites/MapServer/WMSServer',
   'params' => array(
     'buffer' => '2',
     'ratio' => '1.5',
@@ -18,7 +19,7 @@ $openlayers_layers->data = array(
     'exceptions' => 'application/vnd.ogc.se_inimage',
     'format' => 'image/png',
     'layers' => array(
-      0 => '8',
+      0 => '0,1,2',
     ),
     'styles' => '',
   ),

@@ -24,7 +24,7 @@
         <p><em>Urban Wastewater Treatment Directive Structured Implementation and Information Framework (UWWTD SIIF)</em></p>
         <div class="geospatial-award">
             <div class="geospatial-award-img">
-                <a href="//www.geospatialworld.net/news-posts/geospatial-media-communications-announces-winners-geospatial-excellence-award" title="Geospatial Media and Communications announces winners for Geospatial Excellence Award"/>
+                <a href="//www.geospatialworld.net/news-posts/geospatial-media-communications-announces-winners-geospatial-excellence-award" title="Geospatial Media and Communications announces winners for Geospatial Excellence Award">
                 <?php 
                     print theme('image', 
                         array(

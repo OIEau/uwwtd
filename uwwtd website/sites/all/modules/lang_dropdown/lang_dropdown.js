@@ -11,17 +11,17 @@ Drupal.behaviors.lang_dropdown = {
         if (flags) {
           $.each(flags, function(index, value) {
             if (msddSettings.widget == "msdropdown") {
-              $('select#lang-dropdown-select-' + key + ' option[value="' + index + '"]').attr('data-image', value);
+              $('select#lang-dropdown-select-' + key + ' option[value="' + index + '"]', context).attr('data-image', value);
             }
             else if (msddSettings.widget == "ddslick" && Boolean(msddSettings.showSelectedHTML)) {
-              $('select#lang-dropdown-select-' + key + ' option[value="' + index + '"]').attr('data-imagesrc', value);
+              $('select#lang-dropdown-select-' + key + ' option[value="' + index + '"]', context).attr('data-imagesrc', value);
             }
           });
         }
 
         if (msddSettings.widget == "msdropdown") {
           try {
-            $('select#lang-dropdown-select-' + key).msDropDown({
+            $('select#lang-dropdown-select-' + key, context).msDropDown({
               visibleRows: msddSettings.visibleRows,
               roundedCorner: Boolean(msddSettings.roundedCorner),
               animStyle: msddSettings.animStyle,
@@ -34,40 +34,41 @@ Drupal.behaviors.lang_dropdown = {
           }
         }
         else if (msddSettings.widget == "chosen") {
-          $('select#lang-dropdown-select-' + key).chosen({
+          $('select#lang-dropdown-select-' + key, context).chosen({
             disable_search: msddSettings.disable_search,
             no_results_text: msddSettings.no_results_text
           });
         }
         else if (msddSettings.widget == "ddslick") {
-          $.data(document.body, 'ddslick'+key+'flag', 0);
-          $('select#lang-dropdown-select-' + key).ddslick({
-            width: msddSettings.width,
+          $('select#lang-dropdown-select-' + key, context).ddslick({
+            width: (msddSettings.width == 0) ? null : msddSettings.width,
             height: (msddSettings.height == 0) ? null : msddSettings.height,
             showSelectedHTML: Boolean(msddSettings.showSelectedHTML),
             imagePosition: msddSettings.imagePosition,
             onSelected: function(data) {
-              var i = $.data(document.body, 'ddslick'+key+'flag');
-              if (i) {
-                $.data(document.body, 'ddslick'+key+'flag', 0);
-                var lang = data.selectedData.value;
-                var href = $('#lang-dropdown-select-'+key).parents('form').find('input[name="' + lang + '"]').val();
-                window.location.href = href;
+              // ddselect also fires this function on initialization, so we have
+              // to make sure this select has already been initialized.
+              if (!data.selectedItem.parent().data('ddslick-has-been-initialized')) {
+                data.selectedItem.parent().data('ddslick-has-been-initialized', true);
+                return;
               }
-              $.data(document.body, 'ddslick'+key+'flag', 1);
+
+              var lang = data.selectedData.value;
+              var href = $('#lang-dropdown-select-'+key, context).parents('form').find('input[name="' + lang + '"]').val();
+              window.location.href = href;
             }
           });
         }
       }
     }
 
-    $('select.lang-dropdown-select-element').change(function() {
+    $('select.lang-dropdown-select-element', context).change(function() {
       var lang = this.options[this.selectedIndex].value;
       var href = $(this).parents('form').find('input[name="' + lang + '"]').val();
       window.location.href = href;
     });
 
-    $('form.lang-dropdown-form').after('<div style="clear:both;"></div>');
+    $('form.lang-dropdown-form', context).after('<div style="clear:both;"></div>');
   }
 };
 })(jQuery);
