@@ -29,7 +29,7 @@ $openlayers_maps->data = array(
     ),
     'openlayers_behavior_wmsgetfeatureinfo' => array(
       'getfeatureinfo_usevisiblelayers' => 1,
-      'getfeatureinfo_layers' => 'google_satellite',
+      'getfeatureinfo_layers' => 'osm_mapnik',
       'getfeatureinfo_info_format' => 'application/geojson',
       'getfeatureinfo_highlight' => 0,
       'getfeatureinfo_htmlelement' => 'getfeatureinfo',
@@ -147,8 +147,6 @@ Compliantonequipmentonly|Compliant on equipment only|#ea8b2e',
     'openlayers_behavior_scaleline' => array(),
     'openlayers_behavior_zoomtolayer' => array(
       'zoomtolayer' => array(
-        'google_satellite' => 0,
-        'google_normal' => 0,
         'waste_water_network_openlayers_3' => 0,
         'waste_water_network_openlayers_1' => 0,
         'waste_water_network_openlayers_2' => 0,
@@ -170,8 +168,6 @@ Compliantonequipmentonly|Compliant on equipment only|#ea8b2e',
   ),
   'default_layer' => 'osm_mapnik',
   'layers' => array(
-    'google_satellite' => 'google_satellite',
-    'google_normal' => 'google_normal',
     'soe_phosphate_2011' => 'soe_phosphate_2011',
     'soe_nitrates_2011' => 'soe_nitrates_2011',
     'waste_water_network_openlayers_2' => 'waste_water_network_openlayers_2',
