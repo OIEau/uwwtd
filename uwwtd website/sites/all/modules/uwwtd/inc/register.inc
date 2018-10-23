@@ -76,7 +76,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
     
- //    //excel   
+ //    //excel
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
@@ -95,6 +96,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
+    
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
@@ -209,9 +211,13 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                 }
                 //Other condition on field ?
                 $line[$conf['k']] = $val;
+                $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
             }
+
+            
         }
         $lines[$j] = $line;
+//         uwwtd_trace(var_export($line, true));
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
@@ -219,7 +225,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     }
 //     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, $j+1);
-    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 	//Special rules for cell's style
 	
     if(!empty($lines)){
@@ -251,7 +257,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $line_to_fill = 0;
 
         // Adding bottom tables
-        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2), true);
 
         for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
@@ -482,7 +488,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                 }
                 //Other condition on field ?
                 $line[$conf['k']] = (string)$val;
+                $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
             }
+
+            
+            
+
+   
+            
         }
         $lines[$j] = $line;
         $j++;
@@ -492,7 +505,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
     $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour éviter de copier le style de la première ligne! et copier la ligne blanche vide
-    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 
     //Special rules for cell's style
 
@@ -537,7 +550,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $line_to_fill = 0;
 
         // Adding bottom tables
-        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2), true);
 
         for ($i = 0; $i < 3; $i++) {
             $uwwtp = fgetcsv($r, 5000, ';');
@@ -590,6 +603,50 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
+}
+
+
+function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
+{
+//     if (!isset($context['sandbox']['progress'])) {
+//         $context['sandbox']['progress'] = 0;
+//         $context['sandbox']['max'] = 1;
+//     }
+
+//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
+
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    //change to public://
+//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setLoadSheetsOnly( array(
+                                         $GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name'],
+                                        ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name']);
+
+    //write
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+    $objWriter->setPreCalculateFormulas(false);
+    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
+    unset($objWriter);
+    unset($objReader);
+	
+	//In order to finish the script 
+//     $context['sandbox']['progress']++;
+
+//     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
+
+//     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+//     }
 }
 
 function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
@@ -3541,7 +3598,18 @@ function uwwtd_create_register_2015_file_breach_list_sheet7($annee, &$context)
             // Type of Receiving Area NA/ SA/ CSA
             'type_of_receiving_water' => $agglo[$ind['type_of_receiving_water']],
         );
-
+//         uwwtd_trace($agglo_breach[$i]['type_of_receiving_water']);
+//         uwwtd_trace($agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art3_compliance']);
+        $agglo_breach[$i]['type_of_receiving_water'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['type_of_receiving_water'], $agglo_breach[$i]['type_of_receiving_water']);
+        $agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['compliance_art._5_(whole_agglo)_(hierarchical_approach)'], $agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+        $agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['art4_compliance_art._4_(hierarchical_approach)'], $agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+        $agglo_breach[$i]['art3_compliance'] = uwwtd_register_get_glossary_label($GLOBALS['uwwtd']['sheet3_agglo']['art3_compliance'], $agglo_breach[$i]['art3_compliance']);
+//         uwwtd_trace($agglo_breach[$i]['type_of_receiving_water']);
+//         uwwtd_trace($agglo_breach[$i]['compliance_art._5_(whole_agglo)_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art4_compliance_art._4_(hierarchical_approach)']);
+//         uwwtd_trace($agglo_breach[$i]['art3_compliance']);
 //         // art3_count
 //         $agglo_breach[$i][] = $art3_count;
 //         // art3_generated_load
@@ -5939,19 +6007,45 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Connection',
         //'Total % (2)',
-        $line[$ind['total_%_(2)']] = $agg->field_aggc1['und'][0]['value'] + $agg->field_aggc2['und'][0]['value'] + $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $connection_total = $agg->field_aggc1['und'][0]['value'] + $agg->field_aggc2['und'][0]['value'] + $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $connection_aggc1 =  $agg->field_aggc1['und'][0]['value'];
+        $connection_aggc2 =  $agg->field_aggc2['und'][0]['value'];
+        $connection_aggpercwithouttreatment =  $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $line[$ind['total_%_(2)']] = $connection_total;
+
+//         uwwtd_trace('$connection_total = ' . $connection_total);
+//         uwwtd_trace('$connection_aggc1 = ' . $connection_aggc1);
+//         uwwtd_trace('$connection_aggc2 = ' . $connection_aggc2);
+//         uwwtd_trace('$connection_aggpercwithouttreatment = ' . $connection_aggpercwithouttreatment);
+
         //'connected to collecting system % of gen. load',
-        $line[$ind['connected_to_collecting_system']] = $agg->field_aggc1['und'][0]['value'];
+        //e.v 2018/10/22 we fill empty cell with value when not in XML
+        if (empty($connection_aggc1)) {
+          $connection_aggc1 = $connection_total - $connection_aggc2 - $connection_aggpercwithouttreatment;
+        }
+        if (empty($connection_aggc2)) {
+          $connection_aggc2 = $connection_total - $connection_aggc1 - $connection_aggpercwithouttreatment;
+        }
+        if (empty($connection_aggpercwithouttreatment)) {
+          $connection_aggpercwithouttreatment = $connection_total - $connection_aggc1 - $connection_aggc2;
+        }
+
+//         uwwtd_trace('after: ' );
+//         uwwtd_trace('$connection_aggc1 = ' . $connection_aggc1);
+//         uwwtd_trace('$connection_aggc2 = ' . $connection_aggc2);
+//         uwwtd_trace('$connection_aggpercwithouttreatment = ' . $connection_aggpercwithouttreatment);
+
+        $line[$ind['connected_to_collecting_system']] = $connection_aggc1;
         //'connected to collecting system p. e.',
-        $line[$ind['connected_to_collecting_system_p._e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['connected_to_collecting_system_p._e.']] = $connection_aggc1 / 100 * $agg->field_agggenerated['und'][0]['value'];
         //'addressed through IAS % of gen. load',
-        $line[$ind['addressed_through_ias_%_of_gen._load']] = $agg->field_aggc2['und'][0]['value'];
+        $line[$ind['addressed_through_ias_%_of_gen._load']] = $connection_aggc2;
         //'addressed through IAS p. e.',
-        $line[$ind['addressed_through_ias_p._e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['addressed_through_ias_p._e.']] = $connection_aggc2 / 100 * $agg->field_agggenerated['und'][0]['value'];
         //'neither collecting system nor IAS % of gen. load',
-        $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $connection_aggpercwithouttreatment;
         //'neither collecting system nor IAS p. e.',
-        $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $connection_aggpercwithouttreatment / 100 * $agg->field_agggenerated['und'][0]['value'];
 
         //for next sheet
         $context['results']['uwwtp_ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
@@ -8924,7 +9018,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Parameters subject to More Stringent Treatment: P', //;      rcaParameterP
             $ind['parameters_subject_to_more_stringent_treatment:_p'] => $rca[$i]->field_rca_parameter_p['und'][0]['value'],
            // 'Parameters subject to More Stringent Treatment: m', //;      ?
-            $ind['parameters_subject_to_more_stringent_treatment:_m'] => '',
+            $ind['parameters_subject_to_more_stringent_treatment:_m'] => $rca[$i]->field_rca_parameter_m['und'][0]['value'],  //add value e.v 2018/10/22
             //'Parameters subject to More Stringent Treatment: other', //;   rcaParameterOther
             $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]->field_rca_parameter_other['und'][0]['value'],
             //'Date of designation of Art. 5(8)', //;                  ?
@@ -9054,7 +9148,9 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     }
 
     $configsheet = $GLOBALS['uwwtd']['sheet'];
-    $listesheet = array('rca',
+    $listesheet = array(
+                        'glossary',
+                        'rca',
                         'uwwtp',
                         'agglo',
                         'summary_legal_comp',
@@ -9914,4 +10010,29 @@ function agglo_leak_pe($compliance, $connected_load, $entering_load){
 	}elseif ($compliance == 'NR'){
 		return 0;
 	}
+}
+
+/**
+ * Format the Acronym in the register
+ */
+function uwwtd_register_get_glossary_label($conf, $val) {
+//   uwwtd_trace('-->'.var_export($conf, true));
+//   uwwtd_trace('-->'.$val);           
+  if (isset($conf['glossary']) && true === $conf['glossary'] && isset($GLOBALS['glossary'][ $val ])) {              
+    $val = $val . ' [' . $GLOBALS['glossary'][ $val ] . ']';
+  }    
+
+  if (isset($conf['glossary_composed']) && true === $conf['glossary_composed']) {              
+    $explode = explode(';', $val);
+    $implode = '';
+    foreach($explode as $element) {
+      if (isset($GLOBALS['glossary'][ $element ])) {              
+        $implode .= (empty($implode) ? '' : ';') . $element . ' [' . $GLOBALS['glossary'][ $element ] . ']';
+      }
+    }
+    
+    $val = $implode;
+  }
+//   uwwtd_trace('----->'.$val);
+  return $val;
 }

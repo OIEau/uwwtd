@@ -4,7 +4,7 @@ if ( !defined('UWWTD_CACHE_ACTIVE')) {
     define('UWWTD_CACHE_ACTIVE', true);
 }
 if ( !defined('DEBUG_ALGO')) {
-    define('DEBUG_ALGO', false);    
+    define('DEBUG_ALGO', true);    
 }
 
 // $GLOBALS['uwwtd']['message']['boolean_error']
@@ -487,5 +487,55 @@ $GLOBALS['ms_level'] = array(
         'C'=>array('color'=>'#bd8842','label'=>t('Combine system')),
 		'NI'=>array('color'=>'#a2a2a2','label'=>t('No information')),
 	)
+);
+
+$GLOBALS['glossary'] = array(
+'ES' =>            'Estuary',
+'CW' =>            'Coastal waters',
+'FW' =>            'Freshwater',
+'SA' =>            'Sensitive Area',
+'CSA' =>           'Catchment of Sensitive Area',
+'LSA' =>           'Less Sensitive Area',
+'NA' =>            'Normal Area',
+'A54' =>           'A54 Sensitive Area',
+'A58' =>           'A58 Sensitive Area',
+// 'P' =>             'Primary',
+// 'S' =>             'Secondary',
+'appropriate' =>   'Appropriate',
+'N' =>             'Nitrogen',
+'MP' =>            'Phosphorus',
+'O' =>             'Other',
+'NP' =>            'Nitrogen & Phosphorus',
+'NR' =>            'Not Relevant',
+'MS' =>            'More Stringent',
+'NPO' =>           'Nitrogen & Phosphorus & Other',
+'NO' =>            'Nitrogen Other',
+'PO' =>            'Phosphorus & Other',
+'NI' =>            'No Information',
+'C' =>             'Compliant',
+'QC' =>            'Questionable Compliance',
+'PD' =>            'Pending Deadline',
+'NC' =>            'Not Compliant',
+'NR' =>            'Not relevant ',
+'NI' =>            'No information',
+// 'P' =>             'Pass',
+// 'F' =>             'Fail',
+'NR' =>            'Not relevant',
+'NI' =>            'No information',
+'P' =>             'Primary treatment',
+'S' =>             'Secondary treatment',
+'MS' =>            'More stringent treatment',
+// 'B' =>             'Separative and combine system',
+// 'S' =>             'Separative system',
+// 'C' =>             'Combine system',
+// 'NI' =>            'No information',
+'EXP' =>           'Expire deadline',
+'PD' =>            'Pending dealine',
+'EXP-PD' =>        'Expire deadline - Pending dealine',
+'IAS' =>           'Individual & appropriated system',
+'1' => 'Primary treatment',
+'2' => 'Secondary treatment',
+'3other' => 'More stringent treatment : Nitrogen & phosphorus',
+'3NP' => 'More stringent treatment: other (UV, Chlorination...)',
 );
 
