@@ -2210,6 +2210,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
 
 function uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee){
     	$e = 0;
+        $timestamp = time();
 
     	// Retrieving values from XML file
     	$field_art17inves_flarepcode = isset($investment['flarepCode']) ? $investment['flarepCode'] : null;
@@ -2435,7 +2436,7 @@ function uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee){
 
 function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
         $e = 0;
-
+        $timestamp = time();
     	// Retrieving values from XML file
     	$field_art17uwwtp_flarepcode = isset($uwwtp['flarepCode']) ? $uwwtp['flarepCode'] : null;
     	$field_art17uwwtp_uwwcode = isset($uwwtp['uwwCode']) ? $uwwtp['uwwCode'] : null;
@@ -2626,6 +2627,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
 
 function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
     $e = 0;
+    $timestamp = time();
 
     	// Retrieving values from XML file
     	$field_art17agg_flarepcode = isset($agglomeration['flarepCode']) ? $agglomeration['flarepCode'] : null;
