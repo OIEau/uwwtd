@@ -16,8 +16,20 @@ function openlayers_gazetteer_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
   );
+  $items['openlayers/gazetteer/geonames'] = array(
+    'page callback' => 'openlayers_gazetteer_geonames_ajax',
+    'access callback' => true,
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
+}
+
+//Fonction d'appel de geonames en proxy afin de prendre en compte les appels HTTPS
+function openlayers_gazetteer_geonames_ajax(){
+    drupal_add_http_header('Content-Type', 'application/json');
+    $url = 'http://api.geonames.org/searchJSON';
+    exit(file_get_contents($url.'?'.$_SERVER['QUERY_STRING']));
 }
 
 /**
