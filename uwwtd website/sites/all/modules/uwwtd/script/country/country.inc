@@ -220,7 +220,7 @@ $country_list = array(
 		'metadataRcaUid'=> '8e97d33670060bf54cb724b82ac4cde9fc137cbd'
 	),
     'uk'=>array(
-		'CountryName'=>'United Kindom',
+		'CountryName'=>'United Kingdom',
 		'centerpoint' => '',
 		'metadataAggloUid'=> 'aafa291feca156f1b1a944ee2f215aefb4a51882', 
 		'metadataUwwtpUid'=> '53dd80721c6264b18cc46d1c1ee5709b977ac2a2', 
