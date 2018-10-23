@@ -582,7 +582,6 @@ function uwwtd_get_data_sensitive_areas($option){
     
 }
 
-
 //======================================================================PAGES ====================================================
 
 function uwwtd_page_agglomeration_compliance($type_export = ''){
