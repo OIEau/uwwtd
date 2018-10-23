@@ -217,6 +217,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             
         }
         $lines[$j] = $line;
+//         uwwtd_trace(var_export($line, true));
         $j++;
         $context['sandbox']['file_position'] = ftell($ragglofile);
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
@@ -224,7 +225,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     }
 //     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, $j+1);
-    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 	//Special rules for cell's style
 	
     if(!empty($lines)){
@@ -256,7 +257,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
         $line_to_fill = 0;
 
         // Adding bottom tables
-        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2), true);
 
         for ($i = 0; $i <= 3; $i++) {
             $agglo = fgetcsv($r, 5000, ';');
@@ -504,7 +505,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
     $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour éviter de copier le style de la première ligne! et copier la ligne blanche vide
-    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line']);
+    $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 
     //Special rules for cell's style
 
@@ -549,7 +550,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         $line_to_fill = 0;
 
         // Adding bottom tables
-        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2));
+        $sheet->fromArray($dataArray, null, 'A'.($context['sandbox']['line'] + 2), true);
 
         for ($i = 0; $i < 3; $i++) {
             $uwwtp = fgetcsv($r, 5000, ';');
@@ -6006,19 +6007,45 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Connection',
         //'Total % (2)',
-        $line[$ind['total_%_(2)']] = $agg->field_aggc1['und'][0]['value'] + $agg->field_aggc2['und'][0]['value'] + $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $connection_total = $agg->field_aggc1['und'][0]['value'] + $agg->field_aggc2['und'][0]['value'] + $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $connection_aggc1 =  $agg->field_aggc1['und'][0]['value'];
+        $connection_aggc2 =  $agg->field_aggc2['und'][0]['value'];
+        $connection_aggpercwithouttreatment =  $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $line[$ind['total_%_(2)']] = $connection_total;
+
+//         uwwtd_trace('$connection_total = ' . $connection_total);
+//         uwwtd_trace('$connection_aggc1 = ' . $connection_aggc1);
+//         uwwtd_trace('$connection_aggc2 = ' . $connection_aggc2);
+//         uwwtd_trace('$connection_aggpercwithouttreatment = ' . $connection_aggpercwithouttreatment);
+
         //'connected to collecting system % of gen. load',
-        $line[$ind['connected_to_collecting_system']] = $agg->field_aggc1['und'][0]['value'];
+        //e.v 2018/10/22 we fill empty cell with value when not in XML
+        if (empty($connection_aggc1)) {
+          $connection_aggc1 = $connection_total - $connection_aggc2 - $connection_aggpercwithouttreatment;
+        }
+        if (empty($connection_aggc2)) {
+          $connection_aggc2 = $connection_total - $connection_aggc1 - $connection_aggpercwithouttreatment;
+        }
+        if (empty($connection_aggpercwithouttreatment)) {
+          $connection_aggpercwithouttreatment = $connection_total - $connection_aggc1 - $connection_aggc2;
+        }
+
+//         uwwtd_trace('after: ' );
+//         uwwtd_trace('$connection_aggc1 = ' . $connection_aggc1);
+//         uwwtd_trace('$connection_aggc2 = ' . $connection_aggc2);
+//         uwwtd_trace('$connection_aggpercwithouttreatment = ' . $connection_aggpercwithouttreatment);
+
+        $line[$ind['connected_to_collecting_system']] = $connection_aggc1;
         //'connected to collecting system p. e.',
-        $line[$ind['connected_to_collecting_system_p._e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['connected_to_collecting_system_p._e.']] = $connection_aggc1 / 100 * $agg->field_agggenerated['und'][0]['value'];
         //'addressed through IAS % of gen. load',
-        $line[$ind['addressed_through_ias_%_of_gen._load']] = $agg->field_aggc2['und'][0]['value'];
+        $line[$ind['addressed_through_ias_%_of_gen._load']] = $connection_aggc2;
         //'addressed through IAS p. e.',
-        $line[$ind['addressed_through_ias_p._e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['addressed_through_ias_p._e.']] = $connection_aggc2 / 100 * $agg->field_agggenerated['und'][0]['value'];
         //'neither collecting system nor IAS % of gen. load',
-        $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $agg->field_aggpercwithouttreatment['und'][0]['value'];
+        $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] = $connection_aggpercwithouttreatment;
         //'neither collecting system nor IAS p. e.',
-        $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['neither_collecting_system_nor_ias_p._e.']] = $connection_aggpercwithouttreatment / 100 * $agg->field_agggenerated['und'][0]['value'];
 
         //for next sheet
         $context['results']['uwwtp_ias_pe'] += $line[$ind['addressed_through_ias_p._e.']];
@@ -8991,7 +9018,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Parameters subject to More Stringent Treatment: P', //;      rcaParameterP
             $ind['parameters_subject_to_more_stringent_treatment:_p'] => $rca[$i]->field_rca_parameter_p['und'][0]['value'],
            // 'Parameters subject to More Stringent Treatment: m', //;      ?
-            $ind['parameters_subject_to_more_stringent_treatment:_m'] => '',
+            $ind['parameters_subject_to_more_stringent_treatment:_m'] => $rca[$i]->field_rca_parameter_m['und'][0]['value'],  //add value e.v 2018/10/22
             //'Parameters subject to More Stringent Treatment: other', //;   rcaParameterOther
             $ind['parameters_subject_to_more_stringent_treatment:_other'] => $rca[$i]->field_rca_parameter_other['und'][0]['value'],
             //'Date of designation of Art. 5(8)', //;                  ?

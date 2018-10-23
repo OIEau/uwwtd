@@ -7,7 +7,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     'model' => '2018_register_model_20181015.xlsx',
     'model_reporting_2014' => '2015_register_model_20161214.xlsx',
     'model_reporting_2016' => '2018_register_model_20181015.xlsx',
-    'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
+//     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
     'final_register' => '_register_model_final.xlsx',
     'model_type' => 'Excel2007',

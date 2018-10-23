@@ -4807,14 +4807,149 @@ function uwwtd_update_7161(&$context = null){
     include($path);
 
     foreach ($request as $query) {
-       dsm($query);
-       uwwtd_trace($query);
-//        $result = db_query($query);
+//        dsm($query);
+       uwwtd_install_trace($query);
+       $result = db_query($query);
     }
 
 
     //==========DEBUG : permet de relancer la mise à jour si besoin.
 //     throw new DrupalUpdateException(__FUNCTION__);    
+}
+
+/**
+ * Import of the bigcityid of the country for 10th report 2016 
+ */
+function uwwtd_update_7162(&$context = null){
+    uwwtd_install_trace(__FUNCTION__);
+    //file from http://dd.eionet.europa.eu/dataelements/94129    > export > csv
+    $path = drupal_get_path('module', 'uwwtd') . '/script/uwwtd_update_7162/bigCityID.csv';
+
+    $r = fopen($path, 'r');
+
+    fgetcsv($r);
+    fgetcsv($r);
+
+    global $conf;    
+    uwwtd_install_trace($conf['siif_eru_country_code']);
+
+//     throw new DrupalUpdateException(__FUNCTION__);    
+
+    // "Code","Label","Definition"
+    // "AT006","AT","GRAZ"
+    $i = 0;
+    while ($row = fgetcsv($r)) {
+       if ($row[1] == strtoupper($conf['siif_eru_country_code'])) {
+         uwwtd_install_create_big_city($row, 2016);
+         $i++;
+       }
+    }
+    uwwtd_install_trace('write ' . $i . ' big_city');
+    fclose($r);
+
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+//     throw new DrupalUpdateException(__FUNCTION__);    
+}
+
+
+/**
+ * Create the link between agglo and big city if exists
+ */
+function uwwtd_update_7163(&$context){
+    uwwtd_install_trace(__FUNCTION__);
+    include_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
+                       
+    uwwtd_link_bc_agglo_batch_process('', 2016, array('notempty' => true), strtotime('now'), $context);
+    $context['#finished'] = $context['finished'];
+//     uwwtd_install_trace(var_export($context, true));     
+//     if ($context['finished'] == 1) {
+//       //==========DEBUG : permet de relancer la mise à jour si besoin.
+//       throw new DrupalUpdateException(__FUNCTION__);
+//     }    
+//     throw new DrupalUpdateException(__FUNCTION__);
+}
+
+/**
+ * Create a big city or update it
+ * @param  array $row  Code/ country code / Label
+ *       
+ */
+function uwwtd_install_create_big_city($row, $year) {
+    //Code copy from data_center.inc :: uwwtd_import_bigcity_batch_process()
+    // Variables  //text
+    global $language;
+    $siteId = $year.'_big_'.uwwtd_check_text($row[0]);
+   
+    // Check if id exists
+    $exists = uwwtd_check_exist($siteId);
+    uwwtd_install_trace('big_city ' . $siteId . ' exists ? "' . $exists . '".');
+    // If the element exists
+    if(!$exists){
+        $node = new stdClass();
+        $node->type = 'big_city';
+        $node->uid = 1;
+        $node->translate = 0;
+        $node->tnid = 0;
+        $node->sticky = 0;
+        $node->promote = 0;
+        $node->comment = 0;
+        $node->language = $language->language;
+//         $_SESSION['newBc']++;
+        node_save($node);
+        
+        if (empty($node->nid)) {
+            uwwtd_install_trace('big_city ' . $siteId . ' node_save() error');
+        } else {
+            uwwtd_install_trace('big_city ' . $siteId . ' nid : ' . $node->nid);
+        }                
+    }
+    else{
+        // load the node
+        $node = node_load($exists);
+        $node->type = 'big_city';
+//         $_SESSION['upBc']++;
+        
+        if (empty($node->nid)) {
+            uwwtd_install_trace('big_city ' . $siteId . ' node_save() error');
+        } else {
+            uwwtd_install_trace('big_city ' . $siteId . ' nid : ' . $node->nid);
+        }                 
+    }
+    // site mapping
+    $node->field_siteid['und'][0]['value'] = $siteId;
+    $node->field_valid['und'][0]['value'] = 0;
+    $node->field_anneedata['und'][0]['value'] = $year;
+//     $node->field_sourcefile = array(
+//         'und' => array(
+//             0 => array(
+//                 'fid' => trim($newFile->fid),
+//                 'filename' => trim($newFile->filename .".xml"),
+//                 'uri' => trim($newFile->uri),
+//                 'status' => 1,
+//                 'display' => 1
+//             )
+//         )
+//     );
+//     unset($node->field_bcaggliste['und']);
+
+    // data mapping
+//     $node->field_repcode['und'][0]['value'] = $repCode;
+
+    //text
+    $node->field_inspireidlocalid['und'][0]['value'] = $row[0];
+
+    //text
+    $node->title = uwwtd_check_text($row[2]);
+
+    //text
+    $node->field_bigcountrycode['und'][0]['value'] = $row[1];
+
+    // save node
+    node_save($node);
+    
+    if (empty($node->nid)) {
+        uwwtd_install_trace('big_city ' . $siteId . ' node_save() error2');
+    } 
 }
 
    
