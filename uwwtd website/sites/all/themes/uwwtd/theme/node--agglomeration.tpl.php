@@ -306,7 +306,7 @@ echo uwwtd_insert_errors_tab($node);
                             and if the above is not already implemented for the agglomeration it is identified with orange colour in the table.'); ?></span>
                     </div>
 
-                    <table id="dtcomp">
+                    <table class="dtcomp">
                         <tr>
                             <th></th>
                             <th><?php print t('Equipment'); ?></th>
