@@ -57,7 +57,7 @@ function wms_menu() {
  */
 function wms_ajax_wmsgetfeatureinfo() {
   $urls = $_POST['url'];
-  //krumo($urls);
+  //print_r($urls);
   $output='';
   foreach((array)$urls as $url){
       $url_array = parse_url($url);
@@ -78,7 +78,6 @@ function wms_ajax_wmsgetfeatureinfo() {
         'request_uri' => $url,
       );  
       $content_object = proxy($requesturl);
-      
     if (is_array($content_object)) {
         if (strpos($content_object[0], "Domain\ not\ in\ whitelist")) {
           print $content_object[0] . t("Check the proxy module settings.");
