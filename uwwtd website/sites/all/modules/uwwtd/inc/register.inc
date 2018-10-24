@@ -69,7 +69,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    if ($annee < 2016) {
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    } else {
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8', array($annee));
+    }
     $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
@@ -762,6 +767,355 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 }
 
 /**
+ *
+ */
+function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8($annee) 
+{
+ 
+  $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
+  if (!isset($context['sandbox']['progress'])) {
+
+      $context['sandbox']['progress'] = 0;
+      $context['sandbox']['idagg'] = array();
+
+
+     // //we get all cities with big city ID info filled in field_aggbigid
+      $query = 'select n.nid
+      from {node} n
+          inner join
+              {field_data_field_anneedata} f_annee
+                  ON n.nid = f_annee.entity_id   and n.vid = f_annee.revision_id
+          inner join
+              {field_data_field_aggbigid} b
+                  ON n.nid = b.entity_id  and n.vid = b.revision_id
+      where n.type = :typenode
+          and f_annee.field_anneedata_value = :annee
+          and (b.field_aggbigid_value is not null and  b.field_aggbigid_value != \'\')
+      order by b.field_aggbigid_value asc, n.title asc
+      ';
+
+      $param = array(
+          ':typenode' => 'agglomeration',
+          ':annee' => $annee,
+          );
+
+      try {
+          $result = db_query($query, $param);
+          while($row = $result->fetchAssoc()) {
+              $context['sandbox']['idagg'][] = $row['nid'];
+          }
+          unset($result, $row);
+      }catch(Exception $e) {
+          dsm($e->getMessage());
+      }
+      $context['sandbox']['max'] = count($context['sandbox']['idagg']);
+      $context['sandbox']['progressagg'] = 0;
+
+      //we get all bigcity info
+      $query = 'select n.nid
+            from {node} n
+          inner join
+              {field_data_field_anneedata} f_annee
+                  ON n.nid = f_annee.entity_id   and n.vid = f_annee.revision_id
+            where n.type = :typenode
+              and f_annee.field_anneedata_value = :annee
+            order by n.title
+            ';
+      $param = array(
+          ':typenode' => 'big_city',
+          ':annee' => $annee,
+          );
+
+      try {
+        $result = db_query($query, $param);
+        while($row = $result->fetchAssoc()) {
+            $node = node_load($row['nid']);
+            $context['sandbox']['bigcity'][$node->field_inspireidlocalid['und'][0]['value']] = $node->title;
+            unset($node);
+        }
+        unset($result, $row);
+      }catch(Exception $e) {
+        dsm($e->getMessage());
+      }
+
+      uwwtd_trace(var_export($context, true));
+  }
+
+  $sum_by_bigid = array();
+  while ($context['sandbox']['progressagg'] < $context['sandbox']['max']) {
+      $line = array();      
+      if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
+          $bigID = $agg->field_aggbigid['und'][0]['value'];  
+          $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
+          
+          uwwtd_trace($agg->title . "(" . $agg->nid . ") / " . $bigID);
+
+          if (!isset($sum_by_bigid[$bigID])) {
+            $sum_by_bigid[$bigID] = array(
+              'generated_load' => 0,
+              'field_aggc1' => 0,
+              'field_aggc2' => 0,
+              'field_aggpercwithouttreatment' => 0,
+              'type_of_receiving_area' => array(), 
+
+              'treat_3np_3n_3p_pe' => 0,
+              'treat_3other_pe' => 0,
+              'treat_2_pe' => 0,
+              'treat_1_pe' => 0,
+              'treat_0_pe' => 0,
+
+              'treat_3np_3n_3p_agggenerated' => 0,
+              'treat_3other_agggenerated' => 0,
+              'treat_2_agggenerated' => 0,
+              'treat_1_agggenerated' => 0,
+              'treat_0_agggenerated' => 0,
+
+              'list_code_agglo' => array(), 
+              'list_name_agglo' => array(),      
+            );
+          }  
+
+          $sum_by_bigid[$bigID]['generated_load'] += $agg_detail['generated_load'];
+          $sum_by_bigid[$bigID]['field_aggc1'] += $agg_detail['field_aggc1'];
+          $sum_by_bigid[$bigID]['field_aggc2'] += $agg_detail['field_aggc2'];
+          $sum_by_bigid[$bigID]['field_aggpercwithouttreatment'] += $agg_detail['field_aggpercwithouttreatment'];
+
+          $sum_by_bigid[$bigID]['treat_3np_3n_3p_pe'] += $agg_detail['treat_3np_3n_3p_pe'];
+          $sum_by_bigid[$bigID]['treat_3np_3n_3p_agggenerated'] += $agg_detail['treat_3np_3n_3p_agggenerated'];
+
+          $sum_by_bigid[$bigID]['treat_3other_pe'] += $agg_detail['treat_3other_pe'];
+          $sum_by_bigid[$bigID]['treat_3other_agggenerated'] += $agg_detail['treat_3other_agggenerated'];
+
+          $sum_by_bigid[$bigID]['treat_2_pe'] += $agg_detail['treat_2_pe'];
+          $sum_by_bigid[$bigID]['treat_2_agggenerated'] += $agg_detail['treat_2_agggenerated'];
+
+          $sum_by_bigid[$bigID]['treat_1_pe'] += $agg_detail['treat_1_pe'];
+          $sum_by_bigid[$bigID]['treat_1_agggenerated'] += $agg_detail['treat_1_agggenerated'];
+
+          $sum_by_bigid[$bigID]['treat_0_pe'] += $agg_detail['treat_0_pe'];
+          $sum_by_bigid[$bigID]['treat_0_agggenerated'] += $agg_detail['treat_0_agggenerated'];
+
+
+          $sum_by_bigid[$bigID]['type_of_receiving_area'] = array_merge($sum_by_bigid[$bigID]['type_of_receiving_area'], $agg_detail['dcptype']);
+
+
+          $sum_by_bigid[$bigID]['list_code_agglo'][] = $agg->field_inspireidlocalid['und'][0]['value'];
+          $sum_by_bigid[$bigID]['list_name_agglo'][] = $agg->title;     
+
+      }
+      $context['sandbox']['progressagg']++;
+  }
+ 
+  uwwtd_trace(var_export($sum_by_bigid, true));
+ 
+  $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
+  $r = fopen($filename, 'ab');  //create by the precedent function batch with list of big dischargers
+  //we write the csv
+  foreach ($sum_by_bigid as $bigID => $bigid_detail) {  
+       // uwwtd_trace(var_export($bigid_detail, true));
+      $line = array();
+      $line[$ind['big_dischargers']] = 'no';
+      $line[$ind['id']] = $bigID;
+      $line[$ind['name']] = $context['sandbox']['bigcity'][$bigID];
+
+      $line[$ind['generated_load']] = $bigid_detail['generated_load'];
+      $line[$ind['collecting_system']] = $bigid_detail['field_aggc1'] / 100 * $bigid_detail['generated_load']  ;
+      $line[$ind['ias']] = $bigid_detail['field_aggc2'] / 100 * $bigid_detail['generated_load']  ;
+      $line[$ind['no_collecting_system_nor_ias']] = $bigid_detail['field_aggpercwithouttreatment'] / 100 * $bigid_detail['generated_load']  ;
+
+
+      $line[$ind['treatment_0']] = $bigid_detail['treat_0_pe'] * 100 / $bigid_detail['treat_0_agggenerated']  ;    //NAN -> divide by 0 on CY for example
+      $line[$ind['treatment_1']] = $bigid_detail['treat_1_pe'] * 100 / $bigid_detail['treat_1_agggenerated']  ;
+      $line[$ind['treatment_2']] =$bigid_detail['treat_2_pe'] * 100 / $bigid_detail['treat_2_agggenerated']  ;
+      $line[$ind['treatment_3n_p_np']] = $bigid_detail['treat_3np_3n_3p_pe'] * 100 / $bigid_detail['treat_3np_3n_3p_agggenerated']  ;
+      $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $bigid_detail['treat_3other_pe'] * 100 / $bigid_detail['treat_3other_agggenerated']  ;
+
+      $line[$ind['type_of_receiving_area']] = implode(';', $bigid_detail['type_of_receiving_area']);
+
+      $line[$ind['list_code_agglo']] = implode(';', $bigid_detail['list_code_agglo']);
+      $line[$ind['list_name_agglo']] = implode(';', $bigid_detail['list_name_agglo']);
+      // uwwtd_trace(var_export($line, true));
+      fputcsv($r, $line, ';');
+  }
+
+
+  fclose($r);
+
+  $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
+  if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+      $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+}
+
+/**
+ *
+ */
+function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8($annee)
+{
+   //on prend toutes les agglos > 150 000 avec la colonne field_aggbigid rempli
+    if (!isset($context['sandbox']['progress'])) {
+
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['idagg'] = array();
+
+       //get all agglo > 150 000
+        $query = 'select n.nid, a.field_agggenerated_value
+        from {node} n
+            left join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id   and n.vid = f_annee.revision_id
+            left join
+                {field_data_field_agggenerated} a
+                    ON n.nid = a.entity_id   and n.vid = a.revision_id
+            left join
+                {field_data_field_aggbigid} b
+                    ON n.nid = b.entity_id  and n.vid = b.revision_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and a.field_agggenerated_value::integer > :agggenerated
+            and (b.field_aggbigid_value is null or b.field_aggbigid_value = \'\')
+        order by n.title
+        ';
+
+        $param = array(
+            ':typenode' => 'agglomeration',
+            ':annee' => $annee,
+            ':agggenerated' => 150000,
+            );
+
+        try {
+            $result = db_query($query, $param);
+            while($row = $result->fetchAssoc()) {
+                $context['sandbox']['idagg'][] = $row['nid'];
+            }
+            unset($result, $row);
+        }catch(Exception $e) {
+            dsm($e->getMessage());
+        }
+        $context['sandbox']['max'] = count($context['sandbox']['idagg']);
+        $context['sandbox']['progressagg'] = 0;
+    }
+
+    $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
+
+    if ($context['sandbox']['progress'] == 0) {
+        $r = fopen($filename, 'wb');
+
+        $header = array(
+            $ind['big_dischargers'] => 'big_dischargers',
+            $ind['id'] => 'ID',
+            $ind['name'] => 'name',
+            $ind['generated_load'] => 'generated load p.e.',
+            $ind['collecting_system'] => 'collecting system % of generated load',
+            $ind['ias'] => 'IAS % of generated load',
+            $ind['no_collecting_system_nor_ias'] => 'no collecting system nor IAS % of generated load',
+            $ind['treatment_0'] => 'best treatment provided 0',
+            $ind['treatment_1'] => 'best treatment provided 1',
+            $ind['treatment_2'] => 'best treatment provided 2',
+            $ind['treatment_3n_p_np'] => 'best treatment provided 3N',
+            $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)',
+            $ind['type_of_receiving_area'] => 'Type of receiving area',
+            $ind['list_code_agglo'] => 'list_name_agglo',
+            $ind['list_name_agglo'] => 'list_name_agglo',
+        );
+        fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
+        fputcsv($r, $header, ';');
+    } else {
+        $r = fopen($filename, 'ab');
+    }
+
+
+
+    while ($context['sandbox']['progressagg'] < $context['sandbox']['max']) {
+        $line = array();
+        
+        if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
+            $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
+
+            $generated_load = 0;
+            $collecting_system = 0;
+            $ias = 0;
+            $no_collecting_system_nor_ias = 0;
+            $treatment_0 = 0;
+            $treatment_1 = 0;
+            $treatment_2 = 0;
+            $treatment_3np_3n_3p = 0;
+			$treatment_3other = 0;
+            $treat_3np_3n_3p_pe = 0;
+			$treat_3other_pe = 0;
+            $treat_3np_3n_3p_agggenerated = 0;
+			$treat_3other_agggenerated = 0;
+            $type_of_receiving_area = '';
+
+            
+
+            $treatment_0 = $agg_detail['treat_0'];
+            $treatment_1 = $agg_detail['treat_1'];
+            $treatment_2 = $agg_detail['treat_2'];
+            $treatment_3np_3n_3p = $agg_detail['treat_3np_3n_3p'];
+			$treatment_3other = $agg_detail['treat_3other'];
+
+            $generated_load = $agg_detail['generated_load'];
+            $collecting_system =  $agg_detail['collecting_system'];
+            $ias =  $agg_detail['ias'];
+            $no_collecting_system_nor_ias =  $agg_detail['no_collecting_system_nor_ias'];
+
+            $collecting_system_percent =  $collecting_system * 100 / $generated_load;
+            $ias_percent =  $ias * 100 / $generated_load;
+            $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
+
+            $line[$ind['big_dischargers']] = 'yes';
+            $line[$ind['id']] = $agg->field_inspireidlocalid['und'][0]['value'];
+            $line[$ind['name']] = $agg->title;
+            $line[$ind['generated_load']] = $generated_load;
+            $line[$ind['collecting_system']] = $collecting_system_percent;
+            $line[$ind['ias']] = $ias_percent;
+            $line[$ind['no_collecting_system_nor_ias']] = $no_collecting_system_nor_ias_percent;
+            $line[$ind['treatment_0']] = $treatment_0;
+            $line[$ind['treatment_1']] = $treatment_1;
+            $line[$ind['treatment_2']] = $treatment_2;
+
+            $line[$ind['treatment_3n_p_np']] = $treatment_3np_3n_3p;
+            $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3other;
+            $line[$ind['type_of_receiving_area']] = implode(';', $agg_detail['dcptype']);
+
+            $line[$ind['list_code_agglo']] = $agg->field_inspireidlocalid['und'][0]['value'];
+            $line[$ind['list_name_agglo']] = $agg->title;
+
+
+            
+            // SAVING FOR EU PORTION
+            // Search for this string to find all the fields
+    
+//             $agg->field_agg_bc_notreatment['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_0']]);
+//             $agg->field_agg_bc_primary['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_1']]);
+//             $agg->field_agg_bc_secondary['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_2']]);
+//             $agg->field_agg_bc_morestringet_np['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_3n_p_np']]);
+//             $agg->field_agg_bc_morestringet_other['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
+// 
+//             node_save($agg);
+//     
+//             unset($agg);
+            fputcsv($r, $line, ';');
+        }
+        $context['sandbox']['progressagg']++;
+    }
+
+
+    fclose($r);
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+
+
+/**
  * Generate the "Big Cities" Sheet
  * since the 9th report (2016), BigCitiesDischarger node was suppress so we have to use "bigcitiesid" field in agglomeration node 
  * note : a big citie is an agglo with field_agggenerated_value > 150 000. A Big city can only have one agglomeration
@@ -874,6 +1228,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $ias_percent =  $ias * 100 / $generated_load;
             $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
 
+            $line[$ind['big_dischargers']] = '';
             $line[$ind['id']] = $agg->field_inspireidlocalid['und'][0]['value'];
             $line[$ind['name']] = $agg->title;
             $line[$ind['generated_load']] = $generated_load;
@@ -929,8 +1284,11 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
 //     dsm($agg);
     $result['generated_load'] = $agg->field_agggenerated['und'][0]['value'];
     $result['collecting_system'] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+    $result['field_aggc1'] = $agg->field_aggc1['und'][0]['value'];
     $result['ias'] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+    $result['field_aggc2'] = $agg->field_aggc2['und'][0]['value'];
     $result['no_collecting_system_nor_ias'] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
+    $result['field_aggpercwithouttreatment'] = $agg->field_aggpercwithouttreatment['und'][0]['value'];
 
     $result['treat_0_pe'] = 0;
     $result['treat_1_pe'] = 0;
@@ -1289,6 +1647,8 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 //         dsm($bc);
 //         dsm($ind);
 //         dsm($bc[$ind['id']]);
+           
+        $sheet->setCellValueByColumnAndRow($ind['big_dischargers'], $i, $bc[$ind['big_dischargers']]);
         $sheet->setCellValueByColumnAndRow($ind['id'], $i, $bc[$ind['id']]);
 //         $sheet->getCell('B'.$i)->setValue($bc[$ind['id']]);
 //         $sheet->getCell('A1')->setValue($bc[$ind['id']]);
@@ -1312,6 +1672,9 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3np'], $i, $bc[$ind['treatment_3np']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_3_other_(e.g._uv,_filtration)'], $i, $bc[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
         $sheet->setCellValueByColumnAndRow($ind['type_of_receiving_area'], $i, $bc[$ind['type_of_receiving_area']]);
+
+        $sheet->setCellValueByColumnAndRow($ind['list_code_agglo'], $i, $bc[$ind['list_code_agglo']]);
+        $sheet->setCellValueByColumnAndRow($ind['list_name_agglo'], $i, $bc[$ind['list_name_agglo']]);
 
         $i++;
         $sheet->insertNewRowBefore($i, 1);

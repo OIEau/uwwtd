@@ -454,7 +454,8 @@ $GLOBALS['uwwtd']['sheet4_summary_legal'] = array(
 
 		
 $i = 0;
-$GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
+$GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(  
+    'big_dischargers' => $i++,  //e.v add 10th reports (2016)   
     'id' => $i++, 
     'name' => $i++, 
     'generated_load' => $i++, 
@@ -468,7 +469,9 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
 //     'treatment_3p' => $i++, 
 //     'treatment_3np' => $i++, 
     'treatment_3_other_(e.g._uv,_filtration)' => $i++, 
-    'type_of_receiving_area' => $i++, 
+    'type_of_receiving_area' => $i++,
+    'list_code_agglo' => $i++, 
+    'list_name_agglo' => $i++,  
 ); 
 
 $i = 0;
