@@ -455,7 +455,7 @@ $GLOBALS['uwwtd']['sheet4_summary_legal'] = array(
 		
 $i = 0;
 $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(  
-    'big_dischargers' => $i++,  //e.v add 10th reports (2016)   
+//     'big_dischargers' => $i++,  //e.v add 10th reports (2016)   
     'id' => $i++, 
     'name' => $i++, 
     'generated_load' => $i++, 
