@@ -838,7 +838,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
         dsm($e->getMessage());
       }
 
-      uwwtd_trace(var_export($context, true));
+//       uwwtd_trace(var_export($context, true));
   }
 
   $sum_by_bigid = array();
@@ -853,9 +853,11 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
           if (!isset($sum_by_bigid[$bigID])) {
             $sum_by_bigid[$bigID] = array(
               'generated_load' => 0,
-              'field_aggc1' => 0,
-              'field_aggc2' => 0,
-              'field_aggpercwithouttreatment' => 0,
+
+              'collecting_system' => 0,
+              'ias' => 0,
+              'no_collecting_system_nor_ias' => 0,
+
               'type_of_receiving_area' => array(), 
 
               'treat_3np_3n_3p_pe' => 0,
@@ -875,10 +877,13 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
             );
           }  
 
+
+
+
           $sum_by_bigid[$bigID]['generated_load'] += $agg_detail['generated_load'];
-          $sum_by_bigid[$bigID]['field_aggc1'] += $agg_detail['field_aggc1'];
-          $sum_by_bigid[$bigID]['field_aggc2'] += $agg_detail['field_aggc2'];
-          $sum_by_bigid[$bigID]['field_aggpercwithouttreatment'] += $agg_detail['field_aggpercwithouttreatment'];
+          $sum_by_bigid[$bigID]['collecting_system'] += $agg_detail['collecting_system'];
+          $sum_by_bigid[$bigID]['ias'] += $agg_detail['ias'];
+          $sum_by_bigid[$bigID]['no_collecting_system_nor_ias'] += $agg_detail['no_collecting_system_nor_ias'];
 
           $sum_by_bigid[$bigID]['treat_3np_3n_3p_pe'] += $agg_detail['treat_3np_3n_3p_pe'];
           $sum_by_bigid[$bigID]['treat_3np_3n_3p_agggenerated'] += $agg_detail['treat_3np_3n_3p_agggenerated'];
@@ -906,7 +911,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $context['sandbox']['progressagg']++;
   }
  
-  uwwtd_trace(var_export($sum_by_bigid, true));
+//   uwwtd_trace(var_export($sum_by_bigid, true));
  
   $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
   $r = fopen($filename, 'ab');  //create by the precedent function batch with list of big dischargers
@@ -919,9 +924,10 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $line[$ind['name']] = $context['sandbox']['bigcity'][$bigID];
 
       $line[$ind['generated_load']] = $bigid_detail['generated_load'];
-      $line[$ind['collecting_system']] = $bigid_detail['field_aggc1'] / 100 * $bigid_detail['generated_load']  ;
-      $line[$ind['ias']] = $bigid_detail['field_aggc2'] / 100 * $bigid_detail['generated_load']  ;
-      $line[$ind['no_collecting_system_nor_ias']] = $bigid_detail['field_aggpercwithouttreatment'] / 100 * $bigid_detail['generated_load']  ;
+      $line[$ind['collecting_system']] = $bigid_detail['collecting_system'] * 100 / $bigid_detail['generated_load']  ;
+      $line[$ind['ias']] = $bigid_detail['ias'] * 100 / $bigid_detail['generated_load']  ;
+      $line[$ind['no_collecting_system_nor_ias']] = $bigid_detail['no_collecting_system_nor_ias'] * 100 / $bigid_detail['generated_load']  ;
+
 
 
       $line[$ind['treatment_0']] = $bigid_detail['treat_0_pe'] * 100 / $bigid_detail['treat_0_agggenerated']  ;    //NAN -> divide by 0 on CY for example
