@@ -911,7 +911,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $context['sandbox']['progressagg']++;
   }
  
-//   uwwtd_trace(var_export($sum_by_bigid, true));
+  uwwtd_trace(var_export($sum_by_bigid, true));
  
   $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
   $r = fopen($filename, 'ab');  //create by the precedent function batch with list of big dischargers
@@ -927,20 +927,33 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $line[$ind['collecting_system']] = $bigid_detail['collecting_system'] * 100 / $bigid_detail['generated_load']  ;
       $line[$ind['ias']] = $bigid_detail['ias'] * 100 / $bigid_detail['generated_load']  ;
       $line[$ind['no_collecting_system_nor_ias']] = $bigid_detail['no_collecting_system_nor_ias'] * 100 / $bigid_detail['generated_load']  ;
+      $line[$ind['treatment_0']] = 0;
+      $line[$ind['treatment_1']] = 0;
+      $line[$ind['treatment_2']] = 0;
+      $line[$ind['treatment_3n_p_np']] = 0;
+      $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = 0;
 
-
-
-      $line[$ind['treatment_0']] = $bigid_detail['treat_0_pe'] * 100 / $bigid_detail['treat_0_agggenerated']  ;    //NAN -> divide by 0 on CY for example
-      $line[$ind['treatment_1']] = $bigid_detail['treat_1_pe'] * 100 / $bigid_detail['treat_1_agggenerated']  ;
-      $line[$ind['treatment_2']] =$bigid_detail['treat_2_pe'] * 100 / $bigid_detail['treat_2_agggenerated']  ;
-      $line[$ind['treatment_3n_p_np']] = $bigid_detail['treat_3np_3n_3p_pe'] * 100 / $bigid_detail['treat_3np_3n_3p_agggenerated']  ;
-      $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $bigid_detail['treat_3other_pe'] * 100 / $bigid_detail['treat_3other_agggenerated']  ;
+      if ($bigid_detail['treat_0_agggenerated'] > 0) {
+        $line[$ind['treatment_0']] = $bigid_detail['treat_0_pe'] * 100 / $bigid_detail['treat_0_agggenerated']  ;    //NAN -> divide by 0 on CY for example
+      }
+      if ($bigid_detail['treat_1_agggenerated'] > 0) {
+        $line[$ind['treatment_1']] = $bigid_detail['treat_1_pe'] * 100 / $bigid_detail['treat_1_agggenerated']  ;   
+      }
+      if ($bigid_detail['treat_2_agggenerated'] > 0) {
+        $line[$ind['treatment_2']] =$bigid_detail['treat_2_pe'] * 100 / $bigid_detail['treat_2_agggenerated']  ;         
+      }
+      if ($bigid_detail['treat_3np_3n_3p_agggenerated'] > 0) {
+        $line[$ind['treatment_3n_p_np']] = $bigid_detail['treat_3np_3n_3p_pe'] * 100 / $bigid_detail['treat_3np_3n_3p_agggenerated']  ;
+      }
+      if ($bigid_detail['treat_3other_agggenerated'] > 0) {
+        $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $bigid_detail['treat_3other_pe'] * 100 / $bigid_detail['treat_3other_agggenerated']  ;   
+      }
 
       $line[$ind['type_of_receiving_area']] = implode(';', $bigid_detail['type_of_receiving_area']);
 
       $line[$ind['list_code_agglo']] = implode(';', $bigid_detail['list_code_agglo']);
       $line[$ind['list_name_agglo']] = implode(';', $bigid_detail['list_name_agglo']);
-      // uwwtd_trace(var_export($line, true));
+uwwtd_trace(var_export($line, true));
       fputcsv($r, $line, ';');
   }
 
@@ -1056,7 +1069,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $type_of_receiving_area = '';
 
             
-
+// uwwtd_trace(var_export($agg_detail, true));
             $treatment_0 = $agg_detail['treat_0'];
             $treatment_1 = $agg_detail['treat_1'];
             $treatment_2 = $agg_detail['treat_2'];
@@ -1090,7 +1103,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $line[$ind['list_code_agglo']] = $agg->field_inspireidlocalid['und'][0]['value'];
             $line[$ind['list_name_agglo']] = $agg->title;
 
-
+// uwwtd_trace(var_export($line, true));
             
             // SAVING FOR EU PORTION
             // Search for this string to find all the fields
@@ -1102,8 +1115,8 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
 //             $agg->field_agg_bc_morestringet_other['und'][0]['value'] = uwwtd_format_decimal($line[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
 // 
 //             node_save($agg);
-//     
-//             unset($agg);
+    
+            unset($agg);
             fputcsv($r, $line, ';');
         }
         $context['sandbox']['progressagg']++;
@@ -1296,6 +1309,12 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
     $result['no_collecting_system_nor_ias'] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
     $result['field_aggpercwithouttreatment'] = $agg->field_aggpercwithouttreatment['und'][0]['value'];
 
+    $result['treat_0'] = 0;
+    $result['treat_1'] = 0;
+    $result['treat_2'] = 0;
+    $result['treat_3np_3n_3p'] = 0;
+	$result['treat_3other'] = 0;
+
     $result['treat_0_pe'] = 0;
     $result['treat_1_pe'] = 0;
     $result['treat_2_pe'] = 0;
@@ -1359,11 +1378,23 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
     }
     unset($agg);
 
-    $result['treat_3np_3n_3p'] = $result['treat_3np_3n_3p_pe'] * 100 / $result['treat_3np_3n_3p_agggenerated'];
-	$result['treat_3other'] = $result['treat_3other_pe'] * 100 / $result['treat_3other_agggenerated'];
-    $result['treat_2'] = $result['treat_2_pe'] * 100 / $result['treat_2_agggenerated'];
-    $result['treat_1'] = $result['treat_1_pe'] * 100 / $result['treat_1_agggenerated'];
-    $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];
+    //control divided by 0 -> NAN
+    if ($result['treat_3np_3n_3p_agggenerated'] > 0) {
+      $result['treat_3np_3n_3p'] = $result['treat_3np_3n_3p_pe'] * 100 / $result['treat_3np_3n_3p_agggenerated'];
+    }
+    if ($result['treat_3other_agggenerated'] > 0) {
+	  $result['treat_3other'] = $result['treat_3other_pe'] * 100 / $result['treat_3other_agggenerated'];           
+    }
+    if ($result['treat_2_agggenerated'] > 0) {
+      $result['treat_2'] = $result['treat_2_pe'] * 100 / $result['treat_2_agggenerated'];
+    }
+    if ($result['treat_1_agggenerated'] > 0) {
+      $result['treat_1'] = $result['treat_1_pe'] * 100 / $result['treat_1_agggenerated'];
+    }
+    if ($result['treat_0_agggenerated'] > 0) {
+      $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];
+    }
+
 
     return $result;
 }
@@ -4226,43 +4257,44 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         //calculate percentage
         //MS total
         if (isset($context['sandbox']['summary']['total']['ias_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['total']['ias_in_place']['percent'] = $context['sandbox']['summary']['total']['ias_in_place']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['total']['ias_in_place']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['total']['ias_in_place']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['total']['ias_in_place']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['total']['ias_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
     	if (isset($context['sandbox']['summary']['total']['collecting_system']['number']) && isset( $context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['total']['collecting_system']['percent'] = $context['sandbox']['summary']['total']['collecting_system']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['total']['collecting_system']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['total']['collecting_system']['number'] * 100 / $context['sandbox']['summary']['total']['number'];
     	}
     	if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['total']['collecting_system']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['total']['collecting_system']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
     	}
 
         //secondary treatment
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['secondary']['installation_in_place']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['secondary']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
         if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['secondary']['meet_requirement']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['secondary']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
+
         //more stringent treatment
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['more_stringent']['installation_in_place']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
         if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']) && isset($context['sandbox']['summary']['total']['number'])) {
-        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
+        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['percent'] = ($context['sandbox']['summary']['total']['number'] == 0) ? 0 : $context['sandbox']['summary']['more_stringent']['meet_requirement']['number'] * 100 /  $context['sandbox']['summary']['total']['number'];
         }
         if (isset($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']) && isset($context['sandbox']['summary']['total']['waste_pe'])) {
-        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
+        	$context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent'] = ($context['sandbox']['summary']['total']['waste_pe'] == 0) ? 0 : $context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe'] * 100 / $context['sandbox']['summary']['total']['waste_pe'];
         }
 
     //     return $summary;
@@ -4643,14 +4675,14 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $listtypestattmp[] = 'total';
         foreach($listtypestattmp as $typedeadline) {
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
-        	}
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace_%'] =  ($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+        	} 
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+            	$context['sandbox']['data'][$typedeadline]['target_connection']['ias_%'] =   ($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['target_connection']['ias'] * 100 / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
         	}
 
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
-                $context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =  (100 * $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
+                $context['sandbox']['data'][$typedeadline]['target_connection']['distance_%']  =   ($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] == 0) ? 0 : (100 * $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe']) / $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['ias'])) {
                 $context['sandbox']['data'][$typedeadline]['target_connection']['distance_pe'] =  $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'] - ($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace'] + $context['sandbox']['data'][$typedeadline]['target_connection']['ias']);
@@ -4658,10 +4690,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
             //secondary % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'] =  ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
             }
 
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'])) {
@@ -4680,7 +4712,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
             //more stringent % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 :  $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
@@ -4692,7 +4724,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 			}
 
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
-            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 :  $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
 
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
@@ -5299,83 +5331,101 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             }
             //calcul percentage art3
             if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'])) {
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] == 0) ? 0 :  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
             }
             
             if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'])) {
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100
+                $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] == 0) ? 0 :  $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe'] * 100
                             /  $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
             }
             if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'])) {
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']; 
+                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number']; 
             }
             if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'])) {
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
             }
             
             if (isset($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'])) {
-                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
             }
             
             if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'])) {
-                $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['not_connected']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
             }
             if (isset($context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe']) && isset($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'])) {
-                $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['not_connected']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
             }
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number'];
             }
             if ($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] != 0) {
-                $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] == 0) ? 0 :  $context['sandbox']['compliance'][$type]['art3']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art3']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art3']['country_total']['waste_water']['pe'];
             }
             //calcul percentage art4
             if ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['agglo']['number'];
             }
             if ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] != 0) {
-                $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_dischargeLSA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art4']['exempt_due_to_transition']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art4']['country_total']['waste_water']['pe'];
             }
             //calcul percentage art5
             if ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] != 0) {
-                $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+                $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
             }
             if ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] != 0) {
-                $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['size_<=_10000']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+                $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['size_<=_10000']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
+
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
             }
         }
 //     dsm($compliance);
@@ -9440,14 +9490,14 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             $ind['incoming_loads_(t/y)_n-tot_(1)'] => $incomingLoadsNtot,
             //'Rate of Removal N-tot', //;              ?
             //$ind['rate_of_removal_n-tot'] => 'TODO',         =discharged loads Ntot/incoming loads Ntot
-            $ind['rate_of_removal_n-tot'] =>  ($incomingLoadsNtot - $dischargedLoadsNtot) / $incomingLoadsNtot,
+            $ind['rate_of_removal_n-tot'] =>  ($incomingLoadsNtot == 0) ? 0 : ($incomingLoadsNtot - $dischargedLoadsNtot) / $incomingLoadsNtot,
             //'Discharged loads (t/y) N-tot (1)', //; rcaNDischargedMeasured + rcaNDischargedCalculated + rcaNDischargedEstimated
             $ind['discharged_loads_(t/y)_n-tot_(1)'] => $dischargedLoadsNtot,
 
             //'Incoming loads (t/y) P-tot (1)', //;  rcaPIncomingMeasured + rcaPIncomingCalculated + rcaPIncomingEstimated
             $ind['incoming_loads_(t/y)_p-tot_(1)'] => $incomingLoadsPtot,
             //'Rate of Removal P-tot', //;              ?
-            $ind['rate_of_removal_p-tot'] => ($incomingLoadsPtot - $dischargedLoadsPtot) / $incomingLoadsPtot,
+            $ind['rate_of_removal_p-tot'] => ($incomingLoadsPtot == 0) ? 0 : ($incomingLoadsPtot - $dischargedLoadsPtot) / $incomingLoadsPtot,
             //'Discharged loads (t/y) P-tot: ', //; rcaPDischargedMeasured+ rcaPDischargedCalculated + rcaPDischargedEstimated
             $ind['discharged_loads_(t/y)_p-tot:_'] => $dischargedLoadsPtot,
 
