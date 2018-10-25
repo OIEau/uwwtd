@@ -1058,7 +1058,7 @@ function uwwtd_check_text($text){
 //         dsm('uwwtd_check_text ARRAY $text = ');
 //         dsm($text);
         if (empty($text)) {
-          watchdog('uwwtd_checktext_notice', 'uwwtd_check_text array empty for value', array(), WATCHDOG_NOTICE);
+//           watchdog('uwwtd_checktext_notice', 'uwwtd_check_text array empty for value', array(), WATCHDOG_NOTICE);
           return '';      
         } else {
           watchdog('uwwtd_checktext', 'uwwtd_check_text array not empty for value : ' . var_export($text, true), array(), WATCHDOG_WARNING);
