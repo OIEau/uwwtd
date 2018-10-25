@@ -914,7 +914,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
   foreach ($sum_by_bigid as $bigID => $bigid_detail) {  
        // uwwtd_trace(var_export($bigid_detail, true));
       $line = array();
-      $line[$ind['big_dischargers']] = 'no';
+//       $line[$ind['big_dischargers']] = 'no';
       $line[$ind['id']] = $bigID;
       $line[$ind['name']] = $context['sandbox']['bigcity'][$bigID];
 
@@ -1004,7 +1004,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
         $r = fopen($filename, 'wb');
 
         $header = array(
-            $ind['big_dischargers'] => 'big_dischargers',
+//             $ind['big_dischargers'] => 'big_dischargers',
             $ind['id'] => 'ID',
             $ind['name'] => 'name',
             $ind['generated_load'] => 'generated load p.e.',
@@ -1066,9 +1066,9 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $ias_percent =  $ias * 100 / $generated_load;
             $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
 
-            $line[$ind['big_dischargers']] = 'yes';
-            $line[$ind['id']] = $agg->field_inspireidlocalid['und'][0]['value'];
-            $line[$ind['name']] = $agg->title;
+//             $line[$ind['big_dischargers']] = 'yes';
+            $line[$ind['id']] = '';
+            $line[$ind['name']] = '';
             $line[$ind['generated_load']] = $generated_load;
             $line[$ind['collecting_system']] = $collecting_system_percent;
             $line[$ind['ias']] = $ias_percent;
@@ -1228,7 +1228,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
             $ias_percent =  $ias * 100 / $generated_load;
             $no_collecting_system_nor_ias_percent =  $no_collecting_system_nor_ias * 100 / $generated_load;
 
-            $line[$ind['big_dischargers']] = '';
+//             $line[$ind['big_dischargers']] = '';
             $line[$ind['id']] = $agg->field_inspireidlocalid['und'][0]['value'];
             $line[$ind['name']] = $agg->title;
             $line[$ind['generated_load']] = $generated_load;
@@ -1648,7 +1648,7 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 //         dsm($ind);
 //         dsm($bc[$ind['id']]);
            
-        $sheet->setCellValueByColumnAndRow($ind['big_dischargers'], $i, $bc[$ind['big_dischargers']]);
+//         $sheet->setCellValueByColumnAndRow($ind['big_dischargers'], $i, $bc[$ind['big_dischargers']]);
         $sheet->setCellValueByColumnAndRow($ind['id'], $i, $bc[$ind['id']]);
 //         $sheet->getCell('B'.$i)->setValue($bc[$ind['id']]);
 //         $sheet->getCell('A1')->setValue($bc[$ind['id']]);
