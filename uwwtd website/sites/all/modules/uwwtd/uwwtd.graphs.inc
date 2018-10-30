@@ -1527,7 +1527,7 @@ function isEmptyText($text) {
 function uwwtd_agg_history_page($inspireIdLocalId){
     //dsm($inspireIdLocalId);
     $data = uwwtd_getAggHistoryData($inspireIdLocalId);
-    dsm($data);
+    //dsm($data);
     if(empty($data)) return "Error in data. We can't display this page";
     
     drupal_set_title($data['last_node']->title.' - history');
