@@ -10,6 +10,42 @@ define('TPS_WITHOUT_AGG', 'tps_without_agg');
 define('TPS_WITHOUT_DP', 'tps_without_dp');
 define('DPS_WITHOUT_TP', 'dps_without_tp');
 
+
+//Customize main search result
+function uwwtd_preprocess_search_result(&$variables) {
+  $info =array();
+    //krumo($variables);
+  if(isset($variables['result']['type'])){
+    $info['type']  = $variables['result']['type'];  
+  } 
+  if(isset($variables['result']['node'])){
+    $node = $variables['result']['node'];
+    if($node= $variables['result']['node']) {
+        if(isset($node->field_inspireidlocalid)){
+            $info['id']  =t('id').': '.$node->field_inspireidlocalid['und'][0]['value'];
+        }
+        if(isset($node->field_status)){
+            $info['status']  =t('status').': '.$node->field_status['und'][0]['value'];
+        }
+        if(isset($node->field_anneedata)){
+            $info['year']  =t('report year').': '.$node->field_anneedata['und'][0]['value'];
+        }
+        
+        //Manage display of the result --> only if we have a "search_result" view_mode
+        $view_mode = field_view_mode_settings('node', $node->type);
+        if(isset($view_mode['search_result'])){
+            $view = node_view($node, 'search_result');
+            $variables['snippet'] = drupal_render($view);
+        }
+        
+    }
+  }
+  
+  $variables['info_split'] = $info;
+  //$variables['info'] = theme('item_list', array('items'=>$info));
+  $variables['info'] = implode(' - ', $info);
+}
+
 function uwwtd_adjustBrightness($hex, $steps){
     // Steps should be between -255 and 255. Negative = darker, positive = lighter
     $steps = max(-255, min(255, $steps));
