@@ -2435,7 +2435,57 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration changes comment information found.', $timestamp, $i, $node);
 
         //date
-        if(isset($data['aggPeriodOver'])){
+        if(isset($data['aggDateArt3']) && isset($data['aggDateArt4'])){
+            $check3 = uwwtd_check_date($data['aggDateArt3'], $message);
+            $check4 = uwwtd_check_date($data['aggDateArt4'], $message);
+            $check5 = false;
+            if(isset($data['aggDateArt5'])){
+                /*
+                    Deadline for the implementation of requirements of article 5 of the UWWTD (provision of more stringent treatment to urban waste water entering collecting system and being discharge after a treatment into sensitive areas or their catchments). 
+                    This value is required for all active agglomerations of size ≥ 10 000 p.e., served by UWWTPs discharging into sensitive areas.
+                */
+                $check5 = uwwtd_check_date($data['aggDateArt5'], $message);
+            }
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+            } 
+            if($check3 !== false){
+                $node->field_aggperiodover3['und'][0] = array(
+                    'value'=> $check3,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
+                $node->field_aggperiodover6['und'][0] = array(
+                    'value'=> $check3,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
+                //field_aggperiodover7 ????
+            }
+            if($check4 !== false){
+                $node->field_aggperiodover4['und'][0] = array(
+                    'value'=> $check4,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
+            }
+            if($check5 !== false){
+                $node->field_aggperiodover5['und'][0] = array(
+                    'value'=> $check5,
+                    'timezone'=>'Europe/Berlin',
+                    'timezone_bd'=>'Europe/Berlin',
+                    'date_type'=>'date'
+                );
+            }elseif (isset($data['aggGenerated']) && $data['aggGenerated'] >= 10000){
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], "The aggDateArt5 is required for all active agglomerations of size ≥ 10 000 p.e., served by UWWTPs discharging into sensitive areas.", $timestamp, $i, $node);
+                
+            }
+            
+        }
+        elseif(isset($data['aggPeriodOver'])){
             $check = uwwtd_check_date($data['aggPeriodOver'], $message);
             if ($message != '') {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);

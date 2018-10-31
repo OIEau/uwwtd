@@ -800,47 +800,47 @@ function uwwtd_cron(){
     $mslevel_feed_table = 'UWWTD_FeedMSLevel_'.variable_get('siif_eru_country_code');
 	$agglolevel_feed_table = 'UWWTD_FeedAggloLevel_'.variable_get('siif_eru_country_code');
 
-// 	if((time() - $lastGen) > (60*60*24)){
-	// Requires postgres for DROP TABLE IF
-	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
-	CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-        AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
-	ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-	ADD PRIMARY KEY ("siteId");
+ 	if((time() - $lastGen) > (60*60*24)){
+        // Requires postgres for DROP TABLE IF
+        db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
+        CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+            AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
+        ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
-	CREATE TABLE wfs."UWWTD_Agglomeration"
-        AS SELECT * from public."UWWTD_Agglomeration";
-	ALTER TABLE wfs."UWWTD_Agglomeration"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
+        CREATE TABLE wfs."UWWTD_Agglomeration"
+            AS SELECT * from public."UWWTD_Agglomeration";
+        ALTER TABLE wfs."UWWTD_Agglomeration"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
-	CREATE TABLE wfs."UWWTD_ReceivingArea"
-        AS SELECT * from public."UWWTD_ReceivingArea";
-	ALTER TABLE wfs."UWWTD_ReceivingArea"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
+        CREATE TABLE wfs."UWWTD_ReceivingArea"
+            AS SELECT * from public."UWWTD_ReceivingArea";
+        ALTER TABLE wfs."UWWTD_ReceivingArea"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
-	CREATE TABLE wfs."UWWTD_DischargePoint"
-        AS SELECT * from public."UWWTD_DischargePoint";
-	ALTER TABLE wfs."UWWTD_DischargePoint"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
+        CREATE TABLE wfs."UWWTD_DischargePoint"
+            AS SELECT * from public."UWWTD_DischargePoint";
+        ALTER TABLE wfs."UWWTD_DischargePoint"
+        ADD PRIMARY KEY ("siteId");
 
-    DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
-    CREATE TABLE wfs."'.$mslevel_feed_table.'"
-        AS SELECT * from public."'.$mslevel_feed_table.'";
-    ALTER TABLE wfs."'.$mslevel_feed_table.'"
-    ADD PRIMARY KEY ("siteId");
-    
-    DROP TABLE IF EXISTS wfs."'.$agglolevel_feed_table.'";
-    CREATE TABLE wfs."'.$agglolevel_feed_table.'"
-        AS SELECT * from public."'.$agglolevel_feed_table.'";
-    ALTER TABLE wfs."'.$agglolevel_feed_table.'"
-    ADD PRIMARY KEY ("siteId");
-    ');
+        DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
+        CREATE TABLE wfs."'.$mslevel_feed_table.'"
+            AS SELECT * from public."'.$mslevel_feed_table.'";
+        ALTER TABLE wfs."'.$mslevel_feed_table.'"
+        ADD PRIMARY KEY ("siteId");
+        
+        DROP TABLE IF EXISTS wfs."'.$agglolevel_feed_table.'";
+        CREATE TABLE wfs."'.$agglolevel_feed_table.'"
+            AS SELECT * from public."'.$agglolevel_feed_table.'";
+        ALTER TABLE wfs."'.$agglolevel_feed_table.'"
+        ADD PRIMARY KEY ("siteId");
+        ');
 
-    variable_set('uwwtd_wfs_table', time());
-// 	}
+        variable_set('uwwtd_wfs_table', time());
+ 	}
 }
 
 

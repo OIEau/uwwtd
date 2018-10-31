@@ -1773,13 +1773,19 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
         foreach($ids as $y=>$id){
             $node = node_load($id->nid);
             $wrapper =  entity_metadata_wrapper('node', $node);
+            $genLoad = $wrapper->field_agggenerated->value();
             $data[$y] = array(
                 'Year'=>$y,
                 'agg'=>$node,
-                'Generated load'=>$wrapper->field_agggenerated->value(),
+                'Generated load'=>$genLoad,
+                'cs'=>round($genLoad * $wrapper->field_aggc1->value()/100),
+                'ias'=>round($genLoad * $wrapper->field_aggc2->value()/100),
+                'wot'=>round($genLoad * (100 - ($wrapper->field_aggc1->value() + $wrapper->field_aggc2->value()))/100),
+                /*
                 'cs'=>$wrapper->field_agg_connected_load_pe->value(),
                 'ias'=>$wrapper->field_agg_ias_load_pe->value(),
                 'wot'=>$wrapper->field_agg_discharge_pe->value(),
+                */
                 //$agg_leak = ($connected_load - $entering_load);
                 //        - connected_load (float) : load connected to collectiong system
                 //        - entering_load (float) : total load entering in the WWTP linked to the agglomeration
