@@ -4879,8 +4879,7 @@ function uwwtd_update_7164(&$context){
         'Charts and Graphs' => 'charts_graphs',
         'Comment' => 'comment',   
         'Search' => 'search',
-        'Shortcut' => 'shortcut',
-        
+        'Shortcut' => 'shortcut'
     );
     if (false === module_disable($dis)) {
         $msg = "Error, the module ".implode(',', $dis)." can't be disabled.";
@@ -4888,10 +4887,11 @@ function uwwtd_update_7164(&$context){
         throw new DrupalUpdateException($msg);    
     }
     //Enable new modules (search) :
+
     $en= array(
         'Search API' => 'search_api',
         'Database search' => 'search_api_db',
-        'Facet API' => 'facet_api',
+        'Facet API' => 'facetapi',
         'Search facets' => 'search_api_facetapi',
         'Search views' => 'search_api_views',
         'Search API autocomplete' => 'search_api_autocomplete',
@@ -4903,16 +4903,70 @@ function uwwtd_update_7164(&$context){
         uwwtd_install_trace($msg);
         throw new DrupalUpdateException($msg);    
     }
-    
-    //Load search API settings (server, index)
-    
-    //Load new search view
-    
-    //Load facets (with block)
-    
+
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'navigation')
+        ->condition('module', 'system')           
+        ->execute();    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'login')
+        ->condition('module', 'user')           
+        ->execute();  
+       
+
+ //search block : current search, search form, 
+    db_update('block')
+        ->fields(array(
+          'region' => 'content',
+          'title'=>'',
+          'weight' => -25,
+          'status' => 1,
+          'visibility' => 1,
+          'custom'=>0,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', '-exp-search-page')
+        ->condition('module', 'views')           
+        ->execute();  
+     
+    db_update('block')
+        ->fields(array(
+          'region' => 'sidebar_first',
+          'title'=>'',
+          'status' => 1,
+          'weight' => -20,
+          'visibility' => 1,
+          'custom'=>0,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'standard')
+        ->condition('module', 'current_search')           
+        ->execute();      
+   //facets
+    db_update('block')
+        ->fields(array(
+          'region' => 'sidebar_first',
+          'title'=>'',
+          'status' => 1,
+          'visibility' => 1,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('module', 'facetapi')           
+        ->execute();   
     //Load change in content type definition (field labels and label of allowed value)
     
-    throw new DrupalUpdateException(__FUNCTION__);
+    //throw new DrupalUpdateException(__FUNCTION__);
 }
 
 
@@ -6483,6 +6537,23 @@ function uwwtd_install_create_block(&$context)
     //create Map home block and put it in Content region
     //=> done later in hook update 6
     
+    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'navigation')
+        ->condition('module', 'system')           
+        ->execute();    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'login')
+        ->condition('module', 'user')           
+        ->execute();    
         
     $context['message'] = __FUNCTION__;
     $context['finished'] = 1;  
