@@ -4878,7 +4878,9 @@ function uwwtd_update_7164(&$context){
         'Flot' => 'flot',
         'Charts and Graphs' => 'charts_graphs',
         'Comment' => 'comment',   
-        'Search' => 'Search'
+        'Search' => 'search',
+        'Shortcut' => 'shortcut',
+        
     );
     if (false === module_disable($dis)) {
         $msg = "Error, the module ".implode(',', $dis)." can't be disabled.";
