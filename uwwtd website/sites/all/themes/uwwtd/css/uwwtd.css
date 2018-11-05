@@ -1355,3 +1355,25 @@ div.view-search div.views-row:hover {
     text-align:right;
     font-weight:bold;
 }
+.search-block-input{
+    width:200px!important;
+}
+#uwwtd-search-block-form>div, #uwwtd-search-block-form>div>div{
+    float:left;
+}
+section#block-uwwtd-uwwtd-search-block{
+    position:absolute;
+    top:5px;
+    right:5px;
+}
+section#block-lang-dropdown-language{
+    position:absolute;
+    top:42px;
+    right:5px;
+    padding:0;
+}
+.navbar-header ul.navbar-nav{
+    position:absolute;
+    top:40px;
+    right:60px;
+}

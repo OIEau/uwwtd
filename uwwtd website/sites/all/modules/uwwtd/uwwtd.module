@@ -661,7 +661,6 @@ function uwwtd_views_pre_render(&$view){
 }
 
 function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
-	//dsm($form);
 		// for treatment plant booleans
 		if($form['#id'] == "views-exposed-form-uwwtp-treatment-page"){
 			$options = array(
@@ -885,9 +884,15 @@ function uwwtd_errors_get_errors($entity_id, $entity_type){
 function uwwtd_block_info() {
 
   $blocks['map_home'] = array(
-                        'info' => t('Map home'),
-                        'cache' => DRUPAL_NO_CACHE,
-                        );
+        'info' => t('Map home'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['uwwtd_search_block'] = array(
+        'info' => t('Block search [UWWTD]'),
+        'status'=>true,
+        'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+        'region'=>'navigation'
+    );
   return $blocks;
 }
 
@@ -955,7 +960,12 @@ function uwwtd_get_cache_key_page_uwwtp_pressure($option)
 }
 
 function uwwtd_block_view($delta = ''){
+    $block = array();
     switch ($delta) {
+        
+        case 'uwwtd_search_block':
+            $block['content'] =drupal_render(drupal_get_form('uwwtd_search_block_form'));
+          break;
         case 'map_home':
             module_load_include('inc','uwwtd','inc/pages');
             $cache = '';
@@ -1042,11 +1052,37 @@ function uwwtd_block_view($delta = ''){
                     cache_set($cache_name, $block['content'], 'cache_block', CACHE_PERMANENT);
                 }
             }
-            return $block;
-            break;
-        default:
-            break;
+          break;
     }
+    return $block;
+}
+
+function uwwtd_search_block_form($form, &$form_state){
+    $form['search_api_views_fulltext'] = array(
+        '#type'=>'textfield',
+        '#size'=>30,
+        '#default_value'=>'',
+        '#attached'=>array(
+            'css'=>array('sites/all/modules/search_api_autocomplete/search_api_autocomplete.css'),
+            'js'=>array('sites/all/modules/search_api_autocomplete/search_api_autocomplete.js')
+        ),
+        '#autocomplete_path'=>'search_api_autocomplete/search_api_views_search/-',
+        '#attributes'=>array(
+            'class'=>array('auto_submit', 'search-block-input'),
+            'data-search-api-autocomplete-search'=>'search_api_views_search'
+        ),
+    );
+    $form['submit'] = array(
+        '#type'=>'submit',
+        '#value'=>t('Search'),
+        '#id'=>'edit-submit-search',
+    );
+    $form['#process'] = array('_bootstrap_process_element');
+    
+    $form['#action'] = base_path().'/search';
+
+    return $form;
+    
 }
 
 //nd@oieau.fr 20/10/2016 . There is a bug in this function for building the link
