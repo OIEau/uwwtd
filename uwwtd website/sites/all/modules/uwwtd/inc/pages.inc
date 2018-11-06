@@ -702,7 +702,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
         'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
         'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
@@ -953,7 +953,7 @@ function getYearsPossibles() {
 }
 
 function uwwtd_page_agglomeration_connection($type_export = ''){
-    $title = 'Agglomeration connection map and list';
+    $title = 'Agglomeration collection map and list';
     drupal_set_title($title);
     
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
@@ -1051,7 +1051,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
         'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
         'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
