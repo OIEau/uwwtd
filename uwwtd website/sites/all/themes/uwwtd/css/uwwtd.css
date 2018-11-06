@@ -292,7 +292,7 @@ fieldset.group-uwwdescription, fieldset.group-aggdescription, fieldset.group-dcd
 	margin-bottom: 15px;
 }
 
-.c, .ce, .nr, .ni, .nc{
+.c, .ce, .nr, .ni, .nc, .test-p, .test-f,.met-0, .met-1{
 	padding: 1px 3px;
 	-webkit-border-radius: 3px 3px 3px 3px;
 	border-radius: 3px 3px 3px 3px;
@@ -319,6 +319,9 @@ fieldset.group-uwwdescription, fieldset.group-aggdescription, fieldset.group-dcd
 .ce{
 	background-color: #ea8b2e;
 }
+
+.test-p, .met-1{color: white;background-color: #459436;}
+.test-f, .met-0{color: white;background-color: #d93c3c;}
 
 /* ac 04/02/15 */
 .black-title{
