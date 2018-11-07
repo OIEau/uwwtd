@@ -679,6 +679,10 @@ table.dispo-annee tr td.dispo-annee{
 	height: 25px;
 	padding: 3px 2px;
 }
+table tr td ul li{
+    text-align:left;
+}
+
 .dispo-after div{
 	border-color: transparent transparent transparent #cbdff3;
 	border-style: solid;
