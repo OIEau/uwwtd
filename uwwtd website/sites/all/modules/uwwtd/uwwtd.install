@@ -4969,6 +4969,24 @@ function uwwtd_update_7164(&$context){
     //throw new DrupalUpdateException(__FUNCTION__);
 }
 
+function uwwtd_update_7165(&$context){
+    uwwtd_install_trace(__FUNCTION__);
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7165.json');   
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+//throw new DrupalUpdateException(__FUNCTION__);
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+}
 
 
 /**

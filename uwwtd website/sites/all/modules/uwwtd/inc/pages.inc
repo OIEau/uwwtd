@@ -419,7 +419,7 @@ function uwwtd_get_data_uwwtp($option)
 function uwwtd_get_data_dcp($option){
     $cache_name = uwwtd_get_cache_key_dcp($option);
     $cache  ='';
-    if (UWWTD_CACHE_ACTIVE === true) {
+    if (UWWTD_CACHE_ACTIVE === false) {
         $cache = cache_get($cache_name, 'cache');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -437,8 +437,10 @@ function uwwtd_get_data_dcp($option){
                      uwwtp.nid as uwwtp_id,
                      f_comp.field_uwwcompliance_value,
                      f_physicalcapacityactivity.field_physicalcapacityactivity_value,
+                     wwt.field_uwwwastewatertreated_value,
                      rca.title as rca_name,
                      rca.nid as rca_id,
+                     ir.field_dcpirrigation_value,
                      st_astext(st_transform(f_geo.the_geom, 4326)) wkt
     from {node} n
         LEFT join
@@ -456,6 +458,9 @@ function uwwtd_get_data_dcp($option){
         LEFT join
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
+        LEFT join
+            {field_data_field_dcpirrigation} ir
+                ON n.nid = ir.entity_id
         LEFT join 
             {field_data_field_linked_treatment_plants} tp
                 ON n.nid = tp.entity_id
@@ -468,6 +473,9 @@ function uwwtd_get_data_dcp($option){
         LEFT join
             {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
                 ON uwwtp.nid = f_physicalcapacityactivity.entity_id
+        LEFT join
+            {field_data_field_uwwwastewatertreated} wwt
+                ON uwwtp.nid = wwt.entity_id
         LEFT join 
             {field_data_field_linked_receiving_areas} rc
                 ON n.nid = rc.entity_id
@@ -498,6 +506,8 @@ function uwwtd_get_data_dcp($option){
             $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
             $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
             $row['field_physicalcapacityactivity_value_format'] =  uwwtd_format_number($row['field_physicalcapacityactivity_value']);
+             $row['field_uwwwastewatertreated_value_format'] =  uwwtd_format_number($row['field_uwwwastewatertreated_value']);
+            $row['field_dcpirrigation_value_format'] =  $GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']];
             
             
             $data[] = $row;
@@ -2625,6 +2635,289 @@ function uwwtd_dcp_page($type_export = ''){
 
      return $page; 
  }
+
+function uwwtd_dcp_reuse_page($type_export = ''){
+    $title = 'Discharge points - reuse';
+    drupal_set_title($title);
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+	$type = "discharge_point";
+    $option = array();
+
+    $option['order'] = $GLOBALS['uwwtd']['ui']['field']['dcp'];
+    $option['default']['order'] = 'title';//$GLOBALS['uwwtd']['ui']['field']['rca']['_format'];
+    //$option['default']['sort_mod'] = 'numeric';
+    $option['default']['sort'] = 'asc';
+    $option['allyear'] = uwwtd_get_all_year();
+    $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
+    $option['rcacat'] = $GLOBALS['uwwtd_value']['rcacat_labels'];
+
+    $filter = uwwtd_get_form_filter($option);
+    $preset_name = 'dcp_reuse_map';
+    $preset = openlayers_preset_load($preset_name);
+    $map    = openlayers_build_map($preset->data);
+
+    $cache = '';
+    $cache_name = uwwtd_get_cache_key_page_dcp($filter['filter']);
+
+    //use cache only for page with no filter , or only the year and default sort
+    $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
+    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+        $cache = cache_get($cache_name, 'cache_page');
+    }
+    if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
+        return $cache->data['page'];
+    }
+	$data = uwwtd_get_data_dcp($filter['filter']);
+    $list_field = array(
+    
+        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
+        'rcacat'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rcacat_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcacat_labels']),  
+        
+    /*
+        'tot_design_capacity'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+        'tot_entering_load'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
+        'rca52'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca54'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        'rca58'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
+        
+    */
+    );
+// dsm($list_field);
+    $form = uwwtd_filter_form($list_field, $filter);
+
+
+     //dsm($data);
+     //Filter all discharge point without a field_dcpirrigation_value value
+    foreach($data as $k=>$line){
+        if($line['field_dcpirrigation_value']==''){
+            unset($data[$k]);
+        }
+    }
+    $filter_force = array();
+
+    uwwtd_filter_data($filter, $data, $filter_force);        
+    if(empty($data)){
+        return '<h1>'.$title.'</h1>'.$form.'<p>'.t("There is no information about water reuse with yours criterions").'</p>';
+    }
+    
+    uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['dcp'], $data);
+//     dsm($data);
+
+    $optionstyle = array();
+    //get the color for the point
+    $optionstyle['color']['list'] = uwwtd_get_point_color_from_preset($preset);
+    $optionstyle['color']['field'] = 'field_dcpirrigation_value_format';
+    //get the size of the point
+    $optionstyle['weight']['list'] = uwwtd_get_point_size_from_preset($preset, 'openlayers_plus_behavior_scalepoints');
+    $optionstyle['weight']['field'] = 'field_uwwwastewatertreated_value';
+	
+    $optionstyle['popup_title_type'] = 'discharge-point';
+    $optionstyle['popup'] = array(
+        'field_inspireidlocalid_value' => array('label' => 'ID'),
+        'rca_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rca_format']['label']),
+        'zonetype_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label']),
+        'uwwtp_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['uwwtp_format']['label']),
+        'field_uwwcompliance_value_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['field_uwwcompliance_value_format']['label']),
+        'field_dcpirrigation_value_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['dcp']['field_dcpirrigation_value']['label']),
+        'field_uwwwastewatertreated_value'=>array('label' =>$GLOBALS['uwwtd']['ui']['field']['dcp']['field_uwwwastewatertreated_value']['label']),
+        
+    );
+    
+    //todo format data in table
+    $graph = array();
+    $keys = array();
+    foreach($data as $row) {
+        $rows[] = array('data' => array(
+            //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
+            'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+            'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
+            'rca_format'=>$row['rca_format'],
+            'zonetype_format'=>$row['zonetype_format'],
+            'uwwtp_format'=>$row['uwwtp_format'],
+            'field_uwwcompliance_value_format'=>$row['field_uwwcompliance_value_format'],
+            'field_dcpirrigation_value'=>$GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']],
+            'field_uwwwastewatertreated_value'=>$row['field_uwwwastewatertreated_value_format']
+        ));
+        
+        if(!in_array($row['field_uwwcompliance_value'], $keys )){ $keys[] = $row['field_uwwcompliance_value'];}
+        if(!isset($graph[$row['zonetype']])){
+            foreach($GLOBALS['uwwtd']['reuse_type'] as $r=>$label){
+                $graph[$row['zonetype']][$r]['nb'] = 0;
+                $graph[$row['zonetype']][$r]['load'] = 0;  
+            }
+            
+        }
+        $graph[$row['zonetype']][$row['field_dcpirrigation_value']]['nb']++;
+        $graph[$row['zonetype']][$row['field_dcpirrigation_value']]['load']+=$row['field_uwwwastewatertreated_value'];
+        
+    }
+    
+    //We have to set values for empty cell of graph matrix
+    //Sort keys
+    foreach($GLOBALS['uwwtd']['reuse_type'] as $k=>$v){
+        if(in_array($k, $keys)){
+            $order[] = $k;
+        }
+    }
+
+    if(!empty($graph) && !empty($order)){
+        foreach($graph as $k=>$line){
+            $new_line = array();
+            foreach($order as $key){
+                if(!isset($line[$key])){
+                    $new_line[$key] = 0;
+                }
+                else{
+                    $new_line[$key] = $line[$key];
+                }
+            }
+            $graph[$k] = $new_line ;
+        } 
+    }
+    $header = array();
+    $header_export = array();
+    foreach($GLOBALS['uwwtd']['ui']['field']['dcp'] as $field => $info) {
+        if(isset($rows[0]['data'][$field])){
+            $header[$field] = array(
+                'data' => $info['label'],
+                'field' => $field,
+                'sorter'=>isset($info['sort_field'])?$info['sort_field']:$field,
+                'sort_mod'=>isset($info['sort_mod'])?$info['sort_mod']:'text',
+            );
+            $header_export[] = $info['label'];
+        }
+        
+    }
+    
+    //here export data and exit
+    if ($type_export != '') {
+    	if ($type_export === 'xls') {
+    		// Restructuration des tableaux :
+    		$rowsToBeExported = array();
+    		foreach ($header_export as $header) {
+    			$rowsToBeExported[0][] = $header;
+    		}
+    		foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+    				$rowsToBeExported[] = $row['data'];
+    			}
+    		}
+    		 
+    		// Création du fichier xls avec le tableau de valeurs donnés et l'ouvre :
+    		$filename = 'dcp_'. $filter['filter']['field_anneedata_value']. '.xls';
+    		uwwtd_create_xls($filename, $rowsToBeExported);
+    	} else {
+    		uwwtd_export_data($type_export, 'dcp_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+    	}
+    }
+   $features['dcp'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
+    $rendermap = uwwtd_build_map($map, $features);
+    
+    unset($features);
+    unset($data);
+
+    $rows_nb = array();
+    $rows_load = array();
+    $legend = array();
+    $color =array();
+    $total_nb=array();
+    $total_load=array();
+    if(!empty($graph)){
+        foreach($graph as $type=>$item){
+            if(empty($legend)){
+                $legend = array_keys($item);
+                foreach($legend as $i=>$j){
+                    //dsm($j);
+                    $legend[$i]= $GLOBALS['uwwtd']['reuse_type'][$j];
+                    $color[$i]= $GLOBALS['uwwtd']['reuse_type_color'][$j];
+                }
+            }
+            $line_nb = array();
+            $line_load = array();
+            
+            $line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            foreach($item as $k=>$v){
+                $line_nb[] = $v['nb'];
+                $line_load[] = $v['load'];
+                //FIX ME nd@oieau.fr
+                $total_nb[$k]+=$v['nb'];
+                $total_load[$k]+=$v['load'];
+                
+            }
+            $rows_nb[] = $line_nb;
+            $rows_load[] = $line_load;  
+        } 
+    }
+    
+
+    // Pour afficher ce qui est attendu pour crééer un graph pulti colonnes (voir sur /discharge-points) :
+//     dsm($rows_nb);
+//     dsm($color);
+//     dsm($legend);
+
+    $dcp_graph_nb= uwwtd_page_render_column('graph-1', $legend, $color, $rows_nb, true);
+    $dcp_graph=uwwtd_page_render_column('graph-2', $legend, $color, $rows_load, true);
+    array_unshift($total_nb, t('Total'));
+    array_unshift($total_load, t('Total'));
+    //FIX ME nd@oieau.fr
+    $rows_nb[]=$total_nb;
+    $rows_load[]=$total_load;
+    array_unshift($legend, t('Area type'));
+    $dcp_table_nb = theme('table', array('rows'=>$rows_nb, 'header'=>$legend));
+    $dcp_table = theme('table', array('rows'=>$rows_load, 'header'=>$legend));
+    //dsm($rows[0]['data']);
+    $build['tablesort_table'] = array(
+            '#theme' => 'table',
+            '#header' => $header,
+            '#rows' => $rows,
+        );
+
+
+   //============================Render the page ==> TODO use a true template/theme function 
+
+    $page = ''
+            . '<h1>'.$title.'</h1>'
+            . $form
+            . '<div class="rows map-row" >'.$rendermap.'</div>'
+            
+            . '<div class="rows charts-row" >'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content-extended">'
+                    
+                    .uwwtd_page_render_flipcard(t("Water reuse type of discharge point by number and by receving area type"), $dcp_graph_nb, $dcp_table_nb, '')
+                  
+                  .'</div>'
+                .'</div>'
+                .'<div class="cell charts-rows-cell">'
+                  .'<div class="cell-content-extended">'
+                    .uwwtd_page_render_flipcard(t("Water reuse type of discharge point by load entering and by receving area type"), $dcp_graph, $dcp_table, t("Volume of the discharge point is based on the volume entering in the linked waste water treatment plant's"))
+                  .'</div>'
+                .'</div>'
+            .'</div>'
+            . '<div class="rows data-table-row">'
+			 . '<div class="data-table-header">'
+			  . '<b>'.count($rows) ." results</b>"		
+				. '<div class="hideprint export-result"> | Download results: '
+					.l('csv', 'discharge-points/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+					.l('xls', 'discharge-points/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+				.'</div>'
+			 .'</div>'
+				
+                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
+			
+                . '<!--markerprinttable-->'  //use for print wkhtmltopdf
+            .'</div>'
+     ;
+     if (true === $put_in_cache) {
+        cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
+     }
+
+     return $page;
+}
  
 /* 
 function uwwtd_sensitive_areas_page() {
@@ -2829,7 +3122,6 @@ function uwwtd_page_render_column($id, $legend, $color, $rows, $stacked=false){
 }
 
 function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
-    
     //Sort data by area
     if(isset($data[0]['area'])){
         $area = array();
