@@ -10,6 +10,42 @@ define('TPS_WITHOUT_AGG', 'tps_without_agg');
 define('TPS_WITHOUT_DP', 'tps_without_dp');
 define('DPS_WITHOUT_TP', 'dps_without_tp');
 
+
+//Customize main search result
+function uwwtd_preprocess_search_result(&$variables) {
+  $info =array();
+    //krumo($variables);
+  if(isset($variables['result']['type'])){
+    $info['type']  = $variables['result']['type'];  
+  } 
+  if(isset($variables['result']['node'])){
+    $node = $variables['result']['node'];
+    if($node= $variables['result']['node']) {
+        if(isset($node->field_inspireidlocalid)){
+            $info['id']  =t('id').': '.$node->field_inspireidlocalid['und'][0]['value'];
+        }
+        if(isset($node->field_status)){
+            $info['status']  =t('status').': '.$node->field_status['und'][0]['value'];
+        }
+        if(isset($node->field_anneedata)){
+            $info['year']  =t('report year').': '.$node->field_anneedata['und'][0]['value'];
+        }
+        
+        //Manage display of the result --> only if we have a "search_result" view_mode
+        $view_mode = field_view_mode_settings('node', $node->type);
+        if(isset($view_mode['search_result'])){
+            $view = node_view($node, 'search_result');
+            $variables['snippet'] = drupal_render($view);
+        }
+        
+    }
+  }
+  
+  $variables['info_split'] = $info;
+  //$variables['info'] = theme('item_list', array('items'=>$info));
+  $variables['info'] = implode(' - ', $info);
+}
+
 function uwwtd_adjustBrightness($hex, $steps){
     // Steps should be between -255 and 255. Negative = darker, positive = lighter
     $steps = max(-255, min(255, $steps));
@@ -379,79 +415,6 @@ function uwwtd_get_sourcesfilesuri($inspireIdLocalId, $type) {
     return $sourcesFilesUri;
 }
 
-
-
-/**
- * Return DQL query to get datas ensitive areas.
- */
-function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
-    $sqlWithNid = '';
-    if ($isWithNid) {
-        $sqlWithNid = ' AND n.nid = :nid ';
-    }
-
-    return '
-        SELECT 
-            n.nid,
-            n.title,
-            f_annee.field_anneedata_value,
-            id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value as zonetype,
-            rca52.field_rca52applied_value as rca52,
-            rca54.field_rca54applied_value as rca54,
-            rca58.field_rca58applied_value as rca58,
-            st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
-            st_area(st_transform(f_geo.the_geom, 3035)) area,
-            COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
-            SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
-            SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
-        FROM {node} n
-        LEFT join
-            {field_data_field_anneedata} f_annee
-                ON n.nid = f_annee.entity_id
-        LEFT join
-            {field_data_field_inspireidlocalid} id
-                ON n.nid = id.entity_id
-        LEFT join
-            {field_data_field_specialisedzonetype} zt
-                ON n.nid = zt.entity_id
-        LEFT join
-            {field_data_field_rca52applied} rca52
-                ON n.nid = rca52.entity_id
-        LEFT join
-            {field_data_field_rca54applied} rca54
-                ON n.nid = rca54.entity_id
-        LEFT join
-            {field_data_field_rca58applied} rca58
-                ON n.nid = rca58.entity_id
-        LEFT JOIN 
-            {field_data_field_position_geo} f_geo 
-                ON n.nid = f_geo.entity_id
-        LEFT join
-            {field_data_field_linked_treatment_plants} uwwtp
-                ON n.nid = uwwtp.entity_id
-        LEFT join
-            {field_data_field_physicalcapacityactivity} capa
-                ON uwwtp.field_linked_treatment_plants_nid = capa.entity_id
-        LEFT join
-            {field_data_field_uwwloadenteringuwwtp} entering
-                ON uwwtp.field_linked_treatment_plants_nid = entering.entity_id
-              
-        WHERE n.type = :typenode
-            AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
-        GROUP BY 
-            n.nid,
-            n.title,
-            f_annee.field_anneedata_value,
-            id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value,
-            rca52.field_rca52applied_value,
-            rca54.field_rca54applied_value,
-            rca58.field_rca58applied_value,
-            f_geo.the_geom
-        ORDER BY n.title
-    ';
-}
 
 
 function uwwtd_render_article17_aglo($nid){

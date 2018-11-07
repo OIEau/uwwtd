@@ -517,7 +517,7 @@ function uwwtd_get_data_sensitive_areas($option){
     $cache_name = uwwtd_get_cache_key_sensitive_area($option);
     //     dsm($cache_name);
     $cache = '';
-	$putincache =false;
+	$putincache =true;
     /*
 	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
@@ -702,7 +702,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
         'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
         'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
@@ -953,7 +953,7 @@ function getYearsPossibles() {
 }
 
 function uwwtd_page_agglomeration_connection($type_export = ''){
-    $title = 'Agglomeration connection map and list';
+    $title = 'Agglomeration collection map and list';
     drupal_set_title($title);
     
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
@@ -1051,7 +1051,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     $optionstyle['popup'] = array(
         'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
         'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Connection compliance'),
+        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
         'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
         'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
@@ -2195,12 +2195,33 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         'area_format' => array('label' => 'Area'),
         'tot_design_capacity_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label']),
         'tot_entering_load_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label']),
-
     );
 
     //todo format data in table
     $graph = array();
     foreach($data as $row) {
+        $dts  = array();
+        //Art. 5(2,3) - N : field_rcaanstartdate
+        //Art. 5(2,3) -P  : field_rcaapstartdate
+        //Art. 5(2,3) - b : field_rcabstartdate
+        //Art. 5(2,3) - c  : field_rcacstardate
+        //Art. 5(8)          : field_rcadateart5854
+        if(!empty($row['dt_art58'])){
+            $dts[]  = t('Art. 5(8)').': '.date('d/m/Y',strtotime($row['dt_art58'])).',';
+        }
+        if(!empty($row['dt_an'])){
+            $dts[]  = t('Art. 5(2,3) - N').': '.date('d/m/Y',strtotime($row['dt_an'])).',';
+        }
+        if(!empty($row['dt_ap'])){
+            $dts[]  = t('Art. 5(2,3) - P').': '.date('d/m/Y',strtotime($row['dt_ap'])).',';
+        }
+        if(!empty($row['dt_b'])){
+            $dts[]  = t('Art. 5(2,3) - b').': '.date('d/m/Y',strtotime($row['dt_b'])).',';
+        }
+         if(!empty($row['dt_c'])){
+            $dts[]  = t('Art. 5(2,3) - c').': '.date('d/m/Y',strtotime($row['dt_c'])).',';
+        }
+        
         $rows[] = array('data' => array(
             //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('receiving-area', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
             'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
@@ -2211,7 +2232,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             'rca58_format'=>$row['rca58_format'],
             'uwwtps'=>$row['uwwtps'],
             'tot_design_capacity_format'=>$row['tot_design_capacity_format'],
-            'tot_entering_load_format'=>$row['tot_entering_load_format']
+            'tot_entering_load_format'=>$row['tot_entering_load_format'],
+            'starting_dates_application'=>theme('item_list', array('items'=>$dts))
         ));
 
     }
@@ -2240,6 +2262,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     		}
     		foreach ($rows as $row) {
     			if (!empty($row['data'])) {
+                    $row['data']['starting_dates_application'] = strip_tags($row['data']['starting_dates_application']);
     				$rowsToBeExported[] = $row['data'];
     			}
     		}
@@ -2248,7 +2271,15 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     		$filename = 'rca_'. $filter['filter']['field_anneedata_value']. '.xls';
     		uwwtd_create_xls($filename, $rowsToBeExported);
     	} else {
-    		uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+            // Restructuration des tableaux :
+    		$rowsToBeExported = array();
+            foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+                    $row['data']['starting_dates_application'] = strip_tags($row['data']['starting_dates_application']);
+    				$rowsToBeExported[] = $row;
+    			}
+    		}
+    		uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rowsToBeExported);
     	}
     }
 

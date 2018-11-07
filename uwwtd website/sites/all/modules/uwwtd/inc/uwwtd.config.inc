@@ -369,6 +369,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+    'starting_dates_application'=>array('label'=>t('Starting dates of application')),
 );
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
