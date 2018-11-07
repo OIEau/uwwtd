@@ -2207,19 +2207,19 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         //Art. 5(2,3) - c  : field_rcacstardate
         //Art. 5(8)          : field_rcadateart5854
         if(!empty($row['dt_art58'])){
-            $dts[]  = t('Art. 5(8)').': '.date('d/m/Y',strtotime($row['dt_art58']));
+            $dts[]  = t('Art. 5(8)').': '.date('d/m/Y',strtotime($row['dt_art58'])).',';
         }
         if(!empty($row['dt_an'])){
-            $dts[]  = t('Art. 5(2,3) - N').': '.date('d/m/Y',strtotime($row['dt_an']));
+            $dts[]  = t('Art. 5(2,3) - N').': '.date('d/m/Y',strtotime($row['dt_an'])).',';
         }
         if(!empty($row['dt_ap'])){
-            $dts[]  = t('Art. 5(2,3) - P').': '.date('d/m/Y',strtotime($row['dt_ap']));
+            $dts[]  = t('Art. 5(2,3) - P').': '.date('d/m/Y',strtotime($row['dt_ap'])).',';
         }
         if(!empty($row['dt_b'])){
-            $dts[]  = t('Art. 5(2,3) - b').': '.date('d/m/Y',strtotime($row['dt_b']));
+            $dts[]  = t('Art. 5(2,3) - b').': '.date('d/m/Y',strtotime($row['dt_b'])).',';
         }
          if(!empty($row['dt_c'])){
-            $dts[]  = t('Art. 5(2,3) - c').': '.date('d/m/Y',strtotime($row['dt_c']));
+            $dts[]  = t('Art. 5(2,3) - c').': '.date('d/m/Y',strtotime($row['dt_c'])).',';
         }
         
         $rows[] = array('data' => array(
@@ -2262,6 +2262,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     		}
     		foreach ($rows as $row) {
     			if (!empty($row['data'])) {
+                    $row['data']['starting_dates_application'] = strip_tags($row['data']['starting_dates_application']);
     				$rowsToBeExported[] = $row['data'];
     			}
     		}
@@ -2270,7 +2271,15 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     		$filename = 'rca_'. $filter['filter']['field_anneedata_value']. '.xls';
     		uwwtd_create_xls($filename, $rowsToBeExported);
     	} else {
-    		uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rows);
+            // Restructuration des tableaux :
+    		$rowsToBeExported = array();
+            foreach ($rows as $row) {
+    			if (!empty($row['data'])) {
+                    $row['data']['starting_dates_application'] = strip_tags($row['data']['starting_dates_application']);
+    				$rowsToBeExported[] = $row;
+    			}
+    		}
+    		uwwtd_export_data($type_export, 'rca_'.$filter['filter']['field_anneedata_value'], $header_export, $rowsToBeExported);
     	}
     }
 
