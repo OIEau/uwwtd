@@ -337,6 +337,33 @@ function uwwtd_menu(){
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
   );
 
+    $items['discharge-points/reuse'] = array(
+    'title' => 'Discharge points',
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'access callback' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/reuse/csv'] = array(
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/reuse/xls'] = array(
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
     'page arguments' => array(),
