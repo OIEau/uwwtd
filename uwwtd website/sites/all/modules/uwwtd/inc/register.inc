@@ -1,4 +1,3 @@
-
 <?php
 
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
@@ -66,6 +65,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 function uwwtd_register_set_operation(&$batch, $annee){
  //    //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
@@ -84,6 +84,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
  //    //excel
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca54_sheet1_1', array($annee));
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	// //optimize : ok
@@ -97,6 +98,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_graph2_sheet11_1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
@@ -172,7 +174,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
     $objReader->setLoadSheetsOnly( array(
 		$GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name'],
-	) );
+    ));
 
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
@@ -676,11 +678,23 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']);
 
-    $start_line = 6;
+    $start_line = 7; //6 -> 8 (légende + filtre)
 //     $sheet->insertNewRowBefore(7, count($listrca));   todo    $listrca exist pas
 
     $i = $start_line;
     $ind = $GLOBALS['uwwtd']['sheet1_rca'];
+
+    //get content of cell A10 (1) the amount has to be calculated with the sum of measured, calculated, estimated
+    $cell = $sheet->getCell('A10');
+    $A10 = $cell->getValue();
+    $cell->setValue('');
+    //get content of cell A11 (2) possibility to have several related sensitive areas, successor and predecessors. If it is a case separation with ;
+    $cell = $sheet->getCell('A11');
+    $A11 =  $cell->getValue();
+    $cell->setValue('');
+    $i++;
+//     $sheet->insertNewRowBefore($i, 1);
+
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
 //     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['rca']['csv_name']. '.csv';
@@ -745,6 +759,14 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     $sheet->getStyle('AD6:AD10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
     $sheet->getStyle('AG6:AG10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
 
+    //we rewrite the legend
+    $i++;
+//     $sheet->insertNewRowBefore($i, 1);
+    $sheet->setCellValueByColumnAndRow(0, $i, $A10);
+    $i++;
+//     $sheet->insertNewRowBefore($i, 1);
+    $sheet->setCellValueByColumnAndRow(0, $i, $A11);
+
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -760,6 +782,103 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']));
+
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+/**
+ *
+ */
+function uwwtd_create_register_2015_file_rca54_sheet1_1($annee, &$context)
+{
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
+    }
+
+//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
+
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    //change to public://
+//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setLoadSheetsOnly( array(
+                                         $GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_model_sheet_name'],
+                                        ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_model_sheet_name']);
+
+    $start_line = 5; 
+
+
+    $i = $start_line;
+    $ind = $GLOBALS['uwwtd']['sheet1_rcaA54'];
+
+ 
+
+//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
+//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['rca']['csv_name']. '.csv';
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rcaA54']['csv_name'], $annee);
+
+    $rrcafile = fopen($filename, 'rb');
+
+    //ignore header //decomment for debug on xls final file
+    $rca = fgetcsv($rrcafile, 5000, ';');
+
+    while ($rca = fgetcsv($rrcafile, 5000, ';')) {
+//       dsm($i);
+//       dsm($rca);
+//     foreach($listrca as $rca) {
+        $sheet->setCellValueByColumnAndRow($ind['code'], $i, $rca[$ind['code']]);
+        $sheet->setCellValueByColumnAndRow($ind['name'], $i, $rca[$ind['name']]);
+        $sheet->setCellValueByColumnAndRow($ind['designation_date'], $i, $rca[$ind['designation_date']]);
+        $sheet->setCellValueByColumnAndRow($ind['deadline_n'], $i, $rca[$ind['deadline_n']]);
+        $sheet->setCellValueByColumnAndRow($ind['deadline_p'], $i, $rca[$ind['deadline_p']]);
+        $sheet->setCellValueByColumnAndRow($ind['application_art_5_4'], $i, $rca[$ind['application_art_5_4']]);
+        $sheet->setCellValueByColumnAndRow($ind['uwwtp_number'], $i, $rca[$ind['uwwtp_number']]);
+        $sheet->setCellValueByColumnAndRow($ind['uwwtp_capacity_total'], $i, $rca[$ind['uwwtp_capacity_total']]);
+        $sheet->setCellValueByColumnAndRow($ind['n_in'], $i, $rca[$ind['n_in']]);
+        $sheet->setCellValueByColumnAndRow($ind['n_out'], $i, $rca[$ind['n_out']]);
+        $sheet->setCellValueByColumnAndRow($ind['p_in'], $i, $rca[$ind['p_in']]);
+        $sheet->setCellValueByColumnAndRow($ind['p_out'], $i, $rca[$ind['p_out']]);
+        $sheet->setCellValueByColumnAndRow($ind['n_reduction'], $i, $rca[$ind['n_reduction']]);
+        $sheet->setCellValueByColumnAndRow($ind['p_reduction'], $i, $rca[$ind['p_reduction']]);
+        $sheet->setCellValueByColumnAndRow($ind['compliant_5_4'], $i, $rca[$ind['compliant_5_4']]);
+        $sheet->setCellValueByColumnAndRow($ind['transition_period_pending'], $i, $rca[$ind['transition_period_pending']]);
+        $sheet->setCellValueByColumnAndRow($ind['remarks_by_ms'], $i, $rca[$ind['remarks_by_ms']]);
+
+        $i++;
+
+        $sheet->insertNewRowBefore($i, 1);
+    }
+    fclose($rrcafile);
+
+    // Set "Rate of Removal N-tot" and "Rate of Removal P-tot" column in percent format :
+//     $sheet->getStyle('AD6:AD10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
+//     $sheet->getStyle('AG6:AG10000')->getNumberFormat()->applyFromArray(array('code' => PHPExcel_Style_NumberFormat::FORMAT_PERCENTAGE));
+
+
+
+    //write
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+    $objWriter->setPreCalculateFormulas(false);
+    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
+    unset($objWriter);
+    unset($objReader);
+	
+	//In order to finish the script 
+    $context['sandbox']['progress']++;
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_model_sheet_name']));
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
@@ -3037,6 +3156,14 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     	$context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 	}
 //     }
+}
+
+/**
+ *
+ */
+function uwwtd_create_register_2015_file_graph2_sheet11_1($annee, &$context)
+{
+   dsm('todo uwwtd_create_register_2015_file_graph2_sheet11_1');
 }
 
 /**
@@ -9423,6 +9550,35 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
         // Discharged loads (t/y) P-tot :
         $dischargedLoadsPtot = $rca[$i]->field_rcapdischargedmeasured['und'][0]['value'] + $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'] + $rca[$i]->field_rcapdischargedestimated['und'][0]['value'];
 
+        $field_rcacodepredecessor = '';
+        if (isset($rca[$i]->field_rcacodepredecessor['und'][0]['value'])) {
+          foreach ($rca[$i]->field_rcacodepredecessor['und'] as $rcacodepredecessor) {
+            $field_rcacodepredecessor .= ($field_rcacodepredecessor == '' ? '' : ', ') . $rcacodepredecessor['value'];         
+          }
+        }
+        
+        $field_rcasalsaremark = '';
+        if (isset($rca[$i]->field_rcasalsaremark['und'][0]['value'])) {
+          foreach ($rca[$i]->field_rcasalsaremark['und'] as $rcasalsaremark) {
+            $field_rcasalsaremark .= ($field_rcasalsaremark == '' ? '' : ', ') . $rcasalsaremark['value'];         
+          }
+        }
+        
+        $field_rca_sensitive_area = '';   
+        //todo test ? $rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? ''  
+        if (isset($rca[$i]->field_rca_sensitive_area['und'][0]['value'])) {
+          foreach ($rca[$i]->field_rca_sensitive_area['und'] as $rca_sensitive_area) {
+            $field_rca_sensitive_area .= ($field_rca_sensitive_area == '' ? '' : ', ') . $rca_sensitive_area['value'];         
+          }
+        }
+        
+        $field_rcarelatedsaremark = '';
+        if (isset($rca[$i]->field_rcarelatedsaremark['und'][0]['value'])) {
+          foreach ($rca[$i]->field_rcarelatedsaremark['und'] as $rcarelatedsaremark) {
+            $field_rcarelatedsaremark .= ($field_rcarelatedsaremark == '' ? '' : ', ') . $rcarelatedsaremark['value'];         
+          }
+        }
+
         $line = array(
             //'ID of Sensitive Area', //;       rcaCode
             $ind['id_of_sensitive_area'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
@@ -9513,15 +9669,18 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'ID code of successor (2)', //;            ?
             $ind['id_code_of_successor_(2)'] => $rca[$i]->field_rcasuccessor['und'][0]['value'],       //new reporting format?
             //'ID code of predecessor (2)', //;          ?
-            $ind['id_code_of_predecessor_(2)'] => $rca[$i]->field_rcacodepredecessor['und'][0]['value'],   //new reporting format?
+            $ind['id_code_of_predecessor_(2)'] => $field_rcacodepredecessor, //$rca[$i]->field_rcacodepredecessor['und'][0]['value'],   //new reporting format?
             //'remark Successor/Predecessor SA', //;     ?
-            $ind['remark_successor/predecessor_sa'] => '',   //new reporting format?
+            $ind['remark_successor/predecessor_sa'] => $field_rcasalsaremark,   //new reporting format?
             //'Related sensitive area (2)', //;          ?
 //             $ind['related_sensitive_area_(2)'] => 'TODO',       si CSA, voir rcaSensitiveArea field_rca_sensitive_area
-            $ind['related_sensitive_area_(2)'] => ($rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? '' : $rca[$i]->field_rca_sensitive_area['und'][0]['value']),
+            $ind['related_sensitive_area_(2)'] => $field_rca_sensitive_area, //($rca[$i]->field_specialisedzonetype['und'][0]['value'] != 'CSA' ? '' : $rca[$i]->field_rca_sensitive_area['und'][0]['value']),
             //'Remark Related sensitive area (2)', //;   ?
-            $ind['remark_related_sensitive_area_(2)'] => $rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
+            $ind['remark_related_sensitive_area_(2)'] => $field_rcarelatedsaremark, //$rca[$i]->field_rcarelatedsaremark['und'][0]['value'],
         );
+
+
+
         fputcsv($r, $line, ';');
     }
 
@@ -9532,6 +9691,152 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 }
 
+/**
+ *
+ */
+function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['max'] = 1;
+        $context['sandbox']['progress'] = 0;
+    }
+
+
+
+    $ind = $GLOBALS['uwwtd']['sheet1_rcaA54'];
+
+    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rcaA54']['csv_name'], $annee);
+
+    $r = fopen($filename, 'wb');
+
+    // Create sensitive area register sheet
+    $header = array(
+      'code' => 'Code',
+      'name' => 'Name',
+      'designation_date' => 'Designation date',
+      'deadline_n' => 'deadline N',
+      'deadline_p' => 'deadline P',
+      'application_art_5_4' => 'Application Art. 5(4)',
+      'uwwtp_number' => 'UWWTP number',
+      'uwwtp_capacity_total' => 'UWWTP capacity total',
+      'n_in' => 'N in',
+      'n_out' => 'N out',
+      'p_in' => 'Pin',
+      'p_out' => 'Pout',
+      'n_reduction' => 'N reduction',
+      'p_reduction' => 'P reduction',
+      'compliant_5_4' => 'compliant 5(4)?',
+      'transition_period_pending' => 'transition period pending?',
+      'remarks_by_ms' => 'Remarks by MS',
+    );
+
+    $rca = uwwtd_get_all_rca($annee);
+
+    fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
+    fputcsv($r, $header, ';');
+
+    for ($i = 0, $max = count($rca); $i < $max; $i++) {
+
+        //TODO attente retour nd et b
+        //$node->field_rca54applied['und'][0]['value']
+//         if (!$rca[$i]->field_rca54applied['und'][0]['value']) {
+        if (false === in_array($rca[$i]->field_specialisedzonetype['und'][0]['value'], array('A54', 'A5854', 'A5154', 'A54523', 'A5854523'))) {
+            continue;
+        }
+
+        $nIn = 0;
+        $nOut = 0;
+        $pIn = 0;
+        $pOut = 0;
+        $n_reduction = 0;
+        $p_reduction = 0;
+        $compliant_5_4 = '';
+
+        dsm($rca[$i]->field_rcanincomingmeasured['und'][0]['value']);
+        dsm($rca[$i]->field_rcandischargedmeasured['und'][0]['value']);
+        dsm($rca[$i]->field_rcapincomingmeasured['und'][0]['value']);
+        dsm($rca[$i]->field_rcapdischargedmeasured['und'][0]['value']);
+
+        dsm($rca[$i]->field_rcanincomingcalculated['und'][0]['value']);
+        dsm($rca[$i]->field_rcandischargedcalculated['und'][0]['value']);
+        dsm($rca[$i]->field_rcapincomingcalculated['und'][0]['value']);
+        dsm($rca[$i]->field_rcapdischargedcalculated['und'][0]['value']);
+
+        dsm($rca[$i]->field_rcanincomingestimated['und'][0]['value']);
+        dsm($rca[$i]->field_rcandischargedestimated['und'][0]['value']);
+        dsm($rca[$i]->field_rcapincomingestimated['und'][0]['value']);
+        dsm($rca[$i]->field_rcapdischargedestimated['und'][0]['value']);
+
+        dsm($rca[$i]->field_rcamethod54['und'][0]['value']);
+
+        switch ($rca[$i]->field_rcamethod54['und'][0]['value']) {
+          case 'M':
+            $nIn = $rca[$i]->field_rcanincomingmeasured['und'][0]['value'];
+            $nOut = $rca[$i]->field_rcandischargedmeasured['und'][0]['value'];
+            $pIn = $rca[$i]->field_rcapincomingmeasured['und'][0]['value'];
+            $pOut = $rca[$i]->field_rcapdischargedmeasured['und'][0]['value'];
+            break;
+          case 'C':
+            $nIn = $rca[$i]->field_rcanincomingcalculated['und'][0]['value'];
+            $nOut = $rca[$i]->field_rcandischargedcalculated['und'][0]['value'];
+            $pIn = $rca[$i]->field_rcapincomingcalculated['und'][0]['value'];
+            $pOut = $rca[$i]->field_rcapdischargedcalculated['und'][0]['value'];
+            break;
+          case 'E':
+            $nIn = $rca[$i]->field_rcanincomingestimated['und'][0]['value'];
+            $nOut = $rca[$i]->field_rcandischargedestimated['und'][0]['value'];
+            $pIn = $rca[$i]->field_rcapincomingestimated['und'][0]['value'];
+            $pOut = $rca[$i]->field_rcapdischargedestimated['und'][0]['value'];
+            break;
+        }
+        //100- (N out * 100 / N In)
+        $n_reduction = ($nOut > 0 && $nIn > 0) ? 100 - ($nOut * 100 / $nIn) : 0;
+        //100- (P out * 100 / P In)
+        $p_reduction = ($pOut > 0 && $pIn > 0) ? 100 - ($pOut * 100 / $pIn) : 0;
+
+        if ($rca[$i]->field_rcaanitro['und'][0]['value'] == 1 && $rca[$i]->field_rcaaphos['und'][0]['value'] == 1) {
+            $compliant_5_4 = $n_reduction >= 75 && $p_reduction >= 75 ? 'C' : 'NC';
+        } elseif ($rca[$i]->field_rcaanitro['und'][0]['value'] == 1) {
+           $compliant_5_4 = $n_reduction >= 75 ? 'C' : 'NC';
+        } elseif ($rca[$i]->field_rcaaphos['und'][0]['value'] == 1) {
+           $compliant_5_4 = $p_reduction >= 75 ? 'C' : 'NC';
+        } else {
+           $compliant_5_4 = 'NR';
+        }
+
+        $compliant_5_4 = $GLOBALS['glossary'][$compliant_5_4];
+
+        $line = array(              
+            $ind['code'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
+            $ind['name'] => $rca[$i]->title,
+            $ind['designation_date'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),
+            $ind['deadline_n'] => substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10),
+            $ind['deadline_p'] => substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10),
+            $ind['application_art_5_4'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
+            $ind['uwwtp_number'] => isset($rca[$i]->field_rcaPlants['und'][0]['value']) ? $rca[$i]->field_rcaPlants['und'][0]['value'] : '',  
+            $ind['uwwtp_capacity_total'] => isset($rca[$i]->field_rcaplantscapacity['und'][0]['value']) ? $rca[$i]->field_rcaplantscapacity['und'][0]['value'] : '',  
+            $ind['n_in'] => $nIn,
+            $ind['n_out'] => $nOut,
+            $ind['p_in'] => $pIn,
+            $ind['p_out'] => $pOut,
+            $ind['n_reduction'] => $n_reduction,
+            $ind['p_reduction'] => $p_reduction,
+            $ind['compliant_5_4'] => $compliant_5_4, 
+            $ind['transition_period_pending'] => '',
+            $ind['remarks_by_ms'] => '',
+        );
+        fputcsv($r, $line, ';');
+    }
+
+    fclose($r);
+
+    $context['sandbox']['progress']++;
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+}
+
+/**
+ *
+ */
 function uwwtd_get_all_rca($annee)
 {
     $query = '
@@ -9559,7 +9864,7 @@ function uwwtd_get_all_rca($annee)
     }
 
     return $data;
-}
+}  
 
 function uwwtd_create_register_2015_final_file($annee, &$context)
 {
@@ -9572,6 +9877,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     $listesheet = array(
                         'glossary',
                         'rca',
+                        'rcaA54',
                         'uwwtp',
                         'agglo',
                         'summary_legal_comp',
@@ -9582,6 +9888,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
                         'nuts_level2',
                         'sewage_sludge',
                         'graph',
+                        'graph_2',
                         'new_agglo',
                         'agglo_out',
                         'new_uwwtp',
@@ -9650,12 +9957,12 @@ function uwwtd_getregister_file_path($filename, $annee)
  */
 function uwwtd_getregister_modelfile_path($annee)
 {
-    uwwtd_trace($annee);
+//     uwwtd_trace($annee);
     if ($annee >= 2016) {
-      uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
+//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
     } else {
-      uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
+//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
     }
 }
