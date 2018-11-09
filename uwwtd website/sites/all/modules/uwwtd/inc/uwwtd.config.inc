@@ -369,6 +369,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+    'starting_dates_application'=>array('label'=>t('Starting dates of application')),
 );
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
@@ -378,7 +379,8 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
     'rcacat_format'=>array('label'=>t('Type of receiving area')),
-    
+    'field_dcpirrigation_value'=>array('label'=>t('Type of reuse')),
+     'field_uwwwastewatertreated_value'=>array('label'=>t('Volume (m3/y)')),
     
 );
 
@@ -421,6 +423,21 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
     //#81BEAA
     //#F4D4AD
 );
+$GLOBALS['uwwtd']['reuse_type']=array(
+    'IR'=>'Irrigation',
+    'IN'=>'Infiltration',
+    'OT'=>'Other'
+);
+$GLOBALS['uwwtd']['reuse_type_color']=array(
+    'IR'=>'#2e8b57',
+    'IN'=>'#5B3349',
+    'OT'=>'#4682b4'
+);
+/*
+Irrigation|Irrigation|#2e8b57
+Infiltration|Infiltration|
+Other|Other|
+*/
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',

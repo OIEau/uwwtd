@@ -4869,6 +4869,126 @@ function uwwtd_update_7163(&$context){
 //     throw new DrupalUpdateException(__FUNCTION__);
 }
 
+function uwwtd_update_7164(&$context){
+    uwwtd_install_trace(__FUNCTION__);
+    //disable deprecated modules :
+    $dis = array(
+        'Multilingual forum' => 'i18n_forum',
+        'Charts and Graphs: Flot' => 'charts_graphs_flot',
+        'Flot' => 'flot',
+        'Charts and Graphs' => 'charts_graphs',
+        'Comment' => 'comment',   
+        'Search' => 'search',
+        'Shortcut' => 'shortcut'
+    );
+    if (false === module_disable($dis)) {
+        $msg = "Error, the module ".implode(',', $dis)." can't be disabled.";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+    //Enable new modules (search) :
+
+    $en= array(
+        'Search API' => 'search_api',
+        'Database search' => 'search_api_db',
+        'Facet API' => 'facetapi',
+        'Search facets' => 'search_api_facetapi',
+        'Search views' => 'search_api_views',
+        'Search API autocomplete' => 'search_api_autocomplete',
+        'Current Search Blocks'=>'current_search',
+        'UWWTD Search'=>'uwwtd_search'
+    );
+    if (false === module_enable($en)) {
+        $msg = "Error, the module ".implode(',', $en)." can't be enabled.";
+        uwwtd_install_trace($msg);
+        throw new DrupalUpdateException($msg);    
+    }
+
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'navigation')
+        ->condition('module', 'system')           
+        ->execute();    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'login')
+        ->condition('module', 'user')           
+        ->execute();  
+       
+
+ //search block : current search, search form, 
+    db_update('block')
+        ->fields(array(
+          'region' => 'content',
+          'title'=>'',
+          'weight' => -25,
+          'status' => 1,
+          'visibility' => 1,
+          'custom'=>0,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', '-exp-search-page')
+        ->condition('module', 'views')           
+        ->execute();  
+     
+    db_update('block')
+        ->fields(array(
+          'region' => 'sidebar_first',
+          'title'=>'',
+          'status' => 1,
+          'weight' => -20,
+          'visibility' => 1,
+          'custom'=>0,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'standard')
+        ->condition('module', 'current_search')           
+        ->execute();      
+   //facets
+    db_update('block')
+        ->fields(array(
+          'region' => 'sidebar_first',
+          'title'=>'',
+          'status' => 1,
+          'visibility' => 1,
+          'pages' => "search/*\nsearch",
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('module', 'facetapi')           
+        ->execute();   
+    //Load change in content type definition (field labels and label of allowed value)
+    
+    //throw new DrupalUpdateException(__FUNCTION__);
+}
+
+function uwwtd_update_7165(&$context){
+    uwwtd_install_trace(__FUNCTION__);
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7165.json');   
+    variable_set('siif_eru_version', __FUNCTION__);
+    
+//throw new DrupalUpdateException(__FUNCTION__);
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+}
+
+
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label
@@ -6140,7 +6260,9 @@ function uwwtd_install_disable_module(&$context)
     $list_module_to_disable = array(
         'Overlay' => 'overlay',
         'Toolbar' => 'toolbar',
-        'Update manager' => 'update',            
+        'Update manager' => 'update',   
+        'Comment' => 'comment',   
+        'Search' => 'Search'
         );
         
     if (false === module_disable($list_module_to_disable)) {
@@ -6164,9 +6286,6 @@ function  uwwtd_install_enable_module(&$context)
         'PHP filter' => 'php',
         'Administration menu' => 'admin_menu',
         'Chaos tools' => 'ctools',
-        'Charts and Graphs' => 'charts_graphs',
-        'Charts and Graphs: Flot' => 'charts_graphs_flot',
-        'Flot' => 'flot',
         'Date' => 'date',
         'Date API' => 'date_api',
         'Date Views' => 'date_views',
@@ -6188,7 +6307,6 @@ function  uwwtd_install_enable_module(&$context)
         'Internationalization' => 'i18n',
         'Menu translation' => 'i18n_menu',
         'Multilingual content' => 'i18n_node',                                
-        'Multilingual forum' => 'i18n_forum',
         'Multilingual select' => 'i18n_select',
         'String translation' => 'i18n_string',
         'Synchronize translations' => 'i18n_sync',
@@ -6212,7 +6330,7 @@ function  uwwtd_install_enable_module(&$context)
         'Proj4JS' => 'proj4js',
         'Token' => 'token', 
         'WKHTMLTOPDF' => 'wkhtmltopdf',
-        'Google Analytics' => 'googleanalytics',                  
+        //'Google Analytics' => 'googleanalytics',                  
         'BeautyTips API' => 'beautytips',
         'BeautyTips Manager' => 'beautytips_manager',
         'BeautyTips UI' => 'beautytips_ui',
@@ -6239,6 +6357,7 @@ function  uwwtd_install_enable_module(&$context)
         'XML sitemap menu'=>'xmlsitemap_menu',
         'XML sitemap engines'=>'xmlsitemap_engines',
         
+        //search
         
         // 'UWWTD' => 'uwwtd',
         'Statistics for UWWTD' => 'uwwtd_statistics',
@@ -6436,6 +6555,23 @@ function uwwtd_install_create_block(&$context)
     //create Map home block and put it in Content region
     //=> done later in hook update 6
     
+    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'navigation')
+        ->condition('module', 'system')           
+        ->execute();    
+    db_update('block')
+        ->fields(array(
+          'region' => '-1',
+        ))
+        ->condition('theme', 'uwwtd')
+        ->condition('delta', 'login')
+        ->condition('module', 'user')           
+        ->execute();    
         
     $context['message'] = __FUNCTION__;
     $context['finished'] = 1;  
