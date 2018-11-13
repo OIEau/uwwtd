@@ -26,6 +26,11 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'xlsx_name' => '_rca.xlsx',
         'xlsx_model_sheet_name' => 'Information on sensitive area',
     ),
+    'rcaA54' => array(
+        'csv_name' => '_rcaA54.csv',
+        'xlsx_name' => '_rcaA54.xlsx',
+        'xlsx_model_sheet_name' => '5(4)-areas',
+    ),
     'uwwtp' => array(
         'csv_name' => '_uwwtp.csv',
         'csv_total_name' => '_uwwtp.total.csv',   
@@ -72,6 +77,10 @@ $GLOBALS['uwwtd']['sheet'] = array(
     'graph' => array(
         'xlsx_name' => '_graph.xlsx',
         'xlsx_model_sheet_name' => 'Graphs',
+    ), 
+    'graph_2' => array(
+        'xlsx_name' => '_graph2.xlsx',
+        'xlsx_model_sheet_name' => 'Graphs 2',
     ), 
     'new_agglo' => array(
         'csv_name' => '_new_agglo.csv',
@@ -140,6 +149,27 @@ $GLOBALS['uwwtd']['sheet1_rca'] = array(
     'related_sensitive_area_(2)' => $i++,
     'remark_related_sensitive_area_(2)' => $i++,
 );  
+
+$i = 0;
+$GLOBALS['uwwtd']['sheet1_rcaA54'] = array(    
+    'code' => $i++,
+    'name' => $i++,
+    'designation_date' => $i++,
+    'deadline_n' => $i++,
+    'deadline_p' => $i++,
+    'application_art_5_4' => $i++,
+    'uwwtp_number' => $i++,
+    'uwwtp_capacity_total' => $i++,
+    'n_in' => $i++,
+    'n_out' => $i++,
+    'p_in' => $i++,
+    'p_out' => $i++,
+    'n_reduction' => $i++,
+    'p_reduction' => $i++,
+    'compliant_5_4' => $i++,
+    'transition_period_pending' => $i++,
+    'remarks_by_ms' => $i++,
+); 
 
 
 $i = 0;

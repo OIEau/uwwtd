@@ -4969,6 +4969,7 @@ function uwwtd_update_7164(&$context){
     //throw new DrupalUpdateException(__FUNCTION__);
 }
 
+
 function uwwtd_update_7165(&$context){
     uwwtd_install_trace(__FUNCTION__);
     $menu = array(
@@ -4986,6 +4987,52 @@ function uwwtd_update_7165(&$context){
         $context['message'] = __FUNCTION__;
         $context['finished'] = 1;
     } 
+}
+
+
+/**
+ * Update cardinality for 4 field from 1 to FIELD_CARDINALITY_UNLIMITED 
+ *         field_rcacodepredecessor
+ *         field_rcasalsaremark
+ *         field_rca_sensitive_area
+ *         field_rcarelatedsaremark
+ */
+function uwwtd_update_7166() {
+  uwwtd_install_trace(__FUNCTION__);
+  $list = array(
+    'field_rcacodepredecessor',  
+    'field_rcasalsaremark',      
+    'field_rca_sensitive_area',  
+    'field_rcarelatedsaremark'  
+  );
+  
+  $msg_error = '';
+
+  field_cache_clear();
+
+  foreach ($list as $fieldname) {
+    $field = array (
+      'field_name' => $fieldname,
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    );
+    
+    try {
+        field_update_field($field);
+    } catch (Exception $e) {
+        $msg = "Error update field : ".$field['field_name']."\n";
+        $msg .= $e->getMessage() . "\n"; 
+        uwwtd_install_trace($msg);
+        $msg_error .= $msg . "\n";             
+    }
+  }
+
+    if ('' !== $msg_error) {
+        throw new DrupalUpdateException($msg_error);
+    }
+
+    variable_set('siif_eru_version', __FUNCTION__);
+
+//     throw new DrupalUpdateException($msg_error);
 }
 
 
