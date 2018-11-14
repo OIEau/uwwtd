@@ -6419,20 +6419,27 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Agglomeration info',
         //'code',
-        if (isset($agg->field_inspireidlocalid['und'][0]['value']))
+        $line[$ind['aggcode']] = '';
+        if (isset($agg->field_inspireidlocalid['und'][0]['value'])) {
         	$line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
+        } 
+
         //'name',
         $line[$ind['aggname']] = $agg->title;
         //'generated load p.e.',
+        $line[$ind['generated_load_p.e.']]  = '';
         if (isset($agg->field_agggenerated['und'][0]['value']))
         	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
         //'deadline for Art. 3 compliance',
+        $line[$ind['deadline_for_art._3_compliance']] = '';
         if (isset($agg->field_aggperiodover3['und'][0]['value']))
         	$line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
         //'deadline for Art. 4 compliance',
+        $line[$ind['deadline_for_art._4_compliance']] = '';
         if (isset($agg->field_aggperiodover4['und'][0]['value']))
         	$line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
         //'deadline for Art. 5 compliance',
+        $line[$ind['deadline_for_art._5_compliance']] = '';
         if (isset($agg->field_aggperiodover5['und'][0]['value']))
         	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
         //'Pending or expired deadline EXP/PD/EXP-PD',
@@ -6467,8 +6474,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	        }
         }
 
-		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd']))
+		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd'])) {
         	$line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
+        } else {
+            $line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = '';
+        }
+
         //'NUTS 1 code',
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
             $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
