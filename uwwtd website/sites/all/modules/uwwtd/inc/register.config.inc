@@ -1,4 +1,9 @@
 <?php
+$GLOBALS['uwwtd']['register']['message'] = array(
+  'info_not_provided' => 'Information not provided',
+);
+
+// $GLOBALS['uwwtd']['register']['message']['info_not_provided']
 
 //todo move in conf file
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
