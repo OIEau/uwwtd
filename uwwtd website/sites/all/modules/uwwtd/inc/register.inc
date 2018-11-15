@@ -70,6 +70,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
     if ($annee < 2016) {
+
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
     } else {
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
@@ -466,7 +467,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     while ($j < 10000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
 
         //if($trace == 10){
-            uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
+//             uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
         //}
         //else{
         //    $trace = 0;
@@ -517,7 +518,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //Special rules for cell's style
 
     if(!empty($lines)){
-        uwwtd_trace('set style');
+//         uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
             $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
@@ -542,14 +543,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
             // }
 
         }
-        uwwtd_trace('end style');
+//         uwwtd_trace('end style');
     }
 
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
-    uwwtd_trace('end loop');
+//     uwwtd_trace('end loop');
 	//uwwtd_trace('Progress : '.$context['sandbox']['progress'].' / '.$context['sandbox']['max']);
     fclose($ruwwtpfile);
-	uwwtd_trace('Start Total data');
+// 	uwwtd_trace('Start Total data');
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
@@ -890,7 +891,7 @@ function uwwtd_create_register_2015_file_rca54_sheet1_1($annee, &$context)
  */
 function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8($annee) 
 {
- 
+uwwtd_trace(__FUNCTION__); 
   $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
   if (!isset($context['sandbox']['progress'])) {
 
@@ -965,6 +966,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $line = array();      
       if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
           $bigID = $agg->field_aggbigid['und'][0]['value'];  
+uwwtd_trace('before uwwtd_summary_big_cities_get_agglo_detail');
           $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
           
           uwwtd_trace($agg->title . "(" . $agg->nid . ") / " . $bigID);
@@ -977,7 +979,9 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
               'ias' => 0,
               'no_collecting_system_nor_ias' => 0,
 
-              'type_of_receiving_area' => array(), 
+              'type_of_receiving_area' => array(),
+              'id_of_sensitive_area' => array(),
+              'name_of_sensitive_area' => array(), 
 
               'treat_3np_3n_3p_pe' => 0,
               'treat_3other_pe' => 0,
@@ -1021,7 +1025,8 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
 
 
           $sum_by_bigid[$bigID]['type_of_receiving_area'] = array_merge($sum_by_bigid[$bigID]['type_of_receiving_area'], $agg_detail['dcptype']);
-
+          $sum_by_bigid[$bigID]['id_of_sensitive_area'] = array_merge($sum_by_bigid[$bigID]['id_of_sensitive_area'], $agg_detail['rcaCode']);
+          $sum_by_bigid[$bigID]['name_of_sensitive_area'] = array_merge($sum_by_bigid[$bigID]['list_name_agglo'], $agg_detail['rcaName']);
 
           $sum_by_bigid[$bigID]['list_code_agglo'][] = $agg->field_inspireidlocalid['und'][0]['value'];
           $sum_by_bigid[$bigID]['list_name_agglo'][] = $agg->title;     
@@ -1030,7 +1035,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $context['sandbox']['progressagg']++;
   }
  
-  uwwtd_trace(var_export($sum_by_bigid, true));
+//   uwwtd_trace(var_export($sum_by_bigid, true));
  
   $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
   $r = fopen($filename, 'ab');  //create by the precedent function batch with list of big dischargers
@@ -1069,6 +1074,9 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       }
 
       $line[$ind['type_of_receiving_area']] = implode(';', $bigid_detail['type_of_receiving_area']);
+      
+      $line[$ind['id_of_sensitive_area']] = implode(';', $bigid_detail['id_of_sensitive_area']);
+      $line[$ind['name_of_sensitive_area']] = implode(';', $bigid_detail['name_of_sensitive_area']);
 
       $line[$ind['list_code_agglo']] = implode(';', $bigid_detail['list_code_agglo']);
       $line[$ind['list_name_agglo']] = implode(';', $bigid_detail['list_name_agglo']);
@@ -1091,6 +1099,7 @@ uwwtd_trace(var_export($line, true));
  */
 function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8($annee)
 {
+uwwtd_trace(__FUNCTION__);
    //on prend toutes les agglos > 150 000 avec la colonne field_aggbigid rempli
     if (!isset($context['sandbox']['progress'])) {
 
@@ -1155,9 +1164,12 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $ind['treatment_3n_p_np'] => 'best treatment provided 3N',
             $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)',
             $ind['type_of_receiving_area'] => 'Type of receiving area',
+            $ind['id_of_sensitive_area'] => 'ID of Sensitive Area',
+            $ind['name_of_sensitive_area'] => 'Name of Sensitive Area',
             $ind['list_code_agglo'] => 'list_name_agglo',
             $ind['list_name_agglo'] => 'list_name_agglo',
         );
+
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
     } else {
@@ -1170,6 +1182,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
         $line = array();
         
         if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
+uwwtd_trace('call uwwtd_summary_big_cities_get_agglo_detail');
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
 
             $generated_load = 0;
@@ -1219,10 +1232,14 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3other;
             $line[$ind['type_of_receiving_area']] = implode(';', $agg_detail['dcptype']);
 
+            $line[$ind['id_of_sensitive_area']] = implode(';', $agg_detail['rcaCode']);
+            $line[$ind['name_of_sensitive_area']] = implode(';', $agg_detail['rcaName']);
+
+
             $line[$ind['list_code_agglo']] = $agg->field_inspireidlocalid['und'][0]['value'];
             $line[$ind['list_name_agglo']] = $agg->title;
 
-// uwwtd_trace(var_export($line, true));
+uwwtd_trace(var_export($line, true));
             
             // SAVING FOR EU PORTION
             // Search for this string to find all the fields
@@ -1418,6 +1435,8 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
 //     $result['ias'] = 0;
 //     $result['no_collecting_system_nor_ias'] = 0;
     $result['dcptype'] = array();
+    $result['rcaCode'] = array();
+    $result['rcaName'] = array();
 //     $agg = node_load($nidagglo);
 //     dsm($agg);
     $result['generated_load'] = $agg->field_agggenerated['und'][0]['value'];
@@ -1491,6 +1510,18 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
         foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
             $dcp = node_load($dcpnid['nid']);
             $result['dcptype'][] = $dcp->field_rcatype['und'][0]['value'];
+
+            if(isset($dcp->field_dcprcaliste['und'])){
+              foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
+                  $rca = node_load($rcanid['nid']);
+                  if (isset($result['rcaCode'][$rca->field_inspireidlocalid['und'][0]['value']])) {
+                      continue;
+                  }
+              
+                  $result['rcaCode'][] = $rca->field_inspireidlocalid['und'][0]['value'];
+                  $result['rcaName'][] = $rca->title;
+              }
+            }
             unset($dcp);
         }
         unset($uwwtp);
@@ -1513,8 +1544,8 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
     if ($result['treat_0_agggenerated'] > 0) {
       $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];
     }
-
-
+uwwtd_trace(__LINE__);
+uwwtd_trace(var_export($result, true));
     return $result;
 }
 
@@ -1828,6 +1859,11 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3np'], $i, $bc[$ind['treatment_3np']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_3_other_(e.g._uv,_filtration)'], $i, $bc[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
         $sheet->setCellValueByColumnAndRow($ind['type_of_receiving_area'], $i, $bc[$ind['type_of_receiving_area']]);
+
+        if ($annee >= 2016) {
+          $sheet->setCellValueByColumnAndRow($ind['id_of_sensitive_area'], $i, $bc[$ind['id_of_sensitive_area']]);
+          $sheet->setCellValueByColumnAndRow($ind['name_of_sensitive_area'], $i, $bc[$ind['name_of_sensitive_area']]);
+        }
 
         $sheet->setCellValueByColumnAndRow($ind['list_code_agglo'], $i, $bc[$ind['list_code_agglo']]);
         $sheet->setCellValueByColumnAndRow($ind['list_name_agglo'], $i, $bc[$ind['list_name_agglo']]);
@@ -2185,7 +2221,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell_to_repalce = array('B3','D3','AA51','AA52','AA54','AA55','AA57','AA58','AA65','AA66','AA68','AA69','AA71','AA72',
                            'AA41','AB41','AC41','AD41','AE41','AF41','AB48','AB62','B74','A54','A55','A57','A58','A60','A61',
                            'A64','A65','A67','A68','A70','A71','AA31','B21','C13','Z33','AD76','AA85','AA102','AA117','AA11',
-                           'AA128',
+                           'AA128', 'AF24', 'AF25',
                            );
     foreach ($cell_to_repalce as $x){
         $cell = $sheet->getCell($x);
@@ -3163,7 +3199,30 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
  */
 function uwwtd_create_register_2015_file_graph2_sheet11_1($annee, &$context)
 {
-   dsm('todo uwwtd_create_register_2015_file_graph2_sheet11_1');
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    //change to public://
+//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setIncludeCharts(TRUE);
+    $objReader->setLoadSheetsOnly( array(
+                                         $GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_model_sheet_name'],
+                                        ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+//     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_model_sheet_name']);
+
+    //write
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+//     $objWriter->setPreCalculateFormulas(true);
+    $objWriter->setIncludeCharts(TRUE);
+    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
+    unset($objWriter);
+    unset($objReader);
 }
 
 /**
@@ -9960,10 +10019,12 @@ function uwwtd_getregister_modelfile_path($annee)
 //     uwwtd_trace($annee);
     if ($annee >= 2016) {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
-      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
     } else {
-//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
-      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014']);
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014'];
     }
 }
 
