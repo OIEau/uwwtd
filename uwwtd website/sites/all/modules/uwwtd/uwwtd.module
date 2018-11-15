@@ -72,6 +72,16 @@ function uwwtd_menu(){
 		'file path' => drupal_get_path('module', 'uwwtd')
 	);
 
+  $items['article17/%']=array(
+    'title' => t('Article 17 export'),
+    'page callback' => 'uwwtd_article17_export',
+    'page arguments' => array(1),
+    //'access callback' => TRUE,
+     'access arguments' => array('Data-management access'),
+    'file' => 'inc/article17.inc',
+    'file path' => drupal_get_path('module', 'uwwtd')
+  );
+
 	$items['id/%/%'] = array(
         'page callback' => 'uwwtd_node_redirect',
         'page arguments' => array(1,2),

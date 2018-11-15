@@ -475,7 +475,6 @@ $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
     'MS' => t('More stringent treatment'),
 );
 
-
 $GLOBALS['ms_level'] = array(
     'sludge'=>array(
         'dcp'=>array('color'=>'#B5B5BF','label'=>t('Discharged into surface waters : Pipelines')),
@@ -506,6 +505,15 @@ $GLOBALS['ms_level'] = array(
 	)
 );
 
+
+// Article 17 glossary
+$GLOBALS['article17']['glossary'] = array( 
+  "CU" => "current",
+  "EXP" => "expected",
+  "P" => "past"
+);
+
+// Global glossary
 $GLOBALS['glossary'] = array(
 'ES' =>            'Estuary',
 'CW' =>            'Coastal waters',
