@@ -1765,7 +1765,17 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'agglomeration', '=');
     $query->condition('n.status', 1, '=');
-    $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>strtolower($inspireIdLocalId)));
+    
+    //Greek case
+    if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+        $localids=[$inspireIdLocalId];
+        $localids[]=str_replace('el', 'gr',$inspireIdLocalId);
+        $localids[]=str_replace('gr', 'el',$inspireIdLocalId);
+        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') IN ('". implode("','",$localids) ."')");
+    }
+    else{
+        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>$inspireIdLocalId));
+    }
     $query->orderBy('a.field_anneedata_value', 'ASC');
     $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
     if(!empty($ids)){
@@ -1830,7 +1840,15 @@ function uwwtd_getUWWTPHistoryData($inspireIdLocalId){
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'uwwtp', '=');
     $query->condition('n.status', 1, '=');
-    $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>strtolower($inspireIdLocalId)));
+    if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+        $localids=[$inspireIdLocalId];
+        $localids[]=str_replace('el', 'gr',$inspireIdLocalId);
+        $localids[]=str_replace('gr', 'el',$inspireIdLocalId);
+        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') IN ('". implode("','",$localids) ."')");
+    }
+    else{
+        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>$inspireIdLocalId));
+    }
     $query->orderBy('a.field_anneedata_value', 'ASC');
     $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
     if(!empty($ids)){
