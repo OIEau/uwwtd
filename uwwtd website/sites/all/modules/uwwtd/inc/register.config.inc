@@ -1,12 +1,17 @@
 <?php
+$GLOBALS['uwwtd']['register']['message'] = array(
+  'info_not_provided' => 'Information not provided',
+);
+
+// $GLOBALS['uwwtd']['register']['message']['info_not_provided']
 
 //todo move in conf file
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2018_register_model_20181015.xlsx',
-    'model_reporting_2014' => '2015_register_model_20161214.xlsx',
-    'model_reporting_2016' => '2018_register_model_20181015.xlsx',
+    'model' => '2018_register_model_20181114.xlsx',
+    'model_reporting_2014' => '2018_register_model_20181114.xlsx', //'2015_register_model_20161214.xlsx',
+    'model_reporting_2016' => '2018_register_model_20181114.xlsx',
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
     'final_register' => '_register_model_final.xlsx',
@@ -80,7 +85,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     ), 
     'graph_2' => array(
         'xlsx_name' => '_graph2.xlsx',
-        'xlsx_model_sheet_name' => 'Graphs 2',
+        'xlsx_model_sheet_name' => 'National report Graphs',
     ), 
     'new_agglo' => array(
         'csv_name' => '_new_agglo.csv',
@@ -500,6 +505,8 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
 //     'treatment_3np' => $i++, 
     'treatment_3_other_(e.g._uv,_filtration)' => $i++, 
     'type_of_receiving_area' => $i++,
+    'id_of_sensitive_area' => $i++,
+    'name_of_sensitive_area' => $i++,
     'list_code_agglo' => $i++, 
     'list_name_agglo' => $i++,  
 ); 

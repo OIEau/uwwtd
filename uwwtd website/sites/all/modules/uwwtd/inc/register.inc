@@ -70,6 +70,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
     if ($annee < 2016) {
+
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
     } else {
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
@@ -466,7 +467,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     while ($j < 10000 && $uwwtp = fgetcsv($ruwwtpfile, 5000, ';')) {
 
         //if($trace == 10){
-            uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
+//             uwwtd_trace('-- line : '.$j .' - time : '. (time() - $start_time));
         //}
         //else{
         //    $trace = 0;
@@ -517,7 +518,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     //Special rules for cell's style
 
     if(!empty($lines)){
-        uwwtd_trace('set style');
+//         uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
             $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
@@ -542,14 +543,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
             // }
 
         }
-        uwwtd_trace('end style');
+//         uwwtd_trace('end style');
     }
 
     $context['sandbox']['line']=$context['sandbox']['line']+$j;
-    uwwtd_trace('end loop');
+//     uwwtd_trace('end loop');
 	//uwwtd_trace('Progress : '.$context['sandbox']['progress'].' / '.$context['sandbox']['max']);
     fclose($ruwwtpfile);
-	uwwtd_trace('Start Total data');
+// 	uwwtd_trace('Start Total data');
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_total_name'], $annee);
@@ -890,7 +891,7 @@ function uwwtd_create_register_2015_file_rca54_sheet1_1($annee, &$context)
  */
 function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8($annee) 
 {
- 
+uwwtd_trace(__FUNCTION__); 
   $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
   if (!isset($context['sandbox']['progress'])) {
 
@@ -965,6 +966,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $line = array();      
       if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
           $bigID = $agg->field_aggbigid['und'][0]['value'];  
+uwwtd_trace('before uwwtd_summary_big_cities_get_agglo_detail');
           $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
           
           uwwtd_trace($agg->title . "(" . $agg->nid . ") / " . $bigID);
@@ -977,7 +979,9 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
               'ias' => 0,
               'no_collecting_system_nor_ias' => 0,
 
-              'type_of_receiving_area' => array(), 
+              'type_of_receiving_area' => array(),
+              'id_of_sensitive_area' => array(),
+              'name_of_sensitive_area' => array(), 
 
               'treat_3np_3n_3p_pe' => 0,
               'treat_3other_pe' => 0,
@@ -1021,7 +1025,8 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
 
 
           $sum_by_bigid[$bigID]['type_of_receiving_area'] = array_merge($sum_by_bigid[$bigID]['type_of_receiving_area'], $agg_detail['dcptype']);
-
+          $sum_by_bigid[$bigID]['id_of_sensitive_area'] = array_merge($sum_by_bigid[$bigID]['id_of_sensitive_area'], $agg_detail['rcaCode']);
+          $sum_by_bigid[$bigID]['name_of_sensitive_area'] = array_merge($sum_by_bigid[$bigID]['list_name_agglo'], $agg_detail['rcaName']);
 
           $sum_by_bigid[$bigID]['list_code_agglo'][] = $agg->field_inspireidlocalid['und'][0]['value'];
           $sum_by_bigid[$bigID]['list_name_agglo'][] = $agg->title;     
@@ -1030,7 +1035,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       $context['sandbox']['progressagg']++;
   }
  
-  uwwtd_trace(var_export($sum_by_bigid, true));
+//   uwwtd_trace(var_export($sum_by_bigid, true));
  
   $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_big_cities']['csv_name'], $annee);
   $r = fopen($filename, 'ab');  //create by the precedent function batch with list of big dischargers
@@ -1069,6 +1074,9 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_
       }
 
       $line[$ind['type_of_receiving_area']] = implode(';', $bigid_detail['type_of_receiving_area']);
+      
+      $line[$ind['id_of_sensitive_area']] = implode(';', $bigid_detail['id_of_sensitive_area']);
+      $line[$ind['name_of_sensitive_area']] = implode(';', $bigid_detail['name_of_sensitive_area']);
 
       $line[$ind['list_code_agglo']] = implode(';', $bigid_detail['list_code_agglo']);
       $line[$ind['list_name_agglo']] = implode(';', $bigid_detail['list_name_agglo']);
@@ -1091,6 +1099,7 @@ uwwtd_trace(var_export($line, true));
  */
 function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8($annee)
 {
+uwwtd_trace(__FUNCTION__);
    //on prend toutes les agglos > 150 000 avec la colonne field_aggbigid rempli
     if (!isset($context['sandbox']['progress'])) {
 
@@ -1155,9 +1164,12 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $ind['treatment_3n_p_np'] => 'best treatment provided 3N',
             $ind['treatment_3_other_(e.g._uv,_filtration)'] => 'best treatment provided  3 other (e.g. UV, filtration)',
             $ind['type_of_receiving_area'] => 'Type of receiving area',
+            $ind['id_of_sensitive_area'] => 'ID of Sensitive Area',
+            $ind['name_of_sensitive_area'] => 'Name of Sensitive Area',
             $ind['list_code_agglo'] => 'list_name_agglo',
             $ind['list_name_agglo'] => 'list_name_agglo',
         );
+
         fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
         fputcsv($r, $header, ';');
     } else {
@@ -1170,6 +1182,7 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
         $line = array();
         
         if($agg = node_load($context['sandbox']['idagg'][$context['sandbox']['progressagg']])){
+uwwtd_trace('call uwwtd_summary_big_cities_get_agglo_detail');
             $agg_detail = uwwtd_summary_big_cities_get_agglo_detail($annee, $agg);
 
             $generated_load = 0;
@@ -1219,10 +1232,14 @@ function uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdisch
             $line[$ind['treatment_3_other_(e.g._uv,_filtration)']] = $treatment_3other;
             $line[$ind['type_of_receiving_area']] = implode(';', $agg_detail['dcptype']);
 
+            $line[$ind['id_of_sensitive_area']] = implode(';', $agg_detail['rcaCode']);
+            $line[$ind['name_of_sensitive_area']] = implode(';', $agg_detail['rcaName']);
+
+
             $line[$ind['list_code_agglo']] = $agg->field_inspireidlocalid['und'][0]['value'];
             $line[$ind['list_name_agglo']] = $agg->title;
 
-// uwwtd_trace(var_export($line, true));
+uwwtd_trace(var_export($line, true));
             
             // SAVING FOR EU PORTION
             // Search for this string to find all the fields
@@ -1418,6 +1435,8 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
 //     $result['ias'] = 0;
 //     $result['no_collecting_system_nor_ias'] = 0;
     $result['dcptype'] = array();
+    $result['rcaCode'] = array();
+    $result['rcaName'] = array();
 //     $agg = node_load($nidagglo);
 //     dsm($agg);
     $result['generated_load'] = $agg->field_agggenerated['und'][0]['value'];
@@ -1491,6 +1510,18 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
         foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
             $dcp = node_load($dcpnid['nid']);
             $result['dcptype'][] = $dcp->field_rcatype['und'][0]['value'];
+
+            if(isset($dcp->field_dcprcaliste['und'])){
+              foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
+                  $rca = node_load($rcanid['nid']);
+                  if (isset($result['rcaCode'][$rca->field_inspireidlocalid['und'][0]['value']])) {
+                      continue;
+                  }
+              
+                  $result['rcaCode'][] = $rca->field_inspireidlocalid['und'][0]['value'];
+                  $result['rcaName'][] = $rca->title;
+              }
+            }
             unset($dcp);
         }
         unset($uwwtp);
@@ -1513,8 +1544,8 @@ function uwwtd_summary_big_cities_get_agglo_detail($annee, $agg)
     if ($result['treat_0_agggenerated'] > 0) {
       $result['treat_0'] = $result['treat_0_pe'] * 100 / $result['treat_0_agggenerated'];
     }
-
-
+uwwtd_trace(__LINE__);
+uwwtd_trace(var_export($result, true));
     return $result;
 }
 
@@ -1828,6 +1859,11 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 // //         $sheet->setCellValueByColumnAndRow($ind['treatment_3np'], $i, $bc[$ind['treatment_3np']]);
         $sheet->setCellValueByColumnAndRow($ind['treatment_3_other_(e.g._uv,_filtration)'], $i, $bc[$ind['treatment_3_other_(e.g._uv,_filtration)']]);
         $sheet->setCellValueByColumnAndRow($ind['type_of_receiving_area'], $i, $bc[$ind['type_of_receiving_area']]);
+
+        if ($annee >= 2016) {
+          $sheet->setCellValueByColumnAndRow($ind['id_of_sensitive_area'], $i, $bc[$ind['id_of_sensitive_area']]);
+          $sheet->setCellValueByColumnAndRow($ind['name_of_sensitive_area'], $i, $bc[$ind['name_of_sensitive_area']]);
+        }
 
         $sheet->setCellValueByColumnAndRow($ind['list_code_agglo'], $i, $bc[$ind['list_code_agglo']]);
         $sheet->setCellValueByColumnAndRow($ind['list_name_agglo'], $i, $bc[$ind['list_name_agglo']]);
@@ -2185,7 +2221,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $cell_to_repalce = array('B3','D3','AA51','AA52','AA54','AA55','AA57','AA58','AA65','AA66','AA68','AA69','AA71','AA72',
                            'AA41','AB41','AC41','AD41','AE41','AF41','AB48','AB62','B74','A54','A55','A57','A58','A60','A61',
                            'A64','A65','A67','A68','A70','A71','AA31','B21','C13','Z33','AD76','AA85','AA102','AA117','AA11',
-                           'AA128',
+                           'AA128', 'AF24', 'AF25',
                            );
     foreach ($cell_to_repalce as $x){
         $cell = $sheet->getCell($x);
@@ -3163,7 +3199,30 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
  */
 function uwwtd_create_register_2015_file_graph2_sheet11_1($annee, &$context)
 {
-   dsm('todo uwwtd_create_register_2015_file_graph2_sheet11_1');
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    //change to public://
+//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setIncludeCharts(TRUE);
+    $objReader->setLoadSheetsOnly( array(
+                                         $GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_model_sheet_name'],
+                                        ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+//     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph_2']['xlsx_model_sheet_name']);
+
+    //write
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+//     $objWriter->setPreCalculateFormulas(true);
+    $objWriter->setIncludeCharts(TRUE);
+    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->save(drupal_realpath($target_path));
+    
+    $objPHPExcel->__destruct();
+    unset($objPHPExcel);
+    unset($objWriter);
+    unset($objReader);
 }
 
 /**
@@ -6419,22 +6478,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Agglomeration info',
         //'code',
+        $line[$ind['aggcode']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         if (isset($agg->field_inspireidlocalid['und'][0]['value']))
         	$line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
+
         //'name',
         $line[$ind['aggname']] = $agg->title;
+
         //'generated load p.e.',
-        if (isset($agg->field_agggenerated['und'][0]['value']))
+        $line[$ind['generated_load_p.e.']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $field_agggenerated = 0;
+        if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
+            $field_agggenerated = 0;
+        }
+
         //'deadline for Art. 3 compliance',
+        $line[$ind['deadline_for_art._3_compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         if (isset($agg->field_aggperiodover3['und'][0]['value']))
         	$line[$ind['deadline_for_art._3_compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+
         //'deadline for Art. 4 compliance',
+        $line[$ind['deadline_for_art._4_compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         if (isset($agg->field_aggperiodover4['und'][0]['value']))
         	$line[$ind['deadline_for_art._4_compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+
         //'deadline for Art. 5 compliance',
+        $line[$ind['deadline_for_art._5_compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         if (isset($agg->field_aggperiodover5['und'][0]['value']))
         	$line[$ind['deadline_for_art._5_compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+
         //'Pending or expired deadline EXP/PD/EXP-PD',
         $pending_or_expired = '';
 
@@ -6446,9 +6519,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         	|| isset($line[$ind['deadline_for_art._4_compliance']]) 
         	|| isset($line[$ind['deadline_for_art._5_compliance']])) {
         	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
-             || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
-             || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
-            );
+                               || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
+                               || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
+                               );
         }
 
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
@@ -6467,25 +6540,29 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	        }
         }
 
-		if (isset($ind['pending_or_expired_deadline_exp/pd/exp-pd']))
+		if (isset($pending_or_expired))
         	$line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] = $pending_or_expired;
+
         //'NUTS 1 code',
+        $nuts1 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
             $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
         } else {
-            $line[$ind['nuts_1_code']] = '';
+            $line[$ind['nuts_1_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
         //'NUTS 2 code',
+        $nuts2 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
             $line[$ind['nuts_2_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 4);
         } else {
-            $line[$ind['nuts_2_code']] = '';
+            $line[$ind['nuts_2_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
         //'NUTS 3 code',
+        $nuts3 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
             $line[$ind['nuts_3_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 5);
         } else {
-            $line[$ind['nuts_3_code']] = '';
+            $line[$ind['nuts_3_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
 
         //Big City info',
@@ -6505,8 +6582,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	        }
         }
         //'code',
+        if ($bc_code == '') {
+          $bc_code = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        }
         $line[$ind['bccode']] = $bc_code;
+
         //'name',
+        if ($bc_name == '') {
+          $bc_name = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        }
         $line[$ind['bcname']] = $bc_name;
         unset($bc_code, $bc_name);
 
@@ -6657,12 +6741,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		if ($agg_leak > 0){
 			if($agg->field_aggart4compliance['und'][0]['value'] == 'NR'){
 				$uwwtpinfo_for_agglo['NR']['pe'] += $agg_leak;
-				$uwwtpinfo_for_agglo['NR']['percent'] += ($agg_leak * 100 / $line[$ind['generated_load_p.e.']]);
+				$uwwtpinfo_for_agglo['NR']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 			}	
 			elseif ($agg_leak > 2000 ||
 				($agg_leak/$line[$ind['connected_to_collecting_system_p._e.']]) > 0.01){
 				$uwwtpinfo_for_agglo['NC']['pe'] += $agg_leak;
-				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $line[$ind['generated_load_p.e.']]);
+				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 				if($agg->field_aggart4compliance['und'][0]['value'] == 'C'){
 					dsm('art4 is compliant on the web site but not compliant in the register');
 					dsm($agg);
@@ -6670,7 +6754,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 			}
 			else{
 				$uwwtpinfo_for_agglo['C']['pe'] += $agg_leak;
-				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $line[$ind['generated_load_p.e.']]);
+				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 			}
 		}
 
@@ -6994,8 +7078,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $rcaDateAP = '';
         $rcaDateB = '';
         $rcaDateC = '';
+
+        $dcpWaterBodyType = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $dcpWaterBodyTypeCode = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $dcpWaterbodyID = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $dcpWFDRBD = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $dcpTypeOfReceivingArea = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaID = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaName = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateArt54 = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateArt58 = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateAN = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateAP = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateB = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        $rcaDateC = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+
         $rcatreated = array();
-        if (isset($agg->field_agguwwliste['und'])) {
+        if (isset($agg->field_agguwwliste['und'])) {  
 	        foreach($agg->field_agguwwliste['und'] as $uwwtpnid) {
 	            $uwwtp = node_load($uwwtpnid['nid']);
 	            if (isset($uwwtp->field_uwwdcpliste['und'])) {
@@ -7004,7 +7103,12 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
                         //TODO  CAS NA !!!!!!!!!!!!!!!!!
 				        if (isset($dcp->field_dcprcaliste['und']) || $dcp->field_rcatype['und'][0]['value'] == 'NA') {
-                            $dcpWaterBodyTypeCode .= ($dcpWaterBodyTypeCode == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+                            if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'])) {
+                              if ($dcpWaterBodyTypeCode == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ) {
+                                $dcpWaterBodyTypeCode = '';
+                              }
+                              $dcpWaterBodyTypeCode .= ($dcpWaterBodyTypeCode == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+                            }
                             switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
                                 case 'CW':
                                     $field_dcpwaterbodytype = "To coastal water";
@@ -7040,16 +7144,28 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                     break;
                             }
 
-                            if (!isStringPresentIn($field_dcpwaterbodytype, $dcpWaterBodyType)) {
+                            if ($field_dcpwaterbodytype != '' && !isStringPresentIn($field_dcpwaterbodytype, $dcpWaterBodyType)) {
+                                if ($dcpWaterBodyType == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                  $dcpWaterBodyType = '';
+                                }
                                 $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $field_dcpwaterbodytype;
                             }
-                            if (!isStringPresentIn($dcp->field_dcpwaterbodyid['und'][0]['value'], $dcpWaterbodyID)) {
+                            if (isset($dcp->field_dcpwaterbodyid['und'][0]['value']) && !isStringPresentIn($dcp->field_dcpwaterbodyid['und'][0]['value'], $dcpWaterbodyID)) {
+                                if ($dcpWaterbodyID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                  $dcpWaterbodyID = '';
+                                }
                                 $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
                             }
-                            if (!isStringPresentIn($dcp->field_dcpwfdrbd['und'][0]['value'], $dcpWFDRBD)) {
+                            if (isset($dcp->field_dcpwfdrbd['und'][0]['value']) && !isStringPresentIn($dcp->field_dcpwfdrbd['und'][0]['value'], $dcpWFDRBD)) {
+                                if ($dcpWFDRBD == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                  $dcpWFDRBD = '';
+                                }
                                 $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
                             }
-                            if (!isStringPresentIn($dcp->field_rcatype['und'][0]['value'], $dcpTypeOfReceivingArea)) {
+                            if (isset($dcp->field_rcatype['und'][0]['value']) && !isStringPresentIn($dcp->field_rcatype['und'][0]['value'], $dcpTypeOfReceivingArea)) {
+                                if ($dcpTypeOfReceivingArea == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                  $dcpTypeOfReceivingArea = '';
+                                }
                                 $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
                             }
 
@@ -7062,22 +7178,88 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 			                        }
 
 			                        $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
-                                    $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+
+                                    if (isset($rca->field_inspireidlocalid['und'][0]['value'])) {
+                                      if ($rcaID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaID = '';
+                                      }
+                                      $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+                                    }
+                                    
+                                    if ($rcaName == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                      $rcaName = '';
+                                    }
                                     $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
-                                    $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
-                                    $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
-                                    $rcaDateAN .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaanstartdate['und'][0]['value'], 0, 10);
-                                    $rcaDateAP .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
-                                    $rcaDateB .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
-                                    $rcaDateC .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcacstardate['und'][0]['value'], 0, 10);
+
+                                    if (isset($rca->field_rcadateart54['und'][0]['value'])) {
+                                      if ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateArt54 = '';
+                                      }
+                                      $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateArt54 .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+
+
+                                    if (isset($rca->field_rcadateart5854['und'][0]['value'])) {
+                                      if ($rcaDateArt58 == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateArt58 = '';
+                                      }
+                                      $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateArt58 .= ($rcaDateArt58 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+
+
+                                    if (isset($rca->field_rcaanstartdate['und'][0]['value'])) {
+                                      if ($rcaDateAN == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateAN = '';
+                                      }
+                                      $rcaDateAN .= ($rcaDateAN == '' ? '' : ';') . substr($rca->field_rcaanstartdate['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateAN .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcaanstartdate['und'][0]['value'], 0, 10);
+
+
+                                    if (isset($rca->field_rcaapstartdate['und'][0]['value'])) {
+                                      if ($rcaDateAP == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateAP = '';
+                                      }
+                                      $rcaDateAP .= ($rcaDateAP == '' ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateAP .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcaapstartdate['und'][0]['value'], 0, 10);
+
+                                    if (isset($rca->field_rcabstartdate['und'][0]['value'])) {
+                                      if ($rcaDateB == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateB = '';
+                                      }
+                                      $rcaDateB .= ($rcaDateB == '' ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateB .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcabstartdate['und'][0]['value'], 0, 10);
+
+                                    if (isset($rca->field_rcacstardate['und'][0]['value'])) {
+                                      if ($rcaDateC == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                        $rcaDateC = '';
+                                      }
+                                      $rcaDateC .= ($rcaDateC == '' ? '' : ';') . substr($rca->field_rcacstardate['und'][0]['value'], 0, 10);
+                                    }
+//                                     $rcaDateC .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcacstardate['und'][0]['value'], 0, 10);
+
+
                                     if ($dcp->field_rcatype['und'][0]['value'] == 'NA' || $dcp->field_rcatype['und'][0]['value'] == 'LSA') {
-                                        $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'NA/LSA';
+                                        if ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                          $rcaArtApplied = '';
+                                        }
+                                        $rcaArtApplied .= ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . 'NA/LSA';
                                     } else {
                                         if ($rca->field_rca52applied['und'][0]['value'] == '1') {
-                                            $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'A523';
+                                            if ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                              $rcaArtApplied = '';
+                                            }
+                                            $rcaArtApplied .= ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . 'A523';
                                         }
                                         if ($rca->field_rca54applied['und'][0]['value'] == '1') {
-                                            $rcaArtApplied .= ($rcaArtApplied == '' ? '' : ';') . 'A54';
+                                            if ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                                              $rcaArtApplied = '';
+                                            }                                        
+                                            $rcaArtApplied .= ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . 'A54';
                                         }
                                     }
 
@@ -7283,7 +7465,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                 }
             }
 
-            $context['sandbox'][$typestat]['generated_pe'] += $line[$ind['generated_load_p.e.']];
+            $context['sandbox'][$typestat]['generated_pe'] += $field_agggenerated;
             $context['sandbox'][$typestat]['previous_generated_pe'] += $line[$ind['previous_gen._load_p.e.']];
 //             $context['sandbox'][$typestat]['total_percent'] += $line[$ind['total_%_(2)']];
 //             $context['sandbox'][$typestat]['collected_percent'] += $line[$ind['connected_to_collecting_system']];
@@ -7353,22 +7535,22 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             }
 
             $context['sandbox'][$type_rca]['subjected_agglo']++;
-            $context['sandbox'][$type_rca]['subjected_load']['generated'] += $line[$ind['generated_load_p.e.']];
+            $context['sandbox'][$type_rca]['subjected_load']['generated'] += $field_agggenerated;
             $context['sandbox'][$type_rca]['subjected_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
 
             if ($agg->field_aggcompliance['und'][0]['value'] == 'C') {
                 $context['sandbox'][$type_rca]['compliant_agglo']++;
-                $context['sandbox'][$type_rca]['compliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
+                $context['sandbox'][$type_rca]['compliant_load']['generated'] += $field_agggenerated;
                 $context['sandbox'][$type_rca]['compliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
             }
             if ($agg->field_aggcompliance['und'][0]['value'] == 'NC') {
                 $context['sandbox'][$type_rca]['notcompliant_agglo']++;
-                $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += $line[$ind['generated_load_p.e.']];
+                $context['sandbox'][$type_rca]['notcompliant_load']['generated'] += $field_agggenerated;
                 $context['sandbox'][$type_rca]['notcompliant_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
             }
             if ($pending_or_expired == 'PD') {
                 $context['sandbox'][$type_rca]['exempted']++;
-                $context['sandbox'][$type_rca]['exempted_load']['generated'] += $line[$ind['generated_load_p.e.']];
+                $context['sandbox'][$type_rca]['exempted_load']['generated'] += $field_agggenerated;
                 $context['sandbox'][$type_rca]['exempted_load']['collected'] += $line[$ind['connected_to_collecting_system_p._e.']];
             }
         }
@@ -7376,19 +7558,19 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
-        if ($line[$ind['generated_load_p.e.']] >= 2000 && $line[$ind['generated_load_p.e.']] < 10001) {
-            $context['results']['graph']['0_10000']['pe']  += $line[$ind['generated_load_p.e.']];
+        if ($field_agggenerated >= 2000 && $field_agggenerated < 10001) {
+            $context['results']['graph']['0_10000']['pe']  += $field_agggenerated;
             $context['results']['graph']['0_10000']['number']++;
-        } elseif ($line[$ind['generated_load_p.e.']] >= 10001 && $line[$ind['generated_load_p.e.']] < 100001) {
-            $context['results']['graph']['10000_100000']['pe']  += $line[$ind['generated_load_p.e.']];
+        } elseif ($field_agggenerated >= 10001 && $field_agggenerated < 100001) {
+            $context['results']['graph']['10000_100000']['pe']  += $field_agggenerated;
             $context['results']['graph']['10000_100000']['number']++;
-        } elseif ($line[$ind['generated_load_p.e.']] >= 100001) {
-            $context['results']['graph']['100000_n']['pe']  += $line[$ind['generated_load_p.e.']];
+        } elseif ($field_agggenerated >= 100001) {
+            $context['results']['graph']['100000_n']['pe']  += $field_agggenerated;
             $context['results']['graph']['100000_n']['number']++;
         }
 
         //array2
-        $context['results']['graph']['total_generated']['pe'] += $line[$ind['generated_load_p.e.']];
+        $context['results']['graph']['total_generated']['pe'] += $field_agggenerated;
         $context['results']['graph']['total_collected']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
         $context['results']['graph']['total_load_ias']['pe'] += $line[$ind['addressed_through_ias_p._e.']];
         $context['results']['graph']['total_entering']['pe'] += $line[$ind['total_entering_load_p._e.']];
@@ -7396,15 +7578,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //array 5 6 7
         if ($line[$ind['art3_compliance']] == 'C' || $line[$ind['art3_compliance']] == 'QC') {
             $context['results']['graph']['art3_C']['number']++;
-            $context['results']['graph']['art3_C']['pe'] += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['art3_C']['pe'] += $field_agggenerated;
         }
         if ($line[$ind['art3_compliance']] == 'NC') {
             $context['results']['graph']['art3_NC']['number']++;
-            $context['results']['graph']['art3_NC']['pe'] += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['art3_NC']['pe'] += $field_agggenerated;
         }
         if ($line[$ind['art3_compliance']] == 'NR' || $line[$ind['art3_compliance']] == 'PD') {
             $context['results']['graph']['art3_NR']['number']++;
-            $context['results']['graph']['art3_NR']['pe'] += $line[$ind['generated_load_p.e.']];
+            $context['results']['graph']['art3_NR']['pe'] += $field_agggenerated;
         }
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art4_C']['number']++;
@@ -7449,9 +7631,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $agg_compliance_EU_feed = 'PD';
         }
 
-        $agg->field_region_nuts1['und'][0]['value'] = $line[$ind['nuts_1_code']];
-        $agg->field_region_nuts2['und'][0]['value'] = $line[$ind['nuts_2_code']];
-        $agg->field_region_nuts3['und'][0]['value'] = $line[$ind['nuts_3_code']];
+        $agg->field_region_nuts1['und'][0]['value'] = $nuts1;
+        $agg->field_region_nuts2['und'][0]['value'] = $nuts2;
+        $agg->field_region_nuts3['und'][0]['value'] = $nuts3;
         $agg->field_agg_connected_load_pe['und'][0]['value'] = number_format($line[$ind['connected_to_collecting_system_p._e.']], 0,'.','');
         $agg->field_agg_ias_load_pe['und'][0]['value'] = number_format($line[$ind['addressed_through_ias_p._e.']], 0,'.','');
         $agg->field_agg_discharge_pe['und'][0]['value'] = number_format($line[$ind['neither_collecting_system_nor_ias_p._e.']], 0,'.','');
@@ -7950,10 +8132,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //Agglomeration info
             //'code',
             $line[$ind['aggcode']] = $agg->field_inspireidlocalid['und'][0]['value'];
+
             //'name',
             $line[$ind['aggname']] = $agg->title;
+
             //'status',
-            $line[$ind['aggstatus']] = '';
+            $line[$ind['aggstatus']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             if (isset($agg->field_status['und'])) {
                 switch ($agg->field_status['und'][0]['value']) {
                     case (0) :
@@ -7968,25 +8152,54 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 }
             }
             //'generated load  p. e.',
-            $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
+            $line[$ind['generated load  p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_agggenerated['und'][0]['value'])) {
+              $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
+            }
+
             //'deadline for Art. 3 compliance',
-            $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+            $line[$ind['deadline for Art. 3 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggperiodover3['und'][0]['value'])) {
+              $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+            }
+            
             //'deadline for Art. 4 compliance',
-            $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+            $line[$ind['deadline for Art. 4 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggperiodover4['und'][0]['value'])) {
+              $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+            }
+
             //'deadline for Art. 5 compliance',
-            $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+            $line[$ind['deadline for Art. 5 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggperiodover5['und'][0]['value'])) {
+              $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+            }
 
             //Collection
             //'collected in collecting system % of gen. load',
-            $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
+            $line[$ind['collected in collecting system % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggc1['und'][0]['value'])) {
+              $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
+            }
+
             //'collected in collecting system  p. e.',
             $line[$ind['collected in collecting system  p. e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+
             //'addressed through IAS % of gen. load',
-            $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+            $line[$ind['addressed through IAS % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggc2['und'][0]['value'])) {
+              $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+            }
+
             //'addressed through IAS p. e.',
             $line[$ind['addressed through IAS p. e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+
             //'neither collecting system nor IAS % of gen. load',
-            $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+            $line[$ind['neither collecting system nor IAS % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($agg->field_aggpercwithouttreatment['und'][0]['value'])) {
+              $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+            }
+
             //'neither collecting system nor IAS p. e.',
             $line[$ind['neither collecting system nor IAS p. e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
 
@@ -7996,7 +8209,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'name',
             $line[$ind['uww_name']] = $uwwtp->title;
             //'status',
-            $line[$ind['uww_status']] = '';
+            $line[$ind['uww_status']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             if (isset($uwwtp->field_status['und'])) {
                 switch ($uwwtp->field_status['und'][0]['value']) {
                     case (0) :
@@ -8025,21 +8238,29 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //'entering this UWWTP % of gen. load',
                 //$uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * ($agg->field_aggc1['und'][0]['value']/ 100 * $agg->field_agggenerated['und'][0]['value']);
 //                 $uww_entering_load_pe = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
-                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];//$uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+                if (isset($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'])) {
+                  $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];//$uww_entering_load_pe * 100 / $agg->field_agggenerated['und'][0]['value'];
+                }
+
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
 
                 $field_agglo_uww_perc_ent_uw = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 unset($agglo_uwwtp, $siteid);
             } else {
-                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = '';
+                $line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = '';
                 $field_agglo_uww_perc_ent_uw = 0;
             }
 
             $line[$ind['uww_entering this UWWTP % of gen. load']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value'];
-            $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];
+
+            $line[$ind['uww_entering load  p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'])) {
+              $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];
+            }
 
 //             dsm($line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
 //             dsm($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
@@ -8048,7 +8269,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
 
             //'capacity p. e.',
-            $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
+            $line[$ind['uww_capacity p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($uwwtp->field_physicalcapacityactivity['und'][0]['value'])) {
+              $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
+            }
             //'status',
 //             $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
 
@@ -8086,7 +8310,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $previous_percentage_of_change_of_entering_load = 'NI';
                 }
 
-                if (isset($line[$ind['uww_capacity p. e.']]) && $previous_capacity_pe > 0) {
+                if (isset($line[$ind['uww_capacity p. e.']]) && $line[$ind['uww_capacity p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided'] && $previous_capacity_pe > 0) {
                     $previous_percentage_of_change_of_capacity = ($line[$ind['uww_capacity p. e.']] - $previous_capacity_pe) / $previous_capacity_pe* 100;
                 } else {
                     $previous_percentage_of_change_of_capacity = 'NI';
@@ -8121,6 +8345,22 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $startingDateOfApplication_ap = '';
             $startingDateOfApplication_b = '';
             $startingDateOfApplication_c = '';
+
+            $dcpWaterBodyType = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $dcpIrrigation = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $dcpWaterbodyID = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $dcpWFDRBD = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $dcpTypeOfReceivingArea = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $rcaID = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $rcaName = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $rcaName = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $rcaDateArt54 = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $rcaDateArt58 = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $startingDateOfApplication_an = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $startingDateOfApplication_ap = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $startingDateOfApplication_b = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $startingDateOfApplication_c = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+
             if(!empty($uwwtp->field_uwwdcpliste)){
              foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
               $dcp = node_load($dcpnid['nid']);
@@ -8131,6 +8371,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
                         continue;
                     }
+
                     $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
 
                     switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
@@ -8166,21 +8407,101 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                             break;
                     }
 
-                    $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
-                    $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
-                    $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value'];
-                    $dcpWFDRBD .= ($dcpWFDRBD == '' ? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];
-                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
+                    if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'])) {       
+                      if ($dcpWaterBodyType == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $dcpWaterBodyType = '';
+                      }                      
+                      $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+                    }
 
-                    $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+                    if (!empty($field_dcpirrigation)) {
+                      if ($dcpIrrigation == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $dcpIrrigation = '';
+                      }   
+                      $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
+                    }
+
+                    if (isset($dcp->field_dcpwaterbodyid['und'][0]['value'])) {
+                      if ($dcpWaterbodyID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $dcpWaterbodyID = '';
+                      }  
+                      $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value']; 
+                    }
+
+                    if (isset($dcp->field_dcpwfdrbd['und'][0]['value'])) {
+                      if ($dcpWFDRBD == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $dcpWFDRBD = '';
+                      }  
+                      $dcpWFDRBD .= ($dcpWFDRBD == ''? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];   
+                    }
+
+                    if (isset($dcp->field_rcatype['und'][0]['value'])) {
+                      if ($dcpTypeOfReceivingArea == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $dcpTypeOfReceivingArea = '';
+                      }  
+                      $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];  
+                    }
+
+                    if (isset($rca->field_inspireidlocalid['und'][0]['value'])) {
+                      if ($rcaID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $rcaID = '';
+                      } 
+                      $rcaID .= ($rcaID == '' ? '' : ';') . $rca->field_inspireidlocalid['und'][0]['value'];
+                    }
+                    
+
+                    if ($rcaName == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                      $rcaName = '';
+                    }
                     $rcaName .= ($rcaName == '' ? '' : ';') . $rca->title;
-                    $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
-                    $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
 
-                    $startingDateOfApplication_an = ($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-');
-                    $startingDateOfApplication_ap = ($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-');
-                    $startingDateOfApplication_b = ($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
-                    $startingDateOfApplication_c = ($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
+                    if (isset($rca->field_rcadateart54['und'][0]['value'])) {
+                      if ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $rcaDateArt54 = '';
+                      } 
+                      $rcaDateArt54 .= ($rcaDateArt54 == '' ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+                    }
+//                     $rcaDateArt54 .= ($rcaDateArt54 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcadateart54['und'][0]['value'], 0, 10);
+
+                    if (isset($rca->field_rcadateart5854['und'][0]['value'])) {
+                      if ($rcaDateArt58 == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $rcaDateArt58 = '';
+                      } 
+                      $rcaDateArt58 .= ($rcaDateArt58 == '' ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+                    }
+//                     $rcaDateArt58 .= ($rcaDateArt58 == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ? '' : ';') . substr($rca->field_rcadateart5854['und'][0]['value'], 0, 10);
+
+                    if (isset($rca->field_rcaanstartdate['und'][0]['value'])) {
+                      if ($startingDateOfApplication_an == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $startingDateOfApplication_an = '';
+                      } 
+                      $startingDateOfApplication_an .= ($startingDateOfApplication_an == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']);
+                    }    
+//                     $startingDateOfApplication_an = ($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-');
+
+                    if (isset($rca->field_rcaapstartdate['und'][0]['value'])) {
+                      if ($startingDateOfApplication_ap == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $startingDateOfApplication_ap = '';
+                      } 
+                      $startingDateOfApplication_ap .= ($startingDateOfApplication_ap == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']);
+                    } 
+//                     $startingDateOfApplication_ap = ($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-');
+
+                    if (isset($rca->field_rcabdatedesignation['und'][0]['value'])) {
+                      if ($startingDateOfApplication_b == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $startingDateOfApplication_b = '';
+                      } 
+                      $startingDateOfApplication_b .= ($startingDateOfApplication_b == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']);
+                    } 
+//                     $startingDateOfApplication_b = ($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
+
+                    if (isset($rca->field_rcacdatedesignation['und'][0]['value'])) {
+                      if ($startingDateOfApplication_c == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                        $startingDateOfApplication_c = '';
+                      } 
+                      $startingDateOfApplication_c .= ($startingDateOfApplication_c == '' ? '' : ';') . uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']);
+                    } 
+//                     $startingDateOfApplication_c = ($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ? uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($rca->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-');
 
                     unset($rca);
                 }
@@ -8354,24 +8675,24 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['treatment type in place (4)']] = $treatmenttypeinplace;
             //$line[$ind['replace_____']] = $uwwtp->field_uwwtreatmenttype['und'][0]['value'];
             //'Monitoring results - BOD5',
-            $line[$ind['Monitoring results - BOD5']] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            $line[$ind['Monitoring results - BOD5']] = ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
             //'Monitoring results -COD',
-            $line[$ind['Monitoring results -COD']] = ($uwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            $line[$ind['Monitoring results -COD']] = ($uwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
             //'Monitoring results -Ntot',
-            $line[$ind['Monitoring results -Ntot']] = ($uwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            $line[$ind['Monitoring results -Ntot']] = ($uwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
             //'Monitoring results -Ptot',
-            $line[$ind['Monitoring results -Ptot']] = ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            $line[$ind['Monitoring results -Ptot']] = ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
             //'Monitoring results -other',
-            $line[$ind['Monitoring results -other']] = ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+            $line[$ind['Monitoring results -other']] = ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'P' ? 'Pass' : ($uwwtp->field_uwwotherperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
 
             if (isset($previousuwwtp)) {
-                $bod5monitoring = ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                $bod5monitoring = ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwbod5perf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
                 //'Monitoring results -COD',
-                $codmonitoring = ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                $codmonitoring = ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwcodperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
                 //'Monitoring results -Ntot',
-                $monitoring_Ntot = ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                $monitoring_Ntot = ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwntotperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
                 //'Monitoring results -Ptot',
-                $monitoring_Ptot = ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : ''));
+                $monitoring_Ptot = ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'P' ? 'Pass' : ($previousuwwtp->field_uwwptotperf['und'][0]['value'] == 'F' ? 'Fail' : $GLOBALS['uwwtd']['register']['message']['info_not_provided']));
             }
 
             //'In cause of failure (3)',
@@ -8999,14 +9320,18 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //UWWTP incoming and discharged load
             //'Volume of waste water treated' 'm3/y',     field_uwwwastewatertreated
-            $line[$ind['Volume of waste water treated m3/y']] = $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
+            $line[$ind['Volume of waste water treated m3/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            if (isset($uwwtp->field_uwwwastewatertreated['und'][0]['value'])) {
+              $line[$ind['Volume of waste water treated m3/y']] = $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
+            }
+            
 
             //'Incoming loads BOD-tot  t/y',       field_uwwbodincoming
             if (isset($uwwtp->field_uwwbodincoming['und'][0]['value'])) {
                 $line[$ind['Incoming loads BOD-tot  t/y']] = $uwwtp->field_uwwbodincoming['und'][0]['value'];
                 $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
             } else {
-                $line[$ind['Incoming loads BOD-tot  t/y']] = 0;
+                $line[$ind['Incoming loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge
@@ -9014,7 +9339,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Discharged loads BOD-tot  t/y']] = $uwwtp->field_uwwboddischarge['und'][0]['value'];
                 $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
             } else {
-                $line[$ind['Discharged loads BOD-tot  t/y']] = 0;
+                $line[$ind['Discharged loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'BOD rate of removal %',      round(((1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100), 2)
@@ -9043,7 +9368,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Incoming cocentration COD-tot   t/y']] = $uwwtp->field_uwwcodincoming['und'][0]['value'];
                 $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming cocentration COD-tot   t/y']];
             } else {
-                $line[$ind['Incoming cocentration COD-tot   t/y']] = 0;
+                $line[$ind['Incoming cocentration COD-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration COD-tot  t/y',    field_uwwcoddischarge
@@ -9051,7 +9376,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Discharged concentration COD-tot  t/y']] = $uwwtp->field_uwwcoddischarge['und'][0]['value'];
                 $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
             } else {
-                $line[$ind['Discharged concentration COD-tot  t/y']] = '';
+                $line[$ind['Discharged concentration COD-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'COD rate of removal %',   round(( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%'
@@ -9080,14 +9405,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Incoming loads N-tot   t/y']] = $uwwtp->field_uwwnincoming['und'][0]['value'];
                 $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
             } else {
-                $line[$ind['Incoming loads N-tot   t/y']] = '';
+                $line[$ind['Incoming loads N-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
             //'Discharged loads N-tot  t/y',   field_uwwndischarge
             if (isset($uwwtp->field_uwwndischarge['und'][0]['value'])) {
                 $line[$ind['Discharged loads N-tot  t/y']] = $uwwtp->field_uwwndischarge['und'][0]['value'];
                 $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
             } else {
-                $line[$ind['Discharged loads N-tot  t/y']] = '';
+                $line[$ind['Discharged loads N-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'N rate of removal %',   round(( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%'
@@ -9117,7 +9442,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Incoming cocentration P-tot   t/y']] = $uwwtp->field_uwwpincoming['und'][0]['value'];
                 $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming cocentration P-tot   t/y']];
             } else {
-                $line[$ind['Incoming cocentration P-tot   t/y']] = '';
+                $line[$ind['Incoming cocentration P-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration P-tot  t/y',    field_uwwpdischarge
@@ -9125,7 +9450,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Discharged concentration P-tot  t/y']] = $uwwtp->field_uwwpdischarge['und'][0]['value'];
                 $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
             } else {
-                $line[$ind['Discharged concentration P-tot  t/y']] = '';
+                $line[$ind['Discharged concentration P-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'P rate of removal %',   round(( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%'
@@ -9222,12 +9547,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 }
 
                 if (!isset($context['sandbox'][$typestat]['list_agglo_treated'][$line[$ind['aggcode']]])) {
-                    $context['sandbox'][$typestat]['generated_pe'] += $line[$ind['generated load  p. e.']];
+                    $context['sandbox'][$typestat]['generated_pe'] += ($line[$ind['generated load  p. e.']] == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? 0 : $line[$ind['generated load  p. e.']];
 
                     $context['sandbox'][$typestat]['list_agglo_treated'][$line[$ind['aggcode']]] = 1;
                 }
-                $context['sandbox'][$typestat]['entering_pe'] +=  $line[$ind['uww_entering load  p. e.']];
-                $context['sandbox'][$typestat]['capacity_pe'] +=  $line[$ind['uww_capacity p. e.']];
+                $context['sandbox'][$typestat]['entering_pe'] +=  ($line[$ind['uww_entering load  p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_entering load  p. e.']] : 0;
+                $context['sandbox'][$typestat]['capacity_pe'] +=  ($line[$ind['uww_capacity p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_capacity p. e.']] : 0;
                 $context['sandbox'][$typestat]['previous_entering_pe'] +=  $line[$ind['previous_entering load p. e.']];
                 $context['sandbox'][$typestat]['previous_capacity_pe'] +=  $line[$ind['previous_capacity p. e.']];
             }
@@ -9411,7 +9736,7 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
         //'name',
         $line[$ind['aggname']] = $agg->title;
         //'status',
-        $line[$ind['aggstatus']] = '';
+        $line[$ind['aggstatus']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         if (isset($agg->field_status['und'])) {
             switch ($agg->field_status['und'][0]['value']) {
                 case (0) :
@@ -9426,25 +9751,60 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
             }
         }
         //'generated load  p. e.',
-        $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
+        $line[$ind['generated load  p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_agggenerated['und'][0]['value'])) {
+          $line[$ind['generated load  p. e.']] = $agg->field_agggenerated['und'][0]['value'];
+        }
+        
         //'deadline for Art. 3 compliance',
-        $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+        $line[$ind['deadline for Art. 3 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_agggenerated['und'][0]['value'])) {
+          $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+        }
+//         $line[$ind['deadline for Art. 3 compliance']] = substr($agg->field_aggperiodover3['und'][0]['value'], 0, 10);
+
         //'deadline for Art. 4 compliance',
-        $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+        $line[$ind['deadline for Art. 4 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_aggperiodover4['und'][0]['value'])) {
+          $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+        }
+//         $line[$ind['deadline for Art. 4 compliance']] = substr($agg->field_aggperiodover4['und'][0]['value'], 0, 10);
+
         //'deadline for Art. 5 compliance',
-        $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+        $line[$ind['deadline for Art. 5 compliance']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_aggperiodover5['und'][0]['value'])) {
+          $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
+        }
+//         $line[$ind['deadline for Art. 5 compliance']] = substr($agg->field_aggperiodover5['und'][0]['value'], 0, 10);
 
         //Collection
         //'collected in collecting system % of gen. load',
-        $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
+        $line[$ind['collected in collecting system % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_aggc1['und'][0]['value'])) {
+          $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value'];
+        }
+//         $line[$ind['collected in collecting system % of gen. load']] = $agg->field_aggc1['und'][0]['value']; //%
+
         //'collected in collecting system  p. e.',
         $line[$ind['collected in collecting system  p. e.']] = $agg->field_aggc1['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+
         //'addressed through IAS % of gen. load',
-        $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+        $line[$ind['addressed through IAS % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_aggc2['und'][0]['value'])) {
+          $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+        }
+//         $line[$ind['addressed through IAS % of gen. load']] = $agg->field_aggc2['und'][0]['value']; //%
+
         //'addressed through IAS p. e.',
         $line[$ind['addressed through IAS p. e.']] = $agg->field_aggc2['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
+
         //'neither collecting system nor IAS % of gen. load',
-        $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+        $line[$ind['neither collecting system nor IAS % of gen. load']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+        if (isset($agg->field_aggpercwithouttreatment['und'][0]['value'])) {
+          $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+        }                                                                                                                               
+//         $line[$ind['neither collecting system nor IAS % of gen. load']] = $agg->field_aggpercwithouttreatment['und'][0]['value']; //%
+
         //'neither collecting system nor IAS p. e.',
         $line[$ind['neither collecting system nor IAS p. e.']] = $agg->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value']; //pe
 
@@ -9960,10 +10320,12 @@ function uwwtd_getregister_modelfile_path($annee)
 //     uwwtd_trace($annee);
     if ($annee >= 2016) {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
-      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
     } else {
-//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model']);
-      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014']);
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014'];
     }
 }
 

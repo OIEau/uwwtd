@@ -9300,7 +9300,9 @@ function uwwtd_rca_art54_applies($dcp)
         ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'CSA' && $dcp['rca54applied'] === true) ||
-        ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true)
+        ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'A54523' && $dcp['rca54applied'] === true) ||   //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
+        ($dcp['rcatype'] == 'A5854523' && $dcp['rca54applied'] === true)    //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
     );
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    

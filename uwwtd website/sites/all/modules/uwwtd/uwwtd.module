@@ -1766,11 +1766,22 @@ function uwwtd_create_xls($filename, $rows) {
 
 
 
-function uwwtd_check_history($id, $annee){
+function uwwtd_check_history($localid, $annee){
   //Get all the nodes with the same id
+  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
   $query = db_select('field_data_field_inspireidlocalid', 'n');
   $query->fields('n', array('entity_id'));
-  $query->condition('n.field_inspireidlocalid_value', $id, '=');
+  //Greek case
+  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+    $localids=[$localid];
+    $localids[]=str_replace('EL', 'GR',$localid);
+    $localids[]=str_replace('GR', 'EL',$localid);
+    $query->condition('n.field_inspireidlocalid_value', $localids, 'IN'); 
+  }
+  else{
+    $query->condition('n.field_inspireidlocalid_value', $localid, '=');  
+  }
+  
   $ids = array();
   $results = $query->execute();
   foreach($results as $result){
