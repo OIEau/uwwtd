@@ -716,10 +716,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
     }
 
+// dsm($imports);
     if (!empty($imports)) {
-    	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
-    }
 
+    	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
+
+    }
+// return 'ok';
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -1486,7 +1489,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 if (false === $check) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
                 } else {
-                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                    $node->field_rcaplantscapacity['und'][0]['value'] = $check;
                 }     
             }
         }   
@@ -1707,8 +1710,14 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             }
         } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area article 54 applied information found.', $timestamp, $i, $node);
 
-        if ($node->field_specialisedzonetype['und'][0]['value'] == 'A54' ||
-            $node->field_specialisedzonetype['und'][0]['value'] == 'A5854') {
+
+        // liste de type 'A51523', 'A523', 'SA', 'CSA', 'A54', 'A5854', 'A5154', 'A58', 'A58523', 'A54523', 'A5854523', 'LSA'
+        //if(false !== strpos(_______,'54')){
+        //if(false !== strpos(_______,'523')){
+        //if(false !== strpos(_______,'58')){
+//         if ($node->field_specialisedzonetype['und'][0]['value'] == 'A54' ||
+//             $node->field_specialisedzonetype['und'][0]['value'] == 'A5854'
+        if (in_array($node->field_specialisedzonetype['und'][0]['value'], ['A54', 'A5854', 'A5154', 'A54523', 'A5854523'])) {
             $node->field_rca54applied['und'][0]['value'] = TRUE;
         }
 
@@ -1984,6 +1993,32 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         				$node->field_rcac['und'][0]['value'] = '1';
         				$node->field_rcacstardate['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaStartDate'], $message);
         				$node->field_rcacdatedesignation['und'][0]['value'] = uwwtd_check_date($rcaSAParameter['rcaDateDesignation'], $message);
+
+                        //10th report
+                        if(isset($rcaSAParameter['rcaCRelevantDirective'])){
+                          $node->field_rcacrelevantdirective['und'][0]['value'] = uwwtd_check_text($rcaSAParameter['rcaCRelevantDirective']);
+                        }
+                        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area relevant directive information found.', $timestamp, $i, $node);
+                        
+                        //text
+                        if(isset($rcaSAParameter['rcaCIDOtherDirective'])){
+                          $node->field_rcacidotherdirective['und'][0]['value'] = uwwtd_check_text($rcaSAParameter['rcaCIDOtherDirective']);
+                        }
+                        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other directive information found.', $timestamp, $i, $node);
+                        
+                        
+                        //date
+                        if(isset($rcaSAParameter['rcaCDateOtherDirective'])){
+                          $check = uwwtd_check_date($rcaSAParameter['rcaCDateOtherDirective'], $message);
+                          if ($message != '') {
+                            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
+                          }
+                          if($check !== false){
+                            $node->field_rcacdateotherdirective['und'][0]['value'] = $check;
+                          }              
+                        }
+                        else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area other directive information date found.', $timestamp, $i, $node);
+
         				break;
         			default:
         				break;
@@ -1992,31 +2027,110 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
         }
 
         // TODO : improve this test
+        //9th report
+        //TODO e.v -> voir avec b et nd si on doit boucler , si il peux y avoir plusieurs ReceivingAreasSA54:row pour le même rcaCode
         if(isset($data['ReceivingAreasSA54'])) {
-            switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
-            	case 'M':
-            		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-            	case 'C':
-            		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-            	case 'E':
-            		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
-        			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
-        			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
-        			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
-            		break;
-         		default:
-         			break;
-            }
+//             foreach ($data['ReceivingAreasSA54'] as $key => $ReceivingAreasSA54) {  //e.v add foreach ==> todo see where we use the field to sum them all in the processing
+              switch ($data['ReceivingAreasSA54'][0]['rcaMethod54']) {
+              	case 'M':                                          
+                    $node->field_rcamethod54['und'][0]['value'] = 'M';  //todo e.v problem here if multiple $key
+              		$node->field_rcanincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedmeasured['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		break;
+              	case 'C':
+                      $node->field_rcamethod54['und'][0]['value'] = 'C';    //todo e.v problem here if multiple $key
+              		$node->field_rcanincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedcalculated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		break;
+              	case 'E':
+                      $node->field_rcamethod54['und'][0]['value'] = 'E';     //todo e.v problem here if multiple $key
+              		$node->field_rcanincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNIncoming54'];
+          			$node->field_rcandischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaNDischarged54'];
+          			$node->field_rcapincomingestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPIncoming54'];
+          			$node->field_rcapdischargedestimated['und'][0]['value']	= $data['ReceivingAreasSA54'][0]['rcaPDischarged54'];
+              		break;
+           		default:
+           			break;
+              }
 
+            //numeric
+            if(isset($data['ReceivingAreasSA54'][0]['rcaPlants54'])){
+              $check = uwwtd_check_numeric($data['ReceivingAreasSA54'][0]['rcaPlants54']);
+              if (false === $check) {
+                  uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+              } else {
+                  $node->field_rcaPlants['und'][0]['value'] = $check;
+              }
+            }   
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants information found.', $timestamp, $i, $node);
+
+            if(isset($data['ReceivingAreasSA54'][0]['rcaPlantsCapacity54'])){
+              $check = uwwtd_check_numeric($data['ReceivingAreasSA54'][0]['rcaPlantsCapacity54']);
+              if (false === $check) {
+                  uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+              } else {
+                  $node->field_rcaplantscapacity['und'][0]['value'] = $check;
+              }
+            }   
+            else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants capacity information found.', $timestamp, $i, $node);
+            
+//             }
+       
         }
+
+        //10 th report e.v
+        //text TODO test avec 0 1 n value
+        if(isset($data['ReceivingAreasSALSAPredecessor'])) { 
+
+          //rcaCodePredecessor
+          if(isset($data['ReceivingAreasSALSAPredecessor'][0]['rcaCodePredecessor'])){
+              foreach ($data['ReceivingAreasSALSAPredecessor'] as $key => $ReceivingAreasSALSAPredecessor) {
+                //multiple value  => todo e.v change field confiuration to accept multiple value !           
+                $node->field_rcacodepredecessor['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSALSAPredecessor['rcaCodePredecessor']);
+              }
+          }
+          else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA id code area found.', $timestamp, $i, $node);
+
+          //rcasalsaRemark
+          if(isset($data['ReceivingAreasSALSAPredecessor'][0]['rcasalsaRemark'])){
+              foreach ($data['ReceivingAreasSALSAPredecessor'] as $key => $ReceivingAreasSALSAPredecessor) {
+                //multiple value  => todo e.v change field confiuration to accept multiple value !
+                $node->field_rcasalsaremark['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSALSAPredecessor['rcasalsaRemark']);
+              }
+          }
+          else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SALSA remarks area found.', $timestamp, $i, $node);
+        }
+
+        //10 th report e.v
+        //text TODO test avec 0 1 n value
+        if(isset($data['ReceivingAreasSASA'])) { 
+
+          //rcaRelatedSA
+          if(isset($data['ReceivingAreasSASA'][0]['rcaRelatedSA'])){
+              foreach ($data['ReceivingAreasSASA'] as $key => $ReceivingAreasSASA) {
+                //multiple value  => todo e.v change field confiuration to accept multiple value !           
+                $node->field_rca_sensitive_area['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSASA['rcaRelatedSA']);
+              }
+          }
+          else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA rcaRelatedSA area found.', $timestamp, $i, $node);
+
+          //rcaRelatedSARemark
+          if(isset($data['ReceivingAreasSASA'][0]['rcaRelatedSARemark'])){
+              foreach ($data['ReceivingAreasSASA'] as $key => $ReceivingAreasSASA) {
+                //multiple value  => todo e.v change field confiuration to accept multiple value !
+                $node->field_rcarelatedsaremark['und'][$key]['value'] = uwwtd_check_text($ReceivingAreasSASA['rcaRelatedSARemark']);
+              }
+          }
+          else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area SASA rcaRelatedSARemark area found.', $timestamp, $i, $node);
+        }
+
+
+
+
 
         // save node
         node_save($node);
@@ -9186,7 +9300,9 @@ function uwwtd_rca_art54_applies($dcp)
         ($dcp['rcatype'] == 'A58' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'CSA' && $dcp['rca54applied'] === true) ||
-        ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true)
+        ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'A54523' && $dcp['rca54applied'] === true) ||   //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
+        ($dcp['rcatype'] == 'A5854523' && $dcp['rca54applied'] === true)    //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
     );
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
