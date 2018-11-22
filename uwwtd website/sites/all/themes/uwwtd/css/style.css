@@ -6849,7 +6849,7 @@ header.container {
 
 .navbar-header a,
 .navbar-collapse .navbar-nav .menu-item--depth-1 a {
-	color: #ffffff !important;
+	color: #ffffff;
 }
 
 .navbar-collapse .navbar-nav .menu-item--depth-1:hover,
