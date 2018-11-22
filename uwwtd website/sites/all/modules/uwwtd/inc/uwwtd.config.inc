@@ -426,7 +426,7 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
 $GLOBALS['uwwtd']['reuse_type']=array(
     'IR'=>'Irrigation',
     'IN'=>'Infiltration',
-    'OT'=>'Other'
+    'OT'=>'Others'
 );
 $GLOBALS['uwwtd']['reuse_type_color']=array(
     'IR'=>'#2e8b57',
