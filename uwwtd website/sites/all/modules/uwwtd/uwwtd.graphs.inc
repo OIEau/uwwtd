@@ -1459,14 +1459,14 @@ function uwwtd_graph_render_flipcard($title, $front, $back, $msg='', $msgEnd='')
     return $content;
 }
 
-function uwwtd_graph_render_column($id, $legend, $color, $rows, $stacked=false){
+function uwwtd_graph_render_column($id, $legend, $color, $rows, $stacked=false, $width=510, $height=260){
   $chart = array(
 	'id' => $id,
 	'type' => ($stacked?'StackedColumnChart':'ColumnChart'),
 	'legend' => $legend,
 	'rows' => $rows,
-	'width'=>510,
-	'height'=>220,
+	'width'=>$width,
+	'height'=>$height,
 	);
 
 	if(!empty($color)){
