@@ -135,13 +135,12 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
-    
     // Création du code html pour ces graphs :
+    
     $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
     	t("Total load entering by compliance (population equivalent – p.e.)"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
     	t("Number of treatment plant by compliance (number of agglomerations)"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	true, $yearsPossibles);
-    
     
     //==============================================
     //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
@@ -1545,7 +1544,7 @@ function uwwtd_agg_history_page($inspireIdLocalId){
         $fieldnuts = field_view_field('node', $data['last_node'], 'field_regionnuts');
         $html.= '<div class="google-map-banner"><h1><span class="white-title">'. t('Agglomeration').' : </span><span class="node-title">'. $data['last_node']->title.'</span><span class="white-title"> - '.t("Identifier").' : </span><span class="inspireidlocalid">'. $data['last_node']->field_inspireidlocalid['und'][0]['value'].'</span><span class="white-title"> - '. t("Status").' : </span><span class="status status-'.drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])).'">'.$fieldstat[0]['#markup'].'</span><br /><small>'. t("Region (NUTS) Code").' : '. $data['last_node']->field_regionnuts['und'][0]['value'].' - '. t("Region (NUTS) Name").' : '.$fieldnuts[0]['#markup'].'</small></h1></div>';
         $html.= render(field_view_field('node',  $data['last_node'], 'field_position_geo', 'openlayers_map'));
-        $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node'], true).'</div>';
+        $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node']).'</div>';
     $html.= '</div>';
     if(!empty($data['years'])){
         $years = array_keys($data['years']);
@@ -1593,10 +1592,10 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 );
                 $genload_table_rows[] = array(
                     '<b>'.$y.'</b>',
-                    uwwtd_format_number((float)$info['cs']) .' p.e.',
-                    uwwtd_format_number((float)$info['ias']) .' p.e.',
-                    uwwtd_format_number((float)$info['wot']) .' p.e.',
-                    uwwtd_format_number((float)$info['Generated load']) .' p.e.'
+                    uwwtd_format_number((float)$info['cs']) .' pe',
+                    uwwtd_format_number((float)$info['ias']) .' pe',
+                    uwwtd_format_number((float)$info['wot']) .' pe',
+                    uwwtd_format_number((float)$info['Generated load']) .' pe'
                 );
                 //Collection
                 $ent_load = array_sum (array_column($info['uwwtps'], 'entering_load_pe'));
@@ -1621,9 +1620,9 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 
                 $collection_table_rows[$y] = array(
                     'year'=>'<b>'.$y.'</b>',
-                    'cs'=>uwwtd_format_number(round((float)$info['cs'])) .' p.e.',
-                    'ent'=>uwwtd_format_number(round((float)$ent_load)) .' p.e.',
-                    'delta'=>'<b style="color:'.$collection_color.'">'.uwwtd_format_number($collection_delta) .' p.e.</b> ('.uwwtd_get_percent((float)$info['cs'], (float)$ent_load).')'
+                    'cs'=>uwwtd_format_number(round((float)$info['cs'])) .' pe',
+                    'ent'=>uwwtd_format_number(round((float)$ent_load)) .' pe',
+                    'delta'=>'<b style="color:'.$collection_color.'">'.uwwtd_format_number($collection_delta) .' pe</b> ('.uwwtd_get_percent((float)$info['cs'], (float)$ent_load).')'
                 );
                 
                 
@@ -1631,9 +1630,9 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 $dtc_equipment[]= '
                     <tr>
                         <td rowspan="2"><b>'.$y.'</b></td>
-                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['pe']).' p.e.</td>
-                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['pe']).' p.e.</td>
-                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['pe']).' p.e.</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Equipment']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Equipment']['pe']).' pe</td>
                     </tr>
                     <tr>
                         <td style="color:white;background-color:'.$info['dtc']['art3']['Equipment']['color'].'">'.uwwtd_format_number($info['dtc']['art3']['Equipment']['percent'], 1).'%</td>
@@ -1644,8 +1643,8 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                     <tr>
                         <td rowspan="2"><b>'.$y.'</b></td>
                         <td>-</td>
-                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['pe']).' p.e.</td>
-                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['pe']).' p.e.</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art4']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art4']['Performance']['pe']).' pe</td>
+                        <td style="color:white;background-color:'.$info['dtc']['art5']['Performance']['color'].'">'.uwwtd_format_number($info['dtc']['art5']['Performance']['pe']).' pe</td>
                     </tr>
                     <tr>
                         <td>-</td>
@@ -1654,14 +1653,14 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                     </tr>';
                     
                 $capa = array_sum (array_column($info['uwwtps'], 'physicalcapacityactivity'));
-                    $capa_str = '<b>'.uwwtd_format_number($capa) .' p.e.</b>';
+                    $capa_str = '<b>'.uwwtd_format_number($capa) .' pe</b>';
                 $ent = array_sum (array_column($info['uwwtps'], 'uwwloadenteringuwwtp'));
-                    $ent_str = '<b>'.uwwtd_format_number($ent) .' p.e.</b>';
+                    $ent_str = '<b>'.uwwtd_format_number($ent) .' pe</b>';
                 if(!is_null($prev_y)){
                     $prev_capa = array_sum (array_column($data['years'][$prev_y]['uwwtps'], 'physicalcapacityactivity'));
-                        $capa_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($capa-$prev_capa) .' p.e. ('.uwwtd_get_percent($capa, $prev_capa).')</div>';
+                        $capa_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($capa-$prev_capa) .' pe ('.uwwtd_get_percent($capa, $prev_capa).')</div>';
                     $prev_ent = array_sum (array_column($data['years'][$prev_y]['uwwtps'], 'uwwloadenteringuwwtp'));
-                        $ent_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($ent-$prev_ent) .' p.e. ('.uwwtd_get_percent($ent, $prev_ent).')</div>';
+                        $ent_str.='<div class="delta">'.$prev_y.'\'s delta : '. uwwtd_format_number($ent-$prev_ent) .' pe ('.uwwtd_get_percent($ent, $prev_ent).')</div>';
                 }
                 
                 $uwwtp_data[$y]=[
@@ -1692,7 +1691,7 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 'header' => array(t('Year'),t($GLOBALS['ms_level']['connection']['cs']['label']),t("Agglomeration's Entering load"), t('Delta'))
         ));
         //dsm( $genload_graph);
-        $rowTitle = t("Generated load and collection");
+        $rowTitle = t("Generateg load and collection");
         $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
 		'Collection leaks', 'collection-leaks', $collection_graph, $collection_table,
@@ -1765,17 +1764,7 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
     $query->fields('n', array('nid'));
     $query->condition('n.type', 'agglomeration', '=');
     $query->condition('n.status', 1, '=');
-    
-    //Greek case
-    if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
-        $localids=[$inspireIdLocalId];
-        $localids[]=str_replace('el', 'gr',$inspireIdLocalId);
-        $localids[]=str_replace('gr', 'el',$inspireIdLocalId);
-        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') IN ('". implode("','",$localids) ."')");
-    }
-    else{
-        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>$inspireIdLocalId));
-    }
+    $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>strtolower($inspireIdLocalId)));
     $query->orderBy('a.field_anneedata_value', 'ASC');
     $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
     if(!empty($ids)){
@@ -1783,19 +1772,13 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
         foreach($ids as $y=>$id){
             $node = node_load($id->nid);
             $wrapper =  entity_metadata_wrapper('node', $node);
-            $genLoad = $wrapper->field_agggenerated->value();
             $data[$y] = array(
                 'Year'=>$y,
                 'agg'=>$node,
-                'Generated load'=>$genLoad,
-                'cs'=>round($genLoad * $wrapper->field_aggc1->value()/100),
-                'ias'=>round($genLoad * $wrapper->field_aggc2->value()/100),
-                'wot'=>round($genLoad * (100 - ($wrapper->field_aggc1->value() + $wrapper->field_aggc2->value()))/100),
-                /*
+                'Generated load'=>$wrapper->field_agggenerated->value(),
                 'cs'=>$wrapper->field_agg_connected_load_pe->value(),
                 'ias'=>$wrapper->field_agg_ias_load_pe->value(),
                 'wot'=>$wrapper->field_agg_discharge_pe->value(),
-                */
                 //$agg_leak = ($connected_load - $entering_load);
                 //        - connected_load (float) : load connected to collectiong system
                 //        - entering_load (float) : total load entering in the WWTP linked to the agglomeration
@@ -1829,421 +1812,4 @@ function uwwtd_getAggHistoryData($inspireIdLocalId){
         }
     }
     return array('last_node'=>$node, 'years'=>$data);
-}
-
-function uwwtd_getUWWTPHistoryData($inspireIdLocalId){
-    $inspireIdLocalId = strtolower($inspireIdLocalId);
-    $query = db_select('node', 'n');
-    $query->innerJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
-    $query->leftJoin('field_data_field_inspireidlocalid', 'ins', 'n.nid = ins.entity_id AND ins.entity_type = \'node\'');
-    $query->fields('a', array('field_anneedata_value'));
-    $query->fields('n', array('nid'));
-    $query->condition('n.type', 'uwwtp', '=');
-    $query->condition('n.status', 1, '=');
-    if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
-        $localids=[$inspireIdLocalId];
-        $localids[]=str_replace('el', 'gr',$inspireIdLocalId);
-        $localids[]=str_replace('gr', 'el',$inspireIdLocalId);
-        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') IN ('". implode("','",$localids) ."')");
-    }
-    else{
-        $query->where("replace(lower(ins.field_inspireidlocalid_value),'_', '') = :id", array(':id'=>$inspireIdLocalId));
-    }
-    $query->orderBy('a.field_anneedata_value', 'ASC');
-    $ids = $query->execute()->fetchAllAssoc("field_anneedata_value");
-    if(!empty($ids)){
-        $data = array();
-        foreach($ids as $y=>$id){
-            $node = node_load($id->nid);
-            $wrapper =  entity_metadata_wrapper('node', $node);
-            $data[$y] = array(
-                'Year'=>$y,
-                'uwwtp'=>$node,
-                'loadentering'=>$wrapper->field_uwwloadenteringuwwtp->value(),
-                'physicalcapacityactivity'=>$wrapper->field_physicalcapacityactivity->value(),
-                'wastewatertreated'=>$wrapper->field_uwwwastewatertreated->value(),
-                'bod'=>array(
-                    'in'=>$wrapper->field_uwwbodincoming->value(), 
-                    'out'=>$wrapper->field_uwwboddischarge->value(), 
-                ),
-                'cod'=>array(
-                    'in'=>$wrapper->field_uwwcodincoming->value(), 
-                    'out'=>$wrapper->field_uwwcoddischarge->value(), 
-                ),
-                'n'=>array(
-                    'in'=>$wrapper->field_uwwnincoming->value(), 
-                    'out'=>$wrapper->field_uwwndischarge->value(), 
-                ),
-                'p'=>array(
-                    'in'=>$wrapper->field_uwwpincoming->value(), 
-                    'out'=>$wrapper->field_uwwpdischarge->value(), 
-                ),
-                'dcps'=>array(),
-                'aggs'=>array(),
-            );
-            
-            //List Dicharge points
-            //field_uwwdcpliste
-            $dcps = $wrapper->field_uwwdcpliste->value();
-            if(!empty($dcps)){
-                foreach($dcps as $dcp){
-                    if($dcp->field_status['und'][0]['value']==1){
-                        $w = entity_metadata_wrapper('node', $dcp);
-                        $rca = $w->field_linked_receiving_areas->value();
-                        $rca_link = l($rca[0]->title.' ['.$rca[0]->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$rca[0]->nid);
-                        
-                        $data[$y]['dcps'][$dcp->nid] =[
-                            'link' =>  l($dcp->title .' ['.$w->field_inspireidlocalid->value().']', 'node/'.$dcp->nid) .' '.t('in receiving area').' '.$rca_link . ' '.t('of type').' "'.$GLOBALS['uwwtd_value']['rcatype_labels'][$w->field_rcatype->value()].'"',
-                            //	field_rcatype
-                            //field_linked_receiving_areas
-                            'inspireidlocalid'=>$w->field_inspireidlocalid->value(),
-                        ];
-                    }
-                }
-            }
-            
-            
-            //List Agglomeration
-            $aggs = $wrapper->field_uwwaggliste->value();
-            //dsm($aggs);
-            if(!empty($aggs)){
-                foreach($aggs as $agg){
-                    //dsm($uwwtp);
-                    if($agg->field_status['und'][0]['value']==1){
-                        $data[$y]['aggs'][$agg->nid] =[
-                            'link' =>'<span class="'.strtolower($agg->field_aggcompliance['und'][0]['value']).'"> '.$GLOBALS['uwwtd']['all_compliance'][$agg->field_aggcompliance['und'][0]['value']].' </span> '.  l($agg->title .' ['.$agg->field_inspireidlocalid['und'][0]['value'].']', 'node/'.$agg->nid),
-                            'inspireidlocalid'=>$agg->field_inspireidlocalid['und'][0]['value'],
-                            'compliance'=>$agg->field_aggcompliance['und'][0]['value'],
-                            'genload'=>$agg->field_agggenerated['und'][0]['value'],
-                        ];
-                        
-                        /* get value of entering load from */
-                        $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $y, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $node->field_inspireidlocalid['und'][0]['value'])));
-                        if ('' !== $agglo_uwwtpnid) {
-                            $agglo_uwwtp = node_load($agglo_uwwtpnid);
-                            $data[$y]['aggs'][$agg->nid]['entering_load_pe'] = round(($agg->field_aggc1['und'][0]['value'] / 100) * ($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100) * $agg->field_agggenerated['und'][0]['value']);
-                            $data[$y]['aggs'][$agg->nid]['link'].= ': '.uwwtd_format_number($data[$y]['aggs'][$agg->nid]['entering_load_pe']).' p.e.';
-                        }
-                        
-                    }
-                }
-            }
-        }
-    }
-    return array('last_node'=>$node, 'years'=>$data);
-}
-
-//This new page display historical information on uwwtp 
-function uwwtd_uwwtp_history_page($inspireIdLocalId){
-    $data = uwwtd_getUWWTPHistoryData($inspireIdLocalId);
-    if(empty($data)) return "Error in data. We can't display this page";
-    
-    drupal_set_title($data['last_node']->title.' - history');
-            drupal_add_js('sites/all/libraries/d3/d3.js');
-            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-            drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
-    libraries_load('d3.drupal');
-    
-    //dsm($data);
-    
-    $html='';
-    $html.= '<div class="uwwcontainer">';
-        $fieldstat = field_view_field('node', $data['last_node'], 'field_status');
-        if (!empty($fieldstat[0]['#markup']) && $fieldstat[0]['#markup'] == '2') {
-            $fieldstat[0]['#markup'] = 'Inactive';
-        }
-        $fieldnuts = field_view_field('node', $data['last_node'], 'field_regionnuts');
-        $html.= '<div class="google-map-banner"><h1><span class="white-title">'. t('UWWTP').' : </span><span class="node-title">'. $data['last_node']->title.'</span><span class="white-title"> - '.t("Identifier").' : </span><span class="inspireidlocalid">'. $data['last_node']->field_inspireidlocalid['und'][0]['value'].'</span><span class="white-title"> - '. t("Status").' : </span><span class="status status-'.drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])).'">'.$fieldstat[0]['#markup'].'</span><br /><small>'. t("Region (NUTS) Code").' : '. $data['last_node']->field_regionnuts['und'][0]['value'].' - '. t("Region (NUTS) Name").' : '.$fieldnuts[0]['#markup'].'</small></h1></div>';
-        $html.= render(field_view_field('node',  $data['last_node'], 'field_position_geo', 'openlayers_map'));
-        $html.= '<div class="uwwhalf" style="clear:left;">'.uwwtd_timeline_output($data['last_node'], true).'</div>';
-    $html.= '</div>';
-    $years =[];
-    
-    if(!empty($data['years'])){
-        $years = array_keys($data['years']);
-        
-        //UWWTP description
-        $uwwInfo = array();
-        
-        //entering load / physicalcapacityactivity 
-        $elpc_graph = array(
-            'data'=>array(),
-            'color'=>array(
-                '#00658e',
-                '#459436'
-            ),
-            'legend'=>array(
-                t('Entering load'),
-                t('Physical Capacity'),
-            ),
-            'stacked'=>false
-        );
-        $elpc_table = array();
-        
-        //Waste water treated
-        $wwt_graph = array(
-            'data'=>array(),
-            'color'=>array('#00658e'),
-            'legend'=>array(t('Waste water treated (m3/y)')),
-        );
-        $wwt_table = array();
-        $prev_wastewatertreated = null;
-        // N
-        $n_graph = array(
-            'data'=>array(),
-            'color'=>array('#87ceeb', '#c8e8f5'),
-            'legend'=>array(
-                t('Entering'),
-                t('Discharged')
-            ),
-            'stacked'=>false
-        );
-        $n_table = array();
-        //P
-        $p_graph = array(
-            'data'=>array(),
-            'color'=>array('#ff9900', '#ffcf95'),
-            'legend'=>array(
-                t('Entering'),
-                t('Discharged')
-            ),
-            'stacked'=>false
-        );
-        $p_table = array();
-        //COD
-        $cod_graph = array(
-            'data'=>array(),
-            'color'=>array('#d87600', '#ffcf95'),
-            'legend'=>array(
-                t('Entering'),
-                t('Discharged')
-            ),
-            'stacked'=>false
-        );
-        $cod_table = array();
-        //BOD
-        $bod_graph = array(
-            'data'=>array(),
-            'color'=>array('#5B3349', '#dcc1d0'),
-            'legend'=>array(
-                t('Entering'),
-                t('Discharged')
-            ),
-            'stacked'=>false
-        );
-        $bod_table = array();
-        
-        //Agglomerations
-        $aggInfo = array();
-        $agg_list = array();
-        
-        //DCP
-        $dcpInfo = array();
-        $dcp_list = array();  
-        
-        foreach($years as $year){
-            $elpc_graph['data'][]=array(
-                (string)$year,
-                (integer)$data['years'][$year]['loadentering'],
-                (integer)$data['years'][$year]['physicalcapacityactivity'],
-            );
-            
-            $load_rate = null;
-            if(!is_null($data['years'][$year]['physicalcapacityactivity']) && $data['years'][$year]['physicalcapacityactivity'] > 0) {
-                $load_rate = round((integer)$data['years'][$year]['loadentering']/(integer)$data['years'][$year]['physicalcapacityactivity']*100 , 1);
-            }
-            $load_rate_color = '#4f4f4f';
-            $load_mention ='';
-            if(is_null($load_rate)){
-                //catch 
-            }
-            //Si > 100 % : surcharge, Si < 70 % sous charge
-            elseif(($load_rate>100 && $load_rate<=110)) {
-                $load_rate_color = '#ff8c00';
-                $load_mention = t('overload');
-            }
-            elseif($load_rate<=70){
-                $load_rate_color = '#ff8c00';
-                $load_mention = t('underload');
-            }
-            //Si > 110 %  surcharge problématique
-            elseif($load_rate>110) {
-                $load_rate_color = '#ff0000';
-                $load_mention = t('overload');
-                //raise message ?
-            }
-            $elpc_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['loadentering']) .' p.e.',
-                uwwtd_format_number($data['years'][$year]['physicalcapacityactivity']) .' p.e.',
-                !is_null($load_rate)?'<b style="color:'.$load_rate_color.'">'. $load_rate .' % '.$load_mention.'</b>':''
-            );
-            $wwt_graph['data'][]=array(
-                (string)$year,
-                (integer)$data['years'][$year]['wastewatertreated'],
-            );
-            $wwt_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['wastewatertreated']) .' m3/y',
-                !is_null($prev_wastewatertreated)?round((($data['years'][$year]['wastewatertreated']-$prev_wastewatertreated)/$prev_wastewatertreated)*100, 1) .' %':'-'
-            );
-            
-            $treatment = 'required : '.$GLOBALS['glossary'][$data['years'][$year]['uwwtp']->field_uwwtreatmentrequired['und'][0]['value']].'<br/>';
-            $treatment.= 'in place : '.$GLOBALS['glossary'][$data['years'][$year]['uwwtp']->field_uwwtreatmenttype['und'][0]['value']].'<br/>';
-            
-            $load = 'Capacity: '.uwwtd_format_number($data['years'][$year]['physicalcapacityactivity']) .' p.e.<br/>';
-            $load.= 'Entering: '.uwwtd_format_number($data['years'][$year]['loadentering']) .' p.e.<br/>';
-            $load.= 'Load rate : <b style="color:'.$load_rate_color.'">'. $load_rate .' % '.$load_mention.'</b>';
-            
-            $comp = 'Compliance : <span class="'.strtolower($data['years'][$year]['uwwtp']->field_uwwcompliance['und'][0]['value']).'">'.$GLOBALS['uwwtd']['all_compliance'][$data['years'][$year]['uwwtp']->field_uwwcompliance['und'][0]['value']].'</span><br/>';
-            $comp.= 'Treatment met : <span class="met-'.strtolower($data['years'][$year]['uwwtp']->field_uwwtreatment_met['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['yes_no'][$data['years'][$year]['uwwtp']->field_uwwtreatment_met['und'][0]['value']].'</span><br/>';
-            $comp.= 'Performance met : <span class="met-'.strtolower($data['years'][$year]['uwwtp']->field_uwwperformance_met['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['yes_no'][$data['years'][$year]['uwwtp']->field_uwwperformance_met['und'][0]['value']].'</span><br/>';
-            
-            $perf = '';
-            if($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']!='') $perf.= 'BOD: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']!='') $perf.= 'COD: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']!='') $perf.= 'TSS: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']!='') $perf.= 'Total Nitrogen: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']!='') $perf.= 'Total phosphorus: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']!='') $perf.= 'Other: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']].'</span><br/>';
-            
-            $uwwInfo[$year] = array(
-                '<b>'.$year.'</b>',
-                $comp, 
-                $treatment,
-                $load,
-                $perf
-            );
-            
-            
-            $prev_wastewatertreated = $data['years'][$year]['wastewatertreated'];
-            $n_graph['data'][]=array(
-                (string)$year,
-                (float)$data['years'][$year]['n']['in'],
-                (float)$data['years'][$year]['n']['out'],
-            );
-            $n_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['n']['in']) .' T/y',
-                uwwtd_format_number($data['years'][$year]['n']['out']) .' T/y',
-                ($data['years'][$year]['n']['out'] && $data['years'][$year]['n']['in']?uwwtd_format_number((1- $data['years'][$year]['n']['out']/$data['years'][$year]['n']['in'])*100, 1 ).' %':'-')
-            );
-            $p_graph['data'][]=array(
-                (string)$year,
-                (float)$data['years'][$year]['p']['in'],
-                (float)$data['years'][$year]['p']['out'],
-            );
-            $p_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['p']['in']) .' T/y',
-                uwwtd_format_number($data['years'][$year]['p']['out']) .' T/y',
-                ($data['years'][$year]['p']['out'] && $data['years'][$year]['p']['in']?uwwtd_format_number((1- $data['years'][$year]['p']['out']/$data['years'][$year]['p']['in'])*100, 1 ).' %':'-')
-            );
-            
-            $cod_graph['data'][]=array(
-                (string)$year,
-                (float)$data['years'][$year]['cod']['in'],
-                (float)$data['years'][$year]['cod']['out'],
-            );
-            $cod_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['cod']['in']) .' T/y',
-                uwwtd_format_number($data['years'][$year]['cod']['out']) .' T/y',
-                ($data['years'][$year]['cod']['out'] && $data['years'][$year]['cod']['in']?uwwtd_format_number((1- $data['years'][$year]['cod']['out']/$data['years'][$year]['cod']['in'])*100, 1 ).' %':'-')
-            );
-            
-            $bod_graph['data'][]=array(
-                (string)$year,
-                (float)$data['years'][$year]['bod']['in'],
-                (float)$data['years'][$year]['bod']['out'],
-            );
-            $bod_table[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['bod']['in']) .' T/y',
-                uwwtd_format_number($data['years'][$year]['bod']['out']) .' T/y',
-                ($data['years'][$year]['bod']['out'] && $data['years'][$year]['bod']['in']?uwwtd_format_number((1- $data['years'][$year]['bod']['out']/$data['years'][$year]['bod']['in'])*100, 1 ).' %':'-')
-            );
-            //Agglomeration 
-            $aggInfo[$year] = array(
-                '<b>'.$year.'</b>',
-                uwwtd_format_number($data['years'][$year]['physicalcapacityactivity']) .'p.e.',
-                uwwtd_format_number($data['years'][$year]['loadentering']) .'p.e.',
-                uwwtd_format_number(array_sum(array_column($data['years'][$year]['aggs'], 'entering_load_pe'))) .'p.e.',
-                theme('item_list', array('items'=>array_column($data['years'][$year]['aggs'], 'link'))),
-            );
-            $agg_list[$year] = array_column($data['years'][$year]['aggs'], 'inspireidlocalid');
-            
-            //DCP
-            $dcpInfo[$year] = array(
-                 '<b>'.$year.'</b>',
-                theme('item_list', array('items'=>array_column($data['years'][$year]['dcps'], 'link'))),
-            );
-            $dcp_list[$year] = array_column($data['years'][$year]['dcps'], 'inspireidlocalid');
-        }
-    } 
-
-    //Line 1  : Description
-    $html .='<div class="rows">';
-    $html .='<h2>'.t('Description').'</h2>';
-        $html .=theme('table', [
-            'rows'=>$uwwInfo,
-            'header'=>[t('Year'), t('Compliance'), t('Treatment type'),t('Load'), t('Treatment performance')]
-        ]);
-    $html .='</div>';
-    //Line 2  : entering load / physicalcapacityactivity | Waste water treated
-    $rowTitle = t("Entering load and design capacity");
-    $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
-    'Entering load vs Physical Capacity (p.e.)', 'el-pc', $elpc_graph, theme('table', array('rows'=>$elpc_table, 'header'=>array(t('Year'), t('Entering'), t('Capacity'), t('Load rate')))), 
-    'Waste water treated (m3/y)', 'waste-water-treated', $wwt_graph, theme('table', array('rows'=>$wwt_table,'header'=>array(t('Year'), t('Waste water treated'), t('Delta')))),
-    false, $years);
-    
-    //Line 3 : BOD | COD 
-    $rowTitle = t("COD & BOD");
-    $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
-    'COD load entering and discharged (Tons per year)', 'coded', $cod_graph, theme('table', array('rows'=>$cod_table,'header'=>array(t('Year'), t('Entering'), t('Discharged'), t('Performance rate')))), 
-    'BOD load entering and discharged (Tons per year)', 'boded', $bod_graph, theme('table', array('rows'=>$bod_table,'header'=>array(t('Year'), t('Entering'), t('Discharged'), t('Performance rate')))),
-    false, $years);
-    
-    //Line 4 : Nitrogen | Phosphorus
-    $rowTitle = t("Nitrogen & Phosphorus");
-    $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
-    'Nitrogen load entering and discharged (Tons per year)', 'ned', $n_graph, theme('table', array('rows'=>$n_table,'header'=>array(t('Year'), t('Entering'), t('Discharged'), t('Performance rate')))), 
-    'Phosphorus load entering and discharged (Tons per year)', 'ped', $p_graph, theme('table', array('rows'=>$p_table,'header'=>array(t('Year'), t('Entering'), t('Discharged'), t('Performance rate')))),
-    false, $years);
-    
-    //Line 5 : List of Agg 
-    $html .='<div class="rows">';
-    $html .='<h2>'.t('Agglomerations').'</h2>';
-        $html .=uwwtd_compare_idlist($agg_list);
-        //Mettre un message s'il y a un nombre différent et ou des id qui change au fil du temps
-        //t('Total design capacity'), t('Total entering load')
-        //==============================================DEBUG FIX ME : add explantation on table header
-        //.'<sup>1</sup>'
-        $html .=theme('table', [
-            'rows'=>$aggInfo,
-            'header'=>[t('Year'), t('UWWTP capacity'), t('UWWTP Entering load'), t('Total of load collected in collecting systems'),t('Linked Agglomeration(s)')]
-        ]);
-        //$html .='<div class="description">1 : aaaa<br>bbbbb<br></div>';
-    
-    $html .='</div>';
-    
-    //Line 6 : List of DCP ==> RCA
-    
-    $html .='<div class="rows">';
-    $html .='<h2>'.t('Discharge points').'</h2>';
-        //dsm($uwwtp_list);
-        $html .=uwwtd_compare_idlist($dcp_list);
-        //Mettre un message s'il y a un nombre différent et ou des id qui change au fil du temps
-        $html .=theme('table', [
-            'rows'=>$dcpInfo,
-            'header'=>[t('Year'), t('Linked Discharge point(s)')]
-        ]);
-        
-    $html .='</div>';
-    
-   
-    
-    
-    
-    return '<article>'.$html.'</article>';
 }
