@@ -72,6 +72,16 @@ function uwwtd_menu(){
 		'file path' => drupal_get_path('module', 'uwwtd')
 	);
 
+  $items['article17/%']=array(
+    'title' => t('Article 17 export'),
+    'page callback' => 'uwwtd_article17_export',
+    'page arguments' => array(1),
+    //'access callback' => TRUE,
+     'access arguments' => array('Data-management access'),
+    'file' => 'inc/article17.inc',
+    'file path' => drupal_get_path('module', 'uwwtd')
+  );
+
 	$items['id/%/%'] = array(
         'page callback' => 'uwwtd_node_redirect',
         'page arguments' => array(1,2),
@@ -839,37 +849,37 @@ function uwwtd_cron(){
         // Requires postgres for DROP TABLE IF
         db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
         CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-            AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
+            AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
         ADD PRIMARY KEY ("siteId");
 
         DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
         CREATE TABLE wfs."UWWTD_Agglomeration"
-            AS SELECT * from public."UWWTD_Agglomeration";
+            AS SELECT * from public."UWWTD_Agglomeration" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."UWWTD_Agglomeration"
         ADD PRIMARY KEY ("siteId");
 
         DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
         CREATE TABLE wfs."UWWTD_ReceivingArea"
-            AS SELECT * from public."UWWTD_ReceivingArea";
+            AS SELECT * from public."UWWTD_ReceivingArea" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."UWWTD_ReceivingArea"
         ADD PRIMARY KEY ("siteId");
 
         DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
         CREATE TABLE wfs."UWWTD_DischargePoint"
-            AS SELECT * from public."UWWTD_DischargePoint";
+            AS SELECT * from public."UWWTD_DischargePoint" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."UWWTD_DischargePoint"
         ADD PRIMARY KEY ("siteId");
 
         DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
         CREATE TABLE wfs."'.$mslevel_feed_table.'"
-            AS SELECT * from public."'.$mslevel_feed_table.'";
+            AS SELECT * from public."'.$mslevel_feed_table.'" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."'.$mslevel_feed_table.'"
         ADD PRIMARY KEY ("siteId");
         
         DROP TABLE IF EXISTS wfs."'.$agglolevel_feed_table.'";
         CREATE TABLE wfs."'.$agglolevel_feed_table.'"
-            AS SELECT * from public."'.$agglolevel_feed_table.'";
+            AS SELECT * from public."'.$agglolevel_feed_table.'" WHERE "siteId" IS NOT NULL;
         ALTER TABLE wfs."'.$agglolevel_feed_table.'"
         ADD PRIMARY KEY ("siteId");
         ');

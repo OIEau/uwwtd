@@ -2174,6 +2174,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
     //size of agglo/pe per class
     //array1
+// uwwtd_trace('Graph : context result = ');
+// uwwtd_trace(var_export($context['results'], true));
+
     if (isset($context['results']['graph']['0_10000']['number'])) {
     	$sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
     }
@@ -6588,10 +6591,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line = array();
         $fieldsAndValues_EUFeed = array();
 
+
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
+
+// uwwtd_trace($agg->field_inspireidlocalid['und'][0]['value'] . '=');
 
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
@@ -6613,7 +6619,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $field_agggenerated = 0;
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
-            $field_agggenerated = 0;
+            $field_agggenerated = $agg->field_agggenerated['und'][0]['value'];
         }
 
         //'deadline for Art. 3 compliance',
@@ -7681,6 +7687,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
+
         if ($field_agggenerated >= 2000 && $field_agggenerated < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $field_agggenerated;
             $context['results']['graph']['0_10000']['number']++;
