@@ -75,23 +75,23 @@ function uwwtd_register_form_submit($form, &$form_state){
 
 function uwwtd_register_set_operation(&$batch, $annee){
  //    //CSV
-//     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-//     if ($annee < 2016) {
-// 
-//       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
-//     } else {
-//       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
-//       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8', array($annee));
-//     }
-//     $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-//     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    if ($annee < 2016) {
+
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
+    } else {
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8', array($annee));
+    }
+    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
     
  //    //excel
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
