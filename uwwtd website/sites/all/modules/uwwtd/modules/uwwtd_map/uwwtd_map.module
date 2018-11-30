@@ -1,0 +1,237 @@
+<?php
+
+// Fonction pour definir le lien de menu
+function uwwtd_map_menu(){
+	$items = array();
+	$items['map/europe'] = array(
+		'title' => t('Europe Map'),
+		'description' => t('Europe Map'),
+		'page callback' => 'uwwtd_map_display_map',
+		'page arguments' => array(),
+		'access callback' => TRUE,
+	);
+
+  	$items['map/europe/generate'] = array(
+  		'title' => t('Europe Map'),
+  		'description' => t('Europe Map'),
+  		'page callback' => 'uwwtd_map_display_map_generate',
+  		'page arguments' => array(),
+  		'access arguments' => array('Data-management access'),
+  	);
+
+    return $items;
+}
+
+
+
+function uwwtd_map_display_map() {
+
+  drupal_add_css(drupal_get_path('theme', 'uwwtd') . '/css/uwwtd_map.css');
+  $main_map = openlayers_map_load('uwwtd_map_europe');
+  $main_output = openlayers_render_map($main_map->data,$main_map->name);
+
+
+  $list_mini_map = array(
+    
+    'topleft' => array(
+      //Açores  PT
+      'Açores (PT)' => array(
+        'title' => 'Açores (PT)',
+        'map_name' => 'acore',
+        'class'    => 'acore',
+      ),
+      //MAdeira  PT
+      'Madeira (PT)' => array(
+        'title' => 'Madeira (PT)',
+        'map_name' => 'madeira',
+        'class'    => 'madeira',
+      ),
+  
+      //Islas Canriass  ES
+      'Islas Canariass (ES)' => array(
+        'title' => 'Islas Canariass (ES)',
+        'map_name' => 'canariass',
+        'class'    => 'canariass',
+      ),
+    ),
+
+    'topright' => array(
+      //FR
+      'La Réunion (FR)' => array(
+        'title' => 'La Réunion (FR)',
+        'map_name' => 'reunion',
+        'class'    => 'reunion',
+      ),
+      'Guadeloupe (FR)' => array(
+        'title' => 'Guadeloupe (FR)',
+        'map_name' => 'guadeloupe',
+        'class'    => 'guadeloupe',
+      ),
+      'Martinique (FR)' => array(
+        'title' => 'Martinique (FR)',
+        'map_name' => 'martinique',
+        'class'    => 'martinique',
+      ),
+      'Guyane (FR)' => array(
+        'title' => 'Guyane (FR)',
+        'map_name' => 'guyane',
+        'class'    => 'guyane',
+      ),
+    ),
+
+    'bottomleft' => array(
+      //Malta 
+      'Malta' => array(
+        'title' => 'Malta',
+        'map_name' => 'malta',
+        'class'    => 'malta',
+      ),
+    ),
+  );
+
+  $group = '';
+  foreach ($list_mini_map as $key => $list_map) {
+    $group .= '<div class="'.$key.'">';
+    $group .= '<div class="'.$key.'-inner">';
+    foreach ($list_map as $map_config) {
+      $mini_map = openlayers_map_load($map_config['map_name']);
+      $group .=  '
+      <div class="mini-map '.$mini_map->name.' '.$map_config['class'].'">
+         <div class="minimap-title">'.$map_config['title'].'</div>
+      '
+       . openlayers_render_map($mini_map->data,$mini_map->name)
+       . '</div>';
+    }
+    $group .= '</div>';
+    $group .= '</div>';
+  }
+
+//   dsm($output); 
+
+   $s = ' 
+   <div class="map-page">
+     <div class="map-title">
+     Overview of designated Sensitive Areas and Catchment os Sensitive Areas and the application of Article 5 (8) UWWTD in the European Union
+     </div>       
+     <div class="main-map">
+         ' . $main_output . '
+         ' . $group . '
+     </div>
+   </div>
+
+   <div class="map-legend"> 
+    <div class="legend-title">Legend</div>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <td style="width:233px;">
+          <table >
+            <tr>
+              <td>
+              <span class="color-legend normalarea">
+              </td>
+              <td >    
+              <span class="legend-label">Normal areas</span>
+              </td>
+            </tr>
+            <tr>
+              <td> 
+              <span class="color-legend csa">
+              </td>
+              <td >  
+              <span class="legend-label">Catchment area os sensitive area as designated by Member State</span>
+              </td>
+            </tr>
+            <tr>
+              <td> 
+              <span class="color-legend art5854">
+              </td>
+              <td style="margin-left:5px;">  
+              <span class="legend-label">Application of Article 5(8) and Article 5(4)</span>
+              </td>
+            </tr>
+          </table> 
+        </td>
+        <td style="width:233px;">
+          <table>
+            <tr>
+              <td>
+              <span class="color-legend art58523">
+              </td>
+              <td style="padding-left:5px;">    
+              <span class="legend-label">Application of Article 5(8) and Article 5(2.3)</span>
+              </td>
+            </tr>
+            <tr>
+              <td> 
+              <span class="color-legend sa">
+              </td>
+              <td style="padding-left:5px;">  
+              <span class="legend-label">Sensitive area as designated by Member States</span>
+              </td>
+            </tr>
+            <tr>
+              <td> 
+              <span class="color-legend no-eu">
+              </td>
+              <td style="padding-left:5px;">  
+              <span class="legend-label">Non EU countries</span>
+              </td>
+            </tr>
+          </table> 
+        </td>
+        <td>
+        </td>
+      </tr>
+    </table>
+    <!--   
+    <div class="legend-left">      
+      <div>
+        <div class="container-legend"><span class="color-legend normalarea"></span> <span class="legend-label">Normal areas</span></div>
+        <div class="container-legend" ><span class="color-legend csa"></span> <span class="legend-label">Catchment area os sensitive area <br>as designated by Member State</span></div>
+        <div class="container-legend"><span class="color-legend art5854"></span> <span class="legend-label">Application of Article 5(8) <br>and Article 5(4)</span></div>
+      </div>
+    </div>
+    <div class="legend-center">
+      <div> 
+         <div class="container-legend"><span class="color-legend art58523"></span> <span class="legend-label">Application of Article 5(8) <br>and Article 5(2.3)</span></div>
+         <div class="container-legend"><span class="color-legend sa"></span> <span class="legend-label">Sensitive area as designated <br>by Member States</span></div>
+         <div class="container-legend"><span class="color-legend no-eu"></span> <span class="legend-label">Non EU countries</span></div>
+      </div>
+    </div>
+    <div class="legend-right">
+
+    </div>
+    -->
+   </div> 
+   ';
+  return $s;
+
+}
+
+function uwwtd_map_display_map_generate() {
+//   return 'ok';
+  $uri = 'public://map/europe.png'; 
+  $url_source = 'https://dev.oieau.fr' . base_path() . 'map/europe';
+  $target_file = escapeshellarg(drupal_realpath($uri));
+               
+  $command = "/opt/wkhtmltox.0.12.4/bin/wkhtmltoimage --crop-w 700 --javascript-delay 5000  '" . $url_source  . "' " . $target_file;
+
+  $result = system($command, $return_var);  
+// dsm($return_var); 
+// dsm($result);  
+
+  $markup = '<img src="'.file_create_url($uri). '?d=' . date("YmdHis") . '" />';
+
+// dsm($url_source);
+// dsm($target_file);
+// dsm($command);
+// dsm($markup);
+
+  return [
+    '#type' => 'markup',
+    '#markup' => $markup,
+  ];
+}
+

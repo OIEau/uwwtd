@@ -1,0 +1,85 @@
+<?php
+
+/**
+ * create new map europe
+ */ 
+function ____uwwtd_map_update_7100()
+{
+   uwwtd_map_install_trace(__FUNCTION__);
+
+   $list_map = array(
+        'acore.inc', 
+        'canariass.inc', 
+        'guadeloupe', 
+        'guyane', 
+        'madeira', 
+        'malta', 
+        'martinique', 
+        'reunion', 
+        'uwwtd_map_europe',        
+    );
+
+    $path = drupal_get_path('module', 'uwwtd_map') . '/script/map/';
+
+    foreach($list_map as $filename) {
+        include($path . $filename);
+        if (isset($openlayers_maps)) {
+            $row = array();
+            $row['name'] = $openlayers_maps->name;
+            $row['title'] = $openlayers_maps->title;
+            $row['description'] = $openlayers_maps->description;
+            $row['data'] = $openlayers_maps->data;
+            $msgresult = 'ok';
+            try {
+                uwwtd_map_insert_openlayers('openlayers_maps', $row);
+            } catch (Exception $e) {
+                $msgresult = 'error';
+                $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
+            }
+                        
+            uwwtd_map_install_trace('map ' . $filename . ' result : ' . $msgresult);                                
+        }
+    }
+
+}
+
+/***************************************************************************/
+// Function utils
+/***************************************************************************/
+function uwwtd_map_insert_openlayers($table, $row)
+{
+    uwwtd_map_install_trace(__FUNCTION__);
+    if (db_select($table)
+                  ->fields($table, array('name'))
+                  ->condition('name', $row['name'])
+                  ->execute()
+                  ->fetchCol()) {
+          $resultupdate = db_update($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->condition('name', $row['name'], '=')       
+          ->execute();                    
+    } else {
+          db_insert($table)
+          ->fields(array(
+            'name' => $row['name'],
+            'title' =>  $row['title'],
+            'description' => $row['description'],
+            'data' => serialize($row['data'])
+          ))
+          ->execute();    
+    }
+}
+
+function uwwtd_map_install_trace($message) 
+{                   
+    if($file = drupal_realpath('public://data_errors/install_trace.log')){
+        $r = fopen($file, 'a');
+        fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
+        fclose($r);
+    }
+}
