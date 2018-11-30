@@ -5,9 +5,20 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-    $cacheSettings = array('memoryCacheSize' => '4MB', 'cacheTime' => '1000'); 
-    PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+// dsm( DRUPAL_ROOT . '/vendor/autoload.php');
+
+// require DRUPAL_ROOT . '/vendor/autoload.php';
+// 
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\IOFactory;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
+
+
+$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+$cacheSettings = array('memoryCacheSize' => '4MB', 'cacheTime' => '1000'); 
+PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
 /**
  *
@@ -99,6 +110,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+//     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph2_sheet11_1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
@@ -107,6 +119,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+
+//     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     
 }
 
@@ -2109,6 +2123,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
 //     }
 }
 
+
 /**
  *
  */
@@ -2159,6 +2174,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
     //size of agglo/pe per class
     //array1
+// uwwtd_trace('Graph : context result = ');
+// uwwtd_trace(var_export($context['results'], true));
+
     if (isset($context['results']['graph']['0_10000']['number'])) {
     	$sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
     }
@@ -3193,6 +3211,114 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 	}
 //     }
 }
+
+
+
+// /**
+//  *
+//  */
+// function uwwtd_create_register_2015_file_graph_test_sheet11($annee, &$context)
+// {
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
+//     //change to public://
+// //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
+//     $target_path = uwwtd_getregister_file_path('_Feuil1.xlsx', $annee);
+// 
+//     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+//     $objReader->setIncludeCharts(TRUE);
+//     $objReader->setLoadSheetsOnly( array(
+//                                          'Feuil1',
+//                                         ) );
+//     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+//     $sheet = $objPHPExcel->getSheetByName('Feuil1');
+// 
+// //	Set the Labels for each data series we want to plot
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $dataSeriesLabels = array(
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$AA$4', NULL, 1),	//	curertn year
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$AB$4', NULL, 1),	//	prevous year
+// );
+// //	Set the X-Axis Labels
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $xAxisTickValues = array(
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$Z$5:$Z$7', NULL, 4),	//	Q1 to Q4
+// );
+// //	Set the Data values for each data series we want to plot
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $dataSeriesValues = array(
+// 	new PHPExcel_Chart_DataSeriesValues('Number', 'Graphs!$AA$5:$AA$7', NULL, 4),
+// 	new PHPExcel_Chart_DataSeriesValues('Number', 'Graphs!$AB$5:$AB$7', NULL, 4),
+// );
+// 
+// //	Build the dataseries
+// $series = new PHPExcel_Chart_DataSeries(
+// 	PHPExcel_Chart_DataSeries::TYPE_BARCHART,		// plotType
+// 	PHPExcel_Chart_DataSeries::GROUPING_STANDARD,	// plotGrouping
+// 	range(0, count($dataSeriesValues)-1),			// plotOrder
+// 	$dataSeriesLabels,								// plotLabel
+// 	$xAxisTickValues,								// plotCategory
+// 	$dataSeriesValues								// plotValues
+// );
+// //	Set additional dataseries parameters
+// //		Make it a vertical column rather than a horizontal bar graph
+// $series->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_COL);
+// 
+// //	Set the series in the plot area
+// $plotArea = new PHPExcel_Chart_PlotArea(NULL, array($series));
+// //	Set the chart legend
+// $legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
+// 
+// $title = new PHPExcel_Chart_Title('Test Column Chart_');
+// $yAxisLabel = new PHPExcel_Chart_Title('Value ($k)_');
+// 
+// 
+// //	Create the chart
+// $chart = new PHPExcel_Chart(
+// 	'chart1',		// name
+// 	$title,			// title
+// 	$legend,		// legend
+// 	$plotArea,		// plotArea
+// 	true,			// plotVisibleOnly
+// 	0,				// displayBlanksAs
+// 	NULL,			// xAxisLabel
+// 	$yAxisLabel		// yAxisLabel
+// );
+// 
+// //	Set the position where the chart should appear in the worksheet
+// $chart->setTopLeftPosition('R2');
+// $chart->setBottomRightPosition('W14');
+// 
+// //	Add the chart to the worksheet
+// $sheet->addChart($chart);
+// 
+// 
+//     //write
+//     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+// //     $objWriter->setPreCalculateFormulas(true);
+//     $objWriter->setIncludeCharts(TRUE);
+//     //$objWriter->setOffice2003Compatibility(true);
+//     $objWriter->save(drupal_realpath($target_path));
+//     
+//     $objPHPExcel->__destruct();
+//     unset($objPHPExcel);
+//     unset($objWriter);
+//     unset($objReader);
+// }
 
 /**
  *
@@ -6465,10 +6591,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line = array();
         $fieldsAndValues_EUFeed = array();
 
+
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
+
+// uwwtd_trace($agg->field_inspireidlocalid['und'][0]['value'] . '=');
 
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
@@ -6490,7 +6619,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $field_agggenerated = 0;
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
-            $field_agggenerated = 0;
+            $field_agggenerated = $agg->field_agggenerated['und'][0]['value'];
         }
 
         //'deadline for Art. 3 compliance',
@@ -7558,6 +7687,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
+
         if ($field_agggenerated >= 2000 && $field_agggenerated < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $field_agggenerated;
             $context['results']['graph']['0_10000']['number']++;
@@ -10226,6 +10356,154 @@ function uwwtd_get_all_rca($annee)
     return $data;
 }  
 
+
+// function uwwtd_create_register_2015_final_file_testspreadsheet($annee, &$context)
+// {
+//     if (!isset($context['sandbox']['progress'])) {
+//         $context['sandbox']['progress'] = 0;
+//         $context['sandbox']['max'] = 1;
+//     }
+// 
+// //     $configsheet = $GLOBALS['uwwtd']['sheet'];
+// //     $listesheet = array(
+// //                         'glossary',
+// //                         'rca',
+// //                         'rcaA54',
+// //                         'uwwtp',
+// //                         'agglo',
+// //                         'summary_legal_comp',
+// //                         'distance_to_comp',
+// //                         'summary_installation_in_place',
+// //                         'breach_list',
+// //                         'summary_big_cities',
+// //                         'nuts_level2',
+// //                         'sewage_sludge',
+// //                         'graph',
+// //                         'graph_2',
+// // //                         'graph_test',
+// //                         'new_agglo',
+// //                         'agglo_out',
+// //                         'new_uwwtp',
+// //                         'uwwtp_out',
+// //                         );
+// 
+// // use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// 
+// // $spreadsheet = new Spreadsheet();
+// // $sheet = $spreadsheet->getActiveSheet();
+// // $sheet->setCellValue('A1', 'Hello World !');
+// $target_path = uwwtd_getregister_finalfile_path($annee);
+// $model = drupal_realpath(uwwtd_getregister_modelfile_path($annee));
+//     $reader = IOFactory::createReader('Xlsx');
+//     $reader->setIncludeCharts(true);
+//     $spreadsheet = $reader->load(drupal_realpath($model));
+// 
+//     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+//     $writer->setIncludeCharts(true);
+// 
+//     $writer->save(drupal_realpath($target_path));
+// 
+//     //$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
+// // //     dsm($target_path);
+// //     $objWriter->setIncludeCharts(TRUE);
+// //     $objWriter->save(drupal_realpath($target_path));
+// 
+// // $writer->save(drupal_realpath($target_path));
+// 
+// //     $finalPHPExcel = new PHPExcel();
+// //     $sheetIndex = $finalPHPExcel->getIndex($finalPHPExcel->getSheetByName('Worksheet')); //default worksheet
+// //     $finalPHPExcel->removeSheetByIndex($sheetIndex);
+// // 
+// //     foreach($listesheet as $sheet) {
+// // //         dsm($sheet);
+// //         //load sheet
+// // //         $sheet_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'] .'.xlsx';
+// //         $sheet_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'], $annee);
+// // 
+// //         if (!file_exists($sheet_path)) {
+// //             continue;
+// //         }
+// // //         dsm($sheet_path);
+// //     //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
+// // //         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
+// //         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+// //         $objReader->setIncludeCharts(TRUE);
+// //         $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
+// //         $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));
+// // //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
+// // //         dsm(1);
+// //         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
+// //         
+// //         $objPHPExcel->__destruct();
+// //         unset($objPHPExcel, $objReader);
+// //     }
+// // 
+// //     //write
+// //     $objWriter = PHPExcel_IOFactory::createWriter($finalPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+// //     $objWriter->setPreCalculateFormulas(false);
+// //     //$objWriter->setOffice2003Compatibility(true);
+// //     $target_path = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
+// // //     dsm($target_path);
+// //     $objWriter->setIncludeCharts(TRUE);
+// //     $objWriter->save(drupal_realpath($target_path));
+// //     unset($finalPHPExcel);
+// //     unset($objWriter);
+// 
+// 
+// // $zip = new ZipArchive;
+// // dsm($target_path);
+// // if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/mytheme1.xml', 'xl/theme/theme1.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/[Content_Types].xml', '[Content_Types].xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/sharedStrings.xml', 'xl/sharedStrings.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/styles.xml', 'xl/styles.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/workbook.xml', 'xl/workbook.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/calcChain.xml', 'xl/calcChain.xml');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/_rels/workbook.xml.rels', 'xl/_rels/workbook.xml.rels');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing1.xml', 'xl/drawings/drawing1.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing2.xml', 'xl/drawings/drawing2.xml');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing1.xml.rels', 'xl/drawings/_rels/drawing1.xml.rels');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing2.xml.rels', 'xl/drawings/_rels/drawing2.xml.rels');
+// // 
+// //     foreach(range(1,29) as $key) {
+// // //        dsm('add style'.$key.'.xml');
+// //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/style'.$key.'.xml', 'xl/charts/style'.$key.'.xml');
+// // //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/colors'.$key.'.xml', 'xl/charts/colors'.$key.'.xml');
+// //     }
+// //     $zip->close();
+// //     dsm( 'ok');
+// // } else {
+// //     dsm($er);
+// //     dsm(ZipArchive::ER_EXISTS);
+// //     dsm(ZipArchive::ER_INCONS);
+// //     dsm(ZipArchive::ER_INVAL);
+// //     dsm(ZipArchive::ER_MEMORY);
+// //     dsm(ZipArchive::ER_NOENT);
+// //     dsm(ZipArchive::ER_NOZIP);
+// //     dsm(ZipArchive::ER_OPEN);
+// //     dsm(ZipArchive::ER_READ);
+// //     dsm(ZipArchive::ER_SEEK);
+// //     dsm('err');
+// // }
+// 
+// 
+//     $context['sandbox']['progress']++;
+// 
+//     $context['message'] = '('.$annee.') ' . t('Finalization');
+// 
+// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+// //     }
+// 
+// 
+//     variable_set('registre_'.$annee, time());
+//     drupal_set_message(uwwtd_registre_create_html_link($annee));
+// }
+
 function uwwtd_create_register_2015_final_file($annee, &$context)
 {
     if (!isset($context['sandbox']['progress'])) {
@@ -10249,6 +10527,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
                         'sewage_sludge',
                         'graph',
                         'graph_2',
+//                         'graph_test',
                         'new_agglo',
                         'agglo_out',
                         'new_uwwtp',
@@ -10293,6 +10572,23 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);
+
+
+    $zip = new ZipArchive;
+    if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
+        //we modify the xml file for each graph we need to change color (use Excel 2007 to modify the excel file and use the xml in the xlsx generated)
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart23.xml', 'xl/charts/chart23.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart24.xml', 'xl/charts/chart24.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart25.xml', 'xl/charts/chart25.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart26.xml', 'xl/charts/chart26.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart27.xml', 'xl/charts/chart27.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart29.xml', 'xl/charts/chart29.xml');
+        $zip->close();
+    } else {
+        uwwtd_trace(var_export($er, true));
+    }
+
+
     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Finalization');
@@ -10320,7 +10616,7 @@ function uwwtd_getregister_modelfile_path($annee)
 //     uwwtd_trace($annee);
     if ($annee >= 2016) {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
-//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet'][];
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
     } else {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014']);
