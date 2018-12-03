@@ -11,6 +11,10 @@ include_once(drupal_get_path('module', 'uwwtd') . '/uwwtd.install');
  */ 
 function uwwtd_map_install() 
 {
+    //create dir
+	$dir = 'public://map';
+	file_prepare_directory($dir, FILE_CREATE_DIRECTORY);  
+
     $batch = array(
         'title' => t('Installing UWWTD'),
         'operations' => array(

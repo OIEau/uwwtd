@@ -262,6 +262,12 @@ body {
 
 .legend-label {
   msargin-left:10px;
-  font-size:12px;
- 
+  font-size:12px; 
+}
+.legend-col-label{
+  padding-left:5px;
+}
+
+.legend-col {
+  width: 233px;
 }
