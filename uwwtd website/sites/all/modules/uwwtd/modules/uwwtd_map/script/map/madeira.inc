@@ -15,8 +15,8 @@ $openlayers_maps->data = array(
   'hide_empty_map' => 0,
   'center' => array(
     'initial' => array(
-      'centerpoint' => '23.55468748859422, 55.17886766058932',
-      'zoom' => '4',
+      'centerpoint' => '-16.87500000416377, 32.84267363275422',
+      'zoom' => '7',
     ),
     'restrict' => array(
       'restrictextent' => 0,
@@ -33,7 +33,7 @@ $openlayers_maps->data = array(
   ),
   'default_layer' => 'test',
   'layers' => array(
-    'test' => 'test',
+    'osm_mapnik' => 'osm_mapnik',
     'oieau_nuts' => 'oieau_nuts',
   ),
   'layer_weight' => array(

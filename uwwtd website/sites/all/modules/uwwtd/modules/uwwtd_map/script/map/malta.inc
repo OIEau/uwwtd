@@ -1,5 +1,4 @@
 <?php
-
 $openlayers_maps = new stdClass();
 $openlayers_maps->disabled = FALSE; /* Edit this to true to make a default openlayers_maps disabled initially */
 $openlayers_maps->api_version = 1;
@@ -7,16 +6,16 @@ $openlayers_maps->name = 'malta';
 $openlayers_maps->title = 'malta';
 $openlayers_maps->description = '';
 $openlayers_maps->data = array(
-  'width' => '120px',
-  'height' => '120px',
+  'width' => '150px',
+  'height' => '130px',
   'image_path' => 'sites/all/modules/openlayers/themes/default_dark/img/',
   'css_path' => 'sites/all/modules/openlayers/themes/default_dark/style.css',
   'proxy_host' => '',
   'hide_empty_map' => 0,
   'center' => array(
     'initial' => array(
-      'centerpoint' => '23.55468748859422, 55.17886766058932',
-      'zoom' => '4',
+      'centerpoint' => ' 14.378238 ,  35.948305',
+      'zoom' => '9',
     ),
     'restrict' => array(
       'restrictextent' => 0,
@@ -33,7 +32,7 @@ $openlayers_maps->data = array(
   ),
   'default_layer' => 'test',
   'layers' => array(
-    'test' => 'test',
+    'osm_mapnik' => 'osm_mapnik',
     'oieau_nuts' => 'oieau_nuts',
   ),
   'layer_weight' => array(

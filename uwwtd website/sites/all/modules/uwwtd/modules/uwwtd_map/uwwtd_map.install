@@ -1,25 +1,68 @@
 <?php
 
+include_once(drupal_get_path('module', 'uwwtd') . '/uwwtd.install');
+
+/**
+ * Installmodule UWWTD 
+ *  - create directory
+ *  - disabled/enable module
+ *  - create all fields and bundle
+ *  - configure drupal    
+ */ 
+function uwwtd_map_install() 
+{
+    $batch = array(
+        'title' => t('Installing UWWTD'),
+        'operations' => array(
+        ),
+        'finished' => 'uwwtd_map_install_batch_finished',
+        'init_message' => t('Start to install uwwtd_map...'),
+        'progress_message' => t('installing...'),
+        'error_message' => t('An error occured while installing.'),
+        'file' => drupal_get_path('module', 'uwwtd_map') . '/uwwtd_map.install',
+    );
+      
+     
+    
+    //and execute all update! because all current update will not be visible on update.php    
+    //on install,,execute all update function defined
+    for ($i = 7100; $i < 7199; $i++) {
+//     for ($i = 7100; $i < 7101; $i++) {
+        $candidate = 'uwwtd_map_update_' . $i;
+        if (function_exists($candidate)) {
+//           $candidate();
+          $batch['operations'][] = array($candidate, array());
+        }
+    }
+    
+     batch_set($batch);  
+}
+
 /**
  * create new map europe
  */ 
-function ____uwwtd_map_update_7100()
+function uwwtd_map_update_7100(&$context = null)
 {
    uwwtd_map_install_trace(__FUNCTION__);
+   include_once(drupal_get_path('module', 'uwwtd') . '/uwwtd.install');
+   
 
    $list_map = array(
         'acore.inc', 
         'canariass.inc', 
-        'guadeloupe', 
-        'guyane', 
-        'madeira', 
-        'malta', 
-        'martinique', 
-        'reunion', 
-        'uwwtd_map_europe',        
+        'guadeloupe.inc', 
+        'guyane.inc', 
+        'madeira.inc', 
+        'malta.inc', 
+        'martinique.inc', 
+        'reunion.inc', 
+        'uwwtd_map_europe.inc',        
     );
 
     $path = drupal_get_path('module', 'uwwtd_map') . '/script/map/';
+
+    //if exsist we delete them
+
 
     foreach($list_map as $filename) {
         include($path . $filename);
@@ -31,7 +74,7 @@ function ____uwwtd_map_update_7100()
             $row['data'] = $openlayers_maps->data;
             $msgresult = 'ok';
             try {
-                uwwtd_map_insert_openlayers('openlayers_maps', $row);
+                uwwtd_insert_openlayers('openlayers_maps', $row);
             } catch (Exception $e) {
                 $msgresult = 'error';
                 $msgexception .= 'Error : can\'t create openlayers map ' . $filename . '('.$msgresult.')'."\n";
@@ -41,40 +84,12 @@ function ____uwwtd_map_update_7100()
         }
     }
 
+//     throw new DrupalUpdateException(__FUNCTION__);
 }
 
 /***************************************************************************/
 // Function utils
 /***************************************************************************/
-function uwwtd_map_insert_openlayers($table, $row)
-{
-    uwwtd_map_install_trace(__FUNCTION__);
-    if (db_select($table)
-                  ->fields($table, array('name'))
-                  ->condition('name', $row['name'])
-                  ->execute()
-                  ->fetchCol()) {
-          $resultupdate = db_update($table)
-          ->fields(array(
-            'name' => $row['name'],
-            'title' =>  $row['title'],
-            'description' => $row['description'],
-            'data' => serialize($row['data'])
-          ))
-          ->condition('name', $row['name'], '=')       
-          ->execute();                    
-    } else {
-          db_insert($table)
-          ->fields(array(
-            'name' => $row['name'],
-            'title' =>  $row['title'],
-            'description' => $row['description'],
-            'data' => serialize($row['data'])
-          ))
-          ->execute();    
-    }
-}
-
 function uwwtd_map_install_trace($message) 
 {                   
     if($file = drupal_realpath('public://data_errors/install_trace.log')){
@@ -82,4 +97,18 @@ function uwwtd_map_install_trace($message)
         fputs($r, date("[Y-m-d H:i:s] ") . $message . "\n");
         fclose($r);
     }
+}
+
+function uwwtd_map_install_batch_finished($success, $results, $operations)
+{
+    uwwtd_map_install_trace(__FUNCTION__);     
+    if ($success) {
+		drupal_set_message('success');
+        drupal_set_message('install uwwtd_map ok');
+	}
+	else {
+		drupal_set_message(
+			t('An error occurred')
+		);  
+	}
 }

@@ -1,5 +1,4 @@
 <?php
-
 $openlayers_maps = new stdClass();
 $openlayers_maps->disabled = FALSE; /* Edit this to true to make a default openlayers_maps disabled initially */
 $openlayers_maps->api_version = 1;
@@ -15,8 +14,8 @@ $openlayers_maps->data = array(
   'hide_empty_map' => 0,
   'center' => array(
     'initial' => array(
-      'centerpoint' => '23.55468748859422, 55.17886766058932',
-      'zoom' => '4',
+      'centerpoint' => '-27.271320 ,  38.300430',
+      'zoom' => '5',
     ),
     'restrict' => array(
       'restrictextent' => 0,
@@ -33,7 +32,7 @@ $openlayers_maps->data = array(
   ),
   'default_layer' => 'test',
   'layers' => array(
-    'test' => 'test',
+    'osm_mapnik' => 'osm_mapnik',
     'oieau_nuts' => 'oieau_nuts',
   ),
   'layer_weight' => array(
