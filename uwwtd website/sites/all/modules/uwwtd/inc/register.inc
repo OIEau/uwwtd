@@ -120,6 +120,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
+    $batch['operations'][]=array('uwwtd_create_report', array($annee));
+
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     
 }
@@ -346,6 +348,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             switch($i) {
                 case 0:
                     $line_to_fill = $context['sandbox']['line'] + 7; 
+                    $context['results']['auto_report']['NB_AGGLO'] = $agglo[0]; //save for auto generation of report
                 break;
                 case 1:
                      $line_to_fill = $context['sandbox']['line'] + 17;  
@@ -357,6 +360,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
             //subjected_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[0]);
+
             //compliant_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[1]);
             //notcompliant_agglo
@@ -2222,12 +2226,22 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
 
     //previous
-    $sheet->setCellValue('C15', uwwtd_register_get_cell_value($previoussheet, 'B15'));
+    $previousB15 = uwwtd_register_get_cell_value($previoussheet, 'B15');
+    $sheet->setCellValue('C15', $previousB15);
     $sheet->setCellValue('C16', uwwtd_register_get_cell_value($previoussheet, 'B16'));
     $sheet->setCellValue('C17', uwwtd_register_get_cell_value($previoussheet, 'B17'));
     $sheet->setCellValue('C18', uwwtd_register_get_cell_value($previoussheet, 'B18'));
     $sheet->setCellValue('C19', uwwtd_register_get_cell_value($previoussheet, 'B19'));
 
+         
+    $context['results']['auto_report']['COUNTRY']  = $country_name;
+    $context['results']['auto_report']['CURRENT_REPORT_YEAR']  = $annee;
+    $context['results']['auto_report']['PREVIOUS_REPORT_YEAR']  = $previous_year;
+    $context['results']['auto_report']['PREVIOUS_REPORT_NUMBER'] = $GLOBALS['report_number'][$previous_year];  
+    $context['results']['auto_report']['CURRENT_REPORT_NUMBER'] = $GLOBALS['report_number'][$annee];
+    $context['results']['auto_report']['TOTAL_GENERATED_LOAD'] = $context['results']['graph']['total_generated']['pe'];
+    //Cell B15– cellule C15 auto generation report
+    $context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'] = round($context['results']['graph']['total_generated']['pe'], 0)  -  $previousB15; 
 
     //array 5 6 7
 //     $previous_year = uwwtd_get_previous_year($annee);
@@ -4679,10 +4693,15 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_percent'])) {
         	$sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
         }
+
+        $context['results']['auto_report']['TOTAL_COLLECTING_SYSTEM_IN_PLACE'] = $context['sandbox']['summary']['total']['collecting_system']['waste_percent'];
+
         //secondary treatment
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number'])) {
         	$sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
         }
+        $context['results']['auto_report']['SECONDARY_INSTALLATION_IN_PLACE'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'];
+
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['percent'])) {
         	$sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
         }
@@ -4708,6 +4727,9 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['number'])) {
         	$sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
         }
+
+        $context['results']['auto_report']['TERTIARY_INSTALLATION_IN_PLACE'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['number']; 
+
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'])) {
         	$sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
         }
@@ -5209,6 +5231,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_%']))
 	        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
+
+        $context['results']['auto_report']['ART3_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1);         
+
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_pe']))
 	        $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
 
@@ -5238,6 +5263,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+
+         $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1);         
+
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);
 
@@ -5258,6 +5286,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
+
+         $context['results']['auto_report']['ART5_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1);
+
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
 	    if (isset($context['sandbox']['data']))
@@ -5815,7 +5846,13 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $col['F'] = 'U';
             }
             $sheet->getCell($col['C'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']);
+            if ($col['C'].'12' == 'C12') {
+              $context['results']['auto_report']['COMPLIANCE_ART3_NUMBER'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'];
+            }
             $sheet->getCell($col['D'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage']);
+            if ($col['D'].'12' == 'D12') {
+              $context['results']['auto_report']['COMPLIANCE_ART3'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'];
+            }
             $sheet->getCell($col['E'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']);
             $sheet->getCell($col['F'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage']);
             $sheet->getCell($col['C'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']);
@@ -5847,6 +5884,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['D'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage']);
             $sheet->getCell($col['E'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe']);
             $sheet->getCell($col['F'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage']);
+            if ($col['F'].'21' == 'F21') {
+              $context['results']['auto_report']['COMPLIANCE_ART4'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'];
+            }
             $sheet->getCell($col['C'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']);
             $sheet->getCell($col['D'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage']);
             $sheet->getCell($col['E'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe']);
@@ -5881,6 +5921,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $sheet->getCell($col['D'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage']);
                 $sheet->getCell($col['E'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe']);
                 $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']);
+                if ($col['F'].'31' == 'F31') {
+                  $context['results']['auto_report']['COMPLIANCE_ART5'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'];
+                }
                 $sheet->getCell($col['C'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']);
                 $sheet->getCell($col['D'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage']);
                 $sheet->getCell($col['E'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe']);
@@ -10504,6 +10547,8 @@ function uwwtd_get_all_rca($annee)
 //     drupal_set_message(uwwtd_registre_create_html_link($annee));
 // }
 
+
+
 function uwwtd_create_register_2015_final_file($annee, &$context)
 {
     if (!isset($context['sandbox']['progress'])) {
@@ -10600,6 +10645,117 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 
     variable_set('registre_'.$annee, time());
     drupal_set_message(uwwtd_registre_create_html_link($annee));
+}
+
+/**
+ *
+ */
+function uwwtd_create_report($annee, &$context)
+{
+  $text = "
+  1	[#COUNTRY#]
+  1.1	General information on data
+  
+  For reference date 31/12/[#CURRENT_REPORT_YEAR#], [#COUNTRY#] reported [#NB_AGGLO#] agglomerations ≥ 2 000 population equivalent (p.e.) with a generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  Figures 1 and 2 show a comparison of the number of agglomerations and the amount of generated waste water load from the last UWWTD reporting exercise in [#PREVIOUS_YEAR_REPORT#] ([#PREVIOUS_REPORT_NUMBER#] Report) and [#CURRENT_YEAR_REPORT#] ([#CURRENT_REPORT_NUMBER#] Report). 
+  Between [#PREVIOUS_YEAR_REPORT#] and [#CURRENT_YEAR_REPORT#] the waste water load increased by [#WASTER_WATER_LOAD_INCREASED#] p.e., the share of waste water load has increased by ?% in the ? – ? size class, decreased by ? % in the ?-? size class and is stable in the >? size class.
+  
+  1.2	Receiving areas – application of Article 5(8) and Article 5(4)
+  
+  1.3	Results of the legal compliance check
+  
+  This section presents the results of the legal compliance check.
+  
+  [All [#NB_AGGLO#] agglomerations comply with requirements of Article 3 (collection) of the Directive.] 
+  The compliance rate for Article 3 (collection) of the Directive is [#COMPLIANCE_ART3#]%.
+  The compliance rate for Article 4 is [#COMPLIANCE_ART4#]% of the waste water load (secondary treatment), and the compliance rate for Article 5 is [#COMPLIANCE_ART5#]% of the waste water load (more stringent treatment).
+  
+  1.4	Distance to compliance
+  
+  This section provides an evaluation of the waste water load in p.e. that is responsible for non-compliance. This analysis can give an accurate idea of the efforts needed to meet compliance.
+  
+  [#COUNTRY#] has a [#ART3_DISTANCE_TO_COMPLIANCE#] distance to compliance for Article 3, but the distance to compliance is [#ART4_DISTANCE_TO_COMPLIANCE#]% for Article 4 and  [#ART5_DISTANCE_TO_COMPLIANCE#]% for Article 5.
+      
+  1.5	Results of the legal compliance check at the regional level
+  
+  1.6	Waste water installations in place
+  
+  This section assesses the information concerning the reported waste water installations in place.
+  
+  [#COUNTRY#] has reported [#NB_AGGLO#] agglomerations ≥ 2,000 p.e. with a total generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  The share of the total generated load of all agglomerations ≥ 2,000 p.e. that is reported to be collected in a collecting system is [#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]%. 
+  There are [#SECONDARY_INSTALLATION_IN_PLACE#] agglomerations that have installations for secondary treatment in place, of these there are [#TERTIARY_INSTALLATION_IN_PLACE#] agglomerations reported to have more stringent treatment installations.
+  
+  
+  1.7	Waste water treatment in “big cities”
+  
+  1.8	Production of sludge, sludge re-use and disposal
+  
+  1.9	National Implementation Programme
+  
+  1.10	Storm water overflows
+  
+  1.11	Waste Water reuse
+  ";
+
+//   dsm($text);
+//   dsm($context['results']['auto_report']);
+  $text = str_replace(
+                 array(
+                   '[#COUNTRY#]',
+                   '[#CURRENT_REPORT_YEAR#]', 
+                   '[#NB_AGGLO#]',
+                   '[#TOTAL_GENERATED_LOAD#]',
+                   '[#PREVIOUS_YEAR_REPORT#]',
+                   '[#PREVIOUS_REPORT_NUMBER#]',
+                   '[#CURRENT_YEAR_REPORT#]',
+                   '[#CURRENT_REPORT_NUMBER#]',
+                   '[#PREVIOUS_YEAR_REPORT#]',
+                   '[#CURRENT_YEAR_REPORT#]',
+                   '[#WASTER_WATER_LOAD_INCREASED#]',
+                   '[#COMPLIANCE_ART3_NUMBER#]',
+                   '[#COMPLIANCE_ART3#]',
+                   '[#COMPLIANCE_ART4#]',
+                   '[#COMPLIANCE_ART5#]', 
+                   '[#ART3_DISTANCE_TO_COMPLIANCE#]',
+                   '[#ART4_DISTANCE_TO_COMPLIANCE#]',
+                   '[#ART5_DISTANCE_TO_COMPLIANCE#]',
+                   '[#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]',
+                   '[#SECONDARY_INSTALLATION_IN_PLACE#]',
+                   '[#TERTIARY_INSTALLATION_IN_PLACE#]',
+                 ),
+                 array(
+                     $context['results']['auto_report']['COUNTRY'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'], 
+                     $context['results']['auto_report']['NB_AGGLO'],
+                     number_format($context['results']['auto_report']['TOTAL_GENERATED_LOAD'], 0),
+                     $context['results']['auto_report']['PREVIOUS_REPORT_YEAR'],
+                     $context['results']['auto_report']['PREVIOUS_REPORT_NUMBER'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'],
+                     $context['results']['auto_report']['CURRENT_REPORT_NUMBER'],
+                     $context['results']['auto_report']['PREVIOUS_REPORT_YEAR'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'],
+                     number_format($context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'], 0),
+                     number_format($context['results']['auto_report']['COMPLIANCE_ART3_NUMBER'], 0),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART3'], 2), 1),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART4'], 2), 1),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART5'], 2), 1),
+                     $context['results']['auto_report']['ART3_DISTANCE_TO_COMPLIANCE'],
+                     $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'],
+                     $context['results']['auto_report']['ART5_DISTANCE_TO_COMPLIANCE'],
+                     number_format(round($context['results']['auto_report']['TOTAL_COLLECTING_SYSTEM_IN_PLACE'], 2), 1),
+                     $context['results']['auto_report']['SECONDARY_INSTALLATION_IN_PLACE'],
+                     $context['results']['auto_report']['TERTIARY_INSTALLATION_IN_PLACE'],
+                 ),
+                 $text
+              );
+
+  $path = 'public://register/' . $annee . '_report.txt';
+  $url = file_create_url($path);              
+  file_put_contents($path, $text);
+//   dsm($text);
+//   dsm($context['results']['auto_report']);
+//   drupal_set_message('<a href="'.$url.'?d='.date("YmdHis").'">Rapport</a>');
 }
 
 

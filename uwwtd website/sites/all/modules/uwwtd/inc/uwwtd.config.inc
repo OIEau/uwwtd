@@ -513,6 +513,15 @@ $GLOBALS['article17']['glossary'] = array(
   "P" => "past"
 );
 
+$GLOBALS['report_number'] = array(
+  2010 => '7th',
+  2012 => '8th',                          
+  2014 => '9th',
+  2016 => '10th',
+  2018 => '11th', 
+  2020 => '12th',                           
+);
+
 // Global glossary
 $GLOBALS['glossary'] = array(
 'ES' =>            'Estuary',
