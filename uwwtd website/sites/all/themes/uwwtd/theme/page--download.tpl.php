@@ -147,6 +147,11 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Full Article 17 UWWTD reported data</td>
+			<td>Country</td>
+			<td><a href="<?php print $base_url."article17/".$anneeRef ?>" target="_blank"> xlsx (Excel)</a></td>
+		</tr>
+		<tr>
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
