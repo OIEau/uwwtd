@@ -1,0 +1,23 @@
+Home {"url":"<front>","lang":"und","weight":"-50"}
+View/Discover {"url":"content\/agglomerations","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Sensitive areas {"url":"sensitive-areas","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-46"}
+-Discharge points {"url":"discharge-points","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+--Compliance map {"url":"discharge-points","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-10"}
+--Reuse map {"url":"discharge-points\/reuse","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-5"}
+-Agglomeration {"url":"agglomerations\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Compliance map {"url":"agglomerations\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Connection map {"url":"agglomerations\/connection","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+-Treatment Plants {"url":"uwwtps\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+--Compliance map {"url":"uwwtps\/compliance","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+--Treatment map {"url":"uwwtps\/treatment","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+--Pressure map {"url":"uwwtps\/pressure","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+Download/Invoke {"url":"download","lang":"und","options":{"attributes":{"title":""}},"weight":"-48"}
+Statistics {"url":"uwwtd_statistics","expanded":true,"lang":"und","options":{"attributes":{"title":""}},"weight":"-47"}
+-View Stats {"url":"stats\/graphs","lang":"und","options":{"attributes":{"title":""}},"weight":"-50"}
+-Create Stats {"url":"uwwtd_statistics","lang":"und","options":{"attributes":{"title":""}},"weight":"-49"}
+Regulations {"url":"content\/regulations","lang":"und","weight":"-46"}
+Resources {"url":"content\/resources\/useful-links","expanded":true,"lang":"und","weight":"-45"}
+-Useful links {"url":"content\/resources\/useful-links","lang":"und","weight":"1"}
+-About the UWWTD SIIF {"url":"content\/resources\/about-uwwtd-siif","lang":"und","weight":"2"}
+-SIIF for developers {"url":"content\/resources\/siif-developers","lang":"und","weight":"3"}
+Contact {"url":"contact","lang":"und","weight":"-44"}
