@@ -6877,7 +6877,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				$uwwtpinfo_for_agglo['NC']['pe'] += $agg_leak;
 				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 				if($agg->field_aggart4compliance['und'][0]['value'] == 'C'){
-					dsm('art4 is compliant on the web site but not compliant in the register');
+					dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
 					dsm($agg);
 				}
 			}
@@ -6895,7 +6895,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				($agg_leak/$line[$ind['connected_to_collecting_system_p._e.']]) > 0.01){
 				$uwwtpinfo_for_agglo['art5_NC_pe'] += $agg_leak;
 				if($agg->field_aggart5compliance['und'][0]['value'] == 'C'){
-					dsm('art5 is compliant on the web site but not compliant in the register');
+					dsm('art5 is compliant on the web site but  a part is not compliant in the register '.$agg->nid);
 					dsm($agg);
 				}
 			}
@@ -7009,12 +7009,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Distance to compliance art. 4',
         //Treatment',
         //'% of connected Load',
-        $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
         //'in p.e. (4)',
         $line[$ind['dist_art4_treat_in_p.e._(4)']] = $uwwtpinfo_for_agglo['distart4_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         //Performance',
         //'% of connected Load',
-        $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['dist_art4_perf_%_of_connected_load']] = '';
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
@@ -7181,12 +7183,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		}else{
 			$compliance = 'NC';
 		}
-        $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['distance_art5_treat_%_of_gen._load']] = '';
         //'in p.e. (6)',
         $line[$ind['distance_art5_treat_in_p.e._(6)']] = $uwwtpinfo_for_agglo['distart5_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         //Performance',
         //'% of gen. Load',
-        $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['distance_art5_perf_%_of_gen._load']] = '';
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
@@ -9599,7 +9603,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0) {
                 $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration P mg/l']] = '';
@@ -9683,8 +9687,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 }
                 $context['sandbox'][$typestat]['entering_pe'] +=  ($line[$ind['uww_entering load  p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_entering load  p. e.']] : 0;
                 $context['sandbox'][$typestat]['capacity_pe'] +=  ($line[$ind['uww_capacity p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_capacity p. e.']] : 0;
-                $context['sandbox'][$typestat]['previous_entering_pe'] +=  $line[$ind['previous_entering load p. e.']];
-                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  $line[$ind['previous_capacity p. e.']];
+                $context['sandbox'][$typestat]['previous_entering_pe'] +=  (is_numeric($line[$ind['previous_entering load p. e.']])?$line[$ind['previous_entering load p. e.']]:0);
+                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  (is_numeric($line[$ind['previous_capacity p. e.']])?$line[$ind['previous_capacity p. e.']]:0);
             }
         }
 
