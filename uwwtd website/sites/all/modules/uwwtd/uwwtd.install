@@ -4997,7 +4997,7 @@ function uwwtd_update_7165(&$context){
  *         field_rca_sensitive_area
  *         field_rcarelatedsaremark
  */
-function uwwtd_update_7166() {
+function uwwtd_update_7166(&$context) {
   uwwtd_install_trace(__FUNCTION__);
   $list = array(
     'field_rcacodepredecessor',  
