@@ -1,12 +1,17 @@
 <?php
+$GLOBALS['uwwtd']['register']['message'] = array(
+  'info_not_provided' => 'Information not provided',
+);
+
+// $GLOBALS['uwwtd']['register']['message']['info_not_provided']
 
 //todo move in conf file
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2018_register_model_20181015.xlsx',
-    'model_reporting_2014' => '2015_register_model_20161214.xlsx',
-    'model_reporting_2016' => '2018_register_model_20181015.xlsx',
+    'model' => '',  //deprecated  from 2016
+    'model_reporting_2014' => '2018_register_model_20181114.xlsx', //'2015_register_model_20161214.xlsx',  original.xlsx
+    'model_reporting_2016' => '2018_register_model_20181114.xlsx',   //2018_register_model_20181114
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
     'final_register' => '_register_model_final.xlsx',
@@ -25,6 +30,11 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'csv_name' => '_rca.csv',
         'xlsx_name' => '_rca.xlsx',
         'xlsx_model_sheet_name' => 'Information on sensitive area',
+    ),
+    'rcaA54' => array(
+        'csv_name' => '_rcaA54.csv',
+        'xlsx_name' => '_rcaA54.xlsx',
+        'xlsx_model_sheet_name' => '5(4)-areas',
     ),
     'uwwtp' => array(
         'csv_name' => '_uwwtp.csv',
@@ -73,6 +83,14 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'xlsx_name' => '_graph.xlsx',
         'xlsx_model_sheet_name' => 'Graphs',
     ), 
+    'graph_2' => array(
+        'xlsx_name' => '_graph2.xlsx',
+        'xlsx_model_sheet_name' => 'National report Graphs',
+    ), 
+//     'graph_test' => array(
+//         'xlsx_name' => '_Feuil1.xlsx',
+//         'xlsx_model_sheet_name' => 'Feuil1',
+//     ), 
     'new_agglo' => array(
         'csv_name' => '_new_agglo.csv',
         'xlsx_name' => '_new_agglo.xlsx',
@@ -140,6 +158,27 @@ $GLOBALS['uwwtd']['sheet1_rca'] = array(
     'related_sensitive_area_(2)' => $i++,
     'remark_related_sensitive_area_(2)' => $i++,
 );  
+
+$i = 0;
+$GLOBALS['uwwtd']['sheet1_rcaA54'] = array(    
+    'code' => $i++,
+    'name' => $i++,
+    'designation_date' => $i++,
+    'deadline_n' => $i++,
+    'deadline_p' => $i++,
+    'application_art_5_4' => $i++,
+    'uwwtp_number' => $i++,
+    'uwwtp_capacity_total' => $i++,
+    'n_in' => $i++,
+    'n_out' => $i++,
+    'p_in' => $i++,
+    'p_out' => $i++,
+    'n_reduction' => $i++,
+    'p_reduction' => $i++,
+    'compliant_5_4' => $i++,
+    'transition_period_pending' => $i++,
+    'remarks_by_ms' => $i++,
+); 
 
 
 $i = 0;
@@ -470,6 +509,8 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
 //     'treatment_3np' => $i++, 
     'treatment_3_other_(e.g._uv,_filtration)' => $i++, 
     'type_of_receiving_area' => $i++,
+    'id_of_sensitive_area' => $i++,
+    'name_of_sensitive_area' => $i++,
     'list_code_agglo' => $i++, 
     'list_name_agglo' => $i++,  
 ); 

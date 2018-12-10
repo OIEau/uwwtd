@@ -115,6 +115,8 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    $img = uwwtd_get_gg_snapshot('public://test.png', '37.20776245', '-7.41892334', 'hybrid', 16, '640x640');
+    dsm($img);
     //Loading Art 17 xml file
     /*
     module_load_include('inc','uwwtd','inc/data_center');
@@ -171,6 +173,29 @@ function uwwtd_debug(){
     }
     */
     return 'debug';
+}
+
+function uwwtd_get_gg_snapshot($dest_uri, $lat, $lon, $maptype, $zoom = 15, $size = '640x640', $format = 'png'){
+    $url = url(
+        'https://maps.googleapis.com/maps/api/staticmap',
+        array(
+            'external' => true,
+            'query'    => array(
+                'format'  => $format,
+                'zoom'    => $zoom,
+                'size'    => $size,
+                'maptype' => $maptype,
+                //'key'     => 'AIzaSyCQGC-fIeuFfBp84oW7AooJFQTZewQZgq0',
+                'markers' => 'color:red|' . $lat . ',' . $lon,
+            ),
+        )
+    );
+    dsm($url);
+    $img           = file_get_contents($url);
+    $file          = file_save_data($img, $dest_uri, FILE_EXISTS_REPLACE);
+    $file          = (array) $file;
+    $file['title'] = 'Google snapshot : ' . $maptype;
+    return $file;
 }
 
 
@@ -310,11 +335,20 @@ function uwwtd_get_filemanaged($fid){
 function uwwtd_check_exist($siteId){
 
 	$id = '';
-
-	$results = db_query('SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value = :id', array(':id' => $siteId));
+    if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+        $siteIds=[$siteId];
+        $siteIds[]=str_replace('_EL', '_GR',$siteId);
+        $siteIds[]=str_replace('_GR', '_EL',$siteId);
+        $results = db_query("SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value IN ('". implode("','",$siteIds) ."')");
+    }
+    else{
+        $results = db_query('SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value = :id', array(':id' => $siteId));
+    }
+	
 
 	foreach($results as $result){
 		$id = $result->entity_id;
+        break;
 	}
 	return $id;
 }

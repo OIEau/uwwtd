@@ -369,6 +369,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+    'starting_dates_application'=>array('label'=>t('Starting dates of application')),
 );
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
@@ -378,7 +379,8 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
     'rcacat_format'=>array('label'=>t('Type of receiving area')),
-    
+    'field_dcpirrigation_value'=>array('label'=>t('Type of reuse')),
+     'field_uwwwastewatertreated_value'=>array('label'=>t('Volume (m3/y)')),
     
 );
 
@@ -421,6 +423,21 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
     //#81BEAA
     //#F4D4AD
 );
+$GLOBALS['uwwtd']['reuse_type']=array(
+    'IR'=>'Irrigation',
+    'IN'=>'Infiltration',
+    'OT'=>'Others'
+);
+$GLOBALS['uwwtd']['reuse_type_color']=array(
+    'IR'=>'#2e8b57',
+    'IN'=>'#5B3349',
+    'OT'=>'#4682b4'
+);
+/*
+Irrigation|Irrigation|#2e8b57
+Infiltration|Infiltration|
+Other|Other|
+*/
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',
@@ -458,7 +475,6 @@ $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
     'MS' => t('More stringent treatment'),
 );
 
-
 $GLOBALS['ms_level'] = array(
     'sludge'=>array(
         'dcp'=>array('color'=>'#B5B5BF','label'=>t('Discharged into surface waters : Pipelines')),
@@ -489,6 +505,24 @@ $GLOBALS['ms_level'] = array(
 	)
 );
 
+
+// Article 17 glossary
+$GLOBALS['article17']['glossary'] = array( 
+  "CU" => "current",
+  "EXP" => "expected",
+  "P" => "past"
+);
+
+$GLOBALS['report_number'] = array(
+  2010 => '7th',
+  2012 => '8th',                          
+  2014 => '9th',
+  2016 => '10th',
+  2018 => '11th', 
+  2020 => '12th',                           
+);
+
+// Global glossary
 $GLOBALS['glossary'] = array(
 'ES' =>            'Estuary',
 'CW' =>            'Coastal waters',
