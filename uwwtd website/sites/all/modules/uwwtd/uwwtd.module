@@ -72,6 +72,16 @@ function uwwtd_menu(){
 		'file path' => drupal_get_path('module', 'uwwtd')
 	);
 
+  $items['article17/%']=array(
+    'title' => t('Article 17 export'),
+    'page callback' => 'uwwtd_article17_export',
+    'page arguments' => array(1),
+    //'access callback' => TRUE,
+     'access arguments' => array('Data-management access'),
+    'file' => 'inc/article17.inc',
+    'file path' => drupal_get_path('module', 'uwwtd')
+  );
+
 	$items['id/%/%'] = array(
         'page callback' => 'uwwtd_node_redirect',
         'page arguments' => array(1,2),
@@ -102,6 +112,15 @@ function uwwtd_menu(){
     'access callback' => true,
     'access arguments' => true,
     'type' => MENU_CALLBACK,
+  );
+  $items['treatment-plant/%/history'] = array(
+    'page callback' => 'uwwtd_uwwtp_history_page',
+    'page arguments' => array(1),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'uwwtd.graphs.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd')
   );
   //redirection agglomeration
   $items['agglomeration/%'] = array(
@@ -328,6 +347,33 @@ function uwwtd_menu(){
  	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
   );
 
+    $items['discharge-points/reuse'] = array(
+    'title' => 'Discharge points',
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'access callback' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/reuse/csv'] = array(
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'page arguments' => array('csv'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  $items['discharge-points/reuse/xls'] = array(
+    'page callback' => 'uwwtd_dcp_reuse_page',
+    'page arguments' => array('xls'),
+    'access callback' => true,
+    'access arguments' => true,
+    'type' => MENU_CALLBACK,
+    'file' => 'pages.inc',
+ 	'file path' => drupal_get_path('module', 'uwwtd') . '/inc/'
+  );
+  
   $items['download'] = array(
     'page callback' => 'uwwtd_page_download',
     'page arguments' => array(),
@@ -661,7 +707,6 @@ function uwwtd_views_pre_render(&$view){
 }
 
 function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
-	//dsm($form);
 		// for treatment plant booleans
 		if($form['#id'] == "views-exposed-form-uwwtp-treatment-page"){
 			$options = array(
@@ -800,47 +845,47 @@ function uwwtd_cron(){
     $mslevel_feed_table = 'UWWTD_FeedMSLevel_'.variable_get('siif_eru_country_code');
 	$agglolevel_feed_table = 'UWWTD_FeedAggloLevel_'.variable_get('siif_eru_country_code');
 
-// 	if((time() - $lastGen) > (60*60*24)){
-	// Requires postgres for DROP TABLE IF
-	db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
-	CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-        AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant";
-	ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
-	ADD PRIMARY KEY ("siteId");
+ 	if((time() - $lastGen) > (60*60*24)){
+        // Requires postgres for DROP TABLE IF
+        db_query('DROP TABLE IF EXISTS wfs."UWWTD_UrbanWasteWaterTreatmentPlant";
+        CREATE TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+            AS SELECT * from public."UWWTD_UrbanWasteWaterTreatmentPlant" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."UWWTD_UrbanWasteWaterTreatmentPlant"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
-	CREATE TABLE wfs."UWWTD_Agglomeration"
-        AS SELECT * from public."UWWTD_Agglomeration";
-	ALTER TABLE wfs."UWWTD_Agglomeration"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_Agglomeration";
+        CREATE TABLE wfs."UWWTD_Agglomeration"
+            AS SELECT * from public."UWWTD_Agglomeration" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."UWWTD_Agglomeration"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
-	CREATE TABLE wfs."UWWTD_ReceivingArea"
-        AS SELECT * from public."UWWTD_ReceivingArea";
-	ALTER TABLE wfs."UWWTD_ReceivingArea"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_ReceivingArea";
+        CREATE TABLE wfs."UWWTD_ReceivingArea"
+            AS SELECT * from public."UWWTD_ReceivingArea" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."UWWTD_ReceivingArea"
+        ADD PRIMARY KEY ("siteId");
 
-	DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
-	CREATE TABLE wfs."UWWTD_DischargePoint"
-        AS SELECT * from public."UWWTD_DischargePoint";
-	ALTER TABLE wfs."UWWTD_DischargePoint"
-	ADD PRIMARY KEY ("siteId");
+        DROP TABLE IF EXISTS wfs."UWWTD_DischargePoint";
+        CREATE TABLE wfs."UWWTD_DischargePoint"
+            AS SELECT * from public."UWWTD_DischargePoint" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."UWWTD_DischargePoint"
+        ADD PRIMARY KEY ("siteId");
 
-    DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
-    CREATE TABLE wfs."'.$mslevel_feed_table.'"
-        AS SELECT * from public."'.$mslevel_feed_table.'";
-    ALTER TABLE wfs."'.$mslevel_feed_table.'"
-    ADD PRIMARY KEY ("siteId");
-    
-    DROP TABLE IF EXISTS wfs."'.$agglolevel_feed_table.'";
-    CREATE TABLE wfs."'.$agglolevel_feed_table.'"
-        AS SELECT * from public."'.$agglolevel_feed_table.'";
-    ALTER TABLE wfs."'.$agglolevel_feed_table.'"
-    ADD PRIMARY KEY ("siteId");
-    ');
+        DROP TABLE IF EXISTS wfs."'.$mslevel_feed_table.'";
+        CREATE TABLE wfs."'.$mslevel_feed_table.'"
+            AS SELECT * from public."'.$mslevel_feed_table.'" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."'.$mslevel_feed_table.'"
+        ADD PRIMARY KEY ("siteId");
+        
+        DROP TABLE IF EXISTS wfs."'.$agglolevel_feed_table.'";
+        CREATE TABLE wfs."'.$agglolevel_feed_table.'"
+            AS SELECT * from public."'.$agglolevel_feed_table.'" WHERE "siteId" IS NOT NULL;
+        ALTER TABLE wfs."'.$agglolevel_feed_table.'"
+        ADD PRIMARY KEY ("siteId");
+        ');
 
-    variable_set('uwwtd_wfs_table', time());
-// 	}
+        variable_set('uwwtd_wfs_table', time());
+ 	}
 }
 
 
@@ -885,9 +930,15 @@ function uwwtd_errors_get_errors($entity_id, $entity_type){
 function uwwtd_block_info() {
 
   $blocks['map_home'] = array(
-                        'info' => t('Map home'),
-                        'cache' => DRUPAL_NO_CACHE,
-                        );
+        'info' => t('Map home'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    $blocks['uwwtd_search_block'] = array(
+        'info' => t('Block search [UWWTD]'),
+        'status'=>true,
+        'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+        'region'=>'navigation'
+    );
   return $blocks;
 }
 
@@ -955,7 +1006,13 @@ function uwwtd_get_cache_key_page_uwwtp_pressure($option)
 }
 
 function uwwtd_block_view($delta = ''){
+    $block = array();
     switch ($delta) {
+        
+        case 'uwwtd_search_block':
+            $form = drupal_get_form('uwwtd_search_block_form');
+            if($form) $block['content'] =drupal_render($form);
+          break;
         case 'map_home':
             module_load_include('inc','uwwtd','inc/pages');
             $cache = '';
@@ -1042,11 +1099,37 @@ function uwwtd_block_view($delta = ''){
                     cache_set($cache_name, $block['content'], 'cache_block', CACHE_PERMANENT);
                 }
             }
-            return $block;
-            break;
-        default:
-            break;
+          break;
     }
+    return $block;
+}
+
+function uwwtd_search_block_form($form, &$form_state){
+    $form['search_api_views_fulltext'] = array(
+        '#type'=>'textfield',
+        '#size'=>30,
+        '#default_value'=>'',
+        '#attached'=>array(
+            'css'=>array('sites/all/modules/search_api_autocomplete/search_api_autocomplete.css'),
+            'js'=>array('sites/all/modules/search_api_autocomplete/search_api_autocomplete.js')
+        ),
+        '#autocomplete_path'=>'search_api_autocomplete/search_api_views_search/-',
+        '#attributes'=>array(
+            'class'=>array('auto_submit', 'search-block-input'),
+            'data-search-api-autocomplete-search'=>'search_api_views_search'
+        ),
+    );
+    $form['submit'] = array(
+        '#type'=>'submit',
+        '#value'=>'<span class="glyphicon glyphicon-search"></span>',
+        '#id'=>'edit-submit-search',
+    );
+    //$form['#process'] = array('_bootstrap_process_element');
+    
+    $form['#action'] = base_path().'/search';
+
+    return $form;
+    
 }
 
 //nd@oieau.fr 20/10/2016 . There is a bug in this function for building the link
@@ -1683,11 +1766,22 @@ function uwwtd_create_xls($filename, $rows) {
 
 
 
-function uwwtd_check_history($id, $annee){
+function uwwtd_check_history($localid, $annee){
   //Get all the nodes with the same id
+  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
   $query = db_select('field_data_field_inspireidlocalid', 'n');
   $query->fields('n', array('entity_id'));
-  $query->condition('n.field_inspireidlocalid_value', $id, '=');
+  //Greek case
+  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+    $localids=[$localid];
+    $localids[]=str_replace('EL', 'GR',$localid);
+    $localids[]=str_replace('GR', 'EL',$localid);
+    $query->condition('n.field_inspireidlocalid_value', $localids, 'IN'); 
+  }
+  else{
+    $query->condition('n.field_inspireidlocalid_value', $localid, '=');  
+  }
+  
   $ids = array();
   $results = $query->execute();
   foreach($results as $result){
@@ -1699,7 +1793,7 @@ function uwwtd_check_history($id, $annee){
   else return $ids;
 }
 
-function uwwtd_timeline_output($node){
+function uwwtd_timeline_output($node, $linkOnAllYears=false){
   $output = '';
   $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
   if($histories != false){
@@ -1747,7 +1841,7 @@ function uwwtd_timeline_output($node){
       $j=0;
             $cell = 0;
       for($a=1;$a<=$nbAnnee;$a++){
-                if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
+        if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value'] && !$linkOnAllYears){
               $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
             $output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
             // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
@@ -1785,6 +1879,8 @@ function uwwtd_timeline_output($node){
       $output.='<td class="dispo-after"><div></div></td>';
       if($node->type == 'agglomeration'){
           $output.='<td class="history-link">'.l('View history', 'agglomeration/'.str_replace('_', '', strtolower($node->field_inspireidlocalid['und'][0]['value'])).'/history', ['attributes'=>['target'=>'_blank']]).'</td>';
+       }elseif($node->type == 'uwwtp'){
+          $output.='<td class="history-link">'.l('View history', 'treatment-plant/'.str_replace('_', '', strtolower($node->field_inspireidlocalid['und'][0]['value'])).'/history', ['attributes'=>['target'=>'_blank']]).'</td>';
        }
       
           $output.='</tr>';
@@ -1883,6 +1979,105 @@ function uwwtd_timeline_receiving_area_output($node){
   }
 
   return $output;
+}
+
+
+/**
+ * Return DQL query to get datas ensitive areas.
+ */
+function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
+    $sqlWithNid = '';
+    if ($isWithNid) {
+        $sqlWithNid = ' AND n.nid = :nid ';
+    }
+    return '
+        SELECT 
+            n.nid,
+            n.title,
+            f_annee.field_anneedata_value,
+            id.field_inspireidlocalid_value,
+            zt.field_specialisedzonetype_value as zonetype,
+            rca52.field_rca52applied_value as rca52,
+            rca54.field_rca54applied_value as rca54,
+            rca58.field_rca58applied_value as rca58,
+            
+            an.field_rcaanstartdate_value as dt_an,
+            ap.field_rcaapstartdate_value as dt_ap,
+            b.field_rcabstartdate_value as dt_b,
+            c.field_rcacstardate_value as dt_c,
+            art58.field_rcadateart5854_value as dt_art58,
+            
+            st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
+            st_area(st_transform(f_geo.the_geom, 3035)) area,
+            COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
+            SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
+            SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
+        FROM {node} n
+        LEFT join
+            {field_data_field_anneedata} f_annee
+                ON n.nid = f_annee.entity_id
+        LEFT join
+            {field_data_field_inspireidlocalid} id
+                ON n.nid = id.entity_id
+        LEFT join
+            {field_data_field_specialisedzonetype} zt
+                ON n.nid = zt.entity_id
+        LEFT join
+            {field_data_field_rca52applied} rca52
+                ON n.nid = rca52.entity_id
+        LEFT join
+            {field_data_field_rca54applied} rca54
+                ON n.nid = rca54.entity_id
+        LEFT join
+            {field_data_field_rca58applied} rca58
+                ON n.nid = rca58.entity_id
+        LEFT join
+                    {field_data_field_rcaanstartdate} an
+                        ON n.nid = an.entity_id
+        LEFT join
+                    {field_data_field_rcaapstartdate} ap
+                        ON n.nid = ap.entity_id
+        LEFT join
+                    {field_data_field_rcabstartdate} b
+                        ON n.nid = b.entity_id
+        LEFT join
+                    {field_data_field_rcacstardate} c
+                        ON n.nid = c.entity_id
+        LEFT join
+                    {field_data_field_rcadateart5854} art58
+                        ON n.nid = art58.entity_id        
+        LEFT JOIN 
+            {field_data_field_position_geo} f_geo 
+                ON n.nid = f_geo.entity_id
+        LEFT join
+            {field_data_field_linked_treatment_plants} uwwtp
+                ON n.nid = uwwtp.entity_id
+        LEFT join
+            {field_data_field_physicalcapacityactivity} capa
+                ON uwwtp.field_linked_treatment_plants_nid = capa.entity_id
+        LEFT join
+            {field_data_field_uwwloadenteringuwwtp} entering
+                ON uwwtp.field_linked_treatment_plants_nid = entering.entity_id
+              
+        WHERE n.type = :typenode
+            AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
+        GROUP BY 
+            n.nid,
+            n.title,
+            f_annee.field_anneedata_value,
+            id.field_inspireidlocalid_value,
+            zt.field_specialisedzonetype_value,
+            rca52.field_rca52applied_value,
+            rca54.field_rca54applied_value,
+            rca58.field_rca58applied_value,
+            an.field_rcaanstartdate_value,
+            ap.field_rcaapstartdate_value,
+            b.field_rcabstartdate_value,
+            c.field_rcacstardate_value,
+            art58.field_rcadateart5854_value,
+            f_geo.the_geom
+        ORDER BY n.title
+    ';
 }
 
 

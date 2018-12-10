@@ -200,6 +200,8 @@ function facetapi_get_delta_map() {
     }
     else {
 
+      $map = array();
+
       // Maps deltas for all realms. This is a hack since not all realms display
       // facets in blocks, but it doesn't hurt to store the extra data. The map
       // is cached anyways, so it shouldn't cause too much additional resource
@@ -275,7 +277,9 @@ function facetapi_hash_delta($delta) {
   // Ensure hashes are URL safe and alpha-numeric.
   // @see http://drupal.org/node/1355270
   $hash = substr(drupal_hash_base64($delta), 0, 32);
-  return strtr($hash, array('-' => '0', '_' => '1'));
+  $hash = strtr($hash, array('-' => '0', '_' => '1'));
+  drupal_alter('facetapi_hash', $hash, $delta);
+  return $hash;
 }
 
 /**

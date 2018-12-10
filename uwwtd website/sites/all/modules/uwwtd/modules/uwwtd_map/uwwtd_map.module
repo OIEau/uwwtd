@@ -1,0 +1,102 @@
+<?php
+
+include_once(drupal_get_path('module', 'uwwtd_map') . '/inc/uwwtd_map.inc');
+
+// Fonction pour definir le lien de menu
+function uwwtd_map_menu(){
+	$items = array();
+	$items['map/europe'] = array(
+		'title' => t('Europe Map'),
+		'description' => t('Europe Map'),
+		'page callback' => 'uwwtd_map_display_map',
+		'page arguments' => array(),
+		'access callback' => TRUE,
+	);
+
+  	$items['map/europe/generate'] = array(
+  		'title' => t('Europe Map'),
+  		'description' => t('Europe Map'),
+  		'page callback' => 'uwwtd_map_display_map_generate',
+  		'page arguments' => array(),
+  		'access arguments' => array('Data-management access'),
+  	);
+
+    return $items;
+}
+
+
+
+function uwwtd_map_display_map() {
+
+  drupal_add_css(drupal_get_path('theme', 'uwwtd') . '/css/uwwtd_map.css');
+  $main_map = openlayers_map_load($GLOBALS['uwwtd_map']['europe']['main_map']);
+  $main_output = openlayers_render_map($main_map->data,$main_map->name);
+
+  $group = '';
+  foreach ($GLOBALS['uwwtd_map']['europe']['list_minimap'] as $key => $list_map) {
+    $group .= '<div class="'.$key.'">';
+    $group .= '<div class="'.$key.'-inner">';
+    foreach ($list_map as $map_config) {
+      $mini_map = openlayers_map_load($map_config['map_name']);
+      $group .=  '
+      <div class="mini-map '.$mini_map->name.' '.$map_config['class'].'">
+         <div class="minimap-title">'.$map_config['title'].'</div>
+      '
+       . openlayers_render_map($mini_map->data,$mini_map->name)
+       . '</div>';
+    }
+    $group .= '</div>';
+    $group .= '</div>';
+  }
+
+//   dsm($output); 
+   return theme('europe_map', array('param' => array( 
+                                        'main_output' => $main_output,
+                                        'group' => $group,
+                                        )
+                                    ));
+}
+
+function uwwtd_map_display_map_generate() {
+//   return 'ok';
+  $uri = 'public://map/europe.png'; 
+//   $url_source = 'https://dev.oieau.fr' . base_path() . 'map/europe';
+  $url_source = $GLOBALS['uwwtd_map']['europe']['url_source'];
+
+  $target_file = escapeshellarg(drupal_realpath($uri));
+          
+//   $command = "/opt/wkhtmltox.0.12.4/bin/wkhtmltoimage --crop-y 10 --crop-w 700 --crop-h 1170 --javascript-delay 5000  '" . $url_source  . "' " . $target_file;
+  $command = str_replace(array('[#SOURCE#]','[#TARGET#]'), array($url_source, $target_file), $GLOBALS['uwwtd_map']['europe']['wkhtmlpath_command']);
+
+  $result = system($command, $return_var);  
+// dsm($return_var); 
+// dsm($result);  
+
+  $markup = '<img src="'.file_create_url($uri). '?d=' . date("YmdHis") . '" />';
+
+// dsm($url_source);
+// dsm($target_file);
+// dsm($command);
+// dsm($markup);
+
+  return [
+    '#type' => 'markup',
+    '#markup' => $markup,
+  ];
+}
+
+/**
+ *
+ */
+function uwwtd_map_theme($existing, $type, $theme, $path) {
+  return array(
+    'europe_map' => array(
+      'variables' => array(
+        'param' => null,
+      ),
+      'path' => drupal_get_path('module', 'uwwtd_map') . '/template/',
+      'template' => 'europe-map',
+    ),
+  );         
+}
+
