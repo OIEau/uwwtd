@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the uwwtd_search feature.
+ */
+
+include_once 'uwwtd_search.features.inc';
