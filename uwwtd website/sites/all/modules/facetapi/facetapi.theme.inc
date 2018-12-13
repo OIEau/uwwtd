@@ -33,7 +33,7 @@ function theme_facetapi_title($variables) {
 }
 
 /**
- * Returns HTML for an active facet item.
+ * Returns HTML for an inactive facet item.
  *
  * @param $variables
  *   An associative array containing the keys 'text', 'path', 'options', and
@@ -52,7 +52,9 @@ function theme_facetapi_link_inactive($variables) {
   $accessible_markup = theme('facetapi_accessible_markup', $accessible_vars);
 
   // Sanitizes the link text if necessary.
-  $sanitize = empty($variables['options']['html']);
+  //$sanitize = empty($variables['options']['html']);
+  //modif nd@oieau.fr never sanitize
+  $sanitize = false;
   $variables['text'] = ($sanitize) ? check_plain($variables['text']) : $variables['text'];
 
   // Adds count to link if one was passed.
@@ -68,7 +70,7 @@ function theme_facetapi_link_inactive($variables) {
 }
 
 /**
- * Returns HTML for the inactive facet item's count.
+ * Returns HTML for the active facet item's count.
  *
  * @param $variables
  *   An associative array containing:
@@ -81,7 +83,7 @@ function theme_facetapi_count($variables) {
 }
 
 /**
- * Returns HTML for an inactive facet item.
+ * Returns HTML for an active facet item.
  *
  * @param $variables
  *   An associative array containing the keys 'text', 'path', and 'options'. See
@@ -146,5 +148,9 @@ function theme_facetapi_deactivate_widget($variables) {
 function theme_facetapi_accessible_markup($variables) {
   $vars = array('@text' => $variables['text']);
   $text = ($variables['active']) ? t('Remove @text filter', $vars) : t('Apply @text filter', $vars);
-  return '<span class="element-invisible">' . $text . '</span>';
+  // Add spaces before and after the text, since other content may be displayed
+  // inline with this and we don't want the words to run together. However, the
+  // spaces must be inside the <span> so as not to disrupt the layout for
+  // sighted users.
+  return '<span class="element-invisible"> ' . $text . ' </span>';
 }
