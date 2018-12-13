@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <c:date1904 val="0" />
+  <c:lang val="en-GB" />
+  <c:roundedCorners val="0" />
+  <mc:AlternateContent xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <mc:Choice xmlns:c14="http://schemas.microsoft.com/office/drawing/2007/8/2/chart" Requires="c14">
+      <c14:style val="102" />
+    </mc:Choice>
+    <mc:Fallback>
+      <c:style val="2" />
+    </mc:Fallback>
+  </mc:AlternateContent>
+  <c:chart>
+    <c:title>
+      <c:tx>
+        <c:rich>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:r>
+              <a:rPr b="0" i="0" u="none" strike="noStrike">
+                <a:latin typeface="Calibri" />
+              </a:rPr>
+              <a:t>Comparison of compliance between 7th reporting, 8th reporting and 9th reporting Number of agglomerations</a:t>
+            </a:r>
+          </a:p>
+        </c:rich>
+      </c:tx>
+      <c:layout />
+      <c:overlay val="0" />
+    </c:title>
+    <c:autoTitleDeleted val="0" />
+    <c:plotArea>
+      <c:layout>
+        <c:manualLayout>
+          <c:layoutTarget val="inner" />
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.14496318693151" />
+          <c:y val="0.17245640128317" />
+          <c:w val="0.74074213814176" />
+          <c:h val="0.67251793525809" />
+        </c:manualLayout>
+      </c:layout>
+      <c:barChart>
+        <c:barDir val="col" />
+        <c:grouping val="stacked" />
+        <c:varyColors val="1" />
+        <c:ser>
+          <c:idx val="0" />
+          <c:order val="0" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AB$63</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Compliant</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:invertIfNegative val="0" />
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 [#current_year#]</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AB$64:$AB$72</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:ser>
+          <c:idx val="1" />
+          <c:order val="1" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AC$63</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Not compliant</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:invertIfNegative val="0" />
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 [#current_year#]</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AC$64:$AC$72</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:ser>
+          <c:idx val="2" />
+          <c:order val="2" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AD$63</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Not relevant</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <!-- START color bar  -->
+          <c:spPr>
+            <a:solidFill>
+              <a:schemeClr val="bg1">
+                <a:lumMod val="65000" />
+              </a:schemeClr>
+            </a:solidFill>
+          </c:spPr>
+          <c:invertIfNegative val="0" />
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 [#current_year#]</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 7th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 [#previous_year#]</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 [#current_year#]</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AD$64:$AD$72</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:dLbls>
+          <c:showLegendKey val="0" />
+          <c:showVal val="0" />
+          <c:showCatName val="0" />
+          <c:showSerName val="0" />
+          <c:showPercent val="0" />
+          <c:showBubbleSize val="0" />
+          <c:showLeaderLines val="0" />
+        </c:dLbls>
+        <c:gapWidth val="150" />
+        <c:overlap val="100" />
+        <c:axId val="75091328" />
+        <c:axId val="75089408" />
+      </c:barChart>
+      <c:catAx>
+        <c:axId val="75091328" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:delete val="0" />
+        <c:axPos val="b" />
+        <c:title>
+          <c:tx>
+            <c:rich>
+              <a:bodyPr />
+              <a:lstStyle />
+              <a:p>
+                <a:r>
+                  <a:t>Years</a:t>
+                </a:r>
+              </a:p>
+            </c:rich>
+          </c:tx>
+          <c:layout />
+          <c:overlay val="0" />
+        </c:title>
+        <c:numFmt formatCode="General" sourceLinked="1" />
+        <c:majorTickMark val="none" />
+        <c:minorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:crossAx val="75089408" />
+        <c:crosses val="autoZero" />
+        <c:auto val="1" />
+        <c:lblAlgn val="ctr" />
+        <c:lblOffset val="100" />
+      </c:catAx>
+      <c:valAx>
+        <c:axId val="75089408" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:delete val="0" />
+        <c:axPos val="l" />
+        <c:majorGridlines>
+          <c:spPr>
+            <a:effectLst />
+          </c:spPr>
+        </c:majorGridlines>
+        <c:title>
+          <c:tx>
+            <c:rich>
+              <a:bodyPr />
+              <a:lstStyle />
+              <a:p>
+                <a:r>
+                  <a:t></a:t>
+                </a:r>
+              </a:p>
+            </c:rich>
+          </c:tx>
+          <c:layout>
+            <c:manualLayout>
+              <c:xMode val="edge" />
+              <c:yMode val="edge" />
+              <c:x val="0.029727629439549" />
+              <c:y val="0.25581539807524" />
+            </c:manualLayout>
+          </c:layout>
+          <c:overlay val="0" />
+        </c:title>
+        <c:numFmt formatCode="General" sourceLinked="1" />
+        <c:majorTickMark val="none" />
+        <c:minorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:spPr>
+          <a:ln w="9525" cap="flat" cmpd="sng">
+            <a:prstDash val="solid" />
+            <a:bevel />
+          </a:ln>
+          <a:effectLst />
+        </c:spPr>
+        <c:crossAx val="75089408" />
+        <c:crosses val="autoZero" />
+        <c:crossBetween val="midCat" />
+      </c:valAx>
+    </c:plotArea>
+    <c:legend>
+      <c:legendPos val="b" />
+      <c:layout>
+        <c:manualLayout>
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.88813318761614" />
+          <c:y val="0.17827200423623" />
+          <c:w val="0.11186681238386" />
+          <c:h val="0.19583377077865" />
+        </c:manualLayout>
+      </c:layout>
+      <c:overlay val="0" />
+      <c:txPr>
+        <a:bodyPr />
+        <a:lstStyle />
+        <a:p>
+          <a:pPr rtl="0">
+            <a:defRPr />
+          </a:pPr>
+          <a:endParaRPr lang="en-US" />
+        </a:p>
+      </c:txPr>
+    </c:legend>
+    <c:plotVisOnly val="1" />
+    <c:dispBlanksAs val="gap" />
+    <c:showDLblsOverMax val="0" />
+  </c:chart>
+  <c:printSettings>
+    <c:headerFooter />
+    <c:pageMargins footer="0.3" header="0.3" r="0.7" l="0.7" t="0.75" b="0.75" />
+    <c:pageSetup orientation="portrait" />
+  </c:printSettings>
+</c:chartSpace>
