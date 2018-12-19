@@ -366,6 +366,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'rca52_format'=>array('label'=>t('Article 52 applied')),
     'rca54_format'=>array('label'=>t('Article 54 applied')),
     'rca58_format'=>array('label'=>t('Article 58 applied')),
+    'aggs'=>array('label'=>t('Number of agglomerations')),
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
@@ -425,19 +426,14 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
 );
 $GLOBALS['uwwtd']['reuse_type']=array(
     'IR'=>'Irrigation',
-    'IN'=>'Infiltration',
+    'IN'=>'Industry',
     'OT'=>'Others'
 );
 $GLOBALS['uwwtd']['reuse_type_color']=array(
-    'IR'=>'#2e8b57',
-    'IN'=>'#5B3349',
-    'OT'=>'#4682b4'
+    'IR'=>'#459436',
+    'IN'=>'#334D5C',
+    'OT'=>'#02658C'
 );
-/*
-Irrigation|Irrigation|#2e8b57
-Infiltration|Infiltration|
-Other|Other|
-*/
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',

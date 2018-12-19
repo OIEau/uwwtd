@@ -2091,21 +2091,33 @@ function uwwtd_uwwtp_history_page($inspireIdLocalId){
             $treatment = 'required : '.$GLOBALS['glossary'][$data['years'][$year]['uwwtp']->field_uwwtreatmentrequired['und'][0]['value']].'<br/>';
             $treatment.= 'in place : '.$GLOBALS['glossary'][$data['years'][$year]['uwwtp']->field_uwwtreatmenttype['und'][0]['value']].'<br/>';
             
-            $load = 'Capacity: '.uwwtd_format_number($data['years'][$year]['physicalcapacityactivity']) .' p.e.<br/>';
-            $load.= 'Entering: '.uwwtd_format_number($data['years'][$year]['loadentering']) .' p.e.<br/>';
-            $load.= 'Load rate : <b style="color:'.$load_rate_color.'">'. $load_rate .' % '.$load_mention.'</b>';
+            $load = '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Capacity').':</div> '.uwwtd_format_number($data['years'][$year]['physicalcapacityactivity']) .' p.e.<span class="custom_tooltip">From field &lt;uwwCapacity&gt; : Organic design capacity (p.e.)</span></div>';
+            $load.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Entering').':</div> '.uwwtd_format_number($data['years'][$year]['loadentering']) .' p.e.<span class="custom_tooltip">From field &lt;uwwLoadEnteringUWWTP&gt; : Load entering UWWTP (p.e.)</span></div>';
+            $load.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Load rate').':</div> <b style="color:'.$load_rate_color.'">'. $load_rate .' % '.$load_mention.'</b><span class="custom_tooltip">&lt;uwwLoadEnteringUWWTP&gt; / &lt;uwwCapacity&gt;  x 100 </span></div>';
             
             $comp = 'Compliance : <span class="'.strtolower($data['years'][$year]['uwwtp']->field_uwwcompliance['und'][0]['value']).'">'.$GLOBALS['uwwtd']['all_compliance'][$data['years'][$year]['uwwtp']->field_uwwcompliance['und'][0]['value']].'</span><br/>';
             $comp.= 'Treatment met : <span class="met-'.strtolower($data['years'][$year]['uwwtp']->field_uwwtreatment_met['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['yes_no'][$data['years'][$year]['uwwtp']->field_uwwtreatment_met['und'][0]['value']].'</span><br/>';
             $comp.= 'Performance met : <span class="met-'.strtolower($data['years'][$year]['uwwtp']->field_uwwperformance_met['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['yes_no'][$data['years'][$year]['uwwtp']->field_uwwperformance_met['und'][0]['value']].'</span><br/>';
             
             $perf = '';
-            if($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']!='') $perf.= 'BOD: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']!='') $perf.= 'COD: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']!='') $perf.= 'TSS: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']!='') $perf.= 'Total Nitrogen: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']!='') $perf.= 'Total phosphorus: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']].'</span><br/>';
-            if($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']!='') $perf.= 'Other: <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']].'</span><br/>';
+        if($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('BOD').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwbod5perf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwBOD5Perf&gt;</span></div>';
+        }
+        if($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('COD').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwcodperf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwCODPerf&gt;</span></div>';
+        }
+        if($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('TSS').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwtssperf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwTSSPerf&gt;</span></div>';
+        }
+        if($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total Nitrogen').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwntotperf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwNTotPerf&gt;</span></div>';
+        }
+        if($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total phosphorus').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']).'">'. $GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwptotperf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwPTotPerf&gt;</span></div>';
+        }
+        if($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']!=''){
+            $perf.= '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Other').':</div> <span class="test-'.strtolower($data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']).'">'.$GLOBALS['uwwtd']['ui']['test_pass'][$data['years'][$year]['uwwtp']->field_uwwotherperf['und'][0]['value']].'</span><span class="custom_tooltip">From field &lt;uwwOtherPerf&gt;</span></div>';
+        }
             
             $uwwInfo[$year] = array(
                 '<b>'.$year.'</b>',
@@ -2215,15 +2227,17 @@ function uwwtd_uwwtp_history_page($inspireIdLocalId){
     $html .='<div class="rows">';
     $html .='<h2>'.t('Agglomerations').'</h2>';
         $html .=uwwtd_compare_idlist($agg_list);
-        //Mettre un message s'il y a un nombre différent et ou des id qui change au fil du temps
-        //t('Total design capacity'), t('Total entering load')
-        //==============================================DEBUG FIX ME : add explantation on table header
-        //.'<sup>1</sup>'
         $html .=theme('table', [
             'rows'=>$aggInfo,
-            'header'=>[t('Year'), t('UWWTP capacity'), t('UWWTP Entering load'), t('Total of load collected in collecting systems'),t('Linked Agglomeration(s)')]
+            'header'=>[
+                t('Year'), 
+                '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('UWWTP capacity') .'</div><span class="custom_tooltip">Value define in &lt;uwwCapacity&gt; field for the UWWTP in the report file with definition : "Organic design capacity (p.e.)"</span></div>', 
+                '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('UWWTP Entering load').'</div><span class="custom_tooltip">Value define in &lt;uwwLoadEnteringUWWTP&gt; field for the UWWTP in the report file with definition : "Load entering UWWTP (p.e.)"</span></div>', 
+                '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total of load collected by collecting systems').'</div><span class="custom_tooltip">Sum of load adressed to UWWTP by linked agglomeration. The load addressed by an agglomeration to an UWWTP is calculated with the following formula : <i>Generated load (p.e.) of the agglomeration (&lt;aggGenerated&gt;)</i> x <i>Rate of generated load of agglomeration collected through collecting system (% of p.e.) (&lt;aggC1&gt;) </i> x <i>% of load of agglomeration collected in collecting system and entering that treatmentplant (&lt;aucPercEnteringUWWTP&gt;) </i></span></div>',
+                t('Linked Agglomeration(s) with addressed load to the UWWTP')
+            ]
         ]);
-        //$html .='<div class="description">1 : aaaa<br>bbbbb<br></div>';
+        $html .='<div class="description"><u>Notice</u> : "UWWTP entering load" is based on measure of yearly average, "Total of load collected" is based on estimation of maximum over a year.</div>';
     
     $html .='</div>';
     

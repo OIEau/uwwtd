@@ -562,6 +562,10 @@ function uwwtd_get_data_sensitive_areas($option){
         $rcatype = array_flip($GLOBALS['uwwtd_value']['rcatype']);
         while($row = $result->fetchAssoc()) {
             
+            if($node = node_load($row['nid'])){
+                $row['aggs'] = count($node->field_linked_agglomerations['und']);
+            }
+            
             $row['tot_design_capacity_format'] =  ($row['tot_design_capacity'] ? uwwtd_format_number($row['tot_design_capacity']) : '-');
             $row['tot_entering_load_format'] =  ($row['tot_entering_load'] ? uwwtd_format_number($row['tot_entering_load']) : '-');
 
@@ -2240,6 +2244,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             'rca52_format'=>$row['rca52_format'],
             // 'rca54_format'=>$row['rca54_format'],
             'rca58_format'=>$row['rca58_format'],
+            'aggs'=>$row['aggs'],
             'uwwtps'=>$row['uwwtps'],
             'tot_design_capacity_format'=>$row['tot_design_capacity_format'],
             'tot_entering_load_format'=>$row['tot_entering_load_format'],
