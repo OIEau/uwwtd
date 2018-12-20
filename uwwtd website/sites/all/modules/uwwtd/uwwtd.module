@@ -2052,6 +2052,8 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
         LEFT join
             {field_data_field_linked_treatment_plants} uwwtp
                 ON n.nid = uwwtp.entity_id
+        LEFT JOIN  {field_data_field_status} uwwtp_status
+            ON uwwtp.field_linked_treatment_plants_nid = uwwtp_status.entity_id
         LEFT join
             {field_data_field_physicalcapacityactivity} capa
                 ON uwwtp.field_linked_treatment_plants_nid = capa.entity_id
@@ -2061,6 +2063,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
               
         WHERE n.type = :typenode
             AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
+            AND uwwtp_status.field_status_value = \'1\'
         GROUP BY 
             n.nid,
             n.title,
