@@ -294,7 +294,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'n3nm'                                   =>  array('label'=>t('Region (NUTS)')),
     'rbd'                                    =>  array('label'=>t('RBD')),
     'field_aggcompliance_value_format'       =>  array('label'=>t('Global compliance'), 'sort_field'=>'field_aggcompliance_value'),
-	'field_aggart3compliance_value_format'   =>  array('label'=>t('Connection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
+	'field_aggart3compliance_value_format'   =>  array('label'=>t('Collection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
     'field_aggart4compliance_value_format'   =>  array('label'=>t('2nd treatment compliance'), 'sort_field'=>'field_aggart4compliance_value'),
     'field_aggart5compliance_value_format'   =>  array('label'=>t('3rd treatment compliance'), 'sort_field'=>'field_aggart5compliance_value'),
     'field_aggart6compliance_value_format'   =>  array('label'=>t('Article 6 compliance'), 'sort_field'=>'field_aggart6compliance_value'),
@@ -489,7 +489,7 @@ $GLOBALS['ms_level'] = array(
         'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#00658e','label'=>t('Connected to collecting system')),
+		'cs'=>array('color'=>'#00658e','label'=>t('Collected by collecting system')),
         'ias'=>array('color'=>'#00ced1','label'=>t('Individual and Appropriate Systems')),
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),

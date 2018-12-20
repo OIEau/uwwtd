@@ -1553,9 +1553,9 @@ function uwwtd_agg_history_page($inspireIdLocalId){
         $uwwtp_data = [];
         $uwwtp_list = [];
         $dtc_equipment =[];
-            $dtc_equipment[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>';
+            $dtc_equipment[]='<tr><th>'.t("Year").'</th><th>'.t("Collection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>';
         $dtc_performance =[];
-            $dtc_performance[]='<tr><th>'.t("Year").'</th><th>'.t("Connection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>'; 
+            $dtc_performance[]='<tr><th>'.t("Year").'</th><th>'.t("Collection").'</th><th>'.t("2nd treatment").'</th><th>'.t("3rd treatment").'</th></tr>'; 
         
         
         //==================Graph sur le generated load
@@ -1682,20 +1682,32 @@ function uwwtd_agg_history_page($inspireIdLocalId){
         $genload_table = theme(
             'table', array(
                 'rows' => $genload_table_rows, 
-                'header' => array(t('Year'), t($GLOBALS['ms_level']['connection']['cs']['label']),t($GLOBALS['ms_level']['connection']['ias']['label']), t($GLOBALS['ms_level']['connection']['wot']['label']), '<b>'.t('Total').'</b>'))
+                'header' => array(
+                    t('Year'), 
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t($GLOBALS['ms_level']['connection']['cs']['label']).'</div><span class="custom_tooltip"> Generated load (p.e.) &lt;aggGenerated&gt; x Rate of generated load of agglomeration collected through collecting system (% of p.e.) &lt;aggC1&gt; </span></div>',
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t($GLOBALS['ms_level']['connection']['ias']['label']).'</div><span class="custom_tooltip"> Generated load (p.e.) &lt;aggGenerated&gt; x Rate of generated load of agglomeration addressed through IAS (% of p.e.) (% of p.e.) &lt;aggC2&gt; </span></div>',
+                   '<div class="field custom_tooltip_wrapper"><div class="field-label">'. t($GLOBALS['ms_level']['connection']['wot']['label']).'</div><span class="custom_tooltip"> Generated load (p.e.) &lt;aggGenerated&gt; x Rate of generated load of agglomeration not collected through collecting systems and not addressed through IAS (% of p.e.)&lt;aggPercWithoutTreatment&gt; </span></div>',
+                    '<b>'.t('Total').'</b>')
+                )
         );
         
         //dsm($collection_table_rows);
         $collection_table = theme(
             'table', array(
                 'rows' => $collection_table_rows, 
-                'header' => array(t('Year'),t($GLOBALS['ms_level']['connection']['cs']['label']),t("Agglomeration's Entering load"), t('Delta'))
+                'header' => array(
+                    t('Year'),
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t($GLOBALS['ms_level']['connection']['cs']['label']).'</div><span class="custom_tooltip"> Generated load (p.e.) &lt;aggGenerated&gt; x Rate of generated load of agglomeration collected through collecting system (% of p.e.) &lt;aggC1&gt; </span></div>',
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t("Agglomeration's Entering load").'</div><span class="custom_tooltip">Sum of entering load of linked UWWTP from &lt;uwwLoadEnteringUWWTP&gt;</span></div>',
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Delta').'</div><span class="custom_tooltip"> Difference between '.t($GLOBALS['ms_level']['connection']['cs']['label']).' and '.t("Agglomeration's Entering load").'. Warning : the delta compared theorical value (generated load) and measured value (entering load)</span></div>',
+                )
         ));
         //dsm( $genload_graph);
+        
         $rowTitle = t("Generated load and collection");
         $html = getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		'Generated Load by collection type (population equivalent – p.e.)', 'genloadbyct', $genload_graph, $genload_table, 
-		'Collection leaks', 'collection-leaks', $collection_graph, $collection_table,
+		"Generated Load collected by collective system vs UWWTP's entering load", 'collection-leaks', $collection_graph, $collection_table,
 		false, []);
         
         
@@ -1704,6 +1716,18 @@ function uwwtd_agg_history_page($inspireIdLocalId){
             $html .='<h2>'.t("Distance to compliance").'</h2>';
             $html .='<div class="charts-rows-cell cell dtc dtc-equipment"><div class="cell-content"><h3>'.t("On equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div></div>';
             $html .='<div class="charts-rows-cell cell dtc dtc-performance"><div class="cell-content"><h3>'.t("On performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div></div>';
+            $html .='<div style="padding:1em;"><br/><p>'.  t('The distance to compliance concept present the rate of waste water load that is:').'
+                            <ul>
+                                <li>'. t('adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)').'</li>
+                            </ul>
+                            '. t('and then when collected:').'
+                            <ul>
+                                <li>'.t('treated at an adequate level (secondary or more stringent treatment) as required by the directive,').'</li>
+                                <li>'.t('and with the performance requirements under tables 1 or 2 of the annex I of Directive 91/271/EEC, (UWWTD).').'</li>
+                            </ul>
+                            '. t('When countries joined the EU, they have obtained a delay to implement the Directive. 
+                            In such case the deadline for implementing the above (see in section characteristics) may be different, 
+                            and if the above is not already implemented for the agglomeration it is identified with orange colour in the table.').'</p></div>';
         $html .='</div>';
         
         //List of UWWTP
@@ -1714,7 +1738,12 @@ function uwwtd_agg_history_page($inspireIdLocalId){
             //Mettre un message s'il y a un nombre différent et ou des id qui change au fil du temps
             $html .=theme('table', [
                 'rows'=>$uwwtp_data,
-                'header'=>[t('Year'), t('Linked Treatment Plant(s)'), t('Total design capacity'), t('Total entering load')]
+                'header'=>[
+                    t('Year'), 
+                    t('Linked Treatment Plant(s)'),
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total design capacity').'</div><span class="custom_tooltip">Sum of linked UWWTP\'s organic design capacity from field &lt;uwwCapacity&gt; : Organic design capacity (p.e.)</span></div>',
+                    '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total entering load').'</div><span class="custom_tooltip">Sum of linked UWWTP\'s load entering design capacity from field &lt;uwwLoadEnteringUWWTP&gt; : Load entering UWWTP (p.e.)</span></div>',
+                ]
             ]);
         $html .='</div>';
     }
