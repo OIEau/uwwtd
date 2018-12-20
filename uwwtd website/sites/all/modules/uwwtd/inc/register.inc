@@ -5,9 +5,20 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-    $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-    $cacheSettings = array('memoryCacheSize' => '4MB', 'cacheTime' => '1000'); 
-    PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+// dsm( DRUPAL_ROOT . '/vendor/autoload.php');
+
+// require DRUPAL_ROOT . '/vendor/autoload.php';
+// 
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\IOFactory;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
+
+
+$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+$cacheSettings = array('memoryCacheSize' => '4MB', 'cacheTime' => '1000'); 
+PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
 /**
  *
@@ -99,6 +110,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
+//     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph2_sheet11_1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
@@ -107,6 +119,10 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+
+    $batch['operations'][]=array('uwwtd_create_report', array($annee));
+
+//     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     
 }
 
@@ -332,6 +348,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             switch($i) {
                 case 0:
                     $line_to_fill = $context['sandbox']['line'] + 7; 
+                    $context['results']['auto_report']['NB_AGGLO'] = $agglo[0]; //save for auto generation of report
                 break;
                 case 1:
                      $line_to_fill = $context['sandbox']['line'] + 17;  
@@ -343,6 +360,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
             //subjected_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[0]);
+
             //compliant_agglo
             $sheet->setCellValueByColumnAndRow(5, $line_to_fill++, $agglo[1]);
             //notcompliant_agglo
@@ -2109,6 +2127,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
 //     }
 }
 
+
 /**
  *
  */
@@ -2159,6 +2178,9 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
     //size of agglo/pe per class
     //array1
+// uwwtd_trace('Graph : context result = ');
+// uwwtd_trace(var_export($context['results'], true));
+
     if (isset($context['results']['graph']['0_10000']['number'])) {
     	$sheet->setCellValue('B5', $context['results']['graph']['0_10000']['number']);
     }
@@ -2204,12 +2226,22 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
 
     //previous
-    $sheet->setCellValue('C15', uwwtd_register_get_cell_value($previoussheet, 'B15'));
+    $previousB15 = uwwtd_register_get_cell_value($previoussheet, 'B15');
+    $sheet->setCellValue('C15', $previousB15);
     $sheet->setCellValue('C16', uwwtd_register_get_cell_value($previoussheet, 'B16'));
     $sheet->setCellValue('C17', uwwtd_register_get_cell_value($previoussheet, 'B17'));
     $sheet->setCellValue('C18', uwwtd_register_get_cell_value($previoussheet, 'B18'));
     $sheet->setCellValue('C19', uwwtd_register_get_cell_value($previoussheet, 'B19'));
 
+         
+    $context['results']['auto_report']['COUNTRY']  = $country_name;
+    $context['results']['auto_report']['CURRENT_REPORT_YEAR']  = $annee;
+    $context['results']['auto_report']['PREVIOUS_REPORT_YEAR']  = $previous_year;
+    $context['results']['auto_report']['PREVIOUS_REPORT_NUMBER'] = $GLOBALS['report_number'][$previous_year];  
+    $context['results']['auto_report']['CURRENT_REPORT_NUMBER'] = $GLOBALS['report_number'][$annee];
+    $context['results']['auto_report']['TOTAL_GENERATED_LOAD'] = $context['results']['graph']['total_generated']['pe'];
+    //Cell B15– cellule C15 auto generation report
+    $context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'] = round($context['results']['graph']['total_generated']['pe'], 0)  -  $previousB15; 
 
     //array 5 6 7
 //     $previous_year = uwwtd_get_previous_year($annee);
@@ -3193,6 +3225,114 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 	}
 //     }
 }
+
+
+
+// /**
+//  *
+//  */
+// function uwwtd_create_register_2015_file_graph_test_sheet11($annee, &$context)
+// {
+//     $model_path = uwwtd_getregister_modelfile_path($annee);
+//     //change to public://
+// //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'] .'.xlsx';
+//     $target_path = uwwtd_getregister_file_path('_Feuil1.xlsx', $annee);
+// 
+//     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+//     $objReader->setIncludeCharts(TRUE);
+//     $objReader->setLoadSheetsOnly( array(
+//                                          'Feuil1',
+//                                         ) );
+//     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+//     $sheet = $objPHPExcel->getSheetByName('Feuil1');
+// 
+// //	Set the Labels for each data series we want to plot
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $dataSeriesLabels = array(
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$AA$4', NULL, 1),	//	curertn year
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$AB$4', NULL, 1),	//	prevous year
+// );
+// //	Set the X-Axis Labels
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $xAxisTickValues = array(
+// 	new PHPExcel_Chart_DataSeriesValues('String', 'Graphs!$Z$5:$Z$7', NULL, 4),	//	Q1 to Q4
+// );
+// //	Set the Data values for each data series we want to plot
+// //		Datatype
+// //		Cell reference for data
+// //		Format Code
+// //		Number of datapoints in series
+// //		Data values
+// //		Data Marker
+// $dataSeriesValues = array(
+// 	new PHPExcel_Chart_DataSeriesValues('Number', 'Graphs!$AA$5:$AA$7', NULL, 4),
+// 	new PHPExcel_Chart_DataSeriesValues('Number', 'Graphs!$AB$5:$AB$7', NULL, 4),
+// );
+// 
+// //	Build the dataseries
+// $series = new PHPExcel_Chart_DataSeries(
+// 	PHPExcel_Chart_DataSeries::TYPE_BARCHART,		// plotType
+// 	PHPExcel_Chart_DataSeries::GROUPING_STANDARD,	// plotGrouping
+// 	range(0, count($dataSeriesValues)-1),			// plotOrder
+// 	$dataSeriesLabels,								// plotLabel
+// 	$xAxisTickValues,								// plotCategory
+// 	$dataSeriesValues								// plotValues
+// );
+// //	Set additional dataseries parameters
+// //		Make it a vertical column rather than a horizontal bar graph
+// $series->setPlotDirection(PHPExcel_Chart_DataSeries::DIRECTION_COL);
+// 
+// //	Set the series in the plot area
+// $plotArea = new PHPExcel_Chart_PlotArea(NULL, array($series));
+// //	Set the chart legend
+// $legend = new PHPExcel_Chart_Legend(PHPExcel_Chart_Legend::POSITION_RIGHT, NULL, false);
+// 
+// $title = new PHPExcel_Chart_Title('Test Column Chart_');
+// $yAxisLabel = new PHPExcel_Chart_Title('Value ($k)_');
+// 
+// 
+// //	Create the chart
+// $chart = new PHPExcel_Chart(
+// 	'chart1',		// name
+// 	$title,			// title
+// 	$legend,		// legend
+// 	$plotArea,		// plotArea
+// 	true,			// plotVisibleOnly
+// 	0,				// displayBlanksAs
+// 	NULL,			// xAxisLabel
+// 	$yAxisLabel		// yAxisLabel
+// );
+// 
+// //	Set the position where the chart should appear in the worksheet
+// $chart->setTopLeftPosition('R2');
+// $chart->setBottomRightPosition('W14');
+// 
+// //	Add the chart to the worksheet
+// $sheet->addChart($chart);
+// 
+// 
+//     //write
+//     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+// //     $objWriter->setPreCalculateFormulas(true);
+//     $objWriter->setIncludeCharts(TRUE);
+//     //$objWriter->setOffice2003Compatibility(true);
+//     $objWriter->save(drupal_realpath($target_path));
+//     
+//     $objPHPExcel->__destruct();
+//     unset($objPHPExcel);
+//     unset($objWriter);
+//     unset($objReader);
+// }
 
 /**
  *
@@ -4553,10 +4693,15 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['total']['collecting_system']['waste_percent'])) {
         	$sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
         }
+
+        $context['results']['auto_report']['TOTAL_COLLECTING_SYSTEM_IN_PLACE'] = $context['sandbox']['summary']['total']['collecting_system']['waste_percent'];
+
         //secondary treatment
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['number'])) {
         	$sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
         }
+        $context['results']['auto_report']['SECONDARY_INSTALLATION_IN_PLACE'] = $context['sandbox']['summary']['secondary']['installation_in_place']['number'];
+
         if (isset($context['sandbox']['summary']['secondary']['installation_in_place']['percent'])) {
         	$sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
         }
@@ -4582,6 +4727,9 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['number'])) {
         	$sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
         }
+
+        $context['results']['auto_report']['TERTIARY_INSTALLATION_IN_PLACE'] = $context['sandbox']['summary']['more_stringent']['installation_in_place']['number']; 
+
         if (isset($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent'])) {
         	$sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
         }
@@ -5083,6 +5231,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_%']))
 	        $sheet->getCell('E51')->setValue(round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1));
+
+        $context['results']['auto_report']['ART3_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['target_connection']['distance_%'], 1);         
+
 	    if (isset($context['sandbox']['data']['total']['target_connection']['distance_pe']))
 	        $sheet->getCell('F51')->setValue($context['sandbox']['data']['total']['target_connection']['distance_pe']);
 
@@ -5112,6 +5263,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+
+         $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1);         
+
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']);
 
@@ -5132,6 +5286,9 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 	        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
+
+         $context['results']['auto_report']['ART5_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1);
+
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F61')->setValue($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']);
 	    if (isset($context['sandbox']['data']))
@@ -5689,7 +5846,13 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $col['F'] = 'U';
             }
             $sheet->getCell($col['C'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number']);
+            if ($col['C'].'12' == 'C12') {
+              $context['results']['auto_report']['COMPLIANCE_ART3_NUMBER'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['number'];
+            }
             $sheet->getCell($col['D'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage']);
+            if ($col['D'].'12' == 'D12') {
+              $context['results']['auto_report']['COMPLIANCE_ART3'] = $context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['agglo']['percentage'];
+            }
             $sheet->getCell($col['E'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['pe']);
             $sheet->getCell($col['F'].'12')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_collected_sytem']['waste_water']['percentage']);
             $sheet->getCell($col['C'].'13')->setValue($context['sandbox']['compliance'][$type]['art3']['connected_to_ias']['agglo']['number']);
@@ -5721,6 +5884,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $sheet->getCell($col['D'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['agglo']['percentage']);
             $sheet->getCell($col['E'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['pe']);
             $sheet->getCell($col['F'].'21')->setValue($context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage']);
+            if ($col['F'].'21' == 'F21') {
+              $context['results']['auto_report']['COMPLIANCE_ART4'] = $context['sandbox']['compliance'][$type]['art4']['total_actual']['waste_water']['percentage'];
+            }
             $sheet->getCell($col['C'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['number']);
             $sheet->getCell($col['D'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['agglo']['percentage']);
             $sheet->getCell($col['E'].'22')->setValue($context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe']);
@@ -5755,6 +5921,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $sheet->getCell($col['D'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['agglo']['percentage']);
                 $sheet->getCell($col['E'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe']);
                 $sheet->getCell($col['F'].'31')->setValue($context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage']);
+                if ($col['F'].'31' == 'F31') {
+                  $context['results']['auto_report']['COMPLIANCE_ART5'] = $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'];
+                }
                 $sheet->getCell($col['C'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['number']);
                 $sheet->getCell($col['D'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['agglo']['percentage']);
                 $sheet->getCell($col['E'].'32')->setValue($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe']);
@@ -6465,10 +6634,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line = array();
         $fieldsAndValues_EUFeed = array();
 
+
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
+
+// uwwtd_trace($agg->field_inspireidlocalid['und'][0]['value'] . '=');
 
         //for next sheet
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
@@ -6490,7 +6662,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $field_agggenerated = 0;
         if (isset($agg->field_agggenerated['und'][0]['value'])) {
         	$line[$ind['generated_load_p.e.']] = $agg->field_agggenerated['und'][0]['value'];
-            $field_agggenerated = 0;
+            $field_agggenerated = $agg->field_agggenerated['und'][0]['value'];
         }
 
         //'deadline for Art. 3 compliance',
@@ -6748,7 +6920,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				$uwwtpinfo_for_agglo['NC']['pe'] += $agg_leak;
 				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 				if($agg->field_aggart4compliance['und'][0]['value'] == 'C'){
-					dsm('art4 is compliant on the web site but not compliant in the register');
+					dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
 					dsm($agg);
 				}
 			}
@@ -6766,7 +6938,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				($agg_leak/$line[$ind['connected_to_collecting_system_p._e.']]) > 0.01){
 				$uwwtpinfo_for_agglo['art5_NC_pe'] += $agg_leak;
 				if($agg->field_aggart5compliance['und'][0]['value'] == 'C'){
-					dsm('art5 is compliant on the web site but not compliant in the register');
+					dsm('art5 is compliant on the web site but  a part is not compliant in the register '.$agg->nid);
 					dsm($agg);
 				}
 			}
@@ -6880,12 +7052,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Distance to compliance art. 4',
         //Treatment',
         //'% of connected Load',
-        $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
         //'in p.e. (4)',
         $line[$ind['dist_art4_treat_in_p.e._(4)']] = $uwwtpinfo_for_agglo['distart4_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         //Performance',
         //'% of connected Load',
-        $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['dist_art4_perf_%_of_connected_load']] = '';
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
@@ -7052,12 +7226,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		}else{
 			$compliance = 'NC';
 		}
-        $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['distance_art5_treat_%_of_gen._load']] = '';
         //'in p.e. (6)',
         $line[$ind['distance_art5_treat_in_p.e._(6)']] = $uwwtpinfo_for_agglo['distart5_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         //Performance',
         //'% of gen. Load',
-        $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        else $line[$ind['distance_art5_perf_%_of_gen._load']] = '';
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
@@ -7558,6 +7734,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         ////////////////////////////////////////////////////////////////////////
         //get data for graph sheet
         ////////////////////////////////////////////////////////////////////////
+
         if ($field_agggenerated >= 2000 && $field_agggenerated < 10001) {
             $context['results']['graph']['0_10000']['pe']  += $field_agggenerated;
             $context['results']['graph']['0_10000']['number']++;
@@ -9469,7 +9646,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0) {
                 $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration P mg/l']] = '';
@@ -9553,8 +9730,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 }
                 $context['sandbox'][$typestat]['entering_pe'] +=  ($line[$ind['uww_entering load  p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_entering load  p. e.']] : 0;
                 $context['sandbox'][$typestat]['capacity_pe'] +=  ($line[$ind['uww_capacity p. e.']] != $GLOBALS['uwwtd']['register']['message']['info_not_provided']) ? $line[$ind['uww_capacity p. e.']] : 0;
-                $context['sandbox'][$typestat]['previous_entering_pe'] +=  $line[$ind['previous_entering load p. e.']];
-                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  $line[$ind['previous_capacity p. e.']];
+                $context['sandbox'][$typestat]['previous_entering_pe'] +=  (is_numeric($line[$ind['previous_entering load p. e.']])?$line[$ind['previous_entering load p. e.']]:0);
+                $context['sandbox'][$typestat]['previous_capacity_pe'] +=  (is_numeric($line[$ind['previous_capacity p. e.']])?$line[$ind['previous_capacity p. e.']]:0);
             }
         }
 
@@ -10226,6 +10403,156 @@ function uwwtd_get_all_rca($annee)
     return $data;
 }  
 
+
+// function uwwtd_create_register_2015_final_file_testspreadsheet($annee, &$context)
+// {
+//     if (!isset($context['sandbox']['progress'])) {
+//         $context['sandbox']['progress'] = 0;
+//         $context['sandbox']['max'] = 1;
+//     }
+// 
+// //     $configsheet = $GLOBALS['uwwtd']['sheet'];
+// //     $listesheet = array(
+// //                         'glossary',
+// //                         'rca',
+// //                         'rcaA54',
+// //                         'uwwtp',
+// //                         'agglo',
+// //                         'summary_legal_comp',
+// //                         'distance_to_comp',
+// //                         'summary_installation_in_place',
+// //                         'breach_list',
+// //                         'summary_big_cities',
+// //                         'nuts_level2',
+// //                         'sewage_sludge',
+// //                         'graph',
+// //                         'graph_2',
+// // //                         'graph_test',
+// //                         'new_agglo',
+// //                         'agglo_out',
+// //                         'new_uwwtp',
+// //                         'uwwtp_out',
+// //                         );
+// 
+// // use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// 
+// // $spreadsheet = new Spreadsheet();
+// // $sheet = $spreadsheet->getActiveSheet();
+// // $sheet->setCellValue('A1', 'Hello World !');
+// $target_path = uwwtd_getregister_finalfile_path($annee);
+// $model = drupal_realpath(uwwtd_getregister_modelfile_path($annee));
+//     $reader = IOFactory::createReader('Xlsx');
+//     $reader->setIncludeCharts(true);
+//     $spreadsheet = $reader->load(drupal_realpath($model));
+// 
+//     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+//     $writer->setIncludeCharts(true);
+// 
+//     $writer->save(drupal_realpath($target_path));
+// 
+//     //$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
+// // //     dsm($target_path);
+// //     $objWriter->setIncludeCharts(TRUE);
+// //     $objWriter->save(drupal_realpath($target_path));
+// 
+// // $writer->save(drupal_realpath($target_path));
+// 
+// //     $finalPHPExcel = new PHPExcel();
+// //     $sheetIndex = $finalPHPExcel->getIndex($finalPHPExcel->getSheetByName('Worksheet')); //default worksheet
+// //     $finalPHPExcel->removeSheetByIndex($sheetIndex);
+// // 
+// //     foreach($listesheet as $sheet) {
+// // //         dsm($sheet);
+// //         //load sheet
+// // //         $sheet_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'] .'.xlsx';
+// //         $sheet_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'], $annee);
+// // 
+// //         if (!file_exists($sheet_path)) {
+// //             continue;
+// //         }
+// // //         dsm($sheet_path);
+// //     //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
+// // //         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
+// //         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+// //         $objReader->setIncludeCharts(TRUE);
+// //         $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
+// //         $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));
+// // //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
+// // //         dsm(1);
+// //         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
+// //         
+// //         $objPHPExcel->__destruct();
+// //         unset($objPHPExcel, $objReader);
+// //     }
+// // 
+// //     //write
+// //     $objWriter = PHPExcel_IOFactory::createWriter($finalPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+// //     $objWriter->setPreCalculateFormulas(false);
+// //     //$objWriter->setOffice2003Compatibility(true);
+// //     $target_path = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
+// // //     dsm($target_path);
+// //     $objWriter->setIncludeCharts(TRUE);
+// //     $objWriter->save(drupal_realpath($target_path));
+// //     unset($finalPHPExcel);
+// //     unset($objWriter);
+// 
+// 
+// // $zip = new ZipArchive;
+// // dsm($target_path);
+// // if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/mytheme1.xml', 'xl/theme/theme1.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/[Content_Types].xml', '[Content_Types].xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/sharedStrings.xml', 'xl/sharedStrings.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/styles.xml', 'xl/styles.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/workbook.xml', 'xl/workbook.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/calcChain.xml', 'xl/calcChain.xml');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/_rels/workbook.xml.rels', 'xl/_rels/workbook.xml.rels');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing1.xml', 'xl/drawings/drawing1.xml');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing2.xml', 'xl/drawings/drawing2.xml');
+// // 
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing1.xml.rels', 'xl/drawings/_rels/drawing1.xml.rels');
+// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing2.xml.rels', 'xl/drawings/_rels/drawing2.xml.rels');
+// // 
+// //     foreach(range(1,29) as $key) {
+// // //        dsm('add style'.$key.'.xml');
+// //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/style'.$key.'.xml', 'xl/charts/style'.$key.'.xml');
+// // //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/colors'.$key.'.xml', 'xl/charts/colors'.$key.'.xml');
+// //     }
+// //     $zip->close();
+// //     dsm( 'ok');
+// // } else {
+// //     dsm($er);
+// //     dsm(ZipArchive::ER_EXISTS);
+// //     dsm(ZipArchive::ER_INCONS);
+// //     dsm(ZipArchive::ER_INVAL);
+// //     dsm(ZipArchive::ER_MEMORY);
+// //     dsm(ZipArchive::ER_NOENT);
+// //     dsm(ZipArchive::ER_NOZIP);
+// //     dsm(ZipArchive::ER_OPEN);
+// //     dsm(ZipArchive::ER_READ);
+// //     dsm(ZipArchive::ER_SEEK);
+// //     dsm('err');
+// // }
+// 
+// 
+//     $context['sandbox']['progress']++;
+// 
+//     $context['message'] = '('.$annee.') ' . t('Finalization');
+// 
+// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+// //     }
+// 
+// 
+//     variable_set('registre_'.$annee, time());
+//     drupal_set_message(uwwtd_registre_create_html_link($annee));
+// }
+
+
+
 function uwwtd_create_register_2015_final_file($annee, &$context)
 {
     if (!isset($context['sandbox']['progress'])) {
@@ -10249,6 +10576,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
                         'sewage_sludge',
                         'graph',
                         'graph_2',
+//                         'graph_test',
                         'new_agglo',
                         'agglo_out',
                         'new_uwwtp',
@@ -10293,6 +10621,23 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);
+
+
+    $zip = new ZipArchive;
+    if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
+        //we modify the xml file for each graph we need to change color (use Excel 2007 to modify the excel file and use the xml in the xlsx generated)
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart23.xml', 'xl/charts/chart23.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart24.xml', 'xl/charts/chart24.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart25.xml', 'xl/charts/chart25.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart26.xml', 'xl/charts/chart26.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart27.xml', 'xl/charts/chart27.xml');
+        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart29.xml', 'xl/charts/chart29.xml');
+        $zip->close();
+    } else {
+        uwwtd_trace(var_export($er, true));
+    }
+
+
     $context['sandbox']['progress']++;
 
     $context['message'] = '('.$annee.') ' . t('Finalization');
@@ -10304,6 +10649,117 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 
     variable_set('registre_'.$annee, time());
     drupal_set_message(uwwtd_registre_create_html_link($annee));
+}
+
+/**
+ *
+ */
+function uwwtd_create_report($annee, &$context)
+{
+  $text = "
+  1	[#COUNTRY#]
+  1.1	General information on data
+  
+  For reference date 31/12/[#CURRENT_REPORT_YEAR#], [#COUNTRY#] reported [#NB_AGGLO#] agglomerations ≥ 2 000 population equivalent (p.e.) with a generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  Figures 1 and 2 show a comparison of the number of agglomerations and the amount of generated waste water load from the last UWWTD reporting exercise in [#PREVIOUS_YEAR_REPORT#] ([#PREVIOUS_REPORT_NUMBER#] Report) and [#CURRENT_YEAR_REPORT#] ([#CURRENT_REPORT_NUMBER#] Report). 
+  Between [#PREVIOUS_YEAR_REPORT#] and [#CURRENT_YEAR_REPORT#] the waste water load increased by [#WASTER_WATER_LOAD_INCREASED#] p.e., the share of waste water load has increased by ?% in the ? – ? size class, decreased by ? % in the ?-? size class and is stable in the >? size class.
+  
+  1.2	Receiving areas – application of Article 5(8) and Article 5(4)
+  
+  1.3	Results of the legal compliance check
+  
+  This section presents the results of the legal compliance check.
+  
+  [All [#NB_AGGLO#] agglomerations comply with requirements of Article 3 (collection) of the Directive.] 
+  The compliance rate for Article 3 (collection) of the Directive is [#COMPLIANCE_ART3#]%.
+  The compliance rate for Article 4 is [#COMPLIANCE_ART4#]% of the waste water load (secondary treatment), and the compliance rate for Article 5 is [#COMPLIANCE_ART5#]% of the waste water load (more stringent treatment).
+  
+  1.4	Distance to compliance
+  
+  This section provides an evaluation of the waste water load in p.e. that is responsible for non-compliance. This analysis can give an accurate idea of the efforts needed to meet compliance.
+  
+  [#COUNTRY#] has a [#ART3_DISTANCE_TO_COMPLIANCE#] distance to compliance for Article 3, but the distance to compliance is [#ART4_DISTANCE_TO_COMPLIANCE#]% for Article 4 and  [#ART5_DISTANCE_TO_COMPLIANCE#]% for Article 5.
+      
+  1.5	Results of the legal compliance check at the regional level
+  
+  1.6	Waste water installations in place
+  
+  This section assesses the information concerning the reported waste water installations in place.
+  
+  [#COUNTRY#] has reported [#NB_AGGLO#] agglomerations ≥ 2,000 p.e. with a total generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  The share of the total generated load of all agglomerations ≥ 2,000 p.e. that is reported to be collected in a collecting system is [#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]%. 
+  There are [#SECONDARY_INSTALLATION_IN_PLACE#] agglomerations that have installations for secondary treatment in place, of these there are [#TERTIARY_INSTALLATION_IN_PLACE#] agglomerations reported to have more stringent treatment installations.
+  
+  
+  1.7	Waste water treatment in “big cities”
+  
+  1.8	Production of sludge, sludge re-use and disposal
+  
+  1.9	National Implementation Programme
+  
+  1.10	Storm water overflows
+  
+  1.11	Waste Water reuse
+  ";
+
+//   dsm($text);
+//   dsm($context['results']['auto_report']);
+  $text = str_replace(
+                 array(
+                   '[#COUNTRY#]',
+                   '[#CURRENT_REPORT_YEAR#]', 
+                   '[#NB_AGGLO#]',
+                   '[#TOTAL_GENERATED_LOAD#]',
+                   '[#PREVIOUS_YEAR_REPORT#]',
+                   '[#PREVIOUS_REPORT_NUMBER#]',
+                   '[#CURRENT_YEAR_REPORT#]',
+                   '[#CURRENT_REPORT_NUMBER#]',
+                   '[#PREVIOUS_YEAR_REPORT#]',
+                   '[#CURRENT_YEAR_REPORT#]',
+                   '[#WASTER_WATER_LOAD_INCREASED#]',
+                   '[#COMPLIANCE_ART3_NUMBER#]',
+                   '[#COMPLIANCE_ART3#]',
+                   '[#COMPLIANCE_ART4#]',
+                   '[#COMPLIANCE_ART5#]', 
+                   '[#ART3_DISTANCE_TO_COMPLIANCE#]',
+                   '[#ART4_DISTANCE_TO_COMPLIANCE#]',
+                   '[#ART5_DISTANCE_TO_COMPLIANCE#]',
+                   '[#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]',
+                   '[#SECONDARY_INSTALLATION_IN_PLACE#]',
+                   '[#TERTIARY_INSTALLATION_IN_PLACE#]',
+                 ),
+                 array(
+                     $context['results']['auto_report']['COUNTRY'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'], 
+                     $context['results']['auto_report']['NB_AGGLO'],
+                     number_format($context['results']['auto_report']['TOTAL_GENERATED_LOAD'], 0),
+                     $context['results']['auto_report']['PREVIOUS_REPORT_YEAR'],
+                     $context['results']['auto_report']['PREVIOUS_REPORT_NUMBER'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'],
+                     $context['results']['auto_report']['CURRENT_REPORT_NUMBER'],
+                     $context['results']['auto_report']['PREVIOUS_REPORT_YEAR'],
+                     $context['results']['auto_report']['CURRENT_REPORT_YEAR'],
+                     number_format($context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'], 0),
+                     number_format($context['results']['auto_report']['COMPLIANCE_ART3_NUMBER'], 0),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART3'], 2), 1),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART4'], 2), 1),
+                     number_format(round($context['results']['auto_report']['COMPLIANCE_ART5'], 2), 1),
+                     $context['results']['auto_report']['ART3_DISTANCE_TO_COMPLIANCE'],
+                     $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'],
+                     $context['results']['auto_report']['ART5_DISTANCE_TO_COMPLIANCE'],
+                     number_format(round($context['results']['auto_report']['TOTAL_COLLECTING_SYSTEM_IN_PLACE'], 2), 1),
+                     $context['results']['auto_report']['SECONDARY_INSTALLATION_IN_PLACE'],
+                     $context['results']['auto_report']['TERTIARY_INSTALLATION_IN_PLACE'],
+                 ),
+                 $text
+              );
+
+  $path = 'public://register/' . $annee . '_report.txt';
+  $url = file_create_url($path);              
+  file_put_contents($path, $text);
+//   dsm($text);
+//   dsm($context['results']['auto_report']);
+//   drupal_set_message('<a href="'.$url.'?d='.date("YmdHis").'">Rapport</a>');
 }
 
 
@@ -10320,7 +10776,7 @@ function uwwtd_getregister_modelfile_path($annee)
 //     uwwtd_trace($annee);
     if ($annee >= 2016) {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
-//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model'];
+//       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet'][];
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];
     } else {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2014']);

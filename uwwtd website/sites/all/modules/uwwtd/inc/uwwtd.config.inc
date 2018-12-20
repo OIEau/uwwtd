@@ -294,7 +294,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'n3nm'                                   =>  array('label'=>t('Region (NUTS)')),
     'rbd'                                    =>  array('label'=>t('RBD')),
     'field_aggcompliance_value_format'       =>  array('label'=>t('Global compliance'), 'sort_field'=>'field_aggcompliance_value'),
-	'field_aggart3compliance_value_format'   =>  array('label'=>t('Connection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
+	'field_aggart3compliance_value_format'   =>  array('label'=>t('Collection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
     'field_aggart4compliance_value_format'   =>  array('label'=>t('2nd treatment compliance'), 'sort_field'=>'field_aggart4compliance_value'),
     'field_aggart5compliance_value_format'   =>  array('label'=>t('3rd treatment compliance'), 'sort_field'=>'field_aggart5compliance_value'),
     'field_aggart6compliance_value_format'   =>  array('label'=>t('Article 6 compliance'), 'sort_field'=>'field_aggart6compliance_value'),
@@ -366,6 +366,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'rca52_format'=>array('label'=>t('Article 52 applied')),
     'rca54_format'=>array('label'=>t('Article 54 applied')),
     'rca58_format'=>array('label'=>t('Article 58 applied')),
+    'aggs'=>array('label'=>t('Number of agglomerations')),
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
@@ -425,19 +426,14 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
 );
 $GLOBALS['uwwtd']['reuse_type']=array(
     'IR'=>'Irrigation',
-    'IN'=>'Infiltration',
+    'IN'=>'Industry',
     'OT'=>'Others'
 );
 $GLOBALS['uwwtd']['reuse_type_color']=array(
-    'IR'=>'#2e8b57',
-    'IN'=>'#5B3349',
-    'OT'=>'#4682b4'
+    'IR'=>'#459436',
+    'IN'=>'#334D5C',
+    'OT'=>'#02658C'
 );
-/*
-Irrigation|Irrigation|#2e8b57
-Infiltration|Infiltration|
-Other|Other|
-*/
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',
@@ -493,7 +489,7 @@ $GLOBALS['ms_level'] = array(
         'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#00658e','label'=>t('Connected to collecting system')),
+		'cs'=>array('color'=>'#00658e','label'=>t('Collected by collecting system')),
         'ias'=>array('color'=>'#00ced1','label'=>t('Individual and Appropriate Systems')),
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
@@ -511,6 +507,15 @@ $GLOBALS['article17']['glossary'] = array(
   "CU" => "current",
   "EXP" => "expected",
   "P" => "past"
+);
+
+$GLOBALS['report_number'] = array(
+  2010 => '7th',
+  2012 => '8th',                          
+  2014 => '9th',
+  2016 => '10th',
+  2018 => '11th', 
+  2020 => '12th',                           
 );
 
 // Global glossary

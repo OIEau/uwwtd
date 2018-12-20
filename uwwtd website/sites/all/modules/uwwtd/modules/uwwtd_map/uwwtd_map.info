@@ -1,0 +1,6 @@
+name = Maps & print map
+description = Add a page with a européen map
+core = 7.x
+version = 7.x-1.0
+package = uwwtd
+dependencies[] = uwwtd

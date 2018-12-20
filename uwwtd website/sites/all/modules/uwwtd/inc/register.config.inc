@@ -9,9 +9,9 @@ $GLOBALS['uwwtd']['register']['message'] = array(
 // $GLOBALS['uwwtd']['sheet']['path_model_file']
 $GLOBALS['uwwtd']['sheet'] = array(
     'BOM' => "\xEF\xBB\xBF",
-    'model' => '2018_register_model_20181114.xlsx',
-    'model_reporting_2014' => '2018_register_model_20181114.xlsx', //'2015_register_model_20161214.xlsx',
-    'model_reporting_2016' => '2018_register_model_20181114.xlsx',
+    'model' => '',  //deprecated  from 2016
+    'model_reporting_2014' => '2018_register_model_20181114.xlsx', //'2015_register_model_20161214.xlsx',  original.xlsx
+    'model_reporting_2016' => '2018_register_model_20181114.xlsx',   //2018_register_model_20181114
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
     'final_register' => '_register_model_final.xlsx',
@@ -87,6 +87,10 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'xlsx_name' => '_graph2.xlsx',
         'xlsx_model_sheet_name' => 'National report Graphs',
     ), 
+//     'graph_test' => array(
+//         'xlsx_name' => '_Feuil1.xlsx',
+//         'xlsx_model_sheet_name' => 'Feuil1',
+//     ), 
     'new_agglo' => array(
         'csv_name' => '_new_agglo.csv',
         'xlsx_name' => '_new_agglo.xlsx',
