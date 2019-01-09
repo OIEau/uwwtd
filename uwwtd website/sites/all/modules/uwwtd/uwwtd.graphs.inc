@@ -1005,7 +1005,6 @@ function getRow7Graph1($yearSelected, $results) {
 	
 	$columns[0]['Destination']['data'] = t('Destination');
 	if (!empty($results)) {
-        if($yearSelected == ALL_YEARS){
             $legend = array();
             $color = array();
             foreach ($results as $year => $row) {
@@ -1018,7 +1017,7 @@ function getRow7Graph1($yearSelected, $results) {
                             $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
                             
                             // Ajout de la ligne :
-                            $rows[$keyElement]['data'][$year] = $element;
+                            $rows[$keyElement]['data'][(string)$year] = $element;
                             $item[$keyElement] =$element;
                             $legend[$keyElement] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
                             $color[$keyElement] = $GLOBALS['ms_level']['sludge'][$keyElement]['color'];
@@ -1056,61 +1055,7 @@ function getRow7Graph1($yearSelected, $results) {
                 $front['data'][$key] = $item;
             }
             $back = theme('table', array('rows' => $table, 'header' =>$header)); // 'header' => $columns, 'rows_multiple' => true
-        }
-        else{
-            foreach ($results as $year => $row) {
-                // Définition des entete de colonnes :
-                $columns[0][$year]['data'] = $year;
-                
-                if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
-                    foreach ($row['sludge']['destination'] as $keyElement => $element) {
-                        if (!empty($element)) {
-                            $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
-                            
-                            // Ajout de la ligne :
-                            //$rows[$keyElement]['data'][$year] = $element;
-                            $rows[$keyElement]['data'][$year] = uwwtd_format_number($element).' '.t('T DS/year');
-                            
-                            $front[$year][] =array(
-                                'value'=>$element,
-                                'label'=>$GLOBALS['ms_level']['sludge'][$keyElement]['label'],
-                                'valueformat'=>uwwtd_format_number($element).' '.t('T DS/year'),
-                                'color'=>$GLOBALS['ms_level']['sludge'][$keyElement]['color'],
-                            );
-                            
-                        }
-                    }
-                }
-            }
-            // Pour chaque ligne :
-            foreach ($rows as $rowName => $row) {
-                if (array_key_exists('data', $row) && array_key_exists(0, $columns)) {
-                    // Pour toutes les colonnes existantes :
-                    foreach (array_keys($columns[0]) as $columsName) {
-                        if (!array_key_exists($columsName, $row['data'])) {
-                            // Remplissage des trous :
-                            $rows[$rowName]['data'][$columsName] = ' - ';
-                        }
-                    }
-                }
-            }
-            
-            // Récupération du DOM du tableau :
-            $back = theme('table', array('rows' => $rows, 'header' => $columns, 'rows_multiple' => true));
-            
-            // Ajout des légendes :
-            $back .= '
-                <table class="stats-graphs table table-hover table-striped sticky-enabled">
-                    <thead>
-                        <tr>
-                            <th><i>*: '.t('Tons of Dry Substance per year T DS/year').'</i></th>
-                        </tr>
-                    </thead>
-                </table>';
-            
-        }
-		
-	}
+    }
 	
 	
 	
@@ -1401,6 +1346,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
     
     // Si le graph a des données :
     if (!$isEmptyGraph1) {
+        $yearSelected = ALL_YEARS;
 		// Création du code html pour le graph1 :
 		switch ($yearSelected) {
 			case ALL_YEARS :
