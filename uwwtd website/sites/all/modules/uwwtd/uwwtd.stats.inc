@@ -491,9 +491,9 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
 	$data = array();
 	$param = array();
 	$aConditions = array(
-		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
-		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
-		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
+		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 2000 and f_agggenerated.field_agggenerated_value < 10000) ',
+		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 10000 and f_agggenerated.field_agggenerated_value < 100000) ',
+		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 100000) ',
 	);
 	$query = 'select 
 		f_annee.field_anneedata_value as year,
