@@ -1766,7 +1766,7 @@ function uwwtd_create_xls($filename, $rows) {
 
 
 
-function uwwtd_check_history($localid, $annee){
+function uwwtd_check_history($localid, $annee, $type=null){
   //Get all the nodes with the same id
   //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
   $query = db_select('field_data_field_inspireidlocalid', 'n');
@@ -1782,6 +1782,10 @@ function uwwtd_check_history($localid, $annee){
     $query->condition('n.field_inspireidlocalid_value', $localid, '=');  
   }
   
+  if(!is_null($type) && $type!=''){
+    $query->condition('n.bundle', $type, '=');    
+  }
+  
   $ids = array();
   $results = $query->execute();
   foreach($results as $result){
@@ -1795,7 +1799,7 @@ function uwwtd_check_history($localid, $annee){
 
 function uwwtd_timeline_output($node, $linkOnAllYears=false){
   $output = '';
-  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], $node->type);
   if($histories != false){
     $otherList = array();
     $output .= '<div class="uwwtd-history">';
@@ -1803,6 +1807,7 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
     <legend class="panel-heading">
     <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
     </legend>';
+    
     foreach($histories as $history){  
 
       $other = node_load($history);
