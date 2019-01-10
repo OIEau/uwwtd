@@ -294,7 +294,7 @@ $GLOBALS['uwwtd']['ui']['field']['agglomeration'] = array(
     'n3nm'                                   =>  array('label'=>t('Region (NUTS)')),
     'rbd'                                    =>  array('label'=>t('RBD')),
     'field_aggcompliance_value_format'       =>  array('label'=>t('Global compliance'), 'sort_field'=>'field_aggcompliance_value'),
-	'field_aggart3compliance_value_format'   =>  array('label'=>t('Connection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
+	'field_aggart3compliance_value_format'   =>  array('label'=>t('Collection compliance'), 'sort_field'=>'field_aggart3compliance_value'),
     'field_aggart4compliance_value_format'   =>  array('label'=>t('2nd treatment compliance'), 'sort_field'=>'field_aggart4compliance_value'),
     'field_aggart5compliance_value_format'   =>  array('label'=>t('3rd treatment compliance'), 'sort_field'=>'field_aggart5compliance_value'),
     'field_aggart6compliance_value_format'   =>  array('label'=>t('Article 6 compliance'), 'sort_field'=>'field_aggart6compliance_value'),
@@ -366,9 +366,11 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'rca52_format'=>array('label'=>t('Article 52 applied')),
     'rca54_format'=>array('label'=>t('Article 54 applied')),
     'rca58_format'=>array('label'=>t('Article 58 applied')),
+    'aggs'=>array('label'=>t('Number of agglomerations')),
     'uwwtps'=>array('label'=>t('Number of UWWTP')),
     'tot_design_capacity_format'=>array('label'=>t('Total physical Capacity (p.e.)'), 'sort_field'=>'tot_design_capacity', 'sort_mod'=>'numeric'),
     'tot_entering_load_format'=>array('label'=>t('Total load entering (p.e.)'), 'sort_field'=>'tot_entering_load', 'sort_mod'=>'numeric'),
+    'starting_dates_application'=>array('label'=>t('Starting dates of application')),
 );
 $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'title'                           =>  array('label'=>t('Name')),
@@ -378,7 +380,8 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'uwwtp_format'=>array('label'=>t('Linked treatment plant')),
     'field_uwwcompliance_value_format'=>array('label'=>t('Compliance of treatment plant')),
     'rcacat_format'=>array('label'=>t('Type of receiving area')),
-    
+    'field_dcpirrigation_value'=>array('label'=>t('Type of reuse')),
+     'field_uwwwastewatertreated_value'=>array('label'=>t('Volume (m3/y)')),
     
 );
 
@@ -421,6 +424,16 @@ $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
     //#81BEAA
     //#F4D4AD
 );
+$GLOBALS['uwwtd']['reuse_type']=array(
+    'IR'=>'Irrigation',
+    'IN'=>'Industry',
+    'OT'=>'Others'
+);
+$GLOBALS['uwwtd']['reuse_type_color']=array(
+    'IR'=>'#459436',
+    'IN'=>'#334D5C',
+    'OT'=>'#02658C'
+);
 
 $GLOBALS['uwwtd']['ui']['compliance'] = array(
     'All' => '- Any -',
@@ -458,7 +471,6 @@ $GLOBALS['uwwtd']['ui']['treatment_type_in_place'] = array(
     'MS' => t('More stringent treatment'),
 );
 
-
 $GLOBALS['ms_level'] = array(
     'sludge'=>array(
         'dcp'=>array('color'=>'#B5B5BF','label'=>t('Discharged into surface waters : Pipelines')),
@@ -477,7 +489,7 @@ $GLOBALS['ms_level'] = array(
         'others'=>array('color'=>'#02658C','label'=>t('Others'))
     ),
 	'connection'=>array(
-		'cs'=>array('color'=>'#00658e','label'=>t('Connected to collecting system')),
+		'cs'=>array('color'=>'#00658e','label'=>t('Collected by collecting system')),
         'ias'=>array('color'=>'#00ced1','label'=>t('Individual and Appropriate Systems')),
         'wot'=>array('color'=>'#d93c3c','label'=>t('Discharged without treatment'))
 	),
@@ -489,6 +501,24 @@ $GLOBALS['ms_level'] = array(
 	)
 );
 
+
+// Article 17 glossary
+$GLOBALS['article17']['glossary'] = array( 
+  "CU" => "current",
+  "EXP" => "expected",
+  "P" => "past"
+);
+
+$GLOBALS['report_number'] = array(
+  2010 => '7th',
+  2012 => '8th',                          
+  2014 => '9th',
+  2016 => '10th',
+  2018 => '11th', 
+  2020 => '12th',                           
+);
+
+// Global glossary
 $GLOBALS['glossary'] = array(
 'ES' =>            'Estuary',
 'CW' =>            'Coastal waters',

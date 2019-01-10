@@ -100,7 +100,7 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	try {
 		$result = db_query("
 			SELECT f_annee.field_anneedata_value as year,
-				s.field_aggsewagenetwork_value AS type, 
+				upper(s.field_aggsewagenetwork_value) AS type, 
 				SUM(g.field_agggenerated_value) AS sn_sum,  
 				COUNT (*) AS sn_count
 			FROM {node} n
@@ -313,7 +313,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 	$data = array();
     
     //Filter uwwtp with "min_aggenerated_display" parameter
-    
+    //In this request we need all uwwtp linked with a relevant agg (> 2000 ep)
     $with = 'WITH uwwtp_min_agg AS(
         SELECT n.nid, n.type, n.title 
         FROM {node} n
@@ -335,31 +335,15 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         GROUP BY n.nid
         )
     ';
-    
 	$query = $with. 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
-	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
-			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
-    from {node} n
+    //warning this request count the number of agglomeration and not just the number of uwwtp
+	$query .= ' COUNT(n.nid) AS  total_count, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS loadentering_sum
+    FROM {node} n
         join uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid 
         left join
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
-        left join
-            {field_data_field_inspireidlocalid} f_uwwcode
-                ON n.nid = f_uwwcode.entity_id
-        left join
-            {field_data_field_uwwprimarytreatment} f_primarytreatment
-                ON n.nid = f_primarytreatment.entity_id
-        left join
-            {field_data_field_uwwsecondarytreatment} f_secondarytreatment
-                ON n.nid = f_secondarytreatment.entity_id
-        left join
-            {field_data_field_uwwnremoval} f_nremoval
-                ON n.nid = f_nremoval.entity_id
-        left join
-            {field_data_field_uwwpremoval} f_premoval
-                ON n.nid = f_premoval.entity_id
         left join
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
@@ -367,49 +351,15 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
             {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
                 ON n.nid = f_uwwloadenteringuwwtp.entity_id
         left join
-            {field_data_field_regionnuts} f_regionnuts
-                ON n.nid = f_regionnuts.entity_id
-        left join
-            {field_data_field_uwwbod5perf} f_uwwbod5perf
-                ON n.nid = f_uwwbod5perf.entity_id
-        left join
-            {field_data_field_uwwcodperf} f_uwwcodperf
-                ON n.nid = f_uwwcodperf.entity_id
-        left join
-            {field_data_field_uwwntotperf} f_uwwntotperf
-                ON n.nid = f_uwwntotperf.entity_id
-        left join
-            {field_data_field_uwwptotperf} f_uwwptotperf
-                ON n.nid = f_uwwptotperf.entity_id
-        left join
             {field_data_field_uwwtreatmenttype} f_uwwtreatmenttype
                 ON n.nid = f_uwwtreatmenttype.entity_id
         left join
             {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
                 ON n.nid = f_physicalcapacityactivity.entity_id
         left join
-            {field_data_field_uwwspecification} f_uwwspecification
-                ON n.nid = f_uwwspecification.entity_id
-        left join
-            {field_data_field_uwwboddischarge} f_uwwboddischarge
-                ON n.nid = f_uwwboddischarge.entity_id
-        left join
-            {field_data_field_uwwcoddischarge} f_uwwcoddischarge
-                ON n.nid = f_uwwcoddischarge.entity_id
-        left join
-            {field_data_field_uwwndischarge} f_uwwndischarge
-                ON n.nid = f_uwwndischarge.entity_id
-        left join
-            {field_data_field_uwwpdischarge} f_uwwpdischarge
-                ON n.nid = f_uwwpdischarge.entity_id
-        left join
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-        left join
-            {field_data_field_position_geo} f_geo
-                ON n.nid = f_geo.entity_id
 		where n.type = :typenode
-
     ' .
     $conditions . '
 		group by f_annee.field_anneedata_value,' . $group_by;
@@ -419,11 +369,13 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         ':min_agg' => variable_get('min_aggenerated_display', '1999'),
     );
     try {
-//     	dsm($query);
         $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
     			case 'compliance' :
+                    if($row['field_uwwcompliance_value']==''){
+                        $row['field_uwwcompliance_value']='NI';
+                    }
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
                     $color = $GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']];
     				break;
@@ -434,6 +386,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     			default:
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
     		}
+            
     		$data[$complianceState]['data'][$table_key_label] = $complianceState;
     		if (is_null($row['loadentering_sum']) || is_null($row['total_count'])) {
     			// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
@@ -487,9 +440,9 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
 	$data = array();
 	$param = array();
 	$aConditions = array(
-		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value > 2000 and f_agggenerated.field_agggenerated_value <= 10000) ',
-		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 10000 and f_agggenerated.field_agggenerated_value <= 100000) ',
-		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value > 100000) ',
+		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 2000 and f_agggenerated.field_agggenerated_value < 10000) ',
+		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 10000 and f_agggenerated.field_agggenerated_value < 100000) ',
+		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 100000) ',
 	);
 	$query = 'select 
 		f_annee.field_anneedata_value as year,
@@ -1047,7 +1000,7 @@ function uwwtd_stat_national_uwwtp_agglo($options)
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
 		where n.type = :typenode    
-              and f_agggenerated.field_agggenerated_value > :agggenerated
+              and f_agggenerated.field_agggenerated_value >= :agggenerated
     '
     . $conditions;
 //     dsm($query);
