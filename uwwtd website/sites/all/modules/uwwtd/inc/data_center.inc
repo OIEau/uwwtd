@@ -158,6 +158,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     }
     $timestamp = strtotime('now');
 
+
     //dsm($timestamp);
 
     if(isset($datas['UWWTD_Report']['ReportPeriod']['repCode'])){
@@ -180,12 +181,16 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     elseif(!empty($datas['MSLevel']) && isset($datas['MSLevel']['Row'])){
         uwwtd_update_mslevel($newFile, $annee, $datas['MSLevel']['Row'], $repCode, $timestamp);
     }
+
+//     dsm($datas['MSLevel']);
+//     return;
     uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);  
 }
 
 function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
     global $language;
     if(!empty($datas)){
+
 //         dsm($datas);
         // Variables
         $siteId = $annee.'_mslevel';
@@ -251,7 +256,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         //numeric
         //if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_numeric($datas['mslSludgeProduction'], $timestamp, 0 , $node);
         if(isset($datas['mslSludgeProduction'])) {
-            $check = uwwtd_check_numeric($datas['mslSludgeProduction']);
+            $check = uwwtd_check_decimal($datas['mslSludgeProduction']); //e.v 209/01/07 change from uwwtd_check_numeric to uwwtd_check_decimal
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, 0 , $node);
             } else {
@@ -379,6 +384,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         }
         //text
         if(isset($datas['mslWWReuseExplain'])) $node->field_mslwwreuseexplain['und'][0]['value'] = uwwtd_check_text($datas['mslWWReuseExplain']);
+
         // save node
         node_save($node);
         
