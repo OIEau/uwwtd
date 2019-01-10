@@ -337,9 +337,8 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     ';
     
 	$query = $with. 'select f_annee.field_anneedata_value as year, ' . $group_by . ',';
-	$query .= ' COUNT(n.title) AS  TOTAL_COUNT,
-			SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
-    from {node} n
+	$query .= ' COUNT(n.title) AS  TOTAL_COUNT, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS LOADENTERING_SUM
+    FROM {node} n
         join uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid 
         left join
@@ -419,7 +418,6 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         ':min_agg' => variable_get('min_aggenerated_display', '1999'),
     );
     try {
-//     	dsm($query);
         $result = db_query($query,$param);
     	while ($row = $result->fetchAssoc()) {
     		switch ($groupBy){
@@ -1051,7 +1049,7 @@ function uwwtd_stat_national_uwwtp_agglo($options)
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
 		where n.type = :typenode    
-              and f_agggenerated.field_agggenerated_value > :agggenerated
+              and f_agggenerated.field_agggenerated_value >= :agggenerated
     '
     . $conditions;
 //     dsm($query);

@@ -1504,12 +1504,15 @@ function uwwtd_get_national_stat_str($year){
 	//$nbUrban = count($dataAggl);
 	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
 	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
-
-	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population equivalent (p.e).
-			These agglomerations generated a total load of ".$nbGeneratedLoad." p.e. ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
-			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
-			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
-			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. " p.e. ";
+    $output ='';
+	$output.=   t("In @year, @country had @nbUrban urban waste water agglomerations of more then 2 000 population equivalent (p.e).", ['@year'=>$annee, '@country'=>variable_get('siif_eru_country_name'), '@nbUrban'=>$nbUrban])." ";
+	$output.=   t("These agglomerations generated a total load of @nbGeneratedLoad p.e. @totalCollectingSystem% of this load is connected to collecting systems and @totalIAS% addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...).", ['@nbGeneratedLoad'=>$nbGeneratedLoad, '@totalCollectingSystem'=>$totalCollectingSystem, '@totalIAS'=>$totalIAS])." ";
+	$output.=   t("These agglomerations are connected to")." ";
+    if($nbPrimaryTreatement>0) $output.=   t("@nbPrimaryTreatement primary treatment plant", ['@nbPrimaryTreatement'=>$nbPrimaryTreatement]).", "; 
+    $output.=   t("@nbSecondaryTreatement secondary treatment plants", ['@nbSecondaryTreatement'=>$nbSecondaryTreatement])." and ";
+    $output.=   t("@nbOtherTreatement more stringent treatment plants.", [ '@nbOtherTreatement'=>$nbOtherTreatement]).", ";
+	$output.=   t("All these treatment plants have a total design capacity of @nbPhysicalCapacity p.e. ", ['@nbPhysicalCapacity'=>$nbPhysicalCapacity])." ";
+    return $output;
 }
 //hook_wms_getlegend_alter
 function uwwtd_wms_getlegend_alter(&$result, &$url){
