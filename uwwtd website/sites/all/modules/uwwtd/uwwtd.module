@@ -1481,10 +1481,9 @@ function uwwtd_get_national_stat_str($year){
             $nbUrban++;
         }
 	}
-
-	foreach($dataUwwtp as $uwwtp){
-		// dsm($uwwtp);
-        if($uwwtp['field_status_value']==1){
+    $uwwtp_ids = [];
+	foreach($dataUwwtp as $uwwtp){        
+        if($uwwtp['field_status_value']==1 && !in_array($uwwtp['nid'], $uwwtp_ids)){
             if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
                 $nbPrimaryTreatement = $nbPrimaryTreatement+1;
             }elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
@@ -1493,6 +1492,8 @@ function uwwtd_get_national_stat_str($year){
                 $nbOtherTreatement = $nbOtherTreatement+1;
             }
             $nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
+            //Keep id of uwwtp in memory in order to prevent double counting
+            $uwwtp_ids[] = $uwwtp['nid'];
         }
 	}
 	$nbCollectingSystem = $nbCollectingSystem *100 / $nbGeneratedLoad;
@@ -1504,12 +1505,15 @@ function uwwtd_get_national_stat_str($year){
 	//$nbUrban = count($dataAggl);
 	$nbGeneratedLoad = number_format($nbGeneratedLoad, 0, ".", " ");
 	$nbPhysicalCapacity = number_format($nbPhysicalCapacity, 0, ".", " ");
-
-	return  "In ".$annee.", ".variable_get('siif_eru_country_name')." had ".$nbUrban." urban waste water agglomerations of more then 2 000 population equivalent (p.e).
-			These agglomerations generated a total load of ".$nbGeneratedLoad." p.e. ".$totalCollectingSystem." % of this load is connected to collecting systems and ".$totalIAS." % 
-			addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...). These agglomerations are
-			connected to ".$nbPrimaryTreatement." primary treatment plant, ".$nbSecondaryTreatement." secondary treatment plants and ".$nbOtherTreatement." more stringent treatment plants.
-			All these treatment plants have a total design capacity of ".$nbPhysicalCapacity. " p.e. ";
+    $output ='';
+	$output.=   t("In @year, @country had @nbUrban urban waste water agglomerations of more then 2 000 population equivalent (p.e).", ['@year'=>$annee, '@country'=>variable_get('siif_eru_country_name'), '@nbUrban'=>$nbUrban])." ";
+	$output.=   t("These agglomerations generated a total load of @nbGeneratedLoad p.e. @totalCollectingSystem% of this load is connected to collecting systems and @totalIAS% addressed through Individual and Appropriate Systems (storage or septic tanks, micro-stations,...).", ['@nbGeneratedLoad'=>$nbGeneratedLoad, '@totalCollectingSystem'=>$totalCollectingSystem, '@totalIAS'=>$totalIAS])." ";
+	$output.=   t("These agglomerations are connected to")." ";
+    if($nbPrimaryTreatement>0) $output.=   t("@nbPrimaryTreatement primary treatment plant", ['@nbPrimaryTreatement'=>$nbPrimaryTreatement]).", "; 
+    $output.=   t("@nbSecondaryTreatement secondary treatment plants", ['@nbSecondaryTreatement'=>$nbSecondaryTreatement])." and ";
+    $output.=   t("@nbOtherTreatement more stringent treatment plants.", [ '@nbOtherTreatement'=>$nbOtherTreatement])." ";
+	$output.=   t("All these treatment plants have a total design capacity of @nbPhysicalCapacity p.e. ", ['@nbPhysicalCapacity'=>$nbPhysicalCapacity])." ";
+    return $output;
 }
 //hook_wms_getlegend_alter
 function uwwtd_wms_getlegend_alter(&$result, &$url){
@@ -1766,7 +1770,7 @@ function uwwtd_create_xls($filename, $rows) {
 
 
 
-function uwwtd_check_history($localid, $annee){
+function uwwtd_check_history($localid, $annee, $type=null){
   //Get all the nodes with the same id
   //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
   $query = db_select('field_data_field_inspireidlocalid', 'n');
@@ -1782,6 +1786,10 @@ function uwwtd_check_history($localid, $annee){
     $query->condition('n.field_inspireidlocalid_value', $localid, '=');  
   }
   
+  if(!is_null($type) && $type!=''){
+    $query->condition('n.bundle', $type, '=');    
+  }
+  
   $ids = array();
   $results = $query->execute();
   foreach($results as $result){
@@ -1795,7 +1803,7 @@ function uwwtd_check_history($localid, $annee){
 
 function uwwtd_timeline_output($node, $linkOnAllYears=false){
   $output = '';
-  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value']);
+  $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], $node->type);
   if($histories != false){
     $otherList = array();
     $output .= '<div class="uwwtd-history">';
@@ -1803,6 +1811,7 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
     <legend class="panel-heading">
     <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
     </legend>';
+    
     foreach($histories as $history){  
 
       $other = node_load($history);
@@ -1830,12 +1839,13 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
 
       if(isset($val)){
         if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
-        if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
-        if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
-        if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-            // if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
-                if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
+        elseif($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
+        elseif($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
+        elseif($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
+        // if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
+        else{$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
       }
+      else{$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
       // $color = uwwtd_adjustBrightness($color, 50);
       $nbAnnee = count($otherY); 
       $j=0;

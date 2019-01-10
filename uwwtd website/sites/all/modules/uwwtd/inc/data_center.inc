@@ -2772,7 +2772,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         if(isset($data['aggSewageNetwork'])){
-            $node->field_aggsewagenetwork['und'][0]['value'] = uwwtd_check_text($data['aggSewageNetwork']);}
+            $node->field_aggsewagenetwork['und'][0]['value'] = strtoupper(uwwtd_check_text($data['aggSewageNetwork']));}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration type of collecing system information found.', $timestamp, $i, $node);
         
         //text
