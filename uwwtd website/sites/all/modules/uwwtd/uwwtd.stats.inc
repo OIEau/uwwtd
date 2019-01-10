@@ -100,7 +100,7 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 	try {
 		$result = db_query("
 			SELECT f_annee.field_anneedata_value as year,
-				s.field_aggsewagenetwork_value AS type, 
+				upper(s.field_aggsewagenetwork_value) AS type, 
 				SUM(g.field_agggenerated_value) AS sn_sum,  
 				COUNT (*) AS sn_count
 			FROM {node} n
