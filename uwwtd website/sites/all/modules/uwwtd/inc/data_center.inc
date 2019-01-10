@@ -251,7 +251,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         //numeric
         //if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_numeric($datas['mslSludgeProduction'], $timestamp, 0 , $node);
         if(isset($datas['mslSludgeProduction'])) {
-            $check = uwwtd_check_numeric($datas['mslSludgeProduction']);
+            $check = uwwtd_check_decimal($datas['mslSludgeProduction']); //e.v 209/01/07 change from uwwtd_check_numeric to uwwtd_check_decimal
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, 0 , $node);
             } else {
