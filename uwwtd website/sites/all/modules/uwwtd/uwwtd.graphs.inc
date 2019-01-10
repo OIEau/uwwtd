@@ -114,7 +114,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	t("Generated Load by collection type (population equivalent – p.e.)"), 'graph_collect_type', $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Generated Load by sewage network type (population equivalent – p.e.)"), 'graph_cs_type', $frontAndBackGraph2[0], $frontAndBackGraph2[1],
     	true, $yearsPossibles);
-    
+
     //==============================================
     //=============== ROW 2 : Agglomeration : Generated load by compliance
     //==============================================
@@ -131,7 +131,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
     //==============================================
-    
+  
     // Récupération des données des graphs :
 	$results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
@@ -156,7 +156,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	false, $yearsPossibles);
     
-	
+      	
     //==============================================
     //=============== ROW 5 : Agglomeration : generated load by agglomeration size
     //==============================================
@@ -174,7 +174,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         ), $yearsPossibles
     );
     
-    
+
     
     //==============================================
     //=============== ROW 6 : Waste water treatement plant : Total load entering and discharged
@@ -255,16 +255,16 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         }
     }
     
-	
+   	
 	//==============================================
     //=============== ROW 7 : MS Level statistics
     //==============================================
     
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles);
+    //===========nd@oieau.fr 10/01/2019 : FIX ME : the legend is too long on sludge chart
     $frontAndBackGraph1 = getRow7Graph1($yearSelected, $results);
     $frontGraph2 = getRow7Graph2($results, $yearSelected, $yearsPossibles);
-    
     // Création du code html pour ces graphs :
     $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
     	t("Sludge destination"), 'graph_sludge_dest', $results,  $frontAndBackGraph1[0], $frontAndBackGraph1[1],
@@ -282,8 +282,8 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Legal compliance"), 
 	    array(
 	    	array(
-	    		'graph_art3_pe', t("Legal compliance for connection in p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
-	    		'graph_art3_agg', t("Legal compliance for connection by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
+	    		'graph_art3_pe', t("Legal compliance for collection in p.e."), $frontAndBackGraphs['graph1Front'],  $frontAndBackGraphs['graph1Back'], true,
+	    		'graph_art3_agg', t("Legal compliance for collection by number of agglomerations"), $frontAndBackGraphs['graph2Front'],  $frontAndBackGraphs['graph2Back'], true
 	    	),
     		array(
     			'graph_art4_pe', t("Legal compliance for 2nd treatment in p.e."), $frontAndBackGraphs['graph3Front'],  $frontAndBackGraphs['graph3Back'], true,
@@ -295,7 +295,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     		),
 	    ), $yearsPossibles
     );
-    
+
 	return  $formResult;
 }
 
@@ -1013,7 +1013,7 @@ function getRow7Graph1($yearSelected, $results) {
                 $item[0] = (string)$year;   
                 if (array_key_exists('sludge', $row) && array_key_exists('destination', $row['sludge'])) {
                     foreach ($row['sludge']['destination'] as $keyElement => $element) {
-                        if (!empty($element)) {
+                        if (!is_null($element)) {
                             $rows[$keyElement]['data']['Destination'] = $GLOBALS['ms_level']['sludge'][$keyElement]['label'];
                             
                             // Ajout de la ligne :
