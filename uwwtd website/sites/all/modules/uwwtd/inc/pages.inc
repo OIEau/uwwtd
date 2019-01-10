@@ -234,6 +234,26 @@ function uwwtd_get_data_uwwtp($option)
 
     $data = array();
     $query = '
+    WITH uwwtp_min_agg AS(
+        SELECT n.nid, n.type, n.title 
+        FROM {node} n
+            LEFT join
+              {field_data_field_anneedata f_annee}
+                ON n.nid = f_annee.entity_id
+            left join
+              {field_data_field_status f_status}
+                ON n.nid = f_status.entity_id
+            LEFT join
+              {field_data_field_agguwwliste f_uwwtp_agglo}
+                ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
+            LEFT join
+            {field_data_field_agggenerated f_agggenerated}
+                ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
+        WHERE n.type = :typenode
+            AND f_agggenerated.field_agggenerated_value >= 2000
+             AND f_annee.field_anneedata_value = :annee
+        GROUP BY n.nid
+    )
     select distinct on (n.nid) n.nid,
         n.title,
 		f_annee.field_anneedata_value,
@@ -264,6 +284,8 @@ function uwwtd_get_data_uwwtp($option)
         rbd.eurbdcode as rbd,
         rbd.rbdname
     from {node} n
+        JOIN uwwtp_min_agg
+            ON n.nid = uwwtp_min_agg.nid
         LEFT join
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id

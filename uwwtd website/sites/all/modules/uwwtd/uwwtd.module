@@ -1481,10 +1481,9 @@ function uwwtd_get_national_stat_str($year){
             $nbUrban++;
         }
 	}
-
-	foreach($dataUwwtp as $uwwtp){
-		// dsm($uwwtp);
-        if($uwwtp['field_status_value']==1){
+    $uwwtp_ids = [];
+	foreach($dataUwwtp as $uwwtp){        
+        if($uwwtp['field_status_value']==1 && !in_array($uwwtp['nid'], $uwwtp_ids)){
             if($uwwtp['field_uwwtreatmenttype_value'] == "P"){
                 $nbPrimaryTreatement = $nbPrimaryTreatement+1;
             }elseif($uwwtp['field_uwwtreatmenttype_value'] == "S"){
@@ -1493,6 +1492,8 @@ function uwwtd_get_national_stat_str($year){
                 $nbOtherTreatement = $nbOtherTreatement+1;
             }
             $nbPhysicalCapacity = $uwwtp['field_physicalcapacityactivity_value']+ $nbPhysicalCapacity;
+            //Keep id of uwwtp in memory in order to prevent double counting
+            $uwwtp_ids[] = $uwwtp['nid'];
         }
 	}
 	$nbCollectingSystem = $nbCollectingSystem *100 / $nbGeneratedLoad;
@@ -1510,7 +1511,7 @@ function uwwtd_get_national_stat_str($year){
 	$output.=   t("These agglomerations are connected to")." ";
     if($nbPrimaryTreatement>0) $output.=   t("@nbPrimaryTreatement primary treatment plant", ['@nbPrimaryTreatement'=>$nbPrimaryTreatement]).", "; 
     $output.=   t("@nbSecondaryTreatement secondary treatment plants", ['@nbSecondaryTreatement'=>$nbSecondaryTreatement])." and ";
-    $output.=   t("@nbOtherTreatement more stringent treatment plants.", [ '@nbOtherTreatement'=>$nbOtherTreatement]).", ";
+    $output.=   t("@nbOtherTreatement more stringent treatment plants.", [ '@nbOtherTreatement'=>$nbOtherTreatement])." ";
 	$output.=   t("All these treatment plants have a total design capacity of @nbPhysicalCapacity p.e. ", ['@nbPhysicalCapacity'=>$nbPhysicalCapacity])." ";
     return $output;
 }
