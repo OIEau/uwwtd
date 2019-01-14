@@ -465,7 +465,6 @@ echo uwwtd_insert_errors_tab($node);
 			$option['uwwCode'] = $content['field_inspireidlocalid'][0]['#markup'];
 			$siteId = uwwtd_get_siteid($type, $option);
 			$entity = uwwtd_check_exist($siteId);
-			
 			if(isset($entity) && $entity!=""){
 				$sourceFile = uwwtd_get_sourcefile($entity);
 				$fileManaged = uwwtd_get_filemanaged($sourceFile);
@@ -482,6 +481,7 @@ echo uwwtd_insert_errors_tab($node);
             print '<div class="panel-title fieldset-legend">'.t('Site information').'</div>';
           print '</legend>';
           print '<div class="panel-body">';
+          $outputSiteInfo = '';
 			if(isset($arrayFile)){
 				foreach($arrayFile as $files){
 					if($files['year'] == $content['field_anneedata'][0]['#markup']){
@@ -490,9 +490,9 @@ echo uwwtd_insert_errors_tab($node);
 					}else{
 						$server = explode('/',$_SERVER['REQUEST_URI']);
 						
-						$outputSiteInfo = '<br><b>'.t("Year of data").': </b>'.$files['year'].'<br>';
+						$outputSiteInfo.= '<div><b>'.t("Year of data").': </b>'.$files['year'].'<br/>';
 						$outputSiteInfo.= '<b>'.t("Source of data").': </b><img src="/'.$server[1].'/modules/file/icons/application-octet-stream.png" title="application/xml" alt="file"/>
-						<a href=/'.$server[1].'/sites/default/files/data_sources/'.$files['file'].'>'.t("See sourcefile").'</a>';
+						<a href=/'.$server[1].'/sites/default/files/data_sources/'.$files['file'].'>'.t("See sourcefile").'</a><br/></div>';
 					}
 				} 
 			}
