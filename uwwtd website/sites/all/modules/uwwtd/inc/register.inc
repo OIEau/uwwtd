@@ -110,16 +110,16 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
-//     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));
+// //     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph2_sheet11_1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
-    
-
+//     
+// 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
-
+// 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
 
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
@@ -144,14 +144,14 @@ function uwwtd_setup_register_batch($annee)
 
 function uwwtd_register_finished($success, $results, $operations)
 {
-    if ($success) {
+    if ($success) {                    
         drupal_set_message('success');
     }
     else {
         drupal_set_message(
             t('An error occurred ')
         );
-    }
+   }
 }
 
 function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
@@ -530,7 +530,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour  √∏viter de copier le style de la premi ≈°re ligne! et copier la ligne blanche vide
+    $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour    viter de copier le style de la premi  °re ligne! et copier la ligne blanche vide
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 
     //Special rules for cell's style
@@ -552,7 +552,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                     ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                     ->getStartColor()->setARGB('FFFFC000');
             }
-            //est-ce n √∏cessaire ?
+            //est-ce n   cessaire ?
             // else{
                     // $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                         // ->getFill()
@@ -697,7 +697,7 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['rca']['xlsx_model_sheet_name']);
 
-    $start_line = 7; //6 -> 8 (l√©gende + filtre)
+    $start_line = 7; //6 -> 8 (l ©gende + filtre)
 //     $sheet->insertNewRowBefore(7, count($listrca));   todo    $listrca exist pas
 
     $i = $start_line;
@@ -2198,7 +2198,22 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     }
     if (isset($context['results']['graph']['100000_n']['pe'])) {
 	    $sheet->setCellValue('C7', round($context['results']['graph']['100000_n']['pe'], 0));
-    }
+    } 
+
+//debug to comment
+// 951	4500183
+// 500	14164306
+// 71	19872061
+
+// dsm('delete all debug value B5 ...');
+// $sheet->setCellValue('B5', 951);
+// $sheet->setCellValue('C5', 4500183);
+// $sheet->setCellValue('B6', 500);
+// $sheet->setCellValue('C6', 14164306);
+// $sheet->setCellValue('B7', 71);
+// $sheet->setCellValue('C7', 19872061);
+//debug to comment
+
 
     //previous
     $sheet->setCellValue('D5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
@@ -2225,6 +2240,15 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     	$sheet->setCellValue('B19', round($context['results']['graph']['total_capacity']['pe'], 0));
     }
 
+//debug to comment
+// dsm('delete all debug value B15 ...');
+// $sheet->setCellValue('B15', 38536550);
+// $sheet->setCellValue('B16', 34946534);
+// $sheet->setCellValue('B17', 3350373);
+// $sheet->setCellValue('B18', 34990743);
+// $sheet->setCellValue('B19', 49645180);
+//debug to comment
+
     //previous
     $previousB15 = uwwtd_register_get_cell_value($previoussheet, 'B15');
     $sheet->setCellValue('C15', $previousB15);
@@ -2240,7 +2264,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $context['results']['auto_report']['PREVIOUS_REPORT_NUMBER'] = $GLOBALS['report_number'][$previous_year];  
     $context['results']['auto_report']['CURRENT_REPORT_NUMBER'] = $GLOBALS['report_number'][$annee];
     $context['results']['auto_report']['TOTAL_GENERATED_LOAD'] = $context['results']['graph']['total_generated']['pe'];
-    //Cell B15‚Äì cellule C15 auto generation report
+    //Cell B15 Äì cellule C15 auto generation report
     $context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'] = round($context['results']['graph']['total_generated']['pe'], 0)  -  $previousB15; 
 
     //array 5 6 7
@@ -2487,6 +2511,11 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $sheet->setCellValue('B28', round($field_msldisposalincineration));
         $sheet->setCellValue('B29', round($field_msldisposalothers));
         $sheet->setCellValue('B30', round($field_others));
+
+//debug to comment
+// dsm('delete all debug value B24 ...');
+// $sheet->setCellValue('B24', 603142);
+//debug to comment
 
         if (!empty($field_mslsludgeproduction)) {
             if (!empty($field_mslreusesoilagriculture)) {
@@ -2932,6 +2961,16 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['uwwtp_notreatment_nb'])) {
     	$sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
     }
+    
+
+
+
+    
+    
+        
+
+
+
     if (isset($context['results']['uwwtp_ias_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
     	$sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
     }
@@ -3094,7 +3133,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D175')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C175'));
     $sheet->getCell('D176')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C176'));
 
-    // R √∏cup √∏ration des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
+    // R   cup   ration des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
     $arrayInPe = array();
     $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('E55')->getValue();
     $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('E58')->getValue();
@@ -3108,7 +3147,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('G58')->getValue();
     $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('G61')->getValue();
 
-    // R √∏cup √∏ration des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
+    // R   cup   ration des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
     $arrayInNumOfAgg = array();
     $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B43')->getValue();
     $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B46')->getValue();
@@ -3122,7 +3161,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
     $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
 
-    // R √∏cup √∏ration des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
+    // R   cup   ration des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
     $distancesExpired = array();
     $distancesExpired['Target connection'] = $sheet->getCell('B88')->getValue();
     $distancesExpired['Not connected'] = $sheet->getCell('B89')->getValue();
@@ -3133,7 +3172,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('B94')->getValue();
     $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('B95')->getValue();
 
-    // R √∏cup √∏ration des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
+    // R   cup   ration des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
     $distancesPending = array();
     $distancesPending['Target connection'] = $sheet->getCell('B104')->getValue();
     $distancesPending['Not connected'] = $sheet->getCell('B105')->getValue();
@@ -3144,7 +3183,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('B110')->getValue();
     $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('B111')->getValue();
 
-    // R √∏cup √∏ration des valeurs du tableau "Distance to compliance total" :
+    // R   cup   ration des valeurs du tableau "Distance to compliance total" :
     $distancesTotal = array();
     $distancesTotal['Target connection'] = $sheet->getCell('C119')->getValue();
     $distancesTotal['Not connected'] = $sheet->getCell('C120')->getValue();
@@ -3155,7 +3194,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
     $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
 
-    // R √∏cup √∏ration du nid du node MS_LEVEL de cette ann √∏e :
+    // R   cup   ration du nid du node MS_LEVEL de cette ann   e :
     $query = db_select('node', 'n');
     $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
     $query->fields('n');
@@ -3165,11 +3204,11 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $query->condition('n.status', 1, '=');
     $nid = $query->execute()->fetchField();
 
-    // Si il n'y a pas encore de node ms_level pour cette ann √∏e :
+    // Si il n'y a pas encore de node ms_level pour cette ann   e :
     global $language;
 	$siteId = $annee.'_mslevel';
     if (empty($nid)) {
-		// Cr √∏ation du node pour cette ann √∏e :
+		// Cr   ation du node pour cette ann   e :
         $node = new stdClass();
     	$node->type = 'ms_level';
     	$node->uid = 1;
@@ -3184,7 +3223,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $node->field_anneedata['und'][0]['value'] = $annee;
         node_save($node);
 
-        // R √∏cup √∏ration du nid :
+        // R   cup   ration du nid :
         $query = db_select('node', 'n');
         $query->fields('n');
         $query->condition('n.type', 'ms_level', '=');
@@ -4549,15 +4588,15 @@ function uwwtd_create_register_2015_file_summary_installation_in_place_sheet6($a
         }
 
         //secondary treatment
-        // √à√≥ Number summarized from sheet  √à√ΩAgglomerations √à√ñ, hidden column  √à√ΩInstallations for wastewater treatment in place, secondary treatment installed, p.e. √à√ñ, where parameter is  >0. (Excel-function: COUNTIF( √à√Ωp.e. for which installation for secondary treatment is in place √à√ñ; √à√ù>0 √à√ù)
-        // √à√≥ p.e. summarized from sheet  √à√ΩAgglomerations √à√ñ, hidden column  √à√ΩInstallations for wastewater treatment in place, secondary treatment installed, p.e. √à√ñ: sum of the entire column Excel-function: SUM ( √à√Ωp.e. for which installation for secondary treatment is in place √à√ñ)
+        //  à   Number summarized from sheet   à  Agglomerations  à ñ, hidden column   à  Installations for wastewater treatment in place, secondary treatment installed, p.e.  à ñ, where parameter is  >0. (Excel-function: COUNTIF(  à  p.e. for which installation for secondary treatment is in place  à ñ;  à ù>0  à ù)
+        //  à   p.e. summarized from sheet   à  Agglomerations  à ñ, hidden column   à  Installations for wastewater treatment in place, secondary treatment installed, p.e.  à ñ: sum of the entire column Excel-function: SUM (  à  p.e. for which installation for secondary treatment is in place  à ñ)
         if (isset($agglo[$ind['secondary_treatment_installed_(p._e.)']]) && $agglo[$ind['secondary_treatment_installed_(p._e.)']] > 0) {
             $context['sandbox']['summary']['secondary']['installation_in_place']['number']++;
             $context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe'] += $agglo[$ind['secondary_treatment_installed_(p._e.)']];
         }
 
-        // √à√≥ Number summarized from sheet  √à√ΩAgglomerations √à√ñ, hidden column  √à√ΩInstallations for wastewater treatment in place, monitoring results f. secondary OK, p.e. √à√ñ, where parameter is  >0 (Excel-function: COUNTIF( √à√Ωp.e. for which monitoring results meet the requirements for discharge concerning secondary treatment √à√ñ; √à√ù>0 √à√ù)
-        // √à√≥ p.e. summarized from sheet  √à√ΩAgglomerations √à√ñ, hidden column  √à√ΩInstallations for wastewater treatment in place, monitoring results f. secondary OK, p.e. √à√ñ: sum of the entire column Excel-function: SUM ( √à√Ωp.e. for which monitoring results meet the requirements for discharge concerning secondary treatment √à√ñ)
+        //  à   Number summarized from sheet   à  Agglomerations  à ñ, hidden column   à  Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.  à ñ, where parameter is  >0 (Excel-function: COUNTIF(  à  p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment  à ñ;  à ù>0  à ù)
+        //  à   p.e. summarized from sheet   à  Agglomerations  à ñ, hidden column   à  Installations for wastewater treatment in place, monitoring results f. secondary OK, p.e.  à ñ: sum of the entire column Excel-function: SUM (  à  p.e. for which monitoring results meet the requirements for discharge concerning secondary treatment  à ñ)
         if (isset($agglo[$ind['monitoring_results_f._secondary_ok']]) && $agglo[$ind['monitoring_results_f._secondary_ok']] > 0) {
             $context['sandbox']['summary']['secondary']['meet_requirement']['number']++;
             $context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe'] += $agglo[$ind['monitoring_results_f._secondary_ok']];
@@ -5557,14 +5596,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-                //            - due to a size of 2000p.e. - 10000 p.e.      √à√ô..and discharge into coastal water
+                //            - due to a size of 2000p.e. - 10000 p.e.       à ô..and discharge into coastal water
                 if (isset($agglo[$ind['generated_load_p.e.']]) && $agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
                     && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 }
-    //            - due to 0% collection in collecting  √à√ô...system
+    //            - due to 0% collection in collecting   à ô...system
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
@@ -5607,20 +5646,20 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
-                //- due to a size of  √å√≤ 10000 p.e.      √à√ô
+                //- due to a size of   å   10000 p.e.       à ô
                 if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000) {
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e., but discharge     √à√ô   √à√ô..into NA
+                //   - size > 10000 p.e., but discharge      à ô    à ô..into NA
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $NA && !$LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e. and discharge into  √à√ô..CSA designated for criterion c
+                //   - size > 10000 p.e. and discharge into   à ô..CSA designated for criterion c
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $CSA
                     && $rcac) {
@@ -5628,27 +5667,27 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e., but discharge into  √à√ô...Art. 5(4)- area
+                //   - size > 10000 p.e., but discharge into   à ô...Art. 5(4)- area
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $A54) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - due to 0% collection in collecting  √à√ô...system
+                //   - due to 0% collection in collecting   à ô...system
                 if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e.  and discharge into    √à√ô...LSA
+                //   - size > 10000 p.e.  and discharge into     à ô...LSA
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e. and discharge into  √à√ô..SA/CSA, but transition period pending
+                //   - size > 10000 p.e. and discharge into   à ô..SA/CSA, but transition period pending
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && ($SA  || $CSA)
                     &&  $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
@@ -6216,7 +6255,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
 
                 //(entering load for all stations with compliance article 4 =NC))
-                $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];    //eric : desactivate ? todo ?
                 $context['results']['uwwtp_notreatment_nb']++;
             }
             if ($uwwtp[$induww['art4_final']] == 'NR') {
@@ -6857,8 +6896,24 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //(neither collecting system nor IAS)
         $context['results']['uwwtp_notreatment_pe'] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
 
+
         //(collected in collecting system-entering load)
-        $context['results']['uwwtp_notreatment_pe'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering']);
+//         $context['results']['uwwtp_notreatment_pe'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering']);
+        //coorection e.v 2019/01/14
+        $context['results']['uwwtp_notreatment_pe'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $uwwtpinfo_for_agglo['entering']);
+
+//         $context['results']['uwwtp_notreatment_pe_eric_fuite'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering']);
+        //correction e.v 2019/01/14 
+//         $context['results']['uwwtp_notreatment_pe_eric_fuite'] += ($line[$ind['connected_to_collecting_system_p._e.']] - $uwwtpinfo_for_agglo['entering']);
+
+//         $context['results']['uwwtp_notreatment_pe_eric_fuite_nb']++;
+//         $context['results']['uwwtp_notreatment_pe_eric_fuite1'] = $context['sandbox']['uwwtpinfo_for_agglo'];
+//         $context['results']['uwwtp_notreatment_pe_eric_fuite2'][]= [
+//           $uww_aggcode,
+//           $line[$ind['connected_to_collecting_system_p._e.']],
+//           //$context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'],
+//           $uwwtpinfo_for_agglo['entering'],
+//         ];
 
         //Distance to compliance Art. 3',
         //take all uwwtp art3 comp NC,NI,PD of the agglo and sum the data
@@ -6981,23 +7036,23 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                     else if comp art 4 = nr then nr
                           else nothing
 
-        =IF( √à√ΩCompliance Art.4  √à√Ω="NR";
-                 √à√ΩCompliance Art.4  √à√Ω;
+        =IF(  à  Compliance Art.4   à  ="NR";
+                  à  Compliance Art.4   à  ;
                 IF(
                     AND(
-                        OR( √à√ΩCompliance Art.3  √à√Ω="C";
-                          ( √à√ΩCompliance Art.3  √à√Ω="QC);
-                           √à√ΩCompliance Art.4  √à√Ω="C");
+                        OR(  à  Compliance Art.3   à  ="C";
+                          (  à  Compliance Art.3   à  ="QC);
+                            à  Compliance Art.4   à  ="C");
                             "C";
                             IF(
                                 OR(
                                     (
-                                      √à√ΩCompliance Art.3  √à√Ω="NC";
-                                      √à√ΩCompliance Art.4  √à√ΩNC"
+                                       à  Compliance Art.3   à  ="NC";
+                                       à  Compliance Art.4   à  NC"
                                      );
                                         "NC";
                                         IF(
-                                            √à√ΩCompliance Art.4  √à√Ω="NR";
+                                             à  Compliance Art.4   à  ="NR";
                                                 "NR";
                                                 "EXIT"
                                            )
@@ -7154,24 +7209,24 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         else nothing
 
         =IF(
-             √à√ΩCompliance Art. 5 (only) √à√ñ="NR";
-                 √à√ΩCompliance Art. 5 (only) √à√ñ;
-                IF( √à√Ωgenerated load √à√ñ <=10000;
+              à  Compliance Art. 5 (only)  à ñ="NR";
+                  à  Compliance Art. 5 (only)  à ñ;
+                IF(  à  generated load  à ñ <=10000;
                     "NR";
                     IF(
                         AND(
-                             √à√ΩCompliance Art.4 √à√ñ ="C";
-                             √à√ΩCompliance Art. 5 (only) √à√ñ="C"
+                              à  Compliance Art.4  à ñ ="C";
+                              à  Compliance Art. 5 (only)  à ñ="C"
                             );
                                 "C";
                                 IF(
                                     OR(
-                                        Compliance Art.4 √à√ñ ="NC";
-                                         √à√ΩCompliance Art. 5 (only) √à√ñ="NC"
+                                        Compliance Art.4  à ñ ="NC";
+                                          à  Compliance Art. 5 (only)  à ñ="NC"
                                        );
                                         "NC";
                                         IF(
-                                             √à√ΩCompliance Art. 5 (only) √à√ñ="NR";
+                                              à  Compliance Art. 5 (only)  à ñ="NR";
                                                 "NR";
                                                 "EXIT"
                                            )
@@ -7500,8 +7555,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Installations for wastewater treatment in place',
         //'secondary treatment installed (% of gen. load)',
-        //Aggregated from sheet  √à√ΩUWWTPs √à√ñ via the Excel function of Pivot-tables  (based on parameters  √à√ΩUWWTP info, entering this UWWTP √à√ñ and  √à√ΩInstallations for wastewater treatment in place, Secondary: installed? √à√ñ
-        //Calculated on basis of parameters  √à√ΩSecondary treatment installed -  %of gen. load √à√ñ and the generated load of the agglomeration (p.e.)
+        //Aggregated from sheet   à  UWWTPs  à ñ via the Excel function of Pivot-tables  (based on parameters   à  UWWTP info, entering this UWWTP  à ñ and   à  Installations for wastewater treatment in place, Secondary: installed?  à ñ
+        //Calculated on basis of parameters   à  Secondary treatment installed -  %of gen. load  à ñ and the generated load of the agglomeration (p.e.)
         $secondary_install_pe      = '';
         $secondary_install_percent = '';
         if ($uwwtpinfo_for_agglo['secondary_installed'] == 1) {
@@ -7615,7 +7670,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox'][$typestat]['morestringent_installed'] = 0;
                 $context['sandbox'][$typestat]['morestringent_monitoring'] = 0;
             }
-            //expired deadline   (toutes les NC +  les C qui ont date d √∏pass √∏e)
+            //expired deadline   (toutes les NC +  les C qui ont date d   pass   e)
             if ($typestat == 'expired' && $pending_or_expired != 'EXP') {
 //                 if (false === (
 //                     (substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
@@ -7628,7 +7683,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //                 }
             }
 
-            //pending deadline    PD + les C avec date pas d √∏pass √∏e
+            //pending deadline    PD + les C avec date pas d   pass   e
             if ($typestat == 'pending' && $pending_or_expired != 'PD') {
 //                 if (false === (
 //                     ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) >= $annee
@@ -8423,6 +8478,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
 
+//                 $context['results']['uwwtp_notreatment_pe_eric_fuite_detail'][] = [
+//                   $agg->field_inspireidlocalid['und'][0]['value'],
+//                   $uwwtp->field_inspireidlocalid['und'][0]['value'],
+//                   $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'],
+//                   $agg->field_agggenerated['und'][0]['value'],
+//                   $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']],
+//                 ];
+
                 $field_agglo_uww_perc_ent_uw = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 unset($agglo_uwwtp, $siteid);
             } else {
@@ -8953,7 +9016,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //         $previous_pending_or_expired = 'EXP';
 //     }
 //
-//     //pending deadline    PD + les C avec date pas d √∏pass √∏e
+//     //pending deadline    PD + les C avec date pas d   pass   e
 //     if (
 //         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
 //          && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
@@ -8982,23 +9045,23 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'treatment type', //Treatment met
 
             // =IF(
-            //     OR( √à√Ωgenerated load  √à√Ω<2000;
-            //          √à√Ωneither collecting system nor IAS √à√ñ =100;
-            //          √à√Ωentering this UWWTP √à√ñ=0;
-            //          √à√Ωdeadline for Art. 4 compliance √à√ñ > √à√ñreference date √à√ñ;
-            //          √à√ΩUWWTP status √à√ñ= √à√ùinactive √à√ù;
+            //     OR(  à  generated load   à  <2000;
+            //           à  neither collecting system nor IAS  à ñ =100;
+            //           à  entering this UWWTP  à ñ=0;
+            //           à  deadline for Art. 4 compliance  à ñ >  à ñreference date  à ñ;
+            //           à  UWWTP status  à ñ=  à ùinactive  à ù;
             //         AND(
-            //             OR( √à√Ωwater body type √à√ñ="to coastal water";
-            //                 √à√Ωwater body type √à√ñ="on land (catchment of coastal water)"
+            //             OR(  à  water body type  à ñ="to coastal water";
+            //                  à  water body type  à ñ="on land (catchment of coastal water)"
             //                );
-            //              √à√Ωgenerated load √à√ñ <=10000
+            //               à  generated load  à ñ <=10000
             //             )
             //         );
             //         "NR";
-            //         IFERROR(IF(SEARCH("1"; √à√ñtreatment type √à√ñ)>0;
+            //         IFERROR(IF(SEARCH("1";  à ñtreatment type  à ñ)>0;
             //                     "NC"
             //                   );
-            //                     IFERROR(IF(SEARCH("0"; √à√ñtreatment type √à√ñ)>0;
+            //                     IFERROR(IF(SEARCH("0";  à ñtreatment type  à ñ)>0;
             //                                 "NC"
             //                                );
             //                                 "C"
@@ -9025,23 +9088,23 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //'monitoring',     //Performance met
 
-            // =IF(OR( √à√Ωgenerated load √à√ñ <2000;
-            //         √à√Ωneither collecting system nor IAS √à√ñ =100;
-            //         √à√Ωentering this UWWTP √à√ñ=0;
-            //         √à√ñdeadline for Art. 4 compliance √à√ñ > √à√ùreference date √à√ù;
-            //         √à√ñ Monitoring results - BOD5 √à√ñ="reported as NR";
-            //         √à√ΩMonitoring results  √à√¥COD √à√ñ="reported as NR";
-            //         √à√ΩCompliance Art. 4  √à√¥ treatment type √à√ñ="NR");
+            // =IF(OR(  à  generated load  à ñ <2000;
+            //          à  neither collecting system nor IAS  à ñ =100;
+            //          à  entering this UWWTP  à ñ=0;
+            //          à ñdeadline for Art. 4 compliance  à ñ >  à ùreference date  à ù;
+            //          à ñ Monitoring results - BOD5  à ñ="reported as NR";
+            //          à  Monitoring results   à  COD  à ñ="reported as NR";
+            //          à  Compliance Art. 4   à   treatment type  à ñ="NR");
             //        "NR";
-            //        IF(OR(;  √à√ñMonitoring results - BOD5 √à√ñ="fail √à√ù;
-            //                 √à√ΩMonitoring results - BOD5 √à√ñ= √à√ù not reported";
-            //                 √à√ΩMonitoring results  √à√¥COD √à√ñ="fail";
-            //                 √à√ΩMonitoring results  √à√¥COD √à√ñ="not reported";
-            //                 √à√ΩMonitoring results - BOD5 √à√ñ="--";
-            //                 √à√ΩMonitoring results  √à√¥COD √à√ñ="--");
+            //        IF(OR(;   à ñMonitoring results - BOD5  à ñ="fail  à ù;
+            //                  à  Monitoring results - BOD5  à ñ=  à ù not reported";
+            //                  à  Monitoring results   à  COD  à ñ="fail";
+            //                  à  Monitoring results   à  COD  à ñ="not reported";
+            //                  à  Monitoring results - BOD5  à ñ="--";
+            //                  à  Monitoring results   à  COD  à ñ="--");
             //                "NC";
-            //                IF(AND( √à√ΩMonitoring results - BOD5 √à√ñ="pass";
-            //                        √à√ΩMonitoring results  √à√¥COD √à√ñ="pass");
+            //                IF(AND(  à  Monitoring results - BOD5  à ñ="pass";
+            //                         à  Monitoring results   à  COD  à ñ="pass");
             //                       "C";
             //                       "NC")
             //          )
@@ -9066,14 +9129,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             }
 
             //'final',
-            // =IF(OR( √à√ΩCompliance Art. 4  √à√¥ treatment type √à√ñ="NC";
-            //         √à√ñCompliance Art. 4  √à√¥ monitoring results √à√ñ="NC");
+            // =IF(OR(  à  Compliance Art. 4   à   treatment type  à ñ="NC";
+            //          à ñCompliance Art. 4   à   monitoring results  à ñ="NC");
             //        "NC";
-            //        IF(OR( √à√ΩCompliance Art. 4  √à√¥ treatment type √à√ñ="NR";
-            //               √à√ñCompliance Art. 4  √à√¥ monitoring results √à√ñ="NR");
+            //        IF(OR(  à  Compliance Art. 4   à   treatment type  à ñ="NR";
+            //                à ñCompliance Art. 4   à   monitoring results  à ñ="NR");
             //              "NR";
-            //              IF(AND( √à√ΩCompliance Art. 4  √à√¥ treatment type √à√ñ="C";
-            //                      √à√ñCompliance Art. 4  √à√¥ monitoring results √à√ñ="C");
+            //              IF(AND(  à  Compliance Art. 4   à   treatment type  à ñ="C";
+            //                       à ñCompliance Art. 4   à   monitoring results  à ñ="C");
             //                     "C";
             //                     "EXIT")))
             $art4_final = '';
@@ -9274,14 +9337,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //Installations for wastewater treatment in place
             //'Secondary: installed?',
             /*
-            =IF(( √à√Ωgenerated load √à√ñ <2000);
+            =IF((  à  generated load  à ñ <2000);
                     "NR";
                     IFERROR (
-                            IF(SEARCH("1"; √à√ñtreatment type √à√ñ)>0;
+                            IF(SEARCH("1";  à ñtreatment type  à ñ)>0;
                                 "0"
                             );
                             IFERROR(
-                                    IF(SEARCH("0"; √à√ñtreatment type √à√ñ)>0;
+                                    IF(SEARCH("0";  à ñtreatment type  à ñ)>0;
                                         "0"
                                       );
                                     "1"
@@ -9310,12 +9373,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Secondary: installed?']] = $secondaryinstalled;
             //'Secondary:  monitoring passed?',
             /*
-            =IF( √à√Ωgenerated load √à√ñ <2000;
+            =IF(  à  generated load  à ñ <2000;
                 "NR";
-                IF( √à√ΩSecondary  √à√¥ installed √à√ñ =0;
+                IF(  à  Secondary   à   installed  à ñ =0;
                     0;
-                    IF(AND( √à√ΩMonitoring results - BOD5 √à√ñ="pass";
-                            √à√ΩMonitoring results  √à√¥COD √à√ñ);
+                    IF(AND(  à  Monitoring results - BOD5  à ñ="pass";
+                             à  Monitoring results   à  COD  à ñ);
                         1;
                         0)))
             */
@@ -9333,9 +9396,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Secondary:  monitoring passed?']] = $secondarypass;
             //'Secondary:  FINAL',
             /*
-            =IF( √à√Ωgenerated load √à√ñ <2000;
+            =IF(  à  generated load  à ñ <2000;
                 "NR";
-                 √à√ΩSecondary  √à√¥ installed √à√ñ *  √à√ΩSecondary - monitoring passed? √à√ñ)
+                  à  Secondary   à   installed  à ñ *   à  Secondary - monitoring passed?  à ñ)
             */
             $secondaryfinal = ($secondaryinstalled == '1' && $secondarypass == '1' ? '1': '0');
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
@@ -9344,12 +9407,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['Secondary:  FINAL']] = $secondaryfinal;
             //'More stringent:  installed?',
             /*
-            =IF(OR( √à√Ωneither collecting system nor IAS √à√ñ =100;
-                    √à√Ωentering this UWWTP √à√ñ =0);
+            =IF(OR(  à  neither collecting system nor IAS  à ñ =100;
+                     à  entering this UWWTP  à ñ =0);
                    0;
-                   IF( √à√Ωgenerated load √à√ñ <2000;
+                   IF(  à  generated load  à ñ <2000;
                     "NR";
-                    IFERROR(IF(SEARCH("3"; √à√ñtreatment type √à√ñ)>0;
+                    IFERROR(IF(SEARCH("3";  à ñtreatment type  à ñ)>0;
                                 1);
                             0)))
             */
@@ -9372,40 +9435,40 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'More stringent: monitoring passed?',
 //             /*
             // Part 1
-            // =IF( √à√Ωgenerated load √à√ñ <2000;
+            // =IF(  à  generated load  à ñ <2000;
             //     "NR";
             //     IFERROR(IF(AND(
-            //                     FIND("3NP"; √à√ñtreatment type √à√ñ)>0;
-            //                     OR(AND( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="pass";
-            //                             √à√ñMonitoring results  √à√¥Ptot √à√ñ="pass");
-            //                        AND( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="pass";
-            //                             √à√ñMonitoring results  √à√¥Ptot √à√ñ="not relevant";
-            //                             √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1);
-            //                        AND( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="not relevant";
-            //                             √à√ñMonitoring results  √à√¥Ptot √à√ñ="not relevant";
-            //                             √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1);
-            //                        AND( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="not relevant";
-            //                             √à√ñMonitoring results  √à√¥Ptot √à√ñ="pass";
-            //                             √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1)
+            //                     FIND("3NP";  à ñtreatment type  à ñ)>0;
+            //                     OR(AND(  à  Monitoring results   à  Ntot  à ñ="pass";
+            //                              à ñMonitoring results   à  Ptot  à ñ="pass");
+            //                        AND(  à  Monitoring results   à  Ntot  à ñ="pass";
+            //                              à ñMonitoring results   à  Ptot  à ñ="not relevant";
+            //                              à ñSECONDARY:  MONITORING PASSED  à ñ=1);
+            //                        AND(  à  Monitoring results   à  Ntot  à ñ="not relevant";
+            //                              à ñMonitoring results   à  Ptot  à ñ="not relevant";
+            //                              à ñSECONDARY:  MONITORING PASSED  à ñ=1);
+            //                        AND(  à  Monitoring results   à  Ntot  à ñ="not relevant";
+            //                              à ñMonitoring results   à  Ptot  à ñ="pass";
+            //                              à ñSECONDARY:  MONITORING PASSED  à ñ=1)
             //                       )
             //                     ) ;
             //                     1;
             //                     0
             //                 );
             //             IFERROR(IF(AND(
-            //                             FIND("3N"; √à√ñtreatment type √à√ñ)>0;
-            //                             OR( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="pass";
-            //                                AND( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="not relevant";
-            //                                     √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1)
+            //                             FIND("3N";  à ñtreatment type  à ñ)>0;
+            //                             OR(  à  Monitoring results   à  Ntot  à ñ="pass";
+            //                                AND(  à  Monitoring results   à  Ntot  à ñ="not relevant";
+            //                                      à ñSECONDARY:  MONITORING PASSED  à ñ=1)
             //                                )
             //                           ) ;
             //                         1;
             //                         0);
             //                       IFERROR(IF(AND(
-            //                                      FIND("3P"; √à√ñtreatment type √à√ñ)>0;
-            //                                      OR( √à√ΩMonitoring results  √à√¥Ptot √à√ñ="pass";
-            //                                         AND( √à√ΩMonitoring results  √à√¥Ptot √à√ñ="not relevant";
-            //                                              √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1)
+            //                                      FIND("3P";  à ñtreatment type  à ñ)>0;
+            //                                      OR(  à  Monitoring results   à  Ptot  à ñ="pass";
+            //                                         AND(  à  Monitoring results   à  Ptot  à ñ="not relevant";
+            //                                               à ñSECONDARY:  MONITORING PASSED  à ñ=1)
             //                                         )
             //                                      );
             //                                 1;
@@ -9414,20 +9477,20 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //                     )
             //          ))
             // Part 2
-            // =IF(NOT( √à√ΩPart 1 √à√ñ="EXIT"); √à√ñPart 1 √à√ñ;
-            //     IFERROR(IF(AND(FIND("3other"; √à√ñtreatment type √à√ñ)>0;
-            //                     √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1);
+            // =IF(NOT(  à  Part 1  à ñ="EXIT");  à ñPart 1  à ñ;
+            //     IFERROR(IF(AND(FIND("3other";  à ñtreatment type  à ñ)>0;
+            //                      à ñSECONDARY:  MONITORING PASSED  à ñ=1);
             //                1;
             //                0);
-            //             IFERROR(IF(AND(FIND("2"; √à√ñtreatment type √à√ñ)>0;
-            //                            OR( √à√ΩMonitoring results  √à√¥Ntot √à√ñ="pass";
-            //                                 √à√ñMonitoring results  √à√¥Ptot √à√ñ="pass");
-            //                                 √à√ñSECONDARY:  MONITORING PASSED √à√ñ=1
+            //             IFERROR(IF(AND(FIND("2";  à ñtreatment type  à ñ)>0;
+            //                            OR(  à  Monitoring results   à  Ntot  à ñ="pass";
+            //                                  à ñMonitoring results   à  Ptot  à ñ="pass");
+            //                                  à ñSECONDARY:  MONITORING PASSED  à ñ=1
             //                            );
             //                         1;
             //                         0);
-            //                       IF(OR( √à√Ωtreatment type √à√ñ=0;
-            //                              √à√ñtreatment type √à√ñ=1
+            //                       IF(OR(  à  treatment type  à ñ=0;
+            //                               à ñtreatment type  à ñ=1
             //                             );
             //                         0;
             //                         0)
@@ -9486,8 +9549,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['More stringent: monitoring passed?']] = $morestringentpassed;
             //'More stringent:  FINAL',
             /*
-            =IF( √à√Ωgenerated load √à√ñ <2000;
-                "NR";  √à√ΩMore stringent  - installed √à√ñ *  √à√ΩMore stringent - monitoring passed √à√ñ)
+            =IF(  à  generated load  à ñ <2000;
+                "NR";   à  More stringent  - installed  à ñ *   à  More stringent - monitoring passed  à ñ)
             */
             $morestringentfinal = ($morestringentinstalled == '1' && $morestringentpassed == '1' ? '1': '0');
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
@@ -9697,7 +9760,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                     $context['sandbox'][$typestat]['previous_capacity_pe'] = 0;
                 }
 
-                //expired deadline   (toutes les NC +  les C qui ont date d √∏pass √∏e)
+                //expired deadline   (toutes les NC +  les C qui ont date d   pass   e)
                 if ($typestat == 'expired' && $pending_or_expired != 'EXP') {
     //                 if (false === (
     //                     (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
@@ -9710,7 +9773,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
     //                 }
                 }
 
-                //pending deadline    PD + les C avec date pas d √∏pass √∏e
+                //pending deadline    PD + les C avec date pas d   pass   e
                 if ($typestat == 'pending' && $pending_or_expired != 'PD') {
     //                 if (false === (
     //                     ((substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
@@ -10626,12 +10689,98 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
     $zip = new ZipArchive;
     if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
         //we modify the xml file for each graph we need to change color (use Excel 2007 to modify the excel file and use the xml in the xlsx generated)
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart23.xml', 'xl/charts/chart23.xml');
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart24.xml', 'xl/charts/chart24.xml');
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart25.xml', 'xl/charts/chart25.xml');
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart26.xml', 'xl/charts/chart26.xml');
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart27.xml', 'xl/charts/chart27.xml');
-        $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart29.xml', 'xl/charts/chart29.xml');
+        //sheet Graphs
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart2.xml', 'xl/charts/chart2.xml');    //Graph: Load in p.e. per agglomeration size class
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart4.xml', 'xl/charts/chart4.xml');    //GRAph:Sewage sludge in t DS/y
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart5.xml', 'xl/charts/chart5.xml');    //GRAph:Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart6.xml', 'xl/charts/chart6.xml');    //GRAph:Comparison of compliance between 8th, 9th and 10th reporting: number of agglomerations
+        //sheet National report Graphs 
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart23.xml', 'xl/charts/chart23.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart24.xml', 'xl/charts/chart24.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart25.xml', 'xl/charts/chart25.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart26.xml', 'xl/charts/chart26.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart27.xml', 'xl/charts/chart27.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart28.xml', 'xl/charts/chart28.xml');
+//         $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart29.xml', 'xl/charts/chart29.xml');
+
+
+           /////////////////////////////////////////////////////////////////////
+           //sheet Graphs
+           //chart 6        Number of agglomeration per agglomeration size class
+           //thousand separator
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart6.xml', 'xl/charts/chart6.xml');
+//            dsm($r);
+
+           // chart4     Loadin p.e. per agglomeration size class
+           //thousand separator , divide by 1000 bar label, 
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart4.xml', 'xl/charts/chart4.xml');
+//            dsm($r);
+
+           // chart3     Sewage sludge in t DS/y
+           //thousand separator , ihde axe X title
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart3.xml', 'xl/charts/chart3.xml');
+//            dsm($r);
+
+           //chart 21 : Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.
+           //thousand separator  + color           
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart21.xml', 'xl/charts/chart21.xml');
+//            dsm($r);
+
+           //chart 1 : Comparison of compliance between 8th, 9th and 10th reporting: number of agglomerations
+           //thousand separator  + color           
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart1.xml', 'xl/charts/chart1.xml');
+//            dsm($r);
+
+
+
+           /////////////////////////////////////////////////////////////////////
+           //sheet National report Graphs 
+
+           //chart 29 Number of agglomeration per agglomeration size class
+           //change label bar to percent and color bar , separator vertical axes for thousand valuz
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart29.xml', 'xl/charts/chart29.xml');
+//            dsm($r);
+
+           //chart 27 Loadin p.e. per agglomeration size class
+           //change label bar to percent and color bar , separator vertical axes for thousand valuz
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart27.xml', 'xl/charts/chart27.xml');
+//            dsm($r);
+                  
+           //chart 22 Size of agglomerations 
+           //change label bar to percent and color bar , separator vertical axes for thousand valuz
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart22.xml', 'xl/charts/chart22.xml');
+//            dsm($r);
+
+           //chart 30 Load per agglomeration size   
+           //change label bar to percent and color bar , separator vertical axes for thousand valuz
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart30.xml', 'xl/charts/chart30.xml');
+//            dsm($r);
+
+           //chart 28 Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.
+           //change color and , separator vertical axes for thousand valuz 
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart28.xml', 'xl/charts/chart28.xml');
+//            dsm($r);
+
+           //chart 25 Comparison of compliance between 8th, 9th and 10th reporting: number of agglomerations
+           //change color and , separator vertical axes for thousand valuz 
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart25.xml', 'xl/charts/chart25.xml');
+//            dsm($r);
+
+           //chart 26 Comparison of installation in place for previous year (light colour) and current year (dark colour) loadin p.e.
+           //change color and , separator vertical axes for thousand valuz 
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart26.xml', 'xl/charts/chart26.xml');
+//            dsm($r);
+
+           //chart 23 Production of sludge
+           //change color and , separator vertical axes for thousand valuz 
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart23.xml', 'xl/charts/chart23.xml');
+//            dsm($r);
+
+           //chart 24 : Comparison of sewage sludge re-use and disposal routes between previous year and reference year
+           $r = $zip->addFile(DRUPAL_ROOT . '/sites/all/modules/uwwtd/model/model_file/chart24.xml', 'xl/charts/chart24.xml');
+//            dsm($r);
+
+
         $zip->close();
     } else {
         uwwtd_trace(var_export($er, true));
@@ -10660,11 +10809,11 @@ function uwwtd_create_report($annee, &$context)
   1	[#COUNTRY#]
   1.1	General information on data
   
-  For reference date 31/12/[#CURRENT_REPORT_YEAR#], [#COUNTRY#] reported [#NB_AGGLO#] agglomerations ‚â• 2 000 population equivalent (p.e.) with a generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  For reference date 31/12/[#CURRENT_REPORT_YEAR#], [#COUNTRY#] reported [#NB_AGGLO#] agglomerations  â• 2 000 population equivalent (p.e.) with a generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
   Figures 1 and 2 show a comparison of the number of agglomerations and the amount of generated waste water load from the last UWWTD reporting exercise in [#PREVIOUS_YEAR_REPORT#] ([#PREVIOUS_REPORT_NUMBER#] Report) and [#CURRENT_YEAR_REPORT#] ([#CURRENT_REPORT_NUMBER#] Report). 
-  Between [#PREVIOUS_YEAR_REPORT#] and [#CURRENT_YEAR_REPORT#] the waste water load increased by [#WASTER_WATER_LOAD_INCREASED#] p.e., the share of waste water load has increased by ?% in the ? ‚Äì ? size class, decreased by ? % in the ?-? size class and is stable in the >? size class.
+  Between [#PREVIOUS_YEAR_REPORT#] and [#CURRENT_YEAR_REPORT#] the waste water load increased by [#WASTER_WATER_LOAD_INCREASED#] p.e., the share of waste water load has increased by ?% in the ?  Äì ? size class, decreased by ? % in the ?-? size class and is stable in the >? size class.
   
-  1.2	Receiving areas ‚Äì application of Article 5(8) and Article 5(4)
+  1.2	Receiving areas  Äì application of Article 5(8) and Article 5(4)
   
   1.3	Results of the legal compliance check
   
@@ -10686,12 +10835,12 @@ function uwwtd_create_report($annee, &$context)
   
   This section assesses the information concerning the reported waste water installations in place.
   
-  [#COUNTRY#] has reported [#NB_AGGLO#] agglomerations ‚â• 2,000 p.e. with a total generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
-  The share of the total generated load of all agglomerations ‚â• 2,000 p.e. that is reported to be collected in a collecting system is [#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]%. 
+  [#COUNTRY#] has reported [#NB_AGGLO#] agglomerations  â• 2,000 p.e. with a total generated load of [#TOTAL_GENERATED_LOAD#] p.e.. 
+  The share of the total generated load of all agglomerations  â• 2,000 p.e. that is reported to be collected in a collecting system is [#TOTAL_COLLECTING_SYSTEM_IN_PLACE#]%. 
   There are [#SECONDARY_INSTALLATION_IN_PLACE#] agglomerations that have installations for secondary treatment in place, of these there are [#TERTIARY_INSTALLATION_IN_PLACE#] agglomerations reported to have more stringent treatment installations.
   
   
-  1.7	Waste water treatment in ‚Äúbig cities‚Äù
+  1.7	Waste water treatment in  Äúbig cities Äù
   
   1.8	Production of sludge, sludge re-use and disposal
   
@@ -10967,7 +11116,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
         $pending_or_expired = 'EXP';
     }
 
-    //pending deadline    PD + les C avec date pas d √∏pass √∏e
+    //pending deadline    PD + les C avec date pas d   pass   e
     // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
     if (
         false === $deadline_before
@@ -11310,17 +11459,17 @@ function uwwtd_registre_create_html_link($annee)
 }
 
 //'Compliance Art. 5a (hierarchical approach)',
-// =IF( √à√ΩCompliance Art.5 √à√ñ="NR"
-//      √à√ΩCompliance Art.5 √à√ñ;
+// =IF(  à  Compliance Art.5  à ñ="NR"
+//       à  Compliance Art.5  à ñ;
 //     IF($C4<=10000;  //$C4 = agglo->agggenerated
 //        "NR";
-//        IF(AND( √à√ΩCompliance Art.4 √à√ñ="C";
-//                √à¬ºCOMPLIANCE ART.5 √à¬º="C");
+//        IF(AND(  à  Compliance Art.4  à ñ="C";
+//                 à  COMPLIANCE ART.5  à  ="C");
 //             "C";
-//             IF(OR( √à√ΩCompliance Art.4 √à√ñ="NC";
-//                    √à√ΩCompliance Art.5 √à√ñ="NC");
+//             IF(OR(  à  Compliance Art.4  à ñ="NC";
+//                     à  Compliance Art.5  à ñ="NC");
 //                 "NC";
-//                 IF( √à√ΩCompliance Art.5 √à√ñ="NR";
+//                 IF(  à  Compliance Art.5  à ñ="NR";
 //                    "NR";
 //                    "EXIT")))))
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
@@ -11368,25 +11517,25 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
     return '';
 }
 
-// =IF( √à√ñ% of generated load for which compliance with Art. 5a/5b/5c is not relevant √à√ñ>0;
+// =IF(  à ñ% of generated load for which compliance with Art. 5a/5b/5c is not relevant  à ñ>0;
 //     "NR";
-//     IF(AND( √à√Ωdeadline for agglomeration √à√ñ<=reference date of reporting;
-//             √à√ñ% of generated load not compliant with Art. 5a/5b/5c √à√ñ=0;
-//             √à√ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant √à√ñ=0);
+//     IF(AND(  à  deadline for agglomeration  à ñ<=reference date of reporting;
+//              à ñ% of generated load not compliant with Art. 5a/5b/5c  à ñ=0;
+//              à ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  à ñ=0);
 //         "C";
-//         IF(AND( √à√Ωdeadline for agglomeration √à√ñ<=reference date of reporting;
-//                 √à√ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant √à√ñ=0;
+//         IF(AND(  à  deadline for agglomeration  à ñ<=reference date of reporting;
+//                  à ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  à ñ=0;
 //                (AND(
-//                      AND( √à√ñ% of generated load not compliant with Art. 5a/5b/5c √à√ñ>0;
-//                          √à√ñ% of collected load not compliant with Art. 5a/5b/5c √à√ñ<=1
+//                      AND(  à ñ% of generated load not compliant with Art. 5a/5b/5c  à ñ>0;
+//                           à ñ% of collected load not compliant with Art. 5a/5b/5c  à ñ<=1
 //                         );
-//                       √à√ñp.e. not compliant with Art. 5a/5b/5c √à√ñ<2000))
+//                        à ñp.e. not compliant with Art. 5a/5b/5c  à ñ<2000))
 //                );
 //                "C";
-//                IF(AND( √à√Ωdeadline for agglomeration √à√ñ<=reference date of reporting;
-//                        √à√ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant √à√ñ=0;
-//                       (OR( √à√ñ% of generated load not compliant with Art. 5a/5b/5c √à√ñ>1;
-//                            √à√ñp.e. not compliant with Art. 5a/5b/5c √à√ñ>=2000))
+//                IF(AND(  à  deadline for agglomeration  à ñ<=reference date of reporting;
+//                         à ñ% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  à ñ=0;
+//                       (OR(  à ñ% of generated load not compliant with Art. 5a/5b/5c  à ñ>1;
+//                             à ñp.e. not compliant with Art. 5a/5b/5c  à ñ>=2000))
 //                      );
 //                      "NC";
 //                      7))))
