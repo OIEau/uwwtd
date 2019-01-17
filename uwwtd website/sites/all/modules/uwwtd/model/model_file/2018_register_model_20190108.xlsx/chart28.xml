@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <c:lang val="fr-FR" />
+  <c:chart>
+    <c:title>
+      <c:tx>
+        <c:rich>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:r>
+              <a:rPr lang="fr-FR" b="0" i="0" u="none" strike="noStrike">
+                <a:latin typeface="Calibri" />
+              </a:rPr>
+              <a:t>Production of sludge</a:t>
+            </a:r>
+          </a:p>
+        </c:rich>
+      </c:tx>
+      <c:layout />
+    </c:title>
+    <c:plotArea>
+      <c:layout />
+      <c:barChart>
+        <c:barDir val="col" />
+        <c:grouping val="clustered" />
+        <c:ser>
+          <c:idx val="0" />
+          <c:order val="0" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AG$23</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>t DS/y</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:cat>
+            <c:numRef>
+              <c:f>Graphs!$AF$24:$AF$25</c:f>
+              <c:numCache>
+                <c:formatCode>General</c:formatCode>
+                <c:ptCount val="2" />
+                <c:pt idx="0">
+                  <c:v>2014</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>2016</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AG$24:$AG$25</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0.0</c:formatCode>
+                <c:ptCount val="2" />
+                <c:pt idx="0">
+                  <c:v>603142</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:dLbls />
+        <c:axId val="70156288" />
+        <c:axId val="70157824" />
+      </c:barChart>
+      <c:catAx>
+        <c:axId val="70156288" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:axPos val="b" />
+        <c:numFmt formatCode="General" sourceLinked="1" />
+        <c:majorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:txPr>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:pPr>
+              <a:defRPr lang="en-GB" />
+            </a:pPr>
+            <a:endParaRPr lang="fr-FR" />
+          </a:p>
+        </c:txPr>
+        <c:crossAx val="70157824" />
+        <c:crosses val="autoZero" />
+        <c:auto val="1" />
+        <c:lblAlgn val="ctr" />
+        <c:lblOffset val="100" />
+      </c:catAx>
+      <c:valAx>
+        <c:axId val="70157824" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:axPos val="l" />
+        <c:majorGridlines>
+          <c:spPr>
+            <a:effectLst />
+          </c:spPr>
+        </c:majorGridlines>
+        <c:title>
+          <c:tx>
+            <c:rich>
+              <a:bodyPr rot="-5400000" vert="horz" />
+              <a:lstStyle />
+              <a:p>
+                <a:pPr>
+                  <a:defRPr />
+                </a:pPr>
+                <a:r>
+                  <a:rPr lang="fr-FR" sz="1000" b="0" i="0" u="none" strike="noStrike" baseline="0" />
+                  <a:t>t DS/y</a:t>
+                </a:r>
+                <a:endParaRPr lang="fr-FR" />
+              </a:p>
+            </c:rich>
+          </c:tx>
+          <c:layout />
+        </c:title>
+        <c:numFmt formatCode="#,##0.0" sourceLinked="1" />
+        <c:majorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:spPr>
+          <a:ln w="9525" cap="flat" cmpd="sng">
+            <a:prstDash val="solid" />
+            <a:bevel />
+          </a:ln>
+          <a:effectLst />
+        </c:spPr>
+        <c:txPr>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:pPr>
+              <a:defRPr lang="en-GB" />
+            </a:pPr>
+            <a:endParaRPr lang="fr-FR" />
+          </a:p>
+        </c:txPr>
+        <c:crossAx val="70157824" />
+        <c:crosses val="autoZero" />
+        <c:crossBetween val="midCat" />
+      </c:valAx>
+    </c:plotArea>
+    <c:plotVisOnly val="1" />
+    <c:dispBlanksAs val="gap" />
+  </c:chart>
+  <c:printSettings>
+    <c:headerFooter />
+    <c:pageMargins b="0.75000000000000011" l="0.70000000000000007" r="0.70000000000000007" t="0.75000000000000011" header="0.30000000000000004" footer="0.30000000000000004" />
+    <c:pageSetup orientation="portrait" />
+  </c:printSettings>
+</c:chartSpace>
