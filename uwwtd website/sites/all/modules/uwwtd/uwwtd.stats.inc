@@ -380,6 +380,9 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
                     $color = $GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']];
     				break;
     			case 'treatmenttype' :
+                    if($row['field_uwwtreatmenttype_value']==''){
+                        $row['field_uwwtreatmenttype_value']='NI';
+                    }
     				$complianceState = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
                     $color = $GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']];
     				break;
@@ -388,18 +391,15 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     		}
             
     		$data[$complianceState]['data'][$table_key_label] = $complianceState;
-    		if (is_null($row['loadentering_sum']) || is_null($row['total_count'])) {
-    			// (pe, pe formatée, nombre d'agglo, nombre d'agglo formatée)
-    			$data[$complianceState]['data'][(string)$row['year']] = array('pe'=>0, 'pe_format'=>'0', 'nb'=>0, 'nb_format'=>'0', 'color'=>$color);
-    		} else {
-    			$data[$complianceState]['data'][(string)$row['year']] = array(
-                    'pe'=>$row['loadentering_sum'], 
-    				'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' pe', 
-    				'nb'=>$row['total_count'],
-    				'nb_format'=>uwwtd_format_number($row['total_count'], 0),
-                    'color'=>$color
-    			);
-    		}
+    		if (is_null($row['loadentering_sum'])) {$row['loadentering_sum'] =0;}
+            if(is_null($row['total_count'])) {$row['total_count']=0;}
+            $data[$complianceState]['data'][(string)$row['year']] = array(
+                'pe'=>$row['loadentering_sum'], 
+                'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' pe', 
+                'nb'=>$row['total_count'],
+                'nb_format'=>uwwtd_format_number($row['total_count'], 0),
+                'color'=>$color
+            );
     	}
     }catch(Exception $e) {
     	dsm($e->getMessage());

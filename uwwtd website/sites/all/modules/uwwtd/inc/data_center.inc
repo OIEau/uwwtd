@@ -6821,10 +6821,10 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         uwwtd_trace("pdischarged = $pdischarged");
         uwwtd_trace("n0.75 = " . (1 - ($ndischarged / $nincoming)));
         uwwtd_trace("p0.75 = " . (1 - ($pdischarged / $pincoming)));
-
-        if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) > 0.75)
+        
+        if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) >= 0.75)
             &&
-            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) > 0.75)
+            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) >= 0.75)
             ) {
             if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
                 return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
