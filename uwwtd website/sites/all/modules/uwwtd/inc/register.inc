@@ -6975,8 +6975,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				$uwwtpinfo_for_agglo['NC']['pe'] += $agg_leak;
 				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 				if($agg->field_aggart4compliance['und'][0]['value'] == 'C'){
-					dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
-					dsm($agg);
+					//dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
+					//dsm($agg);
 				}
 			}
 			else{
