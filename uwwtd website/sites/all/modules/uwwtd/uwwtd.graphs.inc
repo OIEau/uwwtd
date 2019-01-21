@@ -948,7 +948,7 @@ function getRow6Graphs($results){
                             (string)$key,
                             uwwtd_format_number($item['in']['q']),
                             uwwtd_format_number($item['out']['q']),
-                            uwwtd_format_number($item['out']['q']*100/$item['in']['q'] ,1) .'%'
+                            uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%'
                         );
                         
                         // BB - 26/10/16
@@ -966,7 +966,7 @@ function getRow6Graphs($results){
                             // $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
                             $item['in']['c'] > 0 ? round($item['in']['c'], 3) : '-',
                             $item['out']['c'] > 0 ? round($item['out']['c'], 3) : '-',
-                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number($item['out']['c'] * 100 / $item['in']['c'], 1) . '%' : '-'
+                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number(($item['in']['c'] - $item['out']['c']) * 100 / $item['in']['c'], 1) . '%' : '-'
 
                         );
                         
