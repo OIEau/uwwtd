@@ -1047,13 +1047,18 @@ function getRow7Graph1($yearSelected, $results) {
                 $year = $values[0];
                 $header[$year] = $year;
                 $item[]=$year;
+                $tot = 0;
                 foreach($legend_ord as $l=>$lab){
-                    $item[] = (isset($values[$l])?$values[$l]:0);
+                    $val = (isset($values[$l])?$values[$l]:0);
+                    $item[] = $val;
+                    $tot +=$val;
                     if(!isset($table[$l])) $table[$l][0]= $lab;
                     $table[$l][$year] =  (isset($values[$l])? uwwtd_format_number($values[$l], 1):0);
                 }
+                if(empty($table['Total'])) $table['Total'][0] = '<strong>'.t('Total'). '</strong>';
+                 $table['Total'][$year] =  '<strong>'.uwwtd_format_number($tot, 1). '</strong>';
                 $front['data'][$key] = $item;
-            }
+            } 
             $back = theme('table', array('rows' => $table, 'header' =>$header)); // 'header' => $columns, 'rows_multiple' => true
     }
 	return array($front, $back);
