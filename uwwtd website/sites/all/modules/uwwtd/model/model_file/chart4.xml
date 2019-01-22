@@ -62,24 +62,14 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <!-- START color bar  -->
-          <c:spPr>
-            <a:solidFill>
-              <a:schemeClr val="tx2">
-                <a:lumMod val="40000" />
-                <a:lumOff val="60000" />
-              </a:schemeClr>
-            </a:solidFill>
-          </c:spPr>
-          <!-- END color bar  -->
           <!-- START percentage -->
           <c:dLbls>
             <c:dLbl>
               <c:idx val="0" />
-              <c:layout />
-              <c:tx> 
+              <c:layout />  
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AC$5</c:f>
+                  <c:f>Graphs!$AF$5</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -98,9 +88,9 @@
             <c:dLbl>
               <c:idx val="1" />
               <c:layout />
-              <c:tx>    
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AC$6</c:f>
+                  <c:f>Graphs!$AF$6</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -119,9 +109,9 @@
             <c:dLbl>
               <c:idx val="2" />
               <c:layout />
-              <c:tx>  
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AC$7</c:f>
+                  <c:f>Graphs!$AF$7</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -137,6 +127,7 @@
               </c:tx>
               <c:showVal val="1" />
             </c:dLbl>
+            <c:numFmt formatCode="#,##0.00" sourceLinked="0" />
             <c:txPr>
               <a:bodyPr />
               <a:lstStyle />
@@ -149,7 +140,7 @@
             </c:txPr>
             <c:showVal val="1" />
           </c:dLbls>
-          <!-- END percentage -->
+          <!-- END percentgage -->
           <c:cat>
             <c:strRef>
               <c:f>Graphs!$Z$5:$Z$7</c:f>
@@ -201,24 +192,14 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <!-- START color bar  -->
-          <c:spPr>
-            <a:solidFill>
-              <a:schemeClr val="tx2">
-                <a:lumMod val="60000" />
-                <a:lumOff val="40000" />
-              </a:schemeClr>
-            </a:solidFill>
-          </c:spPr>
-          <!-- END color bar  -->
           <!-- START percentage -->
           <c:dLbls>
             <c:dLbl>
               <c:idx val="0" />
-              <c:layout />
-              <c:tx> 
+              <c:layout />  
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AD$5</c:f>
+                  <c:f>Graphs!$AG$5</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -226,7 +207,7 @@
                   <a:lstStyle />
                   <a:p>
                     <a:r>
-                      <a:t>test2</a:t>
+                      <a:t>test1</a:t>
                     </a:r>
                   </a:p>
                 </c:rich>
@@ -237,9 +218,9 @@
             <c:dLbl>
               <c:idx val="1" />
               <c:layout />
-              <c:tx>  
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AD$6</c:f>
+                  <c:f>Graphs!$AG$6</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -247,7 +228,7 @@
                   <a:lstStyle />
                   <a:p>
                     <a:r>
-                      <a:t>test4</a:t>
+                      <a:t>test3</a:t>
                     </a:r>
                   </a:p>
                 </c:rich>
@@ -258,9 +239,9 @@
             <c:dLbl>
               <c:idx val="2" />
               <c:layout />
-              <c:tx>   
+              <c:tx>
                 <c:strRef>
-                  <c:f>Graphs!$AD$7</c:f>
+                  <c:f>Graphs!$AG$7</c:f>
                 </c:strRef>
                 <!--
                 <c:rich>
@@ -268,7 +249,7 @@
                   <a:lstStyle />
                   <a:p>
                     <a:r>
-                      <a:t>test6</a:t>
+                      <a:t>test5</a:t>
                     </a:r>
                   </a:p>
                 </c:rich>
@@ -276,6 +257,7 @@
               </c:tx>
               <c:showVal val="1" />
             </c:dLbl>
+            <c:numFmt formatCode="#,##0.00" sourceLinked="0" />
             <c:txPr>
               <a:bodyPr />
               <a:lstStyle />
@@ -288,7 +270,7 @@
             </c:txPr>
             <c:showVal val="1" />
           </c:dLbls>
-          <!-- END percentage -->
+          <!-- END percentgage -->
           <c:cat>
             <c:strRef>
               <c:f>Graphs!$Z$5:$Z$7</c:f>
@@ -345,21 +327,6 @@
         </c:scaling>
         <c:delete val="0" />
         <c:axPos val="b" />
-        <c:title>
-          <c:tx>
-            <c:rich>
-              <a:bodyPr />
-              <a:lstStyle />
-              <a:p>
-                <a:r>
-                  <a:t>Years</a:t>
-                </a:r>
-              </a:p>
-            </c:rich>
-          </c:tx>
-          <c:layout />
-          <c:overlay val="0" />
-        </c:title>
         <c:numFmt formatCode="General" sourceLinked="1" />
         <c:majorTickMark val="none" />
         <c:minorTickMark val="none" />

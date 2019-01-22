@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+  <c:lang val="fr-FR" />
+  <c:chart>
+    <c:title>
+      <c:tx>
+        <c:rich>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:r>
+              <a:rPr lang="fr-FR" b="0" i="0" u="none" strike="noStrike">
+                <a:latin typeface="Calibri" />
+              </a:rPr>
+              <a:t>Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.</a:t>
+            </a:r>
+          </a:p>
+        </c:rich>
+      </c:tx>
+      <c:layout />
+    </c:title>
+    <c:plotArea>
+      <c:layout>
+        <c:manualLayout>
+          <c:layoutTarget val="inner" />
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.13729188069966003" />
+          <c:y val="0.12648857927867996" />
+          <c:w val="0.74668819473481007" />
+          <c:h val="0.72821100577289" />
+        </c:manualLayout>
+      </c:layout>
+      <c:barChart>
+        <c:barDir val="col" />
+        <c:grouping val="stacked" />
+        <c:varyColors val="1" />
+        <c:ser>
+          <c:idx val="0" />
+          <c:order val="0" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AB$49</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Compliant</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 10th reporting</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AB$50:$AB$58</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>35324548</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>31499467</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>21311680</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:ser>
+          <c:idx val="1" />
+          <c:order val="1" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AC$49</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Not compliant</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 10th reporting</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AC$50:$AC$58</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>3212002</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>3444863</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>10293679</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:ser>
+          <c:idx val="2" />
+          <c:order val="2" />
+          <c:tx>
+            <c:strRef>
+              <c:f>Graphs!$AD$49</c:f>
+              <c:strCache>
+                <c:ptCount val="1" />
+                <c:pt idx="0">
+                  <c:v>Authorised exemptions</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:tx>
+          <c:spPr>
+            <a:solidFill>
+              <a:schemeClr val="bg1">
+                <a:lumMod val="65000" />
+              </a:schemeClr>
+            </a:solidFill>
+          </c:spPr>
+          <c:cat>
+            <c:strRef>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
+              <c:strCache>
+                <c:ptCount val="9" />
+                <c:pt idx="0">
+                  <c:v>Article 3 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="1">
+                  <c:v>Article 3 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>Article 3 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="3">
+                  <c:v>Article 4 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>Article 4 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>Article 4 10th reporting</c:v>
+                </c:pt>
+                <c:pt idx="6">
+                  <c:v>Article 5 8th reporting</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>Article 5 9th reporting</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>Article 5 10th reporting</c:v>
+                </c:pt>
+              </c:strCache>
+            </c:strRef>
+          </c:cat>
+          <c:val>
+            <c:numRef>
+              <c:f>Graphs!$AD$50:$AD$58</c:f>
+              <c:numCache>
+                <c:formatCode>#,##0</c:formatCode>
+                <c:ptCount val="9" />
+                <c:pt idx="1">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="2">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="4">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="5">
+                  <c:v>0</c:v>
+                </c:pt>
+                <c:pt idx="7">
+                  <c:v>3341175</c:v>
+                </c:pt>
+                <c:pt idx="8">
+                  <c:v>0</c:v>
+                </c:pt>
+              </c:numCache>
+            </c:numRef>
+          </c:val>
+        </c:ser>
+        <c:dLbls />
+        <c:overlap val="100" />
+        <c:axId val="70027520" />
+        <c:axId val="70041984" />
+      </c:barChart>
+      <c:catAx>
+        <c:axId val="70027520" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:axPos val="b" />
+        <c:title>
+          <c:tx>
+            <c:rich>
+              <a:bodyPr />
+              <a:lstStyle />
+              <a:p>
+                <a:r>
+                  <a:rPr lang="fr-FR" />
+                  <a:t>Years</a:t>
+                </a:r>
+              </a:p>
+            </c:rich>
+          </c:tx>
+          <c:layout />
+        </c:title>
+        <c:numFmt formatCode="General" sourceLinked="1" />
+        <c:majorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:txPr>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:pPr>
+              <a:defRPr lang="en-GB" />
+            </a:pPr>
+            <a:endParaRPr lang="fr-FR" />
+          </a:p>
+        </c:txPr>
+        <c:crossAx val="70041984" />
+        <c:crosses val="autoZero" />
+        <c:auto val="1" />
+        <c:lblAlgn val="ctr" />
+        <c:lblOffset val="100" />
+      </c:catAx>
+      <c:valAx>
+        <c:axId val="70041984" />
+        <c:scaling>
+          <c:orientation val="minMax" />
+        </c:scaling>
+        <c:axPos val="l" />
+        <c:majorGridlines>
+          <c:spPr>
+            <a:effectLst />
+          </c:spPr>
+        </c:majorGridlines>
+        <c:title>
+          <c:tx>
+            <c:rich>
+              <a:bodyPr rot="-5400000" vert="horz" />
+              <a:lstStyle />
+              <a:p>
+                <a:pPr>
+                  <a:defRPr />
+                </a:pPr>
+                <a:r>
+                  <a:rPr lang="fr-FR" />
+                  <a:t>Load</a:t>
+                </a:r>
+                <a:r>
+                  <a:rPr lang="fr-FR" baseline="0" />
+                  <a:t>in p.e.</a:t>
+                </a:r>
+                <a:endParaRPr lang="fr-FR" />
+              </a:p>
+            </c:rich>
+          </c:tx>
+          <c:layout />
+        </c:title>
+        <c:numFmt formatCode="#,##0" sourceLinked="0" />
+        <c:majorTickMark val="none" />
+        <c:tickLblPos val="nextTo" />
+        <c:spPr>
+          <a:ln w="9525" cap="flat" cmpd="sng">
+            <a:prstDash val="solid" />
+            <a:bevel />
+          </a:ln>
+          <a:effectLst />
+        </c:spPr>
+        <c:txPr>
+          <a:bodyPr />
+          <a:lstStyle />
+          <a:p>
+            <a:pPr>
+              <a:defRPr lang="en-GB" />
+            </a:pPr>
+            <a:endParaRPr lang="fr-FR" />
+          </a:p>
+        </c:txPr>
+        <c:crossAx val="70041984" />
+        <c:crosses val="autoZero" />
+        <c:crossBetween val="midCat" />
+      </c:valAx>
+    </c:plotArea>
+    <c:legend>
+      <c:legendPos val="b" />
+      <c:layout>
+        <c:manualLayout>
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.88186476940972991" />
+          <c:y val="0.24733752457121003" />
+          <c:w val="0.11813523059028003" />
+          <c:h val="0.19422937937676002" />
+        </c:manualLayout>
+      </c:layout>
+      <c:txPr>
+        <a:bodyPr />
+        <a:lstStyle />
+        <a:p>
+          <a:pPr rtl="0">
+            <a:defRPr lang="en-GB" />
+          </a:pPr>
+          <a:endParaRPr lang="fr-FR" />
+        </a:p>
+      </c:txPr>
+    </c:legend>
+    <c:plotVisOnly val="1" />
+    <c:dispBlanksAs val="gap" />
+  </c:chart>
+  <c:printSettings>
+    <c:headerFooter />
+    <c:pageMargins b="0.75000000000000011" l="0.70000000000000007" r="0.70000000000000007" t="0.75000000000000011" header="0.30000000000000004" footer="0.30000000000000004" />
+    <c:pageSetup orientation="portrait" />
+  </c:printSettings>
+</c:chartSpace>
