@@ -22,7 +22,7 @@
               <a:rPr b="0" i="0" u="none" strike="noStrike">
                 <a:latin typeface="Calibri" />
               </a:rPr>
-              <a:t>Comparison of sewage sludge re-use and disposal routes between previous year and reference year</a:t>
+              <a:t>Sewage sludge in t DS/y</a:t>
             </a:r>
           </a:p>
         </c:rich>
@@ -33,18 +33,26 @@
     <c:autoTitleDeleted val="0" />
     <c:plotArea>
       <c:layout>
-        <c:manualLayout />
+        <c:manualLayout>
+          <c:layoutTarget val="inner" />
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.13961716842911" />
+          <c:y val="0.19246953048259" />
+          <c:w val="0.59991495693364" />
+          <c:h val="0.57711031133906" />
+        </c:manualLayout>
       </c:layout>
       <c:barChart>
         <c:barDir val="col" />
-        <c:grouping val="stacked" />
+        <c:grouping val="clustered" />
         <c:varyColors val="1" />
         <c:ser>
           <c:idx val="0" />
           <c:order val="0" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AA$32</c:f>
+              <c:f>Graphs!$AC$24</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -53,31 +61,14 @@
               </c:strCache>
             </c:strRef>
           </c:tx>
-          <c:invertIfNegative val="0" />  
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
+          <c:invertIfNegative val="0" />
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AA$33:$AA$34</c:f>
+              <c:f>Graphs!$AD$24</c:f>
               <c:numCache>
                 <c:formatCode>0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -89,7 +80,7 @@
           <c:order val="1" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AB$32</c:f>
+              <c:f>Graphs!$AC$25</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -99,30 +90,13 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AB$33:$AB$34</c:f>
+              <c:f>Graphs!$AD$25</c:f>
               <c:numCache>
                 <c:formatCode>0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -134,7 +108,7 @@
           <c:order val="2" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AC$32</c:f>
+              <c:f>Graphs!$AC$26</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -144,30 +118,13 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AC$33:$AC$34</c:f>
+              <c:f>Graphs!$AD$26</c:f>
               <c:numCache>
                 <c:formatCode>0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -179,7 +136,7 @@
           <c:order val="3" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AD$32</c:f>
+              <c:f>Graphs!$AC$27</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -189,30 +146,13 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AD$33:$AD$34</c:f>
+              <c:f>Graphs!$AD$27</c:f>
               <c:numCache>
                 <c:formatCode>0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -224,7 +164,7 @@
           <c:order val="4" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AE$32</c:f>
+              <c:f>Graphs!$AC$28</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -234,30 +174,13 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AE$33:$AE$34</c:f>
+              <c:f>Graphs!$AD$28</c:f>
               <c:numCache>
-                <c:formatCode>#,##0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:formatCode>0</c:formatCode>
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -269,7 +192,7 @@
           <c:order val="5" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AF$32</c:f>
+              <c:f>Graphs!$AC$29</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -279,30 +202,13 @@
             </c:strRef>
           </c:tx>
           <c:invertIfNegative val="0" />
-          <c:cat>
-            <c:strRef>
-              <c:f>Graphs!$Z$33:$Z$34</c:f>
-              <c:strCache>
-                <c:ptCount val="2" />
-                <c:pt idx="0">
-                  <c:v>[#previous_year#]</c:v>
-                </c:pt>
-                <c:pt idx="1">
-                  <c:v>[#current_year#]</c:v>
-                </c:pt>
-              </c:strCache>
-            </c:strRef>
-          </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AF$33:$AF$34</c:f>
+              <c:f>Graphs!$AD$29</c:f>
               <c:numCache>
                 <c:formatCode>0</c:formatCode>
-                <c:ptCount val="2" />
+                <c:ptCount val="1" />
                 <c:pt idx="0">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="1">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -319,7 +225,6 @@
           <c:showLeaderLines val="0" />
         </c:dLbls>
         <c:gapWidth val="150" />
-        <c:overlap val="100" />
         <c:axId val="75091328" />
         <c:axId val="75089408" />
       </c:barChart>
@@ -328,12 +233,15 @@
         <c:scaling>
           <c:orientation val="minMax" />
         </c:scaling>
-        <c:delete val="0" />
+        <!--<c:delete val="0" />-->
         <c:axPos val="b" />
         <c:numFmt formatCode="General" sourceLinked="1" />
         <c:majorTickMark val="none" />
         <c:minorTickMark val="none" />
+        <!--  test 
         <c:tickLblPos val="nextTo" />
+        -->
+        <c:tickLblPos val="none" />
         <c:crossAx val="75089408" />
         <c:crosses val="autoZero" />
         <c:auto val="1" />
@@ -345,7 +253,7 @@
         <c:scaling>
           <c:orientation val="minMax" />
         </c:scaling>
-        <c:delete val="0" />
+        <!--<c:delete val="0" />-->
         <c:axPos val="l" />
         <c:majorGridlines>
           <c:spPr>
@@ -359,17 +267,19 @@
               <a:lstStyle />
               <a:p>
                 <a:r>
-                  <a:t>t DS/y</a:t>
+                  <a:t>in t DS/y</a:t>
                 </a:r>
               </a:p>
             </c:rich>
           </c:tx>
           <c:layout />
-          <c:overlay val="0" />
+          <!--<c:overlay val="0" />-->
         </c:title>
-        <c:numFmt formatCode="General" sourceLinked="1" />
+        <!-- START change thoussand separaor -->
+        <c:numFmt formatCode="# ##0" sourceLinked="0" />
+        <!-- END change thoussand separaor --> 
         <c:majorTickMark val="none" />
-        <c:minorTickMark val="none" />
+        <!--<c:minorTickMark val="none" />-->
         <c:tickLblPos val="nextTo" />
         <c:spPr>
           <a:ln w="9525" cap="flat" cmpd="sng">
@@ -385,7 +295,16 @@
     </c:plotArea>
     <c:legend>
       <c:legendPos val="r" />
-      <c:layout />
+      <c:layout>
+        <c:manualLayout>
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.78771453334653" />
+          <c:y val="0.23460670337555" />
+          <c:w val="0.21228540488856" />
+          <c:h val="0.6987262039443" />
+        </c:manualLayout>
+      </c:layout>
       <c:overlay val="0" />
       <c:txPr>
         <a:bodyPr />

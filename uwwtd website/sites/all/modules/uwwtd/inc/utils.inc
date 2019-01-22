@@ -202,10 +202,10 @@ function uwwtd_get_gg_snapshot($dest_uri, $lat, $lon, $maptype, $zoom = 15, $siz
 /**
  *
  */
-function uwwtd_get_max_annee()
+function uwwtd_get_max_annee($bundle = 'agglomeration')
 {
-	$query = "SELECT MAX(field_anneedata_value) FROM {field_data_field_anneedata}";
-	$result = db_query($query);
+	$query = "SELECT MAX(field_anneedata_value) FROM {field_data_field_anneedata} WHERE bundle=:bundle ";
+	$result = db_query($query, [':bundle'=>$bundle]);
 	$annee = $result->fetchField();
     return $annee;
 }
@@ -286,7 +286,7 @@ function  uwwtd_get_previous_year($year)
 function uwwtd_get_all_year()
 {
     $year = array();
-	$query = "SELECT field_anneedata_value FROM {field_data_field_anneedata} group by field_anneedata_value order by field_anneedata_value desc";
+	$query = "SELECT field_anneedata_value FROM {field_data_field_anneedata} WHERE bundle='agglomeration' GROUP BY field_anneedata_value ORDER BY field_anneedata_value DESC";
     $result = db_query($query);
 	while($record = $result->fetchAssoc()) {
 		$year[$record['field_anneedata_value']] = $record['field_anneedata_value'];
