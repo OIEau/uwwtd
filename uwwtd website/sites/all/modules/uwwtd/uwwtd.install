@@ -5035,6 +5035,27 @@ function uwwtd_update_7166(&$context) {
 //     throw new DrupalUpdateException($msg_error);
 }
 
+/**
+ *Create dcp_reuse_map
+ */
+function uwwtd_update_7167(&$context) {
+  uwwtd_install_trace(__FUNCTION__);
+
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code, array('dcp_reuse_map.inc'), array('-'), array('-'));
+  
+  
+    if ('' !== $msg_error) {
+        throw new DrupalUpdateException($msg_error);
+    }
+
+    variable_set('siif_eru_version', __FUNCTION__);
+
+//     throw new DrupalUpdateException($msg_error);
+}
+
 
 /**
  * Create a big city or update it
@@ -5461,6 +5482,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_treatment_map.inc',
         'uwwtp_pressure_map.inc',
         'dcp_map.inc',
+        'dcp_reuse_map.inc',
         'rca_map.inc',
         
     );

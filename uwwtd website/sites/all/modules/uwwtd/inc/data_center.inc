@@ -251,7 +251,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         //numeric
         //if(isset($datas['mslSludgeProduction'])) $node->field_mslsludgeproduction['und'][0]['value'] = uwwtd_check_numeric($datas['mslSludgeProduction'], $timestamp, 0 , $node);
         if(isset($datas['mslSludgeProduction'])) {
-            $check = uwwtd_check_numeric($datas['mslSludgeProduction']);
+            $check = uwwtd_check_decimal($datas['mslSludgeProduction']); //e.v 209/01/07 change from uwwtd_check_numeric to uwwtd_check_decimal
             if (false === $check) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, 0 , $node);
             } else {
@@ -2772,7 +2772,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //text
         if(isset($data['aggSewageNetwork'])){
-            $node->field_aggsewagenetwork['und'][0]['value'] = uwwtd_check_text($data['aggSewageNetwork']);}
+            $node->field_aggsewagenetwork['und'][0]['value'] = strtoupper(uwwtd_check_text($data['aggSewageNetwork']));}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No agglomeration type of collecing system information found.', $timestamp, $i, $node);
         
         //text
@@ -6821,10 +6821,10 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         uwwtd_trace("pdischarged = $pdischarged");
         uwwtd_trace("n0.75 = " . (1 - ($ndischarged / $nincoming)));
         uwwtd_trace("p0.75 = " . (1 - ($pdischarged / $pincoming)));
-
-        if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) > 0.75)
+        
+        if (($nincoming > 0 && (1 - ($ndischarged / $nincoming)) >= 0.75)
             &&
-            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) > 0.75)
+            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) >= 0.75)
             ) {
             if ($agg->field_agggenerated['und'][0]['value'] < 10000) {
                 return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
@@ -7872,9 +7872,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
     $required_treatment->required_rcac = 0;
 
     uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen);
-
     uwwtd_trace('result of uwwtd_get_required_treatment : ' . var_export($required_treatment, true));
-    unset($dcps);
 
     $compliance_info->required       = $required_treatment->required;
     $compliance_info->reason         = $required_treatment->reason;
@@ -8106,16 +8104,13 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         }        
     }
     
-    //more stringent other rcac   
+    //more stringent other rcac
     if ($compliance_info->required_rcaan == 0
         && $compliance_info->required_rcaap == 0
         && $compliance_info->required_rcab == 0
         && $compliance_info->required_rcac == 1) {
-        
         if (true === uwwtd_all_uwwtp_treatement_inplace_in($node, array('secondary'))
-            && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node,
-                            array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other')
-                        )) {                   
+            && true === uwwtd_atleastone_uwwtp_treatement_inplace_in($node, array('uv', 'chlorination', 'ozonation', 'sandfiltration', 'microfiltration', 'other'))) {                   
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['true'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {             
@@ -8130,6 +8125,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             }
         }
         else{
+            dsm("uwwtd_all_uwwtp_treatement_inplace_in : not secondary");
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {               
@@ -8565,7 +8561,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $dcp = $oneDcp;
         }
     }
-    
     switch ($dcp['rcatype']) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
@@ -8646,7 +8641,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
             		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
             	} elseif ($dcp['rcatype'] == 'A51523' || $dcp['rcatype'] == 'A523') {
-            		if (isset($dcp['zonetypeIsSet']) && $dcp['zonetypeIsSet'] == 'UWWCMSA') {
+            		if (isset($dcp['rcazonetype']) && $dcp['rcazonetype'] == 'UWWCMSA') {
             			uwwtd_get_required_treatment_csa($required_treatment, $dcp, $maxgen);
             		} else {
             			uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
@@ -9112,7 +9107,6 @@ function uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, $listtreatement)
                 return false;                   
         }
     }
-    
     return $bResult;    
 }
               
