@@ -22,7 +22,13 @@
               <a:rPr b="0" i="0" u="none" strike="noStrike">
                 <a:latin typeface="Calibri" />
               </a:rPr>
-              <a:t>Comparison of installation in place for previous year (light colour) and current year (dark colour)</a:t>
+              <a:t>Number of agglomeration per agglomeration size</a:t>
+            </a:r>
+            <a:r>
+              <a:rPr b="0" i="0" u="none" strike="noStrike">
+                <a:latin typeface="Calibri" />
+              </a:rPr>
+              <a:t>class</a:t>
             </a:r>
           </a:p>
         </c:rich>
@@ -33,7 +39,15 @@
     <c:autoTitleDeleted val="0" />
     <c:plotArea>
       <c:layout>
-        <c:manualLayout />
+        <c:manualLayout>
+          <c:layoutTarget val="inner" />
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.18454315198707" />
+          <c:y val="0.20265292514767" />
+          <c:w val="0.68946081751519" />
+          <c:h val="0.56758141799267" />
+        </c:manualLayout>
       </c:layout>
       <c:barChart>
         <c:barDir val="col" />
@@ -44,7 +58,7 @@
           <c:order val="0" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AA$76</c:f>
+              <c:f>Graphs!$AA$11</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -53,107 +67,35 @@
               </c:strCache>
             </c:strRef>
           </c:tx>
+          <c:spPr>
+            <a:solidFill>
+              <a:srgbClr val="FFFF00" />
+            </a:solidFill>
+          </c:spPr>
           <c:invertIfNegative val="0" />
-          <!-- START COLOR for each bar and serie -->
-          <c:dPt>
-            <c:idx val="0" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent4">
-                  <a:lumMod val="40000" />
-                  <a:lumOff val="60000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="1" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent4">
-                  <a:lumMod val="40000" />
-                  <a:lumOff val="60000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="2" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent3">
-                  <a:lumMod val="60000" />
-                  <a:lumOff val="40000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="3" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent3">
-                  <a:lumMod val="60000" />
-                  <a:lumOff val="40000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="4" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent1">
-                  <a:lumMod val="40000" />
-                  <a:lumOff val="60000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="5" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent1">
-                  <a:lumMod val="40000" />
-                  <a:lumOff val="60000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <!-- END COLOR for each bar and serie -->
           <c:cat>
             <c:strRef>
-              <c:f>Graphs!$Z$77:$Z$82</c:f>
+              <c:f>Graphs!$Z$12:$Z$14</c:f>
               <c:strCache>
-                <c:ptCount val="6" />
+                <c:ptCount val="3" />
                 <c:pt idx="0">
-                  <c:v>total waste water load to be treated</c:v>
+                  <c:v>2000 - 10000</c:v>
                 </c:pt>
                 <c:pt idx="1">
-                  <c:v>collecting system in place</c:v>
+                  <c:v>10001 - 100000</c:v>
                 </c:pt>
                 <c:pt idx="2">
-                  <c:v>secondary treatment in place</c:v>
-                </c:pt>
-                <c:pt idx="3">
-                  <c:v>compliant secondary treatment</c:v>
-                </c:pt>
-                <c:pt idx="4">
-                  <c:v>more stringent treatment in place</c:v>
-                </c:pt>
-                <c:pt idx="5">
-                  <c:v>compliant more stringent treatment</c:v>
+                  <c:v>&gt;100000</c:v>
                 </c:pt>
               </c:strCache>
             </c:strRef>
           </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AA$77:$AA$82</c:f>
+              <c:f>Graphs!$AA$12:$AA$14</c:f>
               <c:numCache>
-                <c:formatCode>#,##0</c:formatCode>
-                <c:ptCount val="6" />
+                <c:formatCode>General</c:formatCode>
+                <c:ptCount val="3" />
                 <c:pt idx="0">
                   <c:v>0</c:v>
                 </c:pt>
@@ -161,15 +103,6 @@
                   <c:v>0</c:v>
                 </c:pt>
                 <c:pt idx="2">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="3">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="4">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="5">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -181,7 +114,7 @@
           <c:order val="1" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AB$76</c:f>
+              <c:f>Graphs!$AB$11</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -190,101 +123,45 @@
               </c:strCache>
             </c:strRef>
           </c:tx>
-          <c:invertIfNegative val="0" />
-          <!-- START COLOR for each bar and serie -->
-          <c:dPt>
-            <c:idx val="0" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent4">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="1" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent4">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
+          <c:spPr>
+            <a:solidFill>
+              <a:schemeClr val="accent2">
+                <a:lumMod val="50000" />
+              </a:schemeClr>
+            </a:solidFill>
+          </c:spPr>
           <c:dPt>
             <c:idx val="2" />
             <c:spPr>
               <a:solidFill>
-                <a:schemeClr val="accent3">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
+                <a:srgbClr val="00B050" />
               </a:solidFill>
             </c:spPr>
           </c:dPt>
-          <c:dPt>
-            <c:idx val="3" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent3">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="4" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent1">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <c:dPt>
-            <c:idx val="5" />
-            <c:spPr>
-              <a:solidFill>
-                <a:schemeClr val="accent1">
-                  <a:lumMod val="75000" />
-                </a:schemeClr>
-              </a:solidFill>
-            </c:spPr>
-          </c:dPt>
-          <!-- END COLOR for each bar and serie -->
+          <c:invertIfNegative val="0" />
           <c:cat>
             <c:strRef>
-              <c:f>Graphs!$Z$77:$Z$82</c:f>
+              <c:f>Graphs!$Z$12:$Z$14</c:f>
               <c:strCache>
-                <c:ptCount val="6" />
+                <c:ptCount val="3" />
                 <c:pt idx="0">
-                  <c:v>total waste water load to be treated</c:v>
+                  <c:v>2000 - 10000</c:v>
                 </c:pt>
                 <c:pt idx="1">
-                  <c:v>collecting system in place</c:v>
+                  <c:v>10001 - 100000</c:v>
                 </c:pt>
                 <c:pt idx="2">
-                  <c:v>secondary treatment in place</c:v>
-                </c:pt>
-                <c:pt idx="3">
-                  <c:v>compliant secondary treatment</c:v>
-                </c:pt>
-                <c:pt idx="4">
-                  <c:v>more stringent treatment in place</c:v>
-                </c:pt>
-                <c:pt idx="5">
-                  <c:v>compliant more stringent treatment</c:v>
+                  <c:v>&gt;100000</c:v>
                 </c:pt>
               </c:strCache>
             </c:strRef>
           </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AB$77:$AB$82</c:f>
+              <c:f>Graphs!$AB$12:$AB$14</c:f>
               <c:numCache>
                 <c:formatCode>General</c:formatCode>
-                <c:ptCount val="6" />
+                <c:ptCount val="3" />
                 <c:pt idx="0">
                   <c:v>0</c:v>
                 </c:pt>
@@ -292,15 +169,6 @@
                   <c:v>0</c:v>
                 </c:pt>
                 <c:pt idx="2">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="3">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="4">
-                  <c:v>0</c:v>
-                </c:pt>
-                <c:pt idx="5">
                   <c:v>0</c:v>
                 </c:pt>
               </c:numCache>
@@ -309,7 +177,7 @@
         </c:ser>
         <c:dLbls>
           <c:showLegendKey val="0" />
-          <c:showVal val="0" />
+          <c:showVal val="1" />
           <c:showCatName val="0" />
           <c:showSerName val="0" />
           <c:showPercent val="0" />
@@ -356,7 +224,7 @@
               <a:lstStyle />
               <a:p>
                 <a:r>
-                  <a:t>Load in p.e.</a:t>
+                  <a:t></a:t>
                 </a:r>
               </a:p>
             </c:rich>
@@ -380,6 +248,30 @@
         <c:crossBetween val="midCat" />
       </c:valAx>
     </c:plotArea>
+    <c:legend>
+      <c:legendPos val="b" />
+      <c:layout>
+        <c:manualLayout>
+          <c:xMode val="edge" />
+          <c:yMode val="edge" />
+          <c:x val="0.87439695543664" />
+          <c:y val="0.20891146726951" />
+          <c:w val="0.12560304456336" />
+          <c:h val="0.27677000487092" />
+        </c:manualLayout>
+      </c:layout>
+      <c:overlay val="0" />
+      <c:txPr>
+        <a:bodyPr />
+        <a:lstStyle />
+        <a:p>
+          <a:pPr rtl="0">
+            <a:defRPr />
+          </a:pPr>
+          <a:endParaRPr lang="en-US" />
+        </a:p>
+      </c:txPr>
+    </c:legend>
     <c:plotVisOnly val="1" />
     <c:dispBlanksAs val="gap" />
     <c:showDLblsOverMax val="0" />

@@ -948,7 +948,7 @@ function getRow6Graphs($results){
                             (string)$key,
                             uwwtd_format_number($item['in']['q']),
                             uwwtd_format_number($item['out']['q']),
-                            uwwtd_format_number($item['out']['q']*100/$item['in']['q'] ,1) .'%'
+                            uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%'
                         );
                         
                         // BB - 26/10/16
@@ -966,7 +966,7 @@ function getRow6Graphs($results){
                             // $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
                             $item['in']['c'] > 0 ? round($item['in']['c'], 3) : '-',
                             $item['out']['c'] > 0 ? round($item['out']['c'], 3) : '-',
-                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number($item['out']['c'] * 100 / $item['in']['c'], 1) . '%' : '-'
+                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number(($item['in']['c'] - $item['out']['c']) * 100 / $item['in']['c'], 1) . '%' : '-'
 
                         );
                         
@@ -1047,13 +1047,18 @@ function getRow7Graph1($yearSelected, $results) {
                 $year = $values[0];
                 $header[$year] = $year;
                 $item[]=$year;
+                $tot = 0;
                 foreach($legend_ord as $l=>$lab){
-                    $item[] = (isset($values[$l])?$values[$l]:0);
+                    $val = (isset($values[$l])?$values[$l]:0);
+                    $item[] = $val;
+                    $tot +=$val;
                     if(!isset($table[$l])) $table[$l][0]= $lab;
                     $table[$l][$year] =  (isset($values[$l])? uwwtd_format_number($values[$l], 1):0);
                 }
+                if(empty($table['Total'])) $table['Total'][0] = '<strong>'.t('Total'). '</strong>';
+                 $table['Total'][$year] =  '<strong>'.uwwtd_format_number($tot, 1). '</strong>';
                 $front['data'][$key] = $item;
-            }
+            } 
             $back = theme('table', array('rows' => $table, 'header' =>$header)); // 'header' => $columns, 'rows_multiple' => true
     }
 	return array($front, $back);
