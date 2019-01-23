@@ -5070,17 +5070,18 @@ function uwwtd_bc_position_batch_process($newFile, $annee, $timestamp, &$context
                     }
 
                     // get the wkd of the allgo with the biggest population
-                    $bigAgg = node_load($biggestId);
-                    $node->field_position_geo['und'][0] = array(
-                        'geom'=>$bigAgg->field_position_geo['und'][0]['geom'],
-                        'geo_type'=>$bigAgg->field_position_geo['und'][0]['geo_type'],
-                        'lat'=>$bigAgg->field_position_geo['und'][0]['lat'],
-                        'lon'=>$bigAgg->field_position_geo['und'][0]['lon'],
-                        'left'=>$bigAgg->field_position_geo['und'][0]['left'],
-                        'top'=>$bigAgg->field_position_geo['und'][0]['top'],
-                        'bottom'=>$bigAgg->field_position_geo['und'][0]['bottom'],
-                        'geohash'=>$bigAgg->field_position_geo['und'][0]['geohash']
-                    );
+                    if($bigAgg = node_load($biggestId)){
+                        $node->field_position_geo['und'][0] = array(
+                            'geom'=>$bigAgg->field_position_geo['und'][0]['geom'],
+                            'geo_type'=>$bigAgg->field_position_geo['und'][0]['geo_type'],
+                            'lat'=>$bigAgg->field_position_geo['und'][0]['lat'],
+                            'lon'=>$bigAgg->field_position_geo['und'][0]['lon'],
+                            'left'=>$bigAgg->field_position_geo['und'][0]['left'],
+                            'top'=>$bigAgg->field_position_geo['und'][0]['top'],
+                            'bottom'=>$bigAgg->field_position_geo['und'][0]['bottom'],
+                            'geohash'=>$bigAgg->field_position_geo['und'][0]['geohash']
+                        );
+                    }
                 }
 
                 node_save($node);
