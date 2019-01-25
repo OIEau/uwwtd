@@ -7767,10 +7767,12 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         foreach($node->field_uwwaggliste['und'] as $agglist){
             $agg = node_load($agglist['nid']);
             if($agg->field_agggenerated['und'][0]['value'] > $maxgen) $maxgen = $agg->field_agggenerated['und'][0]['value'];
-            $agglos[] = array(
+            $aggCode = $agg->field_inspireidlocalid['und'][0]['value'];
+            $agglos[$aggCode] = array(
                 'nid' => $agg->nid,
                 'title' => $agg->title,
-                'generated' => $agg->field_agggenerated['und'][0]['value']
+                'generated' => $agg->field_agggenerated['und'][0]['value'],
+                'inspireidlocalid'=>$aggCode
             );
         }
     }
@@ -7845,7 +7847,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 'rcac' => $rcac,
                 'paramN' => $paramN,
                 'paramP' => $paramP,
-                'paramO' => $paramO
+                'paramO' => $paramO,
+                'agglomerations'=>$agglos
             );
         }
     }
@@ -8566,7 +8569,17 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 if ($maxgen > 150000) {
-       				$required_treatment->required = 'S';
+                    /**
+                     * Costa do Estoril agglomeration (aggID code: PTAGL070, uwwID: pt12058222) 
+                     * has a derogation granted according to Article 5(8) of the Urban Waste Water Treatment Directive (Commission Decision 2001/720/EC of 8.10.2001, OJ L269 of 10.10.2001). 
+                     * For this agglomerations it is required a less stringent treatment, ie treatment required=primary treatment.
+                    **/
+                    if(!in_array($dcp['agglomerations']['PTAGL070'])){
+                        $required_treatment->required = 'P';
+                    }else{
+                        $required_treatment->required = 'S';
+                    }
+       				
                 } else {
                     $required_treatment->required = 'P';
                 }

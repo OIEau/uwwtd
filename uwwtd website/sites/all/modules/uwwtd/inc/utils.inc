@@ -1526,7 +1526,12 @@ function uwwtd_get_distance_compliance($agg){
     
     $dtc = array(
         'art3'=>[
-            'Equipment'=>['pe'=>$agg->field_aggpercwithouttreatment['und'][0]['value']*field_agggenerated['und'][0]['value'], 'percent'=>$agg->field_aggpercwithouttreatment['und'][0]['value'], 'compliance'=>$agg->field_aggart3compliance['und'][0]['value'], 'color'=>$colorart3],
+            'Equipment'=>[
+                'pe'=>$agg->field_aggpercwithouttreatment['und'][0]['value']*$agg->field_agggenerated['und'][0]['value'], 
+                'percent'=>$agg->field_aggpercwithouttreatment['und'][0]['value'], 
+                'compliance'=>$agg->field_aggart3compliance['und'][0]['value'], 
+                'color'=>$colorart3
+            ],
         ],
         'art4'=>[
             'Equipment'=>['pe'=>$dist_art4_treatment_pe, 'percent'=>$dist_art4_treatment_percent, 'compliance'=>$art4complianceTreat, 'color'=>$colorart4T],
