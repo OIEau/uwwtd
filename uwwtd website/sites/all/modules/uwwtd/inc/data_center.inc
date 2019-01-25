@@ -7800,40 +7800,42 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             $paramN = false;
             $paramP = false;
             $paramO = false;
+            $zonetypeIsSet = false;
                             
             /* Cas des pays avec l'ensemble du pays en zone sensible */
             $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
             // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
             //     $rcaTypeid = 'SA';
-            // }            
-            foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-                $rca = node_load($rcalist['nid']);
-                
-                $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                $isrcaANitro = (isset($rca->field_rcaanitro['und'][0]['value']) ? $rca->field_rcaanitro['und'][0]['value'] == 1: false);
-                $isrcaAPhos  = (isset($rca->field_rcaaphos['und'][0]['value']) ? $rca->field_rcaaphos['und'][0]['value'] == 1: false);
-                $isrcab      = (isset($rca->field_rcab['und'][0]['value']) ? $rca->field_rcab['und'][0]['value'] == 1: false);
-                $isrcac      = (isset($rca->field_rcac['und'][0]['value']) ? $rca->field_rcac['und'][0]['value'] == 1: false);
-                $hasParamN      = (isset($rca->field_rca_parameter_n['und'][0]['value']) ? $rca->field_rca_parameter_n['und'][0]['value'] == 1: false);
-                $hasParamP      = (isset($rca->field_rca_parameter_p['und'][0]['value']) ? $rca->field_rca_parameter_p['und'][0]['value'] == 1: false);
-                $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
+            // } 
+            if(isset($dcp->field_dcprcaliste['und'])){
+                foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                    $rca = node_load($rcalist['nid']);
+                    
+                    $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
+                    $isrcaANitro = (isset($rca->field_rcaanitro['und'][0]['value']) ? $rca->field_rcaanitro['und'][0]['value'] == 1: false);
+                    $isrcaAPhos  = (isset($rca->field_rcaaphos['und'][0]['value']) ? $rca->field_rcaaphos['und'][0]['value'] == 1: false);
+                    $isrcab      = (isset($rca->field_rcab['und'][0]['value']) ? $rca->field_rcab['und'][0]['value'] == 1: false);
+                    $isrcac      = (isset($rca->field_rcac['und'][0]['value']) ? $rca->field_rcac['und'][0]['value'] == 1: false);
+                    $hasParamN      = (isset($rca->field_rca_parameter_n['und'][0]['value']) ? $rca->field_rca_parameter_n['und'][0]['value'] == 1: false);
+                    $hasParamP      = (isset($rca->field_rca_parameter_p['und'][0]['value']) ? $rca->field_rca_parameter_p['und'][0]['value'] == 1: false);
+                    $hasParamO      = (isset($rca->field_rca_parameter_other['und'][0]['value']) ? $rca->field_rca_parameter_other['und'][0]['value'] == 1: false);
 
-                $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
-                if (isset($rca->field_specialisedzonetype['und'][0]['value'])) {
-                    $rcaTypeid = $rca->field_specialisedzonetype['und'][0]['value'];
+                    $zonetypeIsSet = (isset($rca->field_zonetype['und'][0]['value']) ? $rca->field_zonetype['und'][0]['value'] : false);
+                    if (isset($rca->field_specialisedzonetype['und'][0]['value'])) {
+                        $rcaTypeid = $rca->field_specialisedzonetype['und'][0]['value'];
+                    }
+
+                    if($isrca54applied) $rca54applied = true;
+                    
+                    if($isrcaANitro) $rcaANitro = true;
+                    if($isrcaAPhos) $rcaAPhos = true;
+                    if($isrcab) $rcab = true;
+                    if($isrcac) $rcac = true;
+                    if($hasParamN) $paramN = true;
+                    if($hasParamP) $paramP = true;
+                    if($hasParamO) $paramO = true;
                 }
-
-                if($isrca54applied) $rca54applied = true;
-                
-                if($isrcaANitro) $rcaANitro = true;
-                if($isrcaAPhos) $rcaAPhos = true;
-                if($isrcab) $rcab = true;
-                if($isrcac) $rcac = true;
-                if($hasParamN) $paramN = true;
-                if($hasParamP) $paramP = true;
-                if($hasParamO) $paramO = true;
             }
-            
             $dcps[] = array(
                 'nid' => $dcp->nid,
                 'title' => $dcp->title,
@@ -8301,9 +8303,14 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are in place but performance is not met';
                 $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
             }
-        } else {
+        } 
+        #Fix nd@oieau.fr : 25/01/2019 : change according v22 of algo
+        else {
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-
+            $compliance_info->compliance = 'NC';
+            $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place but performance is always met in this case';
+            $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['true'];
+            /*
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf',  'ptotperf'))) {
                 $compliance_info->compliance = 'NC';
                 $compliance_info->reason = 'Station found to be compliant because phosphorus and nitrogen treatment are not in place but performance is met';
@@ -8313,6 +8320,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                 $compliance_info->reason = 'Station found to be non compliant because phosphorus and nitrogen treatment are not in place and performance is not met';
                 $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
             }
+            */
         }
     }
 
@@ -8568,20 +8576,23 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
     switch ($dcp['rcatype']) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
-                if ($maxgen > 150000) {
+                if ($maxgen >= 150000) {
                     /**
                      * Costa do Estoril agglomeration (aggID code: PTAGL070, uwwID: pt12058222) 
                      * has a derogation granted according to Article 5(8) of the Urban Waste Water Treatment Directive (Commission Decision 2001/720/EC of 8.10.2001, OJ L269 of 10.10.2001). 
                      * For this agglomerations it is required a less stringent treatment, ie treatment required=primary treatment.
                     **/
-                    if(!in_array($dcp['agglomerations']['PTAGL070'])){
+                    if(in_array('PTAGL070', $dcp['agglomerations']['PTAGL070'])){
                         $required_treatment->required = 'P';
                     }else{
                         $required_treatment->required = 'S';
                     }
-       				
-                } else {
+                }
+                //FIx nd@oieau.fr : add distinction between case under 10000
+                elseif ($maxgen >= 10000) { 
                     $required_treatment->required = 'P';
+                }else {
+                    $required_treatment->required = 'Appropriate';
                 }
             } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
                 if ($maxgen >= 2000 && $maxgen <= 10000) {
@@ -8786,31 +8797,32 @@ function uwwtd_get_all_info_agguwww($node)
                     // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
                     //     $rcaTypeid = 'SA';
                     // }
-                    foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-                        $rca = node_load($rcalist['nid']);
-                        $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                        if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
-                            $aResult['rca']['art54applies'] = true;
-                            $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
-                            $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
-                            $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
-                            $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
-                            $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
-                            $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
+                    if(isset($dcp->field_dcprcaliste['und'])){
+                        foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                            $rca = node_load($rcalist['nid']);
+                            $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
+                            if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
+                                $aResult['rca']['art54applies'] = true;
+                                $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
+                                $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
+                                $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
+                                $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
+                                $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
+                                $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
 
-                            $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
-                            $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
-                            $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
-                            $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
-                            $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
-                            $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
-                            break 2;
+                                $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
+                                $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
+                                $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
+                                $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
+                                $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
+                                $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
+                                break 2;
+                            }
+                            unset($rca);
                         }
-                        unset($rca);
+                        unset($dcp);
                     }
-                    unset($dcp);
                 }
-
                 $aResult['listUww'][$uww->nid]['node'] = $uww;
             }
             unset($uww);
