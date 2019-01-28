@@ -1384,3 +1384,10 @@ section#block-lang-dropdown-language{
     top:40px;
     right:60px;
 }
+
+.views-exposed-form #edit-type-wrapper, 
+.views-exposed-form select#edit-type{
+    width:250px!important;
+    max-width:250px!important;
+    
+}
