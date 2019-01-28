@@ -4,3 +4,4 @@ Bulk data deletion {"url":"data-deletion","lang":"en","options":{"attributes":{"
 Register {"url":"register","lang":"und","options":{"alter":true},"weight":"-45"}
 Translate interface {"url":"admin\/config\/regional\/translate\/translate","lang":"en","options":{"attributes":{"title":""},"alter":true},"weight":"-45"}
 List Error {"url":"error-list","lang":"und","options":{"alter":true},"weight":"0"}
+Errors summary statistics {"url":"data\/error-list-stats","lang":"und","options":{"alter":true},"weight":"1"}

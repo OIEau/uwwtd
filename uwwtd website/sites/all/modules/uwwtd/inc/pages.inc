@@ -524,13 +524,13 @@ function uwwtd_get_data_dcp($option){
         while($row = $result->fetchAssoc()) {
             
             $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
-            $row['rcacat_format'] =  (isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :$GLOBALS['uwwtd_value']['rcacat_labels']['default']);
+            $row['rcacat_format'] =  (isset($row['rcacat']) && isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :'');
             $row['rca_format'] =  l($row['rca_name'], 'node/'.$row['rca_id']);
             $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
             $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
             $row['field_physicalcapacityactivity_value_format'] =  uwwtd_format_number($row['field_physicalcapacityactivity_value']);
              $row['field_uwwwastewatertreated_value_format'] =  uwwtd_format_number($row['field_uwwwastewatertreated_value']);
-            $row['field_dcpirrigation_value_format'] =  $GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']];
+            $row['field_dcpirrigation_value_format'] =  (isset($GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']])?$GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']]:'');
             
             
             $data[] = $row;
@@ -887,6 +887,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
     $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
     $render_graph_nb = $front;
+    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
     
     //Graph 2
@@ -896,7 +897,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $render_graph = $front2;
     
     
-    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
+    
     $header_2 = array(t('Generated load (p.e.)'),t('Compliance'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
@@ -1430,6 +1431,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
+    $total_1 = 0;
+    $total_2 = 0;
     
     foreach($graph as $compliance_format => $detail) {       
         $seg = array();
@@ -1737,6 +1740,8 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     unset($features);
     
     $graph = array_replace(array_flip($keys_order), $graph);
+    $total_1 = 0;
+    $total_2 = 0;
     foreach($graph as $treatmenttype_format => $detail) {
         
         $seg = array();
@@ -2574,7 +2579,8 @@ function uwwtd_dcp_page($type_export = ''){
             foreach($item as $k=>$v){
                 $line_nb[] = $v['nb'];
                 $line_load[] = $v['load'];
-                //FIX ME nd@oieau.fr
+                if(!isset($total_nb[$k])) $total_nb[$k] = 0;
+                if(!isset($total_load[$k])) $total_load[$k] = 0;
                 $total_nb[$k]+=$v['nb'];
                 $total_load[$k]+=$v['load'];
                 
@@ -2674,7 +2680,10 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     $filter = uwwtd_get_form_filter($option);
     $preset_name = 'dcp_reuse_map';
     $preset = openlayers_preset_load($preset_name);
-    $map    = openlayers_build_map($preset->data);
+    $map = null;
+    if(isset($preset->data)){
+        $map    = openlayers_build_map($preset->data);
+    }
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_dcp($filter['filter']);
@@ -3702,7 +3711,7 @@ function uwwtd_get_form_filter($option){
     else {
         $filter['order'] = $option['default']['order'];
         $filter['sort'] = $option['default']['sort'];
-        $filter['sort_mod'] = $option['default']['sort_mod'];
+        $filter['sort_mod'] = isset($option['default']['sort_mod'])?$option['default']['sort_mod']:'';
     }
     return $filter;
 }
