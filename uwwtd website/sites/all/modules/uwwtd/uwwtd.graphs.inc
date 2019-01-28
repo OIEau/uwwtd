@@ -55,7 +55,7 @@ function uwwtd_stats_graphs_form($form, &$form_state){
 		if(!isset($form_state['storage']['result']) && empty($form_state['input'])) {
 			$form_state['storage']['result'] = uwwtd_page_stats_graphs_result($year);
 		}
-        $form['#suffix'] .= $form_state['storage']['result'];
+        $form['#suffix'] = $form_state['storage']['result'];
 	return $form;
 
 }
@@ -799,20 +799,18 @@ function getRow6Graph1And2($results) {
 					// Si c'est une valeur pour une année :
 					if (is_array($element)) {
 						if (array_key_exists('in', $element) && 
-							array_key_exists('q', $element['in']) && 
 							array_key_exists('out', $element) && 
-							array_key_exists('q', $element['out']) && 
 							array_key_exists('vol', $element)) {
 							// Redéfinition de la valeur de l'année :
 							$graph1Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering' => $element['in']['q'] , 
-                                'Discharged'=>$element['out']['q']
+                                'Entering' => $element['in'] , 
+                                'Discharged'=>$element['out']
                             );
-                            $sum+=$element['in']['q'];
+                            $sum+=$element['in'];
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering'=>round(($element['in']['c']) , 3),
-                                'Discharged'=>round(($element['out']['c']) , 3),
+                                'Entering'=>round(($element['in']/$element['vol']) , 3),
+                                'Discharged'=>round(($element['out']/$element['vol']) , 3),
                             );
 						} else {
 							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
@@ -941,14 +939,14 @@ function getRow6Graphs($results){
                     if(is_array($item)){
                         $graph1Front['data'][] = array(
                             (string)$key,
-                            $item['in']['q'],
-                            $item['out']['q'],
+                            $item['in'],
+                            $item['out'],
                         );
                         $graph1FrontRows[] = array(
                             (string)$key,
-                            uwwtd_format_number($item['in']['q']),
-                            uwwtd_format_number($item['out']['q']),
-                            uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%'
+                            uwwtd_format_number($item['in']),
+                            uwwtd_format_number($item['out']),
+                            $item['in'] ? uwwtd_format_number(($item['in']- $item['out'])*100/$item['in'] ,1) .'%':'-'
                         );
                         
                         // BB - 26/10/16
@@ -956,17 +954,17 @@ function getRow6Graphs($results){
                             (string)$key,
                             // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):0,
                             // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):0,
-                            round($item['in']['c'], 3),
-                            round($item['out']['c'], 3),
+                            round($item['in']/$item['vol'], 3),
+                            round($item['out']/$item['vol'], 3),
                         );
                         $graph2FrontRows[] = array(
                             (string)$key,
                             // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):'-',
                             // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):'-',
                             // $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
-                            $item['in']['c'] > 0 ? round($item['in']['c'], 3) : '-',
-                            $item['out']['c'] > 0 ? round($item['out']['c'], 3) : '-',
-                            $item['out']['c'] * 100 / $item['in']['c'] > 0 ? uwwtd_format_number(($item['in']['c'] - $item['out']['c']) * 100 / $item['in']['c'], 1) . '%' : '-'
+                            $item['in']> 0 ? round($item['in']/$item['vol'], 3) : '-',
+                            $item['out']> 0 ? round($item['out']/$item['vol'], 3) : '-',
+                            $item['in'] && ($item['out'] * 100 / $item['in']) > 0 ? uwwtd_format_number(($item['in'] - $item['out']) * 100 / $item['in'], 1) . '%' : '-'
 
                         );
                         
@@ -1214,8 +1212,9 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		// Si le graph a des données :
 		if (!$isEmptyGraph1) {
 			// Création du code html pour le graph 1 :
+            $front='';
 			if (count($graph1Front) <= 1) {
-				$front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
+				$front.= '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
 				$keys = array_keys($graph1Front);
 				$graph1Front = $graph1Front[$keys[0]];
 				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph1Front).", '". $graph1Id ."');});</script>";
@@ -1231,8 +1230,9 @@ function getHtmlPlusHtmlChartsPies($html, $rowTitle,
 		// Si le graph a des données :
 		if (!$isEmptyGraph2) {
 			// Création du code html pour le graph 2 :
+            $front = '';
 			if (count($graph2Front) <= 1) {
-				$front = '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
+				$front.= '<svg id="'. $graph2Id .'" style="margin:10px;"/>';
 				$keys = array_keys($graph2Front);
 				$graph2Front = $graph2Front[$keys[0]];
 				$front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($graph2Front).", '". $graph2Id ."');});</script>";
@@ -1350,7 +1350,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
     if (!$isEmptyGraph1) {
 		// Création du code html pour le graph1 :
                     $msg_sludge_remark = '';
-                    
+                    $msg_sludge = '';
                     if($yearSelected!=ALL_YEARS && isset($results[$yearSelected])){
                         if($results[$yearSelected]['sludge']['production']!=''){
                             $msg_sludge = t(
@@ -1358,11 +1358,11 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
                                 ['@year'=>$yearSelected, '@production'=>uwwtd_format_number($results[$yearSelected]['sludge']['production'])]
                             );
                         }
-                        if($result[$yearSelected]['sludge']['remark']!=''){
+                        if($results[$yearSelected]['sludge']['remark']!=''){
                             $msg_sludge_remark = $results[$yearSelected]['sludge']['remark'];
                         }
                     }
-                    $front .= uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
+                    $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
 				
 		$html .= '<div class="cell charts-rows-cell"><div class="cell-content">'.uwwtd_graph_render_flipcard($graph1Title, $front, $graph1Back, $msg_sludge, $msg_sludge_remark).'</div></div>';
     }

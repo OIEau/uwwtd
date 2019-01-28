@@ -61,6 +61,16 @@ function uwwtd_menu(){
 		'file path' => drupal_get_path('module', 'uwwtd') . '/inc/',
 		);
 
+    $items['data/error-list-stats'] = array(
+		'title' => t('Errors summary statistics'),
+		'description' => t('List of errors aggregated by type'),
+		'page callback' => 'uwwtd_get_errors_stats',
+		//'page arguments' => array('uwwtd_conformity_form'),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		'file' => 'data_center.inc',
+		'file path' => drupal_get_path('module', 'uwwtd') . '/inc/',
+		);
 
 	$items['register']=array(
 		'title' => t('Register'),
