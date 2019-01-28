@@ -14,6 +14,7 @@ function uwwtd_page_stats_querys()
  * Récupère en base les données pour Graph 1 de la ligne 1.
  */
 function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
+    $conditions ='';
 	switch ($yearSelected) {
 		case ALL_YEARS :
 			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
@@ -61,7 +62,7 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
 		foreach ($dataByYears as $year => $dataByYear) {
 			// Pour chaque colonne de la ligne :
 			foreach ($dataByYear as $key => $data) {
-				if ($key != 'year') {
+				if ($key != 'year' && $key!='Generated load') {
 					$out[$year][] = array(
 						"value" => (float)$data,
 						"label" => $GLOBALS['ms_level']['connection'][$key]['label'],
@@ -80,7 +81,8 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
  * Récupère en base les données pour Graph 2 de la ligne 1.
  */
 function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
-	switch ($yearSelected) {
+	$conditions ='';
+    switch ($yearSelected) {
 		case ALL_YEARS :
 			$conditions .= " and f_annee.field_anneedata_value in " . getInSql($yearsPossibles);
 			break;
@@ -711,26 +713,26 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 				$year = $node->field_anneedata['und'][0]['value'];
 				$data[$year] = array(
 					"sludge"=>array(
-						'production'=>(float)$node->field_mslsludgeproduction['und'][0]['value'],
+						'production'=>isset($node->field_mslsludgeproduction['und'])?(float)$node->field_mslsludgeproduction['und'][0]['value']:0,
 						'destination'=>array(
-							'dcp'=>(float)$node->field_msldischargepipelines['und'][0]['value'],
-							'dcs'=>(float)$node->field_msldischargeships['und'][0]['value'],
-							'dco'=>(float)$node->field_msldischargeothers['und'][0]['value'],
-							'rua'=>(float)$node->field_mslreusesoilagriculture['und'][0]['value'],
-							'ruo'=>(float)$node->field_mslreuseothers['und'][0]['value'],
-							'dil'=>(float)$node->field_msldisposallandfill['und'][0]['value'],
-							'dii'=>(float)$node->field_msldisposalincineration['und'][0]['value'],
-							'dio'=>(float)$node->	field_msldisposalothers['und'][0]['value'],
+							'dcp'=>isset($node->field_msldischargepipelines['und'])?(float)$node->field_msldischargepipelines['und'][0]['value']:0,
+							'dcs'=>isset($node->field_msldischargeships['und'])?(float)$node->field_msldischargeships['und'][0]['value']:0,
+							'dco'=>isset($node->field_msldischargeothers['und'])?(float)$node->field_msldischargeothers['und'][0]['value']:0,
+							'rua'=>isset($node->field_mslreusesoilagriculture['und'])?(float)$node->field_mslreusesoilagriculture['und'][0]['value']:0,
+							'ruo'=>isset($node->field_mslreuseothers['und'])?(float)$node->field_mslreuseothers['und'][0]['value']:0,
+							'dil'=>isset($node->field_msldisposallandfill['und'])?(float)$node->field_msldisposallandfill['und'][0]['value']:0,
+							'dii'=>isset($node->field_msldisposalincineration['und'])?(float)$node->field_msldisposalincineration['und'][0]['value']:0,
+							'dio'=>isset($node->field_msldisposalothers['und'])?(float)$node->field_msldisposalothers['und'][0]['value']:0,
 						),
-						'remark'=>$node->field_mslremarks['und'][0]['value'],
+						'remark'=>isset($node->field_mslremarks['und'])?$node->field_mslremarks['und'][0]['value']:'',
 					),
 					"waste_water"=>array(
-						"Re-used"=>$node->field_mslwwreuseexplain['und'][0]['value'],
-						"rate of re-used"=>(float)$node->field_mslwwreuseperc['und'][0]['value'],
+						"Re-used"=>isset($node->field_mslwwreuseexplain['und'])?$node->field_mslwwreuseexplain['und'][0]['value']:'',
+						"rate of re-used"=>isset($node->field_mslwwreuseperc['und'])?(float)$node->field_mslwwreuseperc['und'][0]['value']:0,
 						"repartition"=>array(
-							'agriculture'=>(float)$node->field_mslwwreuseagri['und'][0]['value'],
-							'industry'=>(float)$node->field_mslwwreuseind['und'][0]['value'],
-							'others'=>(float)$node->field_mslwwreuseother['und'][0]['value'],
+							'agriculture'=>isset($node->field_mslwwreuseagri['und'])?(float)$node->field_mslwwreuseagri['und'][0]['value']:0,
+							'industry'=>isset($node->field_mslwwreuseind['und'])?(float)$node->field_mslwwreuseind['und'][0]['value']:0,
+							'others'=>isset($node->field_mslwwreuseother['und'])?(float)$node->field_mslwwreuseother['und'][0]['value']:0,
 						),
 					),
 				);
