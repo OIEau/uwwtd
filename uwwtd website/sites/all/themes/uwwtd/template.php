@@ -1522,12 +1522,13 @@ function uwwtd_get_agglo_graphic($node){
             $loadedDcp = node_load($dcps['nid']);
             $dcpNid = $loadedDcp->nid;
             $dcpTitle = $loadedDcp->title;
-            $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
-            $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
-            $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
-            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
-            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
-            $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+            if(isset($loadedDcp->field_linked_receiving_areas['und']) && $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid'])){
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+            }
         }
     }
 
