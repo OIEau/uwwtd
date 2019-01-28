@@ -74,6 +74,62 @@ function uwwtd_run_compliance_page($node){
 }
 
 
+function uwwtd_get_errors_stats(){
+    $output ='';
+    //Summary stat on error list
+    $query ="
+        SELECT 
+            e.year AS year,
+            e.type AS type,
+            e.bundle AS bundle,
+            e.category AS category,
+            e.error AS error,
+            COUNT(*) AS nb
+        FROM 
+            {uwwtd_import_errors} e
+        GROUP BY e.year, e.category, e.type, e.error, e.bundle
+        ORDER BY e.year DESC, e.type DESC, e.bundle ASC, e.category ASC, nb DESC
+    ";
+    $result = db_query($query);
+    $data = array();
+    $errors_type = array_flip($GLOBALS['uwwtd_errors_type']['type']);
+    $errors_cat = array_flip($GLOBALS['uwwtd_errors_type']['category']);
+    $node_types = _node_types_build();
+    foreach($result as $row){
+        
+        $line = (array)$row;
+        if($line['bundle']=='') {
+            $line['bundle'] = 'Other';
+        }
+        elseif(isset($node_types->names[$line['bundle']])){
+            $line['bundle'] = $node_types->names[$line['bundle']];
+        }
+        $line['category'] =$errors_cat[$line['category']];
+        $line['type'] =$errors_type[$line['type']];
+        
+        $data[$line['bundle']][$line['year']][]=$line;
+    }
+    
+    if(!empty($data)){
+        foreach($data as $bundle=>$bundles_err){
+            
+            foreach($bundles_err as $year=>$err){
+                $output.="<h3>".$year."</h3>";
+                $output.=theme('table', [
+                    'rows'=>$err, 
+                    'header'=>[t('Year'),t('Type'),t('Bundle'),t('Category'),t('Error'),t('Number of message')],
+                    'sticky'=>true
+                ]);
+            }
+        }
+    }
+    //dsm($data);
+    
+    return $output;
+    
+}
+
+
 ################################ DATA INPUT ################################
 function uwwtd_import_form($form, &$form_state){
 
@@ -8131,7 +8187,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             }
         }
         else{
-            dsm("uwwtd_all_uwwtp_treatement_inplace_in : not secondary");
+            //dsm("uwwtd_all_uwwtp_treatement_inplace_in : not secondary");
             $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
             
             if (true === uwwtd_all_uwwtp_treatementperf_pass_in($node, array('codperf', 'bod5perf'))) {               
@@ -8739,7 +8795,7 @@ function uwwtd_get_all_info_agguwww($node)
     elseif(isset($node->field_linked_treatment_plants['und'])){
         $field = 'field_linked_treatment_plants';
     }
-    else{
+    elseif($node->field_status['und'][0]['value']==1){
         drupal_set_message("There is no linked UWWTP define in field_agguwwliste or in field_linked_treatment_plants", "warning");
     }
     if (!empty($field) && isset($node->{$field}) && !empty($node->{$field}['und'])) {

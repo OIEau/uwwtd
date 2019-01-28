@@ -5056,6 +5056,36 @@ function uwwtd_update_7167(&$context) {
 //     throw new DrupalUpdateException($msg_error);
 }
 
+//Flush error list linked to inactive entity and create page with summury stats on errors
+function uwwtd_update_7169(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    //Flush error list linked to inactive entity
+    db_query("
+    DELETE FROM {uwwtd_import_errors} e 
+    USING {node} n, {field_data_field_status} s 
+    WHERE e.entity_id = n.nid 
+        AND n.nid = s.entity_id
+        AND (s.field_status_value = '0' OR s.field_status_value = '2')
+    ");
+    
+    $menu= array(
+            'link_path' => 'data/error-list-stats',
+            'link_title' => 'Errors summary statistics',
+            'description' => '' ,
+            'menu_name' => 'menu-editorial-menu',
+            'weight' => 1,
+            //'expanded' => true,
+            'mlid' => 0, 
+            'plid' => 0,
+            'customized' => 1,
+        );
+    $mlid = menu_link_save($menu);
+    
+    
+    if ('' !== $msg_error) {
+        throw new DrupalUpdateException($msg_error);
+    }
+}
 
 /**
  * Create a big city or update it

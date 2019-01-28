@@ -115,8 +115,14 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    
+    //TODO render a page with all information bundle by bundle, year per year
+    return uwwtd_get_errors_stats();
+    /*
     $img = uwwtd_get_gg_snapshot('public://test.png', '37.20776245', '-7.41892334', 'hybrid', 16, '640x640');
     dsm($img);
+    */
+    
     //Loading Art 17 xml file
     /*
     module_load_include('inc','uwwtd','inc/data_center');
@@ -959,6 +965,10 @@ function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = n
     if ($isShowed) {
         if ($node) {
             $key = $node->nid;
+            //Don't raise error related to inactive element
+            if(isset($node->field_status) && $node->field_status['und'][0]['value']!=1){
+                return null;
+            }
         } else {
             $key = 'all';
         }
