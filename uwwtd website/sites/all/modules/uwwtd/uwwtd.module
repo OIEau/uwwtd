@@ -10,6 +10,14 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 
 function uwwtd_menu(){
 	$items = array();
+	$items['admin/config/uwwtd/create_config_file_display'] = array(
+		'title' => t('Create config file display'),
+		'description' => t('Create config file display'),
+		'page callback' => 'uwwtd_create_config_file_display',
+		'page arguments' => array(),
+		//'access callback' => TRUE,
+		'access arguments' => array('Data-management access'),
+		);
 	$items['data'] = array(
 		'title' => t('Data management center'),
 		'description' => t('A center to manage all the site data'),
@@ -1817,11 +1825,13 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
   if($histories != false){
     $otherList = array();
     $output .= '<div class="uwwtd-history">';
-    $output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
-    <legend class="panel-heading">
-    <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
-    </legend>';
+
+//     $output .= '<fieldset class="uwwtd-history field-group-fieldset panel panel-default form-wrapper">
+//     <legend class="panel-heading">
+//     <div class="panel-title fieldset-legend">'.t('Compliance timeline').'</div>
+//     </legend>';
     
+
     foreach($histories as $history){  
 
       $other = node_load($history);
@@ -1914,7 +1924,9 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
           $output.='<div class="dispo-legend-item"><div class="dispo-legend-color dispo-0">&nbsp;</div><div class="dispo-legend-label"> '.t('?').'</div></div>';
           $output.='<br class="spacer"/>';
         $output.='</div>';
-    $output .= '</fieldset></div><br>';
+//     $output .= '</fieldset>
+//                 </div><br>';
+    $output .= '</div><br>';
   }
 
   return $output;
@@ -2103,5 +2115,414 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
     ';
 }
 
+/**
+ *  Hook_field_extra_fields
+ */
+function uwwtd_field_extra_fields() { 
+  /**
+   * AGGLOMERATION
+   */
+  $extra['node']['agglomeration']['display'] = array(
+     'virtual_field_error' =>    array(
+            'label'       => t('Error list'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_map' =>    array(
+            'label'       => t('Map'),
+            'label_hidden'       => true,
+            'description' => t("Agglomeration view on a map with some info"),
+            'weight'      => 100,
+        ),
+     'virtual_compliance_time_line' =>    array(
+            'label'       => t('compliance Time Line'), 
+            'label_hidden'       => true,
+            'description' => t("List of all the year available for the agglomeration"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggc1_with_pe' =>    array(
+            'label'       => t('Connected to collecting system'),
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggc2_with_pe' =>    array(
+            'label'       => t('Individual or Appropriate Systems (IAS)'),
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggpercwithouttreatment_with_pe' =>    array(
+            'label'       => t('Discharged without treatment'),
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_piechart_agglonode' =>    array(
+            'label'       => t('Piechart'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggart4compliance_hierarchical' =>    array(
+            'label'       => t('2nd treatment compliance'),
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggart5compliance_hierarchical' =>    array(
+            'label'       => t('3rd treatment compliance'),
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_table_distance_to_compliance' =>    array(
+            'label'       => t('Table of the distance to compliance'), 
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_graphic' =>    array(
+            'label'       => t('Graphical network summary'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_latitude_custom' =>    array(
+            'label'       => t('Latitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_longitude_custom' =>    array(
+            'label'       => t('Longitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_aggperiodover5_custom' =>    array(
+            'label'       => t('Deadline 3rd treatment compliance'),
+            'description' => t("when agggenerated < 10000 set to Nor Relevant"),
+            'weight'      => 100,
+        ),
+     'virtual_field_source_file_link' =>    array(
+            'label'       => t('List of data source file'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_article_17' =>    array(
+            'label'       => t('Article 17 field'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+  );
+
+  /**
+   * UWWTP
+   */
+  $extra['node']['uwwtp']['display'] = array(
+     'virtual_field_error' =>    array(
+            'label'       => t('Error list'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_map' =>    array(
+            'label'       => t('Map'),
+            'label_hidden'       => true,
+            'description' => t("Agglomeration view on a map with some info"),
+            'weight'      => 100,
+        ),
+     'virtual_compliance_time_line' =>    array(
+            'label'       => t('compliance Time Line'), 
+            'label_hidden'       => true,
+            'description' => t("List of all the year available for the agglomeration"),
+            'weight'      => 100,
+        ),
+     'virtual_field_data_stackedbar' =>    array(
+            'label'       => t('Data Stacked bar'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_stackedbar_uwwtpnode' =>    array(
+            'label'       => t('Stacked bar'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_graphic' =>    array(
+            'label'       => t('Graphical network summary'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_latitude_custom' =>    array(
+            'label'       => t('Latitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_longitude_custom' =>    array(
+            'label'       => t('Longitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_source_file_link' =>    array(
+            'label'       => t('List of data source file'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_article_17' =>    array(
+            'label'       => t('Article 17 field'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+  );
+
+  /**
+   * DCP
+   */
+  $extra['node']['discharge_point']['display'] = array(
+     'virtual_field_error' =>    array(
+            'label'       => t('Error list'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),    
+     'virtual_field_map' =>    array(
+            'label'       => t('Map'),
+            'label_hidden'       => true,
+            'description' => t("Agglomeration view on a map with some info"),
+            'weight'      => 100,
+        ),
+     'virtual_field_latitude_custom' =>    array(
+            'label'       => t('Latitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_longitude_custom' =>    array(
+            'label'       => t('Longitude'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+     'virtual_field_source_file_link' =>    array(
+            'label'       => t('List of data source file'),
+            'label_hidden'       => true,
+            'description' => t("description"),
+            'weight'      => 100,
+        ),
+  );
+
+  return $extra;
+}
+
+/**
+ *
+ */
+function uwwtd_node_view($node, $view_mode, $langcode) {
+  require_once(drupal_get_path('module', 'uwwtd') . '/inc/field.inc');
+
+  $extra = uwwtd_field_extra_fields();
+//   static $test = null;
+//   if (!isset($test)) {
+//     $test = true;
+//     dsm(array_keys($node->content));
+// //     dsm($node->content['field_aggart6compliance']);
+//     dsm(array_keys($node->content['field_agggenerated']));
+//     dsm($node->content['field_agggenerated']['#theme']);
+//     dsm($node->content['field_agggenerated']['#title']);
+//     dsm($node->content['field_agggenerated']['#label_display']);
+//     dsm($node->content['field_agggenerated']['#weight']);
+//     dsm($node->content['field_agggenerated']['#field_type']);
+//     dsm($node->content['field_agggenerated']['#field_name']);
+//     dsm($node->content['field_agggenerated']['#bundle']);
+//     dsm($node->content['field_agggenerated']['#entity_type']);
+//     dsm($node->content['field_agggenerated']['#view_mode']);
+//     dsm($node->content['field_agggenerated']['#language']);
+//     dsm($node->content['field_agggenerated']['#formatter']);
+//     dsm($node->content['field_agggenerated']['#items']);
+//   }
+//   dsm(__FUNCTION__);
+//   dsm($view_mode);
+//   dsm($node->type);
+//   dsm($extra);
+
+   // Check that we're supporting the node type being viewed.
+  if (empty($extra['node'][$node->type]['display'])) {
+    return;
+  }
+
+  $config = field_bundle_settings('node', $node->type);
+//   dsm($config);
+//   dsm($extra);
+  foreach ($extra['node'][$node->type]['display'] as $field_name => $field_info) {
+//     dsm($field_name);
+    // Check to make sure this field is visible in this view mode.
+    if (empty($config['extra_fields']['display'][$field_name]['default']['visible'])) {
+//       dsm('continue');
+      continue;
+    }
+
+    $function = 'uwwtd_' . $field_name;
+    $value = $function($node, $view_mode);
+  
+//     if ($field_info['description']) {
+//       $value .= '<div class="custom_tooltip" style="display: none;">'.$field_info['description'].'</div>';
+//     }
+    
+    $element = array(
+//       '#theme' => 'field',
+      '#title' => $field_info['label'],
+      '#label_display' => 'inline',  //hidden above inline
+      '#description' => $field_info['description'],  //hidden above inline
+      '#field_type' => 'text',
+      '#field_name' => $field_name,
+      'type_node' => $node->type,
+//       '#bundle' =>'agglomeration',
+//       '#entity_type' => 'node',
+//       '#view_mode' => 'full',
+//       '#language' => 'en',
+//       '#formatter' => 'text_default',
+      '#items' => array(
+           0 => array('value' => $value),
+       ),
+       0 => array('#markup' => $value),
+//        'classes_array' => array($field_name, 'custom_tooltip_wrapper'),
+    );
+
+    if (isset($field_info['label_hidden']) && true === $field_info['label_hidden']) {
+      $element['#label_display'] = 'hidden';
+    }
+
+//     $attributes = array();    
+//     $attributes['class'] = "custom_tooltip_wrapper";
+//     $variables['attributes_array'] = array('class' => 'custom_tooltip_wrapper');
+//     $element['#attributes'] = $attributes;
+    $variables['element'] = $element;
+//     $variables['classes'] = "$field_name custom_tooltip_wrapper";
+//     $variables['classes_array'] = array($field_name, 'custom_tooltip_wrapper');
+//     field_name_css
+//     field_type_css
+//     $variables['field_name_css']
+//     $variables['field_type_css']
+    $node->content[$field_name]['#markup'] = theme('field', $variables);
+  }
+}
+
+// function uwwtd_preprocess_field(&$variables){
+//     $extra = uwwtd_field_extra_fields();   
+//     if(isset($extra['node'][$variables['element']['type_node']]['display'][$variables['element']['#field_name']]) && isset($variables['items'][0]['#markup'])){
+//       dsm('ok');
+//       $nbcss = count($variables['classes_array']);
+//       $variables['classes_array'][$nbcss] = 'custom_tooltip_wrapper';
+//       $variables['items'][0]['#markup'] = '<div class="custom_tooltip">'.$field_info['custom_tooltip'].'</div>'.$variables['items'][0]['#markup'];
+//     }      
+// // 	$field_info = field_info_field($variables['element']['#field_name']);
+// // 	if(isset($field_info['custom_tooltip']) && $field_info['custom_tooltip'] !== ''){
+// // 		if(isset($variables['items'][0]['#markup'])){
+// // 			$nbcss = count($variables['classes_array']);
+// // 			$variables['classes_array'][$nbcss] = 'custom_tooltip_wrapper';
+// // 			// check boolean
+// // 			if($variables['items'][0]['#markup'] == '1' || $variables['items'][0]['#markup'] == '0'){
+// // 				$variables['items'][0]['#markup'] = '<div class="custom_tooltip">'.$field_info['custom_tooltip'].'</div>';
+// // 			}
+// // 			else{
+// // 				$variables['items'][0]['#markup'] = '<div class="custom_tooltip">'.$field_info['custom_tooltip'].'</div>'.$variables['items'][0]['#markup'];
+// // 			}
+// // 			//dsm($field_info);
+// // 			//dsm($variables);
+// // 		}
+// // 	}
+// }
 
 
+
+
+/**
+ *
+ */
+/**
+ * Implements hook_form_field_ui_display_overview_form_alter().
+ */
+function uwwtd_form_field_ui_display_overview_form_alter(&$form, &$form_state) {
+//   static $test = null;
+//   if (!isset($test)) {
+//     $test = true;
+//     dsm(array_keys($form));
+//   }
+// Load the extra fields from hook_field_extra_fields() for the example module.
+//   $extra = uwwtd_field_extra_fields();
+// 
+//   // If the fields are not supported for the entity type and bundle we're loading the form for
+//   // then return early.
+//   if (!isset($extra[$form['#entity_type']], $extra[$form['#entity_type']][$form['#bundle']])) {
+//     return;
+//   }
+// 
+//   // Filter extra fields by those the field ui module is chosing to show in the form.
+//   $extra_fields = array_keys($extra[$form['#entity_type']][$form['#bundle']]['display']);
+//   $extra_fields = array_intersect($extra_fields, $form['#extra']);
+// 
+//   if (empty($extra_fields)) {
+//     return;
+//   }
+// 
+//   foreach ($extra_fields as $field_name) {
+//     $form['fields'][$field_name]['settings_edit'] = array(
+//       '#type' => 'textfield',
+//       '#default_value' => t('example text field as a configuration option.'),
+//     );
+//     $form['fields'][$field_name]['settings_summary']['#markup'] = 'This is the settings summary.';
+//   }
+//   // Don't forget to add a submit handler if you need to process/save 
+//   // configuration for your fields.
+//   // $form['#submit'][] = 'example_form_field_ui_display_overview_form_submit';
+
+}
+
+function uwwtd_create_config_file_display() {
+
+
+  $bundle_list = array(
+    'agglomeration',
+    'uwwtp',
+    'discharge_point',
+  );
+
+  foreach($bundle_list as $bundle) {
+    //export all group
+    $groups = field_group_info_groups('node', $bundle, 'default');
+//     dsm($groups);
+    file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_group.inc', "<?php \n\n\$groups = " . str_replace('stdClass::__set_state', '(object)', var_export($groups, true)) . ';');
+
+    //export virtual field config (weight)
+    $virtual = field_bundle_settings('node', $bundle);      
+    unset($virtual['extra_fields']['display']['uwwtd_virtual_graphic']);   
+    unset($virtual['extra_fields']['display']['virtual_agglo_graphic']); 
+    file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_virtual.inc', "<?php \n\n\$virtual = " . var_export($virtual, true) . ';'); 
+
+    $instance = field_info_instance('node', 'field_agggenerated', 'agglomeration');
+    dsm($instance);
+    $fields_instance  = field_info_instances('node', $bundle);
+
+    
+//     dsm(array_keys($fields_instance));
+    file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_field.inc', "<?php \n\n\$fields_instance = " . var_export($fields_instance, true) . ';');
+//     $i = 0;
+//     foreach($fields_instance as $key => $instance) {
+//       dsm($key);
+//       dsm($instance);
+//       $i++;
+//       if ($i%1 == 5) {
+//         break;
+//       }
+//     }
+//     dsm($fields_instance);
+  }
+  
+  return 'ok';
+}

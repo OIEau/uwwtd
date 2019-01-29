@@ -1010,6 +1010,18 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * @see template_process()
  */
 function theme($hook, $variables = array()) {
+
+// static $a = null;
+// static $b = null;
+// if (!isset($a) && $hook == 'field') {
+//   dsm(__FUNCTION__);
+//   dsm($hook);
+//   dsm($variables);
+//   $a = true;
+// //   dsm(debug_backtrace());
+// }
+
+
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
@@ -1053,6 +1065,11 @@ function theme($hook, $variables = array()) {
   }
 
   $info = $hooks[$hook];
+// if (!isset($b) && $hook == 'field') {
+//   dsm($info);
+//   $b = true;
+// //   dsm(debug_backtrace());
+// }
   global $theme_path;
   $temp = $theme_path;
   // point path_to_theme() to the currently used theme path:
