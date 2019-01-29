@@ -1702,18 +1702,33 @@ function uwwtd_get_agglo_graphic($node) {
       $reseau[$uwws['nid']]['collectingSystem'] = 'NOTCON';
     }
 
-    foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
-      $loadedDcp = node_load($dcps['nid']);
-      $dcpNid = $loadedDcp->nid;
-      $dcpTitle = $loadedDcp->title;
-      $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
-      $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
-      $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
-      $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
-      $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
-      $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
-    }
-  }
+// < < < < < <<  H E A D
+//     foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
+//       $loadedDcp = node_load($dcps['nid']);
+//       $dcpNid = $loadedDcp->nid;
+//       $dcpTitle = $loadedDcp->title;
+//       $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid']);
+//       $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+//       $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+//       $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+//       $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+//       $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+// =======
+        foreach ($uww->field_linked_discharge_points['und'] as $dcps) {
+            $loadedDcp = node_load($dcps['nid']);
+            $dcpNid = $loadedDcp->nid;
+            $dcpTitle = $loadedDcp->title;
+            if(isset($loadedDcp->field_linked_receiving_areas['und']) && $rca = node_load($loadedDcp->field_linked_receiving_areas['und'][0]['nid'])){
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['nid'] = $dcpNid;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['title'] = $dcpTitle;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaNid'] = $rca->nid;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaTitle'] = $rca->title;
+                $reseau[$uwws['nid']]['dcps'][$dcpNid]['rcaType'] = $loadedDcp->field_rcatype['und'][0]['value'];
+            }
+        }
+// > > > > > > > 3f6fd033dea6f365cc016e263df53d888d7150e9
+//     }
+//   }
 
   $percentage_lost = $node->field_aggc1['und'][0]['value'] - $sumOfLoadEntering;
   $pe_lost = ($percentage_lost * ($node->field_aggc1['und'][0]['value'] * $node->field_agggenerated['und'][0]['value'])) / 10000;

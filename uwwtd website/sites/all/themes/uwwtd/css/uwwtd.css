@@ -1389,6 +1389,7 @@ section#block-lang-dropdown-language{
     right:60px;
 }
 
+
 @media (max-width: 768px) {
   .node-type-agglomeration .flip .front,
   .node-type-uwwtp  .flip .front {
@@ -1409,4 +1410,10 @@ section#block-lang-dropdown-language{
   .google-map-banner h1 {
     text-shadow: none; 
   }
+}
+
+.views-exposed-form #edit-type-wrapper, 
+.views-exposed-form select#edit-type{
+    width:250px!important;
+    max-width:250px!important;
 }

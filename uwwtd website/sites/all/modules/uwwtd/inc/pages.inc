@@ -233,8 +233,29 @@ function uwwtd_get_data_uwwtp($option)
     }
 
     $data = array();
-    $query = 'select distinct on (n.title) n.title,
-        n.nid,
+    $query = '
+    WITH uwwtp_min_agg AS(
+        SELECT n.nid, n.type, n.title 
+        FROM {node} n
+            LEFT join
+              {field_data_field_anneedata f_annee}
+                ON n.nid = f_annee.entity_id
+            left join
+              {field_data_field_status f_status}
+                ON n.nid = f_status.entity_id
+            LEFT join
+              {field_data_field_agguwwliste f_uwwtp_agglo}
+                ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
+            LEFT join
+            {field_data_field_agggenerated f_agggenerated}
+                ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
+        WHERE n.type = :typenode
+            AND f_agggenerated.field_agggenerated_value >= 2000
+             AND f_annee.field_anneedata_value = :annee
+        GROUP BY n.nid
+    )
+    select distinct on (n.nid) n.nid,
+        n.title,
 		f_annee.field_anneedata_value,
 		f_uwwcode.field_inspireidlocalid_value,
 		f_comp.field_uwwcompliance_value,
@@ -263,6 +284,8 @@ function uwwtd_get_data_uwwtp($option)
         rbd.eurbdcode as rbd,
         rbd.rbdname
     from {node} n
+        JOIN uwwtp_min_agg
+            ON n.nid = uwwtp_min_agg.nid
         LEFT join
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
@@ -344,7 +367,7 @@ function uwwtd_get_data_uwwtp($option)
                 ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
     WHERE n.type = :typenode
         and f_annee.field_anneedata_value = :annee
-    ORDER BY n.title
+    ORDER BY n.nid
     ';
  // dsm($query);
 
@@ -501,13 +524,13 @@ function uwwtd_get_data_dcp($option){
         while($row = $result->fetchAssoc()) {
             
             $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
-            $row['rcacat_format'] =  (isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :$GLOBALS['uwwtd_value']['rcacat_labels']['default']);
+            $row['rcacat_format'] =  (isset($row['rcacat']) && isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :'');
             $row['rca_format'] =  l($row['rca_name'], 'node/'.$row['rca_id']);
             $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
             $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
             $row['field_physicalcapacityactivity_value_format'] =  uwwtd_format_number($row['field_physicalcapacityactivity_value']);
              $row['field_uwwwastewatertreated_value_format'] =  uwwtd_format_number($row['field_uwwwastewatertreated_value']);
-            $row['field_dcpirrigation_value_format'] =  $GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']];
+            $row['field_dcpirrigation_value_format'] =  (isset($GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']])?$GLOBALS['uwwtd']['reuse_type'][$row['field_dcpirrigation_value']]:'');
             
             
             $data[] = $row;
@@ -561,6 +584,10 @@ function uwwtd_get_data_sensitive_areas($option){
         
         $rcatype = array_flip($GLOBALS['uwwtd_value']['rcatype']);
         while($row = $result->fetchAssoc()) {
+            
+            if($node = node_load($row['nid'])){
+                $row['aggs'] = count($node->field_linked_agglomerations['und']);
+            }
             
             $row['tot_design_capacity_format'] =  ($row['tot_design_capacity'] ? uwwtd_format_number($row['tot_design_capacity']) : '-');
             $row['tot_entering_load_format'] =  ($row['tot_entering_load'] ? uwwtd_format_number($row['tot_entering_load']) : '-');
@@ -672,7 +699,8 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $filter_force['filter']['field_status_value'] = '1';
     }
 	// dsm($filter);
-    uwwtd_filter_data($filter, $data, $filter_force);        
+    uwwtd_filter_data($filter, $data, $filter_force); 
+    
 //     uwwtd_filter_data($filter, $data);
     $exists = array();
 	foreach($data as $art17){
@@ -728,7 +756,6 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         if (false === isset($graph[$row['field_aggcompliance_value_format']])) {
             $graph[$row['field_aggcompliance_value_format']]['nb'] = 0;
             $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] = 0;
-//             $graph[$row['field_aggcompliance_value_format']]['label'] = 'TODO';
         }
         $graph[$row['field_aggcompliance_value_format']]['nb']++;
         $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
@@ -814,7 +841,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 //     dsm($features);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-    unset($data);
+    
 
     //first graph number agglo
     $data_pie_1 = array();
@@ -860,6 +887,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $front = '<svg id="'. $graph1Id .'" style="margin:10px;"/>';
     $front .= "<script>jQuery(document).ready(function(){display_piechart_custom(".json_encode($data_pie_1).",  '".$graph1Id."');});</script>";
     $render_graph_nb = $front;
+    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
     $render_table_graph_nb = theme('table', array('rows'=>$data_table_1, 'header'=>$header_1));
     
     //Graph 2
@@ -869,7 +897,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $render_graph = $front2;
     
     
-    $header_1 = array(t('Number of agglomeration'),t('Compliance'));
+    
     $header_2 = array(t('Generated load (p.e.)'),t('Compliance'));
     $render_table_graph = theme('table', array('rows'=>$data_table_2, 'header'=>$header_2));
 
@@ -898,43 +926,47 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     	t("Number of agglomerations by compliance (number of agglomerations)"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
     	false, $yearsPossibles);
 
-    $page = ''
-            . '<h1>'.$title.'</h1>'
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>';
-    
-    // Todo : affichage des graph multi ou single année :
-    $displayGraphsMultiYears = false;
-    if ($displayGraphsMultiYears) {
-        $page .= '<div class="rows charts-row" >'. $htmlGraphsMultiYears .'</div>';
-    } else {
-        $page .= '<div class="rows charts-row" >'
-                .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">' 
-                    .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt;2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
-                  .'</div>'
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+        $page.=  '<div class="rows map-row" >'.$rendermap.'</div>';
+        // Todo : affichage des graph multi ou single année :
+        $displayGraphsMultiYears = false;
+        if ($displayGraphsMultiYears) {
+            $page .= '<div class="rows charts-row" >'. $htmlGraphsMultiYears .'</div>';
+        } else {
+            $page .= '<div class="rows charts-row" >'
+                    .'<div class="cell charts-rows-cell">'
+                      .'<div class="cell-content">' 
+                        .uwwtd_page_render_flipcard(t("Global compliance by number of agglomeration (&gt;2000 pe)"), $render_graph_nb, $render_table_graph_nb,'')
+                      .'</div>'
+                    .'</div>'
+                    .'<div class="cell charts-rows-cell">'
+                      .'<div class="cell-content">'
+                        .uwwtd_page_render_flipcard(t("Global compliance by Generated load (p.e.)"), $render_graph, $render_table_graph,'')
+                      .'</div>'
+                    .'</div>';
+            }
+        $page .=  '</div>'
+                . '<div class="rows data-table-row">'
+                 . '<div class="data-table-header">'
+                  . '<b>'.count($rows) ." results</b>"		
+                    . '<div class="hideprint export-result"> | Download results: '
+                        .l('csv', 'agglomerations/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
+                        .l('xls', 'agglomerations/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
+                    .'</div>'
+                 .'</div>'
+                    
+                    . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
+                
+                    . '<!--markerprinttable-->'  //use for print wkhtmltopdf
                 .'</div>'
-                .'<div class="cell charts-rows-cell">'
-                  .'<div class="cell-content">'
-                    .uwwtd_page_render_flipcard(t("Global compliance by Generated load (p.e.)"), $render_graph, $render_table_graph,'')
-                  .'</div>'
-                .'</div>';
-        }
-    $page .=  '</div>'
-            . '<div class="rows data-table-row">'
-			 . '<div class="data-table-header">'
-			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
-					.l('csv', 'agglomerations/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
-					.l('xls', 'agglomerations/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
-				.'</div>'
-			 .'</div>'
-				
-                . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
-			
-                . '<!--markerprinttable-->'  //use for print wkhtmltopdf
-            .'</div>'
-     ;
+         ;
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -942,25 +974,6 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
      return $page;
 }
 
-/**
- * Retourne les années possibles pour ce pays.
- */
-function getYearsPossibles() {
-	$year = uwwtd_get_max_annee();
-	
-	// Get available years for data
-	$query = db_select('field_data_field_anneedata', 'a');
-	$query->fields('a', array('field_anneedata_value'));
-	$query->orderBy('field_anneedata_value', 'DESC');
-	$results = $query->execute();
-	$years = array();
-	$count = 0;
-	while ($record = $results->fetchAssoc()) {
-		$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
-		if ($record['field_anneedata_value']!=$year){$count++;}
-	}
-	return $years;
-}
 
 function uwwtd_page_agglomeration_connection($type_export = ''){
     $title = 'Agglomeration collection map and list';
@@ -974,16 +987,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         'type'=>'ColumnChart',
         'id'=>'default-empty-d3'
     ));
-    
-    /*
-    $info = libraries_load('d3');
-    $info = libraries_load('d3.tooltip');
-    dsm($info);
-    $d3 = drupal_add_library('d3', 'd3.drupal');
-    $d3 = drupal_add_library('d3', 'd3.tooltip');
-    $d3 = drupal_add_library('d3', 'd3.extend');
-    dsm('D3 : '.$d3);
-    */
     
     $type = "agglomeration";
 	$option = array();
@@ -1158,7 +1161,6 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-    unset($data);
     $data_pie = array();
     $xaxis = array();
     $i = 0;
@@ -1200,9 +1202,10 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     $front .= "<script>".$js."</script>";
     $render_graph = $front;
 
-    $page =  '<h1>'.$title.'</h1>'
-            . $form
-            . $piechart                  //style="page-break-after:always;"
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+            $page.= $piechart                  //style="page-break-after:always;"
             . '<div class="rows map-row" >'.$rendermap.'</div>'
             
             
@@ -1227,7 +1230,11 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
                 . '<!--markerprinttable-->' //use for print wjhtmltopdf
             .'</div>'
      ;
-
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -1268,7 +1275,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         return $cache->data['page'];
     }
 //     dsm('not in cache');    
-	$data = uwwtd_get_data_uwwtp($filter['filter']);    
+	$data = uwwtd_get_data_uwwtp($filter['filter']);      
 	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
             'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
@@ -1301,7 +1308,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
    }
 
     $form = uwwtd_filter_form($list_field, $filter, 'views-exposed-form-uwwtp-compliance-page');
-//     dsm($data);    
+      
     $filter_force['filter'] = array();
     if (variable_get('display_only_active', '1') == 1) {
         $filter_force['filter']['field_status_value'] = '1';
@@ -1424,8 +1431,8 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-    unset($data);
-    
+    $total_1 = 0;
+    $total_2 = 0;
     
     foreach($graph as $compliance_format => $detail) {       
         $seg = array();
@@ -1503,10 +1510,11 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
             'attributes' => array('class' => 'customTable'),     
         ));   
 
-    $page = ''
-            . '<h1>'.$title.'</h1>'
-            . $form
-            .'<div class="rows map-row" >'.$rendermap.'</div>'
+        
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+    $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
             .'<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
@@ -1531,6 +1539,11 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf
             .'</div>'
      ;
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -1725,9 +1738,10 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 //     unset($data);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-    unset($data);
     
     $graph = array_replace(array_flip($keys_order), $graph);
+    $total_1 = 0;
+    $total_2 = 0;
     foreach($graph as $treatmenttype_format => $detail) {
         
         $seg = array();
@@ -1789,10 +1803,10 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         );
 
     
-    $page =  '<h1>'.$title.'</h1>'
-
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+    $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
                   .'<div class="cell-content">'
@@ -1817,7 +1831,11 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
                 . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
                 . '<!--markerprinttable-->'   //use for print wkhtmltopdf
             .'</div>';
-
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -2078,10 +2096,6 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
-    unset($data);
-
-
-
 
     $build['tablesort_table'] = array(
             '#theme' => 'table',
@@ -2089,10 +2103,10 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
             '#rows' => $rows,
         );
 
-    
-    $page =  '<h1>'.$title.'</h1>'
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+    $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
 			
             . '<div class="rows data-table-row">'
 				. '<div class="data-table-header">'
@@ -2106,7 +2120,11 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
                 . '<!--markerprinttable-->'  //use for print wjhtmltopdf              
             .'</div>'
      ;
-
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
 
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
@@ -2240,6 +2258,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             'rca52_format'=>$row['rca52_format'],
             // 'rca54_format'=>$row['rca54_format'],
             'rca58_format'=>$row['rca58_format'],
+            'aggs'=>$row['aggs'],
             'uwwtps'=>$row['uwwtps'],
             'tot_design_capacity_format'=>$row['tot_design_capacity_format'],
             'tot_entering_load_format'=>$row['tot_entering_load_format'],
@@ -2310,11 +2329,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }else{
         $rendermap = '';
     }
-    
-    
-    
+
     unset($features);
-    unset($data);
 
     //================================TODO INSERT GRAPH HERE
     
@@ -2325,11 +2341,11 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             '#header' => $header,
             '#rows' => $rows,
         );
-
-    $page = ''
-            . '<h1>'.$title.'</h1>'
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
+    
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+        $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
@@ -2342,8 +2358,12 @@ function uwwtd_sensitive_areas_page($type_export = ''){
                 . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
-            .'</div>'
-     ;
+            .'</div>' ;
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -2535,7 +2555,6 @@ function uwwtd_dcp_page($type_export = ''){
     $rendermap = uwwtd_build_map($map, $features);
     
     unset($features);
-    unset($data);
 
     $rows_nb = array();
     $rows_load = array();
@@ -2560,7 +2579,8 @@ function uwwtd_dcp_page($type_export = ''){
             foreach($item as $k=>$v){
                 $line_nb[] = $v['nb'];
                 $line_load[] = $v['load'];
-                //FIX ME nd@oieau.fr
+                if(!isset($total_nb[$k])) $total_nb[$k] = 0;
+                if(!isset($total_load[$k])) $total_load[$k] = 0;
                 $total_nb[$k]+=$v['nb'];
                 $total_load[$k]+=$v['load'];
                 
@@ -2596,10 +2616,10 @@ function uwwtd_dcp_page($type_export = ''){
 
    //============================Render the page ==> TODO use a true template/theme function 
 
-    $page = ''
-            . '<h1>'.$title.'</h1>'
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+        $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
             
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
@@ -2627,8 +2647,12 @@ function uwwtd_dcp_page($type_export = ''){
                 . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
-            .'</div>'
-     ;
+            .'</div>' ;
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -2656,7 +2680,10 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     $filter = uwwtd_get_form_filter($option);
     $preset_name = 'dcp_reuse_map';
     $preset = openlayers_preset_load($preset_name);
-    $map    = openlayers_build_map($preset->data);
+    $map = null;
+    if(isset($preset->data)){
+        $map    = openlayers_build_map($preset->data);
+    }
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_dcp($filter['filter']);
@@ -2817,8 +2844,6 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     $rendermap = uwwtd_build_map($map, $features);
     
     unset($features);
-    unset($data);
-
     $rows_nb = array();
     $rows_load = array();
     $legend = array();
@@ -2879,10 +2904,10 @@ function uwwtd_dcp_reuse_page($type_export = ''){
 
    //============================Render the page ==> TODO use a true template/theme function 
 
-    $page = ''
-            . '<h1>'.$title.'</h1>'
-            . $form
-            . '<div class="rows map-row" >'.$rendermap.'</div>'
+    $page =  '<h1>'.$title.'</h1>';
+    $page.=  $form;
+    if(!empty($data)){
+            $page.=   '<div class="rows map-row" >'.$rendermap.'</div>'
             
             . '<div class="rows charts-row" >'
                 .'<div class="cell charts-rows-cell">'
@@ -2910,8 +2935,12 @@ function uwwtd_dcp_reuse_page($type_export = ''){
                 . '<div class="view-content content-table">'. drupal_render($build) . '</div>'
 			
                 . '<!--markerprinttable-->'  //use for print wkhtmltopdf
-            .'</div>'
-     ;
+            .'</div>';
+    }
+    else{
+        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+    }
+    unset($data);
      if (true === $put_in_cache) {
         cache_set($cache_name, array('page' => $page), 'cache_page', CACHE_PERMANENT);
      }
@@ -3056,6 +3085,25 @@ function uwwtd_build_sensitive_areas_table($year = '') {
 
 
 //====================================================================== Others function for pages rendering
+/**
+ * Give available years for the country.
+ */
+function getYearsPossibles() {
+	$year = uwwtd_get_max_annee();
+	
+	// Get available years for data
+	$query = db_select('field_data_field_anneedata', 'a');
+	$query->fields('a', array('field_anneedata_value'));
+	$query->orderBy('field_anneedata_value', 'DESC');
+	$results = $query->execute();
+	$years = array();
+	$count = 0;
+	while ($record = $results->fetchAssoc()) {
+		$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+		if ($record['field_anneedata_value']!=$year){$count++;}
+	}
+	return $years;
+}
 
 function uwwtd_page_render_flipcard($title, $front, $back, $msg=''){
     $content = 
@@ -3663,7 +3711,7 @@ function uwwtd_get_form_filter($option){
     else {
         $filter['order'] = $option['default']['order'];
         $filter['sort'] = $option['default']['sort'];
-        $filter['sort_mod'] = $option['default']['sort_mod'];
+        $filter['sort_mod'] = isset($option['default']['sort_mod'])?$option['default']['sort_mod']:'';
     }
     return $filter;
 }

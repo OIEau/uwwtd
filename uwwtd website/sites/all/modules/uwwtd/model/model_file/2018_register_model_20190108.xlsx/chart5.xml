@@ -22,7 +22,7 @@
               <a:rPr b="0" i="0" u="none" strike="noStrike">
                 <a:latin typeface="Calibri" />
               </a:rPr>
-              <a:t>C3Comparison of compliance between 8th, 9th and 10th reporting: number of agglomerations</a:t>
+              <a:t>Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.</a:t>
             </a:r>
           </a:p>
         </c:rich>
@@ -37,10 +37,10 @@
           <c:layoutTarget val="inner" />
           <c:xMode val="edge" />
           <c:yMode val="edge" />
-          <c:x val="0.14496318693151" />
-          <c:y val="0.17245640128317" />
-          <c:w val="0.74074213814176" />
-          <c:h val="0.67251793525809" />
+          <c:x val="0.13729188069966" />
+          <c:y val="0.12648857927868" />
+          <c:w val="0.74668819473481" />
+          <c:h val="0.72821100577289" />
         </c:manualLayout>
       </c:layout>
       <c:barChart>
@@ -52,7 +52,7 @@
           <c:order val="0" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AB$63</c:f>
+              <c:f>Graphs!$AB$49</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -61,10 +61,10 @@
               </c:strCache>
             </c:strRef>
           </c:tx>
-          <c:invertIfNegative val="0" />
+          <c:invertIfNegative val="0" />  
           <c:cat>
             <c:strRef>
-              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
               <c:strCache>
                 <c:ptCount val="9" />
                 <c:pt idx="0">
@@ -99,7 +99,7 @@
           </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AB$64:$AB$72</c:f>
+              <c:f>Graphs!$AB$50:$AB$58</c:f>
               <c:numCache>
                 <c:formatCode>#,##0</c:formatCode>
                 <c:ptCount val="9" />
@@ -130,7 +130,7 @@
           <c:order val="1" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AC$63</c:f>
+              <c:f>Graphs!$AC$49</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -139,10 +139,10 @@
               </c:strCache>
             </c:strRef>
           </c:tx>
-          <c:invertIfNegative val="0" />
+          <c:invertIfNegative val="0" />   
           <c:cat>
             <c:strRef>
-              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
               <c:strCache>
                 <c:ptCount val="9" />
                 <c:pt idx="0">
@@ -177,7 +177,7 @@
           </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AC$64:$AC$72</c:f>
+              <c:f>Graphs!$AC$50:$AC$58</c:f>
               <c:numCache>
                 <c:formatCode>#,##0</c:formatCode>
                 <c:ptCount val="9" />
@@ -208,7 +208,7 @@
           <c:order val="2" />
           <c:tx>
             <c:strRef>
-              <c:f>Graphs!$AD$63</c:f>
+              <c:f>Graphs!$AD$49</c:f>
               <c:strCache>
                 <c:ptCount val="1" />
                 <c:pt idx="0">
@@ -229,7 +229,7 @@
           <!-- END color bar  -->
           <c:cat>
             <c:strRef>
-              <c:f>Graphs!$AA$64:$AA$72</c:f>
+              <c:f>Graphs!$AA$50:$AA$58</c:f>
               <c:strCache>
                 <c:ptCount val="9" />
                 <c:pt idx="0">
@@ -264,7 +264,7 @@
           </c:cat>
           <c:val>
             <c:numRef>
-              <c:f>Graphs!$AD$64:$AD$72</c:f>
+              <c:f>Graphs!$AD$50:$AD$58</c:f>
               <c:numCache>
                 <c:formatCode>#,##0</c:formatCode>
                 <c:ptCount val="9" />
@@ -355,17 +355,22 @@
               <a:lstStyle />
               <a:p>
                 <a:r>
-                  <a:t>number of agglomerations</a:t>
+                  <a:t></a:t>
                 </a:r>
               </a:p>
             </c:rich>
           </c:tx>
-          <c:layout />
+          <c:layout>
+            <c:manualLayout>
+              <c:xMode val="edge" />
+              <c:yMode val="edge" />
+              <c:x val="0.024750692568618" />
+              <c:y val="0.3969385944503" />
+            </c:manualLayout>
+          </c:layout>
           <c:overlay val="0" />
         </c:title>
-        <!-- START change thoussand separaor -->
-        <c:numFmt formatCode="# ##0" sourceLinked="0" />
-        <!-- END change thoussand separaor --> 
+        <c:numFmt formatCode="#,##0" sourceLinked="0" />
         <c:majorTickMark val="none" />
         <c:minorTickMark val="none" />
         <c:tickLblPos val="nextTo" />
@@ -387,10 +392,10 @@
         <c:manualLayout>
           <c:xMode val="edge" />
           <c:yMode val="edge" />
-          <c:x val="0.88813318761614" />
-          <c:y val="0.17827200423623" />
-          <c:w val="0.11186681238386" />
-          <c:h val="0.19583377077865" />
+          <c:x val="0.88186476940973" />
+          <c:y val="0.24733752457121" />
+          <c:w val="0.11813523059028" />
+          <c:h val="0.19422937937676" />
         </c:manualLayout>
       </c:layout>
       <c:overlay val="0" />

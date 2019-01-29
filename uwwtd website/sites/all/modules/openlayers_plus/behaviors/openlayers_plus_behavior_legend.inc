@@ -144,14 +144,21 @@ class openlayers_plus_behavior_legend extends openlayers_behavior {
 	$output = '';
 	
 	$scalepoints_legend='';
-	if(isset($scalepoints['distinct'])){
+	if(isset($scalepoints['distinct']) && $scalepoints['distinct']!='' && $scalepoints['distinct'] > 0){
 		$min_radius = $scalepoints['min']['pointRadius'];
-		$min_value = $scalepoints['min']['value'];
-		$max_radius = $scalepoints['max']['pointRadius'];
-		$max_value = $scalepoints['max']['value'];
+        $max_radius = $scalepoints['max']['pointRadius'];
+        $pointdiff = ($max_radius - $min_radius) / $scalepoints['distinct'];
+        
+        if($scalepoints['min']['value'] && $scalepoints['max']['value']){
+            $min_value = $scalepoints['min']['value'];
+            $max_value = $scalepoints['max']['value'];
+        }
+        else{
+            $min_value = 0;
+            $max_value = 1000;
+        }
+        $valdiff = ($max_value - $min_value) / $scalepoints['distinct'];
 		
-		$pointdiff = ($max_radius - $min_radius) / $scalepoints['distinct'];
-		$valdiff = ($max_value - $min_value) / $scalepoints['distinct'];
 		if(trim($scalepoints['arbitrary_classes'])!=''){
 			$classes = $this->get_classes($scalepoints['arbitrary_classes']);
 		}

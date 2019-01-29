@@ -5035,6 +5035,51 @@ function uwwtd_update_7166(&$context) {
 //     throw new DrupalUpdateException($msg_error);
 }
 
+/**
+ *Create dcp_reuse_map
+ */
+function uwwtd_update_7167(&$context) {
+  uwwtd_install_trace(__FUNCTION__);
+
+    $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    uwwtd_update_map_overlay($country_config, $country_code, array('dcp_reuse_map.inc'), array('-'), array('-'));
+  
+
+    variable_set('siif_eru_version', __FUNCTION__);
+
+//     throw new DrupalUpdateException($msg_error);
+}
+
+/**
+ *Flush error list linked to inactive entity and create page with summury stats on errors
+  */
+function uwwtd_update_7168(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    //Flush error list linked to inactive entity
+    db_query("
+    DELETE FROM {uwwtd_import_errors} e 
+    USING {node} n, {field_data_field_status} s 
+    WHERE e.entity_id = n.nid 
+        AND n.nid = s.entity_id
+        AND (s.field_status_value = '0' OR s.field_status_value = '2')
+    ");
+    
+    $menu= array(
+            'link_path' => 'data/error-list-stats',
+            'link_title' => 'Errors summary statistics',
+            'description' => '' ,
+            'menu_name' => 'menu-editorial-menu',
+            'weight' => 1,
+            //'expanded' => true,
+            'mlid' => 0, 
+            'plid' => 0,
+            'customized' => 1,
+        );
+    $mlid = menu_link_save($menu);
+    menu_cache_clear_all();
+}
 
 /**
  * INstall module  empty_fields   field_formatter_settings
@@ -5647,6 +5692,7 @@ function uwwtd_update_map_overlay($country_config, $country_code, $map = array()
         'uwwtp_treatment_map.inc',
         'uwwtp_pressure_map.inc',
         'dcp_map.inc',
+        'dcp_reuse_map.inc',
         'rca_map.inc',
         
     );
