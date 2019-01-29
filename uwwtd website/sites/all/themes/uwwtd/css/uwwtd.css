@@ -933,6 +933,10 @@ figure:focus{
 .uwwrealthird .distance p{margin:0;line-height:2;}
 .uwwrealthird .distance .custom_tooltip{width: 400px; max-width: 400px;}
 
+
+
+
+
 #OpenLayers_Control_PanZoom_1145_zoomin, #OpenLayers_Control_PanZoom_1145_zoomworld, #OpenLayers_Control_PanZoom_1145_zoomout{display:none;}
 
 #block-uwwtd-map-home .contextual-links-wrapper, .map-row .contextual-links-wrapper{right:40px;display: block;}
@@ -1383,4 +1387,26 @@ section#block-lang-dropdown-language{
     position:absolute;
     top:40px;
     right:60px;
+}
+
+@media (max-width: 768px) {
+  .node-type-agglomeration .flip .front,
+  .node-type-uwwtp  .flip .front {
+    position: relative !important;
+  }
+  
+  .node-type-agglomeration .flip .back,
+  .node-type-uwwtp  .flip .back {
+    transform : none !important;
+    position: relative !important;
+  }
+  
+  .node-type-agglomeration .button-flipper,
+  .node-type-uwwtp  .button-flipper {
+    display:none;
+  }
+
+  .google-map-banner h1 {
+    text-shadow: none; 
+  }
 }
