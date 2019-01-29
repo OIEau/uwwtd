@@ -112,7 +112,7 @@ function uwwtd_get_errors_stats(){
     
     if(!empty($data)){
         foreach($data as $bundle=>$bundles_err){
-            
+            $output.="<h2>".$bundle."</h2>";
             foreach($bundles_err as $year=>$err){
                 $output.="<h3>".$year."</h3>";
                 $output.=theme('table', [
