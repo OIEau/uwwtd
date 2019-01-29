@@ -122,6 +122,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
 
+    //=============== 
+    
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     
 }
@@ -10798,6 +10800,11 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 
     variable_set('registre_'.$annee, time());
     drupal_set_message(uwwtd_registre_create_html_link($annee));
+}
+
+//Get data on distance to target (distance to compliance) foreach agglomeration and set it in agglomeration nodes
+function uwwtd_retreive_agg_dtt($annee, &$context){
+    
 }
 
 /**
