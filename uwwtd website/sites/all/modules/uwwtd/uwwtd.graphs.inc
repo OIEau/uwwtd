@@ -311,10 +311,11 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 		// Pour un graph avec plusieurs années :
 		if ($yearSelected == ALL_YEARS) {
 			// Pour chaque année :
+            /*
 			foreach ($frontTmp as $year => $groupElements) {
 				// Suppresion du groupe du total :
 				array_shift($frontTmp[$year]);
-			}
+			}*/
 			// Pour chaque année :
 			foreach ($frontTmp as $year => $yearRow) {
 				foreach ($yearRow as $groupElements) {
@@ -358,10 +359,11 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 			$front = $frontTmp;
 			
 			// Pour chaque année :
+            /*
 			foreach ($front as $year => $groupElements) {
 				// Suppresion de la ligne du total :
 				array_shift($front[$year]);
-			}
+			}*/
 			// Pour chaque année (restantes) :
 			foreach ($front as $year => $groupElements) {
 				// Pour chaque groupe d'éléments  :
@@ -803,14 +805,16 @@ function getRow6Graph1And2($results) {
 							array_key_exists('vol', $element)) {
 							// Redéfinition de la valeur de l'année :
 							$graph1Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering' => $element['in'] , 
-                                'Discharged'=>$element['out']
+                                'Entering' => isset($element['in']['q'])?$element['in']['q']:$element['in'], 
+                                'Discharged'=>isset($element['out']['q'])?$element['out']['q']:$element['out']
                             );
-                            $sum+=$element['in'];
+
+                            if(isset($element['in']['q'])) $sum+=$element['in']['q'];
+                            else $sum+=$element['in'];
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering'=>round(($element['in']/$element['vol']) , 3),
-                                'Discharged'=>round(($element['out']/$element['vol']) , 3),
+                                'Entering'=>isset($element['in']['c'])?$element['in']['c']:round(($element['in']/$element['vol']) , 3),
+                                'Discharged'=>isset($element['out']['c'])?$element['out']['c']:round(($element['out']/$element['vol']) , 3),
                             );
 						} else {
 							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
@@ -939,14 +943,14 @@ function getRow6Graphs($results){
                     if(is_array($item)){
                         $graph1Front['data'][] = array(
                             (string)$key,
-                            $item['in'],
-                            $item['out'],
+                            $item['in']['q'],
+                            $item['out']['q'],
                         );
                         $graph1FrontRows[] = array(
                             (string)$key,
-                            uwwtd_format_number($item['in']),
-                            uwwtd_format_number($item['out']),
-                            $item['in'] ? uwwtd_format_number(($item['in']- $item['out'])*100/$item['in'] ,1) .'%':'-'
+                            uwwtd_format_number($item['in']['q']),
+                            uwwtd_format_number($item['out']['q']),
+                            $item['in'] ? uwwtd_format_number(($item['in']['q']- $item['out']['q'])*100/$item['in']['q'] ,1) .'%':'-'
                         );
                         
                         // BB - 26/10/16
@@ -954,17 +958,17 @@ function getRow6Graphs($results){
                             (string)$key,
                             // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):0,
                             // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):0,
-                            round($item['in']/$item['vol'], 3),
-                            round($item['out']/$item['vol'], 3),
+                            round($item['in']['c'], 3),
+                            round($item['out']['c'], 3),
                         );
                         $graph2FrontRows[] = array(
                             (string)$key,
                             // $item['vol']>0 ?round($item['in']['c']*1000/$item['vol'],3):'-',
                             // $item['vol']>0 ?round($item['out']['c']*1000/$item['vol'],3):'-',
                             // $item['vol']>0 ? uwwtd_format_number($item['out']['c']*100/$item['in']['c'] ,1) .'%' :'-',
-                            $item['in']> 0 ? round($item['in']/$item['vol'], 3) : '-',
-                            $item['out']> 0 ? round($item['out']/$item['vol'], 3) : '-',
-                            $item['in'] && ($item['out'] * 100 / $item['in']) > 0 ? uwwtd_format_number(($item['in'] - $item['out']) * 100 / $item['in'], 1) . '%' : '-'
+                            $item['in']['c']> 0 ? round($item['in']['c'], 3) : '-',
+                            $item['out']['c']> 0 ? round($item['out']['c'], 3) : '-',
+                            $item['in']['c'] && ($item['out']['c'] * 100 / $item['in']['c']) > 0 ? uwwtd_format_number(($item['in']['c'] - $item['out']['c']) * 100 / $item['in']['c'], 1) . '%' : '-'
 
                         );
                         
