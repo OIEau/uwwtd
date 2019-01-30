@@ -2369,7 +2369,7 @@ function uwwtd_node_view($node, $view_mode, $langcode) {
 
     $function = 'uwwtd_' . $field_name;
     $value = $function($node, $view_mode);
-  
+    if($value=='') return null;
 //     if ($field_info['description']) {
 //       $value .= '<div class="custom_tooltip" style="display: none;">'.$field_info['description'].'</div>';
 //     }

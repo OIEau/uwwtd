@@ -1041,25 +1041,7 @@ function field_extract_bundle($entity_type, $bundle) {
  */
 function template_preprocess_field(&$variables, $hook) {
   $element = $variables['element'];
-// static $a = null;
-// // static $b = null;
-// if (!isset($a) && $hook == 'field') {
-//   dsm(__FUNCTION__);
-//   dsm($hook);
-//   dsm($variables);
-//   $a = true;
-// //   dsm(debug_backtrace());
-// }
-// 
-// if ($variables['element']['#field_name'] == 'field_aggbigid') {
-// dsm('*******d******');
-// // dsm($variables);
-// dsm(array_keys($variables));
-// dsm(array_keys($variables['element']));
-// dsm(array_keys($variables['element']['#items']));
-// dsm(array_keys($variables['element']['#items'][0]));
-// dsm(array_keys($variables['element'][0]));
-// }
+
   // There's some overhead in calling check_plain() so only call it if the label
   // variable is being displayed. Otherwise, set it to NULL to avoid PHP
   // warnings if a theme implementation accesses the variable even when it's
@@ -1090,7 +1072,7 @@ function template_preprocess_field(&$variables, $hook) {
     'field',
     'field-name-' . $variables['field_name_css'],
     'field-type-' . $variables['field_type_css'],
-    'field-label-' . $element['#label_display'], 
+    'field-label-' . $element['#label_display'],
   );
   // Add a "clearfix" class to the wrapper since we float the label and the
   // field items in field.css if the label is inline.
@@ -1193,14 +1175,6 @@ function template_process_field(&$variables, $hook) {
  */
 function theme_field($variables) {
   $output = '';
-
-// static $a = null;
-// if (!isset($a) && $variables['element']['test'] = true) {
-//   dsm(__FUNCTION__);
-//   dsm($variables);
-//   $a = true;   
-// //   dsm(debug_backtrace());
-// }
 
   // Render the label, if it's not hidden.
   if (!$variables['label_hidden']) {

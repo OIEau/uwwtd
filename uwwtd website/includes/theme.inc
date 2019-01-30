@@ -1010,18 +1010,6 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * @see template_process()
  */
 function theme($hook, $variables = array()) {
-
-// static $a = null;
-// static $b = null;
-// if (!isset($a) && $hook == 'field') {
-//   dsm(__FUNCTION__);
-//   dsm($hook);
-//   dsm($variables);
-//   $a = true;
-// //   dsm(debug_backtrace());
-// }
-
-
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
@@ -1065,11 +1053,6 @@ function theme($hook, $variables = array()) {
   }
 
   $info = $hooks[$hook];
-// if (!isset($b) && $hook == 'field') {
-//   dsm($info);
-//   $b = true;
-// //   dsm(debug_backtrace());
-// }
   global $theme_path;
   $temp = $theme_path;
   // point path_to_theme() to the currently used theme path:
@@ -1793,13 +1776,13 @@ function theme_link($variables) {
  *     http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  */
 function theme_links($variables) {
-  $links = $variables['links'];
-  $attributes = $variables['attributes'];
+  $links = (array) $variables['links'];
+  $attributes = (array) $variables['attributes'];
   $heading = $variables['heading'];
   global $language_url;
   $output = '';
 
-  if (count($links) > 0) {
+  if (!empty($links)) {
     // Treat the heading first if it is present to prepend it to the
     // list of links.
     if (!empty($heading)) {
@@ -2012,7 +1995,7 @@ function theme_table($variables) {
   $empty = $variables['empty'];
 
   // Add sticky headers, if applicable.
-  if (count($header) && $sticky) {
+  if (!empty($header) && $sticky) {
     drupal_add_js('misc/tableheader.js');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
@@ -2026,7 +2009,7 @@ function theme_table($variables) {
   }
 
   // Format the table columns:
-  if (count($colgroups)) {
+  if (!empty($colgroups)) {
     foreach ($colgroups as $number => $colgroup) {
       $attributes = array();
 
@@ -2061,38 +2044,40 @@ function theme_table($variables) {
   }
 
   // Add the 'empty' row message if available.
-  if (!count($rows) && $empty) {
+  if (empty($rows) && $empty) {
     $header_count = 0;
-    foreach ($header as $header_cell) {
-      if (is_array($header_cell)) {
-        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
-      }
-      else {
-        $header_count++;
+    if (!empty($header)) {
+      foreach ($header as $header_cell) {
+        if (is_array($header_cell)) {
+          $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+        }
+        else {
+          $header_count++;
+        }
       }
     }
     $rows[] = array(array('data' => $empty, 'colspan' => $header_count, 'class' => array('empty', 'message')));
   }
 
   // Format the table header:
-  if (count($header)) {
+  if (!empty($header)) {
     $ts = tablesort_init($header);
     // HTML requires that the thead tag has tr tags in it followed by tbody
     // tags. Using ternary operator to check and see if we have any rows.
-    $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
+    $output .= (!empty($rows) ? ' <thead><tr>' : ' <tr>');
     foreach ($header as $cell) {
       $cell = tablesort_header($cell, $header, $ts);
       $output .= _theme_table_cell($cell, TRUE);
     }
     // Using ternary operator to close the tags based on whether or not there are rows
-    $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
+    $output .= (!empty($rows) ? " </tr></thead>\n" : "</tr>\n");
   }
   else {
     $ts = array();
   }
 
   // Format the table rows:
-  if (count($rows)) {
+  if (!empty($rows)) {
     $output .= "<tbody>\n";
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';
@@ -2112,7 +2097,7 @@ function theme_table($variables) {
         $attributes = array();
         $no_striping = FALSE;
       }
-      if (count($cells)) {
+      if (!empty($cells)) {
         // Add odd/even class
         if (!$no_striping) {
           $class = $flip[$class];

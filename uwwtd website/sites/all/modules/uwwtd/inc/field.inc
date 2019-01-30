@@ -51,6 +51,8 @@ function uwwtd_virtual_field_article_17($node) {
           $html .= uwwtd_render_article17_uwwtp($node->field_article17_uwwtp['und'][0]['nid']);
       }
      break;
+    default:
+        return null;
   }
 
   return $html;
@@ -132,6 +134,9 @@ function uwwtd_virtual_field_aggc1_with_pe($node, $view_mode) {
     $pe = ' % (' . uwwtd_format_number($node->field_aggc1['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value']) . ' p.e.)';
   }
 
+  if(isset($node->field_aggmethodc1['und']) && $node->field_aggmethodc1['und'][0]['value']!=''){
+    $pe .=' '.t('based on :method method', [':method'=>$GLOBALS['methods'][$node->field_aggmethodc1['und'][0]['value']]]);  
+  }
 
   return  uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) . $pe;
 }
@@ -148,6 +153,9 @@ function uwwtd_virtual_field_aggc2_with_pe($node) {
   if (true === is_numeric($node->field_aggc2['und'][0]['value'])) {
     $pe = ' % (' . uwwtd_format_number($node->field_aggc2['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value']) . ' p.e.)';
   }
+  if(isset($node->field_aggmethodc2['und']) && $node->field_aggmethodc2['und'][0]['value']!=''){
+    $pe .=' '.t('based on :method method', [':method'=>$GLOBALS['methods'][$node->field_aggmethodc2['und'][0]['value']]]);  
+  }
   return uwwtd_format_number($node->field_aggc2['und'][0]['value'], 1) . $pe;
 }
 
@@ -162,6 +170,9 @@ function uwwtd_virtual_field_aggpercwithouttreatment_with_pe($node) {
   $pe = '';
   if (true === is_numeric($node->field_aggpercwithouttreatment['und'][0]['value'])) {
     $pe = ' % (' . uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'] / 100 * $node->field_agggenerated['und'][0]['value']) . ' p.e.)';
+  }
+  if(isset($node->field_aggmethodwithouttreatment['und']) && $node->field_aggmethodwithouttreatment['und'][0]['value']!=''){
+    $pe .=' '.t('based on :method method', [':method'=>$GLOBALS['methods'][$node->field_aggmethodwithouttreatment['und'][0]['value']]]);  
   }
   return uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1) . $pe;
 }
@@ -625,11 +636,6 @@ function uwwtd_virtual_field_aggperiodover5_custom($node) {
  */
 function uwwtd_vitual_get_info_stacked_bar($node) {
 
-  static $data = null;
-  if (isset($data[$node->nid])) {
-    return $data[$node->nid];
-  }         
-
   //BOD
   if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
     if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
@@ -755,37 +761,6 @@ function uwwtd_vitual_get_info_stacked_bar($node) {
     'rateP' => isset($rateP) ? $rateP : null, //$rateP,
   );
 
-  $data[$node->nid] = array( 
-    'incomingLoadBod' => 54, //isset($incomingLoadBod) ? $incomingLoadBod : null, //$incomingLoadBod  
-    'incomingBod' => 54, //isset($incomingBod) ? $incomingBod : null, //$incomingBod,
-    'resultIncomingBod' => 54, //isset($resultIncomingBod) ? $resultIncomingBod : null, //$resultIncomingBod,  
-    'dischargeLoadBod' => 54, //isset($dischargeLoadBod) ? $dischargeLoadBod : null, //$dischargeLoadBod,
-    'dischargeBod' =>54, // isset($dischargeBod) ? $dischargeBod : null, //$dischargeBod,  
-    'resultDischargedBod' => 54, //isset($resultDischargedBod) ? $resultDischargedBod : null, //$resultDischargedBod,
-    'rateBod' => 54, //isset($rateBod) ? $rateBod : null, //$rateBod,  
-    'incomingLoadCod' => 54, //isset($incomingLoadCod) ? $incomingLoadCod : null, //$incomingLoadCod,
-    'incomingCod' =>54, // isset($incomingCod) ? $incomingCod : null, //$incomingCod,  
-    'resultIncomingCod' => 54, //isset($resultIncomingCod) ? $resultIncomingCod : null, //$resultIncomingCod,
-    'dischargeLoadCod' =>54, //isset($dischargeLoadCod) ? $dischargeLoadCod : null, //$dischargeLoadCod,
-    'dischargeCod' =>54, // isset($dischargeCod) ? $dischargeCod : null, //$dischargeCod,
-    'resultDischargedCod' =>54, // isset($resultDischargedCod) ? $resultDischargedCod : null, //$resultDischargedCod,
-    'rateCod' => 54, //isset($rateCod) ? $rateCod : null, //$rateCod,
-    'incomingLoadN' => 54, //isset($incomingLoadN) ? $incomingLoadN : null, //$incomingLoadN,
-    'incomingN' => 54, //isset($incomingN) ? $incomingN : null, //$incomingN,
-    'resultIncomingN' => 54, //isset($resultIncomingN) ? $resultIncomingN : null, //$resultIncomingN,
-    'dischargeLoadN' => 54, //isset($dischargeLoadN) ? $dischargeLoadN : null, //$dischargeLoadN,
-    'dischargeN' => 54, //isset($dischargeN) ? $dischargeN : null, //$dischargeN,
-    'resultDischargedN' => 54, //isset($resultDischargedN) ? $resultDischargedN : null, //$resultDischargedN,
-    'rateN' =>54, // isset($rateN) ? $rateN : null, //,$rateN
-    'incomingLoadP' =>54, // isset($incomingLoadP) ? $incomingLoadP : null, //$incomingLoadP,
-    'incomingP' => 54, //isset($incomingP) ? $incomingP : null, //$incomingP,
-    'resultIncomingP' =>54, // isset($resultIncomingP) ? $resultIncomingP : null, //$resultIncomingP,
-    'dischargeLoadP' => 54, //isset($dischargeLoadP) ? $dischargeLoadP : null, //$dischargeLoadP,
-    'dischargeP' => 54, //isset($dischargeP) ? $dischargeP : null, //$dischargeP,
-    'resultDischargedP' => 54, //isset($resultDischargedP) ? $resultDischargedP : null, //$resultDischargedP,
-    'rateP' => 54, //isset($rateP) ? $rateP : null, //$rateP,
-  );
-
   return $data[$node->nid];
 }
 
@@ -797,10 +772,9 @@ function uwwtd_virtual_field_data_stackedbar($node) {
 //   return __FUNCTION__;
 
   $data = uwwtd_vitual_get_info_stacked_bar($node);
-
   $output = '';
        
-  if (true or isset($data['incomingLoadBod'])|| isset($data['resultIncomingBod']) || isset($data['dischargeLoadBod'])|| isset($data['resultDischargedBod'])|| 
+  if (isset($data['incomingLoadBod'])|| isset($data['resultIncomingBod']) || isset($data['dischargeLoadBod'])|| isset($data['resultDischargedBod'])|| 
       isset($data['incomingLoadCod'])|| isset($data['resultIncomingCod'])|| isset($data['dischargeLoadCod'])|| isset($data['resultDischargedCod'])||
       isset($data['incomingLoadN'])|| isset($data['resultIncomingN'])|| isset($data['dischargeLoadN'])|| isset($data['resultDischargedN'])||
       isset($data['incomingLoadP'])|| isset($data['resultIncomingP'])|| isset($data['dischargeLoadP'])|| isset($data['resultDischargedP'])
@@ -885,7 +859,7 @@ function uwwtd_virtual_field_stackedbar_uwwtpnode($node) {
 
   $html =  '<div class="back">';
 
-  if (true or isset($data['incomingLoadBod'])|| isset($data['resultIncomingBod']) || isset($data['dischargeLoadBod'])|| isset($data['resultDischargedBod'])|| 
+  if (isset($data['incomingLoadBod'])|| isset($data['resultIncomingBod']) || isset($data['dischargeLoadBod'])|| isset($data['resultDischargedBod'])|| 
       isset($data['incomingLoadCod'])|| isset($data['resultIncomingCod'])|| isset($data['dischargeLoadCod'])|| isset($data['resultDischargedCod'])||
       isset($data['incomingLoadN'])|| isset($data['resultIncomingN'])|| isset($data['dischargeLoadN'])|| isset($data['resultDischargedN'])||
       isset($data['incomingLoadP'])|| isset($data['resultIncomingP'])|| isset($data['dischargeLoadP'])|| isset($data['resultDischargedP'])
