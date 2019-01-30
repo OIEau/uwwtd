@@ -2173,7 +2173,7 @@ function uwwtd_field_extra_fields() {
             'weight'      => 100,
         ),
      'virtual_field_table_distance_to_compliance' =>    array(
-            'label'       => t('Table of the distance to compliance'), 
+            'label'       => t('Table of the distance to target'), 
             'label_hidden'       => true,
             'description' => t("description"),
             'weight'      => 100,
@@ -2495,33 +2495,21 @@ function uwwtd_create_config_file_display() {
 
   foreach($bundle_list as $bundle) {
     //export all group
-    $groups = field_group_info_groups('node', $bundle, 'default');
-//     dsm($groups);
+    $groups = field_group_info_groups('node', $bundle);
+    //dsm($groups);
     file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_group.inc', "<?php \n\n\$groups = " . str_replace('stdClass::__set_state', '(object)', var_export($groups, true)) . ';');
 
     //export virtual field config (weight)
     $virtual = field_bundle_settings('node', $bundle);      
     unset($virtual['extra_fields']['display']['uwwtd_virtual_graphic']);   
     unset($virtual['extra_fields']['display']['virtual_agglo_graphic']); 
+    //dsm($virtual);
     file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_virtual.inc', "<?php \n\n\$virtual = " . var_export($virtual, true) . ';'); 
 
-    $instance = field_info_instance('node', 'field_agggenerated', 'agglomeration');
-    dsm($instance);
     $fields_instance  = field_info_instances('node', $bundle);
-
-    
-//     dsm(array_keys($fields_instance));
+    //dsm($fields_instance);
     file_put_contents(drupal_get_path('module', 'uwwtd') . '/script/'.$bundle.'_list_field.inc', "<?php \n\n\$fields_instance = " . var_export($fields_instance, true) . ';');
-//     $i = 0;
-//     foreach($fields_instance as $key => $instance) {
-//       dsm($key);
-//       dsm($instance);
-//       $i++;
-//       if ($i%1 == 5) {
-//         break;
-//       }
-//     }
-//     dsm($fields_instance);
+
   }
   
   return 'ok';

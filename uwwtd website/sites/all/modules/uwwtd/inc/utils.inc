@@ -116,57 +116,7 @@ if (!function_exists('array_column')) {
 
 function uwwtd_debug(){
    // 
-   $annee = '2016';
-   $uri = 'public://register/'.$annee.'_agglo.csv';
-   $filepath = drupal_realpath($uri);
-   //=========Get DTT data
-   $data = [];
-    if (($handle = fopen($filepath, "r")) !== FALSE) {
-        $headers = [];
-        /*
-        'deadline for Art. 3 compliance'=>3, 
-        'deadline for Art. 4 compliance'=>4, 
-        'deadline for Art. 5 compliance'=>5,
-        
-        */
-        
-        //List relevant keys
-        $keys = [
-            'code'=>0, 
-            'dtt_art3_pc'=>24,
-            'dtt_art3_pe'=>25,
-            'dtt_art4_treatment_pc'=>41,
-            'dtt_art4_treatment_pe'=>42,
-            'dtt_art4_perf_pc'=>43,
-            'dtt_art4_perf_pe'=>44,
-             'dtt_art5_treatment_pc'=>75,
-            'dtt_art5_treatment_pe'=>76,
-            'dtt_art5_perf_pc'=>77,
-            'dtt_art5_perf_pe'=>78
-        ];
-        while (($row = fgetcsv($handle, 0, ";")) !== FALSE) {
-            if(empty($headers)) {$headers = $row;}
-            else{
-                $line = [];
-                foreach($keys as $k=>$idx){
-                    $line[$k] = $row[$idx];
-                }
-                $data[$line['code']] = $line;
-            } 
-        }
-        fclose($handle);
-    }
-    //Save data in agglomeration nodes
-    if(!empty($data)){
-        foreach($data as $aggid=>$info){
-            $siteId = $siteId = $annee.'_agg_'.$aggid;
-            if($nid = uwwtd_check_exist($siteId)){
-                if($node=node_load($nid)){
-                    //dsm($node);
-                }
-            }
-        }
-    }
+    uwwtd_create_config_file_display();
    return 'aaaa';
    
     /*

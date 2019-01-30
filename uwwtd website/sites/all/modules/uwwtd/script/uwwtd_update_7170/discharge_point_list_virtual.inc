@@ -15,14 +15,6 @@ $virtual = array (
     array (
       'custom_settings' => false,
     ),
-    'search_index' => 
-    array (
-      'custom_settings' => false,
-    ),
-    'search_result' => 
-    array (
-      'custom_settings' => false,
-    ),
     'token' => 
     array (
       'custom_settings' => false,

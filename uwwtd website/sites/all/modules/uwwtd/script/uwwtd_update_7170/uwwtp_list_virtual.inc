@@ -15,14 +15,6 @@ $virtual = array (
     array (
       'custom_settings' => false,
     ),
-    'search_index' => 
-    array (
-      'custom_settings' => false,
-    ),
-    'search_result' => 
-    array (
-      'custom_settings' => false,
-    ),
     'token' => 
     array (
       'custom_settings' => false,
@@ -32,6 +24,18 @@ $virtual = array (
   array (
     'form' => 
     array (
+      'title' => 
+      array (
+        'weight' => '1',
+      ),
+      'path' => 
+      array (
+        'weight' => '9',
+      ),
+      'xmlsitemap' => 
+      array (
+        'weight' => '8',
+      ),
     ),
     'display' => 
     array (

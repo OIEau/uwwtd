@@ -5210,10 +5210,10 @@ function uwwtd_update_7170(&$context) {
     foreach ($groups as $group_name => $config_group) {
       uwwtd_install_trace('update group ' . $group_name);
   
-      try {
+    try {
           $result  = field_group_group_save($config_group);                                            
            uwwtd_install_trace(var_export($result, true));
-      } catch (Exception $e) {
+    } catch (Exception $e) {
           $msg = "Error create/update group : ".$group_name."\n";
           $msg .= $e->getMessage() . "\n"; 
           uwwtd_install_trace($msg);
@@ -5227,45 +5227,24 @@ function uwwtd_update_7170(&$context) {
       throw new DrupalUpdateException($msg_error);
   }
 
-  //enable module  empty_fields field_formatter_settings
-//   $list_module_to_enable = array(
-//     'empty_fields',
-//     'field_formatter_settings',
-//   );
-//   if (false === module_enable($list_module_to_enable)) {
-//       $msg = "Error, the module ".implode(',', $list_module_to_disable)." can't be enabled.";
-//       uwwtd_install_trace($msg);
-//       throw new DrupalUpdateException($msg);    
-//   }
-// 
-// 
-//   //install new map for node agglo / uwwtp / dcp
-//   $path = drupal_get_path('module', 'uwwtd') . '/script/'.__FUNCTION__.'/uwwtd_geofield_formatter_map.inc';
-//   include($path);
-//   if (isset($openlayers_maps)) {
-//       $row = array();
-//       $row['name'] = $openlayers_maps->name;
-//       $row['title'] = $openlayers_maps->title;
-//       $row['description'] = $openlayers_maps->description;
-//       $row['data'] = $openlayers_maps->data;
-//       $msgresult = 'ok';
-//       try {
-//           uwwtd_insert_openlayers('openlayers_maps', $row);
-//       } catch (Exception $e) {
-//           $msgresult = 'error';
-//           $msgexception .= 'Error : can\'t create openlayers map ' . $path . '('.$msgresult.')'."\n";
-//           throw new DrupalUpdateException($msgexception);
-//       }
-//                   
-//      uwwtd_install_trace('map ' . $path . ' result : ' . $msgresult); 
-//      unset($openlayers_maps);                              
-//   }
-
   variable_set('siif_eru_version', __FUNCTION__);
 
 //   throw new DrupalUpdateException($msg_error);
 }
 
+/**
+* Regenerate UWWTD_Agglomeration SQL view in order to add DTT new field in sync system 
+*/
+function uwwtd_update_7171(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+    include_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+    uwwtd_retreive_agg_dtt(2016, $context);
+    
+    uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    variable_set('siif_eru_version', __FUNCTION__);
+}
 
 /**
  * Create a big city or update it

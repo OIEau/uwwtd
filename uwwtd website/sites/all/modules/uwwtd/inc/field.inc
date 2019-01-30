@@ -336,8 +336,8 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
 
   <div class="distance">
       <div class="field custom_tooltip_wrapper">
-          <div class="field-label">' . t('Distance to compliance:') . '</div>
-              <span class="custom_tooltip">' . t('The distance to compliance concept present the rate of waste water load that is:') . '
+          <div class="field-label">' . t('Distance to target:') . '</div>
+              <span class="custom_tooltip">' . t('The distance to target concept present the rate of waste water load that is:') . '
               <ul>
                   <li>' . t('adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)') . '</li>
               </ul>

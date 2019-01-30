@@ -1,7 +1,113 @@
 <?php 
 
 $fields_instance = array (
-  'field_dcpmsprovide' => 
+  'field_anneedata' => 
+  array (
+    'default_value' => 
+    array (
+      0 => 
+      array (
+        'value' => 2014,
+      ),
+    ),
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '11',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Year of data',
+    'required' => 1,
+    'settings' => 
+    array (
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'options',
+      'settings' => 
+      array (
+      ),
+      'type' => 'options_select',
+      'weight' => '39',
+    ),
+    'id' => '277',
+    'field_id' => '86',
+    'field_name' => 'field_anneedata',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpuntreated' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '19',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Volume of untreated waste water   (m3/y)  in case of situation 125 and 126 of EFFLU (LOV)',
+    'required' => 0,
+    'settings' => 
+    array (
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 0,
+      'module' => 'number',
+      'settings' => 
+      array (
+      ),
+      'type' => 'number',
+      'weight' => '20',
+    ),
+    'id' => '278',
+    'field_id' => '222',
+    'field_name' => 'field_dcpuntreated',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpcomaccept' => 
   array (
     'default_value' => NULL,
     'description' => '',
@@ -11,11 +117,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '23',
+        'weight' => '14',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'text',
       ),
@@ -29,7 +135,7 @@ $fields_instance = array (
         'weight' => 0,
       ),
     ),
-    'label' => 'Has the Member State provided these studies to the Commission (art.6.2)',
+    'label' => 'Did the Commission formally accept that the conditions under Art. 6(2) are met?',
     'required' => 0,
     'settings' => 
     array (
@@ -45,11 +151,186 @@ $fields_instance = array (
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => '24',
+      'weight' => '25',
     ),
-    'id' => '252',
-    'field_id' => '209',
-    'field_name' => 'field_dcpmsprovide',
+    'id' => '246',
+    'field_id' => '206',
+    'field_name' => 'field_dcpcomaccept',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpwaterbodyreferencedate' => 
+  array (
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'date_default',
+        'weight' => '20',
+        'settings' => 
+        array (
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+          'show_remaining_days' => false,
+        ),
+        'module' => 'date',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Reference date of the WFD waterbody ',
+    'required' => 0,
+    'settings' => 
+    array (
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'date',
+      'settings' => 
+      array (
+        'increment' => 1,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'text_parts' => 
+        array (
+        ),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_text',
+      'weight' => '17',
+    ),
+    'id' => '251',
+    'field_id' => '208',
+    'field_name' => 'field_dcpwaterbodyreferencedate',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpsuccessor' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'text_default',
+        'weight' => '17',
+        'settings' => 
+        array (
+          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+        ),
+        'module' => 'text',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'ID of the successor (historical management)',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '9',
+    ),
+    'id' => '290',
+    'field_id' => '233',
+    'field_name' => 'field_dcpsuccessor',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_linked_agglomerations' => 
+  array (
+    'label' => 'Linked agglomerations',
+    'widget' => 
+    array (
+      'weight' => '53',
+      'type' => 'node_reference_autocomplete',
+      'module' => 'node_reference',
+      'active' => 1,
+      'settings' => 
+      array (
+        'autocomplete_match' => 'contains',
+        'size' => '60',
+        'autocomplete_path' => 'node_reference/autocomplete',
+      ),
+    ),
+    'settings' => 
+    array (
+      'user_register_form' => false,
+    ),
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'above',
+        'type' => 'node_reference_default',
+        'weight' => '12',
+        'settings' => 
+        array (
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+        ),
+        'module' => 'node_reference',
+      ),
+      'teaser' => 
+      array (
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'weight' => 0,
+      ),
+    ),
+    'required' => 0,
+    'description' => '',
+    'default_value' => NULL,
+    'id' => '248',
+    'field_id' => '181',
+    'field_name' => 'field_linked_agglomerations',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
@@ -83,8 +364,8 @@ $fields_instance = array (
         'weight' => '13',
         'settings' => 
         array (
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'node_reference',
       ),
@@ -108,165 +389,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcptype' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '49',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Type of discharge point (UWWTP/collecting system)',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '6',
-    ),
-    'id' => '247',
-    'field_id' => '207',
-    'field_name' => 'field_dcptype',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_rcatype' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '10',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Type of receiving area',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '42',
-    ),
-    'id' => '245',
-    'field_id' => '205',
-    'field_name' => 'field_rcatype',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_repcode' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '48',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'ID of the report',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '1',
-    ),
-    'id' => '250',
-    'field_id' => '42',
-    'field_name' => 'field_repcode',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpwaterbodyid' => 
   array (
     'default_value' => NULL,
@@ -277,11 +399,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '17',
+        'weight' => '18',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'module' => 'text',
       ),
@@ -328,14 +450,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'file_default',
+        'type' => 'hidden',
         'weight' => '5',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'file',
       ),
       'teaser' => 
       array (
@@ -400,19 +519,19 @@ $fields_instance = array (
     array (
       'default' => 
       array (
-        'label' => 'above',
+        'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '44',
+        'weight' => '15',
         'settings' => 
         array (
-          'format_type' => 'long',
+          'format_type' => 'custom',
+          'fromto' => 'both',
           'multiple_number' => '',
           'multiple_from' => '',
           'multiple_to' => '',
-          'fromto' => 'both',
-          'show_remaining_days' => false,
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'show_remaining_days' => 0,
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'date',
       ),
@@ -428,13 +547,13 @@ $fields_instance = array (
     ),
     'required' => false,
     'description' => '',
+    'default_value' => NULL,
     'id' => '449',
     'field_id' => '357',
     'field_name' => 'field_dcpbeginlife',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
-    'default_value' => NULL,
   ),
   'field_dcpwfdrbd' => 
   array (
@@ -446,11 +565,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '16',
+        'weight' => '15',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'module' => 'text',
       ),
@@ -489,63 +608,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_anneedata' => 
-  array (
-    'default_value' => 
-    array (
-      0 => 
-      array (
-        'value' => 2014,
-      ),
-    ),
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'list_default',
-        'weight' => '11',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'list',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Year of data',
-    'required' => 1,
-    'settings' => 
-    array (
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'options',
-      'settings' => 
-      array (
-      ),
-      'type' => 'options_select',
-      'weight' => '39',
-    ),
-    'id' => '277',
-    'field_id' => '86',
-    'field_name' => 'field_anneedata',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpnotaffect' => 
   array (
     'default_value' => NULL,
@@ -555,14 +617,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '22',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -661,14 +720,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'node_reference_default',
+        'type' => 'hidden',
         'weight' => '34',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'node_reference',
       ),
       'teaser' => 
       array (
@@ -706,128 +762,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcpwaterbodyreferencedate' => 
-  array (
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'date_default',
-        'weight' => '17',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_remaining_days' => false,
-        ),
-        'module' => 'date',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Reference date of the WFD waterbody ',
-    'required' => 0,
-    'settings' => 
-    array (
-      'default_value' => 'now',
-      'default_value2' => 'same',
-      'default_value_code' => '',
-      'default_value_code2' => '',
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'date',
-      'settings' => 
-      array (
-        'increment' => 1,
-        'input_format' => 'm/d/Y - H:i:s',
-        'input_format_custom' => '',
-        'label_position' => 'above',
-        'text_parts' => 
-        array (
-        ),
-        'year_range' => '-3:+3',
-      ),
-      'type' => 'date_text',
-      'weight' => '17',
-    ),
-    'id' => '251',
-    'field_id' => '208',
-    'field_name' => 'field_dcpwaterbodyreferencedate',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_linked_receiving_areas' => 
-  array (
-    'label' => 'Linked receiving areas',
-    'widget' => 
-    array (
-      'weight' => '54',
-      'type' => 'node_reference_autocomplete',
-      'module' => 'node_reference',
-      'active' => 1,
-      'settings' => 
-      array (
-        'autocomplete_match' => 'contains',
-        'size' => '60',
-        'autocomplete_path' => 'node_reference/autocomplete',
-      ),
-    ),
-    'settings' => 
-    array (
-      'user_register_form' => false,
-    ),
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'above',
-        'type' => 'node_reference_default',
-        'weight' => '14',
-        'settings' => 
-        array (
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-        ),
-        'module' => 'node_reference',
-      ),
-      'teaser' => 
-      array (
-        'type' => 'hidden',
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'weight' => 0,
-      ),
-    ),
-    'required' => 0,
-    'description' => '',
-    'default_value' => NULL,
-    'id' => '249',
-    'field_id' => '90',
-    'field_name' => 'field_linked_receiving_areas',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpeffluentflowtype' => 
   array (
     'default_value' => NULL,
@@ -837,14 +771,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '15',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -891,11 +822,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '16',
+        'weight' => '19',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'module' => 'text',
       ),
@@ -943,14 +874,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '31',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -987,274 +915,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcpirrigation' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '12',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'In case of discharge on land please specify the purpose',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '13',
-    ),
-    'id' => '264',
-    'field_id' => '213',
-    'field_name' => 'field_dcpirrigation',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_status' => 
-  array (
-    'default_value' => 
-    array (
-      0 => 
-      array (
-        'value' => 0,
-      ),
-    ),
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'list_default',
-        'weight' => '47',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'list',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Status of the discharge point',
-    'required' => 0,
-    'settings' => 
-    array (
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'options',
-      'settings' => 
-      array (
-      ),
-      'type' => 'options_buttons',
-      'weight' => '4',
-    ),
-    'id' => '262',
-    'field_id' => '61',
-    'field_name' => 'field_status',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_utilityfacilityreference' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '12',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'ID of UWWTP (or collecting system without treatment)',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '8',
-    ),
-    'id' => '265',
-    'field_id' => '214',
-    'field_name' => 'field_utilityfacilityreference',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_dcpsurfacewaters' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '11',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Surface water',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '43',
-    ),
-    'id' => '258',
-    'field_id' => '210',
-    'field_name' => 'field_dcpsurfacewaters',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_specialisedzonetype' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '33',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'specialisedZoneType',
-    'required' => false,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '36',
-    ),
-    'id' => '259',
-    'field_id' => '35',
-    'field_name' => 'field_specialisedzonetype',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpreceivingwater' => 
   array (
     'default_value' => NULL,
@@ -1264,14 +924,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '38',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1317,14 +974,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '28',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1374,8 +1028,8 @@ $fields_instance = array (
         'weight' => '9',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
         ),
         'module' => 'text',
       ),
@@ -1424,11 +1078,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '25',
+        'weight' => '18',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'text',
       ),
@@ -1476,14 +1130,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'list_default',
+        'type' => 'hidden',
         'weight' => '4',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'list',
       ),
       'teaser' => 
       array (
@@ -1527,14 +1178,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '29',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1580,14 +1228,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '46',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1633,14 +1278,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '8',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1686,14 +1328,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '10',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1739,14 +1378,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '27',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1792,14 +1428,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '30',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -1836,65 +1469,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcpuntreated' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'number_decimal',
-        'weight' => '19',
-        'settings' => 
-        array (
-          'decimal_separator' => '.',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'prefix_suffix' => true,
-          'scale' => 2,
-          'thousand_separator' => ' ',
-        ),
-        'module' => 'number',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Volume of untreated waste water   (m3/y)  in case of situation 125 and 126 of EFFLU (LOV)',
-    'required' => 0,
-    'settings' => 
-    array (
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 0,
-      'module' => 'number',
-      'settings' => 
-      array (
-      ),
-      'type' => 'number',
-      'weight' => '20',
-    ),
-    'id' => '278',
-    'field_id' => '222',
-    'field_name' => 'field_dcpuntreated',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpaccoverflownumber' => 
   array (
     'default_value' => NULL,
@@ -1904,18 +1478,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'number_integer',
+        'type' => 'hidden',
         'weight' => '20',
         'settings' => 
         array (
-          'decimal_separator' => '.',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'prefix_suffix' => true,
-          'scale' => 0,
-          'thousand_separator' => ' ',
         ),
-        'module' => 'number',
       ),
       'teaser' => 
       array (
@@ -1963,18 +1530,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'number_decimal',
+        'type' => 'hidden',
         'weight' => '13',
         'settings' => 
         array (
-          'decimal_separator' => '.',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'prefix_suffix' => true,
-          'scale' => 2,
-          'thousand_separator' => ' ',
         ),
-        'module' => 'number',
       ),
       'teaser' => 
       array (
@@ -2036,13 +1596,13 @@ $fields_instance = array (
     array (
       'default' => 
       array (
-        'label' => 'above',
+        'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '42',
+        'weight' => '21',
         'settings' => 
         array (
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'text',
       ),
@@ -2075,14 +1635,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'above',
-        'type' => 'node_reference_default',
+        'type' => 'hidden',
         'weight' => '35',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'node_reference',
       ),
       'teaser' => 
       array (
@@ -2120,165 +1677,6 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_endlifespanversion' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '32',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'endLifespanVersion',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '34',
-    ),
-    'id' => '283',
-    'field_id' => '98',
-    'field_name' => 'field_endlifespanversion',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_dcpwfdrbdname' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '18',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Name of the WFD river basin district',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '19',
-    ),
-    'id' => '287',
-    'field_id' => '230',
-    'field_name' => 'field_dcpwfdrbdname',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_dcpimpact' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '21',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Does the discharge affect the objective of other relevant directives (MSFD, WFD, BD,…) annex I.B.4',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '22',
-    ),
-    'id' => '293',
-    'field_id' => '235',
-    'field_name' => 'field_dcpimpact',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
   'field_dcpwfdsubunit' => 
   array (
     'label' => 'ID of WFD sub-unit',
@@ -2302,13 +1700,13 @@ $fields_instance = array (
     array (
       'default' => 
       array (
-        'label' => 'above',
+        'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '43',
+        'weight' => '23',
         'settings' => 
         array (
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'text',
       ),
@@ -2328,59 +1726,6 @@ $fields_instance = array (
     'id' => '294',
     'field_id' => '236',
     'field_name' => 'field_dcpwfdsubunit',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_dcpsuccessor' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '7',
-        'settings' => 
-        array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-        ),
-        'module' => 'text',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'ID of the successor (historical management)',
-    'required' => 0,
-    'settings' => 
-    array (
-      'text_processing' => 0,
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'text',
-      'settings' => 
-      array (
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => '9',
-    ),
-    'id' => '290',
-    'field_id' => '233',
-    'field_name' => 'field_dcpsuccessor',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
@@ -2410,19 +1755,19 @@ $fields_instance = array (
     array (
       'default' => 
       array (
-        'label' => 'above',
+        'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '45',
+        'weight' => '16',
         'settings' => 
         array (
-          'format_type' => 'long',
+          'format_type' => 'custom',
+          'fromto' => 'both',
           'multiple_number' => '',
           'multiple_from' => '',
           'multiple_to' => '',
-          'fromto' => 'both',
-          'show_remaining_days' => false,
+          'show_remaining_days' => 0,
           'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'date',
       ),
@@ -2438,13 +1783,13 @@ $fields_instance = array (
     ),
     'required' => false,
     'description' => '',
+    'default_value' => NULL,
     'id' => '450',
     'field_id' => '358',
     'field_name' => 'field_dcpendlife',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
-    'default_value' => NULL,
   ),
   'field_dcp_wfdsubunitrefdate' => 
   array (
@@ -2479,9 +1824,9 @@ $fields_instance = array (
     array (
       'default' => 
       array (
-        'label' => 'above',
+        'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '41',
+        'weight' => '24',
         'settings' => 
         array (
           'format_type' => 'long',
@@ -2490,8 +1835,8 @@ $fields_instance = array (
           'multiple_to' => '',
           'fromto' => 'both',
           'show_remaining_days' => false,
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'date',
       ),
@@ -2523,11 +1868,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '40',
+        'weight' => '17',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
           'format_type' => 'long',
           'fromto' => 'both',
           'multiple_from' => '',
@@ -2591,11 +1936,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '37',
+        'weight' => '22',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
           'format_type' => 'long',
           'fromto' => 'both',
           'multiple_from' => '',
@@ -2658,20 +2003,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'date_default',
+        'type' => 'hidden',
         'weight' => '26',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'format_type' => 'long',
-          'fromto' => 'both',
-          'multiple_from' => '',
-          'multiple_number' => '',
-          'multiple_to' => '',
-          'show_remaining_days' => false,
         ),
-        'module' => 'date',
       ),
       'teaser' => 
       array (
@@ -2718,7 +2054,7 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcpcomaccept' => 
+  'field_dcptype' => 
   array (
     'default_value' => NULL,
     'description' => '',
@@ -2727,14 +2063,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
-        'weight' => '24',
+        'type' => 'hidden',
+        'weight' => '49',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -2746,7 +2079,7 @@ $fields_instance = array (
         'weight' => 0,
       ),
     ),
-    'label' => 'Did the Commission formally accept that the conditions under Art. 6(2) are met?',
+    'label' => 'Type of discharge point (UWWTP/collecting system)',
     'required' => 0,
     'settings' => 
     array (
@@ -2762,65 +2095,11 @@ $fields_instance = array (
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => '25',
+      'weight' => '6',
     ),
-    'id' => '246',
-    'field_id' => '206',
-    'field_name' => 'field_dcpcomaccept',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_linked_agglomerations' => 
-  array (
-    'label' => 'Linked agglomerations',
-    'widget' => 
-    array (
-      'weight' => '53',
-      'type' => 'node_reference_autocomplete',
-      'module' => 'node_reference',
-      'active' => 1,
-      'settings' => 
-      array (
-        'autocomplete_match' => 'contains',
-        'size' => '60',
-        'autocomplete_path' => 'node_reference/autocomplete',
-      ),
-    ),
-    'settings' => 
-    array (
-      'user_register_form' => false,
-    ),
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'above',
-        'type' => 'node_reference_default',
-        'weight' => '12',
-        'settings' => 
-        array (
-          'empty_fields_handler' => '',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-        ),
-        'module' => 'node_reference',
-      ),
-      'teaser' => 
-      array (
-        'type' => 'hidden',
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'weight' => 0,
-      ),
-    ),
-    'required' => 0,
-    'description' => '',
-    'default_value' => NULL,
-    'id' => '248',
-    'field_id' => '181',
-    'field_name' => 'field_linked_agglomerations',
+    'id' => '247',
+    'field_id' => '207',
+    'field_name' => 'field_dcptype',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
@@ -2834,14 +2113,11 @@ $fields_instance = array (
       'default' => 
       array (
         'label' => 'inline',
-        'type' => 'text_default',
+        'type' => 'hidden',
         'weight' => '6',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
         ),
-        'module' => 'text',
       ),
       'teaser' => 
       array (
@@ -2878,120 +2154,61 @@ $fields_instance = array (
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_dcplongitude' => 
+  'field_linked_receiving_areas' => 
   array (
-    'default_value' => NULL,
-    'description' => '',
-    'display' => 
-    array (
-      'default' => 
-      array (
-        'label' => 'inline',
-        'type' => 'number_decimal',
-        'weight' => '14',
-        'settings' => 
-        array (
-          'decimal_separator' => '.',
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
-          'prefix_suffix' => true,
-          'scale' => 2,
-          'thousand_separator' => ' ',
-        ),
-        'module' => 'number',
-      ),
-      'teaser' => 
-      array (
-        'label' => 'above',
-        'settings' => 
-        array (
-        ),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'label' => 'Longitude',
-    'required' => 0,
-    'settings' => 
-    array (
-      'max' => '',
-      'min' => '',
-      'prefix' => '',
-      'suffix' => '',
-      'user_register_form' => false,
-    ),
+    'label' => 'Linked receiving areas',
     'widget' => 
     array (
-      'active' => 0,
-      'module' => 'number',
+      'weight' => '54',
+      'type' => 'node_reference_autocomplete',
+      'module' => 'node_reference',
+      'active' => 1,
       'settings' => 
       array (
+        'autocomplete_match' => 'contains',
+        'size' => '60',
+        'autocomplete_path' => 'node_reference/autocomplete',
       ),
-      'type' => 'number',
-      'weight' => '11',
     ),
-    'id' => '276',
-    'field_id' => '221',
-    'field_name' => 'field_dcplongitude',
-    'entity_type' => 'node',
-    'bundle' => 'discharge_point',
-    'deleted' => '0',
-  ),
-  'field_dcprcaliste' => 
-  array (
-    'default_value' => NULL,
-    'description' => '',
+    'settings' => 
+    array (
+      'user_register_form' => false,
+    ),
     'display' => 
     array (
       'default' => 
       array (
         'label' => 'above',
         'type' => 'node_reference_default',
-        'weight' => '36',
+        'weight' => '14',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_handler' => 'EmptyFieldText',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'node_reference',
       ),
       'teaser' => 
       array (
+        'type' => 'hidden',
         'label' => 'above',
         'settings' => 
         array (
         ),
-        'type' => 'hidden',
         'weight' => 0,
       ),
     ),
-    'label' => 'Linked receiving area(s)',
     'required' => 0,
-    'settings' => 
-    array (
-      'user_register_form' => false,
-    ),
-    'widget' => 
-    array (
-      'active' => 1,
-      'module' => 'node_reference',
-      'settings' => 
-      array (
-        'autocomplete_match' => 'contains',
-        'autocomplete_path' => 'node_reference/autocomplete',
-        'size' => 60,
-      ),
-      'type' => 'node_reference_autocomplete',
-      'weight' => '44',
-    ),
-    'id' => '285',
-    'field_id' => '228',
-    'field_name' => 'field_dcprcaliste',
+    'description' => '',
+    'default_value' => NULL,
+    'id' => '249',
+    'field_id' => '90',
+    'field_name' => 'field_linked_receiving_areas',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
   ),
-  'field_inspireidversionid' => 
+  'field_dcpmsprovide' => 
   array (
     'default_value' => NULL,
     'description' => '',
@@ -3001,11 +2218,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'text_default',
-        'weight' => '9',
+        'weight' => '13',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
           'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
         ),
         'module' => 'text',
       ),
@@ -3019,7 +2236,7 @@ $fields_instance = array (
         'weight' => 0,
       ),
     ),
-    'label' => 'inspireIdVersionId',
+    'label' => 'Has the Member State provided these studies to the Commission (art.6.2)',
     'required' => 0,
     'settings' => 
     array (
@@ -3035,11 +2252,316 @@ $fields_instance = array (
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => '5',
+      'weight' => '24',
     ),
-    'id' => '256',
-    'field_id' => '54',
-    'field_name' => 'field_inspireidversionid',
+    'id' => '252',
+    'field_id' => '209',
+    'field_name' => 'field_dcpmsprovide',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpirrigation' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'text_default',
+        'weight' => '12',
+        'settings' => 
+        array (
+          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+        ),
+        'module' => 'text',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'In case of discharge on land please specify the purpose',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '13',
+    ),
+    'id' => '264',
+    'field_id' => '213',
+    'field_name' => 'field_dcpirrigation',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_utilityfacilityreference' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '12',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'ID of UWWTP (or collecting system without treatment)',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '8',
+    ),
+    'id' => '265',
+    'field_id' => '214',
+    'field_name' => 'field_utilityfacilityreference',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_specialisedzonetype' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '33',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'specialisedZoneType',
+    'required' => false,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '36',
+    ),
+    'id' => '259',
+    'field_id' => '35',
+    'field_name' => 'field_specialisedzonetype',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_endlifespanversion' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '32',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'endLifespanVersion',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '34',
+    ),
+    'id' => '283',
+    'field_id' => '98',
+    'field_name' => 'field_endlifespanversion',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpwfdrbdname' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'text_default',
+        'weight' => '16',
+        'settings' => 
+        array (
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
+        ),
+        'module' => 'text',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Name of the WFD river basin district',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '19',
+    ),
+    'id' => '287',
+    'field_id' => '230',
+    'field_name' => 'field_dcpwfdrbdname',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpimpact' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '21',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Does the discharge affect the objective of other relevant directives (MSFD, WFD, BD,…) annex I.B.4',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '22',
+    ),
+    'id' => '293',
+    'field_id' => '235',
+    'field_name' => 'field_dcpimpact',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',
@@ -3053,11 +2575,11 @@ $fields_instance = array (
       array (
         'label' => 'inline',
         'type' => 'date_default',
-        'weight' => '39',
+        'weight' => '25',
         'settings' => 
         array (
-          'empty_fields_emptyfieldtext_empty_text' => '',
-          'empty_fields_handler' => '',
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
           'format_type' => 'long',
           'fromto' => 'both',
           'multiple_from' => '',
@@ -3108,6 +2630,369 @@ $fields_instance = array (
     'id' => '291',
     'field_id' => '234',
     'field_name' => 'field_dcpreceivingwaterreference',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcprcaliste' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '36',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Linked receiving area(s)',
+    'required' => 0,
+    'settings' => 
+    array (
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'node_reference',
+      'settings' => 
+      array (
+        'autocomplete_match' => 'contains',
+        'autocomplete_path' => 'node_reference/autocomplete',
+        'size' => 60,
+      ),
+      'type' => 'node_reference_autocomplete',
+      'weight' => '44',
+    ),
+    'id' => '285',
+    'field_id' => '228',
+    'field_name' => 'field_dcprcaliste',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_repcode' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '48',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'ID of the report',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '1',
+    ),
+    'id' => '250',
+    'field_id' => '42',
+    'field_name' => 'field_repcode',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_rcatype' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'text_default',
+        'weight' => '10',
+        'settings' => 
+        array (
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
+        ),
+        'module' => 'text',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Type of receiving area',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '42',
+    ),
+    'id' => '245',
+    'field_id' => '205',
+    'field_name' => 'field_rcatype',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_inspireidversionid' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '9',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'inspireIdVersionId',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '5',
+    ),
+    'id' => '256',
+    'field_id' => '54',
+    'field_name' => 'field_inspireidversionid',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcplongitude' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '14',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Longitude',
+    'required' => 0,
+    'settings' => 
+    array (
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 0,
+      'module' => 'number',
+      'settings' => 
+      array (
+      ),
+      'type' => 'number',
+      'weight' => '11',
+    ),
+    'id' => '276',
+    'field_id' => '221',
+    'field_name' => 'field_dcplongitude',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_status' => 
+  array (
+    'default_value' => 
+    array (
+      0 => 
+      array (
+        'value' => 0,
+      ),
+    ),
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'hidden',
+        'weight' => '47',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Status of the discharge point',
+    'required' => 0,
+    'settings' => 
+    array (
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'options',
+      'settings' => 
+      array (
+      ),
+      'type' => 'options_buttons',
+      'weight' => '4',
+    ),
+    'id' => '262',
+    'field_id' => '61',
+    'field_name' => 'field_status',
+    'entity_type' => 'node',
+    'bundle' => 'discharge_point',
+    'deleted' => '0',
+  ),
+  'field_dcpsurfacewaters' => 
+  array (
+    'default_value' => NULL,
+    'description' => '',
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'inline',
+        'type' => 'text_default',
+        'weight' => '11',
+        'settings' => 
+        array (
+          'empty_fields_emptyfieldtext_empty_text' => 'Not available',
+          'empty_fields_handler' => 'EmptyFieldText',
+        ),
+        'module' => 'text',
+      ),
+      'teaser' => 
+      array (
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'label' => 'Surface water',
+    'required' => 0,
+    'settings' => 
+    array (
+      'text_processing' => 0,
+      'user_register_form' => false,
+    ),
+    'widget' => 
+    array (
+      'active' => 1,
+      'module' => 'text',
+      'settings' => 
+      array (
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => '43',
+    ),
+    'id' => '258',
+    'field_id' => '210',
+    'field_name' => 'field_dcpsurfacewaters',
     'entity_type' => 'node',
     'bundle' => 'discharge_point',
     'deleted' => '0',

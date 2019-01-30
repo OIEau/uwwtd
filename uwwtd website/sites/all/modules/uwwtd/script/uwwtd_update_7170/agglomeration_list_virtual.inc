@@ -15,14 +15,6 @@ $virtual = array (
     array (
       'custom_settings' => false,
     ),
-    'search_index' => 
-    array (
-      'custom_settings' => false,
-    ),
-    'search_result' => 
-    array (
-      'custom_settings' => false,
-    ),
     'token' => 
     array (
       'custom_settings' => false,
@@ -32,6 +24,18 @@ $virtual = array (
   array (
     'form' => 
     array (
+      'title' => 
+      array (
+        'weight' => '0',
+      ),
+      'path' => 
+      array (
+        'weight' => '47',
+      ),
+      'xmlsitemap' => 
+      array (
+        'weight' => '46',
+      ),
     ),
     'display' => 
     array (
@@ -55,7 +59,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '9',
+          'weight' => '17',
           'visible' => true,
         ),
       ),
@@ -63,7 +67,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '10',
+          'weight' => '18',
           'visible' => true,
         ),
       ),
@@ -71,7 +75,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '11',
+          'weight' => '19',
           'visible' => true,
         ),
       ),
@@ -103,7 +107,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '27',
+          'weight' => '28',
           'visible' => true,
         ),
       ),
@@ -111,7 +115,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '22',
+          'weight' => '18',
           'visible' => true,
         ),
       ),
@@ -119,7 +123,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '23',
+          'weight' => '19',
           'visible' => true,
         ),
       ),
@@ -135,7 +139,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '34',
+          'weight' => '18',
           'visible' => true,
         ),
       ),
@@ -159,7 +163,7 @@ $virtual = array (
       array (
         'default' => 
         array (
-          'weight' => '26',
+          'weight' => '18',
           'visible' => true,
         ),
       ),
