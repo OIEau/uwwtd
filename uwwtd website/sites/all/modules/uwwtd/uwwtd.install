@@ -5126,19 +5126,15 @@ function uwwtd_update_7169(&$context) {
 }
 
 /**
- * install new virtual fiueld an dconfig on content type display view
+ * install new virtual field an dconfig on content type display view
  */
 function uwwtd_update_7170(&$context) {
   uwwtd_install_trace(__FUNCTION__);
   $msg_error = '';
 
 
-  //TODO vidé tou sle cache pour activer les field virtuel
-//   drupal_flush_all_caches();
-
-
- 
-
+  //TODO vidé tout le cache pour activer les field virtuel
+   drupal_flush_all_caches();
 
   /////////////////////////////////////////////
   //install/config field
@@ -5177,52 +5173,43 @@ function uwwtd_update_7170(&$context) {
     //we save the modification on virtual field
     $virtual = field_bundle_settings('node', $bundle, $current_virtual);
          
-  
-   
     //update field instance weight and new data for empty field module
     $path = drupal_get_path('module', 'uwwtd') . '/script/uwwtd_update_7170/'.$bundle.'_list_field.inc';
     include_once($path);
     foreach ($fields_instance as $field_name => $config_instance) {
       uwwtd_install_trace('update field ' . $field_name . ' instance');
-      $instance = field_info_instance('node', $field_name, $bundle);
-      $instance['display']['default']['settings']['empty_fields_handler'] = 'EmptyFieldText';
-      $instance['display']['default']['settings']['empty_fields_emptyfieldtext_empty_text'] = 'Not available';
-      $instance['display']['default']['weight'] = $config_instance['display']['default']['weight'];
-                 
-      if ($field_name == 'field_position_geo') {   
-        uwwtd_install_trace('update field_position_geo config');          
-        $instance['display']['default'] = $config_instance['display']['default'];
-      }  
-      
-      try {
-          field_update_instance($instance); 
-      } catch (Exception $e) {
-          $msg = "Error update field : ".$field_name."\n";
-          $msg .= $e->getMessage() . "\n"; 
-          uwwtd_install_trace($msg);
-          $msg_error .= $msg . "\n";             
-      }
+        try {
+            field_update_instance($config_instance); 
+        } catch (Exception $e) {
+            $msg = "Error update field : ".$field_name."\n";
+            $msg .= $e->getMessage() . "\n"; 
+            uwwtd_install_trace($msg);
+            $msg_error .= $msg . "\n";             
+        }
     }
+
   
     //update group
     $path = drupal_get_path('module', 'uwwtd') . '/script/uwwtd_update_7170/'.$bundle.'_list_group.inc';
     include_once($path);
-    foreach ($groups as $group_name => $config_group) {
-      uwwtd_install_trace('update group ' . $group_name);
-  
-    try {
-          $result  = field_group_group_save($config_group);                                            
-           uwwtd_install_trace(var_export($result, true));
-    } catch (Exception $e) {
-          $msg = "Error create/update group : ".$group_name."\n";
-          $msg .= $e->getMessage() . "\n"; 
-          uwwtd_install_trace($msg);
-          $msg_error .= $msg . "\n";             
-      }
+    foreach ($groups as $mode => $mode_groups) {
+        foreach ($mode_groups as $group_name => $config_group) {
+          uwwtd_install_trace('update group ' . $group_name);
+      
+            try {
+                if(!field_group_exists($config_group->group_name, $config_group->entity_type, $config_group->bundle, $config_group->mode)){
+                  $result  = field_group_group_save($config_group);                                            
+                   uwwtd_install_trace(var_export($result, true));
+                }
+            } catch (Exception $e) {
+                  $msg = "Error create/update group : ".$group_name."\n";
+                  $msg .= $e->getMessage() . "\n"; 
+                  uwwtd_install_trace($msg);
+                  $msg_error .= $msg . "\n";             
+              }
+        }
     }
-
   }
-
   if ('' !== $msg_error) {
       throw new DrupalUpdateException($msg_error);
   }
@@ -5244,8 +5231,7 @@ function uwwtd_update_7171(&$context) {
     uwwtd_delete_view('UWWTD_Agglomeration');
     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
     variable_set('siif_eru_version', __FUNCTION__);
-}
-
+} 
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label

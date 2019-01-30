@@ -116,8 +116,37 @@ if (!function_exists('array_column')) {
 
 function uwwtd_debug(){
    // 
-    uwwtd_create_config_file_display();
-   return 'aaaa';
+   $bundle_list = array(
+    'agglomeration',
+    'uwwtp',
+    'discharge_point',
+  );
+
+  foreach($bundle_list as $bundle) {
+    $path = drupal_get_path('module', 'uwwtd') . '/script/uwwtd_update_7170/'.$bundle.'_list_group.inc';
+    include_once($path);
+    //dsm($groups);
+    foreach ($groups as $mode => $mode_groups) {
+        foreach ($mode_groups as $group_name => $config_group) {
+          if(!field_group_exists($config_group->group_name, $config_group->entity_type, $config_group->bundle, $config_group->mode)){
+              field_group_group_save($config_group);
+          }
+             
+            /*
+            try {
+                  $result  = field_group_group_save($config_group);                                            
+                   uwwtd_install_trace(var_export($result, true));
+            } catch (Exception $e) {
+                  $msg = "Error create/update group : ".$group_name."\n";
+                  $msg .= $e->getMessage() . "\n"; 
+                  uwwtd_install_trace($msg);
+                  $msg_error .= $msg . "\n";             
+              }
+              */
+        }
+      }
+    }
+    return 'aaaa';
    
     /*
     $img = uwwtd_get_gg_snapshot('public://test.png', '37.20776245', '-7.41892334', 'hybrid', 16, '640x640');
