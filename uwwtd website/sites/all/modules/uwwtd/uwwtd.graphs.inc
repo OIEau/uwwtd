@@ -271,7 +271,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     	t("Water re-use"), $frontGraph2, $yearSelected, $yearsPossibles);
 	
     //==============================================
-    //=============== ROW 8 : Distance to compliance art 3, 4, 5
+    //=============== ROW 8 : Distance to target art 3, 4, 5
     //==============================================
     
     // Récupération des données des graphs :
@@ -1572,7 +1572,7 @@ function uwwtd_agg_history_page($inspireIdLocalId){
                 );
                 
                 
-                //============= Distance to compliance
+                //============= Distance to target
                 $dtc_equipment[]= '
                     <tr>
                         <td rowspan="2"><b>'.$y.'</b></td>
@@ -1656,12 +1656,12 @@ function uwwtd_agg_history_page($inspireIdLocalId){
 		false, []);
         
         
-        //Distance to compliance
+        //Distance to target
         $html .='<div class="rows">';
-            $html .='<h2>'.t("Distance to compliance").'</h2>';
+            $html .='<h2>'.t("Distance to target").'</h2>';
             $html .='<div class="charts-rows-cell cell dtc dtc-equipment"><div class="cell-content"><h3>'.t("On equipment").'</h3><div><table class="dtcomp">'.implode('', $dtc_equipment).'</table></div></div></div>';
             $html .='<div class="charts-rows-cell cell dtc dtc-performance"><div class="cell-content"><h3>'.t("On performance").'</h3><div><table class="dtcomp">'.implode('', $dtc_performance).'</table></div></div></div>';
-            $html .='<div style="padding:1em;"><br/><p>'.  t('The distance to compliance concept present the rate of waste water load that is:').'
+            $html .='<div style="padding:1em;"><br/><p>'.  t('The distance to target concept present the rate of waste water load that is:').'
                             <ul>
                                 <li>'. t('adequately connected to a centralised urban waste water collecting system or addressed via Individual or Appropriate System (IAS)').'</li>
                             </ul>
