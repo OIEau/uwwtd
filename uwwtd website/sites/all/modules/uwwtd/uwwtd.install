@@ -5275,8 +5275,7 @@ function uwwtd_update_7172(&$context) {
     $years = uwwtd_get_all_year();
     //uwwtd_retreive_agg_dtt(2016, $context);
     foreach($years as $year){
-        $c = [];
-        uwwtd_retreive_agg_dtt($year, $c);
+        uwwtd_retreive_agg_dtt($year, $context);
     }
     
     

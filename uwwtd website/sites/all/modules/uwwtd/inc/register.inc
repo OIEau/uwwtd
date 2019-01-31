@@ -10805,10 +10805,10 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 //Get data on distance to target (distance to compliance) foreach agglomeration and set it in agglomeration nodes
 function uwwtd_retreive_agg_dtt($annee, &$context){
     
-        if (!isset($context['sandbox']['progress'])) {
+        if (!isset($context['sandbox'][$annee]['progress'])) {
 
-        $context['sandbox']['progress'] = 0;
-        $context['sandbox']['dtt_data'] = [];
+        $context['sandbox'][$annee]['progress'] = 0;
+        $context['sandbox'][$annee]['dtt_data'] = [];
 
            $uri = 'public://register/'.$annee.'_agglo.csv';
            $filepath = drupal_realpath($uri);
@@ -10842,21 +10842,21 @@ function uwwtd_retreive_agg_dtt($annee, &$context){
                         foreach($keys as $k=>$idx){
                             $line[$k] = $row[$idx];
                         }
-                        $context['sandbox']['dtt_data'][] = $line;
+                        $context['sandbox'][$annee]['dtt_data'][] = $line;
                     } 
                 }
                 fclose($handle);
             }
 
-        $context['sandbox']['max'] = count($context['sandbox']['dtt_data']);
+        $context['sandbox'][$annee]['max'] = count($context['sandbox'][$annee]['dtt_data']);
 
     }
     
     $j = 0;
-    while ($j < 50 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 50 && $context['sandbox'][$annee]['progress'] < $context['sandbox'][$annee]['max']) {
         //Save data in agglomeration nodes
-        if(!empty(isset($context['sandbox']['dtt_data'][$context['sandbox']['progress']]))){
-            $info = $context['sandbox']['dtt_data'][$context['sandbox']['progress']];
+        if(!empty(isset($context['sandbox'][$annee]['dtt_data'][$context['sandbox'][$annee]['progress']]))){
+            $info = $context['sandbox'][$annee]['dtt_data'][$context['sandbox'][$annee]['progress']];
             $siteId = $siteId = $annee.'_agg_'.$info['code'];
             if($nid = uwwtd_check_exist($siteId)){
                 if($node=node_load($nid)){
@@ -10870,12 +10870,12 @@ function uwwtd_retreive_agg_dtt($annee, &$context){
             }
         }
         $j++;
-        $context['sandbox']['progress']++;
+        $context['sandbox'][$annee]['progress']++;
     }
-    $context['message'] = '('.$annee.')  Fill Distance To Target fields in Agglomeration nodes  ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
+    $context['message'] = '('.$annee.')  Fill Distance To Target fields in Agglomeration nodes  ' . $context['sandbox'][$annee]['progress'] . '/' . $context['sandbox'][$annee]['max'];
 
-    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    if ($context['sandbox'][$annee]['progress'] < $context['sandbox'][$annee]['max']) {
+        $context['finished'] = $context['sandbox'][$annee]['progress'] / $context['sandbox'][$annee]['max'];
     }
     
 }
