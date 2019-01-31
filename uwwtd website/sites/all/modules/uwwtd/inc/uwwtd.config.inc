@@ -569,3 +569,9 @@ $GLOBALS['glossary'] = array(
 '3NP' => 'More stringent treatment: other (UV, Chlorination...)',
 );
 
+
+$GLOBALS['methods'] = [
+    'C'=>t('calculated'),
+    'E'=>t('estimated'),
+    'M'=>t('measured'),
+];
