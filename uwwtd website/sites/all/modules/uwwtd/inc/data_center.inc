@@ -214,6 +214,7 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     }
     $timestamp = strtotime('now');
 
+
     //dsm($timestamp);
 
     if(isset($datas['UWWTD_Report']['ReportPeriod']['repCode'])){
@@ -236,12 +237,16 @@ function uwwtd_import_submit_handler($form, &$form_state) {
     elseif(!empty($datas['MSLevel']) && isset($datas['MSLevel']['Row'])){
         uwwtd_update_mslevel($newFile, $annee, $datas['MSLevel']['Row'], $repCode, $timestamp);
     }
+
+//     dsm($datas['MSLevel']);
+//     return;
     uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp);  
 }
 
 function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
     global $language;
     if(!empty($datas)){
+
 //         dsm($datas);
         // Variables
         $siteId = $annee.'_mslevel';
@@ -435,6 +440,7 @@ function uwwtd_update_mslevel($newFile, $annee, $datas, $repCode, $timestamp){
         }
         //text
         if(isset($datas['mslWWReuseExplain'])) $node->field_mslwwreuseexplain['und'][0]['value'] = uwwtd_check_text($datas['mslWWReuseExplain']);
+
         // save node
         node_save($node);
         
