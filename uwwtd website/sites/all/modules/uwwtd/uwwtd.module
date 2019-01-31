@@ -1137,17 +1137,31 @@ function uwwtd_search_block_form($form, &$form_state){
             'data-search-api-autocomplete-search'=>'search_api_views_search'
         ),
     );
+    $form['type'] = array(
+        '#type'=>'hidden',
+        '#value'=>'All',
+    );
     $form['submit'] = array(
         '#type'=>'submit',
         '#value'=>'<span class="glyphicon glyphicon-search"></span>',
         '#id'=>'edit-submit-search',
     );
-    //$form['#process'] = array('_bootstrap_process_element');
+    $form['#process'] = array('_bootstrap_process_element');
     
-    $form['#action'] = base_path().'/search';
+    //$form['#action'] = base_path().'search';
 
     return $form;
     
+}
+
+function uwwtd_search_block_form_submit($form, &$form_state){
+    //dsm($form_state['values']);
+    drupal_goto('search', [
+        'query'=>[
+            'search_api_views_fulltext'=>$form_state['values']['search_api_views_fulltext'],
+            'type'=>$form_state['values']['type']
+        ]
+    ]);
 }
 
 //nd@oieau.fr 20/10/2016 . There is a bug in this function for building the link
