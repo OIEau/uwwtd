@@ -122,6 +122,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
 
+    //=============== 
+    
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     
 }
@@ -10798,6 +10800,84 @@ function uwwtd_create_register_2015_final_file($annee, &$context)
 
     variable_set('registre_'.$annee, time());
     drupal_set_message(uwwtd_registre_create_html_link($annee));
+}
+
+//Get data on distance to target (distance to compliance) foreach agglomeration and set it in agglomeration nodes
+function uwwtd_retreive_agg_dtt($annee, &$context){
+    
+        if (!isset($context['sandbox'][$annee]['progress'])) {
+
+        $context['sandbox'][$annee]['progress'] = 0;
+        $context['sandbox'][$annee]['dtt_data'] = [];
+
+           $uri = 'public://register/'.$annee.'_agglo.csv';
+           $filepath = drupal_realpath($uri);
+           //=========Get DTT data
+            if (($handle = fopen($filepath, "r")) !== FALSE) {
+                $headers = [];
+                /*
+                'deadline for Art. 3 compliance'=>3, 
+                'deadline for Art. 4 compliance'=>4, 
+                'deadline for Art. 5 compliance'=>5,
+                //'dtt_art3_pc'=>24,
+                    //'dtt_art4_treatment_pc'=>41,
+                    // 'dtt_art4_perf_pc'=>43,
+                    // 'dtt_art5_treatment_pc'=>75,
+                    //'dtt_art5_perf_pc'=>77,
+                */
+                
+                //List relevant keys
+                $keys = [
+                    'code'=>0, 
+                    'dtt_art3_pe'=>25,
+                    'dtt_art4_treatment_pe'=>42,
+                    'dtt_art4_perf_pe'=>44,
+                    'dtt_art5_treatment_pe'=>76,
+                    'dtt_art5_perf_pe'=>78
+                ];
+                while (($row = fgetcsv($handle, 0, ";")) !== FALSE) {
+                    if(empty($headers)) {$headers = $row;}
+                    else{
+                        $line = [];
+                        foreach($keys as $k=>$idx){
+                            $line[$k] = $row[$idx];
+                        }
+                        $context['sandbox'][$annee]['dtt_data'][] = $line;
+                    } 
+                }
+                fclose($handle);
+            }
+
+        $context['sandbox'][$annee]['max'] = count($context['sandbox'][$annee]['dtt_data']);
+
+    }
+    
+    $j = 0;
+    while ($j < 50 && $context['sandbox'][$annee]['progress'] < $context['sandbox'][$annee]['max']) {
+        //Save data in agglomeration nodes
+        if(!empty(isset($context['sandbox'][$annee]['dtt_data'][$context['sandbox'][$annee]['progress']]))){
+            $info = $context['sandbox'][$annee]['dtt_data'][$context['sandbox'][$annee]['progress']];
+            $siteId = $siteId = $annee.'_agg_'.$info['code'];
+            if($nid = uwwtd_check_exist($siteId)){
+                if($node=node_load($nid)){
+                    $node->field_dtt_art3['und'][0]['value'] = round($info['dtt_art3_pe']);
+                    $node->field_dtt_art_4_treatment['und'][0]['value'] = round($info['dtt_art4_treatment_pe']);
+                    $node->field_dtt_art_4_performance['und'][0]['value'] = round($info['dtt_art4_perf_pe']);
+                    $node->field_dtt_art_5_treatment['und'][0]['value'] = round($info['dtt_art5_treatment_pe']);
+                    $node->field_dtt_art_5_performance['und'][0]['value'] = round($info['dtt_art5_perf_pe']);
+                    node_save($node);
+                }
+            }
+        }
+        $j++;
+        $context['sandbox'][$annee]['progress']++;
+    }
+    $context['message'] = '('.$annee.')  Fill Distance To Target fields in Agglomeration nodes  ' . $context['sandbox'][$annee]['progress'] . '/' . $context['sandbox'][$annee]['max'];
+
+    if ($context['sandbox'][$annee]['progress'] < $context['sandbox'][$annee]['max']) {
+        $context['finished'] = $context['sandbox'][$annee]['progress'] / $context['sandbox'][$annee]['max'];
+    }
+    
 }
 
 /**
