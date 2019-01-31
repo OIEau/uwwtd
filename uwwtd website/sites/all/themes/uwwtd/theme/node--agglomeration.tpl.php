@@ -134,14 +134,16 @@ echo uwwtd_insert_errors_tab($node);
                 </div>
                 <?php 
             }
-        print render($printy);
+        print render($printy);   
+//         $printy = field_view_field('node', $node, 'field_position_geo', 'openlayers_map');
+//         print render($printy);
       ?>
       <div class="uwwhalf" style="clear:left;"><?php print uwwtd_timeline_output($node);?></div>
     </div>
     <div>
     	<?php
     	// Affichage du graph inter année :
-    	print $variables['htmlGraph']; 
+    	print $variables['htmlGraph'];   
     	?>
     </div>
     <div class="uwwcontainer" style="overflow:hidden;">
@@ -158,7 +160,7 @@ echo uwwtd_insert_errors_tab($node);
 	                  hide($content['comments']);
 	                  hide($content['links']);
 	                  hide($content['field_tags']);
-                      print render($content['field_agggenerated']);
+                      print render($content['field_agggenerated']);      
                    ?>
                    <div class="field-group-aggcx">
                     <?php
