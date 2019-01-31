@@ -115,36 +115,13 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-   // 
-   $bundle_list = array(
-    'agglomeration',
-    'uwwtp',
-    'discharge_point',
-  );
-
-  foreach($bundle_list as $bundle) {
-    $path = drupal_get_path('module', 'uwwtd') . '/script/uwwtd_update_7170/'.$bundle.'_list_group.inc';
-    include_once($path);
-    //dsm($groups);
-    foreach ($groups as $mode => $mode_groups) {
-        foreach ($mode_groups as $group_name => $config_group) {
-          if(!field_group_exists($config_group->group_name, $config_group->entity_type, $config_group->bundle, $config_group->mode)){
-              field_group_group_save($config_group);
-          }
-             
-            /*
-            try {
-                  $result  = field_group_group_save($config_group);                                            
-                   uwwtd_install_trace(var_export($result, true));
-            } catch (Exception $e) {
-                  $msg = "Error create/update group : ".$group_name."\n";
-                  $msg .= $e->getMessage() . "\n"; 
-                  uwwtd_install_trace($msg);
-                  $msg_error .= $msg . "\n";             
-              }
-              */
-        }
-      }
+    include_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+    $years = uwwtd_get_all_year();
+    //uwwtd_retreive_agg_dtt(2016, $context);
+    foreach($years as $year){
+        //dsm($year);
+        unset($context['sandbox']['progress']);
+        uwwtd_retreive_agg_dtt($year, $context);
     }
     return 'aaaa';
    
