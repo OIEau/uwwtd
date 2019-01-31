@@ -5267,7 +5267,7 @@ function uwwtd_update_7171(&$context){
 /**
 * Regenerate UWWTD_Agglomeration SQL view in order to add DTT new field in sync system 
 */
-
+/*
 function uwwtd_update_7172(&$context) {
     uwwtd_install_trace(__FUNCTION__);
     
@@ -5275,8 +5275,7 @@ function uwwtd_update_7172(&$context) {
     $years = uwwtd_get_all_year();
     //uwwtd_retreive_agg_dtt(2016, $context);
     foreach($years as $year){
-        $c = [];
-        uwwtd_retreive_agg_dtt($year, $c);
+        uwwtd_retreive_agg_dtt($year, $context);
     }
     
     
@@ -5284,7 +5283,7 @@ function uwwtd_update_7172(&$context) {
     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
     variable_set('siif_eru_version', __FUNCTION__);
 } 
-
+*/
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label
