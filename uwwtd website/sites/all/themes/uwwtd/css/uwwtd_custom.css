@@ -164,11 +164,15 @@ fieldset.collapsible legend a:hover{
 }
 
 .field-group-fieldset{
-	width: 100%;
+	/*width: 100%;*/
 	font-size: 13px;
 	line-height: 18px;
 	display: block;
 	margin: auto;
+}
+
+.page-node .field-group-fieldset{
+
 }
 
 /* node title */
