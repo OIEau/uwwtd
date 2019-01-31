@@ -115,9 +115,16 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    
-    //TODO render a page with all information bundle by bundle, year per year
-    return uwwtd_get_errors_stats();
+    include_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+    $years = uwwtd_get_all_year();
+    //uwwtd_retreive_agg_dtt(2016, $context);
+    foreach($years as $year){
+        //dsm($year);
+        unset($context['sandbox']['progress']);
+        uwwtd_retreive_agg_dtt($year, $context);
+    }
+    return 'aaaa';
+   
     /*
     $img = uwwtd_get_gg_snapshot('public://test.png', '37.20776245', '-7.41892334', 'hybrid', 16, '640x640');
     dsm($img);
