@@ -41,7 +41,12 @@
     omesures.field_aggothermeasures_value AS "aggOtherMeasures",
     pressure.field_aggpressuretest_value AS "aggPressureTest",
     video.field_aggvideoinspections_value AS "aggVideoInspections",
-    annee.field_anneedata_value AS "repReportedPerdiod"
+    annee.field_anneedata_value AS "repReportedPerdiod",
+    dtt3.field_dtt_art3_value AS "dtt3",
+    dtt4t.field_dtt_art_4_treatment_value AS "dtt4t",
+    dtt4p.field_dtt_art_4_performance_value AS "dtt4p",
+    dtt5t.field_dtt_art_5_treatment_value AS "dtt5t",
+    dtt5p.field_dtt_art_5_performance_value AS "dtt5p"
    FROM drupal_node n
      LEFT JOIN drupal_field_data_field_anneedata annee ON n.nid = annee.entity_id
      LEFT JOIN drupal_field_data_field_repcode repcode ON n.nid = repcode.entity_id
@@ -87,4 +92,9 @@
      LEFT JOIN drupal_field_data_field_agg_dilution_rates dilution ON n.nid = dilution.entity_id
      LEFT JOIN drupal_field_data_field_aggaccoverflows coverflow ON n.nid = coverflow.entity_id
      LEFT JOIN drupal_field_data_field_anneedata year ON n.nid = year.entity_id
+     LEFT JOIN drupal_field_data_field_dtt_art3 dtt3 ON n.nid = dtt3.entity_id
+     LEFT JOIN drupal_field_data_field_dtt_art_4_treatment dtt4t ON n.nid = dtt4t.entity_id
+     LEFT JOIN drupal_field_data_field_dtt_art_4_performance dtt4p ON n.nid = dtt4p.entity_id
+     LEFT JOIN drupal_field_data_field_dtt_art_5_treatment dtt5t ON n.nid = dtt5t.entity_id
+     LEFT JOIN drupal_field_data_field_dtt_art_5_performance dtt5p ON n.nid = dtt5p.entity_id
   WHERE n.type::text = 'agglomeration'::text AND n.status = 1;
