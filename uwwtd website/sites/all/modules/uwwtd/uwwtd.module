@@ -901,7 +901,166 @@ function uwwtd_cron(){
         ALTER TABLE wfs."'.$agglolevel_feed_table.'"
         ADD PRIMARY KEY ("siteId");
         ');
-
+        
+        //============ Article 17 ====================
+        //====MS LEVEL
+        db_query('
+            DROP TABLE IF EXISTS wfs.art17_mslevel;
+            SELECT 
+                field_year_of_datas_value AS year_of_datas,
+                field_soeccode_value AS soeccode,
+                field_soecinvcol_value AS soecinvcol,
+                field_soecinvcomments_value AS soecinvcomments,
+                field_soecnumbias_value AS soecnumbias,
+                field_soecperiod_value AS soecperiod, 
+                field_soeclenghtcocs_value AS soeclenghtcocs,
+                field_soecinvias_value AS soecinvias,
+                field_soeceufunds_value AS soeceufunds,
+                field_soecjobs_value AS soecjobs, 
+                field_soecopcosts_value AS soecopcosts,
+                field_soecpop_value AS soecpop,
+                field_soeclenghtstcs_value AS soeclenghtstcs,
+                field_soeclenghtsacs_value AS soeclenghtsacs,
+                field_soecinvtp_value AS soecinvtp,
+                field_soeccapacity_value AS soeccapacity,
+                field_soecendyear_value AS soecendyear,
+                field_soecstartyear_value AS soecstartyear
+            INTO wfs.art17_mslevel
+            FROM 
+                {node} n 
+                LEFT JOIN {field_data_field_year_of_datas} year_of_datas ON n.vid=year_of_datas.revision_id
+                LEFT JOIN {field_data_field_soeccode} soeccode ON n.vid=soeccode.revision_id
+                LEFT JOIN {field_data_field_soecinvcol} soecinvcol ON n.vid=soecinvcol.revision_id
+                LEFT JOIN {field_data_field_soecinvcomments} soecinvcomments ON n.vid=soecinvcomments.revision_id
+                LEFT JOIN {field_data_field_soecnumbias} soecnumbias ON n.vid=soecnumbias.revision_id
+                LEFT JOIN {field_data_field_soecperiod} soecperiod ON n.vid=soecperiod.revision_id
+                LEFT JOIN {field_data_field_soeclenghtcocs} soeclenghtcocs ON n.vid=soeclenghtcocs.revision_id
+                LEFT JOIN {field_data_field_soecinvias} soecinvias ON n.vid=soecinvias.revision_id
+                LEFT JOIN {field_data_field_soeceufunds} soeceufunds ON n.vid=soeceufunds.revision_id
+                LEFT JOIN {field_data_field_soecjobs} soecjobs ON n.vid=soecjobs.revision_id
+                LEFT JOIN {field_data_field_soecopcosts} soecopcosts ON n.vid=soecopcosts.revision_id
+                LEFT JOIN {field_data_field_soecpop} soecpop ON n.vid=soecpop.revision_id
+                LEFT JOIN {field_data_field_soeclenghtstcs} soeclenghtstcs ON n.vid=soeclenghtstcs.revision_id
+                LEFT JOIN {field_data_field_soeclenghtsacs} soeclenghtsacs ON n.vid=soeclenghtsacs.revision_id
+                LEFT JOIN {field_data_field_soecinvtp} soecinvtp ON n.vid=soecinvtp.revision_id
+                LEFT JOIN {field_data_field_soeccapacity} soeccapacity ON n.vid=soeccapacity.revision_id
+                LEFT JOIN {field_data_field_soecendyear} soecendyear ON n.vid=soecendyear.revision_id
+                LEFT JOIN {field_data_field_soecstartyear} soecstartyear ON n.vid=soecstartyear.revision_id
+            WHERE n.status = 1
+                AND n.type =\'article_17_ms_level\'
+                AND field_soeccode_value IS NOT NULL
+            ORDER BY year_of_datas;
+        ');
+        //===Agglomeration
+        db_query('
+            DROP TABLE IF EXISTS wfs.art17_agglomeration;
+            SELECT 
+                field_anneedata_value AS year_of_data,
+                field_art17agg_aggcode_value AS aggcode,
+                field_art17agg_aggname_value AS aggname,
+                field_art17_flaggstatus_value AS flaggstatus,
+                field_art17_flaggloan_value AS flaggloan,
+                field_art17_flaggloanname_value AS flaggloanname,
+                field_art17_flaggotherfundname_value AS flaggotherfundname,
+                field_art17_flaggreasons_value AS flaggreasons,
+                field_art17_flaggmeasures_value AS flaggmeasures,
+                field_art17_flagginv_value AS flagginv,
+                field_art17_flaggeufundname_value AS flaggeufundname,
+                field_art17_flaggeufund_value AS flaggeufund,
+                field_art17_flaggcomments_value AS flaggcomments,
+                field_art17_flaggexpload_value AS flaggexpload,
+                field_art17_flaggexploadcoll_value AS flaggexploadcoll,
+                field_art17_flaggotherfund_value AS flaggotherfund,
+                field_art17_flaggexploadias_value AS flaggexploadias,
+                field_art17_flaggexpecdatestart_value AS flaggexpecdatestart,
+                field_art17_flaggexpecdatestartw_value AS flaggexpecdatestartw,
+                field_art17_flaggexpecdatecomple_value AS flaggexpecdatecomple
+            INTO wfs.art17_agglomeration
+            FROM {node} n
+                LEFT JOIN {field_data_field_anneedata} anneedata ON n.vid=anneedata.revision_id
+                LEFT JOIN {field_data_field_art17agg_aggcode} aggcode ON n.vid=aggcode.revision_id
+                LEFT JOIN {field_data_field_art17agg_aggname} aggname ON n.vid=aggname.revision_id
+                LEFT JOIN {field_data_field_art17_flaggstatus} flaggstatus ON n.vid=flaggstatus.revision_id
+                LEFT JOIN {field_data_field_art17_flaggloan} flaggloan ON n.vid=flaggloan.revision_id
+                LEFT JOIN {field_data_field_art17_flaggloanname} flaggloanname ON n.vid=flaggloanname.revision_id
+                LEFT JOIN {field_data_field_art17_flaggotherfundname} flaggotherfundname ON n.vid=flaggotherfundname.revision_id
+                LEFT JOIN {field_data_field_art17_flaggreasons} flaggreasons ON n.vid=flaggreasons.revision_id
+                LEFT JOIN {field_data_field_art17_flaggmeasures} flaggmeasures ON n.vid=flaggmeasures.revision_id
+                LEFT JOIN {field_data_field_art17_flagginv} flagginv ON n.vid=flagginv.revision_id
+                LEFT JOIN {field_data_field_art17_flaggeufundname} flaggeufundname ON n.vid=flaggeufundname.revision_id
+                LEFT JOIN {field_data_field_art17_flaggeufund} flaggeufund ON n.vid=flaggeufund.revision_id
+                LEFT JOIN {field_data_field_art17_flaggcomments} flaggcomments ON n.vid=flaggcomments.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexpload} flaggexpload ON n.vid=flaggexpload.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexploadcoll} flaggexploadcoll ON n.vid=flaggexploadcoll.revision_id
+                LEFT JOIN {field_data_field_art17_flaggotherfund} flaggotherfund ON n.vid=flaggotherfund.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexploadias} flaggexploadias ON n.vid=flaggexploadias.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexpecdatestart} flaggexpecdatestart ON n.vid=flaggexpecdatestart.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexpecdatestartw} flaggexpecdatestartw ON n.vid=flaggexpecdatestartw.revision_id
+                LEFT JOIN {field_data_field_art17_flaggexpecdatecomple} flaggexpecdatecomple ON n.vid=flaggexpecdatecomple.revision_id
+            WHERE n.status = 1
+                AND n.type=\'article_17_agglomeration\'
+                AND field_art17agg_aggcode_value IS NOT NULL
+            ORDER BY year_of_data;
+        ');
+        //=== UWWTP
+        db_query('
+            DROP TABLE IF EXISTS wfs.art17_uwwtp;
+            SELECT 
+                field_anneedata_value AS year_of_data,
+                field_art17uwwtp_uwwcode_value AS uwwcode,
+                field_art17uwwtp_uwwname_value AS uwwname,
+                field_art17_flatpstatus_value AS flatpstatus,
+                field_art17_flatpmeasures_value AS flatpmeasures,
+                field_art17_flatpeufundname_value AS flatpeufundname,
+                field_art17uwwtp_aggcode_value AS aggcode, 
+                field_art17uwwtp_aggname_value AS aggname,
+                field_art17_flatpexpload_value AS flatpexpload,
+                field_art17_flatpexpcapacity_value AS flatpexpcapacity, 
+                field_art17_flatptexpectreatment_value AS flatptexpectreatment,
+                field_art17_flatpreasons_value AS flatpreasons, 
+                field_art17_flatpinv_value AS flatpinv, 
+                field_art17_flatpeufund_value AS flatpeufund, 
+                field_art17_flatpcomments_value AS flatpcomments, 
+                field_art17_flatpexploadtruck_value AS flatpexploadtruck,
+                field_art17_flatpotherfund_value AS flatpotherfund, 
+                field_art17_flatpotherfundname_value AS flatpotherfundname, 
+                field_art17_flatploan_value AS flatploan, 
+                field_art17_flatploanname_value AS flatploanname, 
+                field_art17_flatpexpecdatestart_value AS flatpexpecdatestart, 
+                field_art17_flatpexpecdatestartw_value AS flatpexpecdatestartw, 
+                field_art17_flatpexpecdatecomple_value AS flatpexpecdatecomple, 
+                field_art17_flatpexpecdateperfor_value AS flatpexpecdateperfor
+            INTO wfs.art17_uwwtp
+            FROM {node} n
+                LEFT JOIN {field_data_field_anneedata} anneedata ON n.vid=anneedata.revision_id
+                LEFT JOIN {field_data_field_art17uwwtp_uwwcode} uwwcode ON n.vid=uwwcode.revision_id
+                LEFT JOIN {field_data_field_art17uwwtp_uwwname} uwwname  ON n.vid=uwwname.revision_id
+                LEFT JOIN {field_data_field_art17_flatpstatus}  flatpstatus  ON n.vid=flatpstatus.revision_id
+                LEFT JOIN {field_data_field_art17_flatpmeasures}  flatpmeasures ON n.vid=flatpmeasures.revision_id
+                LEFT JOIN {field_data_field_art17_flatpeufundname}  flatpeufundname ON n.vid=flatpeufundname.revision_id
+                LEFT JOIN {field_data_field_art17uwwtp_aggcode}   aggcode   ON n.vid=aggcode.revision_id
+                LEFT JOIN {field_data_field_art17uwwtp_aggname} aggname  ON n.vid=aggname.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpload}  flatpexpload   ON n.vid=flatpexpload.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpcapacity}   flatpexpcapacity   ON n.vid=flatpexpcapacity.revision_id
+                LEFT JOIN {field_data_field_art17_flatptexpectreatment}  flatptexpectreatment  ON n.vid=flatptexpectreatment.revision_id
+                LEFT JOIN {field_data_field_art17_flatpreasons}  flatpreasons   ON n.vid=flatpreasons.revision_id
+                LEFT JOIN {field_data_field_art17_flatpinv}   flatpinv   ON n.vid=flatpinv.revision_id
+                LEFT JOIN {field_data_field_art17_flatpeufund}   flatpeufund ON n.vid=flatpeufund.revision_id
+                LEFT JOIN {field_data_field_art17_flatpcomments}   flatpcomments   ON n.vid=flatpcomments.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexploadtruck}  flatpexploadtruck ON n.vid= flatpexploadtruck.revision_id
+                LEFT JOIN {field_data_field_art17_flatpotherfund} flatpotherfund   ON n.vid=flatpotherfund.revision_id
+                LEFT JOIN {field_data_field_art17_flatpotherfundname}  flatpotherfundname   ON n.vid=flatpotherfundname.revision_id
+                LEFT JOIN {field_data_field_art17_flatploan}   flatploan   ON n.vid=flatploan.revision_id
+                LEFT JOIN {field_data_field_art17_flatploanname}  flatploanname   ON n.vid=flatploanname.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpecdatestart} flatpexpecdatestart  ON n.vid=flatpexpecdatestart.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpecdatestartw}   flatpexpecdatestartw  ON n.vid=flatpexpecdatestartw.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpecdatecomple}   flatpexpecdatecomple  ON n.vid=flatpexpecdatecomple.revision_id
+                LEFT JOIN {field_data_field_art17_flatpexpecdateperfor} flatpexpecdateperfor ON n.vid=flatpexpecdateperfor.revision_id
+            WHERE n.status = 1 
+                AND n.type =\'article_17_uwwtp\'
+                AND field_art17uwwtp_uwwcode_value IS NOT NULL
+            ORDER BY year_of_data;
+        ');
         variable_set('uwwtd_wfs_table', time());
  	}
 }
