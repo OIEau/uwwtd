@@ -107,6 +107,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 
 	// Récupération des données des graphs :
     $frontAndBackGraph1 = getRow1Graph1($yearSelected, $yearsPossibles);
+    dsm($frontAndBackGraph1);
     $frontAndBackGraph2 = getRow1Graph2($yearSelected, $yearsPossibles);
     // Création du code html pour ces graphs :
     
@@ -357,7 +358,6 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 		} 
         else {
 			$front = $frontTmp;
-			
 			// Pour chaque année :
             /*
 			foreach ($front as $year => $groupElements) {
@@ -386,15 +386,10 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
                 // Pour chaque groupe d'éléments :
                 $isFirst = true;
                 foreach ($dataByYears[0] as $elements) {
-                    // Discard le premier groupe d'éléments :
-                    if ($isFirst) {
-                        $isFirst = false;
-                    } else {
                         // Récupération de l'intitulé de la destination :
                         if (array_key_exists('label', $elements) && !empty($elements['label'])) {
                             $destinations[] = $elements['label'];
                         }
-                    }
                 }
                     
                 // Ajout du Total :
@@ -414,8 +409,8 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
             // Pour chaque année :
             foreach ($frontTmp as $year => $groupElements) {
                 // Récupération du total :
-                $all = array_shift($groupElements);
-                    
+                if ($yearSelected == ALL_YEARS) $all = array_shift($groupElements);
+                else{$all= ['label'=>t('Total'),'value'=> array_sum(array_column($groupElements, 'value'))];}
                 // Pour les entetes du tableau :
                 $columns[0][]['data'] = $year;
                     
