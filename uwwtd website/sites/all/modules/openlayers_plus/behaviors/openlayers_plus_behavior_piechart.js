@@ -8,6 +8,7 @@
 	
 	//Override the setStyle function of OpenLayers.Renderer.SVG
 	OpenLayers.Renderer.SVG.prototype.setStyle = function(node, style, options) {
+
         style = style  || node._style;
         options = options || node._options;
         var r = parseFloat(node.getAttributeNS(null, "r"));
@@ -15,10 +16,11 @@
         var pos;
         if (node._geometryClass == "OpenLayers.Geometry.Point" && r) {
             node.style.visibility = "";
+            
             if (style.graphic === false) {
                 node.style.visibility = "hidden";
             } 
-			else if (style.externalGraphic) {
+            else if (style.externalGraphic) {
                 pos = this.getPosition(node);
                 
                 if (style.graphicTitle) {
@@ -56,25 +58,66 @@
                 node.setAttributeNS(null, "style", "opacity: "+opacity);
                 node.onclick = OpenLayers.Renderer.SVG.preventDefault;
             }	
-			//here we add a special case for piechart rendering
-			else if(style.graphicName=="piechart"){
+            			//here we add a special case for piechart rendering
+			else if(style.graphicName=="piechart" && typeof style.piechartdata.data.data != 'undefined'){
 				//Note : for each adding svg element, we need to set the "_featureId"  properties for allow events on feature and for eg fire a "popup"
-                var size = style.pointRadius * 2;
+				var size = style.pointRadius * 2;
 				pos = this.getPosition(node);
-                if (node.getAttribute("treated") != 1) {
+                if (node.getAttribute("treated") != 1 ) {
                     var data=style.piechartdata.data.data;
+                    /////////////////////////////////////////////////////
+//     				var arc = d3.svg.arc()
+//     					.outerRadius(style.pointRadius)
+//     					.innerRadius(0);
+//     				var pie = d3.layout.pie()
+//     					.sort(null)
+//     					.value(function(d) { return d.value; });
+//     				var svg = d3.select(node)
+//     					.append("g")
+//     					.property('_featureId', node._featureId)
+//     					.attr("transform", "translate(" + size / 2 + "," + size / 2 + ")");
+//     				data.forEach(function(d) {
+//     					d.value = +d.value;
+//     				});
+//     				var g = svg.selectAll(".arc")
+//     					  .data(pie(data))
+//     					.enter().append("g")
+//     					  .property('_featureId', node._featureId)
+//     					  .attr("class", "arc");
+//     					  
+//     				g.append("path")
+//     				  .property('_featureId', node._featureId)
+//     				  .attr("d", arc)
+//     				  .style("fill", function(d) { return d.data.color; })
+//     				  .style("stroke", function(d) { return style.strokeColor; })
+//     				  .style("opacity", function(d) { return style.fillOpacity; })
+//     				  .style("stroke-width", function(d) { return style.strokeWidth; });
+                    /////////////////////////////////////////////////////
     				var parent = node.parentNode;
                     var nextSibling = node.nextSibling;
                     if (parent) { 
                         parent.removeChild(node);
                     }
-                    var piechartnode = document.getElementById(style.piechartdata.data.piechartid).cloneNode(true);
-                    piechartnode.setAttributeNS(null, "style", "display:block;");
-                    for (var i = 0; i <  piechartnode.childNodes.length;i++){
-                        piechartnode.childNodes[i]._featureId = node._featureId;
-                    }   
-                                 
-                    node.appendChild(piechartnode);
+                    var piechartnode = null;
+                    //Piechart is provide in feature definition
+                    if(typeof data.piechart != 'undefined'){
+                        piechartnode = $(data.piechart)[0];
+                        piechartnode.setAttributeNS(null, "style", "display:block;");
+                    }
+                    //Piechart is provide in the DOM of page
+                    else{
+                        piechartnode = document.getElementById(style.piechartdata.data.piechartid).cloneNode(true);
+                        piechartnode.setAttributeNS(null, "style", "display:block;");
+                    }
+                    
+                    //If we have find a piechart
+                    if(piechartnode){
+                        for (var i = 0; i <  piechartnode.childNodes.length;i++){
+                            piechartnode.childNodes[i]._featureId = node._featureId;
+                        }   
+                                     
+                        node.appendChild(piechartnode);
+                    }
                     node.setAttributeNS(null, "viewBox", "0 0 "+size+" "+size);
                     node.setAttributeNS(null, "width", size);
                     node.setAttributeNS(null, "height", size);
@@ -155,7 +198,12 @@
         
         if (options.isFilled) {
             node.setAttributeNS(null, "fill", style.fillColor);
-            node.setAttributeNS(null, "fill-opacity", style.fillOpacity);
+            if (node.getAttribute('cx') == null) {
+                node.setAttributeNS(null, "fill-opacity", 0.3);
+            }
+            else {
+                node.setAttributeNS(null, "fill-opacity", style.fillOpacity);
+            }
         } else {
             node.setAttributeNS(null, "fill", "none");
         }
@@ -200,8 +248,10 @@
 			
 			if(layer.CLASS_NAME=="OpenLayers.Layer.Vector"){
 				var styleMap = layer.styleMap;
-				if(styleMap != undefined) {				
+				if(styleMap != undefined) {	
+                    
 					styleMap.createSymbolizer = function(feature, intent){
+                        //console.log(feature);
 						if(!feature) {
 							feature = new OpenLayers.Feature.Vector();
 						}
@@ -216,9 +266,11 @@
 						}
 						var symbol = OpenLayers.Util.extend(defaultSymbolizer, this.styles[intent].createSymbolizer(feature));
 						symbol.piechartdata = feature;
-						symbol.pointRadius = styles[feature.data.weight].pointRadius;
-						symbol.fillOpacity = styles[feature.data.weight].fillOpacity;
-						symbol.strokeWidth = styles[feature.data.weight].strokeWidth;
+                        var styles_idx = 1;
+                        if(feature.data.weight){styles_idx = feature.data.weight;}
+						symbol.pointRadius = styles[styles_idx].pointRadius;
+						symbol.fillOpacity = styles[styles_idx].fillOpacity;
+						symbol.strokeWidth = styles[styles_idx].strokeWidth;
 						symbol.graphic=true;
 						symbol.graphicName = "piechart";
 						symbol.pointerEvents = 'visiblePainted';
@@ -229,6 +281,7 @@
 						*/
 						return symbol;
 					};
+					
 				  layer.redraw();
 				  vector_layers.push(layer);
 				}
