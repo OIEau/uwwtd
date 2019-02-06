@@ -256,23 +256,117 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
 	return $value;
   }
   
+    protected function get_piechart_from_preset($preset, $behaviour)
+    {
+        $configuredPiechart = $preset['behaviors'][$behaviour]['fields_series'];
+        $configuredPiechart = explode("\n", $configuredPiechart);
+        $list = array();
+        foreach($configuredPiechart as $onefield) {
+            $tmp = explode('|', $onefield);
+            $list[ $tmp[0]] = array(
+                'label' => $tmp[1],
+                'color' => $tmp[2],
+            );
+        }
+        return $list;
+    }
+  
+  
+    protected function get_svg_piechart($i, $values, $optionstyle, $weightstyle)
+    {
+        
+        //dsm($weightstyle);
+        /*
+        dsm($i);
+        dsm($values);
+        dsm($optionstyle);
+        dsm($weightstyle);
+        */
+        $chartelem = "";
+
+        $radius = $weightstyle['pointRadius'];
+        $cx = $cy = $radius;
+        $opacity = $weightstyle['fillOpacity'];
+        $strokeWidth = $weightstyle['strokeWidth'];
+
+        $sum = 0;
+        foreach ($optionstyle['piechart'] as $field=>$detail) {
+            //FIX ME : why système can't draw piechart if he have only one serie ==> we have to add a small value 
+            if ($values[$field] == 0) {
+                $values[$field] = 1;
+            }
+            $sum += $values[$field];
+        }
+        $deg = $sum/360; // one degree
+        $jung = $sum/2; // necessary to test for arc type
+
+        /* Data for grid, circle, and slices */
+
+        $dx = $radius; // Starting point:
+        $dy = 0; // first slice starts in the East
+        $oldangle = 0;
+
+        /* Loop through the slices */
+        foreach ($optionstyle['piechart'] as $field=>$detail) {
+            $angle = $oldangle + $values[$field]/$deg; // cumulative angle
+            $x = cos(deg2rad($angle)) * $radius; // x of arc's end point
+            $y = sin(deg2rad($angle)) * $radius; // y of arc's end point
+
+            $colour = $optionstyle['piechart'][$field]['color'];
+
+            if ($values[$field] > $jung) {
+                // arc spans more than 180 degrees
+                $laf = 1;
+            }
+            else {
+                $laf = 0;
+            }
+
+            $ax = $cx + $x; // absolute $x
+            $ay = $cy + $y; // absolute $y
+            $adx = $cx + $dx; // absolute $dx
+            $ady = $cy + $dy; // absolute $dy
+            $chartelem .= "\n";
+            $chartelem .= "\n";
+            $chartelem .= "<g class=\"arc\" >\n";
+            $chartelem .= "<path d=\"M$cx,$cy "; // move cursor to center
+            $chartelem .= " L$adx,$ady "; // draw line away away from cursor
+            $chartelem .= " A$radius,$radius 0 $laf,1 $ax,$ay "; // draw arc
+            $chartelem .= " z\" "; // z = close path
+            $chartelem .= ' style="fill: '.$colour.'; stroke: rgb(34, 34, 34); opacity: '.$opacity.'; stroke-width: '.$strokeWidth.';" stroke-linejoin="round"/>';
+            $chartelem .= "</g>\n";
+            $dx = $x; // old end points become new starting point
+            $dy = $y; // id.
+            $oldangle = $angle;
+        }
+        //style="display:none;"
+        $svg = '<svg  id="pie_'.$i.'">'. $chartelem. '</svg>';
+        //dsm($svg);
+        return  $svg;
+    }
+  
+  
   /**
    * Render.
    */
-  public function render(&$map) {
+  public function render(&$map) {      
     // Get the layers we are going to use.
     $layers = $this->get_layers($map['layers']);
     $get_min = $this->options['min']['value'] === '' || !isset($this->options['min']['value']);
     $get_max = $this->options['max']['value'] === '' || !isset($this->options['max']['value']);
 
     $weights = $this->get_weights();
+    $styles = $this->get_styles();
+    $piecharts = '';
+    $optionstyle = array();
+    
+    $optionstyle['piechart'] = $this->get_piechart_from_preset($map, 'openlayers_plus_behavior_piechart');
 	if(trim($this->options['arbitrary_classes'])!=''){
 		$arbitrary_classes = $this->get_classes($this->options['arbitrary_classes']);
 	}
     foreach ($layers as $k => $layer) {
       // Get the field we are going to use.
       if ($field = $this->get_field($layer['features'])) {
-        
 		$fields_series = $this->fields_series();
 		
         // Get min/max per layer.
@@ -291,6 +385,7 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
             if ($field && isset($feature['attributes'][$field]) && $count = $feature['attributes'][$field]) {
               // Replace the count attribute with the selected one.
               $count = (float)trim(strip_tags($count));
+              
               if ($field !== 'count') {
                 $map['layers'][$k]['features'][$j]['attributes']['count'] = $count;
               }
@@ -308,7 +403,6 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
         if ($count_max < 1 && $count_min < 1) {
           $max = 1;
         }
-        dsm($layer['features']);
         foreach ($layer['features'] as $j => $feature) {
           if ($field && isset($feature['attributes'][$field]) && $count = $feature['attributes'][$field]) {
             // For layers with only a single value always use the
@@ -316,6 +410,8 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
             //------------> modif nd@oieau.fr : we need to strip html tag when data comes from views
 			//dsm(trim(strip_tags($count)));
             $count = (float)$this->get_field_value($count);
+            //dsm($arbitrary_classes);
+            //dsm($count);
             if ($count_max === $count_min) {
               $map['layers'][$k]['features'][$j]['attributes']['weight'] = 1;
             }
@@ -350,27 +446,34 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
 				}
             }
 			//========================draw the pie chart
-            dsm($fields_series);
 			if(!empty($fields_series)){
-                
 				$data = array();
 				$sum = 0;
-				foreach($fields_series as $serie){
+				foreach($fields_series as $f => $serie){
 					$value = (isset($feature['attributes'][$serie[0]])?(float)$this->get_field_value($feature['attributes'][$serie[0]]):0);
-					$data[]=array(
+					$data[$f]=$value;
+                    
+                    
+                    /*array(
 						'label'=>$serie[1],
 						'value'=>$value,
-						'color'=>$serie[2]
-					);
+						'color'=>$serie[2],
+                        'weight'=>4,
+					);*/
 					$sum+=$value;
 				}
 				if($sum==0){
 					drupal_set_message("The feature n°".$j." of the layer have a sum equals to 0 so we can't render a pie chart", "warning");
-				}
+                    unset($map['layers'][$k]['features'][$j]);
+				}else{
+                    //dsm($weight);
+                    $data['piechart'] = $this->get_svg_piechart($j, $data, $optionstyle, $styles[$map['layers'][$k]['features'][$j]['attributes']['weight']]);
+                    $col='#000000';
+                    $map['layers'][$k]['features'][$j]['attributes']['color'] = $col;
+                    $map['layers'][$k]['features'][$j]['attributes']['data'] = $data;
+                }
 			}
-			$col='#000000';
-            $map['layers'][$k]['features'][$j]['attributes']['color'] = $col;
-			$map['layers'][$k]['features'][$j]['attributes']['data'] = $data;
+            
           }
         }
       }
@@ -381,12 +484,13 @@ class openlayers_plus_behavior_piechart extends openlayers_behavior {
     libraries_load('d3.drupal');
 	//drupal_add_js(libraries_get_path('d3').'/d3.v3.min.js');
     drupal_add_js(drupal_get_path('module', 'openlayers_plus') . '/behaviors/openlayers_plus_behavior_piechart.js');
-    $options = array();
-    $options['styles'] = $this->get_styles();
+    $options = array(); 
+    $options['styles'] = $styles;
     if(isset($field_series)) {
       $options['series'] = $fields_series;
     }
     //$options['colors'] = $this->get_colors();
+    //dsm($options);
     return $options;
   }
 }
