@@ -115,23 +115,7 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    include_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
-    
-    $value = (string)'1678153656';
-    dsm(uwwtd_check_decimal($value));
-    //dsm(is_numeric($value));
-    /*
-    $datas = uwwtd_xml_to_array('public://data_sources/q2017uwwtdart1520181005b_1548236311.xml');
-    foreach($datas['UWWTPs']['Row'] as $uww){
-        if($uww['uwwCode'] == 'ES16480270001010E'){
-            dsm($uww);
-            $node = uwwtd_update_uww_node($uww, $newFile, 1, 2016, time(), 0);
-             dsm($GLOBALS['uwwtd_errors']);
-            break;
-        }
-        
-    }
-   */
+
     return "debug";
     /*
     $years = uwwtd_get_all_year();
