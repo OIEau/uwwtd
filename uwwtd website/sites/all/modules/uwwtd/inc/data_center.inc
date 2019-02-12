@@ -1523,14 +1523,14 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 if (false === $check) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
                 } else {
-                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                    $node->field_rcaplants['und'][0]['value'] = $check;
                 }      
             }elseif(isset($data['rcaPlants54'])){
                 $check = uwwtd_check_numeric($data['rcaPlants54']);
                 if (false === $check) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
                 } else {
-                    $node->field_rcaPlants['und'][0]['value'] = $check;
+                    $node->field_rcaplants['und'][0]['value'] = $check;
                 }     
             }
         }   
