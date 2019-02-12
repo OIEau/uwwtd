@@ -3932,7 +3932,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date end life found.', $timestamp, $i, $node);
 
         // save node
-        //node_save($node);
+        node_save($node);
         
         if (empty($node->nid)) {
             uwwtd_trace('uwwtp ' . $siteId . ' node_save() error2');
