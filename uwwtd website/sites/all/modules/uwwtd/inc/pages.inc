@@ -601,7 +601,11 @@ function uwwtd_get_data_sensitive_areas($option){
                 $zonetype_formatB = $GLOBALS['uwwtd_value']['rcatype_labels']['default'];
             }
             $row['zonetype_format'] =  (!empty($row['zonetype']) && isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']]) ? $zonetype_formatA : $zonetype_formatB);
-
+            
+            if($row['rca52']=='') $row['rca52'] = 0; 
+            if($row['rca54']=='') $row['rca54'] = 0; 
+            if($row['rca58']=='') $row['rca58'] = 0; 
+            
             $row['rca52_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca52']];
             $row['rca54_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca54']];
             $row['rca58_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca58']];
@@ -2181,24 +2185,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 //     dsm($data);
     //e.vincent / bruno want to show only agglo > 2000
     $filter_force = array();
-    /*
-    
-    $filter_force['filter']['field_agggenerated_value_op'] = '>';
-    $filter_force['filter']['field_agggenerated_value']['value'] = variable_get('min_aggenerated_display', '1999');
-    if (variable_get('display_only_active', '1') == 1) {
-        $filter_force['filter']['field_status_value'] = '1';
-    }
-    */
-	//dsm($filter);
+
     uwwtd_filter_data($filter, $data, $filter_force);        
-//     uwwtd_filter_data($filter, $data);
-    
-    /*
-	  if($art17 == "No"){
-		  unset($header[9]);
-	  }
-	  unset($header[8]);
-    */
+
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['rca'], $data);
 //     dsm($data);
 
