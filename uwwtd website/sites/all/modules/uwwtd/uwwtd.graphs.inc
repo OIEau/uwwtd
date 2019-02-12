@@ -107,7 +107,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 
 	// Récupération des données des graphs :
     $frontAndBackGraph1 = getRow1Graph1($yearSelected, $yearsPossibles);
-    dsm($frontAndBackGraph1);
     $frontAndBackGraph2 = getRow1Graph2($yearSelected, $yearsPossibles);
     // Création du code html pour ces graphs :
     

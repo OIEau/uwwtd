@@ -94,8 +94,8 @@ function uwwtd_menu(){
     'title' => t('Article 17 export'),
     'page callback' => 'uwwtd_article17_export',
     'page arguments' => array(1),
-    //'access callback' => TRUE,
-     'access arguments' => array('Data-management access'),
+    'access callback' => TRUE,
+    //'access arguments' => array('Data-management access'),
     'file' => 'inc/article17.inc',
     'file path' => drupal_get_path('module', 'uwwtd')
   );

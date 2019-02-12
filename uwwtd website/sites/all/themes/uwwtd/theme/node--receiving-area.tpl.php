@@ -330,112 +330,161 @@ echo uwwtd_insert_errors_tab($node);
         </div>
     <?php endif; ?>
 
-    <?php
-    // END characteristics
-    print '<div class="uwwcontainer">';
-      // END description
-	  if ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||
-	  	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1')) {
-	      print '<div class="uwwthird">';
-	        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-	          print '<legend class="panel-heading">';
-	            print '<div class="panel-title fieldset-legend">'.t('Description').' '. $node->field_anneedata[LANGUAGE_NONE][0]['value'] .'</div>';
-	            print '</legend>';
-	            print '<div class="panel-body">';
+    <div class="uwwcontainer">
+    <?php if ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1')) : ?>
+	      <div class="uwwthird">
+	        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+	          <legend class="panel-heading">
+	            <div class="panel-title fieldset-legend"><?php print t('Description').' '. $node->field_anneedata[LANGUAGE_NONE][0]['value'] ;?></div>
+	            </legend>
+	            <div class="panel-body">
+                <?php 
 	            print render($content['field_rcaplants']);
 	            if (!empty($node->field_rca_total_capacity_uwwtps)) {
 	            	print render($content['field_rca_total_capacity_uwwtps']);
 	            }
-	            if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering)) {
-	            	print '<strong>'. t('Total Phosphorus removal (t/year):').'</strong> '.
-	            	($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
-	            	$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']);
+                //Manage N & P 
+                $n_inc = 0;
+                $n_dis = 0;
+                $p_inc = 0;
+                $p_dis = 0;
+                                
+                //================P
+                if (!empty($node->field_rcapincomingmeasured) && $node->field_rcapincomingmeasured[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_inc = $node->field_rcapincomingmeasured[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapincomingmeasured']);
 	            }
-	            if (!empty($node->field_rca_total_p_entering)) {
+                elseif (!empty($node->field_rcapincomingcalculated) && $node->field_rcapincomingcalculated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_inc = $node->field_rcapincomingcalculated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapincomingcalculated']);
+	            }
+                elseif (!empty($node->field_rcapincomingestimated) && $node->field_rcapincomingestimated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_inc = $node->field_rcapincomingestimated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapincomingestimated']);
+	            }
+	            elseif (!empty($node->field_rca_total_p_entering) && $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_inc = $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rca_total_p_entering']);
 	            }
-	            if (!empty($node->field_rca_total_p_discharged)) {
+                
+                if (!empty($node->field_rcapdischargedmeasured) && $node->field_rcapdischargedmeasured[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rcapdischargedmeasured[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapdischargedmeasured']);
+	            }
+                elseif (!empty($node->field_rcapdischargedcalculated) && $node->field_rcapdischargedcalculated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rcapdischargedcalculated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapdischargedcalculated']);
+	            }
+                elseif (!empty($node->field_rcandischargedestimated) && $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcandischargedestimated']);
+	            }
+	            elseif (!empty($node->field_rca_total_p_entering) && $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rca_total_p_discharged']);
 	            }
-	            if (!empty($node->field_rca_total_p_discharged) && !empty($node->field_rca_total_p_entering)) {
-	            	$rate = ($node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] -
-	            			$node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value']) /
-	            	$node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] * 100;
-	            	print '<strong>'. t('Rate of Phosphorus removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+                print '<strong>'. t('Total Phosphorus removal (t/year):').'</strong> '. ($p_inc-$p_dis).'<br/>';
+                if($p_inc > 0 ) {
+                    $rate = 100 * ($p_inc-$p_dis)/$p_inc;
+                    print '<strong>'. t('Rate of Phosphorus removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+                }
+                
+                //================N
+                if (!empty($node->field_rcanincomingmeasured) && $node->field_rcanincomingmeasured[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_inc = $node->field_rcanincomingmeasured[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcanincomingmeasured']);
 	            }
-	            if (!empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) {
-	            	print '<strong>'. t('Total Nitrogen removal (t/year):').'</strong> '.
-	            	($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
-	            	$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']);
+                elseif (!empty($node->field_rcanincomingcalculated) && $node->field_rcanincomingcalculated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_inc = $node->field_rcanincomingcalculated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcanincomingcalculated']);
 	            }
-	            if (!empty($node->field_rca_total_n_entering)) {
+                elseif (!empty($node->field_rcanincomingestimated) && $node->field_rcanincomingestimated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_inc = $node->field_rcanincomingestimated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcanincomingestimated']);
+	            }
+	            elseif (!empty($node->field_rca_total_n_entering) && $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_inc = $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rca_total_n_entering']);
 	            }
-	            if (!empty($node->field_rca_total_n_discharged)) {
+                
+                if (!empty($node->field_rcandischargedmeasured) && $node->field_rcandischargedmeasured[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_dis = $node->field_rcandischargedmeasured[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcandischargedmeasured']);
+	            }
+                elseif (!empty($node->field_rcandischargedcalculated) && $node->field_rcandischargedcalculated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_dis = $node->field_rcandischargedcalculated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcandischargedcalculated']);
+	            }
+                elseif (!empty($node->field_rcandischargedestimated) && $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_dis = $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcandischargedestimated']);
+	            }
+	            elseif (!empty($node->field_rca_total_n_entering) && $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] > 0) {
+                    $n_dis = $node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rca_total_n_discharged']);
 	            }
-				if (!empty($node->field_rca_total_n_entering) && !empty($node->field_rca_total_n_discharged)) {
-	            	$rate = ($node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] -
-	            			$node->field_rca_total_n_discharged[LANGUAGE_NONE][0]['value']) /
-	            	$node->field_rca_total_n_entering[LANGUAGE_NONE][0]['value'] * 100;
-	            	print '<strong>'. t('Rate of Nitrogen removal (t/year):'). '</strong> ' . number_format($rate, 2, ',', ' ').'%';
-	            }
-	          print '</div>';
-	        print '</fieldset>';
-	      print '</div>';
-	  }
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Waste Water Network Connexions').'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
+                print '<strong>'. t('Total Nitrogen removal (t/year):').'</strong> '. ($n_inc-$n_dis).'<br/>';
+                if($n_inc > 0 ) {
+                    $rate = 100 * ($n_inc-$n_dis)/$n_inc;
+                    print '<strong>'. t('Rate of Nitrogen removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+                }
+                ?>
+	          </div>
+	        </fieldset>
+	      </div>
+	<?php endif; ?>
+    <div class="uwwthird">
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Waste Water Network Connexions'); ?></div>
+          </legend>
+          <div class="panel-body">
+          <?php 
             print render($content['field_linked_agglomerations']);
             print render($content['field_linked_treatment_plants']);
-            //print render($content['field_linked_discharge_points']);
-            //Fix nd@oieau.fr : 10/06/2016 bad field name
             print render($content['field_rcadcpliste']);
-          print '</div>';
-        print '</fieldset>';
-      print '</div>';
-      print '<div class="uwwthird">';
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Site information').'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
+            ?>
+          </div>
+        </fieldset>
+      </div>
+      <div class="uwwthird">
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Site information'); ?></div>
+          </legend>
+          <div class="panel-body">
+          <?php 
             print render($content['field_anneedata']);
             $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
             print render($content['field_sourcefile']);
-          print '</div>';
-        print '</fieldset>';
-        if(isset($node->field_article17['und'][0]['nid'])){
-        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-          print '<legend class="panel-heading">';
-            print '<div class="panel-title fieldset-legend">'.t('Forward looking aspect').'</div>';
-          print '</legend>';
-          print '<div class="panel-body">';
-          print '</div>';
-        print '</fieldset>';
-        }
-      print '</div>';
-      if (!empty($node->field_rca_sensitive_area[LANGUAGE_NONE][0]['value'])) {
-	      print '<div class="uwwthird">';
-	        print '<fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">';
-	          print '<legend class="panel-heading">';
-	            print '<div class="panel-title fieldset-legend">'.t('Related Sensitive area').'</div>';
-	            print '</legend>';
-	            print '<div class="panel-body">';
-	              print render($content['field_rca_sensitive_area']);
-	          print '</div>';
-	        print '</fieldset>';
-	      print '</div>';
-	  }
+            ?>
+          </div>
+        </fieldset>
+        <?php if(isset($node->field_article17['und'][0]['nid'])) : ?>
+        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+          <legend class="panel-heading">
+            <div class="panel-title fieldset-legend"><?php print t('Forward looking aspect'); ?></div>
+          </legend>
+          <div class="panel-body">
+          </div>
+        </fieldset>
+        <?php endif; ?>
+      </div>
+      <?php if (!empty($node->field_rca_sensitive_area[LANGUAGE_NONE][0]['value'])) : ?>
+	      <div class="uwwthird">
+	        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
+	          <legend class="panel-heading">
+	            <div class="panel-title fieldset-legend"><?php print t('Related Sensitive area'); ?></div>
+	            </legend>
+	            <div class="panel-body">
+	              <?php print render($content['field_rca_sensitive_area']); ?>
+	          </div>
+	        </fieldset>
+	      </div>
+	  <?php endif; ?>
 
-    print '</div>';
+    </div>
 
-
-  ?>
   <?php if (!empty($content['field_tags']) || !empty($content['links'])): ?>
   <footer>
     <?php print render($content['field_tags']); ?>
