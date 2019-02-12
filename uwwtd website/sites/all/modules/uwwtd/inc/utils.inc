@@ -115,7 +115,25 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    include_once(drupal_get_path('module', 'uwwtd') . '/inc/register.inc');
+    include_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
+    
+    $value = (string)'1678153656';
+    dsm(uwwtd_check_decimal($value));
+    //dsm(is_numeric($value));
+    /*
+    $datas = uwwtd_xml_to_array('public://data_sources/q2017uwwtdart1520181005b_1548236311.xml');
+    foreach($datas['UWWTPs']['Row'] as $uww){
+        if($uww['uwwCode'] == 'ES16480270001010E'){
+            dsm($uww);
+            $node = uwwtd_update_uww_node($uww, $newFile, 1, 2016, time(), 0);
+             dsm($GLOBALS['uwwtd_errors']);
+            break;
+        }
+        
+    }
+   */
+    return "debug";
+    /*
     $years = uwwtd_get_all_year();
     //uwwtd_retreive_agg_dtt(2016, $context);
     foreach($years as $year){
@@ -124,7 +142,7 @@ function uwwtd_debug(){
         uwwtd_retreive_agg_dtt($year, $context);
     }
     return 'aaaa';
-   
+   */
     /*
     $img = uwwtd_get_gg_snapshot('public://test.png', '37.20776245', '-7.41892334', 'hybrid', 16, '640x640');
     dsm($img);
@@ -986,6 +1004,7 @@ function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = n
             'error'=>$error,
             'timestamp'=>$timestamp,
             'index'=>$index,
+            'field'=>$xmlFieldName
         );
     }
 }
@@ -1165,7 +1184,7 @@ function uwwtd_check_decimal($value){
 	//in fact what is the max value for a real type in postgresql ?
 	//if(is_numeric($value) && $value < bcpow(10,9)) {
         //nd@oieau.fr 17/07/2018  : bcpow is not include by default in php7
-	if(is_numeric($value) && $value < 1000000000) {
+	if(is_numeric($value) && $value < 10000000000000) {
 		return (float)$value;	
 	}
 //     else{
