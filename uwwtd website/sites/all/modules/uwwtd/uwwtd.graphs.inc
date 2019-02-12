@@ -129,7 +129,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 		t("Number of agglomerations by compliance"), 'graph_agglomerationByCompliance', $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3],
 		false, $yearsPossibles);
     //==============================================
-    //=============== ROW 3 : Waste water treatement plant : Load entering by compliance
+    //=============== ROW 3 : Waste water treatment plant : Load entering by compliance
     //==============================================
   
     // Récupération des données des graphs :
@@ -137,21 +137,21 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
-    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by compliance"),
+    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatment plant : Load entering by compliance"),
     	t("Total load entering by compliance (population equivalent – p.e.)"), 'graph_loadenteringByCompliance', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
     	t("Number of treatment plant by compliance"), 'graph_loadenteringByComplianceAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	true, $yearsPossibles);
     
     
     //==============================================
-    //=============== ROW 4 : Waste water treatement plant : Load entering by treatment type
+    //=============== ROW 4 : Waste water treatment plant : Load entering by treatment type
     //==============================================
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
-    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatement plant : Load entering by treatment type"),
+    $formResult = getHtmlPlusHtmlChartsPies($formResult, t("Waste water treatment plant : Load entering by treatment type"),
     	t("Total load entering by treatment type (population equivalent – p.e.)"), 'graph_loadenteringByTreatmenttype', $frontAndBackGraph1[0],  $frontAndBackGraph1[1],
     	t("Number of treatment plant by treatment type"), 'graph_loadenteringByTreatmenttypeAgglomeration', $frontAndBackGraph1[2], $frontAndBackGraph1[3],
     	false, $yearsPossibles);
@@ -177,7 +177,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
 
     
     //==============================================
-    //=============== ROW 6 : Waste water treatement plant : Total load entering and discharged
+    //=============== ROW 6 : Waste water treatment plant : Total load entering and discharged
     //==============================================
     //Display only for annual stats and not for interannual
     // Récupération des données des graphs :
@@ -186,7 +186,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         $frontAndBackGraph1And2 = getRow6Graph1And2($results);
         // Création du code html pour ces graphs :
         if($frontAndBackGraph1And2){
-            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), array(
+            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatment plant : Total load entering and discharged"), array(
                 array(
                     'uwwtd_load_ent_and_dis', t("Total load entering and discharged"), $frontAndBackGraph1And2[0],  $frontAndBackGraph1And2[1], false,
                     'per_ent_and_dis', t("BOD, COD, N, P concentration"), $frontAndBackGraph1And2[2], $frontAndBackGraph1And2[3], false
@@ -250,7 +250,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
         
         // Création du code html pour ces graphs :
         if(!empty($rows)){
-            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatement plant : Total load entering and discharged"), 
+            $formResult = getHtmlPlusHtmlChartsBars($formResult, t("Waste water treatment plant : Total load entering and discharged"), 
             		$rows, $yearsPossibles);
         }
     }
@@ -547,7 +547,7 @@ function getRow1Graph2($yearSelected, $yearsPossibles) {
 
 /**
  * Retourne les données pour les graphes "Total generated load by compliance" et "Number of agglomerations by compliance".
- * && Waste water treatement plant : Load entering by treatment type
+ * && Waste water treatment plant : Load entering by treatment type
  */
 function getRow2Graph1and2($results, $yearSelected) {
 	// Variables du graph 1 :
@@ -756,7 +756,7 @@ function getRow2Graph1and2($results, $yearSelected) {
 	            <table class="stats-graphs table table-hover table-striped sticky-enabled">
 	                <thead>
 	                    <tr>
-	                        <th><i>*: Number of agglomerations</i></th>
+	                        <th><i>*: Number of elements</i></th>
 	                    </tr>
 	                </thead>
 	            </table>';
