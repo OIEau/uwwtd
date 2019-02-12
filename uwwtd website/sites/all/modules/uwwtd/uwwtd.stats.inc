@@ -743,7 +743,7 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 						if($delta>0){
 							$data[$year]['sludge']['destination']['missing']=$delta;
 						}
-						drupal_set_message(t("There are probably an error in sludge destination (delta = @delta t DS/y)",array('@delta'=>$delta)),"error");
+						if(abs($delta)>10) {drupal_set_message(t("There are probably an error in sludge destination (delta = @delta t DS/y)",array('@delta'=>$delta)),"error");}
 					}
 				}
 			}
