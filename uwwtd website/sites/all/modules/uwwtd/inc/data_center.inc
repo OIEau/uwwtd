@@ -3335,7 +3335,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_numeric($data['uwwLoadEnteringUWWTP']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node, 'uwwLoadEnteringUWWTP');
             } else {
                 $node->field_uwwloadenteringuwwtp['und'][0]['value'] = $check;
             }               
@@ -3349,7 +3349,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_numeric($data['uwwCapacity']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node, 'uwwCapacity');
             } else {
                 $node->field_physicalcapacityactivity['und'][0]['value'] = $check;
             }             
@@ -3360,7 +3360,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwPrimaryTreatment'])){
             $check = uwwtd_check_bool($data['uwwPrimaryTreatment']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwPrimaryTreatment');
             } else {
                 $node->field_uwwprimarytreatment['und'][0]['value'] = $check;
             }
@@ -3371,7 +3371,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwSecondaryTreatment'])){
             $check = uwwtd_check_bool($data['uwwSecondaryTreatment']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwSecondaryTreatment');
             } else {
                 $node->field_uwwsecondarytreatment['und'][0]['value'] = $check;
             }
@@ -3382,7 +3382,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwNRemoval'])){
             $check = uwwtd_check_bool($data['uwwNRemoval']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwNRemoval');
             } else {
                 $node->field_uwwnremoval['und'][0]['value'] = $check;
             }
@@ -3393,7 +3393,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwPRemoval'])){
             $check = uwwtd_check_bool($data['uwwPRemoval']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwPRemoval');
             } else {
                 $node->field_uwwpremoval['und'][0]['value'] = $check;
             }
@@ -3404,7 +3404,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwUV'])){
             $check = uwwtd_check_bool($data['uwwUV']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwUV');
             } else {
                 $node->field_uwwuv['und'][0]['value'] = $check;
             }
@@ -3415,7 +3415,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwChlorination'])){
             $check = uwwtd_check_bool($data['uwwChlorination']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwChlorination');
             } else {
                 $node->field_uwwchlorination['und'][0]['value'] = $check;
             }
@@ -3426,7 +3426,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwOzonation'])){
             $check = uwwtd_check_bool($data['uwwOzonation']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwOzonation');
             } else {
                 $node->field_uwwozonation['und'][0]['value'] = $check;
             }
@@ -3437,7 +3437,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwSandFiltration'])){
             $check = uwwtd_check_bool($data['uwwSandFiltration']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwSandFiltration');
             } else {
                 $node->field_uwwsandfiltration['und'][0]['value'] = $check;
             }
@@ -3448,7 +3448,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwMicroFiltration'])){
             $check = uwwtd_check_bool($data['uwwMicroFiltration']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwMicroFiltration');
             } else {
                 $node->field_uwwmicrofiltration['und'][0]['value'] = $check;
             }
@@ -3459,7 +3459,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwOther'])){
             $check = uwwtd_check_bool($data['uwwOther']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwOther');
             } else {
                 $node->field_uwwothertreat['und'][0]['value'] = $check;
             }
@@ -3512,7 +3512,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwBadPerformance'])){
             $check = uwwtd_check_bool($data['uwwBadPerformance']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwBadPerformance');
             } else {
                 $node->field_uwwbadperfdesign['und'][0]['value'] = $check;
             }
@@ -3523,7 +3523,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwAccidents'])){ 
             $check = uwwtd_check_bool($data['uwwAccidents']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwAccidents');
             } else {
                 $node->field_uwwaccidents['und'][0]['value'] = $check;
             }
@@ -3534,7 +3534,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         if(isset($data['uwwBadDesign'])){  
             $check = uwwtd_check_bool($data['uwwBadDesign']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['boolean_error'], $timestamp, 0 , $node, 'uwwBadDesign');
             } else {
                 $node->field_uwwbaddesign['und'][0]['value'] = $check;
             }
@@ -3554,7 +3554,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODIncomingMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODIncomingMeasured');
             } else {
                 $node->field_uwwbodincoming['und'][0]['value'] = round($check,2);
             }               
@@ -3568,7 +3568,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODIncomingCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODIncomingCalculated');
             } else {
                 $node->field_uwwbodincomingcalculated['und'][0]['value'] = round($check,2);
             }             
@@ -3582,7 +3582,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODIncomingEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODIncomingEstimated');
             } else {
                 $node->field_uwwbodincomingestimated['und'][0]['value'] = round($check,2);
             }             
@@ -3596,7 +3596,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODIncomingMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODIncomingMeasured');
             } else {
                 $node->field_uwwcodincoming['und'][0]['value'] = round($check,2);
             }               
@@ -3610,7 +3610,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODIncomingCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODIncomingCalculated');
             } else {
                 $node->field_uwwcodincomingcalculated['und'][0]['value'] = round($check,2);
             }               
@@ -3624,7 +3624,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODIncomingEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODIncomingEstimated');
             } else {
                 $node->field_uwwcodincomingestimated['und'][0]['value'] = round($check,2);
             }              
@@ -3638,7 +3638,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNIncomingMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNIncomingMeasured');
             } else {
                 $node->field_uwwnincoming['und'][0]['value'] = round($check,2);
             }             
@@ -3652,7 +3652,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNIncomingCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNIncomingCalculated');
             } else {
                 $node->field_uwwnincomingcalculated['und'][0]['value'] = round($check,2);
             }             
@@ -3666,7 +3666,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNIncomingEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNIncomingEstimated');
             } else {
                 $node->field_uwwnincomingestimated['und'][0]['value'] = round($check,2);
             }             
@@ -3680,7 +3680,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPIncomingMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPIncomingMeasured');
             } else {
                 $node->field_uwwpincoming['und'][0]['value'] = round($check,2);
             }             
@@ -3694,7 +3694,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPIncomingCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPIncomingCalculated');
             } else {
                 $node->field_uwwpincomingcalculated['und'][0]['value'] = round($check,2);
             }               
@@ -3708,7 +3708,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPIncomingEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPIncomingEstimated');
             } else {
                 $node->field_uwwpincomingestimated['und'][0]['value'] = round($check,2);
             }             
@@ -3722,7 +3722,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODDischargeMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODDischargeMeasured');
             } else {
                 $node->field_uwwboddischarge['und'][0]['value'] = round($check,2);
             }              
@@ -3736,7 +3736,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODDischargeCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODDischargeCalculated');
             } else {
                 $node->field_uwwboddischargecalculated['und'][0]['value'] = round($check,2);
             }              
@@ -3750,7 +3750,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwBODDischargeEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwBODDischargeEstimated');
             } else {
                 $node->field_uwwboddischargeestimated['und'][0]['value'] = round($check,2);
             }               
@@ -3764,7 +3764,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODDischargeMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODDischargeMeasured');
             } else {
                 $node->field_uwwcoddischarge['und'][0]['value'] = round($check,2);
             }             
@@ -3778,7 +3778,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODDischargeCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODDischargeCalculated');
             } else {
                 $node->field_uwwcoddischargecalculated['und'][0]['value'] = round($check,2);
             }              
@@ -3792,7 +3792,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwCODDischargeEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwCODDischargeEstimated');
             } else {
                 $node->field_uwwcoddischargeestimated['und'][0]['value'] = round($check,2);
             }             
@@ -3806,7 +3806,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNDischargeMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNDischargeMeasured');
             } else {
                 $node->field_uwwndischarge['und'][0]['value'] = round($check,2);
             }             
@@ -3820,7 +3820,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNDischargeCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNDischargeCalculated');
             } else {
                 $node->field_uwwndischargecalculated['und'][0]['value'] = round($check,2);
             }             
@@ -3834,7 +3834,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwNDischargeEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwNDischargeEstimated');
             } else {
                 $node->field_uwwndischargeestimated['und'][0]['value'] = round($check,2);
             }             
@@ -3848,7 +3848,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPDischargeMeasured']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPDischargeMeasured');
             } else {
                 $node->field_uwwpdischarge['und'][0]['value'] = round($check,2);
             }               
@@ -3862,7 +3862,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPDischargeCalculated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPDischargeCalculated');
             } else {
                 $node->field_uwwpdischargecalculated['und'][0]['value'] = round($check,2);
             }              
@@ -3876,7 +3876,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
 //             }
             $check = uwwtd_check_decimal($data['uwwPDischargeEstimated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwPDischargeEstimated');
             } else {
                 $node->field_uwwpdischargeestimated['und'][0]['value'] = round($check,2);
             }               
@@ -3885,12 +3885,9 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         
         //decimal
         if(isset($data['uwwWasteWaterTreated'])){
-//             if(uwwtd_check_decimal($data['uwwWasteWaterTreated'], $timestamp, $i, $node) !== false){
-//                 $node->field_uwwwastewatertreated['und'][0]['value'] = uwwtd_check_decimal($data['uwwWasteWaterTreated'], $timestamp, $i, $node);
-//             }
             $check = uwwtd_check_decimal($data['uwwWasteWaterTreated']);
             if (false === $check) {
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node);
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['decimal_error'], $timestamp, $i, $node, 'uwwWasteWaterTreated');
             } else {
                 $node->field_uwwwastewatertreated['und'][0]['value'] = round($check, 0);
             }               
@@ -3935,7 +3932,7 @@ function uwwtd_update_uww_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No uwwTPs date end life found.', $timestamp, $i, $node);
 
         // save node
-        node_save($node);
+        //node_save($node);
         
         if (empty($node->nid)) {
             uwwtd_trace('uwwtp ' . $siteId . ' node_save() error2');

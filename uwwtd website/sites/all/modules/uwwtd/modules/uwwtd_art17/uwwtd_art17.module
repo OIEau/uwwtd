@@ -2182,24 +2182,39 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
     else{
          // Processing agglomerations
          if(isset($datas['FLAAgglomerations']['Row'])){
-            foreach ($datas['FLAAgglomerations']['Row'] as $agglomeration) {
-                uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
-                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
-            } 
+             if(isset($datas['FLAAgglomerations']['Row']['flarepCode'])) {
+                uwwtd_art17_import_FLAAgglomeration($datas['FLAAgglomerations']['Row'], $newFile, $annee);
+            }
+            else{
+                foreach ($datas['FLAAgglomerations']['Row'] as $agglomeration) {
+                    uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
+                    //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+                } 
+            }
          }
         
         // Processing UWWTP
         if(isset($datas['FLAUWWTPs']['Row'])){
-            foreach ($datas['FLAUWWTPs']['Row'] as $uwwtp) {
-                uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
-                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            if(isset($datas['FLAUWWTPs']['Row']['flarepCode'])) {
+                uwwtd_art17_import_FLAUWWTP($datas['FLAUWWTPs']['Row'], $newFile, $annee);
+            }
+            else{
+                foreach ($datas['FLAUWWTPs']['Row'] as $uwwtp) {
+                    uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
+                    //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+                }
             }
         }
         // Processing investments
         if(isset($datas['FLAInvestments']['Row'])){
-            foreach ($datas['FLAInvestments']['Row'] as $investment) {
-                uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
-                //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+            if(isset($datas['FLAInvestments']['Row']['flarepCode'])) {
+                uwwtd_art17_import_FLAInvestment($datas['FLAInvestments']['Row'], $newFile, $annee);
+            }
+            else{
+                foreach ($datas['FLAInvestments']['Row'] as $investment) {
+                    uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
+                    //$context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
+                }
             }
         }
     }
