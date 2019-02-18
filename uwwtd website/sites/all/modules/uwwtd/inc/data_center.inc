@@ -4916,7 +4916,7 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 if (isset($data['aucPercEnteringUWWTP'])) {
                     $check = uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $message);
                     if ($message != '') {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k);
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercEnteringUWWTP');
                     }
                 } else {
                     $check = 0;
@@ -4927,6 +4927,22 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
                 //text
                 $aggTpLinkFull->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = (isset($data['aucMethodPercEnteringUWWTP']) ? uwwtd_check_text($data['aucMethodPercEnteringUWWTP']) : 0);
                 $aggTpLinkFull->field_anneedata['und'][0]['value'] = $annee;
+                
+                //FIX ME
+                //Rate of generated load of agglomeration transported to this UWWTP by trucks (%).
+                //min : 0 max 100% decimal
+                //aucPercC2T
+                if (isset($data['aucPercC2T'])) {
+                    $check = uwwtd_check_pourc($data['aucPercC2T'], $message);
+                    if ($message != '') {
+                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercC2T');
+                    }
+                } else {
+                    $check = 0;
+                }
+                $aggTpLinkFull->field_aucpercc2t['und'][0]['value'] = $check;
+                
+                
                 node_save($aggTpLinkFull);
 
                 if (empty($aggTpLinkFull->nid)) {

@@ -5284,6 +5284,26 @@ function uwwtd_update_7172(&$context) {
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
+
+function uwwtd_update_7173(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+
+     // Mise à jour de la base :
+    $batch = array(
+        'title' => t('Installing UWWTD'),
+        'operations' => array(
+          array('uwwtd_install_content_type', array()),  
+        ),
+        'finished' => 'uwwtd_install_batch_finished',
+        'init_message' => t('Start to install uwwtd...'),
+        'progress_message' => t('installing...'),
+        'error_message' => t('An error occured while installing.'),
+        'file' => drupal_get_path('module', 'uwwtd') . '/uwwtd.install',
+    );
+    
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label
