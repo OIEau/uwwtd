@@ -10,6 +10,8 @@ define('TPS_WITHOUT_AGG', 'tps_without_agg');
 define('TPS_WITHOUT_DP', 'tps_without_dp');
 define('DPS_WITHOUT_TP', 'dps_without_tp');
 
+
+
 //Customize main search result
 function uwwtd_preprocess_search_result(&$variables) {
   $info = array();
@@ -1590,7 +1592,7 @@ function uwwtd_get_uww_graphic($node) {
 function uwwtd_get_agglo_graphic($node) {
   global $base_url;
   $src = $base_url . '/' . drupal_get_path('theme', 'uwwtd');
-
+  $stq_msg = [];
   //$totalout = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'];
   $totalWOT = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggpercwithouttreatment['und'][0]['value'];
   $totalIAS = $node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc2['und'][0]['value'];
@@ -1615,16 +1617,19 @@ function uwwtd_get_agglo_graphic($node) {
     $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
     $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
     $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
-    //$query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+    $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+     $query->join('field_data_field_aucpercc2t', 't', 't.entity_id = n.nid');
     $query->fields('n', array('nid', 'title'));
     $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
-    //$query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+    $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
+    $query->fields('t', array('field_aucpercc2t_value'));
     $query->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=');
     $query->condition('u.field_agglo_uww_uww_nid', $uwws['nid'], '=');
     $result = $query->execute();
     while ($record = $result->fetchAssoc()) {
       $perce_entering = $record['field_agglo_uww_perc_ent_uw_value'];
-      //$mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+      $mperce = $record['field_agglo_uww_mperc_ent_uw_value'];
+      $truck_pc = $record['field_aucpercc2t_value'];
     }
 
     $sumOfLoadEntering += $perce_entering;
@@ -1680,6 +1685,8 @@ function uwwtd_get_agglo_graphic($node) {
     $reseau[$uwws['nid']] = array('nid' => $uwws['nid'], 'dcps' => array());
     $reseau[$uwws['nid']]['loadEntering'] = $total_entering;
     $reseau[$uwws['nid']]['percEntering'] = $perce_entering;
+    $reseau[$uwws['nid']]['mperce'] = $mperce;
+    $reseau[$uwws['nid']]['truck_pc'] = $truck_pc;
     $reseau[$uwws['nid']]['mstype'] = $msType;
     $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
     $reseau[$uwws['nid']]['title'] = $uww->title;
@@ -1750,11 +1757,11 @@ function uwwtd_get_agglo_graphic($node) {
   }
 
   $output .= '<div class="graphic-title">
-            ' . l($node->title, "node/" . $node->nid) . '<br>
-            Generated load : ' . uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0) . ' p.e
+            ' . l($node->title, "node/" . $node->nid) . '<br/>
+            '.t('Generated load').' : ' . uwwtd_format_number($node->field_agggenerated['und'][0]['value'], 0) . ' p.e
         </div>
         <div class="agglo-load">
-            Collective system :<br>' . uwwtd_format_number($node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'], 0) . ' p.e <br>(' . uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) . '%)
+            '.t('Collecting system').' :<br/>' . uwwtd_format_number($node->field_agggenerated['und'][0]['value'] / 100 * $node->field_aggc1['und'][0]['value'], 0) . ' p.e <br>(' . uwwtd_format_number($node->field_aggc1['und'][0]['value'], 1) . '%)
         </div>
     </div>
     <div class="connectors" style="margin-top: -' . $topMarge . 'px; top: ' . $topMarge . 'px;">';
@@ -1778,7 +1785,6 @@ function uwwtd_get_agglo_graphic($node) {
   if ($nbPlants % 2 == 0) {
     $offset = 50;
   }
-
   foreach ($reseau as $station) {
     $output .= '<div class="station" style="position: relative; top: -' . $offset . 'px">';
 
@@ -1800,17 +1806,33 @@ function uwwtd_get_agglo_graphic($node) {
       }
     }
 
-    $output .= '<div class="graphic-title">
-                ' . l($station['title'], "node/" . $station['nid']) . '
-            </div>';
+    $output .= '<div class="graphic-title">' . l($station['title'], "node/" . $station['nid']) . '</div>';
 
+    $style = '';
     if ($percentage_lost > 1 || $pe_lost > 2000) {
-      $output .= '<div class="station-load" style="color:red;">Load entering from:<br>' . $node->title . '<br>' . uwwtd_format_number($station['loadEntering'], 0) . ' p.e <br>(' . uwwtd_format_number($station['percEntering'], 1) . '%)</div>
-            </div>';
-    } else {
-      $output .= '<div class="station-load">Load entering from:<br>' . $node->title . '<br>' . uwwtd_format_number($station['loadEntering'], 0) . ' p.e <br>(' . uwwtd_format_number($station['percEntering'], 1) . '%)</div>
-            </div>';
-    }
+        $style = 'style="color:red;"';
+    } 
+    $output .= '<div class="station-load" '.$style.'>';
+        $output .= '<div>'.t('Load entering from').':</div><div>' . $node->title . '</div>';
+        $output .= '<div>';
+            $output .= uwwtd_format_number($station['loadEntering'], 0) . ' p.e (' . uwwtd_format_number($station['percEntering'], 1) . '%) ';
+            if($station['mperce']!=''){
+                $msg_id = count($stq_msg)+1;
+                $stq_msg[$msg_id] = '<div class="stq-msg-item" id="msg-'.$msg_id.'">'.$msg_id.': '.t('value based on :method method', [':method'=>$GLOBALS['methods'][$station['mperce']]]).'</div>';
+                $output .='<sup><a href="#msg-'.$msg_id.'">'.$msg_id .'</a></sup> ';
+            } 
+            if($station['truck_pc']!='' && $station['truck_pc']>0){
+                $msg_id = count($stq_msg)+1;
+                $stq_msg[] = '<div class="stq-msg-item" id="msg-'.$msg_id.'">'.$msg_id.': '.t('with :pc % of generated load transported by trucks', [':pc'=>round($station['truck_pc'],1)]). '</div>';
+                $output .='<sup><a href="#msg-'.$msg_id.'">'.$msg_id .'</a></sup> ';
+            }
+        $output .= '</div>';
+        
+        
+        
+    $output .= '</div>';
+    $output .= '</div>';
+
   }
 
   $output .= '</div>';
@@ -1909,14 +1931,14 @@ function uwwtd_get_agglo_graphic($node) {
 
   $output .= '</div>
             </div>
-            <div class="dischage-wot">
+            <div class="discharge-wot">
                 <div class="graphic-title">
                     ' . t('Discharge without treatment:') . ' ' . uwwtd_format_number($totalWOT, 0) . ' p.e (' . uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1) . '%)<br>';
   if ($percentage_lost > 2000 || $pe_lost > 1) {
     $output .= '<span style="color:red;">' . t('Warning : Agglomeration found not compliant because of notable difference between load collected in collective system and sum of load entering UWWTPs (> 2000pe or > 1% of the generated load).') . '</span>';
   }
   $output .= '</div>
-                <br><br>
+                <br>
                 <img width="1098px" src="' . $src . '/images/graphic/wot.png" alt="reseau">
                 <div class="graphic-legend">
                     <ul><b>Main treatment :</b>
@@ -1943,7 +1965,7 @@ function uwwtd_get_agglo_graphic($node) {
                     </ul>
                 </div>
             </div>';
-
+    $output .='<div class="stq-msg">'.theme('item_list', ['items'=>$stq_msg]).'</div>';
   return $output;
 }
 
