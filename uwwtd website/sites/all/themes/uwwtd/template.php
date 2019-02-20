@@ -1617,8 +1617,9 @@ function uwwtd_get_agglo_graphic($node) {
     $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
     $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
     $query->join('field_data_field_agglo_uww_perc_ent_uw', 'perce', 'perce.entity_id = n.nid');
-    $query->join('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
-     $query->join('field_data_field_aucpercc2t', 't', 't.entity_id = n.nid');
+    //LEFT JOIN
+    $query->leftjoin('field_data_field_agglo_uww_mperc_ent_uw', 'mperce', 'mperce.entity_id = n.nid');
+    $query->leftjoin('field_data_field_aucpercc2t', 't', 't.entity_id = n.nid');
     $query->fields('n', array('nid', 'title'));
     $query->fields('perce', array('field_agglo_uww_perc_ent_uw_value'));
     $query->fields('mperce', array('field_agglo_uww_mperc_ent_uw_value'));
@@ -1723,7 +1724,6 @@ function uwwtd_get_agglo_graphic($node) {
         }
     }
    }
-
   $percentage_lost = $node->field_aggc1['und'][0]['value'] - $sumOfLoadEntering;
   $pe_lost = ($percentage_lost * ($node->field_aggc1['und'][0]['value'] * $node->field_agggenerated['und'][0]['value'])) / 10000;
 
