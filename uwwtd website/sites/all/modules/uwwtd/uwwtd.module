@@ -2299,7 +2299,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_map' =>    array(
@@ -2316,57 +2316,57 @@ function uwwtd_field_extra_fields() {
         ),
      'virtual_field_aggc1_with_pe' =>    array(
             'label'       => t('Connected to collecting system'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggc2_with_pe' =>    array(
             'label'       => t('Individual or Appropriate Systems (IAS)'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggpercwithouttreatment_with_pe' =>    array(
             'label'       => t('Discharged without treatment'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_piechart_agglonode' =>    array(
             'label'       => t('Piechart'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggart4compliance_hierarchical' =>    array(
             'label'       => t('2nd treatment compliance'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggart5compliance_hierarchical' =>    array(
             'label'       => t('3rd treatment compliance'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_table_distance_to_compliance' =>    array(
             'label'       => t('Table of the distance to target'), 
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_graphic' =>    array(
             'label'       => t('Graphical network summary'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggperiodover5_custom' =>    array(
@@ -2377,13 +2377,13 @@ function uwwtd_field_extra_fields() {
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_article_17' =>    array(
             'label'       => t('Article 17 field'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );
@@ -2395,7 +2395,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_map' =>    array(
@@ -2413,43 +2413,43 @@ function uwwtd_field_extra_fields() {
      'virtual_field_data_stackedbar' =>    array(
             'label'       => t('Data Stacked bar'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_stackedbar_uwwtpnode' =>    array(
             'label'       => t('Stacked bar'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_graphic' =>    array(
             'label'       => t('Graphical network summary'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_article_17' =>    array(
             'label'       => t('Article 17 field'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );
@@ -2461,7 +2461,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),    
      'virtual_field_map' =>    array(
@@ -2473,19 +2473,19 @@ function uwwtd_field_extra_fields() {
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );

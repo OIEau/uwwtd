@@ -854,7 +854,6 @@ function uwwtd_virtual_field_data_stackedbar($node) {
  */
 function uwwtd_virtual_field_stackedbar_uwwtpnode($node) {   
 //   return __FUNCTION__;
-echo 'aaaaaa';
   $data = uwwtd_vitual_get_info_stacked_bar($node);
 
   $html =  '<div class="back">';
