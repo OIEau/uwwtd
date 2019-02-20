@@ -5288,18 +5288,20 @@ function uwwtd_update_7172(&$context) {
 function uwwtd_update_7173(&$context) {
     uwwtd_install_trace(__FUNCTION__);
 
-     // Mise à jour de la base :
-    $batch = array(
-        'title' => t('Installing UWWTD'),
-        'operations' => array(
-          array('uwwtd_install_content_type', array()),  
-        ),
-        'finished' => 'uwwtd_install_batch_finished',
-        'init_message' => t('Start to install uwwtd...'),
-        'progress_message' => t('installing...'),
-        'error_message' => t('An error occured while installing.'),
-        'file' => drupal_get_path('module', 'uwwtd') . '/uwwtd.install',
-    );
+    include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
+    if (! field_info_field($field['field_name']) ) {
+        field_create_field($list_field['field_aucpercc2t']);
+    }
+    $instance = array(
+        'field_name' => 'field_aucpercc2t',
+        'entity_type' => 'node',
+        'bundle' => 'agglo_uww',
+        'label' => $list_field['field_aucpercc2t']['custom_tooltip'],
+      );
+    $instance_exist = field_info_instance('node', 'field_aucpercc2t', 'agglo_uww');
+    if (! $instance_exist ) {
+        $result = field_create_instance($instance);
+    }
     
     variable_set('siif_eru_version', __FUNCTION__);
 } 
