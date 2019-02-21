@@ -8695,7 +8695,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                       }  
                       $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];  
                     }
-
+                    if($dcp->isInRca54){
+                        $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';  
+                    }
                     if (isset($rca->field_inspireidlocalid['und'][0]['value'])) {
                       if ($rcaID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
                         $rcaID = '';
@@ -10365,23 +10367,6 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
         $p_reduction = 0;
         $compliant_5_4 = '';
 
-        dsm($rca[$i]->field_rcanincomingmeasured['und'][0]['value']);
-        dsm($rca[$i]->field_rcandischargedmeasured['und'][0]['value']);
-        dsm($rca[$i]->field_rcapincomingmeasured['und'][0]['value']);
-        dsm($rca[$i]->field_rcapdischargedmeasured['und'][0]['value']);
-
-        dsm($rca[$i]->field_rcanincomingcalculated['und'][0]['value']);
-        dsm($rca[$i]->field_rcandischargedcalculated['und'][0]['value']);
-        dsm($rca[$i]->field_rcapincomingcalculated['und'][0]['value']);
-        dsm($rca[$i]->field_rcapdischargedcalculated['und'][0]['value']);
-
-        dsm($rca[$i]->field_rcanincomingestimated['und'][0]['value']);
-        dsm($rca[$i]->field_rcandischargedestimated['und'][0]['value']);
-        dsm($rca[$i]->field_rcapincomingestimated['und'][0]['value']);
-        dsm($rca[$i]->field_rcapdischargedestimated['und'][0]['value']);
-
-        dsm($rca[$i]->field_rcamethod54['und'][0]['value']);
-
         switch ($rca[$i]->field_rcamethod54['und'][0]['value']) {
           case 'M':
             $nIn = $rca[$i]->field_rcanincomingmeasured['und'][0]['value'];
@@ -10403,16 +10388,16 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
             break;
         }
         //100- (N out * 100 / N In)
-        $n_reduction = ($nOut > 0 && $nIn > 0) ? 100 - ($nOut * 100 / $nIn) : 0;
+        $n_reduction = ($nOut > 0 && $nIn > 0) ? 1 - ($nOut / $nIn) : 0;
         //100- (P out * 100 / P In)
-        $p_reduction = ($pOut > 0 && $pIn > 0) ? 100 - ($pOut * 100 / $pIn) : 0;
+        $p_reduction = ($pOut > 0 && $pIn > 0) ? 1 - ($pOut / $pIn) : 0;
 
         if ($rca[$i]->field_rcaanitro['und'][0]['value'] == 1 && $rca[$i]->field_rcaaphos['und'][0]['value'] == 1) {
-            $compliant_5_4 = $n_reduction >= 75 && $p_reduction >= 75 ? 'C' : 'NC';
+            $compliant_5_4 = $n_reduction >= 0.75 && $p_reduction >= 0.75 ? 'C' : 'NC';
         } elseif ($rca[$i]->field_rcaanitro['und'][0]['value'] == 1) {
-           $compliant_5_4 = $n_reduction >= 75 ? 'C' : 'NC';
+           $compliant_5_4 = $n_reduction >= 0.75 ? 'C' : 'NC';
         } elseif ($rca[$i]->field_rcaaphos['und'][0]['value'] == 1) {
-           $compliant_5_4 = $p_reduction >= 75 ? 'C' : 'NC';
+           $compliant_5_4 = $p_reduction >= 0.75 ? 'C' : 'NC';
         } else {
            $compliant_5_4 = 'NR';
         }
