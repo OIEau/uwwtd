@@ -2574,13 +2574,13 @@ function uwwtd_node_load($nodes, $types){
                 $is54 = false;
                 if(!empty($node->field_linked_receiving_areas)){
                     $rca_id = array_column($node->field_linked_receiving_areas['und'], 'nid');
-                     $rca_id =[1];
                     $query = db_select('field_data_field_rca54applied', 'rca');
                         $query->fields('rca', array('field_rca54applied_value'));
                         $query->condition('entity_id', $rca_id , 'IN');
                         $query->condition('field_rca54applied_value', 1);
-                    $r = $query->execute()->fetchCol();    
-                    $is54 = true;
+                    $r = $query->execute()->fetchCol();  
+                    if(!empty($r)){$is54 = true;}
+                    
                 }
                 $nodes[$nid]->isInRca54 = $is54;
             }
