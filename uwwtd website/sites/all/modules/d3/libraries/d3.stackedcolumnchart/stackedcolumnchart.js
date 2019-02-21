@@ -76,7 +76,7 @@
           .append("text")
           .attr("dy", ".71em")
           .attr("text-anchor", "end")
-          .attr('transform', function(d,i) { return "rotate(-15)"; })
+          .attr('transform', function(d,i) { return "rotate(-90)"; })
           .text(function(d,i){
             var content = '';
             var label = d3.splitString(xLabels[i],20);
@@ -119,7 +119,10 @@
       .attr("dy", ".3em")
       .attr("text-anchor", "end")
       .text(function(d,i){
-            if(d>999) return d3.format(",d")(d);
+            if(d>999){
+                d= d/1000;
+                return d3.format(",d")(d) +'k';
+            } 
             else return d3.format("")(d);  
         }
        );
