@@ -35,8 +35,7 @@ function uwwtd_article17_export($year)
                 drupal_set_message("Aucune fonction d'export de $content_type n'a été trouvée.", "error");
             }
             // Convert nodes to phparray
-            $csvarray = uwwtd_article_17_csvarray($content_type, $nids);           
-
+            $csvarray = uwwtd_article_17_csvarray($content_type, $nids); 
             // Export to excel sheets
             $sheet = $objPHPExcel->getSheetByName($content_type);
             foreach ($csvarray as $line => $row) {

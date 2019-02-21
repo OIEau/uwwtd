@@ -2121,49 +2121,24 @@ function uwwtd_timeline_receiving_area_output($node){
       $otherList[$otherY] = array('node'=>$other);
     }
     ksort($otherList);
-    // dsm($otherList);
     $output .='<table class = "dispo-annee receiving-area">
               <tbody>
                 <tr>
                   <td class="dispo-before"><div></div></td>';
     foreach($otherList as $other){
       $ting = $other['node'];
-   //    if ($ting->type == 'receiving_area') {
-        
-   //    }
-      // if($node->type == 'agglomeration') $val = $ting->field_aggcompliance['und'][0]['value'];
-      // if($node->type == 'uwwtp') $val = $ting->field_uwwcompliance['und'][0]['value'];
-
-      // //override PD and QC value, we don't want to display QC and PD (for now)
-      // if (isset($val) && isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ])) {
-      //  $val = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $val ];
-      // }
-
-      // //default colors
-      // $color = '#6b6b6b'; $borderc = '#6b5e66';
-
-      // if(isset($val)){
-      //  if($val == 'C') {$color = '#4f91e1'; $borderc = '#4faaf9'; $txtc = '#ffffff'; $bulleTxt = t('Compliant'); $dispo =1;}
-      //  if($val == 'NC') {$color = '#d93c3c'; $borderc = '#d91a10'; $txtc = '#ffffff'; $bulleTxt = t('Not compliant');$dispo =2;}
-      //  if($val == 'NR') {$color = '#a2a2a2'; $borderc = '#a6a2a2'; $txtc = '#ffffff'; $bulleTxt = t('Not relevant');$dispo =3;}
-      //  if($val == 'NI') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('No information'); $dispo =4;}
-      //  // if($val == 'CE') {$color = '#ea8b2e'; $borderc = '#ea7810'; $txtc = '#ffffff'; $bulleTxt = t('Compliant on equipment');$dispo =5;}
-      //  if($val == '?') {$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
-      // }
-      // $color = uwwtd_adjustBrightness($color, 50);
+      $class = uwwtd_timeline_receiving_area_state($ting);
       $nbAnnee = count($otherY);
       $j=0;
       $cell = 0;
       for($a=1;$a<=$nbAnnee;$a++){
         if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-          $output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current">';
+          $output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current '.$class.'">';
           $output .= '<h4 style="color: #000;">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-          // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
           $output .= '</td>';
         }else{
-          $output.='<td class="dispo-annee uwwtd-history-element">';
+          $output.='<td class="dispo-annee uwwtd-history-element '.$class.'">';
           $output .= '<h4 style="color: #000;">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid, array('attributes' => array('style' => 'color: #000 !important'))).'</h4>';
-          // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
           $output .= '</td>';
         }
         //Si on arrive a 16 cellules, un retour à la ligne s'impose
@@ -2184,6 +2159,29 @@ function uwwtd_timeline_receiving_area_output($node){
   }
 
   return $output;
+}
+function uwwtd_timeline_receiving_area_state($node){
+    $class = '';
+    if($node->field_rca54applied['und'][0]['value'] == 1){
+        //Test perf on N & P
+        $nincoming   = $node->field_rcanincomingmeasured['und'][0]['value']  + $node->field_rcanincomingcalculated['und'][0]['value']   + $node->field_rcanincomingestimated['und'][0]['value'];
+        $ndischarged = $node->field_rcandischargedmeasured['und'][0]['value']  + $node->field_rcandischargedcalculated['und'][0]['value']   + $node->field_rcandischargedestimated['und'][0]['value'];
+
+        $pincoming   = $node->field_rcapincomingmeasured['und'][0]['value']  + $node->field_rcapincomingcalculated['und'][0]['value']   + $node->field_rcapincomingestimated['und'][0]['value'];
+        $pdischarged = $node->field_rcapdischargedmeasured['und'][0]['value']  + $node->field_rcapdischargedcalculated['und'][0]['value']   + $node->field_rcapdischargedestimated['und'][0]['value'];  
+        if ($nincoming > 0  && $pincoming > 0 ) {  
+            if( (1 - ($ndischarged / $nincoming)) >= 0.75 && (1 - ($pdischarged / $pincoming)) >= 0.75){
+                $class= 'dispo-1';  
+            }
+            else{
+                $class= 'dispo-2';  
+            }
+        }
+        else{
+            $class= 'dispo-3';  
+        }
+    }
+    return $class;
 }
 
 
@@ -2299,7 +2297,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_map' =>    array(
@@ -2316,57 +2314,57 @@ function uwwtd_field_extra_fields() {
         ),
      'virtual_field_aggc1_with_pe' =>    array(
             'label'       => t('Connected to collecting system'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggc2_with_pe' =>    array(
             'label'       => t('Individual or Appropriate Systems (IAS)'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggpercwithouttreatment_with_pe' =>    array(
             'label'       => t('Discharged without treatment'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_piechart_agglonode' =>    array(
             'label'       => t('Piechart'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggart4compliance_hierarchical' =>    array(
             'label'       => t('2nd treatment compliance'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggart5compliance_hierarchical' =>    array(
             'label'       => t('3rd treatment compliance'),
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_table_distance_to_compliance' =>    array(
             'label'       => t('Table of the distance to target'), 
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_graphic' =>    array(
             'label'       => t('Graphical network summary'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_aggperiodover5_custom' =>    array(
@@ -2377,13 +2375,13 @@ function uwwtd_field_extra_fields() {
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_article_17' =>    array(
             'label'       => t('Article 17 field'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );
@@ -2395,7 +2393,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_map' =>    array(
@@ -2413,43 +2411,43 @@ function uwwtd_field_extra_fields() {
      'virtual_field_data_stackedbar' =>    array(
             'label'       => t('Data Stacked bar'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_stackedbar_uwwtpnode' =>    array(
             'label'       => t('Stacked bar'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_graphic' =>    array(
             'label'       => t('Graphical network summary'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_article_17' =>    array(
             'label'       => t('Article 17 field'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );
@@ -2461,7 +2459,7 @@ function uwwtd_field_extra_fields() {
      'virtual_field_error' =>    array(
             'label'       => t('Error list'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),    
      'virtual_field_map' =>    array(
@@ -2473,19 +2471,19 @@ function uwwtd_field_extra_fields() {
      'virtual_field_latitude_custom' =>    array(
             'label'       => t('Latitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_longitude_custom' =>    array(
             'label'       => t('Longitude'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
      'virtual_field_source_file_link' =>    array(
             'label'       => t('List of data source file'),
             'label_hidden'       => true,
-            'description' => t("description"),
+            'description' => null,
             'weight'      => 100,
         ),
   );
@@ -2569,7 +2567,31 @@ function uwwtd_node_view($node, $view_mode, $langcode) {
 
 
 
-
+function uwwtd_node_load($nodes, $types){
+    if(!empty($nodes)){
+        foreach($nodes as $nid=>$node){
+            if(in_array($node->type, ['agglomeration', 'uwwtp', 'discharge_point'])){
+                $is54 = false;
+                if(!empty($node->field_linked_receiving_areas)){
+                    $rca_id = array_column($node->field_linked_receiving_areas['und'], 'nid');
+                    $query = db_select('field_data_field_rca54applied', 'rca');
+                        $query->fields('rca', array('field_rca54applied_value'));
+                        $query->condition('entity_id', $rca_id , 'IN');
+                        $query->condition('field_rca54applied_value', 1);
+                    $r = $query->execute()->fetchCol();  
+                    if(!empty($r)){$is54 = true;}
+                    
+                }
+                $nodes[$nid]->isInRca54 = $is54;
+            }
+        }
+        
+    }
+    /*
+    
+    return false;
+    */
+}
 
 /**
  *
