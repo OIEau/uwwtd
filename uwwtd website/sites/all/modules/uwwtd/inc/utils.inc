@@ -115,10 +115,6 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    
-    $node = node_load(9160);
-    //Check if we are in art 5.4 area
-    dsm($node);
     return "debug";
     /*
     $years = uwwtd_get_all_year();

@@ -73,7 +73,8 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){
+function uwwtd_register_set_operation(&$batch, $annee){  
+
  //    //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -125,7 +126,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    
+  
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -5598,14 +5599,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
-                //            - due to a size of 2000p.e. - 10000 p.e.       ˆ ™..and discharge into coastal water
+                //            - due to a size of 2000p.e. - 10000 p.e.       ..and discharge into coastal water
                 if (isset($agglo[$ind['generated_load_p.e.']]) && $agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
                     && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
                 }
-    //            - due to 0% collection in collecting   ˆ ™...system
+    //            - due to 0% collection in collecting   ...system
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
@@ -5648,20 +5649,20 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['agglo']['number']++;
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
-                //- due to a size of   Œ   10000 p.e.       ˆ ™
+                //- due to a size of   Œ   10000 p.e.       
                 if ($agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000) {
                     $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e., but discharge      ˆ ™    ˆ ™..into NA
+                //   - size > 10000 p.e., but discharge          ..into NA
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $NA && !$LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e. and discharge into   ˆ ™..CSA designated for criterion c
+                //   - size > 10000 p.e. and discharge into   ..CSA designated for criterion c
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $CSA
                     && $rcac) {
@@ -5669,27 +5670,27 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e., but discharge into   ˆ ™...Art. 5(4)- area
+                //   - size > 10000 p.e., but discharge into   ...Art. 5(4)- area
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $A54) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - due to 0% collection in collecting   ˆ ™...system
+                //   - due to 0% collection in collecting   ...system
                 if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['no_collecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e.  and discharge into     ˆ ™...LSA
+                //   - size > 10000 p.e.  and discharge into     ...LSA
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && $LSA && !$SA && !$CSA && !$A58) {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['agglo']['number']++;
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 		$context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_LSA']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
                 }
-                //   - size > 10000 p.e. and discharge into   ˆ ™..SA/CSA, but transition period pending
+                //   - size > 10000 p.e. and discharge into   ..SA/CSA, but transition period pending
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
                     && ($SA  || $CSA)
                     &&  $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
@@ -7406,8 +7407,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                   $dcpTypeOfReceivingArea = '';
                                 }
                                 $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];
+                                
                             }
-
+                            //Manage case of art 5.4 receiving area
+                            if($dcp->isInRca54){
+                                $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';
+                            }
+                            
                             if(isset($dcp->field_dcprcaliste['und'])){
 			                    foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
 			                        $rca = node_load($rcanid['nid']);
@@ -9961,7 +9967,7 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
                 $context['sandbox']['id'][] = $row['nid'];
             }
         }catch(Exception $e) {
-            dsm($e->getMessage());
+            //dsm($e->getMessage());
         }
 
         $context['sandbox']['max'] = count($context['sandbox']['id']);
