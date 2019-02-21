@@ -252,36 +252,25 @@ function uwwtd_get_format_markup_compliance(&$variables) {
 
   }
 
-  if ($variables['element']['#items']['0']['value'] == 'C') {
-    $spanclass = 'c';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'NC') {
-    $spanclass = 'nc';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'AddQC') {
-    $spanclass = 'nc';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'QC') {
-    $spanclass = 'c';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'NR') {
-    $spanclass = 'nr';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'NI') {
-    $spanclass = 'ni';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'CE') {
-    $spanclass = 'ce';
-  }
-
-  if ($variables['element']['#items']['0']['value'] == 'RNC') {
-    $spanclass = 'c';
+  switch($variables['element']['#items']['0']['value']){
+    case 'C': 
+    case 'QC':
+    case 'RNC':
+        $spanclass = 'c';
+      break;
+    case 'NC':
+    case 'AddQC':
+        $spanclass = 'nc';
+      break;
+    case 'NR':
+        $spanclass = 'nr';
+      break;
+    case 'NI':
+        $spanclass = 'ni';
+      break;
+    case 'CE':
+        $spanclass = 'ce';
+      break;
   }
 
   $variables['items']['0']['#markup'] = '<span class="' . $spanclass . '">' . $variables['items']['0']['#markup'] . '</span>';

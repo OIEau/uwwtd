@@ -6678,7 +6678,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
 
 // uwwtd_trace($agg->field_inspireidlocalid['und'][0]['value'] . '=');
@@ -6977,8 +6976,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				$uwwtpinfo_for_agglo['NC']['pe'] += $agg_leak;
 				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 				if($agg->field_aggart4compliance['und'][0]['value'] == 'C'){
-					dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
-					dsm($agg);
+					//dsm('art4 is compliant on the web site but a part is not compliant in the register : '. $agg->nid);
+					//dsm($agg);
 				}
 			}
 			else{
@@ -6995,8 +6994,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				($agg_leak/$line[$ind['connected_to_collecting_system_p._e.']]) > 0.01){
 				$uwwtpinfo_for_agglo['art5_NC_pe'] += $agg_leak;
 				if($agg->field_aggart5compliance['und'][0]['value'] == 'C'){
-					dsm('art5 is compliant on the web site but  a part is not compliant in the register '.$agg->nid);
-					dsm($agg);
+					//dsm('art5 is compliant on the web site but  a part is not compliant in the register '.$agg->nid);
+					//dsm($agg);
 				}
 			}
 			else{

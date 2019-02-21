@@ -115,7 +115,10 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-
+    
+    $node = node_load(9160);
+    //Check if we are in art 5.4 area
+    dsm($node);
     return "debug";
     /*
     $years = uwwtd_get_all_year();
@@ -1412,9 +1415,15 @@ function uwwtd_get_distance_compliance($agg){
         // }
 
         // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
-        $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-        $art5_perf_compliance = '';
-        if (!empty($treatment_required)) {
+        if($agg->isInRca54){
+            $art5_treatment_compliance = 'NR';
+            $art5_perf_compliance = 'NR';
+        }
+        else {
+            $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+        }
+        
+        if (!$agg->isInRca54 && !empty($treatment_required)) {
             $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
                 $treatment_required,
                 $uwwtp->field_uwwcodperf['und'][0]['value'],
@@ -1525,16 +1534,14 @@ function uwwtd_get_distance_compliance($agg){
                     $colorart5P = '#4f91e1';
                 }
 
-                if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR') {
+                if ($agg->field_aggart5compliance['und'][0]['value'] == 'NR' || $agg->isInRca54) {
                     $colorart5T = '#a2a2a2';
                     $colorart5P = '#a2a2a2';
                 }
-
-                if ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
+                elseif ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
                     $colorart5P = '#FF5200';
                 }
-
-                if ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
+                elseif ($agg->field_aggart5compliance['und'][0]['value'] == 'PD' && $dist_art5_treatment_pe > 0) {
                     $colorart5T = '#FF5200';
                 }
 

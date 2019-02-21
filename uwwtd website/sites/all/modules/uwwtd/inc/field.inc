@@ -226,19 +226,22 @@ function uwwtd_virtual_field_aggart4compliance_hierarchical($node) {
  */
 function uwwtd_virtual_field_aggart5compliance_hierarchical($node) {   
 //   return __FUNCTION__;
-
   //Gestion de la "legal compliance" (hierarchical)
   $field_aggart5compliance = $node->field_aggart5compliance['und'][0]['value'];
-  if($node->field_aggart4compliance['und'][0]['value']=='NC' && $field_aggart5compliance=='C'){
+  $msg = '';
+  if($node->isInRca54){
+    $field_aggart5compliance='NR'; 
+    $msg.='</span> <span>('.t('Art 5.4 is applied for the receiving area').')';
+  }
+  elseif($node->field_aggart4compliance['und'][0]['value']=='NC' && $field_aggart5compliance=='C'){
     $field_aggart5compliance='NC';  
   }
 
   $variables['element']['#items']['0']['value'] = $field_aggart5compliance;
-  $variables['element']['0']['#markup'] = $field_aggart5compliance;
-  $variables['items']['0']['#markup'] = $field_aggart5compliance;
+  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance];
+  $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance] . $msg;
 
   uwwtd_get_format_markup_compliance($variables);
-
   return $variables['items']['0']['#markup'];
 }
 
@@ -315,23 +318,20 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
       $colorart5P = '#4f91e1';
   }
   
-  if ($node->field_aggart5compliance['und'][0]['value'] == 'NR') {
+  if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->isInRca54) {
       $colorart5T = '#a2a2a2';
       $colorart5P = '#a2a2a2';
   }
+  elseif ($node->field_aggart5compliance['und'][0]['value'] == 'PD'){
+      if($distanceToCompliance['art5_perf_pe'] > 0) $colorart5P = '#FF5200';
+      if($distanceToCompliance['art5_treat_pe'] > 0) $colorart5T = '#FF5200';
+  } 
   
-  if ($node->field_aggart5compliance['und'][0]['value'] == 'PD' && $distanceToCompliance['art5_perf_pe'] > 0) {
-      $colorart5P = '#FF5200';
-  }
-  
-  if ($node->field_aggart5compliance['und'][0]['value'] == 'PD' && $distanceToCompliance['art5_treat_pe'] > 0) {
-      $colorart5T = '#FF5200';
-  }
   
   if ($distanceToCompliance['art5_perf_pe'] == '-') {
       $colorart5P = '#a2a2a2';
   }
-
+  
   $html = '
 
   <div class="distance">
