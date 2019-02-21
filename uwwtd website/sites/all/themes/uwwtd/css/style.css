@@ -6801,12 +6801,23 @@ div.features-export-list .form-type-checkbox input[type=checkbox] {
   top: 14px;
 }
 
-.dischage-wot{
+.stq-msg{
+    clear:both;
   position: relative;
-  top: -25px;
+}
+.stq-msg ul li{
+    list-style:none;
+}
+.stq-msg-item{
+    font-style:italic;
+    font-size: 10px;
 }
 
-.dischage-wot .graphic-title{
+.discharge-wot{
+  position: relative;
+}
+
+.discharge-wot .graphic-title{
   top: 0px;
   left: 50px;
   width: auto;
