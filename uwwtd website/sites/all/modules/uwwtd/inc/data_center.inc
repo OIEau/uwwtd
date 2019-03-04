@@ -6680,9 +6680,11 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     }
 	//cn@oieau 13-01-2017
 	if($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+    /* nd@oieau.fr : 04/03/2019
         || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
         || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']    
+    */
     ) {
 		uwwtd_trace(__LINE__);
 		return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
@@ -6713,29 +6715,41 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         // uwwtd_trace(__LINE__);      
         // return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     // }   
-
-    if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        //cn@oieau.fr || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
-    )
-    {
-        uwwtd_trace(__LINE__);
-        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+    if($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC'] ||$node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']){
+        if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
+            //cn@oieau.fr || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+        )
+        {
+            uwwtd_trace(__LINE__);
+            return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+        }
+        else{
+            if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
+                //cn@oieau.fr||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
+            )
+            {
+                uwwtd_trace(__LINE__);
+                return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+            }
+            else{
+                // If the agglomeration has a lot of IAS
+                if ($node->field_aggc2['und'][0]['value'] > 98) {
+                    uwwtd_trace(__LINE__);      
+                    return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                }else{
+                    return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
+                } 
+            }
+        }
+    }
+    else{
+        return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
 
-    if ($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
-        //cn@oieau.fr||$node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
-    )
-    {
-        uwwtd_trace(__LINE__);
-        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-    }
 
-    // If the country has a lot of IAS
-	if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC']
-        && $node->field_aggc2['und'][0]['value'] >= 98) {
-        uwwtd_trace(__LINE__);      
-        return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-    } 
+    
+
+    
 
     uwwtd_trace(__LINE__);
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];          
