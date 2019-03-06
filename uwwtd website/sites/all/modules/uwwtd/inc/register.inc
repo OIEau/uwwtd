@@ -7897,7 +7897,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg->field_agg_equip_ms['und'][0]['value'] = number_format($line[$ind['more_str._treatment_installed_(p._e.)']], 0,'.','');
         $agg->field_agg_perf_ms['und'][0]['value'] = number_format($line[$ind['monitoring_results_f._more_string._ok_(p._e.)']], 0,'.','');
 
-        $agg->field_agg_typeof_sa['und'][0]['value'] = $line[$ind['type_of_receiving_water']];
+        //Remove double values
+        $torw = implode(';', array_unique (explode(';', $line[$ind['type_of_receiving_water']])));
+        $agg->field_agg_typeof_sa['und'][0]['value'] = $torw;
         $agg->field_agg_art_applied_sa['und'][0]['value'] = $line[$ind['agg_art_applied_from_rca']];
         $agg->field_agg_rbd_code['und'][0]['value'] = $line[$ind['id_of_wfd_river_basin_district']];
 
