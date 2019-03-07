@@ -74,7 +74,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-
  //    //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -1316,7 +1315,7 @@ function uwwtd_create_register_2015_summary_big_cities_sheet8($annee)
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and a.field_agggenerated_value::integer > :agggenerated
-        order by n.title
+        order by a.field_agggenerated_value desc
         ';
 
         $param = array(
@@ -6098,9 +6097,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
             and status.field_status_value::integer = 1
-            
+        order by f_agggenerated.field_agggenerated_value desc
         ';
-
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
@@ -6552,8 +6550,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['previous_percentage_of_change_of_size_(1)'] => 'Percentage of change of size (1)',
             //connection'] => //Connection',
             $ind['total_%_(2)'] => 'Total % (2)',
-            $ind['connected_to_collecting_system'] => 'connected to collecting system',
-            $ind['connected_to_collecting_system_p._e.'] => 'connected to collecting system p. e.',
+            $ind['connected_to_collecting_system'] => 'collected by collecting system',
+            $ind['connected_to_collecting_system_p._e.'] => 'collected by collecting system p. e.',
             $ind['addressed_through_ias_%_of_gen._load'] => 'addressed through IAS % of gen. load',
             $ind['addressed_through_ias_p._e.'] => 'addressed through IAS p. e.',
             $ind['neither_collecting_system_nor_ias_%_of_gen._load'] => 'neither collecting system nor IAS % of gen. load',
@@ -6567,7 +6565,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['previous_art3_compliance'] => 'Compliance',
             //ratio_connection/collection/treatment'] => //Ratio connection/collection/treatment',
             $ind['total_entering_load_p._e.'] => 'Total entering load p. e.',
-            $ind['ratio_connected/enentering_%'] => 'ratio connected/enentering %',
+            $ind['ratio_connected/enentering_%'] => 'ratio collected/enentering %',
             $ind['total_treatment_plant_design_capacity_p._e.'] => 'Total treatment plant design capacity  p. e.',
             $ind['ratio_total_entering_load/total_design_capacity_%'] => 'ratio Total entering load/Total design capacity %',
             //compliance_art._4'] => //Compliance Art. 4',
@@ -6583,10 +6581,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $ind['previous_art4_compliance'] => 'Compliance',
             //distance_to_compliance_art._4'] => //Distance to compliance art. 4',
             //treatment'] => //Treatment',
-            $ind['dist_art4_treat__%_of_connected_load'] => '% of connected Load',
+            $ind['dist_art4_treat__%_of_connected_load'] => '% of collected Load',
             $ind['dist_art4_treat_in_p.e._(4)'] => 'in p.e. (4)',
             //performance'] => //Performance',
-            $ind['dist_art4_perf_%_of_connected_load'] => '% of connected Load',
+            $ind['dist_art4_perf_%_of_connected_load'] => '% of collected Load',
             $ind['dist_art4_perf_in_p.e._(5)'] => 'in p.e. (5)',
             //compliance_art._5'] => //Compliance Art. 5',
             $ind['compliant_5_a_(%_of_gen._load)'] => 'compliant 5 a  (% of gen. load)',
@@ -6763,21 +6761,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'NUTS 1 code',
         $nuts1 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
-            $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
+            if($nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 3), 'n1cd')){
+                $line[$ind['nuts_1_code']] = $nuts['n1nm'];
+            }
+            else{
+                $line[$ind['nuts_1_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 3);
+            }
         } else {
             $line[$ind['nuts_1_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
         //'NUTS 2 code',
         $nuts2 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
-            $line[$ind['nuts_2_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 4);
+            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 4), 'n2cd')){
+                $line[$ind['nuts_2_code']] = $nuts['n2nm'];
+            }
+            else{
+                $line[$ind['nuts_2_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 4);
+            }
         } else {
             $line[$ind['nuts_2_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
         //'NUTS 3 code',
         $nuts3 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
-            $line[$ind['nuts_3_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 5);
+            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 5), 'n3cd')){
+                $line[$ind['nuts_3_code']] = $nuts['n3nm'];
+            }
+            else{
+                $line[$ind['nuts_3_code']] = substr($agg->field_regionnuts['und'][0]['value'], 0, 5);
+            }
         } else {
             $line[$ind['nuts_3_code']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
         }
@@ -7019,6 +7032,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['art4_not_compliant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NC']['percent'];
         //'not compliant',
         $line[$ind['art4_not_compliant']] = $uwwtpinfo_for_agglo['NC']['pe'];
+        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
+            $line[$ind['art4_not_compliant_%_of_gen._load']]  +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            $line[$ind['art4_not_compliant']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+        }
         //'not relevant % of gen. load',
         $line[$ind['art4_not_relevant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NR']['percent'];
         //'not relevant',
@@ -7116,10 +7133,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Distance to compliance art. 4',
         //Treatment',
         //'% of connected Load',
-        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
-        else $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
+        if($line[$ind['generated load  p. e.']]>0) {
+            $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        }
+        else {
+            $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
+        }
         //'in p.e. (4)',
         $line[$ind['dist_art4_treat_in_p.e._(4)']] = $uwwtpinfo_for_agglo['distart4_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
+                
         //Performance',
         //'% of connected Load',
         if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
@@ -7127,6 +7149,16 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
+        //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
+        
+        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
+            //Treatment',
+            $line[$ind['dist_art4_treat__%_of_connected_load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            $line[$ind['dist_art4_treat_in_p.e._(4)']] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+            //Performance',
+            $line[$ind['dist_art4_perf_%_of_connected_load']] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            $line[$ind['dist_art4_perf_in_p.e._(5)']]+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];  
+        }
         $compliance = NULL;
 
         //Compliance Art. 5',
@@ -7300,6 +7332,20 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         else $line[$ind['distance_art5_perf_%_of_gen._load']] = '';
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
+        
+        //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
+        //Set DTT but if no more stringent treatment is required => this value will be empty later
+        if( $line[$ind['compliance_art._5_(whole_agglo)']] != 'NR' && ($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2)){
+            if($line[$ind['compliance_art._5_(whole_agglo)']] == 'C')  $line[$ind['compliance_art._5_(whole_agglo)']] = 'NC';
+            
+            //Treatment',
+            $line[$ind['distance_art5_treat_%_of_gen._load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+            $line[$ind['distance_art5_treat_in_p.e._(6)']] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+            //Performance',
+            $line[$ind['distance_art5_perf_in_p.e._(7)']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
+            $line[$ind['distance_art5_perf_%_of_gen._load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]; 
+        }
+        
         
 		$compliance = NULL;
 
@@ -7897,7 +7943,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $agg->field_agg_equip_ms['und'][0]['value'] = number_format($line[$ind['more_str._treatment_installed_(p._e.)']], 0,'.','');
         $agg->field_agg_perf_ms['und'][0]['value'] = number_format($line[$ind['monitoring_results_f._more_string._ok_(p._e.)']], 0,'.','');
 
-        $agg->field_agg_typeof_sa['und'][0]['value'] = $line[$ind['type_of_receiving_water']];
+        //Remove double values
+        $torw = implode(';', array_unique (explode(';', $line[$ind['type_of_receiving_water']])));
+        $agg->field_agg_typeof_sa['und'][0]['value'] = $torw;
         $agg->field_agg_art_applied_sa['und'][0]['value'] = $line[$ind['agg_art_applied_from_rca']];
         $agg->field_agg_rbd_code['und'][0]['value'] = $line[$ind['id_of_wfd_river_basin_district']];
 
@@ -8143,15 +8191,19 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         $context['sandbox']['pending']['list_agglo_treated'] = array();
 
         //get all uwwtp (repeat agglo info if one agglo has more than one uwwtp)
-        $query = 'select n.nid
-        from {node} n
-            left join
-                {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id
-        where n.type = :typenode
-            and f_annee.field_anneedata_value = :annee
-        ';
-
+        //we need to sort rows by generated load of agglomeration
+        $query = '
+            SELECT n.nid, max(f_agggenerated.field_agggenerated_value) as agggenerated
+            FROM {node} n
+                LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+                LEFT JOIN {field_data_field_uwwaggliste} agg ON n.nid = agg.entity_id
+                LEFT JOIN {field_data_field_agggenerated} f_agggenerated ON agg.field_uwwaggliste_nid = f_agggenerated.entity_id
+            WHERE n.type = :typenode
+                AND f_annee.field_anneedata_value = :annee
+            GROUP BY n.nid
+            ORDER BY agggenerated desc NULLS LAST;
+        ';        
+        
         $param = array(
             ':typenode' => 'uwwtp',
             ':annee' => $annee,
