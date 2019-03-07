@@ -115,6 +115,8 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    dsm(uwwtd_get_nuts('FI1A3', 'n3cd'));
+    
     return "debug";
     /*
     $years = uwwtd_get_all_year();
@@ -224,11 +226,10 @@ function uwwtd_get_max_annee($bundle = 'agglomeration')
     return $annee;
 }
 
-function uwwtd_get_all_nuts($type)
-{
+function uwwtd_get_all_nuts($type){
 	$regionnuts = '';
 	
-$results = db_query(
+    $results = db_query(
 		'SELECT r.field_regionnuts_value, nut.n3nm 
 		FROM {field_data_field_regionnuts} r 
 			LEFT JOIN regions_nuts nut ON r.field_regionnuts_value = nut.n3cd
@@ -242,6 +243,18 @@ $results = db_query(
 		$regionnuts[$result->field_regionnuts_value] = $result->n3nm;
 	}
 	return $regionnuts;
+}
+
+function uwwtd_get_nuts($cd, $key='n3cd'){
+    $results = db_query(
+		"SELECT * 
+		FROM  regions_nuts nut 
+		WHERE ".$key." = '".$cd."'
+    ");
+    if($r = $results->fetchAssoc()){
+        return $r;
+    }
+    return false;
 }
 
 function uwwtd_get_all_rbd($type){
