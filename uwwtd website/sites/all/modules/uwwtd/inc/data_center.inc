@@ -6765,28 +6765,51 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
 function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUww)
 {   
     uwwtd_trace(__FUNCTION__);
-    //collected in collectiove system = 0 or all uwwtp treatment required in (appropriate or NR)
-    if ($agg->field_aggc1['und'][0]['value'] == 0       
-        || true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'],
-                                                      $GLOBALS['uwwtd_value']['required']['notrelevant'],
-                                                        ), $infoAllAggUww)) {
-        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];                                                        
+    
+    
+    $d_wot = ($agg->field_aggpercwithouttreatment['und'][0]['value']/100) *  $agg->field_agggenerated['und'][0]['value'];
+      
+
+    //collected in collective system = 0 ==> it's probably an error in data or there is no linked uwwtp or all the load is manage in IAS
+    if($agg->field_aggc1['und'][0]['value'] == 0){
+        if($d_wot > 2000 || $agg->field_aggpercwithouttreatment['und'][0]['value'] > 2){
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        }
+        else{
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        }
+         
         return $aResult;
     }    
-
+    
+    // all uwwtp treatment required in (appropriate or NR)
+    if (true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'], $GLOBALS['uwwtd_value']['required']['notrelevant']), $infoAllAggUww)) {
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
+        return $aResult;
+    }  
+    
     $listStationArticleAndUwwtpCompliance = array();
-    foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
-        //ALGO6
-        //$agg->field_aggart3compliance['und'][0]['value']
+    if(!empty($infoAllAggUww['listUww'])){
+        foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
+            //ALGO6
+            //$agg->field_aggart3compliance['und'][0]['value']
+            
+    //         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
+            
+            $listStationArticleAndUwwtpCompliance[$niduwwtp] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
+            //add field necessary for next function call
+            $listStationArticleAndUwwtpCompliance[$niduwwtp]['agglo_uww_perc_ent_uw'] = $uwwtp['agglo_uww_perc_ent_uw'];
+            $listStationArticleAndUwwtpCompliance[$niduwwtp]['treatmenttype'] = $uwwtp['treatmenttype'];
+        }
+    }
+    else{
         
-//         $listStationArticleAndUwwtpCompliance[] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
-        
-        $listStationArticleAndUwwtpCompliance[$niduwwtp] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node']);
-        //add field necessary for next function call
-        $listStationArticleAndUwwtpCompliance[$niduwwtp]['agglo_uww_perc_ent_uw'] = $uwwtp['agglo_uww_perc_ent_uw'];
-        $listStationArticleAndUwwtpCompliance[$niduwwtp]['treatmenttype'] = $uwwtp['treatmenttype'];
     }
 //     uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
     //ALGO7
