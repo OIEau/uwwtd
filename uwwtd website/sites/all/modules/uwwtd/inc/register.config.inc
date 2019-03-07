@@ -1,6 +1,6 @@
 <?php
 $GLOBALS['uwwtd']['register']['message'] = array(
-  'info_not_provided' => 'Information not provided',
+  'info_not_provided' => 'NI',
 );
 
 // $GLOBALS['uwwtd']['register']['message']['info_not_provided']
@@ -14,7 +14,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     //Be carefull!!!!!
     //IMPORTANT
     //the model MUST be modify on Microsoft office Excel 2007, or all the chart will lose their style and format (color, thousand separtor on axis, ...)
-    'model_reporting_2016' => '2018_register_model_20190116.xlsx',   //2018_register_model_20181114
+    'model_reporting_2016' => '2018_register_model_20190307.xlsx',   //2018_register_model_20181114
                 
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
@@ -340,7 +340,7 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'deadline_for_art._3_compliance' => array('k'=>$i++, 'xls'=>true),
     'deadline_for_art._4_compliance' => array('k'=>$i++, 'xls'=>true),
     'deadline_for_art._5_compliance' => array('k'=>$i++, 'xls'=>true),
-    'pending_or_expired_deadline_exp/pd/exp-pd' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'pending_or_expired_deadline_exp/pd/exp-pd' => array('k'=>$i++, 'xls'=>true, 'glossary' => false), //'glossary' => true
     'nuts_1_code' => array('k'=>$i++, 'xls'=>true),
     'nuts_2_code' => array('k'=>$i++, 'xls'=>true),
     'nuts_3_code' => array('k'=>$i++, 'xls'=>true),
