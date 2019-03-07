@@ -358,7 +358,7 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
               <th>' . t('Performance') . '</th>
           </tr>
           <tr>
-              <td rowspan="2"><b>' . t('Connection') . '</b></td>
+              <td rowspan="2"><b>' . t('Collection') . '</b></td>
               <td style="background-color:' . $colorart3 . ';color:white;">' . uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1) . '%</td>
               <td></td>
           </tr>

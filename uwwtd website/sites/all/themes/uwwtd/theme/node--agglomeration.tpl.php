@@ -315,7 +315,7 @@ echo uwwtd_insert_errors_tab($node);
                             <th><?php print t('Performance'); ?></th>
                         </tr>
                         <tr>
-                            <td rowspan="2"><b><?php print t('Connection'); ?></b></td>
+                            <td rowspan="2"><b><?php print t('Collection'); ?></b></td>
                             <td style="background-color:<?php print $colorart3;?>;color:white;"><?php print uwwtd_field_num($content['field_aggpercwithouttreatment']);?>%</td>
                             <td></td>
                         </tr>
