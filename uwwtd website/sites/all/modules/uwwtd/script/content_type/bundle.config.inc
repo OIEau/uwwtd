@@ -167,7 +167,7 @@ $list_field = array (
   ),
   'field_aggperiodover3' => 
   array (
-    'custom_tooltip' => 'Deadline as regards the connection to "collecting system" or "Individual or appropriate  system"  as requested by Article 3 of the Urban Waste Water Treatment directive 91/271/EC',
+    'custom_tooltip' => 'Deadline as regards the collection by "collecting system" or "Individual or appropriate  system"  as requested by Article 3 of the Urban Waste Water Treatment directive 91/271/EC',
     'entity_types' => 
     array (
     ),
@@ -1857,7 +1857,7 @@ $list_field = array (
       ),
       'allowed_values_function' => '',
     ),
-    'custom_tooltip' => 'Connection to "collecting system" or "Individual or appropriate system" as requested by Article 3 of   the Urban Waste Water Treatment directive 91/271/EC',
+    'custom_tooltip' => 'Collection by "collecting system" or "Individual or appropriate system" as requested by Article 3 of the Urban Waste Water Treatment directive 91/271/EC',
     'entity_types' => 
     array (
     ),
@@ -35485,7 +35485,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Deadline connection compliance',
+        'label' => 'Deadline collection compliance',
         'required' => 0,
         'settings' => 
         array (
@@ -36575,7 +36575,7 @@ $list_contenttype = array (
             'weight' => 0,
           ),
         ),
-        'label' => 'Connection compliance',
+        'label' => 'collection compliance',
         'required' => 0,
         'settings' => 
         array (
@@ -39645,7 +39645,7 @@ $list_contenttype = array (
       ),
       81 => 
       array (
-        'label' => 'Connection compliance (Art 3) official',
+        'label' => 'collection compliance (Art 3) official',
         'settings' => 
         array (
           'text_processing' => 0,
