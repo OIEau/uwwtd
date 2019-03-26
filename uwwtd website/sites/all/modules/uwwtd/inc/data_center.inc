@@ -778,12 +778,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
     }
 
-// dsm($imports);
+
     if (!empty($imports)) {
 
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
 
     }
+
 // return 'ok';
     //BigCityDischargers
     $imports  = array();
@@ -2125,7 +2126,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
               if (false === $check) {
                   uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
               } else {
-                  $node->field_rcaPlants['und'][0]['value'] = $check;
+                  $node->field_rcaplants['und'][0]['value'] = $check;
               }
             }   
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants information found.', $timestamp, $i, $node);
@@ -2195,6 +2196,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
 
         // save node
+
         node_save($node);
 
         if (empty($node->nid)) {
