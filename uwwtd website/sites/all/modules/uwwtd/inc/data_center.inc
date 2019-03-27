@@ -778,12 +778,13 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         }
     }
 
-// dsm($imports);
+
     if (!empty($imports)) {
 
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
 
     }
+
 // return 'ok';
     //BigCityDischargers
     $imports  = array();
@@ -2125,7 +2126,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
               if (false === $check) {
                   uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $i, $node);
               } else {
-                  $node->field_rcaPlants['und'][0]['value'] = $check;
+                  $node->field_rcaplants['und'][0]['value'] = $check;
               }
             }   
             else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area plants information found.', $timestamp, $i, $node);
@@ -2195,6 +2196,7 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
 
 
         // save node
+
         node_save($node);
 
         if (empty($node->nid)) {
@@ -6716,7 +6718,11 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         // return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
     // }   
     if($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliantQC'] ||$node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']){
-        if ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
+        $treat_required = array_column($infoAllAggUww['listUww'], 'required');
+        if($node->field_agggenerated['und'][0]['value'] < 10000 && in_array($GLOBALS['uwwtd_value']['required']['appropriate'], $treat_required)){
+            return $GLOBALS['uwwtd_value']['compliance']['compliant'];
+        }
+        elseif ($node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant']
             //cn@oieau.fr || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['pending_deadline']
         )
         {
@@ -6731,12 +6737,12 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
                 uwwtd_trace(__LINE__);
                 return $GLOBALS['uwwtd_value']['compliance']['compliant'];
             }
-            else{
-                // If the agglomeration has a lot of IAS
+            else{               
                 if ($node->field_aggc2['und'][0]['value'] > 98) {
                     uwwtd_trace(__LINE__);      
                     return $GLOBALS['uwwtd_value']['compliance']['compliant'];
-                }else{
+                }
+                else{
                     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
                 } 
             }
@@ -8765,7 +8771,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             break;
         case 'NA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
-                if ($maxgen <= 10000) {
+                if ($maxgen < 10000) {
                     $required_treatment->required = 'Appropriate';
                 } else {
                     $required_treatment->required = 'S';
@@ -8784,7 +8790,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         // If the discharge point is in a Sensitive Area or a Catchment Sensitive Area
         case 'SA':
         case 'CSA':
-            if ($maxgen <= 10000) {
+            if ($maxgen < 10000) {
         		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 	$required_treatment->required = 'Appropriate';
                 } else {
@@ -8809,7 +8815,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         case 'A58523':
         case 'A54523':
         case 'A5854523':
-        	if ($maxgen <= 10000) {
+        	if ($maxgen < 10000) {
         		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 	$required_treatment->required = 'Appropriate';
                 } else {
@@ -8848,7 +8854,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 $required_treatment->required = 'P';
             }
         } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
-            if ($maxgen >= 2000 && $maxgen <= 10000) {
+            if ($maxgen >= 2000 && $maxgen < 10000) {
                 $required_treatment->required = 'P';
             } else {
                 $required_treatment->required = 'S';
