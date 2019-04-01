@@ -115,7 +115,7 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    dsm(uwwtd_get_nuts('FI1A3', 'n3cd'));
+    
     
     return "debug";
     /*
