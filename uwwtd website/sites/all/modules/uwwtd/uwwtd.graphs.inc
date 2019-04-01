@@ -269,7 +269,9 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
     	t("Sludge destination"), 'graph_sludge_dest', $results,  $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Water re-use"), $frontGraph2, $yearSelected, $yearsPossibles);
-	
+	if($results[$yearSelected]['remark']!=''){
+        $formResult.='<div>'. $results[$yearSelected]['remark'].'</div>';
+    }
     //==============================================
     //=============== ROW 8 : Distance to target art 3, 4, 5
     //==============================================
@@ -1160,13 +1162,13 @@ function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 						
 						// Création ligne front :
 						$front[$year][$complianceName]['value'] = $article;
-						$front[$year][$complianceName]['valueformat'] = $article .' pe';
+						$front[$year][$complianceName]['valueformat'] = uwwtd_format_number($article) .' pe';
 						$front[$year][$complianceName]['label'] = $complianceName;
 						$front[$year][$complianceName]['color'] = $color;
 						
 						// Création ligne back :
 						$backRows[$year]['year'] = '<b>'. $year .'</b>';
-						$backRows[$year][$complianceName] = $article;
+						$backRows[$year][$complianceName] = uwwtd_format_number($article);
 					}
 				}
 			}
@@ -1356,9 +1358,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
                                 ['@year'=>$yearSelected, '@production'=>uwwtd_format_number($results[$yearSelected]['sludge']['production'])]
                             );
                         }
-                        if($results[$yearSelected]['sludge']['remark']!=''){
-                            $msg_sludge_remark = $results[$yearSelected]['sludge']['remark'];
-                        }
+                        
                     }
                     $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
 				
@@ -2201,7 +2201,7 @@ function uwwtd_uwwtp_history_page($inspireIdLocalId){
                 t('Year'), 
                 '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('UWWTP capacity') .'</div><span class="custom_tooltip">Value define in &lt;uwwCapacity&gt; field for the UWWTP in the report file with definition : "Organic design capacity (p.e.)"</span></div>', 
                 '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('UWWTP Entering load').'</div><span class="custom_tooltip">Value define in &lt;uwwLoadEnteringUWWTP&gt; field for the UWWTP in the report file with definition : "Load entering UWWTP (p.e.)"</span></div>', 
-                '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total of load collected by collecting systems').'</div><span class="custom_tooltip">Sum of load adressed to UWWTP by linked agglomeration. The load addressed by an agglomeration to an UWWTP is calculated with the following formula : <i>Generated load (p.e.) of the agglomeration (&lt;aggGenerated&gt;)</i> x <i>Rate of generated load of agglomeration collected through collecting system (% of p.e.) (&lt;aggC1&gt;) </i> x <i>% of load of agglomeration collected in collecting system and entering that treatmentplant (&lt;aucPercEnteringUWWTP&gt;) </i></span></div>',
+                '<div class="field custom_tooltip_wrapper"><div class="field-label">'.t('Total of load collected by collecting systems and entering the UWWTPs').'</div><span class="custom_tooltip">Sum of load adressed to UWWTP by linked agglomeration. The load addressed by an agglomeration to an UWWTP is calculated with the following formula : <i>Generated load (p.e.) of the agglomeration (&lt;aggGenerated&gt;)</i> x <i>Rate of generated load of agglomeration collected through collecting system (% of p.e.) (&lt;aggC1&gt;) </i> x <i>% of load of agglomeration collected in collecting system and entering that treatmentplant (&lt;aucPercEnteringUWWTP&gt;) </i></span></div>',
                 t('Linked Agglomeration(s) with addressed load to the UWWTP')
             ]
         ]);

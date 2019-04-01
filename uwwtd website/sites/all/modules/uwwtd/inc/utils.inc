@@ -115,7 +115,7 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
-    dsm(uwwtd_get_nuts('FI1A3', 'n3cd'));
+    
     
     return "debug";
     /*
@@ -206,7 +206,7 @@ function uwwtd_get_gg_snapshot($dest_uri, $lat, $lon, $maptype, $zoom = 15, $siz
             ),
         )
     );
-    dsm($url);
+    //dsm($url);
     $img           = file_get_contents($url);
     $file          = file_save_data($img, $dest_uri, FILE_EXISTS_REPLACE);
     $file          = (array) $file;
@@ -1477,7 +1477,7 @@ function uwwtd_get_distance_compliance($agg){
         $art4complianceTreat = 'NC';
         $art4compliancePerf = 'NC'; 
     }
-    
+    /*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
     //Case of discharge Without treatment > 2000 et 2%
     //=======================================================FIX ME
     $pc_dwot = $agg->field_aggpercwithouttreatment['und'][0]['value'];
@@ -1506,7 +1506,7 @@ function uwwtd_get_distance_compliance($agg){
     } 
     
     //=======================================================END FIX ME
-    
+    */
     //$dist_art3_treatment_percent = 100 * $agg->field_aggpercwithouttreatment['und'][0]['value']/$agg->field_agggenerated['und'][0]['value'];
 
     // Set the colors of "Distance to compliance" table

@@ -8053,8 +8053,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
+        /*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
         //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
-        
         if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
             //Treatment',
             $line[$ind['dist_art4_treat__%_of_connected_load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
@@ -8063,6 +8063,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['dist_art4_perf_%_of_connected_load']] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $line[$ind['dist_art4_perf_in_p.e._(5)']]+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];  
         }
+        */
         $compliance = NULL;
 
         //Compliance Art. 5',
@@ -8237,7 +8238,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
-        //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
+        /*/*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
+        //If dicharge without treament > 2% and 2000 eq the load is reported in art 5
         //Set DTT but if no more stringent treatment is required => this value will be empty later
         if( $line[$ind['compliance_art._5_(whole_agglo)']] != 'NR' && ($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2)){
             if($line[$ind['compliance_art._5_(whole_agglo)']] == 'C')  $line[$ind['compliance_art._5_(whole_agglo)']] = 'NC';
@@ -8249,7 +8251,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['distance_art5_perf_in_p.e._(7)']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
             $line[$ind['distance_art5_perf_%_of_gen._load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]; 
         }
-        
+        */
         
 		$compliance = NULL;
 
