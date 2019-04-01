@@ -262,6 +262,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles);
+    dsm($results);
     //===========nd@oieau.fr 10/01/2019 : FIX ME : the legend is too long on sludge chart
     $frontAndBackGraph1 = getRow7Graph1($yearSelected, $results);
     $frontGraph2 = getRow7Graph2($results, $yearSelected, $yearsPossibles);
@@ -269,7 +270,9 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     $formResult = getHtmlPlusHtmlChartPieAndText($formResult, t("MS Level statistics"),
     	t("Sludge destination"), 'graph_sludge_dest', $results,  $frontAndBackGraph1[0], $frontAndBackGraph1[1],
     	t("Water re-use"), $frontGraph2, $yearSelected, $yearsPossibles);
-	
+	if($results[$yearSelected]['remark']!=''){
+        $formResult.='<div>'. $results[$yearSelected]['remark'].'</div>';
+    }
     //==============================================
     //=============== ROW 8 : Distance to target art 3, 4, 5
     //==============================================
@@ -1160,13 +1163,13 @@ function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 						
 						// Création ligne front :
 						$front[$year][$complianceName]['value'] = $article;
-						$front[$year][$complianceName]['valueformat'] = $article .' pe';
+						$front[$year][$complianceName]['valueformat'] = uwwtd_format_number($article) .' pe';
 						$front[$year][$complianceName]['label'] = $complianceName;
 						$front[$year][$complianceName]['color'] = $color;
 						
 						// Création ligne back :
 						$backRows[$year]['year'] = '<b>'. $year .'</b>';
-						$backRows[$year][$complianceName] = $article;
+						$backRows[$year][$complianceName] = uwwtd_format_number($article);
 					}
 				}
 			}
@@ -1356,9 +1359,7 @@ function getHtmlPlusHtmlChartPieAndText($html, $rowTitle,
                                 ['@year'=>$yearSelected, '@production'=>uwwtd_format_number($results[$yearSelected]['sludge']['production'])]
                             );
                         }
-                        if($results[$yearSelected]['sludge']['remark']!=''){
-                            $msg_sludge_remark = $results[$yearSelected]['sludge']['remark'];
-                        }
+                        
                     }
                     $front = uwwtd_graph_render_column($graph1Id, $graph1Front['legend'], $graph1Front['color'], $graph1Front['data'], true);
 				
