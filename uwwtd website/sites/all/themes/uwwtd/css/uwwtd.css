@@ -1274,7 +1274,7 @@ div.data-table-header table tbody tr td:first-child {
         height: 360px;
         overflow-x: auto!important;
         overflow-y: auto!important;
-        
+        scrollbar-width: thin;
     }
     .uwwrealthird, .uwwthird {
         display:block;

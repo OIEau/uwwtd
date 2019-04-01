@@ -442,9 +442,9 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
 	$data = array();
 	$param = array();
 	$aConditions = array(
-		'< 10000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 2000 and f_agggenerated.field_agggenerated_value < 10000) ',
-		'10000 to 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 10000 and f_agggenerated.field_agggenerated_value < 100000) ',
-		'> 100000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 100000) ',
+		'< 10,000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 2000 and f_agggenerated.field_agggenerated_value < 10000) ',
+		'10,000 to 100,000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 10000 and f_agggenerated.field_agggenerated_value < 100000) ',
+		'> 100,000 pe' => ' and (f_agggenerated.field_agggenerated_value >= 100000) ',
 	);
 	$query = 'select 
 		f_annee.field_anneedata_value as year,
@@ -712,6 +712,7 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 			if ($node = node_load($obj->nid)) {
 				$year = $node->field_anneedata['und'][0]['value'];
 				$data[$year] = array(
+                    'remark'=>isset($node->field_mslremarks['und'])?$node->field_mslremarks['und'][0]['value']:'',
 					"sludge"=>array(
 						'production'=>isset($node->field_mslsludgeproduction['und'])?(float)$node->field_mslsludgeproduction['und'][0]['value']:0,
 						'destination'=>array(
@@ -724,7 +725,6 @@ function uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles) {
 							'dii'=>isset($node->field_msldisposalincineration['und'])?(float)$node->field_msldisposalincineration['und'][0]['value']:0,
 							'dio'=>isset($node->field_msldisposalothers['und'])?(float)$node->field_msldisposalothers['und'][0]['value']:0,
 						),
-						'remark'=>isset($node->field_mslremarks['und'])?$node->field_mslremarks['und'][0]['value']:'',
 					),
 					"waste_water"=>array(
 						"Re-used"=>isset($node->field_mslwwreuseexplain['und'])?$node->field_mslwwreuseexplain['und'][0]['value']:'',
