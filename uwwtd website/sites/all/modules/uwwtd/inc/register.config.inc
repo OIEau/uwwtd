@@ -14,7 +14,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     //Be carefull!!!!!
     //IMPORTANT
     //the model MUST be modify on Microsoft office Excel 2007, or all the chart will lose their style and format (color, thousand separtor on axis, ...)
-    'model_reporting_2016' => '2018_register_model_20190307.xlsx',   //2018_register_model_20181114
+    'model_reporting_2016' => '2018_register_model_20190321.xlsx',   //2018_register_model_20181114 2018_register_model_20190307
                 
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
@@ -50,8 +50,17 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'csv_name' => '_agglo.csv',
         'csv_total_name' => '_agglo.total.csv',
         'csv_evaluation_name' => '_agglo.evaluation.csv',   
+        'csv_distance_name' => '_agglo.distance.csv',  
         'xlsx_name' => '_agglo.xlsx',
         'xlsx_model_sheet_name' => 'agglomeration level',
+    ),
+    'agglo_debug' => array(
+        'csv_name' => '_agglo_debug.csv',
+        // 'csv_total_name' => '_agglo.total.csv',
+        // 'csv_evaluation_name' => '_agglo.evaluation.csv',   
+        // 'csv_distance_name' => '_agglo.distance.csv',  
+        'xlsx_name' => '_agglo_debug.xlsx',
+        'xlsx_model_sheet_name' => 'agglomeration debug level',
     ),
     'summary_legal_comp' => array(
         'xlsx_name' => '_summary_legal_comp.xlsx',
@@ -76,6 +85,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     ),
     'nuts_level2' => array(
         'csv_name' => '_nuts_level2.csv',
+        'csv_distance_name' => '_nuts_level2_distance.csv',
         'xlsx_name' => '_nuts_level2.xlsx',
         'xlsx_model_sheet_name' => 'Nuts2_level analyse',
     ),
@@ -114,7 +124,12 @@ $GLOBALS['uwwtd']['sheet'] = array(
         'csv_name' => '_uwwtp_out.csv',
         'xlsx_name' => '_uwwtp_out.xlsx',
         'xlsx_model_sheet_name' => 'UWWTPsout',
-    ),                                                         
+    ),  
+    'agglo_compliance' => array(
+        'csv_name' => '_agglo_compliance.csv',
+        'xlsx_name' => '_agglo_compliance.xlsx',
+        'xlsx_model_sheet_name' => 'Agglo Compliance',
+    ),                                                       
 );
 
 $i = 0;
@@ -221,12 +236,12 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'previous_Percentage of change of entering load (1) %' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'previous_Percentage of change of capacity (2) %' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     //current RCA details',
-    'water body type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'water body type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'In case of discharge on land please specify the purpose' => array('k'=>$i++, 'xls'=>true),
     'Id code of the water body WFD' => array('k'=>$i++, 'xls'=>true),
     'ID of WFD river basin district' => array('k'=>$i++, 'xls'=>true),
     'entirely discharging into coastal waters?' => array('k'=>$i++, 'xls'=>true),
-    'type of receiving water' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'type of receiving water' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'ID of the SA or LSA' => array('k'=>$i++, 'xls'=>true),
     'rcaname' => array('k'=>$i++, 'xls'=>true),
     'Starting date of application 5.8.' => array('k'=>$i++, 'xls'=>true),
@@ -236,8 +251,8 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'Starting date of application b' => array('k'=>$i++, 'xls'=>true),
     'Starting date of application c' => array('k'=>$i++, 'xls'=>true),
     //UWWTP treatment and performance',
-    'treatment required' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => true,),
-    'treatment type in place (4)' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => true),
+    'treatment required' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => false,),
+    'treatment type in place (4)' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => false),
     'Monitoring results - BOD5' => array('k'=>$i++, 'xls'=>true),
     'Monitoring results -COD' => array('k'=>$i++, 'xls'=>true),
     'Monitoring results -Ntot' => array('k'=>$i++, 'xls'=>true),
@@ -259,31 +274,31 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     
     //Compliance of treatment plant under expired and pending deadline',
     //compliance Art. 4',
-    'art4_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art4_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art4_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'art4_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art4_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art4_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //compliance Art. 5',
-    'art5_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art5_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art5_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'art5_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art5_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art5_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //Compliance of treatment plant under expired deadlines',
     //compliance Art. 4',
-    'art4_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art4_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art4_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'art4_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art4_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art4_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //compliance Art. 5',
-    'art5_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art5_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art5_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'art5_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art5_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art5_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //Previous compliance of the treatment under expired deadlines',
     //compliance Art. 4',
-    'previous_art4_expired_treatment' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'previous_art4_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'previous_art4_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'previous_art4_expired_treatment' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'previous_art4_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'previous_art4_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //compliance Art. 5',
-    'previous_art5_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'previous_art5_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'previous_art5_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'previous_art5_expired_treatment type' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'previous_art5_expired_monitoring' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'previous_art5_expired_final' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'previous_art5_expired_difference between the previous situation and now' => array('k'=>$i++, 'xls'=>true),
     //Installations for wastewater treatment in place',
     'Secondary: installed?' => array('k'=>$i++, 'xls'=>true),
@@ -316,7 +331,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'average Discharge concentration P mg/l' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),    
     
     // info needed for next sheets
-    'uwwtp_collecting_without_treatment' => array('k'=>$i++, 'xls'=>false),
+    'uwwtp_collecting_without_treatment' => array('k'=>$i++, 'xls'=>false), //todo commenté apres debug
     'required_rcaaP' => array('k'=>$i++, 'xls'=>false),
     'required_rcaaN' => array('k'=>$i++, 'xls'=>false),
     'required_rcab'  => array('k'=>$i++, 'xls'=>false),
@@ -366,9 +381,9 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'dist_art3_%_of_gen._load_(3)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'dist_art3_in_p.e.' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     //compliance_art._3' => array('k'=>$i++, 'xls'=>true),
-    'art3_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),   //26
+    'art3_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),   //26
     //compliance_art._3_previous_reporting' => array('k'=>$i++, 'xls'=>true),
-    'previous_art3_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'previous_art3_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //ratio_connection/collection/treatment' => array('k'=>$i++, 'xls'=>true),
     'total_entering_load_p._e.' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'ratio_connected/enentering_%' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
@@ -381,10 +396,10 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'art4_not_compliant' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'art4_not_relevant_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'art4_not_relevant' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'art4_compliance_art._4_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'art4_compliance_art._4_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'art4_compliance_art._4_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'art4_compliance_art._4_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //compliance_art._4_previous_reporting' => array('k'=>$i++, 'xls'=>true),
-    'previous_art4_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'previous_art4_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //distance_to_compliance_art._4' => array('k'=>$i++, 'xls'=>true),
     //treatment' => array('k'=>$i++, 'xls'=>true),
     'dist_art4_treat__%_of_connected_load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
@@ -399,31 +414,31 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'not_compliant_5_a_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_relevant_5_a_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'not_relevant_5_a_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'compliance_art._5a_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'compliance_art._5a_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'compliance_art._5a_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'compliance_art._5a_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'compliant_5_b_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'compliant_5_b_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_compliant_5_b_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'not_compliant_5_b_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_relevant_5_b_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'not_relevant_5_b_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'compliance_art._5b_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'compliance_art._5b_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'compliance_art._5b_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'compliance_art._5b_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'compliant_5_c_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'compliant_5_c__(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_compliant_5_c_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'not_compliant_5_c_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_relevant_5_c_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'not_relevant_5_c_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'compliance_art._5c_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'compliance_art._5c_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'compliance_art._5c_(only)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'compliance_art._5c_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     'compliant_art._5_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     'not_compliant_art._5_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'), //70
     'art._5_not_relevant_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    'compliance_art._5_(whole_agglo)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
-    'compliance_art._5_(whole_agglo)_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'compliance_art._5_(whole_agglo)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
+    'compliance_art._5_(whole_agglo)_(hierarchical_approach)' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //compliance_art._5_previous_reporting' => array('k'=>$i++, 'xls'=>true),
-    'previous_art5_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => true),
+    'previous_art5_compliance' => array('k'=>$i++, 'xls'=>true, 'glossary' => false),
     //distance_to_compliance_art._5' => array('k'=>$i++, 'xls'=>true),
     //treatment' => array('k'=>$i++, 'xls'=>true),
 // 'previous_art5_treat_%_of_gen._load' => array('k'=>$i++, 'xls'=>true),
@@ -444,7 +459,7 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'id_of_wfd_river_basin_district' => array('k'=>$i++, 'xls'=>true),
     'agg_art_applied_from_rca' => array('k'=>$i++, 'xls'=>false),
     'entirely_discharging_into_coastal_waters' => array('k'=>$i++, 'xls'=>true),
-    'type_of_receiving_water' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => true),
+    'type_of_receiving_water' => array('k'=>$i++, 'xls'=>true, 'glossary_composed' => false),
     'id_of_the_sa_or_lsa' => array('k'=>$i++, 'xls'=>true),
     'rca_name' => array('k'=>$i++, 'xls'=>true),
     'starting_date_of_application_5.8.' => array('k'=>$i++, 'xls'=>true),
@@ -468,13 +483,16 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'monitoring_results_f._more_string._ok_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
     //data needed fort later sheet    
-    'required_rcaaP' => array('k'=>$i++, 'xls'=>false),
+    'required_rcaaP' => array('k'=>$i++, 'xls'=>false), //TODO comment//todo commenté apres debug
     'required_rcaaN' => array('k'=>$i++, 'xls'=>false),
     'required_rcab'  => array('k'=>$i++, 'xls'=>false),
     'required_rcac'  => array('k'=>$i++, 'xls'=>false), 
             
     //debug data
-    'debug_compliance_agglo_from_algo' => array('k'=>$i++, 'xls'=>false),
+    'compliance_agglo_global' => array('k'=>$i++, 'xls'=>false), //use in sheet16_agglo_compliance
+ 
+
+
 );
 
 $i = 0;
@@ -502,9 +520,13 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
     'id' => $i++, 
     'name' => $i++, 
     'generated_load' => $i++, 
+    'collecting_system_pe' => $i++, 
     'collecting_system' => $i++, 
+    'ias_pe' => $i++, 
     'ias' => $i++, 
+    'no_collecting_system_nor_ias_pe' => $i++, 
     'no_collecting_system_nor_ias' => $i++, 
+
     'treatment_0' => $i++, 
     'treatment_1' => $i++, 
     'treatment_2' => $i++, 
@@ -517,6 +539,9 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
     'name_of_sensitive_area' => $i++,
     'list_code_agglo' => $i++, 
     'list_name_agglo' => $i++,  
+    'target_connection_distance_%' => $i++,  
+    'secondary_target_monitoring_result_distance_%' => $i++,  
+    'morestringent_target_monitoring_result_distance_%' => $i++,  
 ); 
 
 $i = 0;
@@ -552,7 +577,10 @@ $GLOBALS['uwwtd']['sheet9_nuts2_analyse'] = array(
     'art5_notcompliant_pe' => $i++,
     'art5_notrelevant_number_agglo' => $i++,
     'art5_notrelevant_pe' => $i++,    
-    'art5_rate' => $i++,      
+    'art5_rate' => $i++,     
+    'target_connection_distance_%' => $i++,  
+    'secondary_target_monitoring_result_distance_%' => $i++,  
+    'morestringent_target_monitoring_result_distance_%' => $i++,  
 ); 
 
 $i = 0;
@@ -593,8 +621,14 @@ $GLOBALS['uwwtd']['sheet15_uwwtpout'] = array(
 );  
 
 
-
-
-
+$i = 0;
+$GLOBALS['uwwtd']['sheet16_agglo_compliance'] = array(
+    //This data are from csv sheet3_agglo!!
+    'aggcode' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['aggcode']['k'], 'xls'=>true),               
+    'aggname' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['aggname']['k'], 'xls'=>true),
+    'generated_load_p_e' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['generated_load_p.e.']['k'], 'xls'=>true),
+    'compliance_agglo_global' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['compliance_agglo_global']['k'], 'xls'=>true),
+    
+);
 
 unset($i);
