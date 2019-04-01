@@ -418,9 +418,9 @@ $GLOBALS['uwwtd']['treatment_type_color']  = array(
     'NI' => '#d93c3c',
 );
 $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
-    '< 10000 pe' => '#005572',
-    '10000 to 100000 pe' => '#008B8D',//#006573
-    '> 100000 pe' => '#81BEAA',
+    '< 10,000 pe' => '#005572',
+    '10,000 to 100,000 pe' => '#008B8D',//#006573
+    '> 100,000 pe' => '#81BEAA',
     //#81BEAA
     //#F4D4AD
 );
