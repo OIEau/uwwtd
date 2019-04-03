@@ -22,7 +22,7 @@
               <a:rPr b="0" i="0" u="none" strike="noStrike">
                 <a:latin typeface="Calibri" />
               </a:rPr>
-              <a:t>C4Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.</a:t>
+              <a:t>Comparison of compliance between 8th, 9th and 10th reporting: Load in p.e.</a:t>
             </a:r>
           </a:p>
         </c:rich>
@@ -355,7 +355,7 @@
               <a:lstStyle />
               <a:p>
                 <a:r>
-                  <a:t>Loadin p.e.</a:t>
+                  <a:t>Load in p.e.</a:t>
                 </a:r>
               </a:p>
             </c:rich>
