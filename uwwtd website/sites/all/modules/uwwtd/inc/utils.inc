@@ -231,6 +231,7 @@ function uwwtd_get_all_nuts($type, $year=null){
     if(is_null($year)){
         $year = uwwtd_get_max_annee();
     }
+    //FIX me : this request give all nuts code for all years, buts nuts code is only valid for a given version of nuts year
 	if($year>=2012){
         $results = db_query(
             'SELECT r.field_regionnuts_value, nuts_name as n3nm
@@ -255,7 +256,15 @@ function uwwtd_get_all_nuts($type, $year=null){
     
 	$regionnuts = array("All" =>'- Any -');
 	foreach($results as $result){
-		$regionnuts[$result->field_regionnuts_value] = $result->n3nm;
+        if($result->n3nm!=''){
+            if($year>=2012){
+                $regionnuts[$result->field_regionnuts_value] = $result->field_regionnuts_value.' '.$result->n3nm;
+            }
+            else $regionnuts[$result->field_regionnuts_value] = $result->n3nm;
+        }
+		else{
+            $regionnuts[$result->field_regionnuts_value] =$result->field_regionnuts_value;
+        }
 	}
 	return $regionnuts;
 }
@@ -267,7 +276,7 @@ function uwwtd_get_nuts($cd, $key='n3cd', $year=null){
     if($year>=2012){
         $label = str_replace('cd','nm',$key);
         $results = db_query(
-            "SELECT nuts_id as \"$key\" ,levl_code,cntr_code,nuts_name as \"$label\"
+            "SELECT nuts_id as \"$key\" ,levl_code,cntr_code, nuts_id||' '||nuts_name as \"$label\"
             FROM  nuts_rg_v2013 nut 
             WHERE nuts_id = '".$cd."'
         ");
