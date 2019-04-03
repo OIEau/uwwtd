@@ -226,31 +226,69 @@ function uwwtd_get_max_annee($bundle = 'agglomeration')
     return $annee;
 }
 
-function uwwtd_get_all_nuts($type){
+function uwwtd_get_all_nuts($type, $year=null){
 	$regionnuts = '';
-	
-    $results = db_query(
-		'SELECT r.field_regionnuts_value, nut.n3nm 
-		FROM {field_data_field_regionnuts} r 
-			LEFT JOIN regions_nuts nut ON r.field_regionnuts_value = nut.n3cd
-		WHERE r.bundle = :type 
-		GROUP BY r.field_regionnuts_value, nut.n3nm 
-		ORDER BY n3nm', 
-		array(':type' => $type)
-	);
+    if(is_null($year)){
+        $year = uwwtd_get_max_annee();
+    }
+    //FIX me : this request give all nuts code for all years, buts nuts code is only valid for a given version of nuts year
+	if($year>=2012){
+        $results = db_query(
+            'SELECT r.field_regionnuts_value, nuts_name as n3nm
+            FROM {field_data_field_regionnuts} r 
+                LEFT JOIN nuts_rg_v2013 nut ON r.field_regionnuts_value = nut.nuts_id
+            WHERE r.bundle = :type 
+            GROUP BY r.field_regionnuts_value, nuts_name
+            ORDER BY n3nm', 
+            array(':type' => $type)
+        );
+    }else{
+        $results = db_query(
+            'SELECT r.field_regionnuts_value, nut.n3nm 
+            FROM {field_data_field_regionnuts} r 
+                LEFT JOIN regions_nuts nut ON r.field_regionnuts_value = nut.n3cd
+            WHERE r.bundle = :type 
+            GROUP BY r.field_regionnuts_value, nut.n3nm 
+            ORDER BY n3nm', 
+            array(':type' => $type)
+        );
+    }
+    
 	$regionnuts = array("All" =>'- Any -');
 	foreach($results as $result){
-		$regionnuts[$result->field_regionnuts_value] = $result->n3nm;
+        if($result->n3nm!=''){
+            if($year>=2012){
+                $regionnuts[$result->field_regionnuts_value] = $result->field_regionnuts_value.' '.$result->n3nm;
+            }
+            else $regionnuts[$result->field_regionnuts_value] = $result->n3nm;
+        }
+		else{
+            $regionnuts[$result->field_regionnuts_value] =$result->field_regionnuts_value;
+        }
 	}
 	return $regionnuts;
 }
 
-function uwwtd_get_nuts($cd, $key='n3cd'){
-    $results = db_query(
-		"SELECT * 
-		FROM  regions_nuts nut 
-		WHERE ".$key." = '".$cd."'
-    ");
+function uwwtd_get_nuts($cd, $key='n3cd', $year=null){
+    if(is_null($year)){
+        $year = uwwtd_get_max_annee();
+    }
+    if($year>=2012){
+        $label = str_replace('cd','nm',$key);
+        $results = db_query(
+            "SELECT nuts_id as \"$key\" ,levl_code,cntr_code, nuts_id||' '||nuts_name as \"$label\"
+            FROM  nuts_rg_v2013 nut 
+            WHERE nuts_id = '".$cd."'
+        ");
+        
+    }
+    else{
+        $results = db_query(
+            "SELECT * 
+            FROM  regions_nuts nut 
+            WHERE ".$key." = '".$cd."'
+        ");
+    }
     if($r = $results->fetchAssoc()){
         return $r;
     }
