@@ -1879,6 +1879,8 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
             $context['sandbox']['nuts2'][$nuts2][$ind['generated_load_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['collected_pe']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['collected_percent']] = 0;
+            $context['sandbox']['nuts2'][$nuts2][$ind['ias_pe']] = 0;
+            $context['sandbox']['nuts2'][$nuts2][$ind['ias_percent']] = 0;
 
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_target_load']] = 0;
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_compliant_number_agglo']] = 0;
@@ -1912,6 +1914,12 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
         $context['sandbox']['nuts2'][$nuts2][$ind['generated_load_pe']] += $agglo[$indagglo['generated_load_p.e.']];
         $context['sandbox']['nuts2'][$nuts2][$ind['collected_pe']]      += $agglo[$indagglo['connected_to_collecting_system_p._e.']];
         $context['sandbox']['nuts2'][$nuts2][$ind['collected_percent']] += $agglo[$indagglo['connected_to_collecting_system']];
+        $context['sandbox']['nuts2'][$nuts2][$ind['ias_pe']]      += $agglo[$indagglo['addressed_through_ias_p._e.']];
+        $context['sandbox']['nuts2'][$nuts2][$ind['ias_percent']] += $agglo[$indagglo['addressed_through_ias_%_of_gen._load']];
+        /*
+            'neither_collecting_system_nor_ias_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
+            'neither_collecting_system_nor_ias_p._e.' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
+        */
 
         if ($agglo[$indagglo['art3_compliance']] != 'NR' && $agglo[$indagglo['art3_compliance']] != 'PD' ) {
             $context['sandbox']['nuts2'][$nuts2][$ind['art3_target_load']] += $agglo[$indagglo['generated_load_p.e.']];
@@ -2034,6 +2042,8 @@ function uwwtd_create_register_2015_nuts_level2_analyse_sheet9($annee, &$context
                 $nuts2[$ind['generated_load_pe']],
                 $nuts2[$ind['collected_pe']],
                 $nuts2[$ind['collected_percent']],
+                $nuts2[$ind['ias_pe']],
+                $nuts2[$ind['ias_percent']],
 
                 $nuts2[$ind['art3_target_load']],
                 $nuts2[$ind['art3_compliant_number_agglo']],
@@ -4196,7 +4206,7 @@ $context['sandbox']['previous_data'] = [];
 if (false !== $context['sandbox']['previous_year']) {
     // $previous_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $context['sandbox']['previous_year']);
     $previous_model_path = uwwtd_getregister_finalfile_path($context['sandbox']['previous_year']);
-    dsm($previous_model_path);
+    //dsm($previous_model_path);
     if (true === file_exists($previous_model_path)) {
         $previousobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
         $previousobjReader->setIncludeCharts(false);
@@ -11485,7 +11495,7 @@ function uwwtd_create_register_2015_file_agglo_compliance_sheet16($annee, &$cont
     $indConf = $GLOBALS['uwwtd']['sheet16_agglo_compliance'];
 	//Keep compatibility
     $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet16_agglo_compliance']);
-    dsm($ind);
+    //dsm($ind);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_name'], $annee);
 
     $ragglofile = fopen($filename, 'rb');

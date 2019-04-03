@@ -551,6 +551,8 @@ $GLOBALS['uwwtd']['sheet9_nuts2_analyse'] = array(
     'generated_load_pe' => $i++,
     'collected_pe' => $i++, 
     'collected_percent' => $i++,
+    'ias_pe' => $i++, 
+    'ias_percent' => $i++,
     
     'art3_target_load' => $i++,
     'art3_compliant_number_agglo' => $i++,
