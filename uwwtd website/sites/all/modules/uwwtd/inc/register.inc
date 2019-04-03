@@ -74,11 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-    $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
-    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
-    /*
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -132,7 +128,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
 //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-*/
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -7685,7 +7681,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'NUTS 1 code',
         $nuts1 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 3) {
-            if($nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 3), 'n1cd')){
+            if($nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 3), 'n1cd', $annee)){
                 $line[$ind['nuts_1_code']] = $nuts['n1nm'];
             }
             else{
@@ -7697,7 +7693,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'NUTS 2 code',
         $nuts2 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 4) {
-            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 4), 'n2cd')){
+            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 4), 'n2cd', $annee)){
                 $line[$ind['nuts_2_code']] = $nuts['n2nm'];
             }
             else{
@@ -7709,7 +7705,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'NUTS 3 code',
         $nuts3 = '';
         if (isset($agg->field_regionnuts['und'][0]['value']) && strlen($agg->field_regionnuts['und'][0]['value']) >= 5) {
-            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 5), 'n3cd')){
+            if( $nuts = uwwtd_get_nuts(substr($agg->field_regionnuts['und'][0]['value'], 0, 5), 'n3cd', $annee)){
                 $line[$ind['nuts_3_code']] = $nuts['n3nm'];
             }
             else{
