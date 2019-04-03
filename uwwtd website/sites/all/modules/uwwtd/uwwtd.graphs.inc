@@ -262,7 +262,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_ms_level_data($yearSelected, $yearsPossibles);
-    dsm($results);
     //===========nd@oieau.fr 10/01/2019 : FIX ME : the legend is too long on sludge chart
     $frontAndBackGraph1 = getRow7Graph1($yearSelected, $results);
     $frontGraph2 = getRow7Graph2($results, $yearSelected, $yearsPossibles);
