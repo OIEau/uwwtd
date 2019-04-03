@@ -278,7 +278,6 @@ svg image{
 }
 
 fieldset.group-uwwdescription, fieldset.group-aggdescription, fieldset.group-dcdescription, fieldset.group-rcadescription, fieldset.group-bcdescription{
-	float: right;
 	margin-bottom: 10px !important;
 }
 
