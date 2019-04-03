@@ -41,7 +41,6 @@ function uwwtd_get_data_agglomeration($option){
             f_art6.field_aggart6compliance_value,
             f_comp.field_aggcompliance_value,
             f_nuts.field_regionnuts_value,
-            nut.n3nm,
             f_aggc2.field_aggc2_value,
             f_aggc1.field_aggc1_value,
             f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
@@ -51,7 +50,8 @@ function uwwtd_get_data_agglomeration($option){
             rbd.eurbdcode as rbd,
             rbd.rbdname,
             COUNT(f_uwwtp_agglo.entity_id) as nb_uwwtp,
-            SUM(uwwtp_capa.field_physicalcapacityactivity_value) as sum_uwwtp
+            SUM(uwwtp_capa.field_physicalcapacityactivity_value) as sum_uwwtp,
+            '.($option['field_anneedata_value']>=2012?'nut.nuts_id':'nut.n3nm').' as n3nm
     FROM {node} n
         LEFT join
             {field_data_field_anneedata} f_annee
@@ -80,9 +80,6 @@ function uwwtd_get_data_agglomeration($option){
         LEFT join
             {field_data_field_regionnuts} f_nuts
                 ON n.nid = f_nuts.entity_id
-		LEFT JOIN 
-            regions_nuts nut 
-                ON f_nuts.field_regionnuts_value = nut.n3cd
         LEFT join
             {field_data_field_aggc2} f_aggc2
                 ON n.nid = f_aggc2.entity_id
@@ -109,8 +106,12 @@ function uwwtd_get_data_agglomeration($option){
                 ON f_uwwtp_agglo.field_agguwwliste_nid=uwwtp_capa.entity_id
         LEFT join 
             river_basin rbd
-                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326) 
-        
+                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
+        '.(
+            $option['field_anneedata_value']>=2012?
+            'LEFT JOIN nuts_rg_v2013 nut ON f_nuts.field_regionnuts_value = nut.nuts_id'
+            :'LEFT JOIN regions_nuts nut ON f_nuts.field_regionnuts_value = nut.n3cd'
+        ).'        
     WHERE n.type = :typenode
         AND f_annee.field_anneedata_value = :annee
     GROUP BY n.nid,
@@ -124,7 +125,7 @@ function uwwtd_get_data_agglomeration($option){
             f_art6.field_aggart6compliance_value,
             f_comp.field_aggcompliance_value,
             f_nuts.field_regionnuts_value,
-            nut.n3nm,
+            n3nm,
             f_aggc2.field_aggc2_value,
             f_aggc1.field_aggc1_value,
             f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
@@ -265,7 +266,6 @@ function uwwtd_get_data_uwwtp($option)
 		f_premoval.field_uwwpremoval_value,
 		f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value,
 		f_regionnuts.field_regionnuts_value,
-		nut.n3nm,
 		f_uwwbod5perf.field_uwwbod5perf_value,
 		f_uwwcodperf.field_uwwcodperf_value,
 		f_uwwntotperf.field_uwwntotperf_value,
@@ -282,7 +282,8 @@ function uwwtd_get_data_uwwtp($option)
 		f_article17_uwwtp.field_article17_uwwtp_nid,
 		f_dcpre_uwwtp.field_dcpreceivingwater_value,
         rbd.eurbdcode as rbd,
-        rbd.rbdname
+        rbd.rbdname,
+        '.($option['field_anneedata_value']>=2012?'nut.nuts_id':'nut.n3nm').' as n3nm
     from {node} n
         JOIN uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid
@@ -313,7 +314,6 @@ function uwwtd_get_data_uwwtp($option)
         LEFT join
             {field_data_field_regionnuts} f_regionnuts
                 ON n.nid = f_regionnuts.entity_id
-		LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd
         LEFT join
             {field_data_field_uwwbod5perf} f_uwwbod5perf
                 ON n.nid = f_uwwbod5perf.entity_id
@@ -365,6 +365,11 @@ function uwwtd_get_data_uwwtp($option)
         LEFT join 
             river_basin rbd
                 ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
+        '.(
+            $option['field_anneedata_value']>=2012?
+            'LEFT JOIN nuts_rg_v2013 nut ON f_nuts.field_regionnuts_value = nut.nuts_id'
+            :'LEFT JOIN regions_nuts nut ON f_nuts.field_regionnuts_value = nut.n3cd'
+        ).' 
     WHERE n.type = :typenode
         and f_annee.field_anneedata_value = :annee
     ORDER BY n.nid
@@ -639,10 +644,12 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['sort_field'];
     $option['default']['sort_mod'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['sort_mod'];
     $option['default']['sort'] = 'desc';
-    
-    
+    $year = null;
+    if(isset($_REQUEST['field_anneedata_value']) && $_REQUEST['field_anneedata_value']!=""){
+        $year = $_REQUEST['field_anneedata_value'];
+    }
     $option['allyear'] = uwwtd_get_all_year();
-	$option['allnuts'] = uwwtd_get_all_nuts($type);
+	$option['allnuts'] = uwwtd_get_all_nuts($type, $year);
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
 	
     $filter = uwwtd_get_form_filter($option);
@@ -998,8 +1005,11 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['sort_field'];
     $option['default']['sort_mod'] = $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['sort_mod'];
     $option['default']['sort'] = 'desc';
+    if(isset($_REQUEST['field_anneedata_value']) && $_REQUEST['field_anneedata_value']!=""){
+        $year = $_REQUEST['field_anneedata_value'];
+    }
     $option['allyear'] = uwwtd_get_all_year();
-	$option['allnuts'] = uwwtd_get_all_nuts($type);
+	$option['allnuts'] = uwwtd_get_all_nuts($type, $year);
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
     $filter = uwwtd_get_form_filter($option);
 
@@ -1259,8 +1269,11 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_field'];
     $option['default']['sort_mod'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_mod'];
     $option['default']['sort'] = 'desc';
+    if(isset($_REQUEST['field_anneedata_value']) && $_REQUEST['field_anneedata_value']!=""){
+        $year = $_REQUEST['field_anneedata_value'];
+    }
     $option['allyear'] = uwwtd_get_all_year();
-	$option['allnuts'] = uwwtd_get_all_nuts($type);
+	$option['allnuts'] = uwwtd_get_all_nuts($type, $year);
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
     $filter = uwwtd_get_form_filter($option);
 
@@ -1571,8 +1584,11 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_field'];
     $option['default']['sort_mod'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_mod'];
     $option['default']['sort'] = 'desc';
+    if(isset($_REQUEST['field_anneedata_value']) && $_REQUEST['field_anneedata_value']!=""){
+        $year = $_REQUEST['field_anneedata_value'];
+    }
     $option['allyear'] = uwwtd_get_all_year();
-	$option['allnuts'] = uwwtd_get_all_nuts($type);
+	$option['allnuts'] = uwwtd_get_all_nuts($type, $year);
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
     $filter = uwwtd_get_form_filter($option);
 
@@ -1859,8 +1875,11 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     $option['default']['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_field'];
     $option['default']['sort_mod'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['sort_mod'];
     $option['default']['sort'] = 'desc';
+    if(isset($_REQUEST['field_anneedata_value']) && $_REQUEST['field_anneedata_value']!=""){
+        $year = $_REQUEST['field_anneedata_value'];
+    }
     $option['allyear'] = uwwtd_get_all_year();
-	$option['allnuts'] = uwwtd_get_all_nuts($type);
+	$option['allnuts'] = uwwtd_get_all_nuts($type, $year);
 	$option['allrbd'] = uwwtd_get_all_rbd($type);
 //     dsm($option);
     $filter = uwwtd_get_form_filter($option);
