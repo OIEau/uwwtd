@@ -12983,8 +12983,6 @@ function uwwtd_register_get_glossary_label($conf, $val) {
 //   uwwtd_trace('----->'.$val);
   return $val;
 }
-<<<<<<< HEAD
-=======
 
 /**
  * Sort RCA
@@ -13015,4 +13013,3 @@ function sort_rca_by_title($a, $b) {
     }
     return ($a->title < $b->title) ? -1 : 1;
 }
->>>>>>> f9ea22f8df0bf00278378b86b094fc3623978332
