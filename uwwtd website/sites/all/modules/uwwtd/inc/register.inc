@@ -101,7 +101,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	// //optimize : ok
-    // $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_sheet3', array($annee));
 	//===> nd@oieau.fr : this part need optimisation on memory usage => big dataset imply too large comsuption of RAM with phpExcel lib.
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
