@@ -367,8 +367,8 @@ function uwwtd_get_data_uwwtp($option)
                 ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
         '.(
             $option['field_anneedata_value']>=2012?
-            'LEFT JOIN nuts_rg_v2013 nut ON f_nuts.field_regionnuts_value = nut.nuts_id'
-            :'LEFT JOIN regions_nuts nut ON f_nuts.field_regionnuts_value = nut.n3cd'
+            'LEFT JOIN nuts_rg_v2013 nut ON f_regionnuts.field_regionnuts_value = nut.nuts_id'
+            :'LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd'
         ).' 
     WHERE n.type = :typenode
         and f_annee.field_anneedata_value = :annee
