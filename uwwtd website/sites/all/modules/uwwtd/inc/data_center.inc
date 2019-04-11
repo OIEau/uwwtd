@@ -2624,6 +2624,10 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 */
                 $check5 = uwwtd_check_date($data['aggDateArt5'], $message);
             }
+            //Case when aggDateArt5 is not provided, but needed for all compliance processing
+            elseif(isset($data['aggPeriodOver']) && isset($data['aggGenerated']) && $data['aggGenerated'] > 10000){
+                $check5 = uwwtd_check_date($data['aggPeriodOver'], $message);
+            }
             if ($message != '') {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $i, $node);
             } 
