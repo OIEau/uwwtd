@@ -2430,7 +2430,6 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else{
             // load the node
             $node = node_load($exists);
-            dsm($node);
             $node->type = 'agglomeration';
             $_SESSION['upAgg']++;
             
