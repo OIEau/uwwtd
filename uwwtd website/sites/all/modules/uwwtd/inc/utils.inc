@@ -115,8 +115,18 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    /*
+    module_load_include('inc','uwwtd','inc/data_center');
+    $uri = 'public://data_sources/uwwtdart15fi2016_1554997752.xml';
+    $datas = uwwtd_xml_to_array($uri);
+    $data = $datas['Agglomerations']['Row'][3];
+    dsm($data);
+    $repCode =  uwwtd_check_text($datas['MSLevel']['Row']['repCode']);
+    $timestamp = time();
+    $annee = 2016;
     
-    
+    uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i);
+    */
     return "debug";
     /*
     $years = uwwtd_get_all_year();

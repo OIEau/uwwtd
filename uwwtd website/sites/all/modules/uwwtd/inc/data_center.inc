@@ -2430,6 +2430,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
         else{
             // load the node
             $node = node_load($exists);
+            dsm($node);
             $node->type = 'agglomeration';
             $_SESSION['upAgg']++;
             
@@ -2617,7 +2618,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $check3 = uwwtd_check_date($data['aggDateArt3'], $message);
             $check4 = uwwtd_check_date($data['aggDateArt4'], $message);
             $check5 = false;
-            if(isset($data['aggDateArt5'])){
+            if(isset($data['aggDateArt5']) && !empty($data['aggDateArt5'])){
                 /*
                     Deadline for the implementation of requirements of article 5 of the UWWTD (provision of more stringent treatment to urban waste water entering collecting system and being discharge after a treatment into sensitive areas or their catchments). 
                     This value is required for all active agglomerations of size ≥ 10 000 p.e., served by UWWTPs discharging into sensitive areas.
@@ -2625,7 +2626,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                 $check5 = uwwtd_check_date($data['aggDateArt5'], $message);
             }
             //Case when aggDateArt5 is not provided, but needed for all compliance processing
-            elseif(isset($data['aggPeriodOver']) && isset($data['aggGenerated']) && $data['aggGenerated'] > 10000){
+            elseif(isset($data['aggPeriodOver']) && $data['aggGenerated'] > 10000){
                 $check5 = uwwtd_check_date($data['aggPeriodOver'], $message);
             }
             if ($message != '') {
@@ -2661,7 +2662,7 @@ function uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i
                     'timezone_bd'=>'Europe/Berlin',
                     'date_type'=>'date'
                 );
-            }elseif (isset($data['aggGenerated']) && $data['aggGenerated'] >= 10000){
+            }elseif (isset($data['aggGenerated']) && $data['aggGenerated'] > 10000){
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], "The aggDateArt5 is required for all active agglomerations of size ≥ 10 000 p.e., served by UWWTPs discharging into sensitive areas.", $timestamp, $i, $node);
                 
             }
