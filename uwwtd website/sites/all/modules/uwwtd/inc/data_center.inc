@@ -5523,7 +5523,7 @@ function uwwtd_shapes_form($form, &$form_state){
         $form['proj'] = array(
             '#type' => 'select',
             '#title' => t('Projection'),
-            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)'],
+            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)', '3035'=>'ETRS89 LAEA Europe (EPSG:3035)'],
             '#default_value'=>'4258',
             '#required' => TRUE,
         );
@@ -5567,7 +5567,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
     // dezip the zipped file
     $files = uwwtd_unzip_files($file, 'public://data_shapes/');
     
-    uwwtd_shapes_setup_batch($files, $annee);   
+    uwwtd_shapes_setup_batch($files, $annee, $proj);   
 }
 
 function uwwtd_shapes_setup_batch($files, $annee, $proj='4258'){
