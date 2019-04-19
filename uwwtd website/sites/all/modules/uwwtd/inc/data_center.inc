@@ -5635,6 +5635,7 @@ function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
 }
 
 function rca_set_geo_obj($record, $annee,  $proj='4258'){
+    if(!$record['shp']) return false;
     $id = '';
     $shptype = '1';
 
