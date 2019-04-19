@@ -5635,6 +5635,7 @@ function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
 }
 
 function rca_set_geo_obj($record, $annee,  $proj='4258'){
+    if(!$record['shp']) return false;
     $id = '';
     $shptype = '1';
 
@@ -5643,26 +5644,54 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $id = uwwtd_check_text($dbf['eucd_sa_cm']);
         $geoType = 'CSA';
     }        
+    elseif(isset($dbf['eucdsa_cm'])){
+        $id = uwwtd_check_text($dbf['eucdsa_cm']);
+        $geoType = 'CSA';
+    }        
     elseif(isset($dbf['eucd_sa_rv'])){
         $id = uwwtd_check_text($dbf['eucd_sa_rv']);
+        $geoType = 'RW';
+    }        
+    elseif(isset($dbf['eucdsa_rv'])){
+        $id = uwwtd_check_text($dbf['eucdsa_rv']);
         $geoType = 'RW';
     }        
     elseif(isset($dbf['eucd_sa_lk'])){
         $id = uwwtd_check_text($dbf['eucd_sa_lk']);
         $geoType = 'LW';
     }        
+    elseif(isset($dbf['eucdsa_lk'])){
+        $id = uwwtd_check_text($dbf['eucdsa_lk']);
+        $geoType = 'LW';
+    }        
     elseif(isset($dbf['eucd_sa_tw'])){
         $id = uwwtd_check_text($dbf['eucd_sa_tw']);
+        $geoType = 'ES';
+    }  
+    elseif(isset($dbf['eucdsa_tw'])){
+        $id = uwwtd_check_text($dbf['eucdsa_tw']);
         $geoType = 'ES';
     }  
     elseif(isset($dbf['eucd_sa_cl'])){
         $id = uwwtd_check_text($dbf['eucd_sa_cl']);
         $geoType = 'SA';
     }      
+    elseif(isset($dbf['eucdsa_cl'])){
+        $id = uwwtd_check_text($dbf['eucdsa_cl']);
+        $geoType = 'SA';
+    }      
     elseif(isset($dbf['eucd_lsacl'])){
         $id = uwwtd_check_text($dbf['eucd_lsacl']);
         $geoType = 'LSA';
     } 
+    elseif(isset($dbf['eucd_sa_ca'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_ca']);
+        $geoType = 'CSA';
+    }
+    elseif(isset($dbf['eucdsa_ca'])){
+        $id = uwwtd_check_text($dbf['eucdsa_ca']);
+        $geoType = 'CSA';
+    }    
 //for HU missing  type EUCD_SA_CA here
     elseif(isset($dbf['rcacode'])){
         $id = uwwtd_check_text($dbf['rcacode']);
