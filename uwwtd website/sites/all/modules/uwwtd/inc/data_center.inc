@@ -5660,6 +5660,9 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $geoType = 'LSA';
     }        
     //for IE missing  type EUCD_SA_CA here
+    elseif(isset($dbf['localid'])){
+        $id = uwwtd_check_text($dbf['localid']);
+    }
     elseif(isset($dbf['iso2'])){
         $id = uwwtd_check_text($dbf['iso2']);
     }
