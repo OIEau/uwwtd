@@ -40,7 +40,7 @@
 
     // Configuration
     define("SHOW_ERRORS", true);
-    define("DEBUG", false);
+    define("DEBUG", true);
     
     
     // Constants
@@ -66,7 +66,7 @@
         var $shp_type         = 0;
         
         var $records;
-        function ShapeFile($file_name){
+        function __construct($file_name){
             $this->file_name = $file_name;
             //dsm($file_name);
             _d("Opening [$file_name]");
@@ -151,9 +151,13 @@
                                           1 => "RecordPoint",
                                           8 => "RecordMultiPoint",
                                           3 => "RecordPolyLine",
-                                          5 => "RecordPolygon");
+                                          5 => "RecordPolygon",
+                                          //Debug
+                                          15 => "RecordPolygon",
+                                          
+                                          );
         
-        function ShapeRecord(&$fp, $file_name){
+        function __construct(&$fp, $file_name){
             $this->fp = $fp;
             _d("Shape record created at byte ".ftell($fp));
             
@@ -354,7 +358,7 @@
     
     function _d($debug_text){
         if(DEBUG){
-            echo $debug_text."\n";
+            dsm($debug_text);
         }
     }
     
