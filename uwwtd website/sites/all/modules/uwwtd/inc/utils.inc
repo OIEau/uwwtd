@@ -114,10 +114,38 @@ if (!function_exists('array_column')) {
 }
 
 
+
 function uwwtd_debug(){
+   /* 
+   module_load_include('inc','uwwtd','inc/data_center');
+    //module_load_include('php','uwwtd','inc/ShapeFileAutoloader');
+    module_load_include('php','uwwtd','inc/ShapeFile');
+    module_load_include('php','uwwtd','inc/ShapeFileException');
+
+    // importing the downloaded shapefile
+    $uri = "public://data_shapes/UWWTDSensitiveAreaCatchments_IE.shp";
+    $path = drupal_realpath($uri);
+    $shp = new ShapeFile($path, ShapeFile::FLAG_SUPPRESS_Z);
+    $annee = 2016;
     
-    
+    while ($record = $shp->getRecord(ShapeFile::GEOMETRY_WKT)) {
+        $node = rca_set_geo_obj($record, $annee);
+    }
+    */
     return "debug";
+    /*
+    module_load_include('inc','uwwtd','inc/data_center');
+    $uri = 'public://data_sources/uwwtdart15fi2016_1554997752.xml';
+    $datas = uwwtd_xml_to_array($uri);
+    $data = $datas['Agglomerations']['Row'][3];
+    dsm($data);
+    $repCode =  uwwtd_check_text($datas['MSLevel']['Row']['repCode']);
+    $timestamp = time();
+    $annee = 2016;
+    
+    uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i);
+    */
+    
     /*
     $years = uwwtd_get_all_year();
     //uwwtd_retreive_agg_dtt(2016, $context);
