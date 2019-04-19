@@ -2328,9 +2328,13 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     
     $preset_name = 'rca_map';
     $preset = openlayers_preset_load($preset_name);
+    //Fix bug : in some case background layer  is not activated
+    if(!isset($preset->data['layers']['osm_mapnik'])){
+        $preset->data['layers']['osm_mapnik'] = 'osm_mapnik';
+    }
     $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['rca']=array(
         'layer'=>'rca',
-        'styles'=>$styles
+        //'styles'=>$styles
     );
     $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
