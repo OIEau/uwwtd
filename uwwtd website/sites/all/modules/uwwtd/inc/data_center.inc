@@ -5655,8 +5655,8 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $id = uwwtd_check_text($dbf['eucd_sa_tw']);
         $geoType = 'ES';
     }  
-    elseif(isset($dbf['eucd_sacl'])){
-        $id = uwwtd_check_text($dbf['eucd_sacl']);
+    elseif(isset($dbf['eucd_sa_cl'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_cl']);
         $geoType = 'SA';
     }      
     elseif(isset($dbf['eucd_lsacl'])){
