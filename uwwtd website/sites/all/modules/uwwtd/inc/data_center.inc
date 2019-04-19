@@ -5503,6 +5503,9 @@ function uwwtd_finished($success, $results, $operations){
 
 
 ################################ SHAPES ZIP MANAGEMENT ################################
+
+
+
 function uwwtd_shapes_form($form, &$form_state){
     
     if(!isset($_SESSION['uwwtd_annee'])){
@@ -5517,13 +5520,20 @@ function uwwtd_shapes_form($form, &$form_state){
         $form['uwwtd_text'] = array(
             '#markup' => '<h4>'.t('Receiving areas shapes upload for the year').' : '.$annee.'</h4><p>'.t('Please upload the files that contain the information on the sensitive areas').'.</p>'
         );
-        
+        $form['proj'] = array(
+            '#type' => 'select',
+            '#title' => t('Projection'),
+            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)'],
+            '#default_value'=>'4258',
+            '#required' => TRUE,
+        );
         $form['uwwtd_file'] = array(
             '#type' => 'managed_file',
             '#title' => t('Data file'),
             '#upload_validators' => array('file_validate_extensions' => array('zip')),
             '#required' => TRUE,
         );
+        
         
         // Bouton envoyer
         $form['submit_button'] = array(
@@ -5551,6 +5561,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
 //  if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
 //  if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
     $annee = $_SESSION['uwwtd_annee'];
+    $proj = $form_state['values']['proj'];
     $file = file_load($form_state['values']['uwwtd_file']);
     
     // dezip the zipped file
@@ -5559,7 +5570,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
     uwwtd_shapes_setup_batch($files, $annee);   
 }
 
-function uwwtd_shapes_setup_batch($files, $annee){
+function uwwtd_shapes_setup_batch($files, $annee, $proj='4258'){
     $batch = array(
         'title' => t('Data processing for the shapes files'),
         'operations' => array(),
@@ -5570,13 +5581,13 @@ function uwwtd_shapes_setup_batch($files, $annee){
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'shape'));
-    $batch['operations'][]=array('uwwtd_shapes_batch_process', array($files, $annee));
+    $batch['operations'][]=array('uwwtd_shapes_batch_process', array($files, $annee, $proj));
 
     batch_set($batch);
     batch_process('data/shapes');
 }
 
-function uwwtd_shapes_batch_process($files, $annee, &$context){
+function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
 //     uwwtd_debug_trace(__FUNCTION__);
     if (!isset($context['sandbox']['progress'])) {
         $shpsFiles = array();
@@ -5591,177 +5602,23 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
         $context['results']['nbrecord'] = 0;
         $context['results']['nbrecorderror'] = 0;
         $context['results']['nbrecordok'] = 0;        
-//         uwwtd_debug_trace('max = ' . $context['sandbox']['max']);
-//         uwwtd_debug_trace('$shpsFiles = ' . var_export($shpsFiles, true));
     }
     $i = $context['sandbox']['progress'];
-//     uwwtd_debug_trace('progress = ' . $context['sandbox']['progress']);
     $chosen = $context['sandbox']['ids'][$i];
 
-    //dsm($context['sandbox']['ids']);
-    //dsm($chosen);
+    module_load_include('php','uwwtd','inc/ShapeFile');
+    module_load_include('php','uwwtd','inc/ShapeFileException');
 
-    // including the shapefile reader class
-    //require_once 'ShapeFile.inc.php';
-    
-    module_load_include('php','uwwtd','inc/ShapeFile.inc');
-//  uwwtd_debug_trace('new ShapeFile'); 
-    // importing the downloaded shapefile
-    $shp = new ShapeFile(drupal_realpath($chosen));
-//     uwwtd_debug_trace('end new ShapeFile');
-//  dsm($shp);
+    $shp = new ShapeFile(drupal_realpath($chosen), ShapeFile::FLAG_SUPPRESS_Z);
 
-
-    foreach($shp->records as $record){
+    while ($record = $shp->getRecord(ShapeFile::GEOMETRY_WKT)) {
         $context['results']['nbrecord']++;
-        // id of shape
-        //dsm($record);
-//         uwwtd_debug_trace('$record->dbf_data = ' .var_export($record->dbf_data, true));
-        $id = '';
-        $shptype = '1';
-        
-        
-        //FIX ME  : $shptype & $geoType are not used ? can we remove these vars ?
-        if(isset($record->dbf_data['EUCD_SA_CM'])){
-            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_CM']);
-            $shptype = '1';
-            $geoType = 'CSA';
-        }
-        if(isset($record->dbf_data['eucd_sa_cm'])){
-            $id = uwwtd_check_text($record->dbf_data['eucd_sa_cm']);
-            $shptype = '1';
-            $geoType = 'CSA';
-        }        
-        if(isset($record->dbf_data['EUCD_SA_RV'])){
-            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_RV']);
-            $shptype = '1';
-            $geoType = 'RW';
-        }
-        if(isset($record->dbf_data['eucd_sa_rv'])){
-            $id = uwwtd_check_text($record->dbf_data['eucd_sa_rv']);
-            $shptype = '1';
-            $geoType = 'RW';
-        }        
-        if(isset($record->dbf_data['EUCD_SA_LK'])){
-            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_LK']);
-            $shptype = '1';
-            $geoType = 'LW';
-        }
-        if(isset($record->dbf_data['eucd_sa_lk'])){
-            $id = uwwtd_check_text($record->dbf_data['eucd_sa_lk']);
-            $shptype = '1';
-            $geoType = 'LW';
-        }        
-        if(isset($record->dbf_data['EUCD_SA_TW'])){
-            $id = uwwtd_check_text($record->dbf_data['EUCD_SA_TW']);
-            $shptype = '1';
-            $geoType = 'ES';
-        }
-        if(isset($record->dbf_data['eucd_sa_tw'])){
-            $id = uwwtd_check_text($record->dbf_data['eucd_sa_tw']);
-            $shptype = '1';
-            $geoType = 'ES';
-        }        
-        if(isset($record->dbf_data['EUCD_LSACL'])){
-            $id = uwwtd_check_text($record->dbf_data['EUCD_LSACL']);
-            $shptype = '1';
-            $geoType = 'LSA';
-        }
-        if(isset($record->dbf_data['eucd_lsacl'])){
-            $id = uwwtd_check_text($record->dbf_data['eucd_lsacl']);
-            $shptype = '1';
-            $geoType = 'LSA';
-        }        
-        //for IE missing  type EUCD_SA_CA here
-
-        if(isset($record->dbf_data['ISO2'])){
-            $shptype = '2';
-            $id = uwwtd_check_text($record->dbf_data['ISO2']);
-        }
-        if(isset($record->dbf_data['iso2'])){
-            $shptype = '2';
-            $id = uwwtd_check_text($record->dbf_data['iso2']);
-        }
-        
-        if ($id == '') {
-            $context['results']['nbrecorderror']++;
-            $sErrorMessage = t('Can\t find the rca code on the shape record from file "@filename"', array('@filename' => basename($chosen))); 
-            uwwtd_trace($sErrorMessage . ' : ' . var_export($record->dbf_data, true));
-            uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'));
-            continue;
-        }        
-
-         // check multipolygon
-        $type = 'polygon';
-        
-
-        if($record->shp_data['numparts'] > 1){
-            $type = 'multipolygon';
-            $shpdata = $record->shp_data['parts'];
+        if($node = rca_set_geo_obj($record, $annee,  $proj)){
+            $context['results']['nbrecordok']++;
         }
         else{
-            $shpdata = $record->shp_data['parts'][0]['points'];
-        }
-        
-        
-
-        //dsm($shpdata);
-
-        // Other possible type
-
-        // find receiving area
-//         uwwtd_debug_trace('field_siteid_value = ' . $annee.'_rca_'.$id);
-        $ids = array();
-        $query = db_select('node', 'n');
-        $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-        $query->fields('n', array('nid', 'title'));
-        $query->fields('s', array('field_siteid_value'));
-        $query->condition('n.type', 'receiving_area', '=');
-        $query->condition('s.field_siteid_value', $annee.'_rca_'.$id, '=');
-        $rcas = $query->execute();
-        foreach($rcas as $rca){
-            $ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
-        }
-
-//      dsm($ids);
-//         $ids[]['nid'] = 173356;
-
-        if(count($ids) > 0){
-            // get node
-            $nid = $ids[0]['nid'];
-            $node = node_load($nid);
-
-            // get polgon geo data
-            try {
-                if($type == 'polygon') $geodata = uwwtd_coord_transform_polygon($shpdata);
-                if($type == 'multipolygon') $geodata = uwwtd_coord_transform_multipolygon($shpdata);
-                
-//                 dsm($type);
-//                 dsm($geodata);
-            } catch (Exception $e) {
-                //shape file malformed    uwwtd_errors
-                $sErrorMessage = t('An error was found in the shape file for the receiving area "@title"', array('@title' => $node->title)) . ' : ' . $e->getMessage();
-                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['shape format'], $sErrorMessage, strtotime('now'), 0 , $node);
-                drupal_set_message($sErrorMessage, 'error');
-                continue;
-            }
-
-            
-            $node->field_rca_geotype['und'][0]['value'] = $geoType;
-
-            $node->field_position_geo['und'][0] = array(
-                'geom'=>$geodata['bin'],
-                'geo_type'=>$geodata['polygon'],
-                'geohash'=>$geodata['geohash']
-            );
-
-            node_save($node);
-            //dsm($node);
-            $context['results']['nbrecordok']++;
-        } else {
             $context['results']['nbrecorderror']++;
         }
-
     }
     
     uwwtd_flush_errors();
@@ -5775,6 +5632,75 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
     if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
+}
+
+function rca_set_geo_obj($record, $annee,  $proj='4258'){
+    $id = '';
+    $shptype = '1';
+
+    $dbf = array_change_key_case ($record['dbf']);
+    if(isset($dbf['eucd_sa_cm'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_cm']);
+        $geoType = 'CSA';
+    }        
+    elseif(isset($dbf['eucd_sa_rv'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_rv']);
+        $geoType = 'RW';
+    }        
+    elseif(isset($dbf['eucd_sa_lk'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_lk']);
+        $geoType = 'LW';
+    }        
+    elseif(isset($dbf['eucd_sa_tw'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_tw']);
+        $geoType = 'ES';
+    }        
+    elseif(isset($dbf['eucd_lsacl'])){
+        $id = uwwtd_check_text($dbf['eucd_lsacl']);
+        $geoType = 'LSA';
+    }        
+    //for IE missing  type EUCD_SA_CA here
+    elseif(isset($dbf['localid'])){
+        $id = uwwtd_check_text($dbf['localid']);
+    }
+    elseif(isset($dbf['iso2'])){
+        $id = uwwtd_check_text($dbf['iso2']);
+    }
+    else return false;
+    
+    if($id!=''){
+        $id = str_replace(' ', '', trim($id));
+    }
+    else return false;
+    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326); 
+    
+    $ids = array();
+    $query = db_select('node', 'n');
+        $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+        $query->fields('n', array('nid', 'title'));
+        $query->fields('s', array('field_siteid_value'));
+        $query->condition('n.type', 'receiving_area', '=');
+        $query->condition('s.field_siteid_value', $annee.'_rca_'.$id, '=');
+    $rcas = $query->execute();
+    foreach($rcas as $rca){
+        $ids[] = array('nid'=>$rca->nid, 'title'=>$rca->title, 'siteId'=>$rca->field_siteid_value);
+    }
+
+    if(count($ids) > 0){
+        // get node
+        $nid = $ids[0]['nid'];
+        $node = node_load($nid);
+
+        $node->field_rca_geotype['und'][0]['value'] = $geoType;
+        $node->field_position_geo['und'][0] = array(
+            'geom'=>$geo->bin,
+            'geo_type'=>(strtolower(substr($record['shp'],0,4))=="poly"? 'polygon':'multipolygon'),
+            'geohash'=>$geo->geohash
+        );
+
+        node_save($node);
+    }
+    else return false;        
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {
@@ -7727,7 +7653,6 @@ function uwwtd_coord_transform_polygon($parts){
     $result = db_query($sql);
     foreach ($result as $record) {
         $geo = $record->geo;
-        //dsm($geo);
     }
 
     // create array
@@ -7808,6 +7733,22 @@ function uwwtd_coord_transform_multipolygon($parts){
     }
     return $table;
 }
+
+function uwwtd_wkt_transform($wkt, $prj_src, $prj_target){
+    $sql = "
+        WITH geo AS( SELECT ST_Transform(ST_GeomFromText('".$wkt."', ".$prj_src."),".$prj_target.")::geometry AS obj ) 
+        SELECT  
+            ST_AsBinary(geo.obj::geometry) as bin,
+            ST_GeoHash(geo.obj::geometry, 16) as geohash,
+            ST_AsText(geo.obj::geometry) as wkt
+        FROM geo
+    ";
+    $result = db_query($sql);
+    foreach ($result as $record) {
+        return $record;
+    } 
+}
+
 
 /**
  * return art3,4,5,6 compliance and a reason (4,5,6 are optional)
