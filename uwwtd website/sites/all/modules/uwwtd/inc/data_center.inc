@@ -5654,7 +5654,11 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
     elseif(isset($dbf['eucd_sa_tw'])){
         $id = uwwtd_check_text($dbf['eucd_sa_tw']);
         $geoType = 'ES';
-    }        
+    }  
+    elseif(isset($dbf['eucd_sacl'])){
+        $id = uwwtd_check_text($dbf['eucd_sacl']);
+        $geoType = 'SA';
+    }      
     elseif(isset($dbf['eucd_lsacl'])){
         $id = uwwtd_check_text($dbf['eucd_lsacl']);
         $geoType = 'LSA';
@@ -5662,9 +5666,11 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
     //for IE missing  type EUCD_SA_CA here
     elseif(isset($dbf['localid'])){
         $id = uwwtd_check_text($dbf['localid']);
+        $geoType = 'SA';
     }
     elseif(isset($dbf['iso2'])){
         $id = uwwtd_check_text($dbf['iso2']);
+        $geoType = 'SA';
     }
     else return false;
     
