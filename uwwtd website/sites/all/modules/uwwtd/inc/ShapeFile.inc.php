@@ -66,7 +66,7 @@
         var $shp_type         = 0;
         
         var $records;
-        function ShapeFile($file_name){
+        function __construct($file_name){
             $this->file_name = $file_name;
             //dsm($file_name);
             _d("Opening [$file_name]");

@@ -115,6 +115,7 @@ if (!function_exists('array_column')) {
 
 
 function uwwtd_debug(){
+    return "debug";
     /*
     module_load_include('inc','uwwtd','inc/data_center');
     $uri = 'public://data_sources/uwwtdart15fi2016_1554997752.xml';
@@ -127,7 +128,7 @@ function uwwtd_debug(){
     
     uwwtd_update_agg_node($data, $newFile, $repCode, $annee, $timestamp, $i);
     */
-    return "debug";
+    
     /*
     $years = uwwtd_get_all_year();
     //uwwtd_retreive_agg_dtt(2016, $context);
