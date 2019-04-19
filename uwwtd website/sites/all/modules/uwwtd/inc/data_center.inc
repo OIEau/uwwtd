@@ -5609,7 +5609,7 @@ function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
     module_load_include('php','uwwtd','inc/ShapeFile');
     module_load_include('php','uwwtd','inc/ShapeFileException');
 
-    $shp = new ShapeFile($path, ShapeFile::FLAG_SUPPRESS_Z);
+    $shp = new ShapeFile(drupal_realpath($chosen), ShapeFile::FLAG_SUPPRESS_Z);
 
     while ($record = $shp->getRecord(ShapeFile::GEOMETRY_WKT)) {
         $context['results']['nbrecord']++;
