@@ -5520,13 +5520,20 @@ function uwwtd_shapes_form($form, &$form_state){
         $form['uwwtd_text'] = array(
             '#markup' => '<h4>'.t('Receiving areas shapes upload for the year').' : '.$annee.'</h4><p>'.t('Please upload the files that contain the information on the sensitive areas').'.</p>'
         );
-        
+        $form['proj'] = array(
+            '#type' => 'select',
+            '#title' => t('Projection'),
+            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)'],
+            '#default_value'=>'4258',
+            '#required' => TRUE,
+        );
         $form['uwwtd_file'] = array(
             '#type' => 'managed_file',
             '#title' => t('Data file'),
             '#upload_validators' => array('file_validate_extensions' => array('zip')),
             '#required' => TRUE,
         );
+        
         
         // Bouton envoyer
         $form['submit_button'] = array(
@@ -5554,6 +5561,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
 //  if(isset($_SESSION['uwwtd_errors'])) unset($_SESSION['uwwtd_errors']);
 //  if(isset($_SESSION['uwwtd_warnings'])) unset($_SESSION['uwwtd_warnings']);
     $annee = $_SESSION['uwwtd_annee'];
+    $proj = $form_state['values']['proj'];
     $file = file_load($form_state['values']['uwwtd_file']);
     
     // dezip the zipped file
@@ -5562,7 +5570,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
     uwwtd_shapes_setup_batch($files, $annee);   
 }
 
-function uwwtd_shapes_setup_batch($files, $annee){
+function uwwtd_shapes_setup_batch($files, $annee, $proj='4258'){
     $batch = array(
         'title' => t('Data processing for the shapes files'),
         'operations' => array(),
@@ -5573,13 +5581,13 @@ function uwwtd_shapes_setup_batch($files, $annee){
     
     //delete all error from previous import
     $batch['operations'][]=array('uwwtd_delete_error', array($annee, 'shape'));
-    $batch['operations'][]=array('uwwtd_shapes_batch_process', array($files, $annee));
+    $batch['operations'][]=array('uwwtd_shapes_batch_process', array($files, $annee, $proj));
 
     batch_set($batch);
     batch_process('data/shapes');
 }
 
-function uwwtd_shapes_batch_process($files, $annee, &$context){
+function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
 //     uwwtd_debug_trace(__FUNCTION__);
     if (!isset($context['sandbox']['progress'])) {
         $shpsFiles = array();
@@ -5605,7 +5613,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
 
     while ($record = $shp->getRecord(ShapeFile::GEOMETRY_WKT)) {
         $context['results']['nbrecord']++;
-        if($node = rca_set_geo_obj($record, $annee)){
+        if($node = rca_set_geo_obj($record, $annee,  $proj)){
             $context['results']['nbrecordok']++;
         }
         else{
@@ -5626,7 +5634,7 @@ function uwwtd_shapes_batch_process($files, $annee, &$context){
     }
 }
 
-function rca_set_geo_obj($record, $annee){
+function rca_set_geo_obj($record, $annee,  $proj='4258'){
     $id = '';
     $shptype = '1';
 
@@ -5661,7 +5669,7 @@ function rca_set_geo_obj($record, $annee){
         $id = str_replace(' ', '', trim($id));
     }
     else return false;
-    $geo = uwwtd_wkt_transform($record['shp'], 4258, 4326); 
+    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326); 
     
     $ids = array();
     $query = db_select('node', 'n');
