@@ -413,27 +413,28 @@ class ShapeFile implements \Iterator
         $dbf = $this->readDBFRecord();
         
         // Convert output
-        $geometry_format = $geometry_format ?: $this->default_geometry_format;
-        if ($geometry_format == self::GEOMETRY_WKT) {
-            $shp = $this->toWKT($shp);
-        } elseif ($geometry_format == self::GEOMETRY_GEOJSON_GEOMETRY) {
-            $shp = $this->toGeoJSON($shp);
-        } elseif ($geometry_format == self::GEOMETRY_GEOJSON_FEATURE) {
-            $shp = $this->toGeoJSON($shp, $dbf);
-        } else {
-            $temp = ($geometry_format & self::GEOMETRY_ARRAY) ? $shp : array();
-            if ($geometry_format & self::GEOMETRY_WKT) {
-                $temp['wkt'] = $this->toWKT($shp);
+        if($shp){
+            $geometry_format = $geometry_format ?: $this->default_geometry_format;
+            if ($geometry_format == self::GEOMETRY_WKT) {
+                $shp = $this->toWKT($shp);
+            } elseif ($geometry_format == self::GEOMETRY_GEOJSON_GEOMETRY) {
+                $shp = $this->toGeoJSON($shp);
+            } elseif ($geometry_format == self::GEOMETRY_GEOJSON_FEATURE) {
+                $shp = $this->toGeoJSON($shp, $dbf);
+            } else {
+                $temp = ($geometry_format & self::GEOMETRY_ARRAY) ? $shp : array();
+                if ($geometry_format & self::GEOMETRY_WKT) {
+                    $temp['wkt'] = $this->toWKT($shp);
+                }
+                if ($geometry_format & self::GEOMETRY_GEOJSON_GEOMETRY) {
+                    $temp['geojson'] = $this->toGeoJSON($shp);
+                }
+                if ($geometry_format & self::GEOMETRY_GEOJSON_FEATURE) {
+                    $temp['geojson'] = $this->toGeoJSON($shp, $dbf);
+                }
+                $shp = $temp;
             }
-            if ($geometry_format & self::GEOMETRY_GEOJSON_GEOMETRY) {
-                $temp['geojson'] = $this->toGeoJSON($shp);
-            }
-            if ($geometry_format & self::GEOMETRY_GEOJSON_FEATURE) {
-                $temp['geojson'] = $this->toGeoJSON($shp, $dbf);
-            }
-            $shp = $temp;
         }
-        
         return array(
             'shp'   => $shp,
             'dbf'   => $dbf
@@ -718,6 +719,7 @@ class ShapeFile implements \Iterator
                 );
             }
             if ($i < 0) {
+                return false;
                 $this->throwException('POLYGON_NOT_VALID');
             }
             $parts[$i]['rings'][] = $rawpart;
