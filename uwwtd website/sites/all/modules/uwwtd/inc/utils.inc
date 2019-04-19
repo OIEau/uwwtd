@@ -114,7 +114,24 @@ if (!function_exists('array_column')) {
 }
 
 
+
 function uwwtd_debug(){
+    /*
+   module_load_include('inc','uwwtd','inc/data_center');
+    //module_load_include('php','uwwtd','inc/ShapeFileAutoloader');
+    module_load_include('php','uwwtd','inc/ShapeFile');
+    module_load_include('php','uwwtd','inc/ShapeFileException');
+
+    // importing the downloaded shapefile
+    $uri = "public://data_shapes/BE_SA_catchment.shp";
+    $path = drupal_realpath($uri);
+    $shp = new ShapeFile($path, ShapeFile::FLAG_SUPPRESS_Z);
+    $annee = 2016;
+    
+    while ($record = $shp->getRecord(ShapeFile::GEOMETRY_WKT)) {
+        $node = rca_set_geo_obj($record, $annee);
+    }
+    */
     return "debug";
     /*
     module_load_include('inc','uwwtd','inc/data_center');
