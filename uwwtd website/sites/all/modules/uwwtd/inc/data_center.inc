@@ -5523,7 +5523,7 @@ function uwwtd_shapes_form($form, &$form_state){
         $form['proj'] = array(
             '#type' => 'select',
             '#title' => t('Projection'),
-            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)'],
+            '#options'=>['4258'=>'ETRS89 (EPSG:4258)', '4326'=>'WGS84 (EPSG:4326)', '3035'=>'ETRS89 LAEA Europe (EPSG:3035)'],
             '#default_value'=>'4258',
             '#required' => TRUE,
         );
@@ -5567,7 +5567,7 @@ function uwwtd_shapes_submit_handler($form, &$form_state) {
     // dezip the zipped file
     $files = uwwtd_unzip_files($file, 'public://data_shapes/');
     
-    uwwtd_shapes_setup_batch($files, $annee);   
+    uwwtd_shapes_setup_batch($files, $annee, $proj);   
 }
 
 function uwwtd_shapes_setup_batch($files, $annee, $proj='4258'){
@@ -5635,6 +5635,7 @@ function uwwtd_shapes_batch_process($files, $annee, $proj, &$context){
 }
 
 function rca_set_geo_obj($record, $annee,  $proj='4258'){
+    if(!$record['shp']) return false;
     $id = '';
     $shptype = '1';
 
@@ -5643,26 +5644,54 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $id = uwwtd_check_text($dbf['eucd_sa_cm']);
         $geoType = 'CSA';
     }        
+    elseif(isset($dbf['eucdsa_cm'])){
+        $id = uwwtd_check_text($dbf['eucdsa_cm']);
+        $geoType = 'CSA';
+    }        
     elseif(isset($dbf['eucd_sa_rv'])){
         $id = uwwtd_check_text($dbf['eucd_sa_rv']);
+        $geoType = 'RW';
+    }        
+    elseif(isset($dbf['eucdsa_rv'])){
+        $id = uwwtd_check_text($dbf['eucdsa_rv']);
         $geoType = 'RW';
     }        
     elseif(isset($dbf['eucd_sa_lk'])){
         $id = uwwtd_check_text($dbf['eucd_sa_lk']);
         $geoType = 'LW';
     }        
+    elseif(isset($dbf['eucdsa_lk'])){
+        $id = uwwtd_check_text($dbf['eucdsa_lk']);
+        $geoType = 'LW';
+    }        
     elseif(isset($dbf['eucd_sa_tw'])){
         $id = uwwtd_check_text($dbf['eucd_sa_tw']);
+        $geoType = 'ES';
+    }  
+    elseif(isset($dbf['eucdsa_tw'])){
+        $id = uwwtd_check_text($dbf['eucdsa_tw']);
         $geoType = 'ES';
     }  
     elseif(isset($dbf['eucd_sa_cl'])){
         $id = uwwtd_check_text($dbf['eucd_sa_cl']);
         $geoType = 'SA';
     }      
+    elseif(isset($dbf['eucdsa_cl'])){
+        $id = uwwtd_check_text($dbf['eucdsa_cl']);
+        $geoType = 'SA';
+    }      
     elseif(isset($dbf['eucd_lsacl'])){
         $id = uwwtd_check_text($dbf['eucd_lsacl']);
         $geoType = 'LSA';
     } 
+    elseif(isset($dbf['eucd_sa_ca'])){
+        $id = uwwtd_check_text($dbf['eucd_sa_ca']);
+        $geoType = 'CSA';
+    }
+    elseif(isset($dbf['eucdsa_ca'])){
+        $id = uwwtd_check_text($dbf['eucdsa_ca']);
+        $geoType = 'CSA';
+    }    
 //for HU missing  type EUCD_SA_CA here
     elseif(isset($dbf['rcacode'])){
         $id = uwwtd_check_text($dbf['rcacode']);
