@@ -116,14 +116,27 @@ $GLOBALS['uwwtd_value']['rcacat_labels']=array(
     'FW' => t('Freshwater'),
 );
 
+$GLOBALS['uwwtd_value']['rca_spe_type_labels']=array(
+    'All' => t('- Any -'),
+    'A523'=>t('Art 5.(2,3) area'),
+    'A54'=>t('Art. 5(4) area'),
+    'A54523'=>t('Art. 5(4) and 5 (2,3) area'),
+    'A5854'=>t('Art. 5(8) and 5(4) area'),
+    'A58523'=>t('Art. 5(8) and 5 (2,3) area'),
+    'A5854523'=>t('Art. 5(8), 5(4) and 5 (2,3) area'),
+);
+
 $GLOBALS['uwwtd_value']['rcatype_labels']=array(
     'All' => t('- Any -'),
-    'SA'=>t('Sensitive Area'),
-    'CSA'=>t('Catchment of Sensitive Area'),
-    'LSA'=>t('Less Sensitive Area'),
-    'NA'=>t('Normal Area'),
-    'A54'=>t('A54 Sensitive Area'),
-    'A58'=>t('A58 Sensitive Area'),
+    'UWWCMSA' => t("Catchment of Sensitive area"),
+    'UWW55CMSA' => t("Catchment of Sensitive area defined in the sense of Article 5.5 of the UWWTD"),
+    'UWWCASA' => t("Coast area Sensitive area"),
+    'UWWCLSA' => t("Coast line Sensitive area"),
+    'UWWLKSA'  => t("Lake Sensitive area"),
+    'UWWRISA' => t("River Sensitive area"),
+    'UWWTWSA' => t("Transitional water Sensitive area"),
+    'UWWTDLSA' => t("Less Sensitive Area"),
+    
 );
 $GLOBALS['uwwtd_value']['rcatype_color']=array(
     'All' => array(
@@ -138,11 +151,11 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'SA'=>array(
+    'UWWCMSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ff0000",
-      'strokeColor' => "#ff0000",
-      'strokeWidth' => 3,
+      'fillColor' => "#daa520",
+      'strokeColor' => "#000000",
+      'strokeWidth' => 1,
       'fillOpacity' => 0.8,
       'strokeOpacity' => 1,
       'strokeLinecap' => 'round',
@@ -150,9 +163,9 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'CSA'=>array(
+    'UWW55CMSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#800080",
+      'fillColor' => "#ffa500",
       'strokeColor' => '#800080',
       'strokeWidth' => 1,
       'fillOpacity' => 0.4,
@@ -162,9 +175,9 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'LSA'=>array(
+    'UWWCASA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ffdead",
+      'fillColor' => "#191970",
       'strokeColor' => "#ffdead",
       'strokeWidth' => 1,
       'fillOpacity' => 0.6,
@@ -174,9 +187,9 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'NA'=>array(
+    'UWWCLSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#4682b4",
+      'fillColor' => "#ff00ff",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.6,
@@ -186,9 +199,9 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'A54'=>array(
+    'UWWLKSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ffff00",
+      'fillColor' => "#8fbc8f",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,
@@ -198,9 +211,33 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
-    'A58'=>array(
+    'UWWRISA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#9acd32",
+      'fillColor' => "#6495ed",
+      'strokeColor' => '#6495ed',
+      'strokeWidth' => 3,
+      'fillOpacity' => 0.9,
+      'strokeOpacity' => 0.9,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'UWWTWSA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#008b8b",
+      'strokeColor' => '#000000',
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.9,
+      'strokeOpacity' => 0.9,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
+    'UWWTDLSA'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#adff2f",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,
@@ -363,6 +400,7 @@ $GLOBALS['uwwtd']['ui']['field']['rca'] = array(
     'title'                           =>  array('label'=>t('Name')),
     'field_inspireidlocalid_value'    =>  array('label'=>t('Identifier Code')),
     'zonetype_format'=>array('label'=>t('Type of area')),
+    'spezonetype_format'=>array('label'=>t('Sub-type of receiving area ')),
     'rca52_format'=>array('label'=>t('Article 52 applied')),
     'rca54_format'=>array('label'=>t('Article 54 applied')),
     'rca58_format'=>array('label'=>t('Article 58 applied')),
