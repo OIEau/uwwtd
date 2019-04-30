@@ -2199,7 +2199,8 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             n.title,
             f_annee.field_anneedata_value,
             id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value as zonetype,
+            zt.field_zonetype_value as zonetype,
+            szt.field_specialisedzonetype_value as zonetype_spe,
             rca52.field_rca52applied_value as rca52,
             rca54.field_rca54applied_value as rca54,
             rca58.field_rca58applied_value as rca58,
@@ -2223,8 +2224,11 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             {field_data_field_inspireidlocalid} id
                 ON n.nid = id.entity_id
         LEFT join
-            {field_data_field_specialisedzonetype} zt
+            {field_data_field_zonetype} zt
                 ON n.nid = zt.entity_id
+        LEFT join
+            {field_data_field_specialisedzonetype} szt
+                ON n.nid = szt.entity_id
         LEFT join
             {field_data_field_rca52applied} rca52
                 ON n.nid = rca52.entity_id
@@ -2272,7 +2276,8 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             n.title,
             f_annee.field_anneedata_value,
             id.field_inspireidlocalid_value,
-            zt.field_specialisedzonetype_value,
+            zt.field_zonetype_value,
+            szt.field_specialisedzonetype_value,
             rca52.field_rca52applied_value,
             rca54.field_rca54applied_value,
             rca58.field_rca58applied_value,
