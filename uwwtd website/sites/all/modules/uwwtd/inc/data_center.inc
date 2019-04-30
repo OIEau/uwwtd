@@ -8725,16 +8725,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 if ($maxgen >= 150000) {
-                    /**
-                     * Costa do Estoril agglomeration (aggID code: PTAGL070, uwwID: pt12058222) 
-                     * has a derogation granted according to Article 5(8) of the Urban Waste Water Treatment Directive (Commission Decision 2001/720/EC of 8.10.2001, OJ L269 of 10.10.2001). 
-                     * For this agglomerations it is required a less stringent treatment, ie treatment required=primary treatment.
-                    **/
-                    if(in_array('PTAGL070', $dcp['agglomerations']['PTAGL070'])){
-                        $required_treatment->required = 'P';
-                    }else{
                         $required_treatment->required = 'S';
-                    }
                 }
                 //FIx nd@oieau.fr : add distinction between case under 10000
                 elseif ($maxgen >= 10000) { 
@@ -8833,10 +8824,25 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
     // BB - 04/11 - Adding a step for 9th report format
     if ($dcp['rcazonetype'] === 'UWWTDLSA') {
         if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
-            if ($maxgen > 150000) {
-                $required_treatment->required = 'S';
-            } else {
+            if ($maxgen >= 150000) {
+                /**
+                 * Costa do Estoril agglomeration (aggID code: PTAGL070, uwwID: pt12058222) 
+                 * has a derogation granted according to Article 5(8) of the Urban Waste Water Treatment Directive (Commission Decision 2001/720/EC of 8.10.2001, OJ L269 of 10.10.2001). 
+                 * For this agglomerations it is required a less stringent treatment, ie treatment required=primary treatment.
+                **/
+                
+                if( array_key_exists('PTAGL070', $dcp['agglomerations'])){
+                    $required_treatment->required = 'P';
+                    $required_treatment->reason ="Costa do Estoril agglomeration (aggID code: PTAGL070, uwwID: pt12058222) has a derogation granted according to Article 5(8) of the Urban Waste Water Treatment Directive (Commission Decision 2001/720/EC of 8.10.2001, OJ L269 of 10.10.2001).For this agglomerations it is required a less stringent treatment, ie treatment required=primary treatment.";
+                }else{
+                    $required_treatment->required = 'S';
+                }
+            }
+            //FIx nd@oieau.fr : add distinction between case under 10000
+            elseif ($maxgen >= 10000) { 
                 $required_treatment->required = 'P';
+            }else {
+                $required_treatment->required = 'Appropriate';
             }
         } elseif ($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'LF') {
             if ($maxgen >= 2000 && $maxgen < 10000) {
@@ -8850,6 +8856,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
         }
     }
+    dsm($required_treatment);
 }
 
 
