@@ -599,6 +599,8 @@ function uwwtd_get_data_sensitive_areas($option){
 
             $zonetype_formatA = '';
             if (!empty($row['zonetype']) && !empty($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])) {
+                //TODO : test if values mapping is needed between  10th report values and old ones 
+                $row['zonetype_raw'] = $row['zonetype'];
                 $zonetype_formatA = $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']];
             }
             $zonetype_formatB = '';
@@ -606,6 +608,7 @@ function uwwtd_get_data_sensitive_areas($option){
                 $zonetype_formatB = $GLOBALS['uwwtd_value']['rcatype_labels']['default'];
             }
             $row['zonetype_format'] =  (!empty($row['zonetype']) && isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']]) ? $zonetype_formatA : $zonetype_formatB);
+            $row['spezonetype_format'] =  (!empty($row['zonetype_spe']) && isset($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$row['zonetype_spe']]) ? $zonetype_formatA : $zonetype_formatB);
             
             if($row['rca52']=='') $row['rca52'] = 0; 
             if($row['rca54']=='') $row['rca54'] = 0; 
@@ -2196,6 +2199,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         'rca54'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
         'rca58'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
         'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
+        'zonetype_spe'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['spezonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rca_spe_type_labels']),  
+        
     );
 // dsm($list_field);
     $form = uwwtd_filter_form($list_field, $filter);
@@ -3217,6 +3222,8 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
             if (isset($option['color']) && isset($row[ $option['color']['field']])) {
                 if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
                     $color = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    $style = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    //$color = $option['color']['list'][$row[ $option['color']['field'] ]]['fillColor'];
                 }
                 
                 //Style of the feature 
@@ -3254,7 +3261,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                 $returnvalue .= uwwtd_get_svg_piechart($i, $row, $option, $option['piechart_weight_style'][$weight]);
 
             }
-            
             $feature[] = array(
                 'projection' => 'EPSG:4326',
                 'attributes' => array(
@@ -3265,14 +3271,17 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                     'data' => $chart,
                     'piechartid' => 'pie_'.$type .$i,
                 ),
-                'style' => ($style?$styles[$style]->data:null),
+                'style' => (
+                    is_array($style)?
+                        $style:
+                        (isset($styles[$style])?$styles[$style]->data:null)
+                    ),
                 'style_name' => $style,
                 
                 'wkt' => $row['wkt'],
             );
         }
     }
-    //dsm($feature);
     return $feature;
 }
 
