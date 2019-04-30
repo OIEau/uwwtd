@@ -8856,7 +8856,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $required_treatment->reason = 'Station found to be missing dcp waterbody information required to calculate proper compliance';
         }
     }
-    dsm($required_treatment);
 }
 
 
