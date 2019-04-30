@@ -153,9 +153,9 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWCMSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ff0000",
-      'strokeColor' => "#ff0000",
-      'strokeWidth' => 3,
+      'fillColor' => "#daa520",
+      'strokeColor' => "#000000",
+      'strokeWidth' => 1,
       'fillOpacity' => 0.8,
       'strokeOpacity' => 1,
       'strokeLinecap' => 'round',
@@ -165,7 +165,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWW55CMSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#800080",
+      'fillColor' => "#ffa500",
       'strokeColor' => '#800080',
       'strokeWidth' => 1,
       'fillOpacity' => 0.4,
@@ -177,7 +177,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWCASA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ffdead",
+      'fillColor' => "#191970",
       'strokeColor' => "#ffdead",
       'strokeWidth' => 1,
       'fillOpacity' => 0.6,
@@ -189,7 +189,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWCLSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#4682b4",
+      'fillColor' => "#ff00ff",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.6,
@@ -201,7 +201,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWLKSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#ffff00",
+      'fillColor' => "#8fbc8f",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,
@@ -213,7 +213,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWRISA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#9acd32",
+      'fillColor' => "#6495ed",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,
@@ -225,7 +225,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWTWSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#4169e1",
+      'fillColor' => "#008b8b",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,
@@ -237,7 +237,7 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
     ),
     'UWWTDLSA'=>array(
       'pointRadius' => 6,
-      'fillColor' => "#8a2be2",
+      'fillColor' => "#adff2f",
       'strokeColor' => '#000000',
       'strokeWidth' => 1,
       'fillOpacity' => 0.9,

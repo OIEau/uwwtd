@@ -3222,6 +3222,8 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
             if (isset($option['color']) && isset($row[ $option['color']['field']])) {
                 if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
                     $color = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    $style = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    //$color = $option['color']['list'][$row[ $option['color']['field'] ]]['fillColor'];
                 }
                 
                 //Style of the feature 
@@ -3259,7 +3261,6 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                 $returnvalue .= uwwtd_get_svg_piechart($i, $row, $option, $option['piechart_weight_style'][$weight]);
 
             }
-            
             $feature[] = array(
                 'projection' => 'EPSG:4326',
                 'attributes' => array(
@@ -3270,14 +3271,17 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                     'data' => $chart,
                     'piechartid' => 'pie_'.$type .$i,
                 ),
-                'style' => ($style?$styles[$style]->data:null),
+                'style' => (
+                    is_array($style)?
+                        $style:
+                        (isset($styles[$style])?$styles[$style]->data:null)
+                    ),
                 'style_name' => $style,
                 
                 'wkt' => $row['wkt'],
             );
         }
     }
-    //dsm($feature);
     return $feature;
 }
 
