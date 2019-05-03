@@ -7117,11 +7117,12 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp)
     
     //treatement required = secondary && treatement in place = secondary
     if ($uwwtp->field_uwwtreatmentrequired['und'][0]['value'] == $GLOBALS['uwwtd_value']['required']['secondary']
-        //&& true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))
-        && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array(
-                        $GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
-//         if(true === uwwtd_codperf_pass($uwwtp) && true === uwwtd_bod5perf_pass($uwwtp)){
-        if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))) {
+        && true === in_array($uwwtp->field_uwwtreatmenttype['und'][0]['value'], array($GLOBALS['uwwtd_value']['inplace']['secondary'],$GLOBALS['uwwtd_value']['inplace']['morestringent']))) {  
+        //We have to check if perf are ok but also if the secondary treatment is in place
+        // uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, $listtreatement) 
+        if (true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('codperf', 'bod5perf'))
+            && true === uwwtd_all_uwwtp_treatement_inplace_in($uwwtp, array('secondary'))
+        ) {
             $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; 
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];            
         } else {
