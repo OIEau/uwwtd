@@ -509,6 +509,63 @@ function uwwtd_menu(){
   return $items;
 }
 
+function uwwtd_field_formatter_info() {
+    $formatters = array(
+        'label_and_link' => array(
+          'label' => t('Label and link (Optimized)'),
+          'field types' => array('entityreference','nodereference','node_reference'),
+          'description' => t('optimize label and link for entity reference field with lots of values.'),
+        ),
+  );
+  return $formatters;
+}
+function uwwtd_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+    $settings = $display['settings'];
+    $element = array();
+    if ($display['type'] == 'label_and_link') {
+        $display['settings']['link'] = true;
+        
+        $nids = array_values(array_column($items, 'nid'));
+        $titles = uwwtd_getNodesTitles($nids);
+        unset($nids);
+        foreach ($items as $delta => $item) {
+        // Calling EntityReferenceHandler::getLabel() would make a repeated,
+        // wasteful call to entity_access().
+        if($item['access'] && isset($titles[$item['nid']])){
+            $element[$delta] = array(
+              '#type' => 'link',
+              '#title' => $titles[$item['nid']],
+              '#href' => 'node/'.$item['nid']
+            );
+        }
+      }
+      
+    }
+    return $element;
+}
+//Cherche le titre d'un noeud à partir de son nid
+function uwwtd_getNodeTitle($nid){
+	if($nid!=''){
+		 return db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
+	}
+	return '';
+}
+function uwwtd_getNodesTitles($nids){
+	if(!empty($nids)){
+        $out = [];
+		$query = db_select('node', 'n');
+            $query->fields('n', ['nid', 'title']);
+            $query->condition('nid', $nids, 'IN');
+        $result = $query->execute();
+        while($record = $result->fetchAssoc()) {
+            $out[$record['nid']] = $record['title'];
+        }
+        return $out;
+	}
+	return false;
+}
+
+
 //Define if user is allowed to view the "compliance" tab on agglomeration page
 function uwwtd_check_node_compliance($node){
     global $user;
