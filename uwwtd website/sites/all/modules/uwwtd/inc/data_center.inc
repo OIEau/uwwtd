@@ -6740,16 +6740,19 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
  */ 
 function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUww)
 {   
-    uwwtd_trace(__FUNCTION__);
-    
-    
+    uwwtd_trace(__FUNCTION__);    
     $d_wot = ($agg->field_aggpercwithouttreatment['und'][0]['value']/100) *  $agg->field_agggenerated['und'][0]['value'];
       
 
     //collected in collective system = 0 ==> it's probably an error in data or there is no linked uwwtp or all the load is manage in IAS
     if($agg->field_aggc1['und'][0]['value'] == 0){
         if($d_wot > 2000 || $agg->field_aggpercwithouttreatment['und'][0]['value'] > 2){
-            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            }
+            else{
+                $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+            }
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         }
@@ -6809,13 +6812,18 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
 
 function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
-
     uwwtd_trace(__FUNCTION__);
     uwwtd_trace(var_export($listUwwtpCompliance, true));
-    
+
     $aTmp['listUww'] = $listUwwtpCompliance;
-       
-    if (false === uwwtd_atleastone_uwwtp_required_in(array(
+    if(empty($listUwwtpCompliance)){
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'there is no linked uwwtp and agglomeration is not in pending deadline for art 4'];
+        }else{
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'there is no linked uwwtp but agglomeration is still in pending deadline for art 4'];
+        }
+    }   
+    elseif (false === uwwtd_atleastone_uwwtp_required_in(array(
             $GLOBALS['uwwtd_value']['required']['secondary'],
             $GLOBALS['uwwtd_value']['required']['morestringent'],
             $GLOBALS['uwwtd_value']['required']['nitrogen'],
@@ -6830,11 +6838,13 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>'no secondary or more stringent treatment required'];
     }
     
+    
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;
     $totalLoadenteringPE_P_NI = 0;
     $totalLoadenteringPercent_P_NI = 0;
+    
     foreach($listUwwtpCompliance as $uwwtp) {
         $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
         $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
@@ -6842,8 +6852,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $totalLoadenteringPE_P_NI += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent_P_NI += $uwwtp['agglo_uww_perc_ent_uw'];
         }
-
     }
+    
 
     uwwtd_trace($totalLoadenteringPE);
     uwwtd_trace($totalLoadenteringPercent);
