@@ -740,7 +740,6 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 	  unset($header[8]);
     */
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['agglomeration'], $data);
-//     dsm($data);
 
     $optionstyle = array();
     //get the color for the point
@@ -852,7 +851,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 
 
     $features['compliance_map'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
-//     dsm($features);
+    //dsm($features);
     $rendermap = uwwtd_build_map($map, $features);
     unset($features);
     
@@ -3205,6 +3204,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
     foreach($data as $row) {
         if(isset($row['wkt'])){
             $i++;
+            //if($i>2000) break;
             $description = '';
             if (isset($option['popup'])) {
                 foreach($option['popup'] as $field => $detail) {
