@@ -2332,7 +2332,15 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     //dsm($map);
     $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     if(!empty($features['rca'])){
-    $styles = array_unique(array_column($features['rca'], 'style_name'));
+    $style_names = array_unique(array_column($features['rca'], 'style_name'));
+    $styles = [];
+    foreach($style_names as $sn){
+        $key = strtoupper(substr($sn, 4, strlen($sn)));
+        $styles[$sn] = $GLOBALS['uwwtd_value']['rcatype_color'][$key];
+        if($key !='UWWCMSA_A54') {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels'][$key];}
+        else {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels']['UWWCMSA'].' (Art 5.4)';}
+        $styles[$sn]['key'] = $key;
+    }
     //$map; 
     
     $preset_name = 'rca_map';
@@ -2343,7 +2351,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
     $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['rca']=array(
         'layer'=>'rca',
-        //'styles'=>$styles
+        'styles'=>$styles
     );
     $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
@@ -3228,6 +3236,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                 if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
                     $color = $option['color']['list'][$row[ $option['color']['field'] ]];
                     $style = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    $style_name = $row[ $option['color']['field'] ];
                     //$color = $option['color']['list'][$row[ $option['color']['field'] ]]['fillColor'];
                 }
                 
@@ -3281,7 +3290,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                         $style:
                         (isset($styles[$style])?$styles[$style]->data:null)
                     ),
-                'style_name' => $style,
+                'style_name' => is_array($style)?  $style_name:$style,
                 
                 'wkt' => $row['wkt'],
             );
