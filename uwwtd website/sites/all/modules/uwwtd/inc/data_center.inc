@@ -6463,7 +6463,9 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             
             //=======ART 5
             if(isset($aggArt456Compliance['compArt5_info']) && isset($aggArt456Compliance['compArt5_info']['art54applies']) && $aggArt456Compliance['compArt5_info']['art54applies']){
-                $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['pseudo_compliance'];
+                //nd@oieau.fr : 16/05/2019 (technical workshop)==> if art54applies is apply art5 is NR even if receiving area is not compliant
+                //$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['pseudo_compliance'];
+                $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['compliance'];
             }
             else{
                 $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];

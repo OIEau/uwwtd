@@ -555,7 +555,7 @@ function uwwtd_get_data_sensitive_areas($option){
     $cache_name = uwwtd_get_cache_key_sensitive_area($option);
     //     dsm($cache_name);
     $cache = '';
-	$putincache =true;
+	$putincache =false;
     /*
 	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
@@ -589,7 +589,7 @@ function uwwtd_get_data_sensitive_areas($option){
         
         $rcatype = array_flip($GLOBALS['uwwtd_value']['rcatype']);
         while($row = $result->fetchAssoc()) {
-            
+            $row['zonetype_style'] = '';
             if($node = node_load($row['nid'])){
                 $row['aggs'] = count($node->field_linked_agglomerations['und']);
             }
@@ -601,6 +601,7 @@ function uwwtd_get_data_sensitive_areas($option){
             if (!empty($row['zonetype']) && !empty($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])) {
                 //TODO : test if values mapping is needed between  10th report values and old ones 
                 $row['zonetype_raw'] = $row['zonetype'];
+                $row['zonetype_style'].= $row['zonetype'];
                 $zonetype_formatA = $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']];
             }
             $zonetype_formatB = '';
@@ -609,6 +610,10 @@ function uwwtd_get_data_sensitive_areas($option){
             }
             $row['zonetype_format'] =  (!empty($row['zonetype']) && isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']]) ? $zonetype_formatA : $zonetype_formatB);
             $row['spezonetype_format'] =  (!empty($row['zonetype_spe']) && isset($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$row['zonetype_spe']]) ? $zonetype_formatA : $zonetype_formatB);
+            
+            if($row['zonetype_spe']=='A54'){
+                $row['zonetype_style'].= '_'.$row['zonetype_spe'];
+            }
             
             if($row['rca52']=='') $row['rca52'] = 0; 
             if($row['rca54']=='') $row['rca54'] = 0; 
@@ -2217,7 +2222,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $optionstyle = array();
     //get the color for the point
     $optionstyle['color']['list'] =$GLOBALS['uwwtd_value']['rcatype_color'];
-    $optionstyle['color']['field'] = 'zonetype';
+    $optionstyle['color']['field'] = 'zonetype_style';
     $optionstyle['style_prefix'] = 'rca_';
     //get the size of the point
 /*
