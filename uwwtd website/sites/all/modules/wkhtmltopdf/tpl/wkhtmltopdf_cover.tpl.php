@@ -22,7 +22,7 @@
             font-size:9px;
         }
         div#content{
-            height:180mm;
+            height:40mm;
         }
         div.doc-info{
             width:100%;
@@ -47,7 +47,7 @@
         }
         
         div.doc-info div{
-            margin:50px 5px;
+            margin:20px 5px;
         }
         div.titre{
             font-size:20px;

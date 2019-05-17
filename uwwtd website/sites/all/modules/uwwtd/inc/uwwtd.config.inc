@@ -163,6 +163,18 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
+    'UWWCMSA_A54'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#a0522d",
+      'strokeColor' => "#000000",
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.8,
+      'strokeOpacity' => 1,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
     'UWW55CMSA'=>array(
       'pointRadius' => 6,
       'fillColor' => "#ffa500",
@@ -420,7 +432,6 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'rcacat_format'=>array('label'=>t('Type of receiving area')),
     'field_dcpirrigation_value'=>array('label'=>t('Type of reuse')),
      'field_uwwwastewatertreated_value'=>array('label'=>t('Volume (m3/y)')),
-    
 );
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(

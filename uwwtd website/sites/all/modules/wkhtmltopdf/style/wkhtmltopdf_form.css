@@ -14,7 +14,10 @@
     text-decoration:none;
     padding-left:20px;
 }
-
+.wkhtmltopdf_starter a:hover{
+    text-decoration:underline;
+    color:#428bca;
+}
 .formulaire-public ul{
 	list-style:none;
 	margin:0;

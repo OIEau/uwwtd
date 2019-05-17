@@ -106,6 +106,7 @@
 			$options = array();
 			//Le titre est le nom du site
 			$options['title'] = drupal_get_title();
+			$options['orientation'] = "Landscape";
 			//Le sous titre le nom de la page
 			//$options['subtitle'] ='Le glossaire librement réutilisable que chacun peut améliorer';
 			//Description de la page (en fait le titre)
