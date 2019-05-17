@@ -47,6 +47,13 @@
     div.charts-row{
         page-break-after: always;
     }
+    div.view-filters, div.openlayers-legends, div.openlayers_plus-blockswitcher, div.olControlNoSelect{
+        display:none;
+    }
+    h1{font-size:16px;margin-bottom:12px;}
+    .charts-rows-cell{
+        max-width:580px;
+    }
     </style>
     <!--
     <style>
@@ -62,7 +69,15 @@
     <div id="content" class="m_01" style="padding-top:15px;">
         <div id="wkhtmltopdf-print-content">
 			<?php print  (isset($variables['title'])? '<h1>'.$variables['title'].'</h1>':'');?>
-            <?php print $variables['content'];
+            
+            <?php 
+            //print $variables['content'];
+           print str_replace(
+                ['"openlayers-map":{"width":"auto","height":"700px"', 'style="width:auto;height:700px;"'],
+                ['"openlayers-map":{"width":"auto","height":"610px"', 'style="width:auto;height:610px;"'],
+                $variables['content']
+            );
+            
 			print $variables['footer'];?>
         </div>		
     </div>

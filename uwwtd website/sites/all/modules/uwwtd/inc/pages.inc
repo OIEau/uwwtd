@@ -528,10 +528,10 @@ function uwwtd_get_data_dcp($option){
         $result = db_query($query, $param);
         while($row = $result->fetchAssoc()) {
             
-            $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$GLOBALS['uwwtd_value']['rcatype_labels']['default']);
+            $row['zonetype_format'] =  (isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])? $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']] :$row['zonetype']);
             $row['rcacat_format'] =  (isset($row['rcacat']) && isset($GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']])? $GLOBALS['uwwtd_value']['rcacat_labels'][$row['rcacat']] :'');
-            $row['rca_format'] =  l($row['rca_name'], 'node/'.$row['rca_id']);
-            $row['uwwtp_format'] =  l($row['uwwtp_name'], 'node/'.$row['uwwtp_id']);
+            $row['rca_format'] =  l(str_replace('_',' ', $row['rca_name']), 'node/'.$row['rca_id'], ['attributes'=>['title'=>$row['rca_name']]]);
+            $row['uwwtp_format'] =  l(str_replace('_',' ', $row['uwwtp_name']), 'node/'.$row['uwwtp_id'], ['attributes'=>['title'=>$row['rca_name']]]);
             $row['field_uwwcompliance_value_format'] =  $GLOBALS['uwwtd']['all_compliance'][$row['field_uwwcompliance_value']];
             $row['field_physicalcapacityactivity_value_format'] =  uwwtd_format_number($row['field_physicalcapacityactivity_value']);
              $row['field_uwwwastewatertreated_value_format'] =  uwwtd_format_number($row['field_uwwwastewatertreated_value']);
@@ -589,7 +589,7 @@ function uwwtd_get_data_sensitive_areas($option){
         
         $rcatype = array_flip($GLOBALS['uwwtd_value']['rcatype']);
         while($row = $result->fetchAssoc()) {
-            
+            $row['zonetype_style'] = '';
             if($node = node_load($row['nid'])){
                 $row['aggs'] = count($node->field_linked_agglomerations['und']);
             }
@@ -601,6 +601,7 @@ function uwwtd_get_data_sensitive_areas($option){
             if (!empty($row['zonetype']) && !empty($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']])) {
                 //TODO : test if values mapping is needed between  10th report values and old ones 
                 $row['zonetype_raw'] = $row['zonetype'];
+                $row['zonetype_style'].= $row['zonetype'];
                 $zonetype_formatA = $GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']];
             }
             $zonetype_formatB = '';
@@ -609,6 +610,10 @@ function uwwtd_get_data_sensitive_areas($option){
             }
             $row['zonetype_format'] =  (!empty($row['zonetype']) && isset($GLOBALS['uwwtd_value']['rcatype_labels'][$row['zonetype']]) ? $zonetype_formatA : $zonetype_formatB);
             $row['spezonetype_format'] =  (!empty($row['zonetype_spe']) && isset($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$row['zonetype_spe']]) ? $zonetype_formatA : $zonetype_formatB);
+            
+            if($row['zonetype_spe']=='A54'){
+                $row['zonetype_style'].= '_'.$row['zonetype_spe'];
+            }
             
             if($row['rca52']=='') $row['rca52'] = 0; 
             if($row['rca54']=='') $row['rca54'] = 0; 
@@ -774,10 +779,10 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         $graph[$row['field_aggcompliance_value_format']]['field_agggenerated_value'] += $row['field_agggenerated_value'];
 
 		if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
-			$titleV = truncate_utf8($row['title'], 20, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
+			$titleV = truncate_utf8(str_replace('_',' ',$row['title']), 30, $wordsafe = TRUE, $add_ellipsis = TRUE, $min_wordsafe_length = 10);
 			$rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($titleV, uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($titleV, 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l($titleV, 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
 				'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_agggenerated_value_format'=> (empty($row['field_agggenerated_value']) ? '0' : $row['field_agggenerated_value']),
                         'sum_uwwtp_format'=> $row['sum_uwwtp'],
@@ -1102,7 +1107,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 		if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
 			$rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
                 'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_agggenerated_value_format'=>$row['field_agggenerated_value_format'],
                 'sum_uwwtp_format'=>$row['sum_uwwtp_format'],
@@ -1117,7 +1122,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 		}else{
 			$rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
                 'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_agggenerated_value_format'=>$row['field_agggenerated_value_format'],
                 'sum_uwwtp_format'=>$row['sum_uwwtp_format'],
@@ -1373,7 +1378,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 			$rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
                 'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1685,7 +1690,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 			$rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
                 'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -1969,7 +1974,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 		if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
 		   $rows[] = array('data' => array(
 				//'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path($optionstyle['popup_title_type'], array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-				'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+				'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
                 'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
 				'field_uwwloadenteringuwwtp_value_format'=>$row['field_uwwloadenteringuwwtp_value_format'],
 				'field_physicalcapacityactivity_value_format'=>$row['field_physicalcapacityactivity_value_format'],
@@ -2217,7 +2222,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $optionstyle = array();
     //get the color for the point
     $optionstyle['color']['list'] =$GLOBALS['uwwtd_value']['rcatype_color'];
-    $optionstyle['color']['field'] = 'zonetype';
+    $optionstyle['color']['field'] = 'zonetype_style';
     $optionstyle['style_prefix'] = 'rca_';
     //get the size of the point
 /*
@@ -2264,7 +2269,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         
         $rows[] = array('data' => array(
             //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('receiving-area', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-            'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+            'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
             'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
             // 'zonetype_format'=>$row['zonetype_format'],
             'rca52_format'=>$row['rca52_format'],
@@ -2327,7 +2332,15 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     //dsm($map);
     $features['rca'] = uwwtd_build_feature($data, $optionstyle, $returnvalue);
     if(!empty($features['rca'])){
-    $styles = array_unique(array_column($features['rca'], 'style_name'));
+    $style_names = array_unique(array_column($features['rca'], 'style_name'));
+    $styles = [];
+    foreach($style_names as $sn){
+        $key = strtoupper(substr($sn, 4, strlen($sn)));
+        $styles[$sn] = $GLOBALS['uwwtd_value']['rcatype_color'][$key];
+        if($key !='UWWCMSA_A54') {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels'][$key];}
+        else {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels']['UWWCMSA'].' (Art 5.4)';}
+        $styles[$sn]['key'] = $key;
+    }
     //$map; 
     
     $preset_name = 'rca_map';
@@ -2338,7 +2351,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
     $preset->data['behaviors']['openlayers_plus_behavior_legend']['layers']['rca']=array(
         'layer'=>'rca',
-        //'styles'=>$styles
+        'styles'=>$styles
     );
     $map    = openlayers_build_map($preset->data);
     $rendermap = uwwtd_build_map($map, $features);
@@ -2416,12 +2429,14 @@ function uwwtd_dcp_page($type_export = ''){
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
+    
     if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
+    /*
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
         return $cache->data['page'];
-    }
+    }*/
 	$data = uwwtd_get_data_dcp($filter['filter']);
     $list_field = array(
     
@@ -2490,7 +2505,7 @@ function uwwtd_dcp_page($type_export = ''){
     foreach($data as $row) {
         $rows[] = array('data' => array(
             //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-            'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+            'title'=>($type_export != '' ? $row['title'] : l(str_replace('_',' ',$row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
             'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
             'rca_format'=>$row['rca_format'],
             'zonetype_format'=>$row['zonetype_format'],
@@ -2590,8 +2605,8 @@ function uwwtd_dcp_page($type_export = ''){
             $line_nb = array();
             $line_load = array();
             
-            $line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
-            $line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_nb[] = $type;
+            $line_load[] = $type;
             foreach($item as $k=>$v){
                 $line_nb[] = $v['nb'];
                 $line_load[] = $v['load'];
@@ -2775,7 +2790,7 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     foreach($data as $row) {
         $rows[] = array('data' => array(
             //'title'=>($type_export != '' ? $row['title'] : l($row['title'], uwwtd_get_url_path('discharge-point', array(strtolower($row['field_inspireidlocalid_value']), $row['field_anneedata_value'])))),
-            'title'=>($type_export != '' ? $row['title'] : l($row['title'], 'node/'.$row['nid'], array('html'=>true))),
+            'title'=>($type_export != '' ? $row['title'] : l(str_replace('_', ' ', $row['title']), 'node/'.$row['nid'], array('html'=>true, 'attributes'=>['title'=>$row['title']]))),
             'field_inspireidlocalid_value'=>$row['field_inspireidlocalid_value'],
             'rca_format'=>$row['rca_format'],
             'zonetype_format'=>$row['zonetype_format'],
@@ -2879,8 +2894,10 @@ function uwwtd_dcp_reuse_page($type_export = ''){
             $line_nb = array();
             $line_load = array();
             
-            $line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
-            $line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            //$line_nb[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            //$line_load[] = $GLOBALS['uwwtd_value']['rcatype_labels'][$type];
+            $line_nb[] = $type;
+            $line_load[] = $type;
             foreach($item as $k=>$v){
                 $line_nb[] = $v['nb'];
                 $line_load[] = $v['load'];
@@ -3223,6 +3240,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                 if(isset($option['color']['list'][$row[ $option['color']['field'] ]])){
                     $color = $option['color']['list'][$row[ $option['color']['field'] ]];
                     $style = $option['color']['list'][$row[ $option['color']['field'] ]];
+                    $style_name = $row[ $option['color']['field'] ];
                     //$color = $option['color']['list'][$row[ $option['color']['field'] ]]['fillColor'];
                 }
                 
@@ -3276,7 +3294,7 @@ function uwwtd_build_feature($data, $option, &$returnvalue, $type=''){
                         $style:
                         (isset($styles[$style])?$styles[$style]->data:null)
                     ),
-                'style_name' => $style,
+                'style_name' => is_array($style)?  $style_name:$style,
                 
                 'wkt' => $row['wkt'],
             );
