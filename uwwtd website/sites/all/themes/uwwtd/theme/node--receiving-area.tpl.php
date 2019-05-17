@@ -375,18 +375,20 @@ echo uwwtd_insert_errors_tab($node);
                     $p_dis = $node->field_rcapdischargedcalculated[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rcapdischargedcalculated']);
 	            }
-                elseif (!empty($node->field_rcandischargedestimated) && $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'] > 0) {
-                    $p_dis = $node->field_rcandischargedestimated[LANGUAGE_NONE][0]['value'];
-	            	print render($content['field_rcandischargedestimated']);
+                elseif (!empty($node->field_rcapdischargedestimated) && $node->field_rcapdischargedestimated[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rcapdischargedestimated[LANGUAGE_NONE][0]['value'];
+	            	print render($content['field_rcapdischargedestimated']);
 	            }
-	            elseif (!empty($node->field_rca_total_p_entering) && $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'] > 0) {
-                    $p_dis = $node->field_rca_total_p_entering[LANGUAGE_NONE][0]['value'];
+	            elseif (!empty($node->field_rca_total_p_discharged) && $node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value'] > 0) {
+                    $p_dis = $node->field_rca_total_p_discharged[LANGUAGE_NONE][0]['value'];
 	            	print render($content['field_rca_total_p_discharged']);
 	            }
-                print '<strong>'. t('Total Phosphorus removal (t/year):').'</strong> '. ($p_inc-$p_dis).'<br/>';
+                print '<strong>'. t('Total Phosphorus removal (t/year):').'</strong> '. ($p_inc - $p_dis).'<br/>';
                 if($p_inc > 0 ) {
-                    $rate = 100 * ($p_inc-$p_dis)/$p_inc;
-                    print '<strong>'. t('Rate of Phosphorus removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+                    $rate = 100 * ($p_inc - $p_dis)/$p_inc;
+                    $compliance = 'c';
+                    if($rate<75) $compliance = 'nc';
+                    print '<strong>'. t('Rate of Phosphorus removal (t/year):'). '</strong> <span class="'.$compliance.'">'. number_format($rate, 2, ',', ' ') .'% </span><br/>';
                 }
                 
                 //================N
@@ -426,7 +428,9 @@ echo uwwtd_insert_errors_tab($node);
                 print '<strong>'. t('Total Nitrogen removal (t/year):').'</strong> '. ($n_inc-$n_dis).'<br/>';
                 if($n_inc > 0 ) {
                     $rate = 100 * ($n_inc-$n_dis)/$n_inc;
-                    print '<strong>'. t('Rate of Nitrogen removal (t/year):'). '</strong> '. number_format($rate, 2, ',', ' ') .'% <br/>';
+                    $compliance = 'c';
+                    if($rate<75) $compliance = 'nc';
+                    print '<strong>'. t('Rate of Nitrogen removal (t/year):'). '</strong> <span class="'.$compliance.'">'. number_format($rate, 2, ',', ' ') .'% </span><br/>';
                 }
                 ?>
 	          </div>
