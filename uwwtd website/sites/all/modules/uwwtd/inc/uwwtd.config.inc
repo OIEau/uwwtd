@@ -432,7 +432,6 @@ $GLOBALS['uwwtd']['ui']['field']['dcp'] = array(
     'rcacat_format'=>array('label'=>t('Type of receiving area')),
     'field_dcpirrigation_value'=>array('label'=>t('Type of reuse')),
      'field_uwwwastewatertreated_value'=>array('label'=>t('Volume (m3/y)')),
-    
 );
 
 $GLOBALS['uwwtd']['ui']['compliance_connection'] = array(
