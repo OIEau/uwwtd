@@ -2516,7 +2516,8 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
             $emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
             uwwtd_set_warning(0, $emes);
             //In this case we have to search if a node with the code already exist
-            if($nid = uwwtd_check_exist($siteId, 'field_art17uwwtp_uwwcode')){
+            //FIX ME : the risk is to load an entity with the bad year
+            if($nid = uwwtd_check_exist($siteId, 'field_art17uwwtp_uwwcode', 'field_anneedata', $annee)){
                 $art = node_load($nid);
                 $art->title = $art17_title;
             }else{
@@ -2720,7 +2721,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
             $emes = t('WARNING : the element ').': '.$siteId.' '.t('does not correspond to any identifier in the database.');
             uwwtd_set_warning(0, $emes);
             //In this case we have to search if a node with the code already exist
-            if($nid = uwwtd_check_exist($siteId, 'field_art17agg_aggcode')){
+            if($nid = uwwtd_check_exist($siteId, 'field_art17agg_aggcode', 'field_anneedata', $annee)){
                 $art = node_load($nid);
                 $art->title = $art17_title;
             }else{
