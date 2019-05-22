@@ -425,17 +425,17 @@ function uwwtd_get_filemanaged($fid){
 /**
  *
  */
-function uwwtd_check_exist($siteId){
+function uwwtd_check_exist($siteId, $field = 'field_siteid'){
 
 	$id = '';
     if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
         $siteIds=[$siteId];
         $siteIds[]=str_replace('_EL', '_GR',$siteId);
         $siteIds[]=str_replace('_GR', '_EL',$siteId);
-        $results = db_query("SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value IN ('". implode("','",$siteIds) ."')");
+        $results = db_query("SELECT c.entity_id, c.".$field."_value FROM {field_data_".$field."} c WHERE c.".$field."_value IN ('". implode("','",$siteIds) ."')");
     }
     else{
-        $results = db_query('SELECT c.entity_id, c.field_siteid_value FROM {field_data_field_siteid} c WHERE c.field_siteid_value = :id', array(':id' => $siteId));
+        $results = db_query('SELECT c.entity_id, c.'.$field.'_value FROM {field_data_'.$field.'} c WHERE c.'.$field.'_value = :id', array(':id' => $siteId));
     }
 	
 
