@@ -2500,9 +2500,16 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
         if ($exists != false) {
             $element = node_load($exists);
             $art17_title = $element->field_siteid['und'][0]['value'] .' - Article 17 data '.$annee;
-
+            
+            //In some case, the related node can have been deleted, so we have to test 
             if (isset($element->field_article17_uwwtp['und'][0]['nid']) && ($element->field_article17_uwwtp['und'][0]['nid']!= "" || $element->field_article17_uwwtp['und'][0]['nid']!= NULL)) {
                 $art = node_load($element->field_article17_uwwtp['und'][0]['nid']);
+                if(!$art){
+                    // Create new article 17 node
+                    $art = new StdClass();
+                    $art->type = 'article_17_uwwtp';
+                    $art->title = $art17_title;
+                }
             } else {
                 // Create new article 17 node
                 $art = new StdClass();
@@ -2708,6 +2715,12 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
             
             if (isset($element->field_article17_agglo['und'][0]['nid']) && $element->field_article17_agglo['und'][0]['nid']!= "") {
                 $art = node_load($element->field_article17_agglo['und'][0]['nid']);
+                if(!$art){
+                    // Create new article 17 node
+                    $art = new StdClass();
+                    $art->type = 'article_17_agglomeration';
+                    $art->title = $art17_title;
+                }
             } else {
                 // Create new article 17 node
                 $art = new StdClass();
