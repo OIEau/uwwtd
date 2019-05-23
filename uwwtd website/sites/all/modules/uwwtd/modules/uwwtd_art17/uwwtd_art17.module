@@ -1323,28 +1323,28 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
                 } else {                
-                    $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
+                    if($field_art17_flatpexpecdatestart!='0000-00-00') $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdatestartw, $message );
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
                 } else {                 
-                    $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
+                    if($field_art17_flatpexpecdatestartw!='0000-00-00') $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdatecomple, $message );
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
                 } else {                 
-                    $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
+                    if($field_art17_flatpexpecdatecomple!='0000-00-00') $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
                 }
                 
                 $check = uwwtd_check_date($field_art17_flatpexpecdateperfor, $message  );
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp, $line);    
                 } else {                 
-                    $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
+                    if($field_art17_flatpexpecdateperfor!='0000-00-00') $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
                 }
                 
                 //fix nd@oieau.fr : 04/10/2018 : 10th report use a float value
@@ -2561,28 +2561,28 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
         } else {                
-            $art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;
+            if($field_art17_flatpexpecdatestart!='0000-00-00') {$art->field_art17_flatpexpecdatestart['und'][0]['value'] = $check;}
         }
         
         $check = uwwtd_check_date($field_art17_flatpexpecdatestartw, $message );
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
         } else {                 
-            $art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;
+            if($field_art17_flatpexpecdatestartw!='0000-00-00') {$art->field_art17_flatpexpecdatestartw['und'][0]['value'] = $check;}
         }
         
         $check = uwwtd_check_date($field_art17_flatpexpecdatecomple, $message );
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
         } else {                 
-            $art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;
+            if($field_art17_flatpexpecdatecomple!='0000-00-00') {$art->field_art17_flatpexpecdatecomple['und'][0]['value'] = $check;}
         }
         
         $check = uwwtd_check_date($field_art17_flatpexpecdateperfor, $message  );
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $message, $timestamp);    
         } else {                 
-            $art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;
+            if($field_art17_flatpexpecdateperfor!='0000-00-00') {$art->field_art17_flatpexpecdateperfor['und'][0]['value'] = $check;}
         }
         
         $check = uwwtd_check_decimal($field_art17_flatpinv );
