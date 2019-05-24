@@ -2154,7 +2154,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
    
 
     if($data_format ==  '9th-report'){
-/*
+
         // Processing agglomerations
         $import = [];
         if(isset($datas['FLAAgglomerations']['FLAAgglomeration']['flarepCode'])){
@@ -2185,7 +2185,7 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
             $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
             $context['sandbox']['progress']++;
         }
-*/
+
         // Processing investments
         if(isset($datas['FLAInvestments']['FLAInvestment']['flarepCode'])){
             $import[0] = $datas['FLAInvestments']['FLAInvestment'] ;
