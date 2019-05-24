@@ -2154,8 +2154,17 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
    
 
     if($data_format ==  '9th-report'){
+/*
         // Processing agglomerations
-        foreach ($datas['FLAAgglomerations']['FLAAgglomeration'] as $agglomeration) {
+        $import = [];
+        if(isset($datas['FLAAgglomerations']['FLAAgglomeration']['flarepCode'])){
+            $import[0] = $datas['FLAAgglomerations']['FLAAgglomeration'];
+        }else{
+            $import = $datas['FLAAgglomerations']['FLAAgglomeration'];
+        }
+        
+        foreach ($import as $agglomeration) {
+            
             uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee);
 
             $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for agglomerations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
@@ -2163,15 +2172,28 @@ function uwwtd_art17_import_article17_9th($newFile, $annee, &$context){
         }
 
         // Processing stations
-        foreach ($datas['FLAUWWTPs']['FLAUWWTP'] as $uwwtp) {
+        $import = [];
+        if(isset($datas['FLAUWWTPs']['FLAUWWTP']['flarepCode'])){
+            $import[0] = $datas['FLAUWWTPs']['FLAUWWTP'];
+        }else{
+            $import = $datas['FLAUWWTPs']['FLAUWWTP'];
+        }
+        
+        foreach ($import as $uwwtp) {
             uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee);
 
             $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for stations ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
             $context['sandbox']['progress']++;
         }
-
+*/
         // Processing investments
-        foreach ($datas['FLAInvestments']['FLAInvestment'] as $investment) {
+        if(isset($datas['FLAInvestments']['FLAInvestment']['flarepCode'])){
+            $import[0] = $datas['FLAInvestments']['FLAInvestment'] ;
+        }else{
+            $import = $datas['FLAInvestments']['FLAInvestment'] ;
+        }
+        
+        foreach ($import as $investment) {
             uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee);
             
             $context['message'] = '(' .$annee . ') ' . t('Processing Article 17 for investments ...' . $context['sandbox']['progress'] .'/'. $context['sandbox']['max']);
