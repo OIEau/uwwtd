@@ -10634,150 +10634,158 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             
 
             //'Incoming loads BOD-tot  t/y',       field_uwwbodincoming
-            if (isset($uwwtp->field_uwwbodincoming['und'][0]['value'])) {
-                $line[$ind['Incoming loads BOD-tot  t/y']] = $uwwtp->field_uwwbodincoming['und'][0]['value'];
+            $bodincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
+            if ($bodincoming > 0) {
+                $line[$ind['Incoming loads BOD-tot  t/y']] = $bodincoming;
                 $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
             } else {
                 $line[$ind['Incoming loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge
-            if (isset($uwwtp->field_uwwboddischarge['und'][0]['value'])) {
-                $line[$ind['Discharged loads BOD-tot  t/y']] = $uwwtp->field_uwwboddischarge['und'][0]['value'];
+            $boddischarge = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwboddischarge',  'field_uwwboddischargecalculated', 'field_uwwboddischargeestimated'], -1);
+            if ($bodincoming > 0) {
+                $line[$ind['Discharged loads BOD-tot  t/y']] = $boddischarge;
                 $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
             } else {
                 $line[$ind['Discharged loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'BOD rate of removal %',      round(((1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100), 2)
-            if ($uwwtp->field_uwwboddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwbodincoming['und'][0]['value'] > 0) {
-                $line[$ind['BOD rate of removal %']] = (1- ($uwwtp->field_uwwboddischarge['und'][0]['value'] / $uwwtp->field_uwwbodincoming['und'][0]['value']))*100;
+            if ($bodincoming > 0 && $boddischarge > 0) {
+                $line[$ind['BOD rate of removal %']] = (1- ($boddischarge / $bodincoming))*100;
             } else {
                 $line[$ind['BOD rate of removal %']] = '';
             }
 
             //'average Incoming concentration BOD mg/l', ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Incoming concentration BOD mg/l']] = ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($bodincoming >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration BOD mg/l']] = ($bodincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration BOD mg/l']] = '';
             }
 
             //'average Discharge concentration BOD mg/l', ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Discharge concentration BOD mg/l']] = ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($boddischarge > 0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration BOD mg/l']] = ($boddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration BOD mg/l']] = '';
             }
 
             //'Incoming cocentration COD-tot   t/y',   field_uwwcodincoming
-            if (isset($uwwtp->field_uwwcodincoming['und'][0]['value'])) {
-                $line[$ind['Incoming cocentration COD-tot   t/y']] = $uwwtp->field_uwwcodincoming['und'][0]['value'];
+            $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
+            if ( $codincoming > -1) {
+                $line[$ind['Incoming cocentration COD-tot   t/y']] =  $codincoming;
                 $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming cocentration COD-tot   t/y']];
             } else {
                 $line[$ind['Incoming cocentration COD-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration COD-tot  t/y',    field_uwwcoddischarge
-            if (isset($uwwtp->field_uwwcoddischarge['und'][0]['value'])) {
-                $line[$ind['Discharged concentration COD-tot  t/y']] = $uwwtp->field_uwwcoddischarge['und'][0]['value'];
+            $coddischarge = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwcoddischarge',  'field_uwwcoddischargecalculated', 'field_uwwcoddischargeestimated'], -1);
+            if ( $coddischarge > -1) {
+                $line[$ind['Discharged concentration COD-tot  t/y']] = $coddischarge;
                 $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
             } else {
                 $line[$ind['Discharged concentration COD-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'COD rate of removal %',   round(( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100), 2) . '%'
-            if (isset($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE]) && isset($uwwtp->field_uwwcodincoming[LANGUAGE_NONE]) && $uwwtp->field_uwwcoddischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwcodincoming['und'][0]['value'] > 0) {
-                $line[$ind['COD rate of removal %']] =  ( (1-($uwwtp->field_uwwcoddischarge['und'][0]['value'] / $uwwtp->field_uwwcodincoming['und'][0]['value'])) *100);
+            if ($coddischarge > 0 && $codincoming > 0) {
+                $line[$ind['COD rate of removal %']] =  ( (1-($coddischarge / $codincoming)) *100);
             } else {
                 $line[$ind['COD rate of removal %']] = '';
             }
 
             //'average Incoming concentration COD mg/l',  ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Incoming concentration COD mg/l']] = ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($codincoming >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration COD mg/l']] = ($codincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration COD mg/l']] = '';
             }
 
             //'average Discharge concentration COD mg/l',  ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Discharge concentration COD mg/l']] = ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($coddischarge >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration COD mg/l']] = ($coddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration COD mg/l']] = '';
             }
 
             //'Incoming loads N-tot   t/y',   field_uwwnincoming
-            if (isset($uwwtp->field_uwwnincoming['und'][0]['value'])) {
-                $line[$ind['Incoming loads N-tot   t/y']] = $uwwtp->field_uwwnincoming['und'][0]['value'];
+            $nincoming = uwwtd_get_multiple_field_value($node, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], -1);
+            if ($nincoming>0) {
+                $line[$ind['Incoming loads N-tot   t/y']] = $nincoming;
                 $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
             } else {
                 $line[$ind['Incoming loads N-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
             //'Discharged loads N-tot  t/y',   field_uwwndischarge
-            if (isset($uwwtp->field_uwwndischarge['und'][0]['value'])) {
-                $line[$ind['Discharged loads N-tot  t/y']] = $uwwtp->field_uwwndischarge['und'][0]['value'];
+            $ndischarge = uwwtd_get_multiple_field_value($node, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], -1);
+            if ($ndischarge >0) {
+                $line[$ind['Discharged loads N-tot  t/y']] = $ndischarge ;
                 $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
             } else {
                 $line[$ind['Discharged loads N-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'N rate of removal %',   round(( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100), 2) . '%'
-            if ($uwwtp->field_uwwndischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwnincoming['und'][0]['value'] > 0) {
-                $line[$ind['N rate of removal %']] = ( (1- ($uwwtp->field_uwwndischarge['und'][0]['value'] / $uwwtp->field_uwwnincoming['und'][0]['value'])) *100);
+            if ($ndischarge  > 0 && $nincoming > 0) {
+                $line[$ind['N rate of removal %']] = ( 1- ($ndischarge  / $nincoming) *100);
             } else {
                 $line[$ind['N rate of removal %']] = '';
             }
 
 
             //'average Incoming concentration N mg/l',         ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Incoming concentration N mg/l']] = ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($nincoming>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration N mg/l']] = ($nincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration N mg/l']] = '';
             }
 
             //'average Discharge concentration N mg/l',    ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Discharge concentration N mg/l']] = ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($ndischarge >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Discharge concentration N mg/l']] = ($ndischarge  / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration N mg/l']] = '';
             }
 
             //'Incoming cocentration P-tot   t/y',    field_uwwpincoming
-            if (isset($uwwtp->field_uwwpincoming['und'][0]['value'])) {
-                $line[$ind['Incoming cocentration P-tot   t/y']] = $uwwtp->field_uwwpincoming['und'][0]['value'];
+            $pincoming = uwwtd_get_multiple_field_value($node, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], -1);
+            if ($pincoming>0) {
+                $line[$ind['Incoming cocentration P-tot   t/y']] = $pincoming;
                 $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming cocentration P-tot   t/y']];
             } else {
                 $line[$ind['Incoming cocentration P-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration P-tot  t/y',    field_uwwpdischarge
-            if (isset($uwwtp->field_uwwpdischarge['und'][0]['value'])) {
-                $line[$ind['Discharged concentration P-tot  t/y']] = $uwwtp->field_uwwpdischarge['und'][0]['value'];
+            $pdischarge = uwwtd_get_multiple_field_value($node, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], -1);
+            if ($pdischarge>0) {
+                $line[$ind['Discharged concentration P-tot  t/y']] = $pdischarge;
                 $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
             } else {
                 $line[$ind['Discharged concentration P-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'P rate of removal %',   round(( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100), 2) . '%'
-            if ($uwwtp->field_uwwpdischarge['und'][0]['value'] > 0 && $uwwtp->field_uwwpincoming['und'][0]['value'] > 0) {
-                $line[$ind['P rate of removal %']] = ( (1-($uwwtp->field_uwwpdischarge['und'][0]['value'] / $uwwtp->field_uwwpincoming['und'][0]['value'])) *100);
+            if ($pdischarge > 0 && $pincoming > 0) {
+                $line[$ind['P rate of removal %']] = ( (1-($pdischarge / $pincoming)) *100);
             } else {
                 $line[$ind['P rate of removal %']] = '';
             }
 
 
             //'average Incoming concentration P mg/l',  ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
-                $line[$ind['average Incoming concentration P mg/l']] = ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($pincoming>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
+                $line[$ind['average Incoming concentration P mg/l']] = ($pincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration P mg/l']] = '';
             }
 
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
-            if (isset($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0) {
-                $line[$ind['average Discharge concentration P mg/l']] = ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+            if ($pdischarge>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0) {
+                $line[$ind['average Discharge concentration P mg/l']] = ($pdischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration P mg/l']] = '';
             }
