@@ -625,9 +625,9 @@ function uwwtd_get_data_sensitive_areas($option){
             $row['area_format'] =  ($row['area']?uwwtd_format_number($row['area']/1000000).' km²':'-');
             $data[] = $row;
         }
-		if($putincache){
+		//if($putincache){
 			cache_set($cache_name, $data, 'cache', CACHE_PERMANENT);
-		}
+		//}
         
     }catch(Exception $e) {
         dsm($e->getMessage());
@@ -2188,7 +2188,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if (false && UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -2217,7 +2217,6 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     uwwtd_filter_data($filter, $data, $filter_force);        
 
     uwwtd_sort_data($filter, $GLOBALS['uwwtd']['ui']['field']['rca'], $data);
-//     dsm($data);
 
     $optionstyle = array();
     //get the color for the point
@@ -2337,8 +2336,15 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     foreach($style_names as $sn){
         $key = strtoupper(substr($sn, 4, strlen($sn)));
         $styles[$sn] = $GLOBALS['uwwtd_value']['rcatype_color'][$key];
-        if($key !='UWWCMSA_A54') {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels'][$key];}
-        else {$styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels']['UWWCMSA'].' (Art 5.4)';}
+        if($key =='UWWCMSA_A54') {
+            $styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels']['UWWCMSA'].' (Art 5.4)';            
+        }
+        elseif($key =='UWWCASA_A54') {
+            $styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels']['UWWCASA'].' (Art 5.4)';            
+        }
+        else {
+            $styles[$sn]['title'] = $GLOBALS['uwwtd_value']['rcatype_labels'][$key];
+        }
         $styles[$sn]['key'] = $key;
     }
     //$map; 
