@@ -199,6 +199,18 @@ $GLOBALS['uwwtd_value']['rcatype_color']=array(
       'graphicOpacity' => 1,
       'labelAlign' => 'cm',
     ),
+    'UWWCASA_A54'=>array(
+      'pointRadius' => 6,
+      'fillColor' => "#191970",
+      'strokeColor' => "#bdb76b",
+      'strokeWidth' => 1,
+      'fillOpacity' => 0.6,
+      'strokeOpacity' => 0.8,
+      'strokeLinecap' => 'round',
+      'strokeDashstyle' => 'solid',
+      'graphicOpacity' => 1,
+      'labelAlign' => 'cm',
+    ),
     'UWWCLSA'=>array(
       'pointRadius' => 6,
       'fillColor' => "#ff00ff",

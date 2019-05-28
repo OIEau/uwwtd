@@ -2051,6 +2051,8 @@ function uwwtd_piechart_agglonode($node, &$content) {
     ";
 }
 
+
+
 function uwwtd_stackedbar_uwwtpnode($node) {
   //dsm($node);
   //drupal_add_js('sites/all/libraries/d3/d3.v3.min.js');
@@ -2067,27 +2069,26 @@ function uwwtd_stackedbar_uwwtpnode($node) {
   $aData = array();
   $aData[] = array(
     'BOD',
-    (float) (isset($node->field_uwwbodincoming['und'][0]['value']) ? $node->field_uwwbodincoming['und'][0]['value'] : 0),
-    (float) (isset($node->field_uwwboddischarge['und'][0]['value']) ? $node->field_uwwboddischarge['und'][0]['value'] : 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwboddischarge', 'field_uwwboddischargecalculated', 'field_uwwboddischargeestimated'], 0),
   );
   $aData[] = array(
     'COD',
-    (float) (isset($node->field_uwwcodincoming['und'][0]['value']) ? $node->field_uwwcodincoming['und'][0]['value'] : 0),
-    (float) (isset($node->field_uwwcoddischarge['und'][0]['value']) ? $node->field_uwwcoddischarge['und'][0]['value'] : 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwcodincoming',  'field_uwwcodincomingcalculated', 'field_uwwcodincomingestimated'], 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwcoddischarge', 'field_uwwcoddischargecalculated', 'field_uwwcoddischargeestimated'], 0),
   );
   $aData[] = array(
     'N',
-    (float) (isset($node->field_uwwnincoming['und'][0]['value']) ? $node->field_uwwnincoming['und'][0]['value'] : 0),
-    (float) (isset($node->field_uwwndischarge['und'][0]['value']) ? $node->field_uwwndischarge['und'][0]['value'] : 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], 0),
   );
   $aData[] = array(
     'P',
-    (float) (isset($node->field_uwwpincoming['und'][0]['value']) ? $node->field_uwwpincoming['und'][0]['value'] : 0),
-    (float) (isset($node->field_uwwpdischarge['und'][0]['value']) ? $node->field_uwwpdischarge['und'][0]['value'] : 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], 0),
+    (float) uwwtd_get_multiple_field_value($node, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], 0),
   );
   //$aColor['domain'] = array ('incoming', 'discharged');
   //$aColor['range'] = array ('#74FFE0', '#C00000');
-
   $chart = array(
     'id' => 'uwwtp_ent_dis_chart',
     'type' => 'ColumnChart',
