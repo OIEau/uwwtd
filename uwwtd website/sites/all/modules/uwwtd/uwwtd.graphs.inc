@@ -782,7 +782,8 @@ function getRow6Graph1And2($results) {
 	$graph2Front = array();
 	$graph2Back = '';
 	$graph2Rows = $results;
-    $sum =0;
+    $sum_in =0;
+    $sum_out =0;
     
 	if (!empty($results)) {
 		foreach ($results as $rowName => $row) {
@@ -805,8 +806,11 @@ function getRow6Graph1And2($results) {
                                 'Discharged'=>isset($element['out']['q'])?$element['out']['q']:$element['out']
                             );
 
-                            if(isset($element['in']['q'])) $sum+=$element['in']['q'];
-                            else $sum+=$element['in'];
+                            if(isset($element['in']['q'])) $sum_in+=$element['in']['q'];
+                            else $sum_in+=$element['in'];
+                             if(isset($element['out']['q'])) $sum_in+=$element['out']['q'];
+                            else $sum_in+=$element['out'];
+                            
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
                                 'Entering'=>isset($element['in']['c'])?$element['in']['c']:round(($element['in']/$element['vol']) , 3),
@@ -821,7 +825,7 @@ function getRow6Graph1And2($results) {
 			}
 		}
 	}
-    if($sum==0) return false;
+    if($sum_in==0 && $sum_out==0) return false;
     
     $colors=array(
         'Entering'=>'#5B3349', 
