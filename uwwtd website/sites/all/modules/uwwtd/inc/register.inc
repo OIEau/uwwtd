@@ -9345,7 +9345,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['BOD rate of removal %'] => 'BOD rate of removal %',
             $ind['average Incoming concentration BOD mg/l'] => 'average Incoming concentration BOD mg/l',
             $ind['average Discharge concentration BOD mg/l'] => 'average Discharge concentration BOD mg/l',
-            $ind['Incoming cocentration COD-tot   t/y'] => 'Incoming cocentration COD-tot   t/y',
+            $ind['Incoming concentration COD-tot   t/y'] => 'Incoming concentration COD-tot   t/y',
             $ind['Discharged concentration COD-tot  t/y'] => 'Discharged concentration COD-tot  t/y',
             $ind['COD rate of removal %'] => 'COD rate of removal %',
             $ind['average Incoming concentration COD mg/l'] => 'average Incoming concentration COD mg/l',
@@ -9355,7 +9355,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['N rate of removal %'] => 'N rate of removal %',
             $ind['average Incoming concentration N mg/l'] => 'average Incoming concentration N mg/l',
             $ind['average Discharge concentration N mg/l'] => 'average Discharge concentration N mg/l',
-            $ind['Incoming cocentration P-tot   t/y'] => 'Incoming cocentration P-tot   t/y',
+            $ind['Incoming concentration P-tot   t/y'] => 'Incoming concentration P-tot   t/y',
             $ind['Discharged concentration P-tot  t/y'] => 'Discharged concentration P-tot  t/y',
             $ind['P rate of removal %'] => 'P rate of removal %',
             $ind['average Incoming concentration P mg/l'] => 'average Incoming concentration P mg/l',
@@ -10644,7 +10644,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //'Discharged loads BOD-tot  t/y',    field_uwwboddischarge
             $boddischarge = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwboddischarge',  'field_uwwboddischargecalculated', 'field_uwwboddischargeestimated'], -1);
-            if ($bodincoming > 0) {
+            if ($boddischarge > 0) {
                 $line[$ind['Discharged loads BOD-tot  t/y']] = $boddischarge;
                 $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
             } else {
@@ -10672,13 +10672,13 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['average Discharge concentration BOD mg/l']] = '';
             }
 
-            //'Incoming cocentration COD-tot   t/y',   field_uwwcodincoming
+            //'Incoming concentration COD-tot   t/y',   field_uwwcodincoming
             $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
             if ( $codincoming > -1) {
-                $line[$ind['Incoming cocentration COD-tot   t/y']] =  $codincoming;
-                $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming cocentration COD-tot   t/y']];
+                $line[$ind['Incoming concentration COD-tot   t/y']] =  $codincoming;
+                $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming concentration COD-tot   t/y']];
             } else {
-                $line[$ind['Incoming cocentration COD-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+                $line[$ind['Incoming concentration COD-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration COD-tot  t/y',    field_uwwcoddischarge
@@ -10712,7 +10712,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'Incoming loads N-tot   t/y',   field_uwwnincoming
-            $nincoming = uwwtd_get_multiple_field_value($node, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], -1);
+            $nincoming = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], -1);
             if ($nincoming>0) {
                 $line[$ind['Incoming loads N-tot   t/y']] = $nincoming;
                 $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
@@ -10720,7 +10720,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['Incoming loads N-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
             //'Discharged loads N-tot  t/y',   field_uwwndischarge
-            $ndischarge = uwwtd_get_multiple_field_value($node, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], -1);
+            $ndischarge = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], -1);
             if ($ndischarge >0) {
                 $line[$ind['Discharged loads N-tot  t/y']] = $ndischarge ;
                 $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
@@ -10750,17 +10750,17 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['average Discharge concentration N mg/l']] = '';
             }
 
-            //'Incoming cocentration P-tot   t/y',    field_uwwpincoming
-            $pincoming = uwwtd_get_multiple_field_value($node, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], -1);
+            //'Incoming concentration P-tot   t/y',    field_uwwpincoming
+            $pincoming = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], -1);
             if ($pincoming>0) {
-                $line[$ind['Incoming cocentration P-tot   t/y']] = $pincoming;
-                $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming cocentration P-tot   t/y']];
+                $line[$ind['Incoming concentration P-tot   t/y']] = $pincoming;
+                $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming concentration P-tot   t/y']];
             } else {
-                $line[$ind['Incoming cocentration P-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+                $line[$ind['Incoming concentration P-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             }
 
             //'Discharged concentration P-tot  t/y',    field_uwwpdischarge
-            $pdischarge = uwwtd_get_multiple_field_value($node, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], -1);
+            $pdischarge = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], -1);
             if ($pdischarge>0) {
                 $line[$ind['Discharged concentration P-tot  t/y']] = $pdischarge;
                 $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
