@@ -635,133 +635,96 @@ function uwwtd_virtual_field_aggperiodover5_custom($node) {
  *
  */
 function uwwtd_vitual_get_info_stacked_bar($node) {
-
-  //BOD
-  if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $incomingLoadBod= round($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'],2);
-      $incomingBod = ($node->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultIncomingBod = round($incomingBod,2);
-    }
-  }
-
-  if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $dischargeLoadBod = round($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'],2);
-      $dischargeBod = ($node->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultDischargedBod = round($dischargeBod,2);
-    }
-  }
-
-  if(isset($node->field_uwwboddischarge['und'][0]['value']) && isset($node->field_uwwbodincoming['und'][0]['value']) && $node->field_uwwbodincoming['und'][0]['value']!=0){
-    $rateBod = round(((1- ($node->field_uwwboddischarge['und'][0]['value'] / $node->field_uwwbodincoming['und'][0]['value']))*100), 1) . '%';
-  }
-
-  //COD
-  if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $incomingLoadCod= round($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'],2);
-      $incomingCod = ($node->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultIncomingCod = round($incomingCod,2);
-    }
-  }
-
-  if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $dischargeLoadCod = round($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'],2);
-      $dischargeCod = ($node->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultDischargedCod = round($dischargeCod,2);
-    }
-  }
-
-  if(isset($node->field_uwwcoddischarge['und'][0]['value']) && isset($node->field_uwwcodincoming['und'][0]['value']) && $node->field_uwwcodincoming['und'][0]['value']!=0){
-    $rateCod = round(( (1-($node->field_uwwcoddischarge['und'][0]['value'] / $node->field_uwwcodincoming['und'][0]['value'])) *100), 1) . '%';
-  }
-
-  //Nitrogen
-  if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwnincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwnincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $incomingLoadN= round($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'],2);
-      $incomingN = ($node->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultIncomingN = round($incomingN,2);
-    }
-  }
-
-  if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwndischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwndischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $dischargeLoadN = round($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'],2);
-      $dischargeN = ($node->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultDischargedN = round($dischargeN,2);
-    }
-  }
-
-  if(isset($node->field_uwwndischarge['und'][0]['value']) && isset($node->field_uwwnincoming['und'][0]['value']) && $node->field_uwwnincoming['und'][0]['value']!=0){
-    $rateN =round(( (1- ($node->field_uwwndischarge['und'][0]['value'] / $node->field_uwwnincoming['und'][0]['value'])) *100), 1) . '%';
-  }
-
-  //Phosphorus
-  if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpincoming[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwpincoming[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $incomingLoadP= round($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'],2);
-      $incomingP = ($node->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultIncomingP = round($incomingP,2);
-    }
-  }
-
-  if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] != "" && $node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']!= "Not provided"){
-    if(isset($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])
-    {
-      $dischargeLoadP = round($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'],2);
-      $dischargeP = ($node->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
-      $resultDischargedP =  round($dischargeP,2);
-    }
-  }
-
-  if(isset($node->field_uwwpdischarge['und'][0]['value']) && isset($node->field_uwwpincoming['und'][0]['value']) && $node->field_uwwpincoming['und'][0]['value'] != 0){
-    $rateP = round(( (1-($node->field_uwwpdischarge['und'][0]['value'] / $node->field_uwwpincoming['und'][0]['value'])) *100), 1) . '%';
-  }
-
-
-
-  $data[$node->nid] = array( 
-    'incomingLoadBod' => isset($incomingLoadBod) ? $incomingLoadBod : null, //$incomingLoadBod  
-    'incomingBod' => isset($incomingBod) ? $incomingBod : null, //$incomingBod,
-    'resultIncomingBod' => isset($resultIncomingBod) ? $resultIncomingBod : null, //$resultIncomingBod,  
-    'dischargeLoadBod' => isset($dischargeLoadBod) ? $dischargeLoadBod : null, //$dischargeLoadBod,
-    'dischargeBod' => isset($dischargeBod) ? $dischargeBod : null, //$dischargeBod,  
-    'resultDischargedBod' => isset($resultDischargedBod) ? $resultDischargedBod : null, //$resultDischargedBod,
-    'rateBod' => isset($rateBod) ? $rateBod : null, //$rateBod,  
-    'incomingLoadCod' => isset($incomingLoadCod) ? $incomingLoadCod : null, //$incomingLoadCod,
-    'incomingCod' => isset($incomingCod) ? $incomingCod : null, //$incomingCod,  
-    'resultIncomingCod' => isset($resultIncomingCod) ? $resultIncomingCod : null, //$resultIncomingCod,
-    'dischargeLoadCod' => isset($dischargeLoadCod) ? $dischargeLoadCod : null, //$dischargeLoadCod,
-    'dischargeCod' => isset($dischargeCod) ? $dischargeCod : null, //$dischargeCod,
-    'resultDischargedCod' => isset($resultDischargedCod) ? $resultDischargedCod : null, //$resultDischargedCod,
-    'rateCod' => isset($rateCod) ? $rateCod : null, //$rateCod,
-    'incomingLoadN' => isset($incomingLoadN) ? $incomingLoadN : null, //$incomingLoadN,
-    'incomingN' => isset($incomingN) ? $incomingN : null, //$incomingN,
-    'resultIncomingN' => isset($resultIncomingN) ? $resultIncomingN : null, //$resultIncomingN,
-    'dischargeLoadN' => isset($dischargeLoadN) ? $dischargeLoadN : null, //$dischargeLoadN,
-    'dischargeN' => isset($dischargeN) ? $dischargeN : null, //$dischargeN,
-    'resultDischargedN' => isset($resultDischargedN) ? $resultDischargedN : null, //$resultDischargedN,
-    'rateN' => isset($rateN) ? $rateN : null, //,$rateN
-    'incomingLoadP' => isset($incomingLoadP) ? $incomingLoadP : null, //$incomingLoadP,
-    'incomingP' => isset($incomingP) ? $incomingP : null, //$incomingP,
-    'resultIncomingP' => isset($resultIncomingP) ? $resultIncomingP : null, //$resultIncomingP,
-    'dischargeLoadP' => isset($dischargeLoadP) ? $dischargeLoadP : null, //$dischargeLoadP,
-    'dischargeP' => isset($dischargeP) ? $dischargeP : null, //$dischargeP,
-    'resultDischargedP' => isset($resultDischargedP) ? $resultDischargedP : null, //$resultDischargedP,
-    'rateP' => isset($rateP) ? $rateP : null, //$rateP,
+    $data = array( 
+    'incomingLoadBod' => (float) uwwtd_get_multiple_field_value($node, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1), 
+    'incomingBod' => null, //$incomingBod,
+    'resultIncomingBod' => null, //$resultIncomingBod,  
+    'dischargeLoadBod' =>   (float) uwwtd_get_multiple_field_value($node, ['field_uwwboddischarge', 'field_uwwboddischargecalculated', 'field_uwwboddischargeestimated'], -1), //$dischargeLoadBod,
+    'dischargeBod' => null, //$dischargeBod,  
+    'resultDischargedBod' =>  null, //$resultDischargedBod,
+    'rateBod' =>  null, //$rateBod,  
+    'incomingLoadCod' =>  (float) uwwtd_get_multiple_field_value($node, ['field_uwwcodincoming',  'field_uwwcodincomingcalculated', 'field_uwwcodincomingestimated'], -1), //$incomingLoadCod,
+    'incomingCod' =>  null, //$incomingCod,  
+    'resultIncomingCod' =>  null, //$resultIncomingCod,
+    'dischargeLoadCod' =>  (float) uwwtd_get_multiple_field_value($node, ['field_uwwcoddischarge', 'field_uwwcoddischargecalculated', 'field_uwwcoddischargeestimated'], -1), //$dischargeLoadCod,
+    'dischargeCod' =>  null, //$dischargeCod,
+    'resultDischargedCod' =>  null, //$resultDischargedCod,
+    'rateCod' => null, //$rateCod,
+    'incomingLoadN' => (float) uwwtd_get_multiple_field_value($node, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], -1), //$incomingLoadN,
+    'incomingN' => null, //$incomingN,
+    'resultIncomingN' => null, //$resultIncomingN,
+    'dischargeLoadN' =>  (float) uwwtd_get_multiple_field_value($node, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], -1), //$dischargeLoadN,
+    'dischargeN' =>  null, //$dischargeN,
+    'resultDischargedN' =>  null, //$resultDischargedN,
+    'rateN' =>  null, //,$rateN
+    'incomingLoadP' =>  (float) uwwtd_get_multiple_field_value($node, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], -1), //$incomingLoadP,
+    'incomingP' => null, //$incomingP,
+    'resultIncomingP' => null, //$resultIncomingP,
+    'dischargeLoadP' =>  (float) uwwtd_get_multiple_field_value($node, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], -1), //$dischargeLoadP,
+    'dischargeP' =>  null, //$dischargeP,
+    'resultDischargedP' =>  null, //$resultDischargedP,
+    'rateP' =>  null, //$rateP,
   );
-
-  return $data[$node->nid];
+  if(isset($node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']!='' && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0){
+      $v_treated = $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'];
+  }else{
+      $v_treated = false;
+  }
+  
+   if($data['incomingLoadBod']>0 && $v_treated){
+       $data['incomingBod'] = 1000000 * $data['incomingLoadBod'] / $v_treated;
+       $data['resultIncomingBod'] = round($data['incomingBod'],2);
+  }
+  if($data['incomingLoadCod']>0 && $v_treated){
+       $data['incomingCod'] = 1000000 * $data['incomingLoadCod'] / $v_treated;
+       $data['resultIncomingCod'] = round($data['incomingCod'],2);
+  }
+  if($data['incomingLoadN']>0 && $v_treated){
+       $data['incomingN'] = 1000000 * $data['incomingLoadN'] / $v_treated;
+       $data['resultIncomingN'] = round($data['incomingN'],2);
+  }
+  if($data['incomingLoadP']>0  && $v_treated){
+       $data['incomingP'] = 1000000 * $data['incomingLoadP'] / $v_treated;
+       $data['resultIncomingP'] = round($data['incomingP'],2);
+  }
+  if($data['dischargeLoadBod']>0 && $v_treated){
+       $data['dischargeBod'] = 1000000 * $data['dischargeLoadBod'] / $v_treated;
+       $data['resultDischargeBod'] = round($data['dischargeBod'],2);
+  }
+  if($data['dischargeLoadCod']>0 && $v_treated){
+       $data['dischargeCod'] = 1000000 * $data['dischargeLoadCod'] / $v_treated;
+       $data['resultDischargeCod'] = round($data['dischargeCod'],2);
+  }
+  if($data['dischargeLoadN']>0 && $v_treated){
+       $data['dischargeN'] = 1000000 * $data['dischargeLoadN'] / $v_treated;
+       $data['resultDischargeN'] = round($data['dischargeN'],2);
+  }
+  if($data['dischargeLoadP']>0 && $v_treated){
+       $data['dischargeP'] = 1000000 * $data['dischargeLoadP'] / $v_treated;
+       $data['resultDischargeP'] = round($data['dischargeP'],2);
+  }
+  
+  
+  
+  if($data['incomingLoadBod']>0 &&$data['dischargeLoadBod']>0 ){
+      $data['rateBod'] = round(($data['dischargeLoadBod']/$data['incomingLoadBod'])*100 , 1). '%';
+  }
+  if($data['incomingLoadCod']>0 &&$data['dischargeLoadCod']>0 ){
+      $data['rateCod'] = round(($data['dischargeLoadCod']/$data['incomingLoadCod'])*100 , 1). '%';
+  }
+  if($data['incomingLoadN']>0 &&$data['dischargeLoadN']>0 ){
+      $data['rateN'] = round(($data['dischargeLoadN']/$data['incomingLoadN'])*100 , 1). '%';
+  }
+  if($data['incomingLoadP']>0 &&$data['dischargeLoadP']>0 ){
+      $data['rateP'] = round(($data['dischargeLoadP']/$data['incomingLoadP'])*100 , 1). '%';
+  }
+  foreach($data as $k=>$v){
+      if($v == -1){
+          $data[$k] = null;
+      }
+  }
+  //dsm($data);
+  return $data;
 }
 
 
