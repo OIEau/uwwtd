@@ -545,16 +545,18 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	$data = array();
 	$param = array();
     //======= nd@oieau.fr ====================> In some case (like LT) values for BOD, N, COD, P are empty ==> should we exclude these line for the whole calculation ?
+    //field_uwwbodincomingcalculated
+    //field_uwwbodincomingestimated
 	$query = $with.'select
 		f_annee.field_anneedata_value as year,
-		SUM(f_uwwbodincoming.field_uwwbodincoming_value) AS bodin_sum,
-		SUM(f_uwwboddischarge.field_uwwboddischarge_value) AS bodout_sum,
-		SUM(f_uwwcodincoming.field_uwwcodincoming_value) AS codin_sum,
-		SUM(f_uwwcoddischarge.field_uwwcoddischarge_value) AS codout_sum,
-		SUM(f_uwwnincoming.field_uwwnincoming_value) AS nin_sum,
-		SUM(f_uwwndischarge.field_uwwndischarge_value) AS nout_sum,
-		SUM(f_uwwpincoming.field_uwwpincoming_value) AS pin_sum,
-		SUM(f_uwwpdischarge.field_uwwpdischarge_value) AS pout_sum,
+		SUM(COALESCE(field_uwwbodincoming_value,field_uwwbodincomingestimated_value,field_uwwbodincomingcalculated_value)) AS bodin_sum,
+		SUM(COALESCE(field_uwwboddischarge_value,field_uwwboddischargeestimated_value,field_uwwboddischargecalculated_value)) AS bodout_sum,
+		SUM(COALESCE(field_uwwcodincoming_value,field_uwwcodincomingestimated_value,field_uwwcodincomingcalculated_value)) AS codin_sum,
+		SUM(COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value)) AS codout_sum,
+		SUM(COALESCE(field_uwwnincoming_value,field_uwwnincomingestimated_value,field_uwwnincomingcalculated_value)) AS nin_sum,
+		SUM(COALESCE(field_uwwndischarge_value,field_uwwndischargeestimated_value,field_uwwndischargecalculated_value)) AS nout_sum,
+		SUM(COALESCE(field_uwwpincoming_value,field_uwwpincomingestimated_value,field_uwwpincomingcalculated_value)) AS pin_sum,
+		SUM(COALESCE(field_uwwpdischarge_value,field_uwwpdischargeestimated_value,field_uwwpdischargecalculated_value)) AS pout_sum,
 		SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value) AS uwwt_sum
     from {node} n
         join uwwtp_min_agg
@@ -563,77 +565,85 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
         left join
-            {field_data_field_inspireidlocalid} f_uwwcode
-                ON n.nid = f_uwwcode.entity_id
-        left join
-            {field_data_field_uwwprimarytreatment} f_primarytreatment
-                ON n.nid = f_primarytreatment.entity_id
-        left join
-            {field_data_field_uwwsecondarytreatment} f_secondarytreatment
-                ON n.nid = f_secondarytreatment.entity_id
-        left join
-            {field_data_field_uwwnremoval} f_nremoval
-                ON n.nid = f_nremoval.entity_id
-        left join
-            {field_data_field_uwwpremoval} f_premoval
-                ON n.nid = f_premoval.entity_id
-        left join
-            {field_data_field_uwwcompliance} f_comp
-                ON n.nid = f_comp.entity_id
-        left join
-            {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
-                ON n.nid = f_uwwloadenteringuwwtp.entity_id
-        left join
-            {field_data_field_regionnuts} f_regionnuts
-                ON n.nid = f_regionnuts.entity_id
-        left join
-            {field_data_field_uwwbod5perf} f_uwwbod5perf
-                ON n.nid = f_uwwbod5perf.entity_id
-        left join
-            {field_data_field_uwwcodperf} f_uwwcodperf
-                ON n.nid = f_uwwcodperf.entity_id
-        left join
-            {field_data_field_uwwntotperf} f_uwwntotperf
-                ON n.nid = f_uwwntotperf.entity_id
-        left join
-            {field_data_field_uwwptotperf} f_uwwptotperf
-                ON n.nid = f_uwwptotperf.entity_id
-        left join
-            {field_data_field_uwwtreatmenttype} f_uwwtreatmenttype
-                ON n.nid = f_uwwtreatmenttype.entity_id
-        left join
-            {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
-                ON n.nid = f_physicalcapacityactivity.entity_id
-        left join
-            {field_data_field_uwwspecification} f_uwwspecification
-                ON n.nid = f_uwwspecification.entity_id
-        left join
             {field_data_field_uwwboddischarge} f_uwwboddischarge
                 ON n.nid = f_uwwboddischarge.entity_id
+        left join
+            {field_data_field_uwwboddischargeestimated} f_uwwboddischargeestimated
+                ON n.nid = f_uwwboddischargeestimated.entity_id
+        left join
+            {field_data_field_uwwboddischargecalculated} f_uwwboddischargecalculated
+                ON n.nid = f_uwwboddischargecalculated.entity_id
+                
         left join
             {field_data_field_uwwcoddischarge} f_uwwcoddischarge
                 ON n.nid = f_uwwcoddischarge.entity_id
         left join
+            {field_data_field_uwwcoddischargeestimated} f_uwwcoddischargeestimated
+                ON n.nid = f_uwwboddischargeestimated.entity_id
+        left join
+            {field_data_field_uwwcoddischargecalculated} f_uwwcoddischargecalculated
+                ON n.nid = f_uwwcoddischargecalculated.entity_id
+                
+        left join
             {field_data_field_uwwndischarge} f_uwwndischarge
                 ON n.nid = f_uwwndischarge.entity_id
         left join
+            {field_data_field_uwwndischargeestimated} f_uwwndischargeestimated
+                ON n.nid = f_uwwndischargeestimated.entity_id
+        left join
+            {field_data_field_uwwndischargecalculated} f_uwwndischargecalculated
+                ON n.nid = f_uwwndischargecalculated.entity_id
+                
+        left join
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
+         left join
+            {field_data_field_uwwpdischargeestimated} f_uwwpdischargeestimated
+                ON n.nid = f_uwwpdischargeestimated.entity_id
         left join
-            {field_data_field_position_geo} f_geo
-                ON n.nid = f_geo.entity_id
+            {field_data_field_uwwpdischargecalculated} f_uwwpdischargecalculated
+                ON n.nid = f_uwwpdischargecalculated.entity_id   
+                
 		 left join
             {field_data_field_uwwbodincoming} f_uwwbodincoming
                 ON n.nid = f_uwwbodincoming.entity_id
+         left join
+            {field_data_field_uwwbodincomingestimated} f_uwwbodincomingestimated
+                ON n.nid = f_uwwbodincomingestimated.entity_id
+         left join
+            {field_data_field_uwwbodincomingcalculated} f_uwwbodincomingcalculated
+                ON n.nid = f_uwwbodincomingcalculated.entity_id
+                
 		 left join
             {field_data_field_uwwcodincoming} f_uwwcodincoming
                 ON n.nid = f_uwwcodincoming.entity_id
+         left join
+            {field_data_field_uwwcodincomingestimated} f_uwwcodincomingestimated
+                ON n.nid = f_uwwcodincomingestimated.entity_id
+         left join
+            {field_data_field_uwwcodincomingcalculated} f_uwwcodincomingcalculated
+                ON n.nid = f_uwwcodincomingcalculated.entity_id
+                
 		 left join
             {field_data_field_uwwnincoming} f_uwwnincoming
                 ON n.nid = f_uwwnincoming.entity_id
+         left join
+            {field_data_field_uwwnincomingestimated} f_uwwnincomingestimated
+                ON n.nid = f_uwwnincomingestimated.entity_id
+         left join
+            {field_data_field_uwwnincomingcalculated} f_uwwnincomingcalculated
+                ON n.nid = f_uwwnincomingcalculated.entity_id
+                
 		 left join
             {field_data_field_uwwpincoming} f_uwwpincoming
                 ON n.nid = f_uwwpincoming.entity_id
+        left join
+            {field_data_field_uwwpincomingestimated} f_uwwpincomingestimated
+                ON n.nid = f_uwwpincomingestimated.entity_id
+         left join
+            {field_data_field_uwwpincomingcalculated} f_uwwpincomingcalculated
+                ON n.nid = f_uwwpincomingcalculated.entity_id
+                
 		left join
             {field_data_field_uwwwastewatertreated} f_uwwwastewatertreated
                 ON n.nid = f_uwwwastewatertreated.entity_id
