@@ -549,14 +549,14 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
     //field_uwwbodincomingestimated
 	$query = $with.'select
 		f_annee.field_anneedata_value as year,
-		SUM(COALESCE(field_uwwbodincoming_value,field_uwwbodincomingestimated_value,field_uwwbodincomingcalculated_value)) AS bodin_sum,
-		SUM(COALESCE(field_uwwboddischarge_value,field_uwwboddischargeestimated_value,field_uwwboddischargecalculated_value)) AS bodout_sum,
-		SUM(COALESCE(field_uwwcodincoming_value,field_uwwcodincomingestimated_value,field_uwwcodincomingcalculated_value)) AS codin_sum,
-		SUM(COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value)) AS codout_sum,
-		SUM(COALESCE(field_uwwnincoming_value,field_uwwnincomingestimated_value,field_uwwnincomingcalculated_value)) AS nin_sum,
-		SUM(COALESCE(field_uwwndischarge_value,field_uwwndischargeestimated_value,field_uwwndischargecalculated_value)) AS nout_sum,
-		SUM(COALESCE(field_uwwpincoming_value,field_uwwpincomingestimated_value,field_uwwpincomingcalculated_value)) AS pin_sum,
-		SUM(COALESCE(field_uwwpdischarge_value,field_uwwpdischargeestimated_value,field_uwwpdischargecalculated_value)) AS pout_sum,
+		SUM((field_uwwbodincoming_value + field_uwwbodincomingestimated_value + field_uwwbodincomingcalculated_value)) AS bodin_sum,
+		SUM((field_uwwboddischarge_value + field_uwwboddischargeestimated_value + field_uwwboddischargecalculated_value)) AS bodout_sum,
+		SUM((field_uwwcodincoming_value + field_uwwcodincomingestimated_value + field_uwwcodincomingcalculated_value)) AS codin_sum,
+		SUM((field_uwwcoddischarge_value + field_uwwcoddischargeestimated_value + field_uwwcoddischargecalculated_value)) AS codout_sum,
+		SUM((field_uwwnincoming_value + field_uwwnincomingestimated_value + field_uwwnincomingcalculated_value)) AS nin_sum,
+		SUM((field_uwwndischarge_value + field_uwwndischargeestimated_value + field_uwwndischargecalculated_value)) AS nout_sum,
+		SUM((field_uwwpincoming_value + field_uwwpincomingestimated_value + field_uwwpincomingcalculated_value)) AS pin_sum,
+		SUM((field_uwwpdischarge_value + field_uwwpdischargeestimated_value + field_uwwpdischargecalculated_value)) AS pout_sum,
 		SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value) AS uwwt_sum
     from {node} n
         join uwwtp_min_agg
