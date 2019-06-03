@@ -273,10 +273,10 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwtreatmenttype.field_uwwtreatmenttype_value,
 		f_physicalcapacityactivity.field_physicalcapacityactivity_value,
 		f_uwwspecification.field_uwwspecification_value,
-		f_uwwboddischarge.field_uwwboddischarge_value,
-		f_uwwcoddischarge.field_uwwcoddischarge_value,
-		f_uwwndischarge.field_uwwndischarge_value,
-		f_uwwpdischarge.field_uwwpdischarge_value,
+		COALESCE(field_uwwboddischarge_value,field_uwwboddischargeestimated_value,field_uwwboddischargecalculated_value) AS field_uwwboddischarge_value,
+		COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value) AS field_uwwcoddischarge_value,
+        COALESCE(field_uwwndischarge_value,field_uwwndischargeestimated_value,field_uwwndischargecalculated_value) AS field_uwwndischarge_value,
+        COALESCE(field_uwwpdischarge_value,field_uwwpdischargeestimated_value,field_uwwpdischargecalculated_value) AS field_uwwpdischarge_value,
         f_status.field_status_value,
 		st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
 		f_article17_uwwtp.field_article17_uwwtp_nid,
@@ -335,18 +335,45 @@ function uwwtd_get_data_uwwtp($option)
         LEFT join
             {field_data_field_uwwspecification} f_uwwspecification
                 ON n.nid = f_uwwspecification.entity_id
-        LEFT join
+        left join
             {field_data_field_uwwboddischarge} f_uwwboddischarge
                 ON n.nid = f_uwwboddischarge.entity_id
-        LEFT join
+        left join
+            {field_data_field_uwwboddischargeestimated} f_uwwboddischargeestimated
+                ON n.nid = f_uwwboddischargeestimated.entity_id
+        left join
+            {field_data_field_uwwboddischargecalculated} f_uwwboddischargecalculated
+                ON n.nid = f_uwwboddischargecalculated.entity_id
+                
+        left join
             {field_data_field_uwwcoddischarge} f_uwwcoddischarge
                 ON n.nid = f_uwwcoddischarge.entity_id
-        LEFT join
+        left join
+            {field_data_field_uwwcoddischargeestimated} f_uwwcoddischargeestimated
+                ON n.nid = f_uwwboddischargeestimated.entity_id
+        left join
+            {field_data_field_uwwcoddischargecalculated} f_uwwcoddischargecalculated
+                ON n.nid = f_uwwcoddischargecalculated.entity_id
+                
+        left join
             {field_data_field_uwwndischarge} f_uwwndischarge
                 ON n.nid = f_uwwndischarge.entity_id
-        LEFT join
+        left join
+            {field_data_field_uwwndischargeestimated} f_uwwndischargeestimated
+                ON n.nid = f_uwwndischargeestimated.entity_id
+        left join
+            {field_data_field_uwwndischargecalculated} f_uwwndischargecalculated
+                ON n.nid = f_uwwndischargecalculated.entity_id
+                
+        left join
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
+         left join
+            {field_data_field_uwwpdischargeestimated} f_uwwpdischargeestimated
+                ON n.nid = f_uwwpdischargeestimated.entity_id
+        left join
+            {field_data_field_uwwpdischargecalculated} f_uwwpdischargecalculated
+                ON n.nid = f_uwwpdischargecalculated.entity_id   
         LEFT join
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
@@ -1898,7 +1925,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
