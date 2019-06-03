@@ -665,7 +665,6 @@ function uwwtd_vitual_get_info_stacked_bar($node) {
     'resultDischargedP' =>  null, //$resultDischargedP,
     'rateP' =>  null, //$rateP,
   );
-  dsm($data);
   if(isset($node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']!='' && $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0){
       $v_treated = $node->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'];
   }else{
