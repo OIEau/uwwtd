@@ -689,34 +689,34 @@ function uwwtd_vitual_get_info_stacked_bar($node) {
   }
   if($data['dischargeLoadBod']>0 && $v_treated){
        $data['dischargeBod'] = 1000000 * $data['dischargeLoadBod'] / $v_treated;
-       $data['resultDischargeBod'] = round($data['dischargeBod'],2);
+       $data['resultDischargedBod'] = round($data['dischargeBod'],2);
   }
   if($data['dischargeLoadCod']>0 && $v_treated){
        $data['dischargeCod'] = 1000000 * $data['dischargeLoadCod'] / $v_treated;
-       $data['resultDischargeCod'] = round($data['dischargeCod'],2);
+       $data['resultDischargedCod'] = round($data['dischargeCod'],2);
   }
   if($data['dischargeLoadN']>0 && $v_treated){
        $data['dischargeN'] = 1000000 * $data['dischargeLoadN'] / $v_treated;
-       $data['resultDischargeN'] = round($data['dischargeN'],2);
+       $data['resultDischargedN'] = round($data['dischargeN'],2);
   }
   if($data['dischargeLoadP']>0 && $v_treated){
        $data['dischargeP'] = 1000000 * $data['dischargeLoadP'] / $v_treated;
-       $data['resultDischargeP'] = round($data['dischargeP'],2);
+       $data['resultDischargedP'] = round($data['dischargeP'],2);
   }
   
   
   
   if($data['incomingLoadBod']>0 &&$data['dischargeLoadBod']>0 ){
-      $data['rateBod'] = round(($data['dischargeLoadBod']/$data['incomingLoadBod'])*100 , 1). '%';
+      $data['rateBod'] = round((1-($data['dischargeLoadBod']/$data['incomingLoadBod']))*100 , 1). '%';
   }
   if($data['incomingLoadCod']>0 &&$data['dischargeLoadCod']>0 ){
-      $data['rateCod'] = round(($data['dischargeLoadCod']/$data['incomingLoadCod'])*100 , 1). '%';
+      $data['rateCod'] = round((1-($data['dischargeLoadCod']/$data['incomingLoadCod']))*100 , 1). '%';
   }
   if($data['incomingLoadN']>0 &&$data['dischargeLoadN']>0 ){
-      $data['rateN'] = round(($data['dischargeLoadN']/$data['incomingLoadN'])*100 , 1). '%';
+      $data['rateN'] = round((1-($data['dischargeLoadN']/$data['incomingLoadN']))*100 , 1). '%';
   }
   if($data['incomingLoadP']>0 &&$data['dischargeLoadP']>0 ){
-      $data['rateP'] = round(($data['dischargeLoadP']/$data['incomingLoadP'])*100 , 1). '%';
+      $data['rateP'] = round((1-($data['dischargeLoadP']/$data['incomingLoadP']))*100 , 1). '%';
   }
   foreach($data as $k=>$v){
       if($v == -1){
