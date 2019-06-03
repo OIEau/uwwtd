@@ -273,8 +273,8 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwtreatmenttype.field_uwwtreatmenttype_value,
 		f_physicalcapacityactivity.field_physicalcapacityactivity_value,
 		f_uwwspecification.field_uwwspecification_value,
-		COALESCE(field_uwwboddischarge_value + field_uwwboddischargeestimated_value+field_uwwboddischargecalculated_value) AS field_uwwboddischarge_value,
-		COALESCE(field_uwwcoddischarge_value + field_uwwcoddischargeestimated_value+field_uwwcoddischargecalculated_value) AS field_uwwcoddischarge_value,
+		COALESCE(field_uwwboddischarge_value,field_uwwboddischargeestimated_value,field_uwwboddischargecalculated_value) AS field_uwwboddischarge_value,
+		COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value) AS field_uwwcoddischarge_value,
         COALESCE(field_uwwndischarge_value,field_uwwndischargeestimated_value,field_uwwndischargecalculated_value) AS field_uwwndischarge_value,
         COALESCE(field_uwwpdischarge_value,field_uwwpdischargeestimated_value,field_uwwpdischargecalculated_value) AS field_uwwpdischarge_value,
         f_status.field_status_value,
@@ -1925,7 +1925,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
