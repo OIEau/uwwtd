@@ -226,7 +226,7 @@ function uwwtd_get_data_uwwtp($option)
     /*if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
 	}*/
-    if (false && $putincache && UWWTD_CACHE_ACTIVE === true) {
+    if ($putincache && UWWTD_CACHE_ACTIVE === true) {
         $cache = cache_get($cache_name, 'cache');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -1925,7 +1925,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 //     dsm($filter);
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (false && UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
