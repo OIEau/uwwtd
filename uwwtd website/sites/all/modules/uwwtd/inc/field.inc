@@ -805,7 +805,7 @@ function uwwtd_virtual_field_data_stackedbar($node) {
 	
     $output .= '</table>';
 
-    $output .= t('* Concentration calculated using the annual load and the annual volume of wastewater treated.');
+    $output .= '* '.t('Concentration calculated using the annual load and the annual volume of wastewater treated.');
 
   }
 
@@ -828,7 +828,7 @@ function uwwtd_virtual_field_stackedbar_uwwtpnode($node) {
      )
   {      
     $html .=   '<div class="flip-title">'.t("Incoming and discharged loads (t/year)").'</div>';
-    $html .=  '<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="See the data table" alt="See the data table"></div>';
+    $html .=  '<div class="flip-image"><img src="'.file_create_url(drupal_get_path('theme', 'uwwtd').'/images/corner-table-off.png').'" class="button-flipper chart-to-table" title="'.t('See the data table').'" alt="'.t('See the data table').'"></div>';
     $html .=   uwwtd_stackedbar_uwwtpnode($node);
   } 
   $html .=  '   </div> '; 

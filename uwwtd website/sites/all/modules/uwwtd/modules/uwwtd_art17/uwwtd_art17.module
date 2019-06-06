@@ -2698,7 +2698,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
     $field_art17_flaggmeasures = isset($agglomeration['flaggMeasures']) ? $agglomeration['flaggMeasures'] : null;
     $field_art17_flaggexpecdatestart = isset($agglomeration['flaggExpecDateStart']) ? $agglomeration['flaggExpecDateStart'] : null;
     $field_art17_flaggexpecdatestartw = isset($agglomeration['flaggExpecDateStartWork']) ? $agglomeration['flaggExpecDateStartWork'] : null;
-    $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion ']) ? $agglomeration['flaggExpecDateCompletion '] : null;
+    $field_art17_flaggexpecdatecomple = isset($agglomeration['flaggExpecDateCompletion']) ? $agglomeration['flaggExpecDateCompletion'] : null;
     $field_art17_flagginv = isset($agglomeration['flaggInv']) ? $agglomeration['flaggInv'] : null;
     $field_art17_flaggeufundname = isset($agglomeration['flaggEUFundName']) ? $agglomeration['flaggEUFundName'] : null;
     $field_art17_flaggeufund = isset($agglomeration['flaggEUFund']) ? $agglomeration['flaggEUFund'] : null;
