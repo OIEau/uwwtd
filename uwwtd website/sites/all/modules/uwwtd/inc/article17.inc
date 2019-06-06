@@ -177,6 +177,9 @@ function uwwtd_article_17_csvarray($content_type, $nids)
     // Get labels for 1st row
     $csvheader = array();
     foreach ($fields as $fieldname => $values) {
+        if($fieldname =='field_art17agg_link_agglo'){
+            continue;
+        }
         $csvheader[0][] = $values['label'];
     }
 
@@ -200,7 +203,9 @@ function uwwtd_article17_export_node($node, $fields)
     // Foreach field
     foreach ($fields as $fieldname => $values) {
         $csvvalue = "";
-
+        if($fieldname =='field_art17agg_link_agglo'){
+            continue;
+        }
         // Plugg in functions that will transform node content here :
         if(function_exists("uwwtd_article17_transform_".$fieldname)) {
             $csvvalue = call_user_func("uwwtd_article17_transform_".$fieldname, array($node->{$fieldname}));
