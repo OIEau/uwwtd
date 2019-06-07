@@ -81,6 +81,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_without_uwwtp_sheet2', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+
     if ($annee < 2016) {
 
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
@@ -129,7 +130,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -6489,13 +6489,17 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                 	$context['sandbox']['compliance'][$type]['art4']['target']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
             }
+            
+            //================================= FIX ME : why only NR & PD ==> we also need values for compliant agg  & uwwtp ?
+            
             if (isset($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']]) && in_array($agglo[$ind['art4_compliance_art._4_(hierarchical_approach)']], array('NR', 'PD'))) {
                 $context['sandbox']['compliance'][$type]['art4']['exempt_total']['agglo']['number']++;
-                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])){
                 	$context['sandbox']['compliance'][$type]['art4']['exempt_total']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                }
                 //            - due to a size of 2000p.e. - 10000 p.e.       ..and discharge into coastal water
                 if (isset($agglo[$ind['generated_load_p.e.']]) && $agglo[$ind['generated_load_p.e.']] >= 2000 && $agglo[$ind['generated_load_p.e.']] <= 10000
-                    && $agglo[$ind['entirely_discharging_into_coastal_waters?']] == 'yes') {
+                    && $agglo[$ind['entirely_discharging_into_coastal_waters']] == 'yes') {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['agglo']['number']++;
                 	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
                     	$context['sandbox']['compliance'][$type]['art4']['exempt_size_2000_10000']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
@@ -9624,6 +9628,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //a uwwtp can have multiple dcp and rca, thi case is not documented, so we put all info
             //on each rca separated by a ';'
             $dcpWaterBodyType = '';
+            $dcpWaterBodyTypeCode = '';
             $dcpIrrigation = '';
             $dcpWaterbodyID = '';
             $dcpWFDRBD = '';
@@ -9640,6 +9645,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $startingDateOfApplication_c = '';
 
             $dcpWaterBodyType = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
+            $dcpWaterBodyTypeCode = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             $dcpIrrigation = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             $dcpWaterbodyID = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
             $dcpWFDRBD = $GLOBALS['uwwtd']['register']['message']['info_not_provided'];
@@ -9656,38 +9662,35 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             if(!empty($uwwtp->field_uwwdcpliste)){
              foreach($uwwtp->field_uwwdcpliste['und'] as $dcpnid) {
-              $dcp = node_load($dcpnid['nid']);
-              if(!empty($dcp->field_dcprcaliste)){
-                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
-                    $rca = node_load($rcanid['nid']);
-
-                    if (isset($rcatreated[$rca->field_inspireidlocalid['und'][0]['value']])) {
-                        continue;
-                    }
-
-                    $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
-
-                    switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
-                        case 'CW':
-                            $field_dcpwaterbodytype = "To coastal water";
-                            break;
-                        case 'ES':
-                            $field_dcpwaterbodytype = "To estuary";
-                            break;
-                        case 'FW':
-                            $field_dcpwaterbodytype = "To freshwater";
-                            break;
-                        case 'LC':
-                            $field_dcpwaterbodytype = "On land (catchment of coastal water)";
-                            break;
-                        case 'LF':
-                            $field_dcpwaterbodytype = "On land (catchment of freshwater and/or estuary)";
-                            break;
-                        default:
-                            $field_dcpwaterbodytype = "";
-                            break;
-                    }
-
+               $dcp = node_load($dcpnid['nid']);
+              
+                if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'])) {
+                  if ($dcpWaterBodyTypeCode == $GLOBALS['uwwtd']['register']['message']['info_not_provided'] ) {
+                    $dcpWaterBodyTypeCode = '';
+                  }
+                  $dcpWaterBodyTypeCode .= ($dcpWaterBodyTypeCode == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+                }
+                switch ($dcp->field_dcpwaterbodytype['und'][0]['value']) {
+                    case 'CW':
+                        $field_dcpwaterbodytype = "To coastal water";
+                        break;
+                    case 'ES':
+                        $field_dcpwaterbodytype = "To estuary";
+                        break;
+                    case 'FW':
+                        $field_dcpwaterbodytype = "To freshwater";
+                        break;
+                    case 'LC':
+                        $field_dcpwaterbodytype = "On land (catchment of coastal water)";
+                        break;
+                    case 'LF':
+                        $field_dcpwaterbodytype = "On land (catchment of freshwater and/or estuary)";
+                        break;
+                    default:
+                        $field_dcpwaterbodytype = "";
+                        break;
+                }
+                if(isset($dcp->field_dcpirrigation['und'])){
                     switch ($dcp->field_dcpirrigation['und'][0]['value']) {
                         case 'IR':
                             $field_dcpirrigation = 'Irrigation';
@@ -9699,14 +9702,45 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                             $field_dcpirrigation = '';
                             break;
                     }
-
-                    if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'])) {       
-                      if ($dcpWaterBodyType == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
-                        $dcpWaterBodyType = '';
-                      }                      
-                      $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
-                    }
-
+                }else{$field_dcpirrigation = '';}
+                if (isset($dcp->field_dcpwaterbodytype['und'][0]['value'])) {       
+                  if ($dcpWaterBodyType == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                    $dcpWaterBodyType = '';
+                  }                      
+                  $dcpWaterBodyType .= ($dcpWaterBodyType == '' ? '' : ';') . $dcp->field_dcpwaterbodytype['und'][0]['value'];
+                }
+                if (isset($dcp->field_dcpwaterbodyid['und'][0]['value'])) {
+                  if ($dcpWaterbodyID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                    $dcpWaterbodyID = '';
+                  }  
+                  $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value']; 
+                }
+                if (isset($dcp->field_dcpwfdrbd['und'][0]['value'])) {
+                  if ($dcpWFDRBD == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                    $dcpWFDRBD = '';
+                  }  
+                  $dcpWFDRBD .= ($dcpWFDRBD == ''? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];   
+                }
+                
+                if (isset($dcp->field_rcatype['und'][0]['value'])) {
+                  if ($dcpTypeOfReceivingArea == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
+                    $dcpTypeOfReceivingArea = '';
+                  }  
+                  $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];  
+                }
+                if($dcp->isInRca54){
+                    $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';  
+                }
+                    
+              
+              
+              
+              if(!empty($dcp->field_dcprcaliste) || $dcp->field_rcatype['und'][0]['value'] == 'NA'){
+                foreach($dcp->field_dcprcaliste['und'] as $rcanid) {
+                    
+                    $rca = node_load($rcanid['nid']);
+                    $rcatreated[$rca->field_inspireidlocalid['und'][0]['value']] = true;
+                    
                     if (!empty($field_dcpirrigation)) {
                       if ($dcpIrrigation == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
                         $dcpIrrigation = '';
@@ -9714,29 +9748,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                       $dcpIrrigation .= ($dcpIrrigation == '' ? '' : ';') . $field_dcpirrigation;
                     }
 
-                    if (isset($dcp->field_dcpwaterbodyid['und'][0]['value'])) {
-                      if ($dcpWaterbodyID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
-                        $dcpWaterbodyID = '';
-                      }  
-                      $dcpWaterbodyID .= ($dcpWaterbodyID == '' ? '' : ';') . $dcp->field_dcpwaterbodyid['und'][0]['value']; 
-                    }
+                    
 
-                    if (isset($dcp->field_dcpwfdrbd['und'][0]['value'])) {
-                      if ($dcpWFDRBD == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
-                        $dcpWFDRBD = '';
-                      }  
-                      $dcpWFDRBD .= ($dcpWFDRBD == ''? '' : ';') . $dcp->field_dcpwfdrbd['und'][0]['value'];   
-                    }
+                    
 
-                    if (isset($dcp->field_rcatype['und'][0]['value'])) {
-                      if ($dcpTypeOfReceivingArea == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
-                        $dcpTypeOfReceivingArea = '';
-                      }  
-                      $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . $dcp->field_rcatype['und'][0]['value'];  
-                    }
-                    if($dcp->isInRca54){
-                        $dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';  
-                    }
+                    
                     if (isset($rca->field_inspireidlocalid['und'][0]['value'])) {
                       if ($rcaID == $GLOBALS['uwwtd']['register']['message']['info_not_provided']) {
                         $rcaID = '';
@@ -10455,7 +10471,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             // Commented to fit with condition : Monitoring OK even if equipment missing (as long as bod5 and cod5 OK)
             // } elseif ($secondaryinstalled == '0') {
             //     $secondarypass = '0';
-            } elseif ($uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' && $uwwtp->field_uwwcodperf['und'][0]['value'] == 'P') {
+            } elseif (isset($uwwtp->field_uwwbod5perf['und']) && isset($uwwtp->field_uwwcodperf['und']) && $uwwtp->field_uwwbod5perf['und'][0]['value'] == 'P' && $uwwtp->field_uwwcodperf['und'][0]['value'] == 'P') {
                 $secondarypass = '1';
             } else {
                 $secondarypass = '0';

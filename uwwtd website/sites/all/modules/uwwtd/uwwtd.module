@@ -2731,7 +2731,7 @@ function uwwtd_create_config_file_display() {
 //Get the value of the first non null field of the node
 function uwwtd_get_multiple_field_value($node, $fields=[], $default=null ){
     foreach($fields as $field){
-        if(isset($node->{$field}) && $node->{$field}['und'][0]['value']!=''){
+        if(isset($node->{$field}) &&isset($node->{$field}['und']) && $node->{$field}['und'][0]['value']!=''){
             return $node->{$field}['und'][0]['value'];
         }
     }
