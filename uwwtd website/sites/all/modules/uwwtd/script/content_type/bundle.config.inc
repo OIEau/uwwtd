@@ -2172,6 +2172,106 @@ $list_field = array (
     'bundles' => 
     array (
     ),
+  ),  
+  'field_aggart523compliance' => 
+  array (
+    'settings' => 
+    array (
+      'allowed_values' => 
+      array (
+        'NI' => 'No information',
+        'NR' => 'Not relevant',
+        'C' => 'Compliant',
+        'NC' => 'Not compliant',
+        '?' => '?',
+      ),
+      'allowed_values_function' => '',
+    ),
+    'display' => 
+    array (
+      'default' => 
+      array (
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => '8',
+        'settings' => 
+        array (
+        ),
+      ),
+      'teaser' => 
+      array (
+        'type' => 'hidden',
+        'label' => 'above',
+        'settings' => 
+        array (
+        ),
+        'weight' => 0,
+      ),
+    ),
+    'entity_types' => 
+    array (
+    ),
+    'foreign keys' => 
+    array (
+    ),
+    'indexes' => 
+    array (
+      'value' => 
+      array (
+        0 => 'value',
+      ),
+    ),
+    'translatable' => '0',
+    'storage' => 
+    array (
+      'type' => 'field_sql_storage',
+      'settings' => 
+      array (
+      ),
+      'module' => 'field_sql_storage',
+      'active' => '1',
+      'details' => 
+      array (
+        'sql' => 
+        array (
+          'FIELD_LOAD_CURRENT' => 
+          array (
+            'field_data_field_aggart523compliance' => 
+            array (
+              'value' => 'field_aggart523compliance_value',
+            ),
+          ),
+          'FIELD_LOAD_REVISION' => 
+          array (
+            'field_revision_field_aggart523compliance' => 
+            array (
+              'value' => 'field_aggart523compliance_value',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'id' => '565',
+    'custom_tooltip' => 'Theorical compliance for art 5 if the Art 5.2,3 was applied',
+    'field_name' => 'field_aggart523compliance',
+    'type' => 'list_text',
+    'module' => 'list',
+    'active' => '1',
+    'locked' => '0',
+    'cardinality' => '1',
+    'deleted' => '0',
+    'columns' => 
+    array (
+      'value' => 
+      array (
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => false,
+      ),
+    ),
+    'bundles' => 
+    array (
+    ),
   ),
   'field_aggart4compliance' => 
   array (

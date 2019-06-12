@@ -230,15 +230,16 @@ function uwwtd_virtual_field_aggart5compliance_hierarchical($node) {
   $field_aggart5compliance = $node->field_aggart5compliance['und'][0]['value'];
   $msg = '';
   if($node->isInRca54){
-    $field_aggart5compliance='NR'; 
-    $msg.='</span> <span>('.t('Art 5.4 is applied for the receiving area').')';
+    //$field_aggart5compliance='NR'; 
+    $field_aggart523compliance = $node->field_aggart523compliance['und'][0]['value'];
+    $msg.='</span> <span>('.t('Art 5.4 is applied for the receiving area. At agglomeration level the assessement is :compliance',  [':compliance'=>$GLOBALS['uwwtd']['ui']['compliance'][$field_aggart523compliance]]).')';
   }
   elseif($node->field_aggart4compliance['und'][0]['value']=='NC' && $field_aggart5compliance=='C'){
     $field_aggart5compliance='NC';  
   }
 
   $variables['element']['#items']['0']['value'] = $field_aggart5compliance;
-  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance];
+  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance] . $msg;
   $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance] . $msg;
 
   uwwtd_get_format_markup_compliance($variables);
@@ -318,7 +319,8 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
       $colorart5P = '#4f91e1';
   }
   
-  if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->isInRca54) {
+  //if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->isInRca54) {
+  if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' ) {
       $colorart5T = '#a2a2a2';
       $colorart5P = '#a2a2a2';
   }

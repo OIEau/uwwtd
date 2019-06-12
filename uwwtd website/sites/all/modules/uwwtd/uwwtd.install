@@ -5289,7 +5289,7 @@ function uwwtd_update_7173(&$context) {
     uwwtd_install_trace(__FUNCTION__);
 
     include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
-    if (! field_info_field($field['field_name']) ) {
+    if (! field_info_field($list_field['field_aucpercc2t']) ) {
         field_create_field($list_field['field_aucpercc2t']);
     }
     $instance = array(
@@ -5303,6 +5303,28 @@ function uwwtd_update_7173(&$context) {
         $result = field_create_instance($instance);
     }
     
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+function uwwtd_update_7174(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+    include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
+    if(isset($list_field['field_aggart523compliance'])){        
+        if (! field_info_field('field_aggart523compliance' ) ){
+            dsm($list_field['field_aggart523compliance']);
+            field_create_field($list_field['field_aggart523compliance']);
+        }
+        $instance = array(
+            'field_name' => 'field_aggart523compliance',
+            'entity_type' => 'node',
+            'bundle' => 'agglomeration',
+            'label' => $list_field['field_aggart523compliance']['custom_tooltip'],
+          );
+        $instance_exist = field_info_instance('node', 'field_aggart523compliance', 'agglomeration');
+        if (! $instance_exist ) {
+            $result = field_create_instance($instance);
+        }
+    }
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
