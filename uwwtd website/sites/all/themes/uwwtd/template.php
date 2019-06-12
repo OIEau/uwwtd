@@ -240,13 +240,17 @@ function uwwtd_preprocess_field(&$variables) {
  * Use for extra field too
  */
 function uwwtd_get_format_markup_compliance(&$variables) {
+    //dsm($variables['items']['0']['#markup']);
+    //dsm($variables['element']['#items']['0']['value']);
   if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][$variables['element']['#items']['0']['value']])) {
     $variables['element']['#items']['0']['value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][$variables['element']['#items']['0']['value']];
     $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$variables['element']['#items']['0']['value']];
     //We need to keep the tooltip.
+   
     if ($pos = strpos($variables['items']['0']['#markup'], '</div>')) {
       $variables['items']['0']['#markup'] = substr($variables['items']['0']['#markup'], 0, $pos + 6) . $variables['element']['0']['#markup'];
-    } else {
+    } 
+    elseif($variables['items']['0']['#markup'] == $variables['element']['#items']['0']['value']) {
       $variables['items']['0']['#markup'] = $variables['element']['0']['#markup'];
     }
 
@@ -274,6 +278,7 @@ function uwwtd_get_format_markup_compliance(&$variables) {
   }
 
   $variables['items']['0']['#markup'] = '<span class="' . $spanclass . '">' . $variables['items']['0']['#markup'] . '</span>';
+  //dsm($variables['items']['0']['#markup']);
 }
 
 function uwwtd_field_attach_view_alter(&$output, $context) {
