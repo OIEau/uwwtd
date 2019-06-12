@@ -6470,6 +6470,9 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             else{
                 $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
             }
+            if(isset($aggArt456Compliance['compArt523'])){
+                $node->field_aggart523compliance['und'][0]['value'] = $aggArt456Compliance['compArt523'];
+            }
             if($aggArt456Compliance['compArt5_info']['reason']) {
                 $node->field_article_5_compliance_expli['und'][0] = [
                     'value'=>$aggArt456Compliance['compArt5_info']['reason'],
@@ -6806,6 +6809,9 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     $compArt5 = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
     $aResult['compArt5'] = $compArt5['compliance'];
     $aResult['compArt5_info'] = $compArt5;
+    if(isset($compArt5['compliance_523'])) $aResult['compArt523'] = $compArt5['compliance_523'];
+    else $aResult['compArt523'] = $compArt5['compArt5'];
+    
 //     uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
     
@@ -6979,11 +6985,13 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                     'compliance_523'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                     'reason'=>'art54applies AND agggenerated < 10000 AND perf > 75 %'
                 ];
-            } else {
+            } 
+            else {
                 $comp_523 = uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
                 return [
                     'art54applies'=>true,
-                    'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
+                    'compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'],
+                    //'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                     'rca_compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'],
                     'compliance_523'=>$comp_523['compliance'],
                     'reason'=>'art54applies AND agggenerated < 10000 AND perf > 75 %'
@@ -6998,12 +7006,14 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                     'compliance_523'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                     'reason'=>'art54applies AND agggenerated < 10000 BUT perf < 75 %'
                 ];
-            } else {
+            } 
+            else {
                 //FIX ME : In this case we need to check if perf of UWWTPS are "PASS" for N & P 
                 $comp_523 = uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
                 return [
                     'art54applies'=>true,
-                    'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
+                    'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'],
+                    //'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                     'rca_compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'],
                     'compliance_523'=>$comp_523['compliance'],
                     'reason'=>'art54applies BUT perf on N&P of RCA < 75 % and compliance of art5.2,3 give '.$comp_523['compliance']
