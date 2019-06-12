@@ -83,7 +83,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
     if ($annee < 2016) {
-
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_sheet8', array($annee));
     } else {
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
@@ -94,7 +93,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
-    
+
  //    //excel 
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
@@ -111,16 +110,20 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10', array($annee));
+
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_sheet11', array($annee));
-// //     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));
+// //     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph_test_sheet11', array($annee));   
+
     $batch['operations'][]=array('uwwtd_create_register_2015_file_graph2_sheet11_1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglomerationout_sheet13', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));
+    //FIX ME for 8th report, this function crash the batch operation
+    if ($annee >= 2016) { $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));}
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_debug', array($annee));
-//     
+
+
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 // 
