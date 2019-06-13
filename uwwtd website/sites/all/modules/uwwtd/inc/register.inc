@@ -7606,9 +7606,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
         	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
             //Case of art 5.4 applied in RCA 
+            /*
             if($agg->isInRca54){
                 $agg->field_aggart5compliance['und'][0]['value'] = 'NR';
-            }
+            }*/
         $uwwtpinfo_for_agglo = &$context['sandbox']['uwwtpinfo_for_agglo'][$agg->field_inspireidlocalid['und'][0]['value']];
 
 // uwwtd_trace($agg->field_inspireidlocalid['und'][0]['value'] . '=');
@@ -7771,9 +7772,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
         if ($previousagglonid != '') {
             $previousagg = node_load($previousagglonid);
+            /*
             if($previousagg->isInRca54){
                 $previousagg->field_aggart5compliance['und'][0]['value'] = 'NR';
-            }
+            }*/
             $previous_reported = 'yes';
 //             dsm($previousagg);
             $previous_aggcode =  $previousagg->field_inspireidlocalid['und'][0]['value'];
