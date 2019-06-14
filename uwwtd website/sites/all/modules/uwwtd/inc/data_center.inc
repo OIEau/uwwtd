@@ -6464,8 +6464,8 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             //=======ART 5
             if(isset($aggArt456Compliance['compArt5_info']) && isset($aggArt456Compliance['compArt5_info']['art54applies']) && $aggArt456Compliance['compArt5_info']['art54applies']){
                 //nd@oieau.fr : 16/05/2019 (technical workshop)==> if art54applies is apply art5 is NR even if receiving area is not compliant
-                //$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['rca_compliance'];
-                $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['compliance'];
+                $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['rca_compliance'];
+                //$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['compliance'];
             }
             else{
                 $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5'];
@@ -6955,9 +6955,9 @@ function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompl
 function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo) 
 {
     uwwtd_trace(__FUNCTION__);
-
     //art5(4) applies ?
     if (true === $rcainfo['art54applies']) {
+        
         uwwtd_trace('art54applies applies to agglo');
         uwwtd_trace(var_export($rcainfo, true));
         $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
@@ -9061,7 +9061,6 @@ function uwwtd_get_all_info_agguwww($node)
             unset($uww);
         }
     }
-    
     return $aResult;
 }
 
@@ -9554,8 +9553,10 @@ function uwwtd_rca_art54_applies($dcp)
         ($dcp['rcatype'] == 'A5854' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'CSA' && $dcp['rca54applied'] === true) ||
         ($dcp['rcatype'] == 'A5154' && $dcp['rca54applied'] === true) ||
+        ($dcp['rcatype'] == 'NA' && $dcp['rca54applied'] === true) ||   //nd 2019/06/14 case of HU
         ($dcp['rcatype'] == 'A54523' && $dcp['rca54applied'] === true) ||   //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
         ($dcp['rcatype'] == 'A5854523' && $dcp['rca54applied'] === true)    //e.v 2018/11/15 mail b.db of 09/11/2018 à 17:26
+        
     );
     uwwtd_trace('uwwtd_rca_art54_applies = ' . ($result === true ? 'true' : 'false'));
     return $result;    
