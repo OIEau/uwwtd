@@ -287,8 +287,8 @@ function uwwtd_get_data_uwwtp($option)
     FROM {node} n
         JOIN uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid
-        LEFT JOIN
-            {field_data_field_anneedata} f_annee
+        JOIN
+            {field_data_field_anneedata} f_annee AND f_annee.field_anneedata_value = :annee
                 ON n.nid = f_annee.entity_id
         LEFT JOIN
             {field_data_field_inspireidlocalid} f_uwwcode
@@ -398,10 +398,8 @@ function uwwtd_get_data_uwwtp($option)
             :'LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd'
         ).' 
     WHERE n.type = :typenode
-        and f_annee.field_anneedata_value = :annee
     ORDER BY n.nid
     ';
-return false;
  $nb = strlen($option['field_anneedata_value']);
   if($nb == 1){
 	   $param = array(
