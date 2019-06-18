@@ -53,60 +53,60 @@ function uwwtd_get_data_agglomeration($option){
             SUM(uwwtp_capa.field_physicalcapacityactivity_value) as sum_uwwtp,
             '.($option['field_anneedata_value']>=2012?'nut.nuts_id':'nut.n3nm').' as n3nm
     FROM {node} n
-        LEFT join
+        LEFT JOIN
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_inspireidlocalid} f_aggcode
                 ON n.nid = f_aggcode.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_agggenerated} f_agggenerated
                 ON n.nid = f_agggenerated.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggart3compliance} f_art3
                 ON n.nid = f_art3.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggart4compliance} f_art4
                 ON n.nid = f_art4.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggart5compliance} f_art5
                 ON n.nid = f_art5.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggart6compliance} f_art6
                 ON n.nid = f_art6.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggcompliance} f_comp
                 ON n.nid = f_comp.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_regionnuts} f_nuts
                 ON n.nid = f_nuts.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggc2} f_aggc2
                 ON n.nid = f_aggc2.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggc1} f_aggc1
                 ON n.nid = f_aggc1.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_aggpercwithouttreatment} f_aggpercwithouttreatment
                 ON n.nid = f_aggpercwithouttreatment.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		LEFT join
+		LEFT JOIN
             {field_data_field_article17_agglo} f_article17_agglo
                 ON n.nid = f_article17_agglo.entity_id
-		LEFT join
+		LEFT JOIN
             {field_data_field_agguwwliste} f_uwwtp_agglo
                 ON n.nid = f_uwwtp_agglo.entity_id
         LEFT JOIN
             {field_data_field_physicalcapacityactivity} uwwtp_capa
                 ON f_uwwtp_agglo.field_agguwwliste_nid=uwwtp_capa.entity_id
-        LEFT join 
+        LEFT JOIN 
             river_basin rbd
-                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
+                ON f_geo.the_geom && the_geom4258 AND ST_Intersects(f_geo.the_geom, rbd.the_geom4258)
         '.(
             $option['field_anneedata_value']>=2012?
             'LEFT JOIN nuts_rg_v2013 nut ON f_nuts.field_regionnuts_value = nut.nuts_id'
@@ -238,16 +238,16 @@ function uwwtd_get_data_uwwtp($option)
     WITH uwwtp_min_agg AS(
         SELECT n.nid, n.type, n.title 
         FROM {node} n
-            LEFT join
+            LEFT JOIN
               {field_data_field_anneedata f_annee}
                 ON n.nid = f_annee.entity_id
-            left join
+            LEFT JOIN
               {field_data_field_status f_status}
                 ON n.nid = f_status.entity_id
-            LEFT join
+            LEFT JOIN
               {field_data_field_agguwwliste f_uwwtp_agglo}
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
-            LEFT join
+            LEFT JOIN
             {field_data_field_agggenerated f_agggenerated}
                 ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
         WHERE n.type = :typenode
@@ -255,7 +255,7 @@ function uwwtd_get_data_uwwtp($option)
              AND f_annee.field_anneedata_value = :annee
         GROUP BY n.nid
     )
-    select distinct on (n.nid) n.nid,
+    SELECT DISTINCT ON  (n.nid) n.nid,
         n.title,
 		f_annee.field_anneedata_value,
 		f_uwwcode.field_inspireidlocalid_value,
@@ -284,125 +284,122 @@ function uwwtd_get_data_uwwtp($option)
         rbd.eurbdcode as rbd,
         rbd.rbdname,
         '.($option['field_anneedata_value']>=2012?'nut.nuts_id':'nut.n3nm').' as n3nm
-    from {node} n
+    FROM {node} n
         JOIN uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid
-        LEFT join
-            {field_data_field_anneedata} f_annee
+        JOIN
+            {field_data_field_anneedata} f_annee AND f_annee.field_anneedata_value = :annee
                 ON n.nid = f_annee.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_inspireidlocalid} f_uwwcode
                 ON n.nid = f_uwwcode.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwprimarytreatment} f_primarytreatment
                 ON n.nid = f_primarytreatment.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwsecondarytreatment} f_secondarytreatment
                 ON n.nid = f_secondarytreatment.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwnremoval} f_nremoval
                 ON n.nid = f_nremoval.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwpremoval} f_premoval
                 ON n.nid = f_premoval.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwloadenteringuwwtp} f_uwwloadenteringuwwtp
                 ON n.nid = f_uwwloadenteringuwwtp.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_regionnuts} f_regionnuts
                 ON n.nid = f_regionnuts.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwbod5perf} f_uwwbod5perf
                 ON n.nid = f_uwwbod5perf.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwcodperf} f_uwwcodperf
                 ON n.nid = f_uwwcodperf.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwntotperf} f_uwwntotperf
                 ON n.nid = f_uwwntotperf.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwptotperf} f_uwwptotperf
                 ON n.nid = f_uwwptotperf.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwtreatmenttype} f_uwwtreatmenttype
                 ON n.nid = f_uwwtreatmenttype.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
                 ON n.nid = f_physicalcapacityactivity.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwspecification} f_uwwspecification
                 ON n.nid = f_uwwspecification.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwboddischarge} f_uwwboddischarge
                 ON n.nid = f_uwwboddischarge.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwboddischargeestimated} f_uwwboddischargeestimated
                 ON n.nid = f_uwwboddischargeestimated.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwboddischargecalculated} f_uwwboddischargecalculated
                 ON n.nid = f_uwwboddischargecalculated.entity_id
                 
-        left join
+        LEFT JOIN
             {field_data_field_uwwcoddischarge} f_uwwcoddischarge
                 ON n.nid = f_uwwcoddischarge.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwcoddischargeestimated} f_uwwcoddischargeestimated
-                ON n.nid = f_uwwboddischargeestimated.entity_id
-        left join
+                ON n.nid = f_uwwcoddischargeestimated.entity_id
+        LEFT JOIN
             {field_data_field_uwwcoddischargecalculated} f_uwwcoddischargecalculated
                 ON n.nid = f_uwwcoddischargecalculated.entity_id
                 
-        left join
+        LEFT JOIN
             {field_data_field_uwwndischarge} f_uwwndischarge
                 ON n.nid = f_uwwndischarge.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwndischargeestimated} f_uwwndischargeestimated
                 ON n.nid = f_uwwndischargeestimated.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwndischargecalculated} f_uwwndischargecalculated
                 ON n.nid = f_uwwndischargecalculated.entity_id
                 
-        left join
+        LEFT JOIN
             {field_data_field_uwwpdischarge} f_uwwpdischarge
                 ON n.nid = f_uwwpdischarge.entity_id
-         left join
+         LEFT JOIN
             {field_data_field_uwwpdischargeestimated} f_uwwpdischargeestimated
                 ON n.nid = f_uwwpdischargeestimated.entity_id
-        left join
+        LEFT JOIN
             {field_data_field_uwwpdischargecalculated} f_uwwpdischargecalculated
                 ON n.nid = f_uwwpdischargecalculated.entity_id   
-        LEFT join
+        LEFT JOIN
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-		LEFT join
+		LEFT JOIN
             {field_data_field_article17_uwwtp} f_article17_uwwtp
                 ON n.nid = f_article17_uwwtp.entity_id
-		LEFT join
+		LEFT JOIN
             {field_data_field_uwwdcpliste} f_dcp_uwwtp
                 ON n.nid = f_dcp_uwwtp.entity_id
-		LEFT join
+		LEFT JOIN
             {field_data_field_dcpreceivingwater} f_dcpre_uwwtp
                 ON f_dcp_uwwtp.field_uwwdcpliste_nid = f_dcpre_uwwtp.entity_id
-        LEFT join 
+        LEFT JOIN 
             river_basin rbd
-                ON ST_Intersects(ST_Transform(f_geo.the_geom,4326), rbd.the_geom4326)
+                ON f_geo.the_geom && rbd.the_geom4258 AND ST_Intersects(f_geo.the_geom, rbd.the_geom4258)
         '.(
             $option['field_anneedata_value']>=2012?
             'LEFT JOIN nuts_rg_v2013 nut ON f_regionnuts.field_regionnuts_value = nut.nuts_id'
             :'LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd'
         ).' 
     WHERE n.type = :typenode
-        and f_annee.field_anneedata_value = :annee
     ORDER BY n.nid
     ';
- // dsm($query);
-
  $nb = strlen($option['field_anneedata_value']);
   if($nb == 1){
 	   $param = array(
@@ -482,7 +479,7 @@ function uwwtd_get_data_dcp($option){
     }
     $data = array();
 
-    $query = 'select n.title,
+    $query = 'SELECT n.title,
                      n.nid,
                      f_annee.field_anneedata_value,
                      f_dcpcode.field_inspireidlocalid_value,
@@ -497,49 +494,49 @@ function uwwtd_get_data_dcp($option){
                      rca.nid as rca_id,
                      ir.field_dcpirrigation_value,
                      st_astext(st_transform(f_geo.the_geom, 4326)) wkt
-    from {node} n
-        LEFT join
+    FROM {node} n
+        LEFT JOIN
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_inspireidlocalid} f_dcpcode
                 ON n.nid = f_dcpcode.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_dcpwaterbodytype} wbt
                 ON n.nid = wbt.entity_id        
-        LEFT join
+        LEFT JOIN
             {field_data_field_rcatype} zt
                 ON n.nid = zt.entity_id        
-        LEFT join
+        LEFT JOIN
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_dcpirrigation} ir
                 ON n.nid = ir.entity_id
-        LEFT join 
+        LEFT JOIN 
             {field_data_field_linked_treatment_plants} tp
                 ON n.nid = tp.entity_id
-        LEFT join
+        LEFT JOIN
             {node} uwwtp
                 ON uwwtp.nid = tp.field_linked_treatment_plants_nid
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwcompliance} f_comp
                 ON uwwtp.nid = f_comp.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_physicalcapacityactivity} f_physicalcapacityactivity
                 ON uwwtp.nid = f_physicalcapacityactivity.entity_id
-        LEFT join
+        LEFT JOIN
             {field_data_field_uwwwastewatertreated} wwt
                 ON uwwtp.nid = wwt.entity_id
-        LEFT join 
+        LEFT JOIN 
             {field_data_field_linked_receiving_areas} rc
                 ON n.nid = rc.entity_id
-        LEFT join
+        LEFT JOIN
             {node} rca
                 ON rca.nid = rc.field_linked_receiving_areas_nid
                 
-    where n.type = :typenode
-    and f_annee.field_anneedata_value = :annee
+    WHERE n.type = :typenode
+    AND  f_annee.field_anneedata_value = :annee
     ';
 //     dsm($query);
 
