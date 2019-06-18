@@ -106,7 +106,7 @@ function uwwtd_get_data_agglomeration($option){
                 ON f_uwwtp_agglo.field_agguwwliste_nid=uwwtp_capa.entity_id
         LEFT JOIN 
             river_basin rbd
-                ON ST_Intersects(f_geo.the_geom, rbd.the_geom4258)
+                ON f_geo.the_geom && the_geom4258 AND ST_Intersects(f_geo.the_geom, rbd.the_geom4258)
         '.(
             $option['field_anneedata_value']>=2012?
             'LEFT JOIN nuts_rg_v2013 nut ON f_nuts.field_regionnuts_value = nut.nuts_id'
