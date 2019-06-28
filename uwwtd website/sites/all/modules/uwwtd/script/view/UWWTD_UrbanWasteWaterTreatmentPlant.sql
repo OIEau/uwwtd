@@ -1,4 +1,4 @@
- SELECT siteid.field_siteid_value AS "siteId",
+SELECT siteid.field_siteid_value AS "siteId",
     localid.field_inspireidlocalid_value AS "uwwCode",
     repcode.field_repcode_value AS "repCode",
     n.title AS "uwwName",
@@ -67,7 +67,9 @@
             WHEN ttype.field_uwwtreatmenttype_value::text = 'MS'::text THEN 'More Stringent'::text
             ELSE NULL::text
         END AS "uwwTreatmentType",
-    annee.field_anneedata_value AS "repReportedPerdiod"
+    annee.field_anneedata_value AS "repReportedPerdiod",
+    bl.field_uwwbeginlife_value AS "uwwBeginLife",
+    el.field_uwwendlife_value AS "uwwEndLife"
    FROM drupal_node n
      LEFT JOIN drupal_field_data_field_anneedata annee ON n.nid = annee.entity_id
      LEFT JOIN drupal_field_data_field_repcode repcode ON n.nid = repcode.entity_id
@@ -133,4 +135,6 @@
      LEFT JOIN drupal_field_data_field_uwwpincomingestimated pincest ON n.nid = pincest.entity_id
      LEFT JOIN drupal_field_data_field_uwwbaddesign bad ON n.nid = bad.entity_id
      LEFT JOIN drupal_field_data_field_anneedata year ON n.nid = year.entity_id
+     LEFT JOIN drupal_field_data_field_uwwbeginlife bl ON n.nid = bl.entity_id
+     LEFT JOIN drupal_field_data_field_uwwendlife el ON n.nid = el.entity_id
   WHERE n.type::text = 'uwwtp'::text AND n.status = 1;
