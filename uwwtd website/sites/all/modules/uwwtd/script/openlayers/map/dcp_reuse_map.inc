@@ -149,7 +149,7 @@ $openlayers_maps->data = array(
       'min_label' => '',
       'fields_colors' => 'field_dcpirrigation_value_format',
       'fields_colors_values' => 'Irrigation|Irrigation|#459436
-Infiltration|Industry|#334D5C
+Infiltration|Infiltration|#334D5C
 Other|Other|#02658C',
     ),
     'openlayers_behavior_panzoombar' => array(

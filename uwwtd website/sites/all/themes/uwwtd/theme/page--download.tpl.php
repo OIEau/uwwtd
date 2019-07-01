@@ -155,39 +155,39 @@
 			<td>Agglomerations</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a></td>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a></td>
 		</tr>
 		<tr>
 			<td>Urban Waste Water Treatment plants</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
 		</tr>
 		<tr>
 			<td>Discharge points</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
 		</tr>
 		<tr>
 			<td>Sensitive areas</td>
 			<td>Country</td>
 			<td>
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
-				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
 			</td>
 		</tr>
     </table>
