@@ -288,8 +288,8 @@ function uwwtd_get_data_uwwtp($option)
         JOIN uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid
         JOIN
-            {field_data_field_anneedata} f_annee AND f_annee.field_anneedata_value = :annee
-                ON n.nid = f_annee.entity_id
+            {field_data_field_anneedata} f_annee 
+                ON n.nid = f_annee.entity_id AND f_annee.field_anneedata_value = :annee
         LEFT JOIN
             {field_data_field_inspireidlocalid} f_uwwcode
                 ON n.nid = f_uwwcode.entity_id
@@ -400,6 +400,7 @@ function uwwtd_get_data_uwwtp($option)
     WHERE n.type = :typenode
     ORDER BY n.nid
     ';
+    
  $nb = strlen($option['field_anneedata_value']);
   if($nb == 1){
 	   $param = array(
