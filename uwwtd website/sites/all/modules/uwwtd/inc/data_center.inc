@@ -6994,7 +6994,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                     //'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'],
                     'rca_compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'],
                     'compliance_523'=>$comp_523['compliance'],
-                    'reason'=>'art54applies AND agggenerated < 10000 AND perf > 75 %'
+                    'reason'=>'art54applies AND agggenerated > 10000 AND perf > 75 %'
                 ];
             }              
         } else {
@@ -7193,7 +7193,10 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
                     ){
                          $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     }
-                    else {
+                    elseif($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] && $uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']) {
+                        $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                    }
+                    else{
                         $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                     }
                 }
