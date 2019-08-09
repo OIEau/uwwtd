@@ -12846,34 +12846,30 @@ function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_c
     if ($line[$ind['generated_load_p.e.']] <= 10000) {
         return 'NR';
     }
-
-    if ($nr >= 0 && $c == 0 && $nc == 0) {
+    elseif ($nr >= 0 && $c == 0 && $nc == 0) {
         return 'NR';
     }
-
-    if ($deadline_agglo > $reporting_year) {
+    elseif ($deadline_agglo > $reporting_year) {
         return 'PD';
     }
-
-    if ($nc == 0 && $c > 0) {
+    elseif ($nc == 0 && $c > 0) {
         return 'C';
     }
-
-    if ($deadline_agglo < $reporting_year
+    elseif ($deadline_agglo < $reporting_year
         && $nc > 0
         && $art5x_NC_collected <= 1
         && $nc_pe < 2000
         ) {
         return 'C';
     }
-
-    if ($deadline_agglo < $reporting_year
+    //nd@oieau.fr : 09/08/2019 : change the equality operator
+    elseif ($deadline_agglo <= $reporting_year
         &&
         ($nc > 1 || $nc_pe >= 2000)
         ) {
         return 'NC';
     }
-
+    //nd@oieau.fr => why do we return 7 ?
     return 7;
 }
 
