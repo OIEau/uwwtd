@@ -9028,33 +9028,35 @@ function uwwtd_get_all_info_agguwww($node)
                 $aResult['rca']['rca_p_discharged_estimated']  = 0;
                 foreach($uww->field_uwwdcpliste['und'] as $dcplist){
                     $dcp = node_load($dcplist['nid']);
-                    /* Cas des pays avec l'ensemble du pays en zone sensible */
-                    $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
-                    // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
-                    //     $rcaTypeid = 'SA';
-                    // }
-                    if(isset($dcp->field_dcprcaliste['und'])){
-                        foreach($dcp->field_dcprcaliste['und'] as $rcalist){
-                            $rca = node_load($rcalist['nid']);
-                            $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                            if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
-                                $aResult['rca']['art54applies'] = true;
-                                $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
-                                $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
-                                $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
-                                $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
-                                $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
-                                $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
+                    if($dcp->field_status['und'][0]['value']==1){
+                        /* Cas des pays avec l'ensemble du pays en zone sensible */
+                        $rcaTypeid = $dcp->field_rcatype['und'][0]['value'];
+                        // if('LT' == uwwtd_get_countrycode_from_repcode($node->field_repcode['und'][0]['value'])){
+                        //     $rcaTypeid = 'SA';
+                        // }
+                        if(isset($dcp->field_dcprcaliste['und'])){
+                            foreach($dcp->field_dcprcaliste['und'] as $rcalist){
+                                $rca = node_load($rcalist['nid']);
+                                $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
+                                if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
+                                    $aResult['rca']['art54applies'] = true;
+                                    $aResult['rca']['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
+                                    $aResult['rca']['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
+                                    $aResult['rca']['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
+                                    $aResult['rca']['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
+                                    $aResult['rca']['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
+                                    $aResult['rca']['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
 
-                                $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
-                                $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
-                                $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
-                                $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
-                                $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
-                                $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
-                                break 2;
+                                    $aResult['rca']['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
+                                    $aResult['rca']['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
+                                    $aResult['rca']['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
+                                    $aResult['rca']['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
+                                    $aResult['rca']['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
+                                    $aResult['rca']['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
+                                    break 2;
+                                }
+                                unset($rca);
                             }
-                            unset($rca);
                         }
                         unset($dcp);
                     }
