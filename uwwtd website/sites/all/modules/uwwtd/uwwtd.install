@@ -6697,6 +6697,10 @@ function  uwwtd_install_enable_module(&$context)
         'XML sitemap menu'=>'xmlsitemap_menu',
         'XML sitemap engines'=>'xmlsitemap_engines',
         
+        //GDPR 
+        'EU Cookie Compliance'=>'eu_cookie_compliance',
+        
+        
         //search
         
         // 'UWWTD' => 'uwwtd',
