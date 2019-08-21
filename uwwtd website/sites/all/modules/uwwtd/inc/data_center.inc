@@ -9786,6 +9786,7 @@ function uwwtd_get_required_treatment_csa(&$required_treatment, $dcp, $maxgen)
                 }   
             } else {
                 //if rca demands phosphorus rcaAPhos
+                // Nota: The case where receiving area demands criterion c (other treatment) is not considered/listed here, because according to the document "UWWTD legal compliance assessment methodology document - Final version from 20 June 2014" (page 10) compliance with Article 5 under criterion c is only assessed for SA, but not for CSA.  Hence if CSA demands criterion c only, the required treatment is only secondary
                 if ($dcp['rcaap']) {  
                     $required_treatment->required = 'MP';
                     $required_treatment->required_rcaan = 0;
