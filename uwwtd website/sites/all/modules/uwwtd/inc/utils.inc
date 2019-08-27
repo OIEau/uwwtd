@@ -113,9 +113,10 @@ if (!function_exists('array_column')) {
     }
 }
 
-
-
 function uwwtd_debug(){
+    
+    return "debug";
+    
    /* 
    module_load_include('inc','uwwtd','inc/data_center');
     //module_load_include('php','uwwtd','inc/ShapeFileAutoloader');
@@ -132,7 +133,7 @@ function uwwtd_debug(){
         $node = rca_set_geo_obj($record, $annee);
     }
     */
-    return "debug";
+    
     /*
     module_load_include('inc','uwwtd','inc/data_center');
     $uri = 'public://data_sources/uwwtdart15fi2016_1554997752.xml';
