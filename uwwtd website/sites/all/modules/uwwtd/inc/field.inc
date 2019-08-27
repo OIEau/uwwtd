@@ -87,7 +87,11 @@ function uwwtd_virtual_field_map($node, $view_mode) {
         if ($view_mode == 'full' && !empty($node->title)) {
             $fieldstat = field_view_field('node', $node, 'field_status');
             if (!empty($fieldstat[0]['#markup']) && $fieldstat[0]['#markup'] == '2') {
-                $fieldstat[0]['#markup'] = 'Inactive';
+                $fieldstat[0]['#markup'] = t('Inactive');
+            }
+            $conn = '';
+            if(isset($node->field_uwwcollectingsystem['und'])){
+                $conn = $GLOBALS['uwwtd_value']['conn'][$node->field_uwwcollectingsystem['und'][0]['value']];
             }
             $fieldnuts = field_view_field('node', $node, 'field_regionnuts');
             $html = '
@@ -95,7 +99,8 @@ function uwwtd_virtual_field_map($node, $view_mode) {
             	<h1>                       
                     <span class="white-title">' .  t($nodetype) . ' : </span><span class="node-title">' .  $node->title . '</span>
                     <span class="white-title"> - ' .  t("Identifier") . ' : </span><span class="inspireidlocalid">' .  $node->field_inspireidlocalid['und'][0]['value'] . '</span>
-                    <span class="white-title"> - ' .  t("Status") . ' : </span><span class="status status-' .  drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])) . '">' .  $fieldstat[0]['#markup'] . '</span>
+                    <span class="white-title"> - ' .  t("Status") . ' : </span><span class="status status-' .  drupal_clean_css_identifier(strtolower($fieldstat[0]['#markup'])) . '">' .  $fieldstat[0]['#markup'] .'</span>
+                    '.($conn!=''?'<span class="connection "> - ' .  $conn .'</span>':'').'
                     <span class="white-title"> - ' .  t("Reporting year") . ' : </span><span class="reporting-year">' .  $node->field_anneedata['und'][0]['value'] . '</span>
                     
             		<br />

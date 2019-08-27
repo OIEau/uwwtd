@@ -1623,7 +1623,7 @@ function uwwtd_update_7121(&$context = null)
         ),
         'field_art17_flaggeufund' => array(                      //Integer                    	Text field
             'field_name' => 'field_art17_flaggeufund',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1663,7 +1663,7 @@ function uwwtd_update_7121(&$context = null)
         ),
         'field_art17_flaggotherfund' => array(                // 	Integer                    	Text field
             'field_name' => 'field_art17_flaggotherfund',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1679,7 +1679,7 @@ function uwwtd_update_7121(&$context = null)
         ),
         'field_art17_flaggloan' => array(                    //	Integer               Text field
             'field_name' => 'field_art17_flaggloan',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1826,7 +1826,7 @@ function uwwtd_update_7121(&$context = null)
         ),  
         'field_art17_flatpinv' => array(       
             'field_name' => 'field_art17_flatpinv',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1842,7 +1842,7 @@ function uwwtd_update_7121(&$context = null)
         ),  
         'field_art17_flatpeufund' => array(       
             'field_name' => 'field_art17_flatpeufund',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1866,7 +1866,7 @@ function uwwtd_update_7121(&$context = null)
         ),  
         'field_art17_flatpotherfund' => array(       
             'field_name' => 'field_art17_flatpotherfund',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -1882,7 +1882,7 @@ function uwwtd_update_7121(&$context = null)
         ),  
         'field_art17_flatploan' => array(       
             'field_name' => 'field_art17_flatploan',
-            'type' => 'number_integer',            	
+            'type' => 'number_decimal',            	
             'widget' => array(
             'type' => 'number',
             ), 
@@ -5327,6 +5327,48 @@ function uwwtd_update_7174(&$context) {
     }
     variable_set('siif_eru_version', __FUNCTION__);
 } 
+
+function uwwtd_update_7175(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+        //Change type for some fields in ART 17
+    $fields = [
+        'field_art17_flaggeufund'=>'article_17_agglomeration',
+        'field_art17_flaggotherfund'=>'article_17_agglomeration',
+        'field_art17_flaggloan'=>'article_17_agglomeration',
+        'field_art17_flatpinv'=>'article_17_uwwtp',
+        'field_art17_flatpeufund'=>'article_17_uwwtp',
+        'field_art17_flatpotherfund'=>'article_17_uwwtp',
+        'field_art17_flatploan'=>'article_17_uwwtp'
+    ];
+    foreach($fields as $field=>$type){
+         $instance_info = field_info_instance('node', $field, $type);
+         if ($instance_info) {
+            $instance_info['display']['default']['type'] = 'number_decimal';
+            $instance_info['display']['default']['settings'] = [
+                'thousand_separator'=>',',
+                'decimal_separator'=>'.',
+                'scale'=>2,
+                'precision'=>15,
+                'prefix_suffix'=>true,
+                'empty_fields_handler'=>'',
+                'empty_fields_emptyfieldtext_empty_text'=>''
+            ];
+            field_update_instance($instance_info);
+            db_update('field_config') 
+                ->fields(array('type' => 'number_decimal'))
+                ->condition('field_name', $field, '=')
+                ->execute();
+            db_query('ALTER TABLE drupal_field_data_'.$field.' ALTER COLUMN '.$field.'_value TYPE NUMERIC(15,2)');
+            db_query('ALTER TABLE drupal_field_revision_'.$field.' ALTER COLUMN '.$field.'_value TYPE NUMERIC(15,2)');
+        } 
+        
+    }
+    drupal_flush_all_caches();
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
+
 
 /**
  * Create a big city or update it

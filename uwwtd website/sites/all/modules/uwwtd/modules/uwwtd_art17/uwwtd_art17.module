@@ -1353,7 +1353,7 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);                       
                 } else {                 
-                    $art->field_art17_flatpinv['und'][0]['value'] = round($check);
+                    $art->field_art17_flatpinv['und'][0]['value'] = round($check,2);
                 }
                 $art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
                 
@@ -1363,7 +1363,7 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                 if ($check === false) {
                     uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                 } else {                
-                    $art->field_art17_flatpeufund['und'][0]['value'] = round($check);
+                    $art->field_art17_flatpeufund['und'][0]['value'] = round($check,2);
                 }
                 ///////////////////////////////////////////
                 //optional  
@@ -1385,7 +1385,7 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                     if ($check === false) {
                         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                     } else {                
-                        $art->field_art17_flatpotherfund['und'][0]['value'] = round($check);
+                        $art->field_art17_flatpotherfund['und'][0]['value'] = round($check,2);
                     }
                 }
                 /////////////////////////////////////////// 
@@ -1397,7 +1397,7 @@ function uwwtd_art17_import_article17_uwwtp($newFile, $annee, &$context)
                     if ($check === false) {
                         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp, $line);    
                     } else {                
-                        $art->field_art17_flatploan['und'][0]['value'] = round($check);
+                        $art->field_art17_flatploan['und'][0]['value'] = round($check,2);
                     }
                 }
                 ///////////////////////////////////////////
@@ -2611,7 +2611,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);                       
         } else {                 
-            $art->field_art17_flatpinv['und'][0]['value'] = round($check);
+            $art->field_art17_flatpinv['und'][0]['value'] = round($check, 2);
         }
         if(!empty($field_art17_flatpeufundname)){
             $art->field_art17_flatpeufundname['und'][0]['value'] = $field_art17_flatpeufundname;
@@ -2624,7 +2624,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
         if ($check === false) {
             uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
         } else {                
-            $art->field_art17_flatpeufund['und'][0]['value'] = round($check);
+            $art->field_art17_flatpeufund['und'][0]['value'] = round($check, 2);
         }
         ///////////////////////////////////////////
         //optional  
@@ -2645,7 +2645,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
             if ($check === false) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
             } else {                
-                $art->field_art17_flatpotherfund['und'][0]['value'] = round($check);
+                $art->field_art17_flatpotherfund['und'][0]['value'] = round($check,2);
             }
         }
         /////////////////////////////////////////// 
@@ -2656,7 +2656,7 @@ function uwwtd_art17_import_FLAUWWTP($uwwtp, $newFile, $annee){
             if ($check === false) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
             } else {                
-                $art->field_art17_flatploan['und'][0]['value'] = round($check);
+                $art->field_art17_flatploan['und'][0]['value'] = round($check,2);
             }
         }
         ///////////////////////////////////////////
@@ -2812,7 +2812,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
             if ($check === false) {
                 $art->field_art17_flaggeufund['und'][0]['value'] = 0;
             } else {                
-                $art->field_art17_flaggeufund['und'][0]['value'] = round($check);
+                $art->field_art17_flaggeufund['und'][0]['value'] = round($check, 2);
             }
         }
         /////////////////////////////////////////////
@@ -2852,7 +2852,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
             if ($check === false) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
             } else {                
-                $art->field_art17_flaggotherfund['und'][0]['value'] = round($check);
+                $art->field_art17_flaggotherfund['und'][0]['value'] = round($check,2);
             }
         }
         ////////
@@ -2863,7 +2863,7 @@ function uwwtd_art17_import_FLAAgglomeration($agglomeration, $newFile, $annee){
             if ($check === false) {
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['article17 format'], $GLOBALS['uwwtd']['message']['numeric_error'], $timestamp);    
             } else {                
-                $art->field_art17_flaggloan['und'][0]['value'] = round($check);
+                $art->field_art17_flaggloan['und'][0]['value'] = round($check,2);
             }
         }
         ////////

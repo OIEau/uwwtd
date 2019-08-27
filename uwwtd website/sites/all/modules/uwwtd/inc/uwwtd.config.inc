@@ -309,6 +309,10 @@ $GLOBALS['uwwtd_value']['inplace'] = array(
     'morestringent' => 'MS',
     'noinformation' => 'NI',    
 );
+$GLOBALS['uwwtd_value']['conn'] = array(
+    'ISCON' => t('Connected'),
+    'NOTCON' => t('Not connected'),
+);
 
 $GLOBALS['uwwtd']['uwwtd_years'] = range(2000, date('Y') + 5);
 $GLOBALS['uwwtd']['uwwtd_years'] = array_combine($GLOBALS['uwwtd']['uwwtd_years'], $GLOBALS['uwwtd']['uwwtd_years']);
