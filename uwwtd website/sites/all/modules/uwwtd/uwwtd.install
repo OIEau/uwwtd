@@ -5287,7 +5287,7 @@ function uwwtd_update_7172(&$context) {
 
 function uwwtd_update_7173(&$context) {
     uwwtd_install_trace(__FUNCTION__);
-
+/*
     include(drupal_get_path('module', 'uwwtd') . '/script/content_type/bundle.config.inc');
     if (! field_info_field($list_field['field_aucpercc2t']) ) {
         field_create_field($list_field['field_aucpercc2t']);
@@ -5302,7 +5302,7 @@ function uwwtd_update_7173(&$context) {
     if (! $instance_exist ) {
         $result = field_create_instance($instance);
     }
-    
+    */
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 function uwwtd_update_7174(&$context) {
