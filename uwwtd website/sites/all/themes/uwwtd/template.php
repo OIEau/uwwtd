@@ -101,7 +101,7 @@ function uwwtd_preprocess_field(&$variables) {
 
   if ($variables['element']['#field_name'] == 'field_dcpwaterbodytype') {
     // waterbody
-    if (isset($GLOBALS['uwwtd_value']['rcacat_labels'][$k])) {
+    if (isset($k) && isset($GLOBALS['uwwtd_value']['rcacat_labels'][$k])) {
       $variables['items']['0']['#markup'] = $GLOBALS['uwwtd_value']['rcacat_labels'][$k];
     }
 
