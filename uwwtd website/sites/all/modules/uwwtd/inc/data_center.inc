@@ -6439,18 +6439,8 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                 $ids = explode('_', $node->field_siteid['und'][0]['value']);
                 if($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-                    $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     if($node->field_agggenerated['und'][0]['value'] >= 10000){
                         $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
-                    }else{
-                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-                    }
-                }
-                elseif($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
-                    $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
-                    $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
-                    if($node->field_agggenerated['und'][0]['value'] >= 10000){
-                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     }else{
                         $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     }
@@ -6654,7 +6644,6 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown'])
     ) {
         uwwtd_trace(__LINE__);
-        dsm("uwwtd_agglomeration_compliance TEST");
         if($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']){
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
         }
