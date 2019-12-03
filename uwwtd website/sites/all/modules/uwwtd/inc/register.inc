@@ -6979,7 +6979,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
  */
 function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 {
-	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
+	global $conf;
+    $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $induww = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
     $listtypestat = array('expired', 'pending');
     $list_type_rca = array('all', 'na', 'sa_csa');
@@ -7917,6 +7918,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //         dsm($uwwtpinfo_for_agglo);
 		//cn@oieau 19/01/2017 addition in order to add the leak to the C/NC/NR load : leak = connected load - total entering load
 		$agg_leak = ($line[$ind['connected_to_collecting_system_p._e.']] - $line[$ind['total_entering_load_p._e.']]);
+        //In 2016 for CY, we need to add $line[$ind['neither_collecting_system_nor_ias_p._e.']] in leak value 
+        if($year >= 2016 && $conf['siif_eru_country_code'] == 'cy'){
+            $agg_leak+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];
+        }
 		if ($agg_leak > 0){
 			if($agg->field_aggart4compliance['und'][0]['value'] == 'NR'){
 				$uwwtpinfo_for_agglo['NR']['pe'] += $agg_leak;
