@@ -6434,6 +6434,29 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
            $verbose_msg.=" X-- Algo 5 : field_aggc1 = 0 \n";
         }
         if (false === empty($aArtCompliance)) {
+            if($aArtCompliance['compArt4'] == $GLOBALS['uwwtd_value']['compliance']['unknown']){
+                //Special rules for 10th report under instruction of DGEnv
+                $ids = explode('_', $node->field_siteid['und'][0]['value']);
+                if($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
+                    $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+                    $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                    if($node->field_agggenerated['und'][0]['value'] >= 10000){
+                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+                    }else{
+                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                    }
+                }
+                elseif($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
+                    $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                    $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                    if($node->field_agggenerated['und'][0]['value'] >= 10000){
+                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                    }else{
+                        $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+                    }
+                }
+            }
+            
             $node->field_aggart4compliance['und'][0]['value'] = $aArtCompliance['compArt4'];
             $node->field_aggart5compliance['und'][0]['value'] = $aArtCompliance['compArt5'];
             $node->field_aggart6compliance['und'][0]['value'] = $aArtCompliance['compArt6'];
@@ -6444,7 +6467,8 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                 $verbose_msg.=" --- Algo 5 : field_aggart6compliance = ".$aArtCompliance['compArt6']."\n"; 
             
             
-        } else {  
+        } 
+        else {  
             //e.vincent / 2015/09/02 / new algo station art4,5,6 compliance, then agglomeration art4,5,6 compliance            
             //ALGO6-algo7-algo8-algo9
             
@@ -6618,15 +6642,28 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
     uwwtd_trace($node->field_aggart4compliance['und'][0]['value']);
     uwwtd_trace($node->field_aggart5compliance['und'][0]['value']);
     uwwtd_trace($node->field_aggart6compliance['und'][0]['value']);
-             
-    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
-        || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
-        || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
-        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
-    ) {
+    
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']) {
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
+    
+    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant'] && (
+        $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+        || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
+        || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown'])
+    ) {
+        uwwtd_trace(__LINE__);
+        dsm("uwwtd_agglomeration_compliance TEST");
+        if($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']){
+            return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+        }
+        else{
+            return $GLOBALS['uwwtd_value']['compliance']['unknown'];
+        }
+        
+    }
+    
 
     if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']
         || $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['no_information']
@@ -7132,8 +7169,24 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
  * @return  array    an array with 3 keys : compArt4, compArt5, compArt6 which contains the compliance calculated  
  */ 
 function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
-{    
+{        
     uwwtd_trace(__FUNCTION__);
+    
+    //Case of transboundary UWWTP in BE 
+    /*
+    if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('BERW0000601','BERW5401001','BERW0000201','BERW0000104'))){
+        $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+        $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
+        if($agg->field_agggenerated['und'][0]['value']>=10000){
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+            $aResult['required'] = 'N';
+        }else{
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['required'] = 'S';
+        }
+        return $aResult;
+    }*/
+    
 //     uwwtd_trace(__LINE__);
     $aResult['required'] = $uwwtp->field_uwwtreatmentrequired['und'][0]['value'];
     //treatement required = primary
@@ -9219,7 +9272,6 @@ function uwwtd_atleastone_uwwtp_required_in($authorizeValue, &$infoAllAggUww)
 {
     uwwtd_trace(__FUNCTION__);
     $bResult = false;
-    
     foreach($infoAllAggUww['listUww'] as $aUwwtp) {
         if (true === in_array($aUwwtp['required'], $authorizeValue)) {
             $bResult = true;
@@ -9442,6 +9494,9 @@ function uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, $listperf)
 {
     uwwtd_trace(__FUNCTION__);
     $bResult = true;
+    if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('BERW0000601','BERW5401001','BERW0000201','BERW0000104'))){
+        return true;
+    }
 
     foreach($listperf as $perf) {
         switch($perf) {
