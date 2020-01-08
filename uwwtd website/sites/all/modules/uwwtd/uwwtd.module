@@ -958,7 +958,11 @@ function uwwtd_cron(){
         ALTER TABLE wfs."'.$agglolevel_feed_table.'"
         ADD PRIMARY KEY ("siteId");
         ');
-        
+        db_query('
+            DROP TABLE IF EXISTS wfs."UWWTD_UWWTPs_Agglo";
+            CREATE TABLE wfs."UWWTD_UWWTPs_Agglo"
+                AS SELECT * from public."UWWTD_UWWTPs_Agglo";
+        ');
         //============ Article 17 ====================
         //====MS LEVEL
         db_query('
