@@ -116,26 +116,26 @@
 					<div class="views-exposed-form">
 						<div class="views-exposed-widgets clearfix"><?php print $render_field; ?>
 							<div class="views-exposed-widget views-submit-button">
-								<button class="btn btn-info form-submit" type="submit" value="Apply" name="" id="edit-submit-agglomeration-conformity">Apply</button>
+								<button class="btn btn-info form-submit" type="submit" value="Apply" name="" id="edit-submit-agglomeration-conformity"><?php print t("Apply");?></button>
 							</div>
 							<div class="views-exposed-widget views-reset-button">
-								<button class="btn btn-default form-submit" type="submit" value="Reset" name="op" id="edit-reset">Reset</button>
+								<button class="btn btn-default form-submit" type="submit" value="Reset" name="op" id="edit-reset"><?php print t("Reset");?></button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</form>
 		</div>
-<iframe id="my_iframe" style="display:none;"></iframe>
+<!-- <iframe id="my_iframe" style="display:none;"></iframe> --> 
  <table class="download">	
 	<tr>
-			<td style="text-align:center;"><b>Title</b></td>
-			<td style="text-align:center;"><b>Coverage</b></td>
-			<td style="text-align:center;"><b>Files available</b></td>
+			<td style="text-align:center;"><b><?php print t("Title");?></b></td>
+			<td style="text-align:center;"><b><?php print t("Coverage");?></b></td>
+			<td style="text-align:center;"><b><?php print t("Files available");?></b></td>
 		</tr>
 		<tr>
-			<td>Full UWWTD reported data</td>
-			<td>Country</td>
+			<td><?php print t("Full UWWTD reported data");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<?php 
 				if (!empty($agglo->field_sourcefile['und'][0]['uri'])) {
@@ -147,13 +147,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Full Article 17 UWWTD reported data</td>
-			<td>Country</td>
+			<td><?php print t("Full Article 17 UWWTD reported data");?></td>
+			<td><?php print t("Country");?></td>
 			<td><a href="<?php print $base_url."article17/".$anneeRef ?>" target="_blank"> xlsx (Excel)</a></td>
 		</tr>
 		<tr>
-			<td>Agglomerations</td>
-			<td>Country</td>
+			<td><?php print t("Agglomerations");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
@@ -161,8 +161,8 @@
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_Agglomeration&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a></td>
 		</tr>
 		<tr>
-			<td>Urban Waste Water Treatment plants</td>
-			<td>Country</td>
+			<td><?php print t("Urban Waste Water Treatment plants");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UrbanWasteWaterTreatmentPlant&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
@@ -171,8 +171,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Discharge points</td>
-			<td>Country</td>
+			<td><?php print t("Discharge points");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_DischargePoint&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
@@ -181,13 +181,21 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Sensitive areas</td>
-			<td>Country</td>
+			<td><?php print t("Sensitive areas");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>,
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=SHAPE-ZIP" target="_blank">shp</a>,
 				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_ReceivingArea&CQL_FILTER=<?php print $annee;?>&outputFormat=KML" target="_blank">kml</a>
+			</td>
+		</tr>
+        <tr>
+			<td><?php print t("Association table between Agglomeration and Urban Waste Water Treatment plants");?></td>
+			<td><?php print t("Country");?></td>
+			<td>
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UWWTPs_Agglo&CQL_FILTER=<?php print $annee;?>" target="_blank">xml</a>, 
+				<a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&srsName=EPSG:4326&typeName=<?php print $typeName;?>_UWWTPs_Agglo&CQL_FILTER=<?php print $annee;?>&outputFormat=csv" target="_blank">csv</a>
 			</td>
 		</tr>
     </table>
@@ -197,21 +205,21 @@
 <div class="metadata">
 
 		<div class="title">
-			<h1>Metadata</h1>
+			<h1><?php print t("Metadata");?></h1>
 			<p><?php print t('In this section you can access the metadata fiches for each of the four geographical layers covered by UWWTD (91/271/EEC).'); ?></p>
 		</div>
 		
 <table class="download">		
 	<tr>
-			<td style="text-align:center;"><b>Title</b></td>
-			<td style="text-align:center;"><b>Coverage</b></td>
-			<td style="text-align:center;"><b>Download</b></td>
-			<td style="text-align:center;"><b>View</b></td>
+			<td style="text-align:center;"><b><?php print t("Title");?></b></td>
+			<td style="text-align:center;"><b><?php print t("Coverage");?></b></td>
+			<td style="text-align:center;"><b><?php print t("Download");?></b></td>
+			<td style="text-align:center;"><b><?php print t("View");?></b></td>
 		</tr>
         <?php if(variable_get('metadataAggloUid')): ?>
 		<tr>
-			<td>Agglomerations</td>
-			<td>Country</td>
+			<td><?php print t("Agglomerations");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataAggloUid');?>" download target="_blank">xml</a>, 
 				<a href="<?php print variable_get('metadataAgglo');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataAggloUid');?>" download target="_blank">pdf</a>
@@ -225,8 +233,8 @@
         <?php endif; ?>
         <?php if(variable_get('metadataUwwtpUid')): ?>
 		<tr>
-			<td>Urban Waste Water Treatment plants</td>
-			<td>Country</td>
+			<td><?php print t("Urban Waste Water Treatment plants");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="<?php print variable_get('metadataUwwtp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataUwwtpUid');?>" download target="_blank">xml</a>, 
 				<a href="<?php print variable_get('metadataUwwtp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataUwwtpUid');?>" download target="_blank">pdf</a>
@@ -240,8 +248,8 @@
         <?php endif; ?>
         <?php if(variable_get('metadataDpUid')): ?>
 		<tr>
-			<td>Discharge points</td>
-			<td>Country</td>
+			<td><?php print t("Discharge points");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="<?php print variable_get('metadataDp');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataDpUid');?>" download target="_blank">xml</a>, 
 				<a href="<?php print variable_get('metadataDp');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataDpUid');?>" download target="_blank">pdf</a>
@@ -255,8 +263,8 @@
         <?php endif; ?>
         <?php if(variable_get('metadataRcaUid')): ?>
 		<tr>
-			<td>Sensitive areas</td>
-			<td>Country</td>
+			<td><?php print t("Sensitive areas");?></td>
+			<td><?php print t("Country");?></td>
 			<td>
 				<a href="<?php print variable_get('metadataRca');?>/ows/xml.metadata.get?uuid=<?php print variable_get('metadataRcaUid');?>" download target="_blank">xml</a>, 
 				<a href="<?php print variable_get('metadataRca');?>/ows/md.format.pdf?xsl=full_view&uuid=<?php print variable_get('metadataRcaUid');?>" download target="_blank">pdf</a>
@@ -275,33 +283,33 @@
 <div class="services">
 
 		<div class="title">
-			<h1>Services</h1>
+			<h1><?php print t("Services");?></h1>
 			<p><?php print t('In this section you can access the webservices for each of the four geographical layers covered by UWWTD (91/271/EEC).');?></p>
 		</div>
 			
  <table class="download">		
 	<tr>
-			<td style="text-align:center;"><b>Webservice</b></td>
+			<td style="text-align:center;"><b><?php print t("Webservice");?></b></td>
 			<td style="text-align:center;"><b><?php print t('DescribeFeatureType</b>: description of the information layers, name and type of fields.');?></td>
 			<td style="text-align:center;"><b><?php print t('GetFeature</b>: access to data in GML format');?></td>
 		</tr>
 		<tr>
-			<td style="text-align:center;"><b>Agglomeration</b></td>
+			<td style="text-align:center;"><b><?php print t("Agglomeration");?></b></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">Agglomeration</a></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_Agglomeration" target="_blank">Agglomeration</a></td>
 		</tr>
 		<tr>
-			<td style="text-align:center;"><b>Treatment plant</b></td>
-			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">Download UrbanWasteWaterTreatmentPlant</a></td>
+			<td style="text-align:center;"><b><?php print t("Treatment plant");?></b></td>
+			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">UrbanWasteWaterTreatmentPlant</a></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_UrbanWasteWaterTreatmentPlant" target="_blank">UrbanWasteWaterTreatmentPlant</a></td>
 		</tr>
 		<tr>
-			<td style="text-align:center;"><b>Discharge point</b></td>
+			<td style="text-align:center;"><b><?php print t("Discharge point");?></b></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">DischargePoint</a></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_DischargePoint" target="_blank">DischargePoint</a></td>
 		</tr>
 		<tr>
-			<td style="text-align:center;"><b>Receiving area</b></td>
+			<td style="text-align:center;"><b><?php print t("Receiving area");?></b></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">ReceivingArea</a></td>
 			<td><a href="http://www.uwwtd.oieau.fr/services/ows/?service=WFS&version=1.1.0&request=GetFeature&typeName=<?php print $typeName; ?>_ReceivingArea" target="_blank">ReceivingArea</a></td>
 		</tr>
@@ -312,7 +320,7 @@
 <div class="references">
  
 		<div class="title">
-			<h1>How to make references to this website?</h1>
+			<h1><?php print t("How to make references to this website?");?></h1>
 			<p><?php print t('All the items description page (agglomeration, treatment plant, discharge point and sensitive areas) can be accessed directly, and then referenced on other websites.'); ?></p>
 			<p><?php print t('This can be done by using the following URL pattern: <br>
 			http://uwwtd.oieau.fr/[country]/[name of the element]/[ID of the element]<br>For instance:'); ?></p>

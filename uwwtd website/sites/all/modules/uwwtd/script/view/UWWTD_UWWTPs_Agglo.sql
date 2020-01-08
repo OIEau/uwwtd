@@ -4,10 +4,12 @@
     uww.title AS "uwwName",
     aggsiteid.field_siteid_value AS "aggSiteId",
     aggid.field_inspireidlocalid_value AS "aggCode",
-    agg.title AS "aggName"
+    agg.title AS "aggName",
+    annee.field_anneedata_value AS "repReportedPerdiod"
    FROM drupal_field_data_field_uwwaggliste list
-     LEFT JOIN drupal_node agg ON agg.nid = list.field_uwwaggliste_nid
-     LEFT JOIN drupal_node uww ON uww.nid = list.entity_id
+     JOIN drupal_node agg ON agg.nid = list.field_uwwaggliste_nid AND agg.type = 'agglomeration'
+     JOIN drupal_node uww ON uww.nid = list.entity_id AND uww.type = 'uwwtp'
+     LEFT JOIN drupal_field_data_field_anneedata annee ON uww.nid = annee.entity_id
      LEFT JOIN drupal_field_data_field_repcode repcode ON uww.nid = repcode.entity_id
      LEFT JOIN drupal_field_data_field_inspireidlocalid uwwid ON uww.nid = uwwid.entity_id
      LEFT JOIN drupal_field_data_field_inspireidlocalid aggid ON agg.nid = aggid.entity_id
