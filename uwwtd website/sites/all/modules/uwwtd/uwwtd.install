@@ -5368,6 +5368,18 @@ function uwwtd_update_7175(&$context) {
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
+function uwwtd_update_7176(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+    uwwtd_create_or_replace_view('UWWTD_UWWTPs_Agglo');
+    db_query('
+        DROP TABLE IF EXISTS wfs."UWWTD_UWWTPs_Agglo";
+        CREATE TABLE wfs."UWWTD_UWWTPs_Agglo"
+            AS SELECT * from public."UWWTD_UWWTPs_Agglo";
+    ');
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
 
 
 /**
