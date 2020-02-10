@@ -319,16 +319,18 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     $with = 'WITH uwwtp_min_agg AS(
         SELECT n.nid, n.type, n.title 
         FROM {node} n
-            LEFT join
+            JOIN
               {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
-            LEFT JOIN
+            JOIN
               {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-            LEFT join
+            JOIN {field_data_field_uwwcollectingsystem}  con
+                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
+            JOIN
               {field_data_field_agguwwliste} f_uwwtp_agglo
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
-            LEFT join
+            JOIN
             {field_data_field_agggenerated} f_agggenerated
                 ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
         WHERE n.type = :typenode
@@ -341,11 +343,13 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
     //warning this request count the number of agglomeration and not just the number of uwwtp
 	$query .= ' COUNT(n.nid) AS  total_count, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS loadentering_sum
     FROM {node} n
-        join uwwtp_min_agg
+        JOIN uwwtp_min_agg
             ON n.nid = uwwtp_min_agg.nid 
-        LEFT JOIN
+        JOIN
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
+        JOIN {field_data_field_uwwcollectingsystem}  con
+                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
         LEFT JOIN
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
@@ -364,11 +368,11 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 		WHERE n.type = :typenode
     ' .
     $conditions . '
-		group by f_annee.field_anneedata_value,' . $group_by;
+		GROUP BY f_annee.field_anneedata_value,' . $group_by;
 
     $param = array(
         ':typenode' => 'uwwtp',
-        ':min_agg' => variable_get('min_aggenerated_display', '1999'),
+        ':min_agg' => variable_get('min_aggenerated_display', '2000'),
     );
     try {
         $result = db_query($query,$param);
