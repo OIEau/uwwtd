@@ -1,0 +1,10 @@
+name = GDPR Form Compliance
+description = This module aims at making the forms compliant with the EU GDPR regulation.
+core = 7.x
+configure = admin/config/system/gdpr-form-compliance
+
+; Information added by Drupal.org packaging script on 2018-05-23
+version = "7.x-1.1"
+core = "7.x"
+project = "gdpr_form_compliance"
+datestamp = "1527056586"

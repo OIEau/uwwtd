@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function gdpr_form_compliance_schema() {
+  $schema['gdpr_form_compliance'] = array(
+    'description' => 'GDPR form compliance table.',
+    'fields' => array(
+      'form_id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'compliance_field_value' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'data_protection_statement_url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'data_protection_statement_link_text' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'unique keys' => array(
+      'form_id' => array('form_id'),
+    ),
+  );
+
+  return $schema;
+}
