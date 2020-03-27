@@ -1,0 +1,79 @@
+<?php
+
+/**
+ * @file
+ * GDPR form compliance module file.
+ *
+ * Author: Nikolai Fischer (nikolai@kommune3.org)
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function gdpr_form_compliance_menu() {
+  $items['admin/config/system/gdpr-form-compliance'] = array(
+    'title' => 'GDPR Form Compliance',
+    'description' => 'Make your form compliant with the EU GDPR regulation.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gdpr_form_compliance_admin_form'),
+    'access arguments' => array('administer GDPR Form Compliance settings'),
+    'file' => 'gdpr_form_compliance.admin.inc',
+  );
+
+  $items['admin/config/system/gdpr-form-compliance/%/edit'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gdpr_form_compliance_edit_form', 4),
+    'access arguments' => array('administer GDPR Form Compliance settings'),
+    'file' => 'gdpr_form_compliance.admin.inc',
+  );
+
+  $items['admin/config/system/gdpr-form-compliance/%/delete'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('gdpr_form_compliance_delete_form', 4),
+    'access arguments' => array('administer GDPR Form Compliance settings'),
+    'file' => 'gdpr_form_compliance.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_permission
+ *
+ * @return array
+ */
+function gdpr_form_compliance_permission() {
+  return array(
+    'administer GDPR Form Compliance settings' => array(
+      'title' => t('Administer GDPR Form Compliance settings'),
+      'description' => t('Administer GDPR Form Compliance settings.'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_form_alter
+ *
+ * @param $form
+ * @param $form_state
+ * @param $form_id
+ */
+function gdpr_form_compliance_form_alter(&$form, &$form_state, $form_id) {
+  if(variable_get('gdpr_form_compliance_display_form_ids', false)) {
+    $form['gdpr_form_compliance_form_id'] = array(
+      '#markup' => t('Form ID: @form_id', array('@form_id' => $form_id))
+    );
+  }
+
+  if($settings = gdpr_form_compliance_load_by_form_id($form_id)) {
+    $form['gdpr_form_compliance'] = array(
+      '#type' => 'checkbox',
+      '#title' => t($settings->compliance_field_value, array('!data_protection_statement' => l(t($settings->data_protection_statement_link_text), $settings->data_protection_statement_url))),
+      '#required' => true,
+    );
+  }
+}
+
+function gdpr_form_compliance_load_by_form_id($form_id) {
+  return db_query('SELECT * FROM {gdpr_form_compliance} WHERE form_id=:form_id', array(':form_id' => $form_id))->fetchObject();
+}
