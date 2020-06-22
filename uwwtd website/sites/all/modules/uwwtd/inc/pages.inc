@@ -2196,7 +2196,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+    libraries_load('d3.drupal');
 	$type = "receiving_area";
     $option = array();
 
