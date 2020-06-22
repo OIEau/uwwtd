@@ -1222,6 +1222,10 @@ function uwwtd_get_cache_key_page_dcp($option)
 {
     return 'page_dcp_' . $option['field_anneedata_value'];
 }
+function uwwtd_get_cache_key_page_dcp_reuse($option)
+{
+    return 'page_dcp_reuse' . $option['field_anneedata_value'];
+}
 
 function uwwtd_get_cache_key_page_agglo_treatment($option)
 {
