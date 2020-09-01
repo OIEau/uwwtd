@@ -115,7 +115,44 @@ if (!function_exists('array_column')) {
 
 function uwwtd_debug(){
     
+    
+
     return "debug";
+    
+        
+    /*
+    //fix link between agglomeration and inactive uwwtp
+    //In inactive UWWTP  case the tag "UwwtpAgglos" is not defined and the link between agglomeration-uwwtp is not created
+    //but we can build the link using the "field_uwwtdaggid" (aggCode give in the UWWTP node) 
+    //field_uwwtdaggid
+    //Launch a request in order to find orphan UWWTP 
+    
+    module_load_include('inc','uwwtd','inc/data_center');
+    $annee = '2018';
+    $ids = [];
+    $result = db_query("
+        SELECT n.nid AS nid, n.title AS title, a.field_uwwtdaggid_value AS aggid
+        FROM  {node} n
+            JOIN {field_data_field_siteid} r ON r.entity_id = n.nid
+            JOIN {field_data_field_uwwtdaggid} a ON a.entity_id = n.nid
+            LEFT JOIN {field_data_field_uwwaggliste} agg ON agg.entity_id = n.nid 
+        WHERE  n.type = 'uwwtp' 
+            AND a.field_uwwtdaggid_value IS NOT NULL
+            AND agg.field_uwwaggliste_nid IS NULL
+            AND r.field_siteid_value LIKE '".$annee."%'
+     ");
+     while($row = $result->fetchAssoc()) {
+         //$ids[] = $row;
+         //dsm($row);
+         $siteAggId = $annee.'_agg_'.uwwtd_check_text($row['aggid']);
+         $aggNid = uwwtd_check_exist($siteAggId);
+         uwwtd_link_uww_agglo_node($annee, $aggNid, $row['nid']);
+         //break;
+     }
+    //dsm(count($ids));
+    */
+    
+    
     
    /* 
    module_load_include('inc','uwwtd','inc/data_center');
@@ -1076,7 +1113,7 @@ function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = n
         if ($node) {
             $key = $node->nid;
             //Don't raise error related to inactive element
-            if(isset($node->field_status) && $node->field_status['und'][0]['value']!=1){
+            if((isset($node->field_status) && $node->field_status['und'][0]['value']!=1) || !isset($node->field_status)){
                 return null;
             }
         } else {
