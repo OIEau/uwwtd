@@ -1901,6 +1901,8 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     $title = 'UWWTD Treatment Plants- Pressure map';
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
+    drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
+    libraries_load('d3.drupal');
     $type = "uwwtp";
 	$option = array();
     $option['order'] = $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure'];
@@ -2194,7 +2196,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+    libraries_load('d3.drupal');
 	$type = "receiving_area";
     $option = array();
 
@@ -2438,7 +2440,7 @@ function uwwtd_dcp_page($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+    libraries_load('d3.drupal');
 	$type = "discharge_point";
     $option = array();
 
@@ -2727,7 +2729,7 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
-//     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/../../libraries/d3/d3.v3.min.js')
+    libraries_load('d3.drupal');
 	$type = "discharge_point";
     $option = array();
 
@@ -2748,7 +2750,7 @@ function uwwtd_dcp_reuse_page($type_export = ''){
     }
 
     $cache = '';
-    $cache_name = uwwtd_get_cache_key_page_dcp($filter['filter']);
+    $cache_name = uwwtd_get_cache_key_page_dcp_reuse($filter['filter']);
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
