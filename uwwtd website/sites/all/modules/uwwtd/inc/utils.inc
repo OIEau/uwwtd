@@ -279,7 +279,7 @@ function uwwtd_force_cache(){
             'file' => drupal_get_path('module', 'uwwtd') . '/inc/utils.inc',
         );
         batch_set($batch); //Starting the Batch
-        batch_process('admin/config/uwwtd/force-cache'); 
+        batch_process('admin/config/uwwtd'); 
     }
     
     

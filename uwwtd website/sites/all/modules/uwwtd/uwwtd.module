@@ -449,7 +449,7 @@ function uwwtd_menu(){
 	//MENUS FOR CONFIGURATION
 
   	$items['admin/config/uwwtd'] = array(
-    'title' => 'General settings',
+    'title' => 'UWWTD General settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('uwwtd_general_config'),
     'access arguments' => array('Data-management access'),
