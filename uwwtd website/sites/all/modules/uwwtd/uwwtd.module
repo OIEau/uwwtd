@@ -484,6 +484,15 @@ function uwwtd_menu(){
     'file' => 'inc/uwwtd.admin.config.inc'
     );
 
+    $items['admin/config/uwwtd/force-cache'] = array(
+    'title' => 'Force main pages caches',
+    'page callback' => 'uwwtd_force_cache',
+    //'page arguments' => array('uwwtd_download_config'),
+    'access arguments' => array('Data-management access'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'inc/uwwtd.admin.config.inc'
+    );
+
   //rebuild slovenia deadline
     $items['correction_slovenia_date'] = array(
     'page callback' => 'uwwtd_correction_slovenia_date',
