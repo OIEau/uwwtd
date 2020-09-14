@@ -66,7 +66,7 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
 					$out[$year][] = array(
 						"value" => (float)$data,
 						"label" => $GLOBALS['ms_level']['connection'][$key]['label'],
-						"valueformat" => uwwtd_format_number(round($data, 0)).' pe',
+						"valueformat" => uwwtd_format_number(round($data, 0)).' '.t('pe'),
 						"color" => $GLOBALS['ms_level']['connection'][$key]['color'],
 					);
 				}
@@ -127,7 +127,7 @@ function uwwtd_stat_sewage_network_data($yearSelected, $yearsPossibles){
 			
 			$out[$row['type']]['data'][$row['year']] = array(
 				'equValue' => $row['sn_sum'],
-				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']). ' pe',
+				'equFormated' => uwwtd_format_number((integer)$row['sn_sum']).' '.t('pe'),
 				'aggValue' => $row['sn_count'],
 				'aggFormated' => uwwtd_format_number((integer)$row['sn_count']) . ' na',
 				'color' => $GLOBALS['ms_level']['sewage_network'][$row['type']]['color'],
@@ -256,7 +256,7 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
     		} else {
     			$data[$complianceState]['data'][(string)$row['year']] = array(
                     'pe'=>$row['generated_sum'], 
-    				'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' pe', 
+    				'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' '.t('pe'), 
     				'nb'=>$row['total_count'],
     				'nb_format'=>uwwtd_format_number($row['total_count'], 0),
                     'color'=>$GLOBALS['uwwtd']['compliance_color'][$row['field_aggcompliance_value']]
@@ -401,7 +401,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
             if(is_null($row['total_count'])) {$row['total_count']=0;}
             $data[$complianceState]['data'][(string)$row['year']] = array(
                 'pe'=>$row['loadentering_sum'], 
-                'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' pe', 
+                'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' '.t('pe'), 
                 'nb'=>$row['total_count'],
                 'nb_format'=>uwwtd_format_number($row['total_count'], 0),
                 'color'=>$color
@@ -487,7 +487,7 @@ function uwwtd_stat_national_generated_by_agglomeration($yearSelected, $yearsPos
 				} else {
 					$data[$libelle]['data'][(string)$row['year']] = array(
                         'pe'=>$row['generated_sum'],
-						'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' pe',
+						'pe_format'=>uwwtd_format_number($row['generated_sum'], 0) .' '.t('pe'),
 						'nb'=>$row['number'],
 						'nb_format'=>uwwtd_format_number($row['number'], 0),
                         'color'=>$GLOBALS['uwwtd']['uwwtp_size_color'][$libelle]
