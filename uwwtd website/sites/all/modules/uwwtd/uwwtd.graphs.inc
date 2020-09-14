@@ -1143,7 +1143,7 @@ function getRow8Graphs($results) {
 function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 	$front = array();
 	$columns = array();
-	$columns['year'] = 'Year';
+	$columns['year'] = t('Year');
 	$backRows = array();
 	$back = '';
 	
@@ -1153,7 +1153,7 @@ function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 		foreach ($arraySource as $year => $yearRow) {
 			// Pour chaque données d'année :
 			foreach ($yearRow as $complianceName => $compliance) {
-				$columns[$complianceName] = $complianceName;
+				$columns[$complianceName] = t($complianceName);
 				
 				// Pour chaque article :
 				foreach ($compliance as $name => $article) {
@@ -1166,8 +1166,8 @@ function getFrontAndBackFormated($arraySource, $articleName, $colors) {
 						
 						// Création ligne front :
 						$front[$year][$complianceName]['value'] = $article;
-						$front[$year][$complianceName]['valueformat'] = uwwtd_format_number($article) .' pe';
-						$front[$year][$complianceName]['label'] = $complianceName;
+						$front[$year][$complianceName]['valueformat'] = uwwtd_format_number($article) .' '.t('pe');
+						$front[$year][$complianceName]['label'] = t($complianceName);
 						$front[$year][$complianceName]['color'] = $color;
 						
 						// Création ligne back :

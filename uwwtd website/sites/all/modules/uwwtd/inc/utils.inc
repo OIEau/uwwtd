@@ -115,7 +115,44 @@ if (!function_exists('array_column')) {
 
 function uwwtd_debug(){
     
+    //uwwtd_force_cache();
+
     return "debug";
+    
+        
+    /*
+    //fix link between agglomeration and inactive uwwtp
+    //In inactive UWWTP  case the tag "UwwtpAgglos" is not defined and the link between agglomeration-uwwtp is not created
+    //but we can build the link using the "field_uwwtdaggid" (aggCode give in the UWWTP node) 
+    //field_uwwtdaggid
+    //Launch a request in order to find orphan UWWTP 
+    
+    module_load_include('inc','uwwtd','inc/data_center');
+    $annee = '2018';
+    $ids = [];
+    $result = db_query("
+        SELECT n.nid AS nid, n.title AS title, a.field_uwwtdaggid_value AS aggid
+        FROM  {node} n
+            JOIN {field_data_field_siteid} r ON r.entity_id = n.nid
+            JOIN {field_data_field_uwwtdaggid} a ON a.entity_id = n.nid
+            LEFT JOIN {field_data_field_uwwaggliste} agg ON agg.entity_id = n.nid 
+        WHERE  n.type = 'uwwtp' 
+            AND a.field_uwwtdaggid_value IS NOT NULL
+            AND agg.field_uwwaggliste_nid IS NULL
+            AND r.field_siteid_value LIKE '".$annee."%'
+     ");
+     while($row = $result->fetchAssoc()) {
+         //$ids[] = $row;
+         //dsm($row);
+         $siteAggId = $annee.'_agg_'.uwwtd_check_text($row['aggid']);
+         $aggNid = uwwtd_check_exist($siteAggId);
+         uwwtd_link_uww_agglo_node($annee, $aggNid, $row['nid']);
+         //break;
+     }
+    //dsm(count($ids));
+    */
+    
+    
     
    /* 
    module_load_include('inc','uwwtd','inc/data_center');
@@ -219,6 +256,127 @@ function uwwtd_debug(){
     */
     return 'debug';
 }
+
+function uwwtd_force_cache(){
+    //get all available year
+    $years = uwwtd_get_all_year();
+    
+    //Set batches
+    $operations[] = array('uwwtd_force_cache_agg', array('years'=>$years));
+    $operations[] = array('uwwtd_force_cache_uwwtp', array('years'=>$years));
+    $operations[] = array('uwwtd_force_cache_dcp', array('years'=>$years));
+    $operations[] = array('uwwtd_force_cache_sensitive_area', array('years'=>$years));
+    
+        //Start operation 
+    if(!empty($years)){
+        $batch = array(
+            'operations' => $operations,
+            'finished' => 'uwwtd_force_cache_finish',
+            'title' => t('Processing Batch'),
+            'init_message' => t('Batch is starting for years: ').implode(', ', $years),
+            'progress_message' => t('Processed @current out of @total.'),
+            'error_message' => t('Harvesting Batch has encountered an error.'),
+            'file' => drupal_get_path('module', 'uwwtd') . '/inc/utils.inc',
+        );
+        batch_set($batch); //Starting the Batch
+        batch_process('admin/config/uwwtd'); 
+    }
+    
+    
+}
+
+function uwwtd_force_cache_agg($years, &$context){
+         //Initialisation du batch
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($years);
+            $context['results']['years'] = array_values($years);
+            $context['sandbox']['progress']=0;
+        }
+        
+        $year = $context['results']['years'][$context['sandbox']['progress']];
+        module_load_include('inc','uwwtd','inc/pages');
+        uwwtd_get_data_agglomeration(['field_anneedata_value'=>$year]);
+        $context['message'] = '<h3>Cache for '.$year.' agglomerations pages  Ok </h3>';
+        $context['sandbox']['progress']++;
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        } 
+}
+function uwwtd_force_cache_uwwtp($years, &$context){
+         //Initialisation du batch
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($years);
+            $context['results']['years'] = array_values($years);
+            $context['sandbox']['progress']=0;
+        }
+        
+        $year = $context['results']['years'][$context['sandbox']['progress']];
+        module_load_include('inc','uwwtd','inc/pages');
+        uwwtd_get_data_uwwtp(['field_anneedata_value'=>$year]);
+        $context['message'] = '<h3>Cache for '.$year.' UWWTPS pages  Ok </h3>';
+        $context['sandbox']['progress']++;
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        } 
+}
+function uwwtd_force_cache_dcp($years, &$context){
+         //Initialisation du batch
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($years);
+            $context['results']['years'] = array_values($years);
+            $context['sandbox']['progress']=0;
+        }
+        
+        $year = $context['results']['years'][$context['sandbox']['progress']];
+        module_load_include('inc','uwwtd','inc/pages');
+        uwwtd_get_data_dcp(['field_anneedata_value'=>$year]);
+        $context['message'] = '<h3>Cache for '.$year.' DCP pages  Ok </h3>';
+        $context['sandbox']['progress']++;
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        } 
+}
+function uwwtd_force_cache_sensitive_area($years, &$context){
+         //Initialisation du batch
+        if (!isset($context['sandbox']['progress'])) {
+            $context['sandbox']['max'] = count($years);
+            $context['results']['years'] = array_values($years);
+            $context['sandbox']['progress']=0;
+        }
+        
+        $year = $context['results']['years'][$context['sandbox']['progress']];
+        module_load_include('inc','uwwtd','inc/pages');
+        uwwtd_get_data_sensitive_areas(['field_anneedata_value'=>$year]);
+        $context['message'] = '<h3>Cache for '.$year.' Sensitive areas pages  Ok </h3>';
+        $context['sandbox']['progress']++;
+        
+        if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+            $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+        } 
+}
+//Fonction de fin de process
+function uwwtd_force_cache_finish($success, $results, $operations){
+  if ($success) {
+  // Here we do something meaningful with the results.
+    //$message = t('@count items successfully processed:', array('@count' => count($results['log'])));
+    //$message .= theme('item_list', array('items' => $results['log']));
+    //drupal_set_message($message);     
+    
+    drupal_set_message("uwwtd_force_cache_finish");
+    
+  }
+  else {
+  // An error occurred.
+  // $operations contains the operations that remained unprocessed.
+    $error_operation = reset($operations);
+    $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
+    drupal_set_message($message, 'error');
+  }
+}
+
 
 function uwwtd_get_gg_snapshot($dest_uri, $lat, $lon, $maptype, $zoom = 15, $size = '640x640', $format = 'png'){
     $url = url(
@@ -1076,7 +1234,7 @@ function uwwtd_add_error($year, $type, $category, $error, $timestamp, $index = n
         if ($node) {
             $key = $node->nid;
             //Don't raise error related to inactive element
-            if(isset($node->field_status) && $node->field_status['und'][0]['value']!=1){
+            if((isset($node->field_status) && $node->field_status['und'][0]['value']!=1) || !isset($node->field_status)){
                 return null;
             }
         } else {

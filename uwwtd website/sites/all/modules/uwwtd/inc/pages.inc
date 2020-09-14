@@ -664,7 +664,7 @@ function uwwtd_get_data_sensitive_areas($option){
 //======================================================================PAGES ====================================================
 
 function uwwtd_page_agglomeration_compliance($type_export = ''){
-    $title = 'UWWTD Agglomerations- Compliance map';
+    $title = t('UWWTD Agglomerations - Compliance map');
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -705,7 +705,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
     //if(isset($data[0]['field_article17_agglo_nid']) || ($data[0]['field_article17_agglo_nid']!= '')){
         $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggcompliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
             'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
@@ -719,7 +719,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     }
     else{
        $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggcompliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
             'field_aggart3compliance_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration']['field_aggart3compliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
@@ -781,11 +781,11 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
     $optionstyle['popup_title_type'] = 'agglomeration';
 	
     $optionstyle['popup'] = array(
-        'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
-        'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
-        'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
-        'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
+        'field_agggenerated_value_format' => array('label' => t('Generated load (p.e.)')),
+        'field_aggcompliance_value_format' => array('label' => t('Compliance')),
+        'field_aggart3compliance_value_format' => array('label' => t('Collection compliance')),
+        'field_aggart4compliance_value_format' => array('label' => t('2nd treatment compliance')),
+        'field_aggart5compliance_value_format' => array('label' => t('3rd treatment compliance')),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
 //         'field_aggc1_value' => array('label' => 'Collecting system'),
 //         'field_aggc2_value' => array('label' => 'Individual and Appropriate Systems (IAS)'),
@@ -911,13 +911,13 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
         
         $seg2 = array();
         $seg2['value'] = (float)$detail['field_agggenerated_value'];
-        $seg2['valueformat'] = number_format($detail['field_agggenerated_value']).' pe';
+        $seg2['valueformat'] = number_format($detail['field_agggenerated_value']).' '.t('pe');
         $seg2['label'] = $compliance_format;
         $seg2['color'] = $optionstyle['color']['list'][$compliance_format];
         $data_pie_2[] = $seg2;
         
         $data_table_2[]=array(
-            uwwtd_format_number($detail['field_agggenerated_value']).' pe',
+            uwwtd_format_number($detail['field_agggenerated_value']).' '.t('pe'),
             $compliance_format
         );
         $total_2 += $detail['field_agggenerated_value'];
@@ -994,7 +994,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
                 . '<div class="rows data-table-row">'
                  . '<div class="data-table-header">'
                   . '<b>'.count($rows) ." results</b>"		
-                    . '<div class="hideprint export-result"> | Download results: '
+                    . '<div class="hideprint export-result"> | '.t('Download results').': '
                         .l('csv', 'agglomerations/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
                         .l('xls', 'agglomerations/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
                     .'</div>'
@@ -1007,7 +1007,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
          ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.='<p><strong>'.t('Sorry, your search returned no results').'</strong></p>';
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -1019,7 +1019,7 @@ function uwwtd_page_agglomeration_compliance($type_export = ''){
 
 
 function uwwtd_page_agglomeration_connection($type_export = ''){
-    $title = 'Agglomeration collection map and list';
+    $title = t('Agglomeration collection map and list');
     drupal_set_title($title);
     
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
@@ -1063,7 +1063,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 	$data = uwwtd_get_data_agglomeration($filter['filter']);
 	if(uwwtd_data_contain_art17($data, 'field_article17_agglo_nid')){
        $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggc2_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc2_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1074,7 +1074,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
         );
    }else{
        $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_agggenerated_value'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_agggenerated_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggc2_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc2_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_aggc1_value'             => array('title' => $GLOBALS['uwwtd']['ui']['field']['agglomeration_treatment']['field_aggc1_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1108,15 +1108,15 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 
     $optionstyle['popup_title_type'] = 'agglomeration';
     $optionstyle['popup'] = array(
-        'field_agggenerated_value_format' => array('label' => 'Generated load (p.e.)'),
-        'field_aggcompliance_value_format' => array('label' => 'Compliance'),
-        'field_aggart3compliance_value_format' => array('label' => 'Collection compliance'),
-        'field_aggart4compliance_value_format' => array('label' => '2nd treatment compliance'),
-        'field_aggart5compliance_value_format' => array('label' => '3rd treatment compliance'),
+        'field_agggenerated_value_format' => array('label' => t('Generated load (p.e.)')),
+        'field_aggcompliance_value_format' => array('label' => t('Compliance')),
+        'field_aggart3compliance_value_format' => array('label' => t('Collection compliance')),
+        'field_aggart4compliance_value_format' => array('label' => t('2nd treatment compliance')),
+        'field_aggart5compliance_value_format' => array('label' => t('3rd treatment compliance')),
 //         'field_aggart6compliance_value' => array('label' => 'Article 6 compliance'),
-        'field_aggc1_value_format' => array('label' => 'Collecting system'),
-        'field_aggc2_value_format' => array('label' => 'Individual and Appropriate Systems (IAS)'),
-        'field_aggpercwithouttreatment_value_format' => array('label' => 'Discharge without treatment'),
+        'field_aggc1_value_format' => array('label' => t('Collecting system')),
+        'field_aggc2_value_format' => array('label' => t('Individual and Appropriate Systems (IAS)')),
+        'field_aggpercwithouttreatment_value_format' => array('label' =>t('Discharge without treatment')),
     );
     $graph = array();
         $field_agggenerated_value = 0;
@@ -1267,7 +1267,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
                 . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'agglomerations/connection/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'agglomerations/connection/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -1278,7 +1278,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
      ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -1289,7 +1289,7 @@ function uwwtd_page_agglomeration_connection($type_export = ''){
 }
 
 function uwwtd_page_uwwtps_compliance($type_export = ''){
-    $title = 'UWWTD Treatment Plants- Compliance map';
+    $title = t('UWWTD Treatment Plants - Compliance map');
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -1327,7 +1327,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 	$data = uwwtd_get_data_uwwtp($filter['filter']);      
 	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
             'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
@@ -1342,7 +1342,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         );
    }else{
         $list_field = array(
-            'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwtreatmenttype_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwtreatmenttype_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['treatment_type_in_place']),
             'field_uwwcompliance_value'     => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp']['field_uwwcompliance_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['compliance']),
@@ -1378,13 +1378,13 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     $optionstyle['popup_title_type'] = 'treatment-plant';
 
     $optionstyle['popup'] = array(
-        'field_uwwcompliance_value_format' => array('label' => 'Compliance'),
-        'field_uwwloadenteringuwwtp_value_format' => array('label' => 'Load entering (p.e.)'),
-        'field_physicalcapacityactivity_value_format' => array('label' => 'Capacity'),
-        'field_uwwbod5perf_value_format' => array('label' => 'Performance: BOD5'),
-        'field_uwwcodperf_value_format' => array('label' => 'Performance: COD'),
-        'field_uwwntotperf_value_format' => array('label' => 'Performance: Total nitrogen'),
-        'field_uwwptotperf_value_format' => array('label' => 'Performance: Total phosphorus'),
+        'field_uwwcompliance_value_format' => array('label' => t('Compliance')),
+        'field_uwwloadenteringuwwtp_value_format' => array('label' => t('Load entering (p.e.)')),
+        'field_physicalcapacityactivity_value_format' => array('label' => t('Capacity')),
+        'field_uwwbod5perf_value_format' => array('label' => t('Performance: BOD5')),
+        'field_uwwcodperf_value_format' => array('label' => t('Performance: COD')),
+        'field_uwwntotperf_value_format' => array('label' => t('Performance: Total nitrogen')),
+        'field_uwwptotperf_value_format' => array('label' => t('Performance: Total phosphorus')),
     );
 
     //todo format data in table
@@ -1539,9 +1539,9 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     
     
 	$headers[] = array(
-		array('data' => 'Description ', 'colspan' => 7, 'class' => 'customTableHeader'),
-		array('data' => 'Compliance ', 'class' => 'customTableHeader'),
-		array('data' => 'Performance', 'colspan' => 4, 'class' => 'customTableHeader'),   	
+		array('data' => t('Description'), 'colspan' => 7, 'class' => 'customTableHeader'),
+		array('data' => t('Compliance'), 'class' => 'customTableHeader'),
+		array('data' => t('Performance'), 'colspan' => 4, 'class' => 'customTableHeader'),   	
 	);
     //if article 17, add a column
     /*
@@ -1579,7 +1579,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
             .'<div class="rows data-table-row">'
 			. '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'uwwtps/compliance/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'uwwtps/compliance/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -1590,7 +1590,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
      ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -1601,7 +1601,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 }
 
 function uwwtd_page_uwwtps_treatment($type_export = ''){
-    $title = 'UWWTD Treatment Plants- Treatment map';
+    $title = t('UWWTD Treatment Plants- Treatment map');
     drupal_set_title($title); 
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -1649,7 +1649,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
 	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
         $list_field = array(
-            'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'             => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwprimarytreatment_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwprimarytreatment_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
             'field_uwwsecondarytreatment_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwsecondarytreatment_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
@@ -1661,7 +1661,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
         );
    }else{
        $list_field = array(
-            'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'             => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwprimarytreatment_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwprimarytreatment_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
             'field_uwwsecondarytreatment_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_treatment']['field_uwwsecondarytreatment_value_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
@@ -1875,7 +1875,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             . '<div class="rows data-table-row">'
 			. '<div class="data-table-header">'
 			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'uwwtps/treatment/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'uwwtps/treatment/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -1885,7 +1885,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
             .'</div>';
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -1898,7 +1898,7 @@ function uwwtd_page_uwwtps_treatment($type_export = ''){
 
 //=======================================TODO : manage style for scale point and color with E-PRT range
 function uwwtd_page_uwwtps_pressure($type_export = ''){
-    $title = 'UWWTD Treatment Plants- Pressure map';
+    $title = t('UWWTD Treatment Plants - Pressure map');
     drupal_set_title($title);  //todo
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -1937,7 +1937,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 	$data = uwwtd_get_data_uwwtp($filter['filter']);
 	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
-            'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+            'field_anneedata_value'             => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
             'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwboddischarge_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwboddischarge_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
             'field_uwwcoddischarge_value' => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwcoddischarge_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1950,7 +1950,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
         );
    }else{
        $list_field = array(
-        'field_anneedata_value'             => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'field_anneedata_value'             => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
         
         'field_uwwloadenteringuwwtp_value'  => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwloadenteringuwwtp_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
         'field_uwwboddischarge_value'   => array('title' => $GLOBALS['uwwtd']['ui']['field']['uwwtp_pressure']['field_uwwboddischarge_value_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
@@ -1979,17 +1979,17 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 
     $optionstyle['popup_title_type'] = 'treatment-plant';
     $optionstyle['popup'] = array(
-        'field_uwwtreatmenttype_value_format' => array('label' => 'Treatment type in place'),
-        'field_physicalcapacityactivity_value_format' => array('label' => 'Capacity'),
-        'field_uwwcompliance_value_format' => array('label' => 'Compliance'),
-        'field_uwwprimarytreatment_value_format' => array('label' => 'Primary treatment'),
-        'field_uwwsecondarytreatment_value_format' => array('label' => 'Secondary treatment'),
-        'field_uwwnremoval_value_format' => array('label' => 'N-removal'),
-        'field_uwwpremoval_value_format' => array('label' => 'P-removal'),
-        'field_uwwboddischarge_value_format' => array('label' => 'Discharged load BOD (t per year)'),
-        'field_uwwcoddischarge_value_format' => array('label' => 'Discharged load COD (t per year)'),
-        'field_uwwndischarge_value_format' => array('label' => 'Discharged load Ntot (t per year)'),
-        'field_uwwpdischarge_value_format' => array('label' => 'Discharged load Ptot (t per year)'),
+        'field_uwwtreatmenttype_value_format' => array('label' => t('Treatment type in place')),
+        'field_physicalcapacityactivity_value_format' => array('label' => t('Capacity')),
+        'field_uwwcompliance_value_format' => array('label' => t('Compliance')),
+        'field_uwwprimarytreatment_value_format' => array('label' => t('Primary treatment')),
+        'field_uwwsecondarytreatment_value_format' => array('label' => t('Secondary treatment')),
+        'field_uwwnremoval_value_format' => array('label' => t('N-removal')),
+        'field_uwwpremoval_value_format' => array('label' => t('P-removal')),
+        'field_uwwboddischarge_value_format' => array('label' => t('Discharged load BOD (t per year)')),
+        'field_uwwcoddischarge_value_format' => array('label' => t('Discharged load COD (t per year)')),
+        'field_uwwndischarge_value_format' => array('label' => t('Discharged load Ntot (t per year)')),
+        'field_uwwpdischarge_value_format' => array('label' => t('Discharged load Ptot (t per year)')),
     );
 
 //     dsm($optionstyle);
@@ -2167,8 +2167,8 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 			
             . '<div class="rows data-table-row">'
 				. '<div class="data-table-header">'
-			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+			  . '<b>'.count($rows) ." ".t('results')."</b>"		
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'uwwtps/pressure/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'uwwtps/pressure/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -2179,7 +2179,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
      ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
 
@@ -2192,7 +2192,7 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 
  
 function uwwtd_sensitive_areas_page($type_export = ''){
-    $title = 'Sensitive areas';
+    $title = t('Sensitive areas');
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -2223,7 +2223,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     }
 	$data = uwwtd_get_data_sensitive_areas($filter['filter']);
     $list_field = array(
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
         'tot_design_capacity'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
         'tot_entering_load'      => array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label'], 'type' => 'selectoperator', 'data' => $GLOBALS['uwwtd']['ui']['operator']),
         'rca52'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label'], 'type' => 'selectarticle', 'data' => $GLOBALS['uwwtd']['ui']['yes_no']),
@@ -2263,7 +2263,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         'rca52_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca52_format']['label']),
         'rca54_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca54_format']['label']),
         'rca58_format' => array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['rca58_format']['label']),
-        'area_format' => array('label' => 'Area'),
+        'area_format' => array('label' => t('Area')),
         'tot_design_capacity_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_design_capacity_format']['label']),
         'tot_entering_load_format'=>array('label' => $GLOBALS['uwwtd']['ui']['field']['rca']['tot_entering_load_format']['label']),
     );
@@ -2410,8 +2410,8 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         $page.= '<div class="rows map-row" >'.$rendermap.'</div>'
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
-			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+			  . '<b>'.count($rows) ." ".t("results")."</b>"		
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'sensitive-areas/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'sensitive-areas/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -2423,7 +2423,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
             .'</div>' ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -2436,7 +2436,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 function uwwtd_dcp_page($type_export = ''){
      
     
-    $title = 'Discharge points';
+    $title = t('Discharge points');
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -2473,7 +2473,7 @@ function uwwtd_dcp_page($type_export = ''){
 	$data = uwwtd_get_data_dcp($filter['filter']);
     $list_field = array(
     
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
         'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
         'rcacat'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rcacat_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcacat_labels']),  
         
@@ -2701,8 +2701,8 @@ function uwwtd_dcp_page($type_export = ''){
             .'</div>'
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
-			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+			  . '<b>'.count($rows) ." ".t("results")."</b>"		
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'discharge-points/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'discharge-points/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -2714,7 +2714,7 @@ function uwwtd_dcp_page($type_export = ''){
             .'</div>' ;
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -2725,7 +2725,7 @@ function uwwtd_dcp_page($type_export = ''){
  }
 
 function uwwtd_dcp_reuse_page($type_export = ''){
-    $title = 'Discharge points - reuse';
+    $title = t('Discharge points - reuse');
     drupal_set_title($title);
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/js/uwwtd.js');
     drupal_add_js(drupal_get_path('module', 'uwwtd') . '/lib/flip/jquery.flip.min.js');
@@ -2763,7 +2763,7 @@ function uwwtd_dcp_reuse_page($type_export = ''){
 	$data = uwwtd_get_data_dcp($filter['filter']);
     $list_field = array(
     
-        'field_anneedata_value'         => array('title' => 'Year of data', 'type' => 'select', 'data' => $option['allyear']),
+        'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
         'zonetype'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['zonetype_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcatype_labels']),  
         'rcacat'  		=> array('title' => $GLOBALS['uwwtd']['ui']['field']['dcp']['rcacat_format']['label'], 'type' => 'select', 'data' => $GLOBALS['uwwtd_value']['rcacat_labels']),  
         
@@ -2991,8 +2991,8 @@ function uwwtd_dcp_reuse_page($type_export = ''){
             .'</div>'
             . '<div class="rows data-table-row">'
 			 . '<div class="data-table-header">'
-			  . '<b>'.count($rows) ." results</b>"		
-				. '<div class="hideprint export-result"> | Download results: '
+			  . '<b>'.count($rows) ." ".t("results")."</b>"		
+				. '<div class="hideprint export-result"> | '.t('Download results').': '
 					.l('csv', 'discharge-points/csv', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters())).' '
 					.l('xls', 'discharge-points/xls', array('attributes'=>array('class'=>array("export-result-btn")),'query'=>drupal_get_query_parameters()))
 				.'</div>'
@@ -3004,7 +3004,7 @@ function uwwtd_dcp_reuse_page($type_export = ''){
             .'</div>';
     }
     else{
-        $page.="<p><strong>Sorry, your search returned no results</strong></p>";
+        $page.="<p><strong>".t("Sorry, your search returned no results")."</strong></p>";
     }
     unset($data);
      if (true === $put_in_cache) {
@@ -3497,10 +3497,10 @@ foreach($list_field as $field_name => $data) {
 '. $render_field . '
 
 <div class="views-exposed-widget views-submit-button">
-    <button class="btn btn-info form-submit" type="submit" value="Apply" name="" id="edit-submit-agglomeration-conformity">Apply</button>
+    <button class="btn btn-info form-submit" type="submit" value="Apply" name="" id="edit-submit-agglomeration-conformity">'.t("Apply").'</button>
 </div>
 <div class="views-exposed-widget views-reset-button">
-    <button class="btn btn-default form-submit" type="submit" value="Reset" name="op" id="edit-reset">Reset</button>
+    <button class="btn btn-default form-submit" type="submit" value="Reset" name="op" id="edit-reset">'.t("Reset").'</button>
 </div>
 
 </div>
