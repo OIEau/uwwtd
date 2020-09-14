@@ -1012,6 +1012,9 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         $batch['operations'][]=array('uwwtd_link_uww_agglo_batch_process', array($newFile, $annee, $imports, $timestamp));
     }
 
+    //Process missing link between agglo & uwwtp (especially for inactive uwwtp)
+    $batch['operations'][]=array('uwwtd_missing_link_uww_agglo_batch_process', array($newFile, $annee, $timestamp));
+
     //BigCityDischargers
     $imports  = array();
     if(isset($datas['UWWTD_Report']['BigCityDischargers'])){
@@ -4797,177 +4800,27 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
             //todo test (ro 1)
             $siteUwwId = $annee.'_uww_'.uwwtd_check_text($data['aucUwwCode']);
             $siteAggId = $annee.'_agg_'.uwwtd_check_text($data['aucAggCode']);
-            $siteId = $siteAggId . '_' . $siteUwwId;
+            
 
             // Check if both exist
             $uwwExists = uwwtd_check_exist($siteUwwId);
             $aggExists = uwwtd_check_exist($siteAggId);
-            $agguwwExists = uwwtd_check_exist($siteId);
             
-            uwwtd_trace('import agglo_uww : ' . $siteId);
             
             uwwtd_trace('uwwtp ' . $siteUwwId . ' exists ? "' . $uwwExists . '".');
             uwwtd_trace('agglo ' . $siteAggId . ' exists ? "' . $aggExists . '".');
-            uwwtd_trace('uwwtp ' . $siteId . ' exists ? "' . $agguwwExists . '".');
+            
 
             // Nids :
-            $aggTpLinkNid = $agguwwExists;
+            
             $aggNid = $aggExists;
             $tpNid = $uwwExists;
 
             // If there are agglomeration and treatment plants nids :
             if (!empty($aggNid) && !empty($tpNid)) {
-                // Add agglomeration nid in treament plant :
-                $tpFull = node_load($tpNid);
-                if ($tpFull !== FALSE) {
-                    if (isset($tpFull->field_uwwaggliste)) {
-                        $isFound = FALSE;
-                        if (!empty($tpFull->field_uwwaggliste[LANGUAGE_NONE])) {
-                            // Check if this aggNid already exists in this treament plant :
-                            foreach ($tpFull->field_uwwaggliste[LANGUAGE_NONE] as $nidElement) {
-                                if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $aggNid) {
-                                    $isFound = TRUE;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!$isFound) {
-                            // Add new nid :
-                            $tpFull->field_uwwaggliste[LANGUAGE_NONE][] = array('nid' => $aggNid);
-                            node_save($tpFull);
-                        }
-                    }
-                }
-
-                // Add treament plant nid in agglomeration :
-                $aggFull = node_load($aggNid);
-                if ($aggFull !== FALSE) {
-                    if (isset($aggFull->field_agguwwliste)) {
-                        $isFound = FALSE;
-                        if (!empty($aggFull->field_agguwwliste[LANGUAGE_NONE])) {
-                            // Check if this aggNid already exists in this treament plant :
-                            foreach ($aggFull->field_agguwwliste[LANGUAGE_NONE] as $nidElement) {
-                                if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $tpNid) {
-                                    $isFound = TRUE;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!$isFound) {
-                            // Add new nid :
-                            $aggFull->field_agguwwliste[LANGUAGE_NONE][] = array('nid' => $tpNid);
-                            node_save($aggFull);
-                        }
-                    }
-                    if (isset($aggFull->field_linked_treatment_plants)) {
-                        $isFound = FALSE;
-                        if (!empty($aggFull->field_linked_treatment_plants[LANGUAGE_NONE])) {
-                            // Check if this aggNid already exists in this treament plant :
-                            foreach ($aggFull->field_linked_treatment_plants[LANGUAGE_NONE] as $nidElement) {
-                                if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $tpNid) {
-                                    $isFound = TRUE;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!$isFound) {
-                            // Add new nid :
-                            $aggFull->field_linked_treatment_plants[LANGUAGE_NONE][] = array('nid' => $tpNid);
-                            node_save($aggFull);
-                        }
-                    }
-                }
-
-                // Create/update link :
-                $aggTpLinkFull = node_load($aggTpLinkNid);
-                if ($aggTpLinkFull === FALSE) {
-                    // Create :
-                    $aggTpLinkFull = new stdClass();
-                    $aggTpLinkFull->type = 'agglo_uww';
-                    $aggTpLinkFull->uid = 1;
-                    $aggTpLinkFull->translate = 0;
-                    $aggTpLinkFull->tnid = 0;
-                    $aggTpLinkFull->sticky = 0;
-                    $aggTpLinkFull->promote = 0;
-                    $aggTpLinkFull->comment = 0;
-                    $aggTpLinkFull->language = $language->language;
-                    $_SESSION['newAggloUww']++;
-                    node_save($aggTpLinkFull);
-
-                    if (empty($aggTpLinkFull->nid)) {
-                        uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error');
-                    } else {
-                        uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
-                    }
-                } else {
-                    // Update :
-                    $_SESSION['upAggloUww']++;
-                    uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
-
-                    // Delete current agglomeration and treament plant :
-                    unset($aggTpLinkFull->field_agglo_uww_agglo['und']);
-                    unset($aggTpLinkFull->field_agglo_uww_uww['und']);
-                }
-
-                // Create linking node with all the data needed for compliance calculation later
-                $aggTpLinkFull->title = $annee.' data '.$aggFull->title.' - '.$tpFull->title;
-                $aggTpLinkFull->field_siteid['und'][0]['value'] = $siteId;
-                $aggTpLinkFull->field_agglo_uww_agglo['und'][0]['nid'] = $aggNid;
-                $aggTpLinkFull->field_agglo_uww_uww['und'][0]['nid'] = $tpNid;
-
-                //text
-                if (isset($datas['repCode'])) $aggTpLinkFull->field_repcode['und'][0]['value'] = uwwtd_check_text($datas['repCode']);
-
-                //decimal
-                if (isset($data['aucPercEnteringUWWTP'])) {
-                    $check = uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $message);
-                    if ($message != '') {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercEnteringUWWTP');
-                    }
-                } else {
-                    $check = 0;
-                }
-
-                $aggTpLinkFull->field_agglo_uww_perc_ent_uw['und'][0]['value'] = $check;
-
-                //text
-                $aggTpLinkFull->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = (isset($data['aucMethodPercEnteringUWWTP']) ? uwwtd_check_text($data['aucMethodPercEnteringUWWTP']) : 0);
-                $aggTpLinkFull->field_anneedata['und'][0]['value'] = $annee;
-                
-                //FIX ME
-                //Rate of generated load of agglomeration transported to this UWWTP by trucks (%).
-                //min : 0 max 100% decimal
-                //aucPercC2T
-                if (isset($data['aucPercC2T'])) {
-                    $check = uwwtd_check_pourc($data['aucPercC2T'], $message);
-                    if ($message != '') {
-                        uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercC2T');
-                    }
-                } else {
-                    $check = 0;
-                }
-                $aggTpLinkFull->field_aucpercc2t['und'][0]['value'] = $check;
-                
-                
-                node_save($aggTpLinkFull);
-
-                if (empty($aggTpLinkFull->nid)) {
-                    uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error2');
-                } else {
-                    uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
-                }
-
+                $aggTpLinkFull = uwwtd_link_uww_agglo_node($annee, $aggNid, $tpNid, $data, $datas['repCode']);
+                //=======warning
                 $context['results'][] = $aggTpLinkFull->nid . ' : ' . check_plain($aggTpLinkFull->title);
-
-                // Remove this agglomeration from the list of agglomeration without treatment plants :
-                $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
-                _remove_array_element_by_value($aggId, $aggsWithoutTp);
-                variable_set(AGGS_WITHOUT_TP, $aggsWithoutTp);
-
-                // Remove this treatment plant from the list of treatment plants without agglomeration :
-                $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
-                _remove_array_element_by_value($uwwId, $tpsWithoutAgg);
-                variable_set(TPS_WITHOUT_AGG, $tpsWithoutAgg);
             } else {
                 uwwtd_trace('agglo_uww error, agglo or uwwtp doesn\' exits $siteUwwId = ' . $siteUwwId . ' ("'.$uwwExists.'"), $siteAggId = ' . $siteAggId . '("'.$aggExists.'")');
                 uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomeration ' . $siteAggId . ' and waste water treatment plant ' . $siteUwwId . '', $timestamp, $k);
@@ -4987,6 +4840,215 @@ function uwwtd_link_uww_agglo_batch_process($newFile, $annee, $datas, $timestamp
         uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data linking'], 'No link between agglomerations and waste water treatment plant because no found agglomerations in the dataset', $timestamp);
     }
 }
+
+function uwwtd_missing_link_uww_agglo_batch_process($newFile, $annee, $timestamp, &$context){
+        if(!isset($context['sandbox']['progress'])){
+            $ids = array();
+                $result = db_query("
+                    SELECT n.nid AS nid, n.title AS title, a.field_uwwtdaggid_value AS aggid
+                    FROM  {node} n
+                        JOIN {field_data_field_siteid} r ON r.entity_id = n.nid
+                        JOIN {field_data_field_uwwtdaggid} a ON a.entity_id = n.nid
+                        LEFT JOIN {field_data_field_uwwaggliste} agg ON agg.entity_id = n.nid 
+                    WHERE  n.type = 'uwwtp' 
+                        AND a.field_uwwtdaggid_value IS NOT NULL
+                        AND agg.field_uwwaggliste_nid IS NULL
+                        AND r.field_siteid_value LIKE '".$annee."%'
+                 ");
+                 while($row = $result->fetchAssoc()) {
+                     $ids[] = $row;
+                }
+                $context['sandbox']['max'] = count($ids);
+                $context['sandbox']['progress'] = 0;
+                $context['sandbox']['ids'] = $ids;
+    }
+    
+    
+    if($context['sandbox']['max'] > 0){
+        $i = $context['sandbox']['progress'];
+        $j=0;
+        while($j<5 && $context['sandbox']['progress']<$context['sandbox']['max']){
+            $k=$i+$j;
+            $item = $context['sandbox']['ids'][$k];
+            $siteAggId = $annee.'_agg_'.uwwtd_check_text($item['aggid']);
+             $aggNid = uwwtd_check_exist($siteAggId);
+             uwwtd_link_uww_agglo_node($annee, $aggNid, $item['nid']);
+             $context['results'][] = $item['nid'] . ' : ' . check_plain($item['title']);
+             $context['sandbox']['progress']++;
+             $j++;
+        }
+        uwwtd_flush_errors();
+        $context['message'] = '(' .$annee . ') ' . t('Processing missing links between agglomeration and inactive UWWTP').' : '.'\''.$item['title'].'\''.' '.t('with drupal id').' '.'\''.$item['nid'].'\'' . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
+    }
+     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+}
+
+function uwwtd_link_uww_agglo_node($annee, $aggNid, $tpNid, $data = [], $repCode = null){
+         // Add agglomeration nid in treament plant :
+        $tpFull = node_load($tpNid);
+        if ($tpFull !== FALSE) {
+            if (isset($tpFull->field_uwwaggliste)) {
+                $isFound = FALSE;
+                if (!empty($tpFull->field_uwwaggliste[LANGUAGE_NONE])) {
+                    // Check if this aggNid already exists in this treament plant :
+                    foreach ($tpFull->field_uwwaggliste[LANGUAGE_NONE] as $nidElement) {
+                        if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $aggNid) {
+                            $isFound = TRUE;
+                            break;
+                        }
+                    }
+                }
+                if (!$isFound) {
+                    // Add new nid :
+                    $tpFull->field_uwwaggliste[LANGUAGE_NONE][] = array('nid' => $aggNid);
+                    node_save($tpFull);
+                }
+            }
+        }
+
+        // Add treament plant nid in agglomeration :
+        $aggFull = node_load($aggNid);
+        if ($aggFull !== FALSE) {
+            if (isset($aggFull->field_agguwwliste)) {
+                $isFound = FALSE;
+                if (!empty($aggFull->field_agguwwliste[LANGUAGE_NONE])) {
+                    // Check if this aggNid already exists in this treament plant :
+                    foreach ($aggFull->field_agguwwliste[LANGUAGE_NONE] as $nidElement) {
+                        if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $tpNid) {
+                            $isFound = TRUE;
+                            break;
+                        }
+                    }
+                }
+                if (!$isFound) {
+                    // Add new nid :
+                    $aggFull->field_agguwwliste[LANGUAGE_NONE][] = array('nid' => $tpNid);
+                    node_save($aggFull);
+                }
+            }
+            if (isset($aggFull->field_linked_treatment_plants)) {
+                $isFound = FALSE;
+                if (!empty($aggFull->field_linked_treatment_plants[LANGUAGE_NONE])) {
+                    // Check if this aggNid already exists in this treament plant :
+                    foreach ($aggFull->field_linked_treatment_plants[LANGUAGE_NONE] as $nidElement) {
+                        if (array_key_exists('nid', $nidElement) && $nidElement['nid'] == $tpNid) {
+                            $isFound = TRUE;
+                            break;
+                        }
+                    }
+                }
+                if (!$isFound) {
+                    // Add new nid :
+                    $aggFull->field_linked_treatment_plants[LANGUAGE_NONE][] = array('nid' => $tpNid);
+                    node_save($aggFull);
+                }
+            }
+        }
+
+
+        $siteId = $aggFull->field_siteid['und'][0]['value'] . '_' . $tpFull->field_siteid['und'][0]['value'];
+        $agguwwExists = uwwtd_check_exist($siteId);
+        uwwtd_trace('import agglo_uww : ' . $siteId);
+        uwwtd_trace('uwwtp ' . $siteId . ' exists ? "' . $agguwwExists . '".');
+        
+        $aggTpLinkNid = $agguwwExists;
+
+
+        // Create/update link :
+        $aggTpLinkFull = node_load($aggTpLinkNid);
+        if ($aggTpLinkFull === FALSE) {
+            // Create :
+            $aggTpLinkFull = new stdClass();
+            $aggTpLinkFull->type = 'agglo_uww';
+            $aggTpLinkFull->uid = 1;
+            $aggTpLinkFull->translate = 0;
+            $aggTpLinkFull->tnid = 0;
+            $aggTpLinkFull->sticky = 0;
+            $aggTpLinkFull->promote = 0;
+            $aggTpLinkFull->comment = 0;
+            $aggTpLinkFull->language = $language->language;
+            $_SESSION['newAggloUww']++;
+            node_save($aggTpLinkFull);
+
+            if (empty($aggTpLinkFull->nid)) {
+                uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error');
+            } else {
+                uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
+            }
+        } else {
+            // Update :
+            $_SESSION['upAggloUww']++;
+            uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
+
+            // Delete current agglomeration and treament plant :
+            unset($aggTpLinkFull->field_agglo_uww_agglo['und']);
+            unset($aggTpLinkFull->field_agglo_uww_uww['und']);
+        }
+
+        // Create linking node with all the data needed for compliance calculation later
+        $aggTpLinkFull->title = $annee.' data '.$aggFull->title.' - '.$tpFull->title;
+        $aggTpLinkFull->field_siteid['und'][0]['value'] = $siteId;
+        $aggTpLinkFull->field_agglo_uww_agglo['und'][0]['nid'] = $aggNid;
+        $aggTpLinkFull->field_agglo_uww_uww['und'][0]['nid'] = $tpNid;
+
+        //text
+        if ($repCode) $aggTpLinkFull->field_repcode['und'][0]['value'] = uwwtd_check_text($repCode);
+        else $aggTpLinkFull->field_repcode['und'][0]['value'] = $aggFull->field_repcode['und'][0]['value'];
+        //decimal
+        if (isset($data['aucPercEnteringUWWTP'])) {
+            $check = uwwtd_check_pourc($data['aucPercEnteringUWWTP'], $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercEnteringUWWTP');
+            }
+        } else {
+            $check = 0;
+        }
+
+        $aggTpLinkFull->field_agglo_uww_perc_ent_uw['und'][0]['value'] = $check;
+
+        //text
+        $aggTpLinkFull->field_agglo_uww_mperc_ent_uw['und'][0]['value'] = (isset($data['aucMethodPercEnteringUWWTP']) ? uwwtd_check_text($data['aucMethodPercEnteringUWWTP']) : 0);
+        $aggTpLinkFull->field_anneedata['und'][0]['value'] = $annee;
+        
+        //FIX ME
+        //Rate of generated load of agglomeration transported to this UWWTP by trucks (%).
+        //min : 0 max 100% decimal
+        //aucPercC2T
+        if (isset($data['aucPercC2T'])) {
+            $check = uwwtd_check_pourc($data['aucPercC2T'], $message);
+            if ($message != '') {
+                uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['error'], $GLOBALS['uwwtd_errors_type']['category']['import data format'], $message, $timestamp, $k, $aggTpLinkFull, 'aucPercC2T');
+            }
+        } else {
+            $check = 0;
+        }
+        $aggTpLinkFull->field_aucpercc2t['und'][0]['value'] = $check;
+        
+        
+        node_save($aggTpLinkFull);
+
+        if (empty($aggTpLinkFull->nid)) {
+            uwwtd_trace('agglo_uww ' . $siteId . ' node_save() error2');
+        } else {
+            uwwtd_trace('agglo_uww ' . $siteId . ' nid : ' . $aggTpLinkFull->nid);
+        }
+
+        
+
+        // Remove this agglomeration from the list of agglomeration without treatment plants :
+        $aggsWithoutTp = variable_get(AGGS_WITHOUT_TP, array());
+        _remove_array_element_by_value($aggId, $aggsWithoutTp);
+        variable_set(AGGS_WITHOUT_TP, $aggsWithoutTp);
+
+        // Remove this treatment plant from the list of treatment plants without agglomeration :
+        $tpsWithoutAgg = variable_get(TPS_WITHOUT_AGG, array());
+        _remove_array_element_by_value($uwwId, $tpsWithoutAgg);
+        variable_set(TPS_WITHOUT_AGG, $tpsWithoutAgg);
+    return $aggTpLinkFull;
+}
+
 
 /**
  * Remove an array element by value.
