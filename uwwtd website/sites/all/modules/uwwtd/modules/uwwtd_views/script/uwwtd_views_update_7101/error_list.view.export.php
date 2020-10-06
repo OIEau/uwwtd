@@ -14,7 +14,11 @@ $view->disabled = FALSE; /* Edit this to true to make a default view disabled in
 $handler = $view->new_display('default', 'Master', 'default');
 $handler->display->display_options['title'] = 'Error list';
 $handler->display->display_options['use_more_always'] = FALSE;
-$handler->display->display_options['access']['type'] = 'none';
+$handler->display->display_options['access']['type'] = 'role';
+$handler->display->display_options['access']['role'] = array(
+  3 => '3',
+  4 => '4',
+);
 $handler->display->display_options['cache']['type'] = 'none';
 $handler->display->display_options['query']['type'] = 'views_query';
 $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -63,19 +67,21 @@ $handler->display->display_options['fields']['title']['id'] = 'title';
 $handler->display->display_options['fields']['title']['table'] = 'node';
 $handler->display->display_options['fields']['title']['field'] = 'title';
 $handler->display->display_options['fields']['title']['relationship'] = 'entity_id';
-/* Field: Content: Code */
-$handler->display->display_options['fields']['code']['id'] = 'field_inspireidlocalid';
+/* Field: Content: Identifier of the agglomeration */
+$handler->display->display_options['fields']['code']['id'] = 'code';
 $handler->display->display_options['fields']['code']['table'] = 'field_data_field_inspireidlocalid';
 $handler->display->display_options['fields']['code']['field'] = 'field_inspireidlocalid';
 $handler->display->display_options['fields']['code']['relationship'] = 'entity_id';
-/* Field: Content: Bundle */
+$handler->display->display_options['fields']['code']['label'] = 'Code';
+/* Field: uwwtd_import_errors: bundle */
 $handler->display->display_options['fields']['bundle']['id'] = 'bundle';
 $handler->display->display_options['fields']['bundle']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['fields']['bundle']['field'] = 'bundle';
-/* Field: Bulk operations: uwwtd_import_errors */
+/* Field: Bulk operations: Content */
 $handler->display->display_options['fields']['views_bulk_operations']['id'] = 'views_bulk_operations';
-$handler->display->display_options['fields']['views_bulk_operations']['table'] = 'uwwtd_import_errors';
+$handler->display->display_options['fields']['views_bulk_operations']['table'] = 'views_entity_node';
 $handler->display->display_options['fields']['views_bulk_operations']['field'] = 'views_bulk_operations';
+$handler->display->display_options['fields']['views_bulk_operations']['relationship'] = 'entity_id';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['display_type'] = '0';
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['enable_select_all_pages'] = 1;
 $handler->display->display_options['fields']['views_bulk_operations']['vbo_settings']['row_clickable'] = 1;
@@ -85,9 +91,13 @@ $handler->display->display_options['fields']['views_bulk_operations']['vbo_opera
   'action::views_bulk_operations_delete_item' => array(
     'selected' => 1,
     'postpone_processing' => 0,
-    'skip_confirmation' => 0,
+    'skip_confirmation' => 1,
+    'skip_permission_check' => 1,
     'override_label' => 0,
     'label' => '',
+    'settings' => array(
+      'log' => 0,
+    ),
   ),
 );
 /* Sort criterion: uwwtd_import_errors: date */
@@ -121,6 +131,7 @@ $handler->display->display_options['filters']['year']['expose']['remember_roles'
   4 => 0,
 );
 $handler->display->display_options['filters']['year']['is_grouped'] = false;
+$handler->display->display_options['filters']['year']['exposed'] = TRUE;
 $handler->display->display_options['filters']['year']['expose']['label'] = 'year';
 $handler->display->display_options['filters']['year']['expose']['identifier'] = 'year';
 /* Filter criterion: uwwtd_import_errors: date */
@@ -276,62 +287,89 @@ $handler->display->display_options['filters']['category']['group_info']['group_i
     ),
   ),
 );
-
-/* Filter criterion: bundle */
+/* Filter criterion: uwwtd_import_errors: bundle */
 $handler->display->display_options['filters']['bundle']['id'] = 'bundle';
 $handler->display->display_options['filters']['bundle']['table'] = 'uwwtd_import_errors';
 $handler->display->display_options['filters']['bundle']['field'] = 'bundle';
+$handler->display->display_options['filters']['bundle']['value'] = array(
+  'agglomeration' => 'agglomeration',
+  'agglo_uww' => 'agglo_uww',
+  'article_17_ms_level' => 'article_17_ms_level',
+  'article_17_agglomeration' => 'article_17_agglomeration',
+  'article_17_uwwtp' => 'article_17_uwwtp',
+  'big_city' => 'big_city',
+  'discharge_point' => 'discharge_point',
+  'ms_level' => 'ms_level',
+  'receiving_area' => 'receiving_area',
+  'uwwtp' => 'uwwtp',
+);
 $handler->display->display_options['filters']['bundle']['group'] = 1;
 $handler->display->display_options['filters']['bundle']['exposed'] = TRUE;
 $handler->display->display_options['filters']['bundle']['expose']['operator_id'] = 'bundle_op';
 $handler->display->display_options['filters']['bundle']['expose']['label'] = 'bundle';
 $handler->display->display_options['filters']['bundle']['expose']['operator'] = 'bundle_op';
 $handler->display->display_options['filters']['bundle']['expose']['identifier'] = 'bundle';
-$handler->display->display_options['filters']['bundle']['is_grouped'] = TRUE;
+$handler->display->display_options['filters']['bundle']['expose']['remember_roles'] = array(
+  2 => '2',
+  1 => 0,
+  3 => 0,
+  4 => 0,
+);
+$handler->display->display_options['filters']['bundle']['expose']['reduce'] = TRUE;
 $handler->display->display_options['filters']['bundle']['group_info']['label'] = 'bundle';
 $handler->display->display_options['filters']['bundle']['group_info']['identifier'] = 'bundle';
 $handler->display->display_options['filters']['bundle']['group_info']['group_items'] = array(
-    1 => array(
-        'title' => 'Agglomeration',
-        'operator' => '=',
-        'value' => array(
-            'value' => '0',
-            'min' => '',
-            'max' => '',
-        ),
+  1 => array(
+    'title' => 'Agglomeration',
+    'operator' => '=',
+    'value' => array(
+      'value' => '0',
+      'min' => '',
+      'max' => '',
     ),
-    2 => array(
-        'title' => 'UWWTP',
-        'operator' => '=',
-        'value' => array(
-            'value' => '1',
-            'min' => '',
-            'max' => '',
-        ),
+  ),
+  2 => array(
+    'title' => 'UWWTP',
+    'operator' => '=',
+    'value' => array(
+      'value' => '1',
+      'min' => '',
+      'max' => '',
     ),
-    3 => array(
-        'title' => 'Discharge point',
-        'operator' => '=',
-        'value' => array(
-            'value' => '2',
-            'min' => '',
-            'max' => '',
-        ),
+  ),
+  3 => array(
+    'title' => 'Discharge point',
+    'operator' => '=',
+    'value' => array(
+      'value' => '2',
+      'min' => '',
+      'max' => '',
     ),
-    4 => array(
-        'title' => 'Receiving Area',
-        'operator' => '=',
-        'value' => array(
-            'value' => '3',
-            'min' => '',
-            'max' => '',
-        ),
+  ),
+  4 => array(
+    'title' => 'Receiving Area',
+    'operator' => '=',
+    'value' => array(
+      'value' => '3',
+      'min' => '',
+      'max' => '',
     ),
+  ),
 );
 
 /* Display: Page */
 $handler = $view->new_display('page', 'Page', 'page');
 $handler->display->display_options['path'] = 'error-list';
+
+/* Display: Data export */
+$handler = $view->new_display('views_data_export', 'Data export', 'views_data_export_1');
+$handler->display->display_options['pager']['type'] = 'none';
+$handler->display->display_options['pager']['options']['offset'] = '0';
+$handler->display->display_options['style_plugin'] = 'views_data_export_xls';
+$handler->display->display_options['style_options']['provide_file'] = 1;
+$handler->display->display_options['style_options']['filename'] = '%view%timestamp-full.xls';
+$handler->display->display_options['style_options']['parent_sort'] = 0;
+$handler->display->display_options['path'] = 'error-list/xls';
 $translatables['error_list'] = array(
   t('Master'),
   t('Error list'),
@@ -357,7 +395,11 @@ $translatables['error_list'] = array(
   t('type'),
   t('error'),
   t('Title'),
-  t('uwwtd_import_errors'),
+  t('Code'),
+  t('bundle'),
+  t('Content'),
   t('- Choose an operation -'),
   t('Page'),
+  t('Data export'),
 );
+
