@@ -15,6 +15,18 @@ function uwwtd_views_update_7100(&$context = null)
     //==========DEBUG : permet de relancer la mise à jour si besoin.
 //     throw new DrupalUpdateException(__FUNCTION__);    
 }
+function uwwtd_views_update_7101(&$context = null) 
+{
+    uwwtd_views_install_trace(__FUNCTION__);
+    $path = drupal_get_path('module', 'uwwtd_views') . '/script/uwwtd_views_update_7101/error_list.view.export.php';
+    include($path);
+
+    if (isset($view) && is_object($view)) {
+      views_save_view($view);
+    }
+    //==========DEBUG : permet de relancer la mise à jour si besoin.
+//     throw new DrupalUpdateException(__FUNCTION__);    
+}
 
 /***************************************************************************/
 // Function utils

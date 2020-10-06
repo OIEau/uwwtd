@@ -791,8 +791,18 @@ function uwwtd_views_pre_render(&$view){
 }
 
 function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
+    
+    if($form['#id'] == "views-exposed-form-error-list-page"){
+        if(isset($form['year'])){
+            $form['year'] = array(
+                '#type'=>'select',
+                '#options' => uwwtd_get_all_year(),
+                "#empty_option"=> '- Any -'
+            );
+        }
+    }
 		// for treatment plant booleans
-		if($form['#id'] == "views-exposed-form-uwwtp-treatment-page"){
+		elseif($form['#id'] == "views-exposed-form-uwwtp-treatment-page"){
 			$options = array(
 				'All' => t('- All -'),
 				'1' => t('Yes'),
@@ -817,7 +827,7 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 			);
 		}
 
-		if(
+		elseif(
 			$form['#id'] == "views-exposed-form-waste-water-network-page" ||
 			$form['#id'] == 'views-exposed-form-uwwtp-map-page' ||
 			$form['#id'] == 'views-exposed-form-waste-water-network-openlayers-1' ||
@@ -851,7 +861,7 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 				//'#default_value' => array('2000' => '2000'),
 			);
 		}
-    if(in_array($form['#id'], array("views-exposed-form-uwwtp-map-page"))){
+    elseif(in_array($form['#id'], array("views-exposed-form-uwwtp-map-page"))){
 		if(isset($form['field_physicalcapacityinput_value_op'])){
 			$cap_op_options= $form['field_physicalcapacityinput_value_op']['#options'];
 			unset($cap_op_options['between'], $cap_op_options['not between'], $cap_op_options['empty'], $cap_op_options['not empty']);
@@ -882,38 +892,6 @@ function uwwtd_form_views_exposed_form_alter(&$form, &$form_state){
 		}
 	}
 }
-
-// function uwwtd_debug_submit_handler($form, &$form_state){
-// 	//require_once ( dirname(__FILE__) . '/shpParser.php');
-// 	require_once ( dirname(__FILE__) . '/ShapeFile.inc.php');
-// 	$file = file_load($form_state['values']['uwwtd_file']);
-// 	$uri = $file->uri;
-//
-// 	// On upload le file et la fonction renvoie le nouveau nom du fichier
-// 	$ext = '.shp';
-// 	$newFile = uwwtd_file_upload($file, $ext);
-// 	$path = file_create_url($newFile->uri);
-// 	$shp = new ShapeFile($path, array('noparts' => false));
-// 	  $records = array();
-// 		foreach($shp->records as $record){
-// 		$dbf_data = $record->getDbfData();
-// 		$shp_data = $record->getShpData();
-//
-// 		//Dump the information
-// 		$obj = array(
-// 		  'type' => $shp->getShpTypeName($record->getShpType())
-// 		);
-//
-// 		$obj['shape'] = $shp_data;
-// 		$obj['meta'] = $dbf_data;
-//
-// 		$records[] = $obj;
-// 	}
-// 	dsm($records);
-// }
-
-
-
 
 // permission to view data pages
 function uwwtd_permission() {
