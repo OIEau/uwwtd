@@ -4871,9 +4871,10 @@ function uwwtd_missing_link_uww_agglo_batch_process($newFile, $annee, $timestamp
             $k=$i+$j;
             $item = $context['sandbox']['ids'][$k];
             $siteAggId = $annee.'_agg_'.uwwtd_check_text($item['aggid']);
-             $aggNid = uwwtd_check_exist($siteAggId);
-             uwwtd_link_uww_agglo_node($annee, $aggNid, $item['nid']);
-             $context['results'][] = $item['nid'] . ' : ' . check_plain($item['title']);
+             if($aggNid = uwwtd_check_exist($siteAggId) && $item['nid'] !=''){
+                 uwwtd_link_uww_agglo_node($annee, $aggNid, $item['nid']);
+                $context['results'][] = $item['nid'] . ' : ' . check_plain($item['title']);
+             }
              $context['sandbox']['progress']++;
              $j++;
         }
@@ -6716,7 +6717,6 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown'])
     ) {
         uwwtd_trace(__LINE__);
-        dsm("uwwtd_agglomeration_compliance TEST");
         if($node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_compliant']){
             return $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
         }

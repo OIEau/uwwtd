@@ -12210,7 +12210,9 @@ function uwwtd_getregister_file_path($filename, $annee)
 function uwwtd_getregister_modelfile_path($annee)
 {
 //     uwwtd_trace($annee);
-    if ($annee >= 2016) {
+    if ($annee >= 2018) {
+      return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2018'];
+    }elseif ($annee = 2016) {
 //       uwwtd_trace($GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016']);
 //       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet'][];
       return $GLOBALS['uwwtd']['sheet']['path_model_file'] . $GLOBALS['uwwtd']['sheet']['model_reporting_2016'];

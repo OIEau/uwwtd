@@ -5382,6 +5382,39 @@ function uwwtd_update_7176(&$context) {
     variable_set('siif_eru_version', __FUNCTION__);
 } 
 
+function uwwtd_update_7177(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+    $fields = [
+        'field_mslwwreuseexplain'=>'ms_level',
+    ];
+    foreach($fields as $field=>$type){
+         $instance_info = field_info_instance('node', $field, $type);
+         if ($instance_info) {
+             
+            $instance_info['widget']['settings']['size'] = 2000; 
+            field_update_instance($instance_info);
+            db_query('ALTER TABLE drupal_field_data_'.$field.' ALTER COLUMN '.$field.'_value TYPE character varying(2000)');
+            db_query('ALTER TABLE drupal_field_revision_'.$field.' ALTER COLUMN '.$field.'_value TYPE character varying(2000)');
+            
+              // Update field config with new max length
+          $result = db_query("SELECT data FROM {field_config} WHERE field_name = '".$field."'");
+          $config = $result->fetchField();
+          $config_array = unserialize($config);
+          $config_array['settings']['max_length'] = 2000;
+          $config = serialize($config_array);
+          db_update('field_config')
+            ->fields(array('data' => $config))
+            ->condition('field_name', $field)
+            ->execute();
+            
+        } 
+        
+    }
+    drupal_flush_all_caches();
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
 
 
 /**

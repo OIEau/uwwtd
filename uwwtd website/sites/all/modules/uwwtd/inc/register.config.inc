@@ -15,6 +15,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     //IMPORTANT
     //the model MUST be modify on Microsoft office Excel 2007, or all the chart will lose their style and format (color, thousand separtor on axis, ...)
     'model_reporting_2016' => '2018_register_model_20190321.xlsx',   //2018_register_model_20181114 2018_register_model_20190307
+    'model_reporting_2018' => '2018_register_model_20190321.xlsx',   
                 
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
