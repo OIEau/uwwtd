@@ -25,6 +25,8 @@ function potx_drush_command() {
       'files' => 'Comma delimited list of files to extract translatable strings from.',
       'folder' => 'Folder to begin translation extraction in. When no other option is set this defaults to current directory.',
       'api' => 'Drupal core version to use for extraction settings.',
+      'language' => 'Language code if the template should have language dependent content (like plural formulas and language name) included.',
+      'translations' => 'Enable translations export.',
     ),
     'examples' => array(
       'potx single' => 'Extract translatable strings from applicable files in current directory and write to single output file',
@@ -84,6 +86,11 @@ function potx_drush_extract($mode = NULL) {
   $files_option = drush_get_option('files');
   $folder_option = drush_get_option('folder');
   $api_option = drush_get_option('api');
+  $language_option = drush_get_option('language');
+  if (!empty($language_option) && !in_array($language_option, array_keys(language_list()))) {
+    $language_option = NULL;
+  }
+  $translations_option = (boolean) drush_get_option('translations');
   if (empty($api_option) || !in_array($api_option, array(5, 6, 7, 8))) {
     $api_option = POTX_API_CURRENT;
   }
@@ -114,8 +121,11 @@ function potx_drush_extract($mode = NULL) {
 
   potx_finish_processing('_potx_save_string', $api_option);
 
-  _potx_build_files(POTX_STRING_RUNTIME, $build_mode);
-  _potx_build_files(POTX_STRING_INSTALLER, POTX_BUILD_SINGLE, 'installer');
+  $template_export_langcode = $language_option;
+  $translation_export_langcode = ($translations_option && $language_option) ? $language_option : NULL;
+
+  _potx_build_files(POTX_STRING_RUNTIME, $build_mode, 'general', '_potx_save_string', '_potx_save_version', '_potx_get_header', $template_export_langcode, $translation_export_langcode, $api_option);
+  _potx_build_files(POTX_STRING_INSTALLER, POTX_BUILD_SINGLE, 'installer', '_potx_save_string', '_potx_save_version', '_potx_get_header', $template_export_langcode, $translation_export_langcode, $api_option);
   _potx_write_files();
 
   drush_print("");

@@ -6,11 +6,10 @@ files[] = potx.local.inc
 files[] = tests/potx.test
 core = 7.x
 package = Multilingual
-php = 5.1.2
+php = 5.3
 
-; Information added by Drupal.org packaging script on 2015-12-01
-version = "7.x-3.0-alpha2"
+; Information added by Drupal.org packaging script on 2020-09-08
+version = "7.x-3.0"
 core = "7.x"
 project = "potx"
-datestamp = "1448974741"
-
+datestamp = "1599561778"
