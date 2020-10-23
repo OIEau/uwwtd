@@ -145,6 +145,7 @@ class PotxTestCase extends DrupalWebTestCase {
     $this->assertMsgID('This is a test string.');
     $this->assertMsgID('test watchdog type');
     $this->assertMsgID('My watchdog message');
+    $this->assertMsgID('PHP Syntax error gracefully handled');
 
     // No support for hook_perm() anymore. t() in hook_permissions().
     $this->assertNoMsgID('test potx permission');
@@ -170,6 +171,9 @@ class PotxTestCase extends DrupalWebTestCase {
     // Context support added.
     $this->assertMsgIDContext('Test string in context', 'Test context');
 
+    // Drush support.
+    $this->assertMsgID('This could have been in a drush file');
+
     // Look at installer strings.
     $this->parseFile($filename, POTX_API_7, POTX_STRING_INSTALLER);
     $this->assertMsgID('Installer only test string');
@@ -179,9 +183,10 @@ class PotxTestCase extends DrupalWebTestCase {
     $this->assertMsgIDContext('Installer string in context', 'Installer context');
     $this->assertMsgIDContext('Dynamic string in context', 'Dynamic context');
 
-    $this->assert(count($this->potx_status) == 2, t('2 error messages found'));
+    $this->assert(count($this->potx_status) == 3, t('3 error messages found'));
     $this->assert($this->potx_status[0][0] == $this->empty_error, t('First empty error found.'));
-    $this->assert($this->potx_status[1][0] == $this->empty_error, t('Second empty error found.'));
+    $this->assert($this->potx_status[1][0] == 'Unexpected ;', t('Unexpected semicolon found.'));
+    $this->assert($this->potx_status[2][0] == $this->empty_error, t('Second empty error found.'));
   }
 
   public function testDrupal8LanguageManager() {
@@ -230,6 +235,9 @@ class PotxTestCase extends DrupalWebTestCase {
     $this->assertMsgID('Test string with @extra_filter');
     $this->assertMsgID('Test string with @multiple_filters');
     $this->assertMsgID('Test string with %multiple_filters');
+
+    $this->assertMsgID('Meta-data for a help topic title');
+    $this->assertNoMsgID('Meta-data that should not be translated');
   }
 
   /**
