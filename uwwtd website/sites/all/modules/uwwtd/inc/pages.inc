@@ -1538,11 +1538,14 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
 	$headers = array();
     
     
-	$headers[] = array(
-		array('data' => t('Description'), 'colspan' => 7, 'class' => 'customTableHeader'),
-		array('data' => t('Compliance'), 'class' => 'customTableHeader'),
-		array('data' => t('Performance'), 'colspan' => 4, 'class' => 'customTableHeader'),   	
+	$headers[0] = array(
+		array('data' => t("Description"), 'colspan' => 7, 'class' => 'customTableHeader'),
+		array('data' => t("Compliance"), 'class' => 'customTableHeader'),
+		array('data' => t("Performance"), 'colspan' => 4, 'class' => 'customTableHeader'),   	
 	);
+    if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
+        $headers[0][] = array('data' => t("Art. 17"), 'class' => 'customTableHeader');
+    }
     //if article 17, add a column
     /*
     if (count($header) > 11) {
@@ -1550,7 +1553,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
     }*/
     
 
-	$headers[] = $header;
+	$headers[1] = $header;
 	
     $table = theme('table', array(
             'header' => $headers,
