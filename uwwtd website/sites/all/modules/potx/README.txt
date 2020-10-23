@@ -7,10 +7,29 @@ functionality for Drupal. These translation templates are used by
 teams to translate Drupal to their language of choice. There are 
 basically two ways to use the contents of this project:
 
- * Copy potx.inc and potx-cli.php to the directory you would like to 
-   generate translation templates for and run php potx-cli.php. 
-   The translation templates will get generated in the current 
-   directory.
+ * Use Drush commands provided by the module to extract the translation strings.
+     Command - drush potx
+     Alias - NA
+     Argument - mode : potx output mode e.g. single, multiple or core
+     Options - potx accepts 4 options
+       --modules : Comma delimited list of modules to extract translatable strings from.
+       --files   : Comma delimited list of files to extract translatable strings from.
+       --folder  : Folder to begin translation extraction in. When no other option is set this defaults to current directory.
+       --api     : Drupal core version to use for extraction settings.
+
+     Example -
+     1.Extract translatable strings from applicable files in current directory and write to single output file.
+       drush potx single
+       drush potx (By default, mode = single)
+
+     2.Extract translatable strings from applicable files of example module and write to module-specific output file.
+       drush potx multiple --modules=example
+
+     3.Extract translatable strings from example.module and write to single output file.
+       drush potx --files=sites/all/modules/example/example.module
+
+     4.Extract strings from folder 'projects/drupal/8' using API version 8.
+       drush potx single --api=8 --folder=projects/drupal/8
 
  * Install the module on a Drupal site as you would with any other 
    module. Once potx module is turned on, you can go to the 
@@ -26,33 +45,6 @@ basically two ways to use the contents of this project:
 The module also includes optional Coder (http://drupal.org/project/coder)
 integration, allowing you to spot translatability errors in modules while
 doing your regular code review.
-
-USING potx-cli.php ON THE COMMAND LINE
-================================================================================
-
-Translation templates can easily be created by running the potx-cli.php
-script on all source files that contain translatable strings.
-
-  1. Copy the potx-cli.php and potx.inc to whatever folder you
-     would like to generate template files in.
-  2. Run 'php potx-cli.php' and the script will autodiscover
-     all possible files to generate templates for.
-  3. Translation templates are generated in this folder, if you
-     have the proper rights to create files here.
-     
-You can try 'php potx-cli.php --help' to get a list of more options.
-  
-The contents of files depend on the mode you use. By default, one
-single general.pot file will be generated. You can use the "core"
-mode to generate Drupal core templates (one file per directory, repeated
-usage of the same string in multiple directories folded into general.pot,
-.info files folded into general.pot). Or you can use the "multiple" mode
-which is similar to the "core" mode, but .info files are folded into
-their module template files.
-
-In case of "core" and "multiple" mode, the generated general.pot will
-contain strings that occur more than once in the source files. This will help 
-translators to maintain a single translation for them. 
 
 CREDITS
 ================================================================================

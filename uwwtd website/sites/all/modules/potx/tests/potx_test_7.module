@@ -50,6 +50,11 @@ function potx_test_7_page() {
 
   st('Installer string in context', array(), array('context' => 'Installer context'));
   $t('Dynamic string in context', array(), array('context' => 'Dynamic context'));
+
+  dt('This could have been in a drush file');
+
+  t('Oh god why would @you omit a parenthesis?', array('@you' => 'fool');
+  t('PHP Syntax error gracefully handled');
 }
 
 function potx_test_7_perm() {
