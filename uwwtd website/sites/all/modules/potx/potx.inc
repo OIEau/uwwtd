@@ -12,10 +12,6 @@
  *   functions can be implemented to use the functionality provided here as an
  *   API for Drupal code to translatable string conversion.
  *
- *   The potx-cli.php script can be used with this include file as
- *   a command line interface to string extraction. The potx.module
- *   can be used as a web interface for manual extraction.
- *
  *   For a module using potx as an extraction API, but providing more
  *   sophisticated functionality on top of it, look into the
  *   'Localization server' module: http://drupal.org/project/l10n_server
@@ -290,6 +286,8 @@ function _potx_process_file($file_path, $strip_prefix = 0, $save_callback = '_po
     // This does not support context even in Drupal 7.
     _potx_find_t_calls($file_name, $save_callback, '_locale_import_message', POTX_STRING_BOTH);
   }
+  // dt() in drush does not support context either.
+  _potx_find_t_calls($file_name, $save_callback, 'dt');
 
   if ($api_version > POTX_API_5) {
     // Watchdog calls have both of their arguments translated from Drupal 6.x.
@@ -1243,10 +1241,11 @@ function _potx_skip_args($here) {
   global $_potx_tokens;
 
   $nesting = 0;
-  // Go through to either the end of the function call or to a comma
-  // after the current position on the same nesting level.
+  // Go through to either the end of the function call, or to a comma after the
+  // current position on the same nesting level, or an unexpected semicolon.
   while (!(($_potx_tokens[$here] == ',' && $nesting == 0) ||
-           ($_potx_tokens[$here] == ')' && $nesting == -1))) {
+           ($_potx_tokens[$here] == ')' && $nesting == -1) ||
+           $_potx_tokens[$here] === ';')) {
     $here++;
     if (!is_array($_potx_tokens[$here])) {
       if ($_potx_tokens[$here] == ')') {
@@ -1256,6 +1255,9 @@ function _potx_skip_args($here) {
         $nesting++;
       }
     }
+  }
+  if ($_potx_tokens[$here] === ';') {
+    potx_status('error', t('Unexpected ;'));
   }
   // If we run out of nesting, it means we reached the end of the function call,
   // so we skipped the arguments but did not find meat for looking at the
@@ -1762,6 +1764,38 @@ function _potx_parse_js_string($string) {
  * Parse a Twig template for translatables. Drupal 8+.
  */
 function _potx_parse_twig_file($code, $file, $save_callback) {
+  // Extract front-matter data, and save text in certain ones.
+  $keys_to_save = array('label');
+  // Implementation copied from core's \Drupal\help_topics\FrontMatter class.
+  $fm_separator = '---';
+  $fm_regexp = '/\A(' . $fm_separator . '(.*?)?\R' . $fm_separator . ')(\R.*)?\Z/s';
+  // Check for front matter data.
+  $len = strlen($fm_separator);
+  $matches = array();
+  if (substr($code, 0, $len + 1) === $fm_separator . "\n" || substr($code, 0, $len + 2) === $fm_separator . "\r\n") {
+    preg_match($fm_regexp, $code, $matches);
+    $matches = array_map('trim', $matches);
+  }
+  if (!empty($matches[1])) {
+    // Set the extracted source code.
+    $code = $matches[3];
+    try {
+      $metadata = Yaml::parse($matches[2]);
+      foreach ($metadata as $key => $content) {
+        if (in_array($key, $keys_to_save, TRUE)) {
+          $save_callback(_potx_format_quoted_string('"' . trim($content) . '"'), POTX_CONTEXT_NONE, $file, 1);
+          break;
+        }
+      }
+    }
+    catch (ParseException $e) {
+      potx_status('error', t("YAML parsing error on file @path: @error", array(
+        '@path' => $file,
+        '@error' => $e->getMessage(),
+      )), $file);
+    }
+  }
+
   $twig_lexer = new Twig_Lexer(new Twig_Environment());
 
   try {
@@ -2102,9 +2136,23 @@ function _potx_parse_yaml_file($code, $file_name, $file_path, $save_callback) {
       $potx_callbacks['schema_store_lookup']($keys, $module_name);
     }
   }
-  elseif (preg_match('~[^/]+.info.yml~', $file_name)) {
+  elseif (preg_match('~[^/]+\.info\.yml~', $file_name)) {
     $module_name = basename(dirname($file_name));
-    $_potx_module_metadata[$module_name]['dependencies'] = isset($yaml['dependencies']) ? $yaml['dependencies'] : array();
+    $_potx_module_metadata[$module_name]['dependencies'] = [];
+
+    // Module and theme projects have dependencies. Profiles have modules
+    // listed in the install key.
+    if (isset($yaml['dependencies'])) {
+      $_potx_module_metadata[$module_name]['dependencies'] = $yaml['dependencies'];
+    }
+    if (isset($yaml['install'])) {
+      $_potx_module_metadata[$module_name]['dependencies'] = $yaml['install'];
+    }
+
+    // Remove composer style naming prefix for dependencies.
+    foreach ($_potx_module_metadata[$module_name]['dependencies'] as &$dependency) {
+      $dependency = preg_replace('!^.+:(\S+)!', '\1', $dependency);
+    }
   }
 }
 
@@ -2728,7 +2776,7 @@ function _potx_merge_processed_schema($schema) {
 function _potx_find_shipped_config_translatables($config, $schema_prefix, $config_key, $config_parent, $file_name, $save_callback) {
   global $_potx_processed_schema;
 
-  if (in_array($schema_prefix, $_potx_processed_schema['translatables'])) {
+  if (in_array($schema_prefix, $_potx_processed_schema['translatables']) && is_string($config)) {
     if (isset($_potx_processed_schema['contexts'][$schema_prefix])) {
       $context = $_potx_processed_schema['contexts'][$schema_prefix];
     }
@@ -2783,7 +2831,7 @@ function _potx_find_shipped_config_translatables($config, $schema_prefix, $confi
     }
 
     // Check the keys belonging to config element's schema's "mapping" key.
-    if (in_array($schema_prefix, $_potx_processed_schema['mappings'])) {
+    if (in_array($schema_prefix, $_potx_processed_schema['mappings']) && is_array($config)) {
       foreach ($config as $key => $element) {
         // '%key' and '%parent' keys are added to $config by potx. skip them.
         if ($key === '%parent' || $key === '%key' || empty($element)) {
@@ -2935,14 +2983,14 @@ function _potx_explore_dir($path = '', $basename = '*', $api_version = POTX_API_
   $dirs = glob($path .'*', GLOB_ONLYDIR);
   if (is_array($dirs)) {
     foreach ($dirs as $dir) {
-      if (!preg_match("!(^|.+/)(CVS|\.svn|\.git|tests|Tests|vendor)$!", $dir)) {
+      if (!preg_match("!(^|.+/)(CVS|\.svn|\.git|tests|Tests|vendor|node_modules)$!", $dir)) {
         $files = array_merge($files, _potx_explore_dir("$dir/", $basename, $api_version, $skip_self));
       }
     }
   }
 
   // Skip API and test files. Also skip our own files, if that was requested.
-  $skip_pattern = ($skip_self ? '!(potx-cli\.php|potx\.inc|\.api\.php|\.test)$!' : '!(\.api\.php|\.test)$!');
+  $skip_pattern = ($skip_self ? '!(potx\.inc|\.api\.php|\.test)$!' : '!(\.api\.php|\.test)$!');
   foreach ($files as $id => $file_name) {
     if (preg_match($skip_pattern, $file_name)) {
       unset($files[$id]);
