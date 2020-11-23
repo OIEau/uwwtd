@@ -196,7 +196,7 @@ echo uwwtd_insert_errors_tab($node);
                             <td><?php print ($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value'] ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                             <td><?php print ($node->field_rcadateart5854[LANGUAGE_NONE][0]['value'] ?
-                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart5854[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart5854[LANGUAGE_NONE][0]['value']) : '-'); ?></td>    
                         </tr>
                         <tr>
                             <td>
@@ -213,8 +213,9 @@ echo uwwtd_insert_errors_tab($node);
                                     <?php print $img75Percent; ?>
                                 </div>
                             </td>
-                            <td></td>
-                            <td></td>
+                            <td> - </td>
+                            <td><?php print ($node->field_rcadateart54[LANGUAGE_NONE][0]['value'] ?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart54[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rca52applied']); ?></td>
