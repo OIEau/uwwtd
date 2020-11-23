@@ -6906,11 +6906,19 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO9         
 //FIX ME case of art 5.4 : keep compliance (NR) or RCA compliance or art 5.2,3   
     $compArt5 = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
+    dsm($compArt5);
+    if(isset($compArt5['compliance_523'])){
+        if($compArt4['compliance']==$GLOBALS['uwwtd_value']['compliance']['not_compliant']){
+            $aResult['compArt523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $compArt5['compliance_523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $compArt5['reason'] .=' AND Art 4 = '.$GLOBALS['uwwtd_value']['compliance']['not_compliant'].' (application of hierarchical compliance)';
+        }else{
+            $aResult['compArt523'] = $compArt5['compliance_523'];
+        }
+    } 
+    else $aResult['compArt523'] = $compArt5['compArt5'];
     $aResult['compArt5'] = $compArt5['compliance'];
     $aResult['compArt5_info'] = $compArt5;
-    if(isset($compArt5['compliance_523'])) $aResult['compArt523'] = $compArt5['compliance_523'];
-    else $aResult['compArt523'] = $compArt5['compArt5'];
-    
 //     uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
     
