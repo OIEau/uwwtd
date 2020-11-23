@@ -7117,7 +7117,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             else {
                 //FIX ME : In this case we need to check if perf of UWWTPS are "PASS" for N & P 
                 $comp_523 = uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
-                dsm($comp_523);
                 return [
                     'art54applies'=>true,
                     'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'],
@@ -7199,7 +7198,6 @@ function uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpComplianc
         $listUwwtpCompliance[$k]['compArt5'] = $listUwwtpCompliance[$k]['compArt54-523'];
         //Get compliance status of uwwtp with new input data
     }   
-    dsm($listUwwtpCompliance);
     return uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
 }
 
@@ -7315,10 +7313,23 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
                 if($agg->field_agggenerated['und'][0]['value']>=10000){
                     if($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] &&
                     true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf'))
+                    //TODO check if N & P equipement are in place
                     ){
-                         $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                         if(isset($uwwtp->field_uwwnremoval['und'][0]['value'])|| isset($uwwtp->field_uwwpremoval['und'][0]['value'])){
+                              if($uwwtp->field_uwwnremoval['und'][0]['value'] ==0 || $uwwtp->field_uwwpremoval['und'][0]['value'] == 0){
+                                  $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+                              }else{
+                                  $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                              }
+                         }
+                         //If information on equipment are not provided
+                         else{
+                             $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; //in this case, we consider the (non) environnemental impact
+                         }
+                         
                     }
-                    elseif($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] && $uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']) {
+                    elseif($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] &&
+                        $uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']) {
                         $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     }
                     else{
