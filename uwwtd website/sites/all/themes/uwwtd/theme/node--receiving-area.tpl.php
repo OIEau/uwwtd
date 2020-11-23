@@ -213,7 +213,10 @@ echo uwwtd_insert_errors_tab($node);
                                     <?php print $img75Percent; ?>
                                 </div>
                             </td>
-                            <td> - </td>
+                            <td> <?php print ($node->field_rcadateart54[LANGUAGE_NONE][0]['value'] && $node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']?
+                                    uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?>
+                            
+                            </td>
                             <td><?php print ($node->field_rcadateart54[LANGUAGE_NONE][0]['value'] ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart54[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
@@ -301,12 +304,12 @@ echo uwwtd_insert_errors_tab($node);
                     </div>
                     <table class="characteristics-sentitive-area">
                         <tr>
-                            <td><?php print render($content['field_rcabeginlife']); ?></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><?php print render($content['field_rcacodepredecessor']); ?></td>
+                            <td>
+                               <div class="field field-type-text field-label-inline">
+                                <div class="field-label"><?php print ("Beginlife of the SA"); ?>: </div>
+                                <div class="field-items"><div class="field-item"> <?php print ($node->field_rcabeginlife[LANGUAGE_NONE][0]['value']?uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabeginlife[LANGUAGE_NONE][0]['value']) : '-'); ?></div></div>
+                                </div>
+                            </td>
                             <td></td>
                             <td></td>
                         </tr>
