@@ -6906,7 +6906,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO9         
 //FIX ME case of art 5.4 : keep compliance (NR) or RCA compliance or art 5.2,3   
     $compArt5 = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
-    dsm($compArt5);
+    //dsm($compArt5);
     if(isset($compArt5['compliance_523'])){
         if($compArt4['compliance']==$GLOBALS['uwwtd_value']['compliance']['not_compliant']){
             $aResult['compArt523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -7117,6 +7117,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             else {
                 //FIX ME : In this case we need to check if perf of UWWTPS are "PASS" for N & P 
                 $comp_523 = uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
+                dsm($comp_523);
                 return [
                     'art54applies'=>true,
                     'compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'],
@@ -7198,6 +7199,7 @@ function uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpComplianc
         $listUwwtpCompliance[$k]['compArt5'] = $listUwwtpCompliance[$k]['compArt54-523'];
         //Get compliance status of uwwtp with new input data
     }   
+    dsm($listUwwtpCompliance);
     return uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
 }
 
