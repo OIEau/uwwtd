@@ -6906,11 +6906,19 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO9         
 //FIX ME case of art 5.4 : keep compliance (NR) or RCA compliance or art 5.2,3   
     $compArt5 = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
+    //dsm($compArt5);
+    if(isset($compArt5['compliance_523'])){
+        if($compArt4['compliance']==$GLOBALS['uwwtd_value']['compliance']['not_compliant']){
+            $aResult['compArt523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $compArt5['compliance_523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $compArt5['reason'] .=' AND Art 4 = '.$GLOBALS['uwwtd_value']['compliance']['not_compliant'].' (application of hierarchical compliance)';
+        }else{
+            $aResult['compArt523'] = $compArt5['compliance_523'];
+        }
+    } 
+    else $aResult['compArt523'] = $compArt5['compArt5'];
     $aResult['compArt5'] = $compArt5['compliance'];
     $aResult['compArt5_info'] = $compArt5;
-    if(isset($compArt5['compliance_523'])) $aResult['compArt523'] = $compArt5['compliance_523'];
-    else $aResult['compArt523'] = $compArt5['compArt5'];
-    
 //     uwwtd_trace(var_export($aResult, true));
     unset($listStationArticleAndUwwtpCompliance);
     
@@ -7305,10 +7313,23 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
                 if($agg->field_agggenerated['und'][0]['value']>=10000){
                     if($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] &&
                     true === uwwtd_all_uwwtp_treatementperf_pass_in($uwwtp, array('ntotperf', 'ptotperf'))
+                    //TODO check if N & P equipement are in place
                     ){
-                         $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                         if(isset($uwwtp->field_uwwnremoval['und'][0]['value'])|| isset($uwwtp->field_uwwpremoval['und'][0]['value'])){
+                              if($uwwtp->field_uwwnremoval['und'][0]['value'] ==0 || $uwwtp->field_uwwpremoval['und'][0]['value'] == 0){
+                                  $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+                              }else{
+                                  $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
+                              }
+                         }
+                         //If information on equipment are not provided
+                         else{
+                             $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant']; //in this case, we consider the (non) environnemental impact
+                         }
+                         
                     }
-                    elseif($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] && $uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']) {
+                    elseif($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == $GLOBALS['uwwtd_value']['inplace']['morestringent'] &&
+                        $uwwtp->field_uwwntotperf['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['not_relevant']) {
                         $aResult['compArt54-523'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     }
                     else{
