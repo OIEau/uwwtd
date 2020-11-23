@@ -657,6 +657,7 @@ function uwwtd_get_data_sensitive_areas($option){
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
+    dsm($data);
     return $data;
     
 }
@@ -2282,6 +2283,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
         //Art. 5(8)          : field_rcadateart5854
         if(!empty($row['dt_art58'])){
             $dts[]  = t('Art. 5(8)').': '.date('d/m/Y',strtotime($row['dt_art58'])).',';
+        }
+        if(!empty($row['dt_art54'])){
+            $dts[]  = t('Art. 5(4)').': '.date('d/m/Y',strtotime($row['dt_art54'])).',';
         }
         if(!empty($row['dt_an'])){
             $dts[]  = t('Art. 5(2,3) - N').': '.date('d/m/Y',strtotime($row['dt_an'])).',';

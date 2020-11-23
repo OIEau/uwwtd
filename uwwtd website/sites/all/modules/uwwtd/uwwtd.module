@@ -2262,6 +2262,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             b.field_rcabstartdate_value as dt_b,
             c.field_rcacstardate_value as dt_c,
             art58.field_rcadateart5854_value as dt_art58,
+            art54.field_rcadateart54_value as dt_art54,
             
             st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
             st_area(st_transform(f_geo.the_geom, 3035)) area,
@@ -2305,6 +2306,9 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
         LEFT join
                     {field_data_field_rcadateart5854} art58
                         ON n.nid = art58.entity_id        
+        LEFT join
+                    {field_data_field_rcadateart54} art54
+                        ON n.nid = art54.entity_id        
         LEFT JOIN 
             {field_data_field_position_geo} f_geo 
                 ON n.nid = f_geo.entity_id
@@ -2338,6 +2342,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             b.field_rcabstartdate_value,
             c.field_rcacstardate_value,
             art58.field_rcadateart5854_value,
+            art54.field_rcadateart54_value,
             f_geo.the_geom
         ORDER BY n.title
     ';
