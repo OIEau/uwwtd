@@ -1724,13 +1724,13 @@ function uwwtd_get_distance_compliance($agg){
         $art4complianceTreat = 'NC';
         $art4compliancePerf = 'NC'; 
     }
-    /*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
+    //nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
     //Case of discharge Without treatment > 2000 et 2%
     //=======================================================FIX ME
     $pc_dwot = $agg->field_aggpercwithouttreatment['und'][0]['value'];
     if($pc_dwot > 0){
         $d_wot = $pc_dwot/100*$agg->field_agggenerated['und'][0]['value'] ;
-        if($pc_dwot > 2 &&  $d_wot > 2000){
+        if($pc_dwot > 2 ||  $d_wot > 2000){
             //Set art4 compliance
             $art4complianceTreat = 'NC';
             $art4compliancePerf = 'NC'; 
@@ -1753,7 +1753,7 @@ function uwwtd_get_distance_compliance($agg){
     } 
     
     //=======================================================END FIX ME
-    */
+    //
     //$dist_art3_treatment_percent = 100 * $agg->field_aggpercwithouttreatment['und'][0]['value']/$agg->field_agggenerated['und'][0]['value'];
 
     // Set the colors of "Distance to compliance" table
@@ -1869,6 +1869,7 @@ function uwwtd_get_distance_compliance($agg){
         'art5_perf_compliance' => $art5compliancePerf,
         
     );
+    //dsm($dtc);
     return $dtc;	
 }
 
