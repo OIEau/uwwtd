@@ -657,7 +657,6 @@ function uwwtd_get_data_sensitive_areas($option){
     }catch(Exception $e) {
         dsm($e->getMessage());
     }
-    dsm($data);
     return $data;
     
 }
