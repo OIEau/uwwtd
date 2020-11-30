@@ -425,7 +425,7 @@ function uwwtd_menu(){
     	//'page arguments' => array('uwwtd_debug_form'),
     	//'access callback' => TRUE,
     	'access arguments' => array('Data-management access'),
-     	'file' => 'utils.inc',
+     	'file' => 'debug.inc',
      	'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
     );
   $items['stats/querys'] = array(

@@ -1041,6 +1041,28 @@ function uwwtd_stat_national_uwwtp_agglo($options)
 	return $data;
 }
 
+//=================Art 17
+function uwwtd_stat_art17_mslevel($options){
+    $data = [];
+    $query = '
+        SELECT *
+        FROM wfs.art17_mslevel    
+    ';
+    if(isset($options['year'])){
+        $query.= 'WHERE year_of_datas = '.$options['year'];
+    }
+    try {
+		$result = db_query($query,[]);
+		while($row = $result->fetchAssoc()) {
+
+			$data[] = $row;
+		}
+	}catch(Exception $e) {
+		dsm($e->getMessage());
+	}
+    return $data;
+}
+
 /**
  * Retourne la chaine "(test1, test2, test3, -1)" créée à partir du tableau de string donné.
  */

@@ -9,7 +9,7 @@ body{
 	color: #4f4f4f;
 }
 ol,ul{
-    padding:0;
+    /*padding:0;*/
 }
 .navbar-header{
 	float: none;
@@ -1385,7 +1385,7 @@ section#block-lang-dropdown-language{
 .navbar-header ul.navbar-nav{
     position:absolute;
     top:40px;
-    right:60px;
+    right:170px;
 }
 
 
