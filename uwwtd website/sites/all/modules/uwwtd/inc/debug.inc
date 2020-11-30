@@ -82,9 +82,9 @@ function uwwtd_debug(){
     
     //Reuse
     $dcp_reuse = uwwtd_get_data_dcp(['field_anneedata_value'=>$year]);
-    foreach($data as $k=>$line){
+    foreach($dcp_reuse as $k=>$line){
         if($line['field_dcpirrigation_value']==''){
-            unset($data[$k]);
+            unset($dcp_reuse[$k]);
         }
     }
     
@@ -109,7 +109,7 @@ $output .= '<ul>
         <li>'.round(100 * $stat_collect_values['Discharged without treatment']/$stat_collect_values['Total'], 1).' % of the waste water load must still be collected (approximately '.uwwtd_format_number(round($stat_collect_values['Discharged without treatment'], -2)).' p.e.); and</li>
         <li>===TODO===== 0.1% of the collected waste water load from agglomerations generating >10,000 p.e. and discharging into sensitive areas must still undergo more stringent treatment in line with the requirements of the Directive (approximately 1,200 p.e.).====</li>
     </ul>
-    <p>All of the collected waste water load underwent secondary treatment in line with the requirements of the Directive.</p>';
+    <p>===TODO=====All of the collected waste water load underwent secondary treatment in line with the requirements of the Directive.</p>';
 
 $output .='<p>'.round(100 * $stat_collect_values['Individual and Appropriate Systems']/$stat_collect_values['Total'], 1).'% of waste water load is addressed by means of individual or other appropriate systems (IAS) i.e. non-centralised sanitation systems (approximately '.uwwtd_format_number(round($stat_collect_values['Individual and Appropriate Systems'], -2)).' p.e.).  </p>';
 
@@ -313,7 +313,6 @@ else{
 
 if(isset($ms_level[$year]['waste_water']['rate of re-used']) || !empty($dcp_reuse)){
     $output.='<p>';
-    
     if(!empty($dcp_reuse)){
         $uses = array_unique(array_column($dcp_reuse, 'field_dcpirrigation_value'));
         if(!empty($uses)){
