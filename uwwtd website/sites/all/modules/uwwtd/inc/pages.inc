@@ -238,21 +238,24 @@ function uwwtd_get_data_uwwtp($option)
     WITH uwwtp_min_agg AS(
         SELECT n.nid, n.type, n.title 
         FROM {node} n
-            LEFT JOIN
+            JOIN
               {field_data_field_anneedata f_annee}
                 ON n.nid = f_annee.entity_id
-            LEFT JOIN
+            JOIN
               {field_data_field_status f_status}
                 ON n.nid = f_status.entity_id
-            LEFT JOIN
+            JOIN {field_data_field_uwwcollectingsystem}  con
+                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
+            JOIN
               {field_data_field_agguwwliste f_uwwtp_agglo}
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
-            LEFT JOIN
+            JOIN
             {field_data_field_agggenerated f_agggenerated}
                 ON f_uwwtp_agglo.entity_id = f_agggenerated.entity_id
         WHERE n.type = :typenode
             AND f_agggenerated.field_agggenerated_value >= 2000
              AND f_annee.field_anneedata_value = :annee
+             AND f_status.field_status_value = \'1\'
         GROUP BY n.nid
     )
     SELECT DISTINCT ON  (n.nid) n.nid,
@@ -354,7 +357,6 @@ function uwwtd_get_data_uwwtp($option)
         LEFT JOIN
             {field_data_field_uwwcoddischargecalculated} f_uwwcoddischargecalculated
                 ON n.nid = f_uwwcoddischargecalculated.entity_id
-                
         LEFT JOIN
             {field_data_field_uwwndischarge} f_uwwndischarge
                 ON n.nid = f_uwwndischarge.entity_id
@@ -398,6 +400,7 @@ function uwwtd_get_data_uwwtp($option)
             :'LEFT JOIN regions_nuts nut ON f_regionnuts.field_regionnuts_value = nut.n3cd'
         ).' 
     WHERE n.type = :typenode
+        AND f_status.field_status_value = \'1\'
     ORDER BY n.nid
     ';
     
