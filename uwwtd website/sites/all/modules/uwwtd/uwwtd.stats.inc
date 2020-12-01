@@ -1186,10 +1186,11 @@ $output .= '<ul>
 
 $output .='<p>'.round(100 * $stat_collect_values['Individual and Appropriate Systems']/$stat_collect_values['Total'], 1).'% of waste water load is addressed by means of individual or other appropriate systems (IAS) i.e. non-centralised sanitation systems (approximately '.uwwtd_format_number(round($stat_collect_values['Individual and Appropriate Systems'], -2)).' p.e.).  </p>';
 
+dsm($treatmenttype_nb);
 $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$treatmenttype_nb['Total'].' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>
 <ul>
-    <li>'.format_plural($treatmenttype_nb['Secondary treatment'], '1 plant' , '@count plants').' equipped with technology for primary and secondary treatment </li>
-    <li>'.format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants').' equipped with technology for more stringent treatment than secondary.</li>
+    <li>'.(isset($treatmenttype_nb['Secondary treatment'])?format_plural($treatmenttype_nb['Secondary treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology only for primary and secondary treatment,</li>
+    <li>'.(isset($treatmenttype_nb['More stringent treatment'])?format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology for more stringent treatment than secondary.</li>
 </ul>
 ';
 $output.='<h3>Compliance rate by Article</h3>';
@@ -1323,7 +1324,6 @@ if(!empty($art17_mslevel )){
    $output.='However, as indicated in a recent OECD study, '. $country_name.' would need to increase their investments further to reach and maintain compliance.';
     $output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for water supply and sanitation) is EUR '.round($GLOBALS['ocde_data'][strtoupper($country_code)]['sum'],1).' billion.';
     $output.='</p>';
-    
 }
 
 
