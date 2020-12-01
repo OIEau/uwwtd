@@ -1114,7 +1114,10 @@ function uwwtd_stats_summary_chapter($year){
         }
 	}
     $dataAgg = uwwtd_get_data_agglomeration($option);
-    $overflow = array_filter( array_column($dataAgg, 'field_aggseweroverflows_m3_value'), 'strlen' );    
+    $overflow = array_filter( array_column($dataAgg, 'field_aggseweroverflows_m3_value'), function($v){
+        return ($v >= 1?true:false);
+    } ); 
+    //dsm($overflow);
     //= Legal compliance
     $legal_compliance = uwwtd_stat_national_distance_to_compliance($year, []);
     $art3_C = (integer)$legal_compliance['comparisonsCompliancesByAgg'][$year]->{"Compliant"}->{"Article 3"} ;
@@ -1172,7 +1175,7 @@ $output .= '<ul>
             ).'
         </li>
         <li>'.( $art4_pe_NC>0?
-                round(100 * $art4_pe_NC/$art4_pe_nb,1) .'% of the collected waste water load must still undergo secondary treatment in line with the requirements of the Directive,'
+                round(100 * $art4_pe_NC/$art4_pe_nb,1) .'% of the collected waste water load must still undergo secondary treatment in line with the requirements of the Directive (approximately '.uwwtd_format_number(round($art4_pe_NC, -2)).' p.e.),'
                 :'All of the collected waste water load underwent secondary treatment in line with the requirements of the Directive,').
         '</li>
         <li>'. ($art5_pe_NC>0?
