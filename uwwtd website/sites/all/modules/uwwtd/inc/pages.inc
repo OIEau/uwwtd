@@ -45,6 +45,7 @@ function uwwtd_get_data_agglomeration($option){
             f_aggc1.field_aggc1_value,
             f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
             f_status.field_status_value,
+            overflows_m3.field_aggseweroverflows_m3_value, 
             st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
             f_article17_agglo.field_article17_agglo_nid,
             rbd.eurbdcode as rbd,
@@ -93,6 +94,9 @@ function uwwtd_get_data_agglomeration($option){
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
         LEFT JOIN
+            {field_data_field_aggseweroverflows_m3} overflows_m3
+                ON n.nid = overflows_m3.entity_id
+        LEFT JOIN
             {field_data_field_position_geo} f_geo
                 ON n.nid = f_geo.entity_id
 		LEFT JOIN
@@ -130,6 +134,7 @@ function uwwtd_get_data_agglomeration($option){
             f_aggc1.field_aggc1_value,
             f_aggpercwithouttreatment.field_aggpercwithouttreatment_value,
             f_status.field_status_value,
+            overflows_m3.field_aggseweroverflows_m3_value, 
             f_geo.the_geom,
             f_article17_agglo.field_article17_agglo_nid,
             rbd.eurbdcode,

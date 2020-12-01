@@ -1113,7 +1113,8 @@ function uwwtd_stats_summary_chapter($year){
             $uwwtp_ids[] = $uwwtp['nid'];
         }
 	}
-    
+    $dataAgg = uwwtd_get_data_agglomeration($option);
+    $overflow = array_filter( array_column($dataAgg, 'field_aggseweroverflows_m3_value'), 'strlen' );    
     //= Legal compliance
     $legal_compliance = uwwtd_stat_national_distance_to_compliance($year, []);
     $art3_C = (integer)$legal_compliance['comparisonsCompliancesByAgg'][$year]->{"Compliant"}->{"Article 3"} ;
@@ -1316,10 +1317,8 @@ if(!empty($art17_mslevel )){
     $output.='<p>';
     $output.='The investment needs  for ensuring adequate urban waste water collection and treatment, i.e. compliance with the Directive, as estimated by the national authorities and included in their national plan, are at the level of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soeinvtot')).' million for the period '.$begin_y.'-'.$end_y.'.';
     $output.='This covers works on treatment plants, with the forecasted investment cost of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvcol')).' million ('.$begin_y.'-'.$end_y.'), and works on collecting systems and/or IAS, with a forecasted investment cost of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvtp')).' million ('.$begin_y.'-'.$end_y.').';
-    $output.='</p>';
-    $output.='<p>';    
-   $output.='===TODO======However, as indicated in a recent OECD study, '. $country_name.' would need to increase their investments further to reach and maintain compliance.';
-    $output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for water supply and sanitation) is EUR 0.6 billion. ========';
+   $output.='However, as indicated in a recent OECD study, '. $country_name.' would need to increase their investments further to reach and maintain compliance.';
+    $output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for water supply and sanitation) is EUR '.round($GLOBALS['ocde_data'][strtoupper($country_code)]['sum'],1).' billion.';
     $output.='</p>';
     
 }
@@ -1350,7 +1349,6 @@ if(isset($ms_level[$year]['sludge']['production']) && $ms_level[$year]['sludge']
     }else{
         $no_ms_level[] = 'sludge destination';
     }
-     //re-used for soil and agriculture (83%) or disposed in landfills (17%).';
     $output.='</p>';
 }
 else{
@@ -1386,10 +1384,13 @@ if(isset($ms_level[$year]['waste_water']['rate of re-used']) || !empty($dcp_reus
 }else{
     $no_ms_level[] = 'waste water reuse';
 }
-
-$output.='<p>===TODO====== storm water overflows and urban run-off ========</p>';
+if(!empty($overflow)){
+    $output.='<p>Storm water overflows case was reported on '.format_plural(count($overflow), '1 agglomeration' , '@count agglomerations').' for a total of '.uwwtd_format_number(round(array_sum($overflow),2)).' m3</p>';
+}else{
+    $no_ms_level[] = 'storm water overflows';
+}
 if(!empty($no_ms_level)){
-    $output.='<p>No information was reported on '.implode(', ', $no_ms_level).' by '.$country_name.' because <b>##################</b>.</p>';
+    $output.='<p>No information was reported on '.implode(', ', $no_ms_level).' by '.$country_name.'.</p>';
 }
 
     return '<div class="view-content">'.$output.'</div>';
