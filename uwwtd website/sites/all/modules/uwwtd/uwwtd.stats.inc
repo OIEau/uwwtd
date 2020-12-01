@@ -1371,7 +1371,7 @@ if(isset($ms_level[$year]['waste_water']['rate of re-used']) || !empty($dcp_reus
             }
         }
         
-        $output.='At '.format_plural(count($dcp_reuse), '1 discharge point' , '@count discharge points').' , treated waste water is reused for '.implode(' or ', $uses).'.';
+        $output.='At '.format_plural(count($dcp_reuse), '1 discharge point' , '@count discharge points').', treated waste water is reused for '.implode(' or ', $uses).'.';
     }
     
     if($ms_level[$year]['waste_water']['rate of re-used'] > 0) {
@@ -1380,7 +1380,7 @@ if(isset($ms_level[$year]['waste_water']['rate of re-used']) || !empty($dcp_reus
     if($ms_level[$year]['waste_water']['Re-used']!=''){
         $output.=' ('.$ms_level[$year]['waste_water']['Re-used'].')';
     }
-    $output.='.</p>';
+    $output.='</p>';
 }else{
     $no_ms_level[] = 'waste water reuse';
 }
