@@ -1206,8 +1206,8 @@ $output.='
             <th>Total<br/>[No]</th>
             <th>Comply<br/>[No]</th>
             <th>Comply<br/>[%]</th>
-            <th>Total<br/>[p.e.]]</th>
-            <th>Comply<br/>[p.e.]]</th>
+            <th>Total<br/>[p.e.]</th>
+            <th>Comply<br/>[p.e.]</th>
             <th>Comply<br/>[%]</th>
         </tr>
     </thead>
