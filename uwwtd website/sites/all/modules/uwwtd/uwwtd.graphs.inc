@@ -3,6 +3,63 @@ define('ALL_YEARS', 'allyears');
 
 require_once 'uwwtd.stats.inc';
 
+function uwwtd_stats_summary_chapter_form($form, &$form_state){
+        $year = uwwtd_get_max_annee();
+	$form['#prefix'] = '<h1 align="center">' . t('Summary chapter for national stats') . '</h1>';
+	
+
+	// Get available years for data
+		$query = db_select('field_data_field_anneedata', 'a');
+		$query->fields('a', array('field_anneedata_value'));
+		$query->orderBy('field_anneedata_value', 'DESC');
+		$results = $query->execute();
+		//$years = array('all' => 'Show all');
+        $years = array();
+        $count = 0;
+		while($record = $results->fetchAssoc()) {
+			$years[$record['field_anneedata_value']] = $record['field_anneedata_value'];
+            if($record['field_anneedata_value']!=$year){$count++;}
+		}
+		
+        // TODO : add RBD, nuts and other filters ?
+        // If we have more than one year of availability
+        if($count){
+        	// Ajout du choix pour toutes les années :
+        	$years[ALL_YEARS] = 'All years';
+        	
+            $form['description'] = array('#markup' => '<p>'.t('Select the year to generate the graphs.').'</p>');
+            $form['yearselected'] = array(
+            	'#title' => t('Available years'),
+                '#type' => 'select',
+                '#options' => $years,
+                '#default_value' => isset($form_state['values']['year']) ? $form_state['values']['year'] : $year,
+            );
+            $form['yearspossibles'] = array(
+            	'#type' => 'hidden',
+            	'#value' => $years,
+            );
+            $form['submit'] = array(
+            	'#type' => 'submit',
+            	'#attributes' => array('class' => array('btn-primary', 'btn')),
+            	'#value' => t('Refresh graphs')
+            );
+        }
+        
+		if(!isset($form_state['storage']['result']) && empty($form_state['input'])) {
+			$form_state['storage']['result'] = uwwtd_stats_summary_chapter($year);
+		}
+        $form['#suffix'] = $form_state['storage']['result'];
+	return $form;
+}
+function uwwtd_stats_summary_chapter_form_validate(&$form, &$form_state) {
+}
+function uwwtd_stats_summary_chapter_form_submit(&$form, &$form_state) {
+    $form_state['rebuild'] = TRUE;
+	$table = uwwtd_stats_summary_chapter($form_state['values']['yearselected'], $form_state['values']['yearspossibles']);
+	$form_state['storage']['result'] = $table;
+}
+
+
 function uwwtd_stats_graphs_page(){
 
 	$form = drupal_get_form('uwwtd_stats_graphs_form');

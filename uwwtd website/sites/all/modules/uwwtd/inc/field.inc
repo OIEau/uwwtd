@@ -237,7 +237,7 @@ function uwwtd_virtual_field_aggart5compliance_hierarchical($node) {
   if($node->isInRca54){
     //$field_aggart5compliance='NR'; 
     $field_aggart523compliance = $node->field_aggart523compliance['und'][0]['value'];
-    $msg.='</span> <span>('.t('Art 5.4 is applied for the receiving area. At agglomeration level the assessement is :compliance',  [':compliance'=>$GLOBALS['uwwtd']['ui']['compliance'][$field_aggart523compliance]]).')';
+    $msg.='</span> <span>('.t('Art 5.4 is applied for the receiving area. At agglomeration level the assessment is :compliance',  [':compliance'=>$GLOBALS['uwwtd']['ui']['compliance'][$field_aggart523compliance]]).')';
   }
   elseif($node->field_aggart4compliance['und'][0]['value']=='NC' && $field_aggart5compliance=='C'){
     $field_aggart5compliance='NC';  

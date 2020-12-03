@@ -425,7 +425,7 @@ function uwwtd_menu(){
     	//'page arguments' => array('uwwtd_debug_form'),
     	//'access callback' => TRUE,
     	'access arguments' => array('Data-management access'),
-     	'file' => 'utils.inc',
+     	'file' => 'debug.inc',
      	'file path' => drupal_get_path('module', 'uwwtd') . '/inc',
     );
   $items['stats/querys'] = array(
@@ -440,6 +440,15 @@ function uwwtd_menu(){
   $items['stats/graphs'] = array(
   		'page callback' => 'uwwtd_stats_graphs_page',
   		'page arguments' => array(),
+  		'access callback' => true,
+  		'access arguments' => true,
+  		'type' => MENU_CALLBACK,
+  		'file' => 'uwwtd.graphs.inc',
+  		'file path' => drupal_get_path('module', 'uwwtd')
+  );
+  $items['stats/summary'] = array(
+  		'page callback' => 'drupal_get_form',
+  		'page arguments' => array('uwwtd_stats_summary_chapter_form'),
   		'access callback' => true,
   		'access arguments' => true,
   		'type' => MENU_CALLBACK,
