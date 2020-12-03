@@ -5508,8 +5508,37 @@ function uwwtd_update_7178(&$context = null) {
 
 }
 
-
-
+function uwwtd_update_7179(&$context = null) {
+    //enable new module
+    //Security 
+    //,'Login security'=>'login_security']
+    module_enable(['Password policy'=>'password_policy']);
+    
+    //Password policy 
+    $password_policy = new stdClass();
+    $password_policy->disabled = FALSE; /* Edit this to true to make a default password_policy disabled initially */
+    $password_policy->api_version = 1;
+    $password_policy->name = 'beautifull_password';
+    $password_policy->config = 'a:14:{s:10:"alpha_case";a:1:{s:10:"alpha_case";i:1;}s:11:"alpha_count";a:1:{s:11:"alpha_count";s:1:"8";}s:9:"blacklist";a:2:{s:9:"blacklist";s:0:"";s:26:"blacklist_match_substrings";i:0;}s:10:"char_count";a:1:{s:10:"char_count";s:0:"";}s:11:"consecutive";a:1:{s:22:"consecutive_char_count";s:1:"3";}s:5:"delay";a:2:{s:5:"delay";s:0:"";s:9:"threshold";s:1:"1";}s:15:"drupal_strength";a:1:{s:15:"drupal_strength";s:2:"50";}s:9:"int_count";a:1:{s:9:"int_count";s:0:"";}s:14:"past_passwords";a:1:{s:14:"past_passwords";s:0:"";}s:13:"special_count";a:2:{s:13:"special_count";s:0:"";s:19:"special_count_chars";s:32:"`~!@#$%^&*()_+=-|}{"?:><,./;\'\\[]";}s:8:"username";a:1:{s:8:"username";i:1;}s:7:"authmap";a:1:{s:11:"authmodules";a:0:{}}s:4:"role";a:1:{s:5:"roles";a:4:{i:1;i:0;i:2;i:0;i:3;i:0;i:4;i:0;}}s:6:"expire";a:6:{s:14:"expire_enabled";i:0;s:12:"expire_limit";s:8:"6 months";s:22:"expire_warning_message";s:48:"Your password has expired. Please change it now.";s:25:"expire_warning_email_sent";s:8:"-14 days";s:28:"expire_warning_email_message";s:0:"";s:28:"expire_warning_email_subject";s:94:"[user:name], your password on [site:name] shall expire in [password_expiration_date:interval] ";}}';
+    ctools_include('export');
+    ctools_export_crud_save('password_policy', $password_policy);
+    
+//install new main menu
+    $menu = array(
+        'menu_name' => 'main-menu', // Drupal menu machine name
+        'title' => 'Main menu', // Drupal menu display name
+        'description' => 'The <em>Main</em> menu is used on many sites to show the major sections of the site, often in a top navigation bar.', // Optional menu description
+    );
+    menu_delete(array('menu_name' => $menu['menu_name']));    
+    menu_save($menu);        
+    uwwtd_install_menu($menu, 'main-menu7179.json');  
+    
+    if (isset($context)) {
+        $context['message'] = __FUNCTION__;
+        $context['finished'] = 1;
+    } 
+    //throw new DrupalUpdateException(__FUNCTION__);
+}
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label
@@ -6882,7 +6911,9 @@ function  uwwtd_install_enable_module(&$context)
         //GDPR 
         'EU Cookie Compliance'=>'eu_cookie_compliance',
         
-        
+        //Security 
+        'Password policy'=>'password_policy',
+        'Login security'=>'login_security',
         //search
         
         // 'UWWTD' => 'uwwtd',
