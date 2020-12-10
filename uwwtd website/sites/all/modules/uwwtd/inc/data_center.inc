@@ -7064,7 +7064,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     uwwtd_trace(__FUNCTION__);
     //art5(4) applies ?
     if (true === $rcainfo['art54applies']) {
-        
         uwwtd_trace('art54applies applies to agglo');
         uwwtd_trace(var_export($rcainfo, true));
         $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
@@ -9147,21 +9146,23 @@ function uwwtd_get_all_info_agguwww($node)
                     $aResult['total'] += $uwwperccollec;
                     $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 }
+                //Fix nd@oieau.fr 07/12/2020 : don't reset "rca" values if values are already set
+                if(!isset($aResult['rca'])){
+                    $aResult['rca']['art54applies'] = false;
+                    $aResult['rca']['rca_n_incoming_measured']     = 0;
+                    $aResult['rca']['rca_n_incoming_calculated']   = 0;
+                    $aResult['rca']['rca_n_incoming_estimated']    = 0;
+                    $aResult['rca']['rca_n_discharged_measured']   = 0;
+                    $aResult['rca']['rca_n_discharged_calculated'] = 0;
+                    $aResult['rca']['rca_n_discharged_estimated']  = 0;
 
-                $aResult['rca']['art54applies'] = false;
-                $aResult['rca']['rca_n_incoming_measured']     = 0;
-                $aResult['rca']['rca_n_incoming_calculated']   = 0;
-                $aResult['rca']['rca_n_incoming_estimated']    = 0;
-                $aResult['rca']['rca_n_discharged_measured']   = 0;
-                $aResult['rca']['rca_n_discharged_calculated'] = 0;
-                $aResult['rca']['rca_n_discharged_estimated']  = 0;
-
-                $aResult['rca']['rca_p_incoming_measured']     = 0;
-                $aResult['rca']['rca_p_incoming_calculated']   = 0;
-                $aResult['rca']['rca_p_incoming_estimated']    = 0;
-                $aResult['rca']['rca_p_discharged_measured']   = 0;
-                $aResult['rca']['rca_p_discharged_calculated'] = 0;
-                $aResult['rca']['rca_p_discharged_estimated']  = 0;
+                    $aResult['rca']['rca_p_incoming_measured']     = 0;
+                    $aResult['rca']['rca_p_incoming_calculated']   = 0;
+                    $aResult['rca']['rca_p_incoming_estimated']    = 0;
+                    $aResult['rca']['rca_p_discharged_measured']   = 0;
+                    $aResult['rca']['rca_p_discharged_calculated'] = 0;
+                    $aResult['rca']['rca_p_discharged_estimated']  = 0;
+                }
                 foreach($uww->field_uwwdcpliste['und'] as $dcplist){
                     $dcp = node_load($dcplist['nid']);
                     if($dcp->field_status['und'][0]['value']==1){
@@ -9201,7 +9202,7 @@ function uwwtd_get_all_info_agguwww($node)
             }
             unset($uww);
         }
-    }
+    }    
     return $aResult;
 }
 

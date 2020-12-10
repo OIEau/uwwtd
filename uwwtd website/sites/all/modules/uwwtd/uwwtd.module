@@ -2024,19 +2024,28 @@ function uwwtd_create_xls($filename, $rows) {
 
 function uwwtd_check_history($localid, $annee, $type=null){
   //Get all the nodes with the same id
-  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
+  
+  
   $query = db_select('field_data_field_inspireidlocalid', 'n');
   $query->fields('n', array('entity_id'));
-  //Greek case
-  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
-    $localids=[$localid];
-    $localids[]=str_replace('EL', 'GR',$localid);
-    $localids[]=str_replace('GR', 'EL',$localid);
-    $query->condition('n.field_inspireidlocalid_value', $localids, 'IN'); 
+  //Simple case
+  $localids=[$localid];
+  //"(ad)Normal" change in id code
+  //$localids[]=str_replace('_', '', $localid); //strip all "_"
+  //nd@oieau.fr 10/12/2020: In 2018, EEA ast at leat to Austria to remove the "_" between the iso conustry code and the national ID.
+  if($localid[2]=='_') {
+      $localids[]=substr_replace($localid, '', 2, 1); 
   }
   else{
-    $query->condition('n.field_inspireidlocalid_value', $localid, '=');  
+      $localids[]=substr_replace($localid, '_', 2, 0); 
   }
+  //Greek case
+  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
+  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+    $localids[]=str_replace('EL', 'GR',$localid);
+    $localids[]=str_replace('GR', 'EL',$localid);
+  }
+  $query->condition('n.field_inspireidlocalid_value', $localids, 'IN'); 
   
   if(!is_null($type) && $type!=''){
     $query->condition('n.bundle', $type, '=');    
