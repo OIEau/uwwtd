@@ -544,8 +544,26 @@ function uwwtd_get_MM_DD_YYYY_from_YYYY_MM_DD_XXX($date) {
 /**
  * Get array of sources files uri for entity matching with given $inspireIdLocalId
  */
-function uwwtd_get_sourcesfilesuri($inspireIdLocalId, $type) {
+function uwwtd_get_sourcesfilesuri($localid, $type) {
   $sourcesFilesUri = array();
+
+  //Simple case
+  $localids=[$localid];
+  //"(ad)Normal" change in id code
+  //$localids[]=str_replace('_', '', $localid); //strip all "_"
+  //nd@oieau.fr 10/12/2020: In 2018, EEA ast at leat to Austria to remove the "_" between the iso conustry code and the national ID.
+  if($localid[2]=='_') {
+      $localids[]=substr_replace($localid, '', 2, 1); 
+  }
+  else{
+      $localids[]=substr_replace($localid, '_', 2, 0); 
+  }
+  //Greek case
+  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
+  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+    $localids[]=str_replace('EL', 'GR',$localid);
+    $localids[]=str_replace('GR', 'EL',$localid);
+  }
 
   $query = db_select('node', 'n');
   $query->innerJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
@@ -556,8 +574,8 @@ function uwwtd_get_sourcesfilesuri($inspireIdLocalId, $type) {
   $query->fields('fm', array('uri'));
   $query->condition('n.type', $type, '=');
   $query->condition('n.status', 1, '=');
-  $query->condition('ins.field_inspireidlocalid_value', $inspireIdLocalId, '=');
-  $query->orderBy('a.field_anneedata_value', 'ASC');
+  $query->condition('ins.field_inspireidlocalid_value', $localids, 'IN');
+  $query->orderBy('a.field_anneedata_value', 'DESC');
   $nodes = $query->execute()->fetchAllAssoc("field_anneedata_value");
 
   if (!empty($nodes)) {
