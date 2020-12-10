@@ -461,11 +461,30 @@ echo uwwtd_insert_errors_tab($node);
             <div class="panel-title fieldset-legend"><?php print t('Site information'); ?></div>
           </legend>
           <div class="panel-body">
+          <?php
+          // Get all agglomeration with this field_inspireidlocalid :
+          $sourcesFilesUri = uwwtd_get_sourcesfilesuri($node->field_inspireidlocalid[LANGUAGE_NONE][0]['value'], $node->type);
+          ?>
+          
           <?php 
             print render($content['field_anneedata']);
             $content['field_sourcefile'][0]['#file']->filename = 'See sourcefile';
             print render($content['field_sourcefile']);
             ?>
+            <br/>
+          <b><i><?php print t('Other years'); ?> :</i></b>
+          <br/>
+          <?php foreach ($sourcesFilesUri as $sourceFileUri) : ?>
+              <?php if ($sourceFileUri->field_anneedata_value != $content['field_anneedata'][0]['#markup']) : ?>
+                  <b><?php print t('Year of data'); ?>:</b> <?php print $sourceFileUri->field_anneedata_value; ?>
+                  <br/>
+                  <b><?php print t('Source of data'); ?>:</b> <img src="<?php print url('modules/file/icons/application-octet-stream.png'); ?>" title="application/xml" alt="file"/>
+                  <?php print l(t('See sourcefile'), file_create_url($sourceFileUri->uri)); ?>
+                  <br/>
+                  <br/>
+              <?php endif; ?>
+          <?php endforeach; ?>
+            
           </div>
         </fieldset>
         <?php if(isset($node->field_article17['und'][0]['nid'])) : ?>
