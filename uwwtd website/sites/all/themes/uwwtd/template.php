@@ -409,42 +409,6 @@ function uwwtd_preprocess_node(&$vars) {
 
     // Récupérer les données de cette agglomeration :
     $data = array();
-
-    // Produire le graph de comparaison inter année :
-    //       $htmlGraph = '';
-
-    // Envoie au template :
-    //       $vars['htmlGraph'] = $htmlGraph;
-
-    //move all code here from tpl e.v
-    //       dsm(array_keys($vars));
-    //       dsm($vars['view_mode']);
-    //       $vars['htmlGraph'] = $htmlGraph;
-
-//       $vars['field_map'] = uwwtd_get_field_map();
-    //       $vars['compliance_time_line'] = '';
-    //       $vars['field_aggc1_with_pe'] = '';
-    //       $vars['field_aggc2_with_pe'] = '';
-    //       $vars['field_aggpercwithouttreatment_with_pe'] = '';
-    //       $vars['field_piechart_agglonode'] = '';
-    //
-    //       $vars['field_aggart4compliance_hierarchical'] = '';
-    //       $vars['field_aggart5compliance_hierarchical'] = '';
-    //
-    //       $vars['field_table_distance_to_compliance'] = '';
-    //
-    //       $vars['agglo_graphic'] = '';
-    //
-    //       $vars['field_latitude_custom'] = '';
-    //       $vars['field_longitude_custom'] = '';
-    //
-    //
-    //       $vars['field_aggperiodover5_custom'] = '';
-    //
-    //       $vars['field_source_file_link'] = '';
-    //
-    //       $vars['field_article_17'] = '';
-
   } elseif ($vars['node']->type === 'receiving_area') {
     $totalLoadEntering = '';
     $totalDesigncapacity = '';
@@ -476,34 +440,8 @@ function uwwtd_preprocess_node(&$vars) {
 
     $typeSensitiveArea = '';
     if (isset($vars['node']->field_zonetype) && !empty($vars['node']->field_zonetype[LANGUAGE_NONE][0]['value'])) {
-      switch ($vars['node']->field_zonetype[LANGUAGE_NONE][0]['value']) {
-      case 'UWW55CMSA':
-        $typeSensitiveArea = 'Catchment of Sensitive';
-        break;
-      case 'UWWCASA':
-        $typeSensitiveArea = 'Sensitive area';
-        break;
-      case 'UWWCLSA':
-        $typeSensitiveArea = 'Sensitive area';
-        break;
-      case 'UWWCMSA':
-        $typeSensitiveArea = 'Catchment of Sensitive area';
-        break;
-      case 'UWWLKSA':
-        $typeSensitiveArea = 'Sensitive area';
-        break;
-      case 'UWWRISA':
-        $typeSensitiveArea = 'Sensitive area';
-        break;
-      case 'UWWTDLSA':
-        $typeSensitiveArea = 'Sensitive area';
-        break;
-      case 'UWWTWSA':
-        $typeSensitiveArea = 'Transitional water Sensitive area';
-        break;
-      }
+        $typeSensitiveArea = $GLOBALS['uwwtd_value']['rcatype_labels'][$vars['node']->field_zonetype[LANGUAGE_NONE][0]['value']];
     }
-
     // Envoie au template :
     $vars['totalLoadEntering'] = $totalLoadEntering;
     $vars['totalDesigncapacity'] = $totalDesigncapacity;
