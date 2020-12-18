@@ -1,6 +1,8 @@
 <?php
 $GLOBALS['uwwtd']['register']['message'] = array(
   'info_not_provided' => 'NI',
+  'info_empty' => '',
+  
 );
 
 // $GLOBALS['uwwtd']['register']['message']['info_not_provided']
@@ -15,7 +17,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     //IMPORTANT
     //the model MUST be modify on Microsoft office Excel 2007, or all the chart will lose their style and format (color, thousand separtor on axis, ...)
     'model_reporting_2016' => '2018_register_model_20190321.xlsx',   //2018_register_model_20181114 2018_register_model_20190307
-    'model_reporting_2018' => '2018_register_model_20190321.xlsx',   
+    'model_reporting_2018' => '2020_register_model_20201216.xlsx',   
                 
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
@@ -454,6 +456,8 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'distance_art5_perf_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'distance_art5_perf_in_p.e._(7)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
+    'global_compliance'=> array('k'=>$i++, 'xls'=>true),
+    
     //current_rca_details' => array('k'=>$i++, 'xls'=>true),
     'water_body_type' => array('k'=>$i++, 'xls'=>true),
     'id_code_of_the_water_body_wfd' => array('k'=>$i++, 'xls'=>true),
@@ -521,12 +525,13 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
     'id' => $i++, 
     'name' => $i++, 
     'generated_load' => $i++, 
-    'collecting_system_pe' => $i++, 
     'collecting_system' => $i++, 
-    'ias_pe' => $i++, 
+    'collecting_system_pe' => $i++, 
     'ias' => $i++, 
-    'no_collecting_system_nor_ias_pe' => $i++, 
+    'ias_pe' => $i++, 
     'no_collecting_system_nor_ias' => $i++, 
+    'no_collecting_system_nor_ias_pe' => $i++, 
+    
 
     'treatment_0' => $i++, 
     'treatment_1' => $i++, 
@@ -539,10 +544,14 @@ $GLOBALS['uwwtd']['sheet8_summary_big_cities'] = array(
     'id_of_sensitive_area' => $i++,
     'name_of_sensitive_area' => $i++,
     'list_code_agglo' => $i++, 
-    'list_name_agglo' => $i++,  
-    'target_connection_distance_%' => $i++,  
-    'secondary_target_monitoring_result_distance_%' => $i++,  
-    'morestringent_target_monitoring_result_distance_%' => $i++,  
+    'list_name_agglo' => $i++, 
+    'target_connection_distance_%' => $i++,      
+    'target_connection_distance_pe' => $i++,   
+    'secondary_target_monitoring_result_distance_%' => $i++,
+    'secondary_target_monitoring_result_distance_pe' => $i++,    
+    'morestringent_target_monitoring_result_distance_%' => $i++,    
+    'morestringent_target_monitoring_result_distance_pe' => $i++,    
+    
 ); 
 
 $i = 0;
