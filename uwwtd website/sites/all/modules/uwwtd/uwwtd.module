@@ -2109,45 +2109,15 @@ function uwwtd_timeline_output($node, $linkOnAllYears=false){
         else{$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
       }
       else{$color = '#6b6b6b'; $borderc = '#6b5e66'; $txtc = '#ffffff'; $bulleTxt = t('?');$dispo =0;}
-      // $color = uwwtd_adjustBrightness($color, 50);
-      $nbAnnee = count($otherY); 
-      $j=0;
-            $cell = 0;
-      for($a=1;$a<=$nbAnnee;$a++){
         if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value'] && !$linkOnAllYears){
               $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element uwwtd-history-element-current">';
             $output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-            // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
           $output .= '</td>';
         }else{
           $output.='<td class="dispo-annee dispo-'.$dispo.' uwwtd-history-element">';
             $output .= '<h4 style="color: '.$txtc.';" title="'.$bulleTxt.'">'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
-            // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
           $output .= '</td>';
         }
-                //Si on arrive a 16 cellules, un retour à la ligne s'impose
-                if($cell==16){
-                    $output.='<td class="dispo-next">...</td></tr><tr><td class="dispo-next">...</td>';
-                    $cell=0;
-                }
-                else{
-                    $cell++;
-                }
-                $j++;
-            }
-
-      // if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
-        // $output .= '<div class="uwwtd-history-element uwwtd-history-element-current">';
-        // $output .= '<h4>'.$ting->field_anneedata['und'][0]['value'].'</h4>';
-        // if(isset($val)) $output .= '<span class="current" style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$bulleTxt.'</span>';
-        // $output .= '</div>';
-      // }
-      // else{
-        // $output .= '<div class="uwwtd-history-element">';
-        // $output .= '<h4>'.l($ting->field_anneedata['und'][0]['value'], 'node/'.$ting->nid).'</h4>';
-        // if(isset($val)) $output .= '<span style="background-color: '.$color.'; border-color: '.$borderc.'; color: '.$txtc.'" title="'.$bulleTxt.'">'.$val.'</span>';
-        // $output .= '</div>';
-      // }
     }
       $output.='<td class="dispo-after"><div></div></td>';
       if($node->type == 'agglomeration'){
