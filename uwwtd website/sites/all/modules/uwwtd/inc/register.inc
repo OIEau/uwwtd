@@ -3821,12 +3821,12 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $sheet->setCellValue('L3', $a[$annee]['nb']);
         }
         if(isset($a[$previous_year])){
-            $sheet->setCellValue('K7', $a[$previous_year]['pe']);
-            $sheet->setCellValue('L7', $a[$previous_year]['nb']);
+            $sheet->setCellValue('K8', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L8', $a[$previous_year]['nb']);
         }
         if(isset($a[$previous_year_n2])){
-            $sheet->setCellValue('K11', $a[$previous_year_n2]['pe']);
-            $sheet->setCellValue('L11', $a[$previous_year_n2]['nb']);
+            $sheet->setCellValue('K13', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L13', $a[$previous_year_n2]['nb']);
         }
     }
     if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['C']])){
@@ -3836,12 +3836,12 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $sheet->setCellValue('L4', $a[$annee]['nb']);
         }
         if(isset($a[$previous_year])){
-            $sheet->setCellValue('K8', $a[$previous_year]['pe']);
-            $sheet->setCellValue('L8', $a[$previous_year]['nb']);
+            $sheet->setCellValue('K9', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L9', $a[$previous_year]['nb']);
         }
         if(isset($a[$previous_year_n2])){
-            $sheet->setCellValue('K12', $a[$previous_year_n2]['pe']);
-            $sheet->setCellValue('L12', $a[$previous_year_n2]['nb']);
+            $sheet->setCellValue('K14', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L14', $a[$previous_year_n2]['nb']);
         }
     }
     if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NR']])){
@@ -3851,27 +3851,42 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $sheet->setCellValue('L5', $a[$annee]['nb']);
         }
         if(isset($a[$previous_year])){
-            $sheet->setCellValue('K9', $a[$previous_year]['pe']);
-            $sheet->setCellValue('L9', $a[$previous_year]['nb']);
+            $sheet->setCellValue('K10', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L10', $a[$previous_year]['nb']);
         }
         if(isset($a[$previous_year_n2])){
-            $sheet->setCellValue('K13', $a[$previous_year_n2]['pe']);
-            $sheet->setCellValue('L13', $a[$previous_year_n2]['nb']);
+            $sheet->setCellValue('K15', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L15', $a[$previous_year_n2]['nb']);
         }
     }
-    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']])){
-        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']]['data'];
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NI']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NI']]['data'];
         if(isset($a[$annee])){
             $sheet->setCellValue('K6', $a[$annee]['pe']);
             $sheet->setCellValue('L6', $a[$annee]['nb']);
         }
         if(isset($a[$previous_year])){
-            $sheet->setCellValue('K10', $a[$previous_year]['pe']);
-            $sheet->setCellValue('L10', $a[$previous_year]['nb']);
+            $sheet->setCellValue('K11', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L11', $a[$previous_year]['nb']);
         }
         if(isset($a[$previous_year_n2])){
-            $sheet->setCellValue('K14', $a[$previous_year_n2]['pe']);
-            $sheet->setCellValue('L14', $a[$previous_year_n2]['nb']);
+            $sheet->setCellValue('K16', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L16', $a[$previous_year_n2]['nb']);
+        }
+    }
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']]['data'];
+        if(isset($a[$annee])){
+            $sheet->setCellValue('K7', $a[$annee]['pe']);
+            $sheet->setCellValue('L7', $a[$annee]['nb']);
+        }
+        if(isset($a[$previous_year])){
+            $sheet->setCellValue('K12', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L12', $a[$previous_year]['nb']);
+        }
+        if(isset($a[$previous_year_n2])){
+            $sheet->setCellValue('K17', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L17', $a[$previous_year_n2]['nb']);
         }
     }
     unset($a, $data);
