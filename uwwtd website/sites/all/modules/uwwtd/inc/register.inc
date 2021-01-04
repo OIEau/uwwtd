@@ -74,7 +74,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -129,20 +128,20 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtpsout_sheet15', array($annee));
     //FIX ME for 8th report, this function crash the batch operation
-    if ($annee >= 2016) { $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));}
+    if ($annee >= 2016) { 
+        $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));
+    }
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_debug', array($annee));
 
 
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
-// 
+
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
-
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -3667,7 +3666,8 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 }
 
 function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
-{
+{   
+    
     //country name
     $path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     include($path);
@@ -3726,7 +3726,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     }
 
     //size of agglo/pe per class
-    //array1
+    //=========================================array1
 // uwwtd_trace('Graph : context result = ');
 // uwwtd_trace(var_export($context['results'], true));
 
@@ -3764,7 +3764,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('F7', uwwtd_register_get_cell_value($previoussheet, 'B7'));
     $sheet->setCellValue('G7', uwwtd_register_get_cell_value($previoussheet, 'C7'));
 
-    //array2
+    //=============================================================array2
     if (isset($context['results']['graph']['total_generated']['pe'])) {
     	$sheet->setCellValue('B15', round($context['results']['graph']['total_generated']['pe'], 0));
     }
@@ -3808,7 +3808,75 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     //Cell B15 �� cellule C15 auto generation report
     $context['results']['auto_report']['WASTER_WATER_LOAD_INCREASED'] = round($context['results']['graph']['total_generated']['pe'], 0)  -  $previousB15; 
 
-    //array 5 6 7
+    //================================================== Array 3
+    //Array on load by global compliance (pink array)
+    module_load_include('inc','uwwtd','uwwtd.stats');
+    $years = [$annee,  $previous_year, $previous_year_n2];
+    $data = uwwtd_stat_national_compliance('allyears', $years);
+    unset($years);
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NC']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NC']]['data'];
+        if(isset($a[$annee])){
+            $sheet->setCellValue('K3', $a[$annee]['pe']);
+            $sheet->setCellValue('L3', $a[$annee]['nb']);
+        }
+        if(isset($a[$previous_year])){
+            $sheet->setCellValue('K7', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L7', $a[$previous_year]['nb']);
+        }
+        if(isset($a[$previous_year_n2])){
+            $sheet->setCellValue('K11', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L11', $a[$previous_year_n2]['nb']);
+        }
+    }
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['C']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['C']]['data'];
+        if(isset($a[$annee])){
+            $sheet->setCellValue('K4', $a[$annee]['pe']);
+            $sheet->setCellValue('L4', $a[$annee]['nb']);
+        }
+        if(isset($a[$previous_year])){
+            $sheet->setCellValue('K8', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L8', $a[$previous_year]['nb']);
+        }
+        if(isset($a[$previous_year_n2])){
+            $sheet->setCellValue('K12', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L12', $a[$previous_year_n2]['nb']);
+        }
+    }
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NR']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['NR']]['data'];
+        if(isset($a[$annee])){
+            $sheet->setCellValue('K5', $a[$annee]['pe']);
+            $sheet->setCellValue('L5', $a[$annee]['nb']);
+        }
+        if(isset($a[$previous_year])){
+            $sheet->setCellValue('K9', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L9', $a[$previous_year]['nb']);
+        }
+        if(isset($a[$previous_year_n2])){
+            $sheet->setCellValue('K13', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L13', $a[$previous_year_n2]['nb']);
+        }
+    }
+    if(isset($data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']])){
+        $a = $data[$GLOBALS['uwwtd']['ui']['field']['compliance_label']['?']]['data'];
+        if(isset($a[$annee])){
+            $sheet->setCellValue('K6', $a[$annee]['pe']);
+            $sheet->setCellValue('L6', $a[$annee]['nb']);
+        }
+        if(isset($a[$previous_year])){
+            $sheet->setCellValue('K10', $a[$previous_year]['pe']);
+            $sheet->setCellValue('L10', $a[$previous_year]['nb']);
+        }
+        if(isset($a[$previous_year_n2])){
+            $sheet->setCellValue('K14', $a[$previous_year_n2]['pe']);
+            $sheet->setCellValue('L14', $a[$previous_year_n2]['nb']);
+        }
+    }
+    unset($a, $data);
+    
+    //==================================================array 5 6 7
 //     $previous_year = uwwtd_get_previous_year($annee);
     $replaceyearby = $previous_year;
     if (false === $previous_year) {
@@ -4343,8 +4411,8 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 
     //previous
     //FIX ME =======nd@oieau.fr
-    $sheet->setCellValue('F88', uwwtd_register_get_cell_value($previoussheet, 'C88'));
-    //not EonneEted
+    $sheet->setCellValue('E88', uwwtd_register_get_cell_value($previoussheet, 'C88'));
+    //not connected
     $sheet->setCellValue('D89', uwwtd_register_get_cell_value($previoussheet, 'B89'));
     $sheet->setCellValue('E89', uwwtd_register_get_cell_value($previoussheet, 'C89'));
     //2nd treatment targe                                                      arg
