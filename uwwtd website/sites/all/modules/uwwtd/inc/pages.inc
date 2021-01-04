@@ -2225,7 +2225,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (false && UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
