@@ -3803,7 +3803,6 @@ function uwwtd_get_form_filter($option){
 }
 
 function uwwtd_filter_data($filter, &$data, $forcefilter = array()){
-    dsm($filter);
      //For RBD data are already filtered
      //unset($filter['filter']['rbd']);
 //     dsm($forcefilter);
