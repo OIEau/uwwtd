@@ -4,7 +4,7 @@ function uwwtd_debug(){
     $year = 2018;
     //=== Load libs
     module_load_include('inc','uwwtd','uwwtd.stats');
-    return uwwtd_stats_summary_chapter($year);
+    //return uwwtd_stats_summary_chapter($year);
 
     /*
     //fix link between agglomeration and inactive uwwtp

@@ -588,7 +588,7 @@ function uwwtd_get_data_sensitive_areas($option){
     $cache_name = uwwtd_get_cache_key_sensitive_area($option);
     //     dsm($cache_name);
     $cache = '';
-	$putincache =true;
+	$putincache =false;
     /*
 	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
@@ -605,9 +605,7 @@ function uwwtd_get_data_sensitive_areas($option){
     
     //field_rca_sensitive_area
     $query = uwwtd_get_query_data_sensitive_areas();
-
     // add rca state
-    
     $param = array(
         ':typenode' => 'receiving_area',
         ':annee' => $option['field_anneedata_value'],
@@ -651,6 +649,7 @@ function uwwtd_get_data_sensitive_areas($option){
             if($row['rca52']=='') $row['rca52'] = 0; 
             if($row['rca54']=='') $row['rca54'] = 0; 
             if($row['rca58']=='') $row['rca58'] = 0; 
+            if($row['field_status']=='') $row['field_status'] = 1; 
             
             $row['rca52_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca52']];
             $row['rca54_format'] = $GLOBALS['uwwtd']['ui']['yes_no'][$row['rca54']];
@@ -2226,7 +2225,7 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if (false && UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -2249,8 +2248,9 @@ function uwwtd_sensitive_areas_page($type_export = ''){
 
 
 //     dsm($data);
-    //e.vincent / bruno want to show only agglo > 2000
-    $filter_force = array();
+    $filter_force = [
+        'filter'=>['field_status' => '1']
+    ];
 
     uwwtd_filter_data($filter, $data, $filter_force);        
 

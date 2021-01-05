@@ -1,5 +1,5 @@
 <?php
-
+define('ALL_YEARS', 'allyears');
 /**
  * Return years which defines 8th report.
  */

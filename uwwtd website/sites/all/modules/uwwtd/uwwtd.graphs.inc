@@ -1,5 +1,5 @@
 <?php
-define('ALL_YEARS', 'allyears');
+
 
 require_once 'uwwtd.stats.inc';
 

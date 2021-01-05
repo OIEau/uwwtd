@@ -2239,6 +2239,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             n.title,
             f_annee.field_anneedata_value,
             id.field_inspireidlocalid_value,
+            uwwtp_status.field_status_value,
             zt.field_zonetype_value as zonetype,
             szt.field_specialisedzonetype_value as zonetype_spe,
             rca52.field_rca52applied_value as rca52,
@@ -2314,12 +2315,12 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
               
         WHERE n.type = :typenode
             AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
-            AND uwwtp_status.field_status_value = \'1\'
         GROUP BY 
             n.nid,
             n.title,
             f_annee.field_anneedata_value,
             id.field_inspireidlocalid_value,
+            uwwtp_status.field_status_value,
             zt.field_zonetype_value,
             szt.field_specialisedzonetype_value,
             rca52.field_rca52applied_value,
