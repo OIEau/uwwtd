@@ -11,9 +11,14 @@ function uwwtd_debug(){
     $data_history = json_decode(file_get_contents(drupal_get_path('module', 'uwwtd').'/inc/sa_history.json'), true);
     $data_history = $data_history[$cc];
     
+    //Report number of the current year
+    $cyear = (int)substr($GLOBALS['report_number'][$annee ], 0, -2);
+    
     $out = [];
     
     $rca = uwwtd_get_all_rca($annee);
+    
+    
     
     if(!empty($rca)){
         usort($rca, "sort_rca_by_title"); 
@@ -105,6 +110,18 @@ function uwwtd_debug(){
                     }
                 }
             }
+            //Fill empty cells
+            for($i=$cyear; $i>4; $i--){
+                if(!isset($otherList[$i])){
+                    $otherList[$i] = [
+                        'id'=>'',
+                        'name'=>'',
+                        'designation_criteria'=>'',
+                        'designation_dt'=>''
+                    ];
+                }
+                
+            }
             krsort($otherList);
            $out[$node->field_inspireidlocalid['und'][0]['value']] = $otherList;
         }
@@ -113,6 +130,7 @@ function uwwtd_debug(){
     
     //If some area are still the data_history, they are probalably disable
     $not_reported = [];
+    
     if(!empty($data_history)){
         foreach($data_history as $id=>$hist){
             $nr = [
@@ -122,9 +140,8 @@ function uwwtd_debug(){
                 5=>$hist['5th'],
                 4=>$hist['4th']
             ];
-            //Fill empty "new" report
-            $cyear = (int)substr($GLOBALS['report_number'][$otherY], 0, -2);
-            for($i=$cyear+1; $i>8; $i--){
+            
+            for($i=$cyear; $i>8; $i--){
                 $nr[$i] = [
                     'id'=>'Not reported - '.$id,
                     'name'=>'',
@@ -143,26 +160,27 @@ function uwwtd_debug(){
     */
     //Render the output
     $rows = [];
-    $headers = [];
     $keys = [
         'id'=>'ID of Sensitive Area',
         'name'=>'Name of Sensitive Area',
         'designation_criteria'=>'Designation criteria',
         'designation_dt'=>'Date of application'
     ];
+    $headers = [];
+    for($i=$cyear; $i>=4; $i--){
+        $headers[0][] = [
+            'data'=>$i.'th', 
+            'colspan' => 4
+        ];
+        foreach($keys as $k=>$label){
+            $headers[1][] = $label;
+        }
+    }
+    
     foreach($out as $id=>$area){
         $row = [];
-        if(empty($headers )) {$flag_head = true;}
-        else $flag_head = false;
         foreach($area as $report=>$info){
-            if($flag_head) {
-                $headers[0][] = [
-                    'data'=>$report.'th', 
-                    'colspan' => 4
-                ];
-            }
             foreach($keys as $k=>$label){
-                if($flag_head) {$headers[1][] = $label;}
                 $row[] = $info[$k];
             }
         }
