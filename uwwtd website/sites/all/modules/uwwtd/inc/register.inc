@@ -13365,7 +13365,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context){
         unset($listesheet['graph_2']);
         $listesheet = array_flip($listesheet);
     }
-    if($annee <= 2018){
+    if($annee < 2018){
         $listesheet = array_flip($listesheet);
         unset($listesheet['rca_history']);
         $listesheet = array_flip($listesheet);
