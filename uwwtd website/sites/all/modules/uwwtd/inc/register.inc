@@ -97,6 +97,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_rca54_sheet1_1', array($annee));
+    if ($annee >= 2018) {$batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));}
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	// //optimize : ok
@@ -1045,6 +1046,250 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
+}
+
+function uwwtd_create_register_2020_sa_history($annee, &$context){
+    if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
+    }
+    
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rca_history']['xlsx_name'], $annee);
+
+    $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+    $objReader->setLoadSheetsOnly( array(
+        $GLOBALS['uwwtd']['sheet']['rca_history']['xlsx_model_sheet_name'],
+    ) );
+    $objPHPExcel = $objReader->load(drupal_realpath($model_path));
+
+    $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['rca_history']['xlsx_model_sheet_name']);
+
+    $cc = strtoupper(variable_get('siif_eru_country_code', '-1'));
+    $data_history = json_decode(file_get_contents(drupal_get_path('module', 'uwwtd').'/inc/sa_history.json'), true);
+    $data_history = $data_history[$cc];
+    
+    //Report number of the current year
+    $cyear = (int)substr($GLOBALS['report_number'][$annee ], 0, -2);
+    
+    $out = [];
+    
+    //Get active sensitive area list
+    $rca = uwwtd_get_all_rca($annee);
+    if(!empty($rca)){
+        usort($rca, "sort_rca_by_title"); 
+        //For each sensitive area we get the history
+        foreach($rca as $node){
+            $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], $node->type);
+            $localIds = uwwtd_get_possible_localids($node->field_inspireidlocalid['und'][0]['value']);
+            if($histories != false){
+                foreach($histories as $history){  
+
+                    $other = node_load($history);
+                    $otherY = $other->field_anneedata['und'][0]['value'];
+                        
+                        $designation_dt = [];
+                    
+                        $designation_criteria = $GLOBALS['uwwtd_value']['rcatype_labels'][$other->field_zonetype['und'][0]['value']];
+                        if($other->field_specialisedzonetype['und'][0]['value']!=''){
+                            $designation_criteria .= ' '.substr($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$other->field_specialisedzonetype['und'][0]['value']], 0, -4);
+                        } 
+                        if($other->field_rcaanitro['und'][0]['value']==1 && $other->field_rcaaphos['und'][0]['value']==1){
+                            $designation_criteria .= ', a (N+P)';
+                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
+                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
+                        }elseif($other->field_rcaanitro['und'][0]['value']==1){
+                            $designation_criteria .= ', a (N)';
+                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
+                        }
+                        elseif($other->field_rcaaphos['und'][0]['value']==1){
+                            $designation_criteria .= ', a (P)';
+                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
+                        }
+                        if($other->field_rcab['und'][0]['value']==1){
+                            $designation_criteria .= ', b';
+                            if($other->field_rcabdatedesignation['und'][0]['value']!='') $designation_dt['b'] = strtotime($other->field_rcabdatedesignation['und'][0]['value']);
+                        }
+                        if($other->field_rcac['und'][0]['value']==1){
+                            $designation_criteria .= ', c';
+                            if($other->field_rcacdatedesignation['und'][0]['value']!='') $designation_dt['c'] = strtotime($other->field_rcacdatedesignation['und'][0]['value']);
+                            if($other->field_rcacrelevantdirective['und'][0]['value'] !='' ){
+                                $designation_criteria .= '('.$other->field_rcacrelevantdirective['und'][0]['value'].')';
+                            }
+                        }
+                        /*
+                        if($other->field_rca54applied['und'][0]['value']==1){
+                            $designation_dt['54'] = substr($other->field_rcadateart54['und'][0]['value'], 0, 10);
+                        }*/
+                        if($other->field_rca58applied['und'][0]['value']==1){
+                            $designation_criteria .= ', c';
+                            if($other->field_rcaart58datedesign['und'][0]['value']!='') $designation_dt['58'] = strtotime($other->field_rcaart58datedesign['und'][0]['value']);
+                        }
+                        //a : field_rcaanitro + field_rcaaphos + field_rcaadatedesignation
+                        //b : field_rcab + field_rcabdatedesignation 
+                        //c : field_rcac  + field_rcacdatedesignation + field_rcacrelevantdirective
+                        //field_rca52applied / field_rca58applied / field_rca54applied
+                        //field_specialisedzonetype
+                        //field_zonetype
+                    $otherList[(int)substr($GLOBALS['report_number'][$otherY], 0, -2)] =  [
+                    //$otherList[$otherY] =  [
+                        'id'=>$other->field_inspireidlocalid['und'][0]['value'],
+                        'name'=>$other->title,
+                        'designation_dt'=>date('d/m/Y', max(array_values($designation_dt))), 
+                         'designation_criteria'=>$designation_criteria,                    
+                        //'node'=>$other
+                    ];
+                }
+                krsort($otherList);
+            }
+            //Try to find historic data
+            if(!empty($localIds)){
+                foreach($localIds as $id){
+                    if(isset($data_history[$id])){
+                       if(isset($data_history[$id]['8th']) && !isset($otherList['8th'])){
+                           $otherList[8] = $data_history[$id]['8th'];
+                       }
+                       if(isset($data_history[$id]['7th']) && !isset($otherList['7th'])){
+                           $otherList[7] = $data_history[$id]['7th'];
+                       }
+                       if(isset($data_history[$id]['6th']) && !isset($otherList['6th'])){
+                           $otherList[6] = $data_history[$id]['6th'];
+                       }
+                       if(isset($data_history[$id]['5th']) && !isset($otherList['5th'])){
+                           $otherList[5] = $data_history[$id]['5th'];
+                       }
+                       if(isset($data_history[$id]['4th']) && !isset($otherList['4th'])){
+                           $otherList[4] = $data_history[$id]['4th'];
+                       }
+                       unset($data_history[$id]);
+                       break;
+                    }
+                }
+            }
+            //Fill empty cells
+            for($i=$cyear; $i>4; $i--){
+                if(!isset($otherList[$i])){
+                    $otherList[$i] = [
+                        'id'=>'',
+                        'name'=>'',
+                        'designation_criteria'=>'',
+                        'designation_dt'=>''
+                    ];
+                }
+                
+            }
+            krsort($otherList);
+           $out[$node->field_inspireidlocalid['und'][0]['value']] = $otherList;
+        }
+    }
+   unset($rca, $node, $histories, $otherList, $localIds);
+    
+    //If some area are still the data_history, they are probalably disable
+    $not_reported = [];
+    
+    if(!empty($data_history)){
+        foreach($data_history as $id=>$hist){
+            $nr = [
+                8=>$hist['8th'],
+                7=>$hist['7th'],
+                6=>$hist['6th'],
+                5=>$hist['5th'],
+                4=>$hist['4th']
+            ];
+            
+            for($i=$cyear; $i>8; $i--){
+                $nr[$i] = [
+                    'id'=>'Not reported - '.$id,
+                    'name'=>'',
+                    'designation_criteria'=>'',
+                    'designation_dt'=>''
+                ];
+            }
+            krsort($nr);
+            $not_reported[$id] = $nr;
+        }
+    }
+    unset($data_history, $hist);
+    /*
+    dsm($out);
+    dsm($not_reported );
+    */
+    //Render the output
+    $rows = [];
+    $keys = [
+        'id'=>'ID of Sensitive Area',
+        'name'=>'Name of Sensitive Area',
+        'designation_criteria'=>'Designation criteria',
+        'designation_dt'=>'Date of designation'
+    ];
+    $headers = [];
+    for($i=$cyear; $i>=4; $i--){
+        $headers[0][] = $i.'th Synthesis Report';
+        $headers[0][] = '';
+        $headers[0][] = '';
+        $headers[0][] = '';
+        
+        foreach($keys as $k=>$label){
+            $headers[1][] = $label;
+        }
+    }
+    
+    foreach($out as $id=>$area){
+        $row = [];
+        foreach($area as $report=>$info){
+            foreach($keys as $k=>$label){
+                $row[] = $info[$k];
+            }
+        }
+        $rows[] = $row;
+        unset($row);
+    }
+    if(!empty($not_reported )){
+        foreach($not_reported as $id=>$area){
+            foreach($area as $report=>$info){
+                foreach($keys as $k=>$label){
+                    $row[] = $info[$k];
+                }
+            }
+            $rows[] = $row;
+            unset($row);
+        }
+    }
+    
+    // $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, $j+1);
+    $sheet->fromArray($headers, null, 'A1', true);
+    $sheet->fromArray($rows, null, 'A3', true);
+    
+    /*
+    $output = theme('table', 
+        [
+            'header'=>$headers, 
+            'rows'=>$rows,
+            'rows_multiple'=>true,
+            'attributes' => array('class' => 'customTable'),    
+        ]
+    );
+    */
+    //write
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
+        $objWriter->setPreCalculateFormulas(false);
+        //$objWriter->setOffice2003Compatibility(true);
+        $objWriter->save(drupal_realpath($target_path));
+        
+        $objPHPExcel->__destruct();
+        unset($objPHPExcel);
+        unset($objWriter);
+        unset($objReader);
+
+	//In order to finish the script 
+    $context['sandbox']['progress']++;
+
+    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rca_history']['xlsx_model_sheet_name']));
+
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+    }
+    
 }
 
 /**
@@ -13094,6 +13339,7 @@ function uwwtd_create_register_2015_final_file($annee, &$context){
                         'glossary',
                         'rca',
                         'rcaA54', //don't add this sheet if country is not subjected to Art 5.4
+                        'rca_history', //don't add this sheet if country is not subjected to Art 5.4
                         'uwwtp',
                         'agglo',
                         'summary_legal_comp',
@@ -13117,6 +13363,11 @@ function uwwtd_create_register_2015_final_file($annee, &$context){
         $listesheet = array_flip($listesheet);
         unset($listesheet['agglo_compliance']);
         unset($listesheet['graph_2']);
+        $listesheet = array_flip($listesheet);
+    }
+    if($annee <= 2018){
+        $listesheet = array_flip($listesheet);
+        unset($listesheet['rca_history']);
         $listesheet = array_flip($listesheet);
     }
     $finalPHPExcel = new PHPExcel();
