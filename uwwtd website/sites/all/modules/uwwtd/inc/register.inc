@@ -12490,7 +12490,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
 
     $rca = uwwtd_get_all_rca($annee);
 
-    //wee must sort on $rca[$i]->title
+    //we must sort on $rca[$i]->title
     usort($rca, "sort_rca_by_title");    
 
     fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
