@@ -2024,27 +2024,11 @@ function uwwtd_create_xls($filename, $rows) {
 
 function uwwtd_check_history($localid, $annee, $type=null){
   //Get all the nodes with the same id
-  
+  $localids = uwwtd_get_possible_localids($localid);
   
   $query = db_select('field_data_field_inspireidlocalid', 'n');
   $query->fields('n', array('entity_id'));
-  //Simple case
-  $localids=[$localid];
-  //"(ad)Normal" change in id code
-  //$localids[]=str_replace('_', '', $localid); //strip all "_"
-  //nd@oieau.fr 10/12/2020: In 2018, EEA ast at leat to Austria to remove the "_" between the iso conustry code and the national ID.
-  if($localid[2]=='_') {
-      $localids[]=substr_replace($localid, '', 2, 1); 
-  }
-  else{
-      $localids[]=substr_replace($localid, '_', 2, 0); 
-  }
-  //Greek case
-  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
-  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
-    $localids[]=str_replace('EL', 'GR',$localid);
-    $localids[]=str_replace('GR', 'EL',$localid);
-  }
+
   $query->condition('n.field_inspireidlocalid_value', $localids, 'IN'); 
   
   if(!is_null($type) && $type!=''){
@@ -2061,7 +2045,34 @@ function uwwtd_check_history($localid, $annee, $type=null){
   if(count($ids) == 0) return false;
   else return $ids;
 }
-
+function uwwtd_get_possible_localids($localid){
+      //Simple case
+  $localids=[$localid];
+  
+  //"(ad)Normal" change in id code
+  //$localids[]=str_replace('_', '', $localid); //strip all "_"
+  //nd@oieau.fr 10/12/2020: In 2018, EEA ast at leat to Austria to remove the "_" between the iso conustry code and the national ID.
+  if($localid[2]=='_') {
+      $localids[]=substr_replace($localid, '', 2, 1); 
+      $localids[]=substr_replace($localid, ' ', 2, 1); 
+  }
+  elseif($localid[2]==' ') {
+      $localids[]=substr_replace($localid, '_', 2, 1);
+      $localids[]=substr_replace($localid, '', 2, 1); 
+  }
+  else{
+      $localids[]=substr_replace($localid, '_', 2, 0);
+      $localids[]=substr_replace($localid, ' ', 2, 0);
+      
+  }
+  //Greek case
+  //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
+  if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
+    $localids[]=str_replace('EL', 'GR',$localid);
+    $localids[]=str_replace('GR', 'EL',$localid);
+  }
+  return $localids;
+}
 function uwwtd_timeline_output($node, $linkOnAllYears=false){
   $output = '';
   $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], $node->type);
@@ -2315,6 +2326,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
               
         WHERE n.type = :typenode
             AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
+            AND uwwtp_status.field_status_value = \'1\'
         GROUP BY 
             n.nid,
             n.title,

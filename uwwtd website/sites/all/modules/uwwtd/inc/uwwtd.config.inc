@@ -128,14 +128,14 @@ $GLOBALS['uwwtd_value']['rca_spe_type_labels']=array(
 
 $GLOBALS['uwwtd_value']['rcatype_labels']=array(
     'All' => t('- Any -'),
-    'UWWCMSA' => t("Catchment of Sensitive area"),
-    'UWW55CMSA' => t("Catchment of Sensitive area defined in the sense of Article 5.5 of the UWWTD"),
-    'UWWCASA' => t("Coast area Sensitive area"),
-    'UWWCLSA' => t("Coast line Sensitive area"),
-    'UWWLKSA'  => t("Lake Sensitive area"),
-    'UWWRISA' => t("River Sensitive area"),
-    'UWWTWSA' => t("Transitional water Sensitive area"),
-    'UWWTDLSA' => t("Less Sensitive Area"),
+    'UWWCMSA' => t("Catchment of sensitive area"),
+    'UWW55CMSA' => t("Catchment of sensitive area defined in the sense of Article 5.5 of the UWWTD"),
+    'UWWCASA' => t("Coast area sensitive area"),
+    'UWWCLSA' => t("Coast line sensitive area"),
+    'UWWLKSA'  => t("Lake sensitive area"),
+    'UWWRISA' => t("River sensitive area"),
+    'UWWTWSA' => t("Transitional water sensitive area"),
+    'UWWTDLSA' => t("Less sensitive Area"),
 );
 
 $GLOBALS['uwwtd_value']['rcatype_color']=array(
@@ -575,12 +575,23 @@ $GLOBALS['article17']['glossary'] = array(
 );
 
 $GLOBALS['report_number'] = array(
+  1998 => '1th',
+  2000 => '2th',
+  2002 => '3th',
+  2004 => '4th',
+  2006 => '5th',
+  2008 => '6th',
   2010 => '7th',
-  2012 => '8th',                          
-  2014 => '9th',
+  2011 => '8th',
+  2012 => '8th',                                                   
+  2014 => '9th',                          
+  2015 => '9th',                          
   2016 => '10th',
   2018 => '11th', 
-  2020 => '12th',                           
+  2020 => '12th',
+  2022 => '13th',
+  2024 => '14th'
+  
 );
 
 // Global glossary

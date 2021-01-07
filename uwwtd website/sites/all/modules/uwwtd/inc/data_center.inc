@@ -1248,22 +1248,27 @@ function uwwtd_update_rca_node($data, $newFile, $repCode, $annee, $timestamp, $i
             $node->field_rcaenvdom['und'][0]['value'] = uwwtd_check_text($data['rcaEnvDom']);}
         else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['notification'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area lsa environmental domain found.', $timestamp, $i, $node);
         
+        //nd@oieau.fr 04/01/2021 the default status is "1" 
+        $node->field_status['und'][0]['value'] = '1';
+        
         //text
         // BB 22/08 added elseif for 9th report
         // BeginLife date is set and is before report date
-        if (isset($data['rcaBeginLife']) && date("Y", strtotime($data['rcaBeginLife'])) < $annee) {
-        	$rcaState9thReport = '1';
+        if (isset($data['rcaBeginLife']) && date("Y", strtotime($data['rcaBeginLife'])) >  $annee) {
+        	$rcaState9thReport = '0';
         	// If EndLife date before report date, rca is inactive
-        	if (isset($data['rcaEndLife']) && date("Y", strtotime($data['rcaEndLife'])) < $annee) {
-        		$rcaState9thReport = '0';
-        	}
-        } 
+        	
+        }
+        if (isset($data['rcaEndLife']) && date("Y", strtotime($data['rcaEndLife'])) < $annee) {
+            $rcaState9thReport = '0';
+        }
 
         if(isset($data['rcaState'])){
             $node->field_status['und'][0]['value'] = uwwtd_check_text($data['rcaState']);
         } elseif(isset($rcaState9thReport)) {
         	$node->field_status['und'][0]['value'] = $rcaState9thReport;
-        } else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area status found.', $timestamp, $i, $node);
+        } 
+        //else uwwtd_add_error($annee, $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['import data input'], 'No receiving area status found.', $timestamp, $i, $node);
         
         //text
         $node->field_inspireidlocalid['und'][0]['value'] = uwwtd_check_text($data['rcaCode']);
@@ -7655,155 +7660,6 @@ function uwwtd_removeBOM($str=""){
     }
     return $str;
 }
-
-// function uwwtd_getCodeLov($code, $i){
-//  $ref = array(
-//      "1"=>'fail',
-//      "2"=>'pass',
-//      "3"=>'Production of alcohol and alcoholic beverages',
-//      "4"=>'Breweries',
-//      "5"=>'Manufacture and bottling of soft drinks',
-//      "6"=>'Manufacture of aninmal feed from plant products',
-//      "7"=>'Fish-processing industry',
-//      "8"=>'Manufacture of fruit and vegetable products',
-//      "9"=>'Manufacture of gelatine and glue from hides, skin and bones',
-//      "10"=>'Malt-houses',
-//      "11"=>'Meat industry',
-//      "12"=>'Milk-processing',
-//      "13"=>'Potato-processing',
-//      "14"=>'calculated',
-//      "15"=>'estimated',
-//      "16"=>'Document (*.doc)',
-//      "17"=>'GIS-data',
-//      "18"=>'Document (*.pdf)',
-//      "19"=>'Missing Culture Info',
-//      "20"=>'Data type is not clear',
-//      "21"=>'Please fill-in at least one value',
-//      "22"=>'Set to deault value',
-//      "23"=>'Different Report Period ID (between manual data input and data i',
-//      "24"=>'Field has to have a value',
-//      "25"=>'Error whilst inserting normal area',
-//      "26"=>'Value > 100%',
-//      "27"=>'Invalid code',
-//      "28"=>'Invalid data format in the import file.',
-//      "29"=>'ID  is not correct',
-//      "30"=>'Invalid link',
-//      "31"=>'Invalid status',
-//      "32"=>'No valid value',
-//      "33"=>'Value is master data',
-//      "34"=>'No Sensitive Area is linked to this Catchment Area of Sensitive',
-//      "35"=>'Value is not Y (yes) or N (no)',
-//      "36"=>'No Catchment Area. Indication of Sensitive Area is not foreseen',
-//      "37"=>'Field not numeric',
-//      "38"=>'%-values do not add up to 100%',
-//      "39"=>'Table does not contain data sets',
-//      "40"=>'Value is not a valid date',
-//      "41"=>'No discharge point is linked to this UWWTP',
-//      "42"=>'Data set is not available',
-//      "43"=>'The selected Sensitive Area does not exist in the inventory of',
-//      "44"=>'No UWWTP is linked to this agglomeration',
-//      "45"=>'ID is not distinct',
-//      "46"=>'Not a valid date',
-//      "47"=>'Reference is not valid',
-//      "48"=>'%-value is out of range 0-100',
-//      "49"=>'Report period does not correspond to the selected report period',
-//      "50"=>'Value is required',
-//      "51"=>'Please select one value',
-//      "52"=>'Error message of the system',
-//      "53"=>'Text too long',
-//      "54"=>'File comprises too many data sets',
-//      "55"=>'Text too short',
-//      "56"=>'Infiltration',
-//      "57"=>'Irrigation',
-//      "58"=>'other',
-//      "59"=>'No',
-//      "60"=>'Yes',
-//      "61"=>'National Regulation in place',
-//      "62"=>'calculated',
-//      "63"=>'estimated',
-//      "64"=>'measured',
-//      "65"=>'Austria',
-//      "66"=>'Belgium',
-//      "67"=>'Bulgaria',
-//      "68"=>'Cyprus',
-//      "69"=>'Czech Republic',
-//      "70"=>'Germany',
-//      "71"=>'Denmark',
-//      "72"=>'Estonia',
-//      "73"=>'Spain',
-//      "74"=>'Finland',
-//      "75"=>'France',
-//      "76"=>'Greece',
-//      "77"=>'Hungary',
-//      "78"=>'Ireland',
-//      "79"=>'Italy',
-//      "80"=>'Lithuania',
-//      "81"=>'Luxembourg',
-//      "82"=>'Latvia',
-//      "83"=>'Malta',
-//      "84"=>'Netherlands',
-//      "85"=>'Norway',
-//      "86"=>'Poland',
-//      "87"=>'Portugal',
-//      "88"=>'Romania',
-//      "89"=>'Sweden',
-//      "90"=>'Slovenia',
-//      "91"=>'Slovakia',
-//      "92"=>'United Kingdom',
-//      "93"=>'fail',
-//      "94"=>'not relevant',
-//      "95"=>'pass',
-//      "96"=>'Art. 5(4) area',
-//      "97"=>'Art. 5(8) area (entire Member State)',
-//      "98"=>'Catchment in the sense of Art. 5(5)',
-//      "99"=>'Less sensitive area',
-//      "100"=>'Normal area',
-//      "101"=>'Sensitive area',
-//      "102"=>'c) both a&b',
-//      "103"=>'a) combined',
-//      "104"=>'b) separeted',
-//      "105"=>'inactive',
-//      "106"=>'active',
-//      "107"=>'No',
-//      "108"=>'Yes',
-//      "109"=>'No combined system',
-//      "110"=>'National Regulation in place',
-//      "111"=>'Collecting system is connected to UWWTP',
-//      "112"=>'Collecting system is not connected to UWWTP',
-//      "113"=>'to coastal water',
-//      "114"=>'to estuary',
-//      "115"=>'to freshwater',
-//      "116"=>'on land (catchment of coastal water)',
-//      "117"=>'on land (catchment of freshwater and / or estuary)',
-//      "118"=>'to coastal water',
-//      "119"=>'to estuary',
-//      "120"=>'on land (catchment of coastal water)',
-//      "121"=>'on land (catchment of freshwater and / or estuary)',
-//      "122"=>'No',
-//      "123"=>'Yes',
-//      "124"=>'No',
-//      "125"=>'Yes',
-//      "126"=>'Not relevant',
-//      "127"=>'fully treated effluent- dry and wet weather, partially treated s',
-//      "128"=>'fully treated effluent- dry and wet weather',
-//      "129"=>'fully treated effluent- dry weather;',
-//      "130"=>'tempinactive',
-//      "131"=>''
-//  );
-//  if(array_key_exists($code, $ref)){
-//      return $ref[$code];
-//  }
-//  else if($code == ''){
-//      $wmes = t('WARNING : Lov code not found');
-//      uwwtd_set_warning($i, $wmes);
-//      return '';
-//  }
-//  else{
-//      $wmes = t('WARNING : Lov code not found ').': '.$code;
-//      uwwtd_set_warning($i, $wmes);
-//      return '';
-//  }   
-// }
 
 function uwwtd_coord_transform($lat, $long){
 
