@@ -2326,6 +2326,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
               
         WHERE n.type = :typenode
             AND f_annee.field_anneedata_value = :annee ' . $sqlWithNid . '
+            AND uwwtp_status.field_status_value = \'1\'
         GROUP BY 
             n.nid,
             n.title,
