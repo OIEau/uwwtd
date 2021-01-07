@@ -588,7 +588,7 @@ function uwwtd_get_data_sensitive_areas($option){
     $cache_name = uwwtd_get_cache_key_sensitive_area($option);
     //     dsm($cache_name);
     $cache = '';
-	$putincache =false;
+	$putincache =true;
     /*
 	if(isset($option['rbd']) && $option['rbd'] !="All"){
 		$putincache =false;
