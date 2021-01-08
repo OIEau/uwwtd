@@ -74,6 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -88,10 +89,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
       $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8', array($annee));
     }
     $batch['operations'][] = array('uwwtd_create_register_2015_nuts_level2_analyse_sheet9', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
+    
+    //deprecated because now the process is done directly during the xlsx generation
+    //$batch['operations'][] = array('uwwtd_create_register_2015_new_agglomerations_sheet12', array($annee));
+    //$batch['operations'][] = array('uwwtd_create_register_2015_agglomerationout_sheet13', array($annee));
+    //$batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
+    //$batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
 
  //    //excel 
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
@@ -142,7 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -1139,6 +1142,7 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
                          'designation_criteria'=>$designation_criteria,                    
                         //'node'=>$other
                     ];
+                    unset($history);
                 }
                 krsort($otherList);
             }
@@ -1180,9 +1184,10 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
             }
             krsort($otherList);
            $out[$node->field_inspireidlocalid['und'][0]['value']] = $otherList;
+           unset($node, $histories, $otherList, $localIds);
         }
     }
-   unset($rca, $node, $histories, $otherList, $localIds);
+   unset($rca);
     
     //If some area are still the data_history, they are probalably disable
     $not_reported = [];
@@ -1260,16 +1265,6 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
     $sheet->fromArray($headers, null, 'A1', true);
     $sheet->fromArray($rows, null, 'A3', true);
     
-    /*
-    $output = theme('table', 
-        [
-            'header'=>$headers, 
-            'rows'=>$rows,
-            'rows_multiple'=>true,
-            'attributes' => array('class' => 'customTable'),    
-        ]
-    );
-    */
     //write
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
         $objWriter->setPreCalculateFormulas(false);
@@ -5628,293 +5623,87 @@ function uwwtd_create_register_2015_new_treatment_plants_sheet14($annee, &$conte
 /**
  *
  */
-function uwwtd_create_register_2015_uwwtpsout_sheet15($annee, &$context)
-{
-//     get previous year
-//     get all uwwtp from prvious year active
-//     if uwwtp current year is not active
-//         add a line
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'] . '.csv';
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
-
-    $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-
-    if (!isset($context['sandbox']['progress'])) {
-        $context['sandbox']['progress'] = 0;
-//         dsm($filename);
-        $r = fopen($filename, 'wb');
-//         dsm($r);
-
-        $header = array(
-            $ind['id_of_uwwtp'] => 'id_of_uwwtp',
-            $ind['name_of_uwwtp'] => 'name_of_uwwtp',
-            $ind['id_of_agglomeration'] => 'id_of_agglomeration',
-            $ind['name_of_agglomeration'] => 'name_of_agglomeration',
-            $ind['size_of_uwwtp'] => 'size_of_uwwtp',
-            $ind['remarks'] => 'remarks',
-        );
-        fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
-        fputcsv($r, $header, ';');
-
-        //get previous year
-        $context['sandbox']['previous_year'] = uwwtd_get_previous_year($annee);
-        //if not previous year nothing do to
-        if (false === $context['sandbox']['previous_year']) {
-            $context['message'] = '('.$annee.') ' . t('End of @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name']));
-            $context['sandbox']['progress'] = $context['sandbox']['max'];
-            $context['finished'] = 1;
-            return;
-        }
-
-        $query = 'select n.nid
-        from {node} n
-            left join
-                {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id
-            left join
-                {field_data_field_status} f_status
-                    ON n.nid = f_status.entity_id
-            left join 
-                {field_data_field_physicalcapacityactivity} f_capacity
-                ON n.nid = f_capacity.entity_id
-
-        where n.type = :typenode
-            and f_annee.field_anneedata_value = :annee
-            and f_status.field_status_value = :status
-        order by f_capacity.field_physicalcapacityactivity_value DESC NULLS LAST
-        ';
-
-        $param = array(
-            ':typenode' => 'uwwtp',
-            ':annee' => $context['sandbox']['previous_year'],
-            ':status' => 1,
-        );
-        $context['sandbox']['id'] = array();
-        try {
-            $result = db_query($query, $param);
-            while($row = $result->fetchAssoc()) {
-                $context['sandbox']['id'][] = $row['nid'];
-            }
-        }catch(Exception $e) {
-            dsm($e->getMessage());
-        }
-
-        $context['sandbox']['max'] = count($context['sandbox']['id']);
-
-//Load previous UWWTP info from previous register
-//load data from previous report 
-$context['sandbox']['previous_data'] = [];
-if (false !== $context['sandbox']['previous_year']) {
-    // $previous_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_name'], $context['sandbox']['previous_year']);
-    $previous_model_path = uwwtd_getregister_finalfile_path($context['sandbox']['previous_year']);
-    //dsm($previous_model_path);
-    if (true === file_exists($previous_model_path)) {
-        $previousobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
-        $previousobjReader->setIncludeCharts(false);
-        $previousobjReader->setLoadSheetsOnly( array(
-                                                $GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name'],
-                                            ) );
-        $previousobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_model_path));
-        $previoussheet = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
-
-        //load all col A(agglo code) B(agglo name) N(uwwtp code) O(uwwtp name) U (capacity) from previous 
-        $prevMaxRow = $previoussheet->getHighestRow();
-        for ($i = 1; $i < $prevMaxRow; $i++) {
-            $uwwtpCode = $previoussheet->getCell('N'.$i)->getValue();
-            // $uwwtpName = $previoussheet->getCell('O'.$i)->getValue();
-            $aggloCode = $previoussheet->getCell('A'.$i)->getValue();
-            $aggloName = $previoussheet->getCell('B'.$i)->getValue();
-            $uwwtpcapacity = $previoussheet->getCell('U'.$i)->getValue();
-            
-            
-            if (!isset($context['sandbox']['previous_data'][$uwwtpCode])) {
-                $context['sandbox']['previous_data'][$uwwtpCode] = [
-                    'aggloCode' => [],
-                    'aggloName' => [],
-                    'uwwtpcapacity' => $uwwtpcapacity,
-                ];
-            }
-                
-            $context['sandbox']['previous_data'][$uwwtpCode]['aggloCode'][] = $aggloCode;
-            $context['sandbox']['previous_data'][$uwwtpCode]['aggloName'][] = $aggloName;
-            
-        }
-        
-        // $previousobjReader->disconnectWorksheets();
-        unset($previousobjReader);
-    }
-}
-// dsm(array_keys($context['sandbox']['previous_data']));  
-        
-    } else {
-        $r = fopen($filename, 'ab');
-    }
-
-    $j = 0;
-    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-
-        $previousuwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
-
-        if ('' != ($uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $annee, 'uwwCode' => $previousuwwtp->field_inspireidlocalid['und'][0]['value'] ))))) {
-            $uwwtp = node_load($uwwtpnid);
-            if ($uwwtp->field_status['und'][0]['value'] === '0') {
-                $uwwtpCode = $previousuwwtp->field_inspireidlocalid['und'][0]['value'];
-                // $list_id_agglo = '';
-                // $list_name_agglo = '';
-                // if(isset($uwwtp->field_uwwaggliste['und'])){
-                //     foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
-                //         $agg = node_load($nidagg['nid']);
-                //         $list_id_agglo = ($list_id_agglo == '' ? '' : ';') . $agg->field_inspireidlocalid['und'][0]['value'];
-                //         $list_name_agglo = ($list_name_agglo == '' ? '' : ';') . $agg->title;
-                //         unset($agg);
-                //     }
-                // }
-                // $line = array(
-                //     $ind['id_of_uwwtp'] => $previousuwwtp->field_inspireidlocalid['und'][0]['value'],
-                //     $ind['name_of_uwwtp'] => $previousuwwtp->title,
-                //     $ind['id_of_agglomeration'] => $list_id_agglo,
-                //     $ind['name_of_agglomeration'] => $list_name_agglo,
-                //     $ind['size_of_uwwtp'] => $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'],
-                //     $ind['remarks'] => '',
-                // );
-                $id_of_agglomeration = '';
-                if (isset($context['sandbox']['previous_data'][$uwwtpCode]['aggloCode'])) {
-                    $id_of_agglomeration = implode(';', $context['sandbox']['previous_data'][$uwwtpCode]['aggloCode']); 
-                }
-                $name_of_agglomeration = '';
-                if (isset($context['sandbox']['previous_data'][$uwwtpCode]['aggloName'])) {
-                    $name_of_agglomeration = implode(';', $context['sandbox']['previous_data'][$uwwtpCode]['aggloName']); 
-                }
-                $size_of_uwwtp = 0; 
-                if (isset($context['sandbox']['previous_data'][$uwwtpCode]['uwwtpcapacity'])) {
-                    $size_of_uwwtp = $context['sandbox']['previous_data'][$uwwtpCode]['uwwtpcapacity']; 
-                } else {
-                    $size_of_uwwtp = $previousuwwtp->field_physicalcapacityactivity['und'][0]['value'];
-                }
-                $line = array(
-                    $ind['id_of_uwwtp'] => $previousuwwtp->field_inspireidlocalid['und'][0]['value'],
-                    $ind['name_of_uwwtp'] => $previousuwwtp->title,
-                    $ind['id_of_agglomeration'] => $id_of_agglomeration,
-                    $ind['name_of_agglomeration'] => $name_of_agglomeration,
-                    $ind['size_of_uwwtp'] => $size_of_uwwtp,
-                    $ind['remarks'] => '',
-                );
-                fputcsv($r, $line, ';');
-            }
-        }
-        $context['sandbox']['progress']++;
-        $j++;
-    }
-
-    $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/'. $context['sandbox']['max'];
-
-    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-    } else {
-        unset($context['sandbox']['previous_data']);
-    }
-}
-
-
-/**
- *
- */
 function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$context)
 {
-    $ind = $GLOBALS['uwwtd']['sheet12_newagglo'];
-
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'], $annee);
-
-    $ragglofile = fopen($filename, 'rb');
-
     if (!isset($context['sandbox']['progress'])) {
-        $context['sandbox']['file_position'] = 0;
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['max'] = filesize($filename);
-        //ignore header
-        $agglo = fgetcsv($ragglofile, 5000, ';');
-
-        $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-
-        $context['sandbox']['line'] = 6;
-
-        $model_path = uwwtd_getregister_modelfile_path($annee);
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
-    } else {
-        $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
-        $target_path = $model_path;
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
     }
-
-    fseek($ragglofile, $context['sandbox']['file_position']);
-//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
-//     $model_path = uwwtd_getregister_modelfile_path($annee);
-    //change to public://
-//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'] .'.xlsx';
-//     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
+    
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_name'], $annee);
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
-                                         $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'],
-                                        ) );
+        $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'],
+    ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name']);
 
-//     $start_line = 6;
-//     $sheet->insertNewRowBefore(5, count($listagglo));
-
-//     $i = $start_line;
-
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_agglo']['csv_name'] . '.csv';
-
-    $j = 0;
-    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-    	if (isset($ind['id_of_agglomeration'])&& $agglo[$ind['id_of_agglomeration']])
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration'])&& $agglo[$ind['name_of_agglomeration']])
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_agglomeration'])&& $agglo[$ind['size_of_agglomeration']])
-        	$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-    	if (isset($ind['reason'])&& $agglo[$ind['reason']])
-        	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $agglo[$ind['reason']]);
-
-        $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);   //0 -> +1
-
-        $j++;
-        $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+    $annee_p = uwwtd_get_previous_year($annee);
+    $data = [];
+    
+    $query = 'select localid.field_inspireidlocalid_value as agg_id, n.title, field_agggenerated_value as size
+        from {node} n
+            join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id
+            join
+                {field_data_field_status} f_status
+                    ON n.nid = f_status.entity_id
+            join
+                {field_data_field_inspireidlocalid} localid
+                    ON n.nid = localid.entity_id         
+            left join 
+                {field_data_field_agggenerated} agggenerated
+                ON n.nid = agggenerated.entity_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and f_status.field_status_value = :status
+            and field_agggenerated_value >=2000
+        order by size desc nulls last
+        ';
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 1]);
+    $past = [];
+    
+    while($row = $result->fetchAssoc()) {
+        $past[$row['agg_id']]  = $row;
     }
-    fclose($ragglofile);
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee ,':status' => 1]);
+    $current = [];
+    while($row = $result->fetchAssoc()) {
+        $current[$row['agg_id']]  = $row;
+    }
+
+    $diff = array_diff(array_keys($current), array_keys($past));
+    if(!empty($diff)){
+        foreach($diff as $k){
+            $data[] = array_values($past[$k]);
+        }
+    }
+    unset($past, $current);
+    
+    //Insert data in the sheet
+    $sheet->fromArray($data, null, 'A6', true);
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
-    //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
     $objPHPExcel->__destruct();
     unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
+    
+    //In order to finish the script 
+    $context['sandbox']['progress']++;
 
-//     $context['sandbox']['progress']++;
-
-//     $context['message'] = t('new_agglomerations_sheet12 finish');
-//
-// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_agglo']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
-    if (isset($context['sandbox']['progress']) && isset($context['sandbox']['max'])) {
-	    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-	        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-	    }
+    if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
 }
 
@@ -5923,103 +5712,81 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
  */
 function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$context)
 {
-    $ind = $GLOBALS['uwwtd']['sheet13_aggloout'];
-
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);
-
-    $ragglofile = fopen($filename, 'rb');
-
-    if (!isset($context['sandbox']['progress'])) {
-        $context['sandbox']['file_position'] = 0;
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['max'] = filesize($filename);
-       //ignore header
-        $agglo = fgetcsv($ragglofile, 5000, ';');
-
-        $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-
-        $context['sandbox']['line'] = 6;
-
-        $model_path = uwwtd_getregister_modelfile_path($annee);
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
-    } else {
-        $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
-        $target_path = $model_path;
+   if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
     }
-
-    fseek($ragglofile, $context['sandbox']['file_position']);
-
-//  if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
-
-//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
-//     $model_path = uwwtd_getregister_modelfile_path($annee);
-    //change to public://
-//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'] .'.xlsx';
-//     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
+    
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_name'], $annee);
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
-                                         $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'],
-                                        ) );
+        $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'],
+    ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name']);
 
-
-//     $start_line = 6;
-//     $sheet->insertNewRowBefore(5, count($listagglo));
-
-//     $i = $start_line;
-//     $ind = $GLOBALS['uwwtd']['sheet13_aggloout'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'] . '.csv';
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_out']['csv_name'], $annee);
-
-//     $ragglofile = fopen($filename, 'rb');
-//     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
-    $j = 0;
-    while ($j < 1000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
-    	if (isset($ind['id_of_agglomeration'])&& isset($agglo[$ind['id_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration'])&& isset($agglo[$ind['name_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_agglomeration'])&& isset($agglo[$ind['size_of_agglomeration']]))
-       		$sheet->setCellValueByColumnAndRow($ind['size_of_agglomeration'], $context['sandbox']['line'], $agglo[$ind['size_of_agglomeration']]);
-    	if (isset($ind['remarks'])&& isset($agglo[$ind['remarks']]))
-        	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $agglo[$ind['remarks']]);
-
-        $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1); //0 -> +1
-
-        $j++;
-        $context['sandbox']['file_position'] = ftell($ragglofile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+    $annee_p = uwwtd_get_previous_year($annee);
+    $data = [];
+    
+    $query = 'select localid.field_inspireidlocalid_value as agg_id, n.title, field_agggenerated_value as size
+        from {node} n
+            join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id
+            join
+                {field_data_field_status} f_status
+                    ON n.nid = f_status.entity_id
+            join
+                {field_data_field_inspireidlocalid} localid
+                    ON n.nid = localid.entity_id         
+            left join 
+                {field_data_field_agggenerated} agggenerated
+                ON n.nid = agggenerated.entity_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and f_status.field_status_value = :status
+            and field_agggenerated_value >=2000
+        order by size desc nulls last
+        ';
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 1]);
+    $past = [];
+    
+    while($row = $result->fetchAssoc()) {
+        $past[$row['agg_id']]  = $row;
     }
-    fclose($ragglofile);
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee ,':status' => 1]);
+    $current = [];
+    while($row = $result->fetchAssoc()) {
+        $current[$row['agg_id']]  = $row;
+    }
+
+    $diff = array_diff(array_keys($past), array_keys($current));
+    if(!empty($diff)){
+        foreach($diff as $k){
+            $data[] = array_values($past[$k]);
+        }
+    }
+    unset($past, $current);
+    
+    //Insert data in the sheet
+    $sheet->fromArray($data, null, 'A6', true);
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
-    //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
     $objPHPExcel->__destruct();
     unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
+    
+    //In order to finish the script 
+    $context['sandbox']['progress']++;
 
-//     $context['sandbox']['progress']++;
-
-//     $context['message'] = t('agglomerationout_sheet13 finish');
-//
-// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['agglo_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
@@ -6032,110 +5799,95 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
  */
 function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$context)
 {
-    $ind = $GLOBALS['uwwtd']['sheet14_newuwwtp'];
-
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);
-
-    $rfile = fopen($filename, 'rb');
-
-    if (!isset($context['sandbox']['progress'])) {
-        $context['sandbox']['file_position'] = 0;
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['max'] = filesize($filename);
-        //ignore header
-        $agglo = fgetcsv($rfile, 5000, ';');
-
-        $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-
-        $context['sandbox']['line'] = 5;
-
-        $model_path = uwwtd_getregister_modelfile_path($annee);
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
-    } else {
-        $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
-        $target_path = $model_path;
+        if (!isset($context['sandbox']['progress'])) {
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
     }
-
-    fseek($rfile, $context['sandbox']['file_position']);
-
-//  if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
-
-//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
-//     $model_path = uwwtd_getregister_modelfile_path($annee);
-    //change to public://
-//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'] .'.xlsx';
-//     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
+    
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_name'], $annee);
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
-                                         $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'],
-                                        ) );
+        $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'],
+    ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name']);
 
-//     $start_line = 5;
-
-//     $i = $start_line;
-//     $ind = $GLOBALS['uwwtd']['sheet14_newuwwtp'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'] . '.csv';
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['new_uwwtp']['csv_name'], $annee);
-//
-//     $rfile = fopen($filename, 'rb');
-//     while ($line = fgetcsv($rfile, 5000, ';')) {
-    $j = 0;
-    while ($j < 1000 && $line = fgetcsv($rfile, 5000, ';')) {
-    	if (isset($ind['id_of_uwwtp'])&& isset($line[$ind['id_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-    	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-    	if (isset($ind['id_of_agglomeration']) && isset($line[$ind['id_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($line[$ind['name_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_uwwtp']) && isset($line[$ind['size_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-    	if (isset($ind['reason']) && isset($line[$ind['reason']]))
-        	$sheet->setCellValueByColumnAndRow($ind['reason'], $context['sandbox']['line'], $line[$ind['reason']]);
-
-        $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);  //0 -> +1
-
-        $j++;
-        $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+    $annee_p = uwwtd_get_previous_year($annee);
+    $data = [];
+    
+    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
+        from {node} n
+            join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id
+            join
+                {field_data_field_status} f_status
+                    ON n.nid = f_status.entity_id
+            join
+                {field_data_field_inspireidlocalid} localid
+                    ON n.nid = localid.entity_id
+            join 
+                {field_data_field_uwwaggliste} agg
+                    ON n.nid = agg.entity_id
+            join
+                {field_data_field_inspireidlocalid} agg_localid
+                    ON agg.field_uwwaggliste_nid = agg_localid.entity_id        
+            join
+                {node} agg_node
+                    ON agg.field_uwwaggliste_nid = agg_node.nid        
+            left join 
+                {field_data_field_physicalcapacityactivity} f_capacity
+                ON n.nid = f_capacity.entity_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and f_status.field_status_value = :status
+        order by physicalcapacity desc nulls last
+        ';
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 1]);
+    $uwwtp_past = [];
+    
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
     }
-    fclose($rfile);
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
+    $uwwtp_current = [];
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_current[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+    }
+
+    $diff = array_diff(array_keys($uwwtp_current), array_keys($uwwtp_past));
+    if(!empty($diff)){
+        foreach($diff as $k){
+            $data[] = array_values($uwwtp_past[$k]);
+        }
+    }
+    unset($uwwtp_past, $uwwtp_current);
+    
+    //Insert data in the sheet
+    $sheet->fromArray($data, null, 'A6', true);
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
-    //$objWriter->setOffice2003Compatibility(true);
     $objWriter->save(drupal_realpath($target_path));
+    
     $objPHPExcel->__destruct();
     unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
+    
+    //In order to finish the script 
+    $context['sandbox']['progress']++;
 
-//     $context['sandbox']['progress']++;
-
-//     $context['message'] = t('new_treatment_plants_sheet14 finish');
-//
-// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['new_uwwtp']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
+    
 }
 
 /**
@@ -6143,112 +5895,96 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
  */
 function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
 {
-    $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-
-    $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
-
-    $rfile = fopen($filename, 'rb');
-
     if (!isset($context['sandbox']['progress'])) {
-        $context['sandbox']['file_position'] = 0;
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-        $context['sandbox']['max'] = filesize($filename);
-        //ignore header
-        $agglo = fgetcsv($rfile, 5000, ';');
-
-        $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
-
-        $context['sandbox']['line'] = 6;
-
-        $model_path = uwwtd_getregister_modelfile_path($annee);
-        $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
-    } else {
-        $model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
-        $target_path = $model_path;
+        $context['sandbox']['progress'] = 0;
+        $context['sandbox']['max'] = 1;
     }
-
-    fseek($rfile, $context['sandbox']['file_position']);
-
-
-//  if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
-
-//     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
-//     $model_path = uwwtd_getregister_modelfile_path($annee);
-    //change to public://
-//     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'] .'.xlsx';
-//     $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
+    
+    $model_path = uwwtd_getregister_modelfile_path($annee);
+    $target_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_name'], $annee);
 
     $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
     $objReader->setLoadSheetsOnly( array(
-                                         $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'],
-                                        ) );
+        $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'],
+    ) );
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name']);
 
-//     $start_line = 6;
-
-//     $i = $start_line;
-//     $ind = $GLOBALS['uwwtd']['sheet15_uwwtpout'];
-
-//     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
-//     $filename = $path . $annee . $GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'] . '.csv';
-//     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp_out']['csv_name'], $annee);
-
-//     $rfile = fopen($filename, 'rb');
-//     while ($line = fgetcsv($rfile, 5000, ';')) {
-    $j = 0;
-    while ($j < 1000 && $line = fgetcsv($rfile, 5000, ';')) {
-    	if (isset($ind['id_of_uwwtp']) && isset($line[$ind['id_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_uwwtp'], $context['sandbox']['line'], $line[$ind['id_of_uwwtp']]);
-    	if (isset($ind['name_of_uwwtp']) && isset($line[$ind['name_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_uwwtp'], $context['sandbox']['line'], $line[$ind['name_of_uwwtp']]);
-    	if (isset($ind['id_of_agglomeration']) && isset($line[$ind['id_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['id_of_agglomeration'], $context['sandbox']['line'], $line[$ind['id_of_agglomeration']]);
-    	if (isset($ind['name_of_agglomeration']) && isset($line[$ind['name_of_agglomeration']]))
-        	$sheet->setCellValueByColumnAndRow($ind['name_of_agglomeration'], $context['sandbox']['line'], $line[$ind['name_of_agglomeration']]);
-    	if (isset($ind['size_of_uwwtp']) && isset($line[$ind['size_of_uwwtp']]))
-        	$sheet->setCellValueByColumnAndRow($ind['size_of_uwwtp'], $context['sandbox']['line'], $line[$ind['size_of_uwwtp']]);
-    	if (isset($ind['remarks']) && isset($line[$ind['remarks']]))
-        	$sheet->setCellValueByColumnAndRow($ind['remarks'], $context['sandbox']['line'], $line[$ind['remarks']]);
-
-        $context['sandbox']['line']++;
-        $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, 1);  // 0 -> +1
-
-        $j++;
-        $context['sandbox']['file_position'] = ftell($rfile);
-        $context['sandbox']['progress'] = $context['sandbox']['file_position'];
+    $annee_p = uwwtd_get_previous_year($annee);
+    $data = [];
+    
+    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
+        from {node} n
+            join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id
+            join
+                {field_data_field_status} f_status
+                    ON n.nid = f_status.entity_id
+            join
+                {field_data_field_inspireidlocalid} localid
+                    ON n.nid = localid.entity_id
+            join 
+                {field_data_field_uwwaggliste} agg
+                    ON n.nid = agg.entity_id
+            join
+                {field_data_field_inspireidlocalid} agg_localid
+                    ON agg.field_uwwaggliste_nid = agg_localid.entity_id        
+            join
+                {node} agg_node
+                    ON agg.field_uwwaggliste_nid = agg_node.nid        
+            left join 
+                {field_data_field_physicalcapacityactivity} f_capacity
+                ON n.nid = f_capacity.entity_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and f_status.field_status_value = :status
+        order by physicalcapacity desc nulls last
+        ';
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 1]);
+    $uwwtp_past = [];
+    
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
     }
-    fclose($rfile);
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
+    $uwwtp_current = [];
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_current[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+    }
+
+    $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
+    if(!empty($diff)){
+        foreach($diff as $k){
+            $data[] = array_values($uwwtp_past[$k]);
+        }
+    }
+    unset($uwwtp_past, $uwwtp_current);
+    
+    //Insert data in the sheet
+    $sheet->fromArray($data, null, 'A6', true);
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
-    // $objWriter->setPreCalculateFormulas(false);
-    //$objWriter->setOffice2003Compatibility(true);
+    $objWriter->setPreCalculateFormulas(false);
     $objWriter->save(drupal_realpath($target_path));
+    
     $objPHPExcel->__destruct();
     unset($objPHPExcel);
     unset($objWriter);
     unset($objReader);
+    
+    //In order to finish the script 
+    $context['sandbox']['progress']++;
 
-//     $context['sandbox']['progress']++;
-//
-//     $context['message'] = t('uwwtpsout_sheet15 finish');
-//
-// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['uwwtp_out']['xlsx_model_sheet_name'])) . ' ' . ' ('. $context['sandbox']['progress'] .'/'. $context['sandbox']['max'] .')';
 
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
 }
+
 
 /**
  *
@@ -13178,156 +12914,6 @@ function uwwtd_get_all_rca($annee)
     return $data;
 }  
 
-
-// function uwwtd_create_register_2015_final_file_testspreadsheet($annee, &$context)
-// {
-//     if (!isset($context['sandbox']['progress'])) {
-//         $context['sandbox']['progress'] = 0;
-//         $context['sandbox']['max'] = 1;
-//     }
-// 
-// //     $configsheet = $GLOBALS['uwwtd']['sheet'];
-// //     $listesheet = array(
-// //                         'glossary',
-// //                         'rca',
-// //                         'rcaA54',
-// //                         'uwwtp',
-// //                         'agglo',
-// //                         'summary_legal_comp',
-// //                         'distance_to_comp',
-// //                         'summary_installation_in_place',
-// //                         'breach_list',
-// //                         'summary_big_cities',
-// //                         'nuts_level2',
-// //                         'sewage_sludge',
-// //                         'graph',
-// //                         'graph_2',
-// // //                         'graph_test',
-// //                         'new_agglo',
-// //                         'agglo_out',
-// //                         'new_uwwtp',
-// //                         'uwwtp_out',
-// //                         );
-// 
-// // use PhpOffice\PhpSpreadsheet\Spreadsheet;
-// // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-// 
-// // $spreadsheet = new Spreadsheet();
-// // $sheet = $spreadsheet->getActiveSheet();
-// // $sheet->setCellValue('A1', 'Hello World !');
-// $target_path = uwwtd_getregister_finalfile_path($annee);
-// $model = drupal_realpath(uwwtd_getregister_modelfile_path($annee));
-//     $reader = IOFactory::createReader('Xlsx');
-//     $reader->setIncludeCharts(true);
-//     $spreadsheet = $reader->load(drupal_realpath($model));
-// 
-//     $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-//     $writer->setIncludeCharts(true);
-// 
-//     $writer->save(drupal_realpath($target_path));
-// 
-//     //$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
-// // //     dsm($target_path);
-// //     $objWriter->setIncludeCharts(TRUE);
-// //     $objWriter->save(drupal_realpath($target_path));
-// 
-// // $writer->save(drupal_realpath($target_path));
-// 
-// //     $finalPHPExcel = new PHPExcel();
-// //     $sheetIndex = $finalPHPExcel->getIndex($finalPHPExcel->getSheetByName('Worksheet')); //default worksheet
-// //     $finalPHPExcel->removeSheetByIndex($sheetIndex);
-// // 
-// //     foreach($listesheet as $sheet) {
-// // //         dsm($sheet);
-// //         //load sheet
-// // //         $sheet_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'] .'.xlsx';
-// //         $sheet_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_name'], $annee);
-// // 
-// //         if (!file_exists($sheet_path)) {
-// //             continue;
-// //         }
-// // //         dsm($sheet_path);
-// //     //     PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp);
-// // //         PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_sqlite);
-// //         $objReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
-// //         $objReader->setIncludeCharts(TRUE);
-// //         $objReader->setLoadSheetsOnly(array($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
-// //         $objPHPExcel = $objReader->load(drupal_realpath($sheet_path));
-// // //         $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']);
-// // //         dsm(1);
-// //         $finalPHPExcel->addExternalSheet(clone $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet'][$sheet]['xlsx_model_sheet_name']));
-// //         
-// //         $objPHPExcel->__destruct();
-// //         unset($objPHPExcel, $objReader);
-// //     }
-// // 
-// //     //write
-// //     $objWriter = PHPExcel_IOFactory::createWriter($finalPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
-// //     $objWriter->setPreCalculateFormulas(false);
-// //     //$objWriter->setOffice2003Compatibility(true);
-// //     $target_path = uwwtd_getregister_finalfile_path($annee);//$GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['final_register'];
-// // //     dsm($target_path);
-// //     $objWriter->setIncludeCharts(TRUE);
-// //     $objWriter->save(drupal_realpath($target_path));
-// //     unset($finalPHPExcel);
-// //     unset($objWriter);
-// 
-// 
-// // $zip = new ZipArchive;
-// // dsm($target_path);
-// // if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/mytheme1.xml', 'xl/theme/theme1.xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/[Content_Types].xml', '[Content_Types].xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/sharedStrings.xml', 'xl/sharedStrings.xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/styles.xml', 'xl/styles.xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/workbook.xml', 'xl/workbook.xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/calcChain.xml', 'xl/calcChain.xml');
-// // 
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/_rels/workbook.xml.rels', 'xl/_rels/workbook.xml.rels');
-// // 
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing1.xml', 'xl/drawings/drawing1.xml');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/drawing2.xml', 'xl/drawings/drawing2.xml');
-// // 
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing1.xml.rels', 'xl/drawings/_rels/drawing1.xml.rels');
-// //     $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/drawings/_rels/drawing2.xml.rels', 'xl/drawings/_rels/drawing2.xml.rels');
-// // 
-// //     foreach(range(1,29) as $key) {
-// // //        dsm('add style'.$key.'.xml');
-// //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/style'.$key.'.xml', 'xl/charts/style'.$key.'.xml');
-// // //        $zip->addFile('/var/www/html/evincent/uwwtd_at/sites/all/modules/uwwtd/model/model_file/xl/charts/colors'.$key.'.xml', 'xl/charts/colors'.$key.'.xml');
-// //     }
-// //     $zip->close();
-// //     dsm( 'ok');
-// // } else {
-// //     dsm($er);
-// //     dsm(ZipArchive::ER_EXISTS);
-// //     dsm(ZipArchive::ER_INCONS);
-// //     dsm(ZipArchive::ER_INVAL);
-// //     dsm(ZipArchive::ER_MEMORY);
-// //     dsm(ZipArchive::ER_NOENT);
-// //     dsm(ZipArchive::ER_NOZIP);
-// //     dsm(ZipArchive::ER_OPEN);
-// //     dsm(ZipArchive::ER_READ);
-// //     dsm(ZipArchive::ER_SEEK);
-// //     dsm('err');
-// // }
-// 
-// 
-//     $context['sandbox']['progress']++;
-// 
-//     $context['message'] = '('.$annee.') ' . t('Finalization');
-// 
-// //     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
-//         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-// //     }
-// 
-// 
-//     variable_set('registre_'.$annee, time());
-//     drupal_set_message(uwwtd_registre_create_html_link($annee));
-// }
-
-
-
 function uwwtd_create_register_2015_final_file($annee, &$context){
     if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
@@ -14282,20 +13868,6 @@ function uwwtd_registre_create_html_link($annee)
     return '<a href="'.file_create_url(uwwtd_getregister_finalfile_path($annee)).'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
 }
 
-//'Compliance Art. 5a (hierarchical approach)',
-// =IF(  �  Compliance Art.5  � �="NR"
-//       �  Compliance Art.5  � �;
-//     IF($C4<=10000;  //$C4 = agglo->agggenerated
-//        "NR";
-//        IF(AND(  �  Compliance Art.4  � �="C";
-//                 �  COMPLIANCE ART.5  �  ="C");
-//             "C";
-//             IF(OR(  �  Compliance Art.4  � �="NC";
-//                     �  Compliance Art.5  � �="NC");
-//                 "NC";
-//                 IF(  �  Compliance Art.5  � �="NR";
-//                    "NR";
-//                    "EXIT")))))
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 {
     switch($type) {
@@ -14341,28 +13913,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
     return '';
 }
 
-// =IF(  � �% of generated load for which compliance with Art. 5a/5b/5c is not relevant  � �>0;
-//     "NR";
-//     IF(AND(  �  deadline for agglomeration  � �<=reference date of reporting;
-//              � �% of generated load not compliant with Art. 5a/5b/5c  � �=0;
-//              � �% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  � �=0);
-//         "C";
-//         IF(AND(  �  deadline for agglomeration  � �<=reference date of reporting;
-//                  � �% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  � �=0;
-//                (AND(
-//                      AND(  � �% of generated load not compliant with Art. 5a/5b/5c  � �>0;
-//                           � �% of collected load not compliant with Art. 5a/5b/5c  � �<=1
-//                         );
-//                        � �p.e. not compliant with Art. 5a/5b/5c  � �<2000))
-//                );
-//                "C";
-//                IF(AND(  �  deadline for agglomeration  � �<=reference date of reporting;
-//                         � �% of generated load for which compliance with Art. 5a/5b/5c  is not relevant  � �=0;
-//                       (OR(  � �% of generated load not compliant with Art. 5a/5b/5c  � �>1;
-//                             � �p.e. not compliant with Art. 5a/5b/5c  � �>=2000))
-//                      );
-//                      "NC";
-//                      7))))
+
 function uwwtd_register_getcompliance_art5x_only($type, $ind, $line, $art5x_NC_collected, $reporting_year, $deadline_agglo) {
     switch($type) {
         case 'a':
