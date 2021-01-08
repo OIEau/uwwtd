@@ -145,7 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
+    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
