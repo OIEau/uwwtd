@@ -5,210 +5,76 @@ function uwwtd_debug(){
     module_load_include('inc','uwwtd','inc/register');
     
     $annee = 2018;
-    //$years = uwwtd_get_all_year();
-    //dsm($years);
-    $cc = strtoupper(variable_get('siif_eru_country_code', '-1'));
-    $data_history = json_decode(file_get_contents(drupal_get_path('module', 'uwwtd').'/inc/sa_history.json'), true);
-    $data_history = $data_history[$cc];
+    $annee_p = uwwtd_get_previous_year($annee);
+    $data = [];
     
-    //Report number of the current year
-    $cyear = (int)substr($GLOBALS['report_number'][$annee ], 0, -2);
+    $query = 'select n.title, localid.field_inspireidlocalid_value as uwwtp_id,  agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
+        from {node} n
+            join
+                {field_data_field_anneedata} f_annee
+                    ON n.nid = f_annee.entity_id
+            join
+                {field_data_field_status} f_status
+                    ON n.nid = f_status.entity_id
+            join
+                {field_data_field_inspireidlocalid} localid
+                    ON n.nid = localid.entity_id
+            join 
+                {field_data_field_uwwaggliste} agg
+                    ON n.nid = agg.entity_id
+            join
+                {field_data_field_inspireidlocalid} agg_localid
+                    ON agg.field_uwwaggliste_nid = agg_localid.entity_id        
+            join
+                {node} agg_node
+                    ON agg.field_uwwaggliste_nid = agg_node.nid        
+            left join 
+                {field_data_field_physicalcapacityactivity} f_capacity
+                ON n.nid = f_capacity.entity_id
+        where n.type = :typenode
+            and f_annee.field_anneedata_value = :annee
+            and f_status.field_status_value = :status
+        order by physicalcapacity desc nulls last
+        ';
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 1]);
+    $uwwtp_past = [];
     
-    $out = [];
-    
-    $rca = uwwtd_get_all_rca($annee);
-    
-    
-    
-    if(!empty($rca)){
-        usort($rca, "sort_rca_by_title"); 
-        //For each sensitive area we get the history
-        foreach($rca as $node){
-            $histories = uwwtd_check_history($node->field_inspireidlocalid['und'][0]['value'], $node->field_anneedata['und'][0]['value'], $node->type);
-            $localIds = uwwtd_get_possible_localids($node->field_inspireidlocalid['und'][0]['value']);
-            if($histories != false){
-                foreach($histories as $history){  
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+    }
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
+    $uwwtp_current = [];
+    while($row = $result->fetchAssoc()) {
+        $uwwtp_current[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+    }
 
-                    $other = node_load($history);
-                    $otherY = $other->field_anneedata['und'][0]['value'];
-                        
-                        $designation_dt = [];
-                    
-                        $designation_criteria = $GLOBALS['uwwtd_value']['rcatype_labels'][$other->field_zonetype['und'][0]['value']];
-                        if($other->field_specialisedzonetype['und'][0]['value']!=''){
-                            $designation_criteria .= ' '.substr($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$other->field_specialisedzonetype['und'][0]['value']], 0, -4);
-                        } 
-                        if($other->field_rcaanitro['und'][0]['value']==1 && $other->field_rcaaphos['und'][0]['value']==1){
-                            $designation_criteria .= ', a (N+P)';
-                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
-                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
-                        }elseif($other->field_rcaanitro['und'][0]['value']==1){
-                            $designation_criteria .= ', a (N)';
-                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
-                        }
-                        elseif($other->field_rcaaphos['und'][0]['value']==1){
-                            $designation_criteria .= ', a (P)';
-                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
-                        }
-                        if($other->field_rcab['und'][0]['value']==1){
-                            $designation_criteria .= ', b';
-                            if($other->field_rcabdatedesignation['und'][0]['value']!='') $designation_dt['b'] = strtotime($other->field_rcabdatedesignation['und'][0]['value']);
-                        }
-                        if($other->field_rcac['und'][0]['value']==1){
-                            $designation_criteria .= ', c';
-                            if($other->field_rcacdatedesignation['und'][0]['value']!='') $designation_dt['c'] = strtotime($other->field_rcacdatedesignation['und'][0]['value']);
-                            if($other->field_rcacrelevantdirective['und'][0]['value'] !='' ){
-                                $designation_criteria .= '('.$other->field_rcacrelevantdirective['und'][0]['value'].')';
-                            }
-                        }
-                        /*
-                        if($other->field_rca54applied['und'][0]['value']==1){
-                            $designation_dt['54'] = substr($other->field_rcadateart54['und'][0]['value'], 0, 10);
-                        }*/
-                        if($other->field_rca58applied['und'][0]['value']==1){
-                            $designation_criteria .= ', c';
-                            if($other->field_rcaart58datedesign['und'][0]['value']!='') $designation_dt['58'] = strtotime($other->field_rcaart58datedesign['und'][0]['value']);
-                        }
-                        //a : field_rcaanitro + field_rcaaphos + field_rcaadatedesignation
-                        //b : field_rcab + field_rcabdatedesignation 
-                        //c : field_rcac  + field_rcacdatedesignation + field_rcacrelevantdirective
-                        //field_rca52applied / field_rca58applied / field_rca54applied
-                        //field_specialisedzonetype
-                        //field_zonetype
-                    $otherList[(int)substr($GLOBALS['report_number'][$otherY], 0, -2)] =  [
-                    //$otherList[$otherY] =  [
-                        'id'=>$other->field_inspireidlocalid['und'][0]['value'],
-                        'name'=>$other->title,
-                        'designation_dt'=>date('d/m/Y', max(array_values($designation_dt))), 
-                         'designation_criteria'=>$designation_criteria,                    
-                        //'node'=>$other
-                    ];
-                }
-                krsort($otherList);
-            }
-            //Try to find historic data
-            if(!empty($localIds)){
-                foreach($localIds as $id){
-                    if(isset($data_history[$id])){
-                       if(isset($data_history[$id]['8th']) && !isset($otherList['8th'])){
-                           $otherList[8] = $data_history[$id]['8th'];
-                       }
-                       if(isset($data_history[$id]['7th']) && !isset($otherList['7th'])){
-                           $otherList[7] = $data_history[$id]['7th'];
-                       }
-                       if(isset($data_history[$id]['6th']) && !isset($otherList['6th'])){
-                           $otherList[6] = $data_history[$id]['6th'];
-                       }
-                       if(isset($data_history[$id]['5th']) && !isset($otherList['5th'])){
-                           $otherList[5] = $data_history[$id]['5th'];
-                       }
-                       if(isset($data_history[$id]['4th']) && !isset($otherList['4th'])){
-                           $otherList[4] = $data_history[$id]['4th'];
-                       }
-                       unset($data_history[$id]);
-                       break;
-                    }
-                }
-            }
-            //Fill empty cells
-            for($i=$cyear; $i>4; $i--){
-                if(!isset($otherList[$i])){
-                    $otherList[$i] = [
-                        'id'=>'',
-                        'name'=>'',
-                        'designation_criteria'=>'',
-                        'designation_dt'=>''
-                    ];
-                }
-                
-            }
-            krsort($otherList);
-           $out[$node->field_inspireidlocalid['und'][0]['value']] = $otherList;
+    $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
+    unset($uwwtp_current);
+    if(!empty($diff)){
+        foreach($diff as $k){
+            $data[$k] = $uwwtp_past[$k];
         }
     }
-   unset($rca, $node, $histories, $otherList, $localIds);
-    
-    //If some area are still the data_history, they are probalably disable
-    $not_reported = [];
-    
-    if(!empty($data_history)){
-        foreach($data_history as $id=>$hist){
-            $nr = [
-                8=>$hist['8th'],
-                7=>$hist['7th'],
-                6=>$hist['6th'],
-                5=>$hist['5th'],
-                4=>$hist['4th']
-            ];
-            
-            for($i=$cyear; $i>8; $i--){
-                $nr[$i] = [
-                    'id'=>'Not reported - '.$id,
-                    'name'=>'',
-                    'designation_criteria'=>'',
-                    'designation_dt'=>''
-                ];
-            }
-            krsort($nr);
-            $not_reported[$id] = $nr;
-        }
-    }
-    unset($data_history, $hist);
+    unset($uwwtp_past);
+    dsm($data);
     /*
-    dsm($out);
-    dsm($not_reported );
-    */
-    //Render the output
-    $rows = [];
-    $keys = [
-        'id'=>'ID of Sensitive Area',
-        'name'=>'Name of Sensitive Area',
-        'designation_criteria'=>'Designation criteria',
-        'designation_dt'=>'Date of application'
-    ];
-    $headers = [];
-    for($i=$cyear; $i>=4; $i--){
-        $headers[0][] = [
-            'data'=>$i.'th', 
-            'colspan' => 4
-        ];
-        foreach($keys as $k=>$label){
-            $headers[1][] = $label;
+    $data = [];
+    if(!empty($diff)){
+        foreach($diff as $nid=>$localid){
+            $node = node_load($nid);
+            $data[$localid] = [
+                'localid'=>$localid,
+                'name'=>$node->title;
+                'id_agglo'=>'----',
+                'size'=>$node->field_physicalcapacityactivity['und'][0]['value']
+                'remarks'=>''
+            ];
         }
-    }
+    }*/
+    //Get missing UWWTP between current and previous years
     
-    foreach($out as $id=>$area){
-        $row = [];
-        foreach($area as $report=>$info){
-            foreach($keys as $k=>$label){
-                $row[] = $info[$k];
-            }
-        }
-        $rows[] = $row;
-        unset($row);
-    }
-    if(!empty($not_reported )){
-        $rows[] = [[ 'data'=>'=======NOT still reported list===============================================', 'colspan'=>'10']];
-        foreach($not_reported as $id=>$area){
-            foreach($area as $report=>$info){
-                foreach($keys as $k=>$label){
-                    $row[] = $info[$k];
-                }
-            }
-            $rows[] = $row;
-            unset($row);
-        }
-    }
     
-    $output = theme('table', 
-        [
-            'header'=>$headers, 
-            'rows'=>$rows,
-            'rows_multiple'=>true,
-            'attributes' => array('class' => 'customTable'),    
-        ]
-    );
-    return $output;
+    return 'debug';
     
     
     
