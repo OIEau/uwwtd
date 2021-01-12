@@ -141,11 +141,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));    
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -12552,7 +12553,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Designation criteria  a N', //;                         rcaANitro
             $ind['designation_criteria_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaanitro['und'][0]['value'],
             //'Starting date of designation a N', //;                  ?
-            $ind['starting_date_of_designation_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10) : '',
+            $ind['starting_date_of_designation_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaadatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application a N', //;                  ?
             $ind['starting_date_of_application_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  a P', //;                         rcaAPhos
