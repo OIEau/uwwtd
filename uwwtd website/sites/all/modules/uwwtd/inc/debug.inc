@@ -5,58 +5,19 @@ function uwwtd_debug(){
     module_load_include('inc','uwwtd','inc/register');
     
     $annee = 2018;
-    $annee_p = uwwtd_get_previous_year($annee);
-    $data = [];
     
-    $query = 'select n.title, localid.field_inspireidlocalid_value as uwwtp_id,  agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
-        from {node} n
-            join
-                {field_data_field_anneedata} f_annee
-                    ON n.nid = f_annee.entity_id
-            join
-                {field_data_field_status} f_status
-                    ON n.nid = f_status.entity_id
-            join
-                {field_data_field_inspireidlocalid} localid
-                    ON n.nid = localid.entity_id
-            join 
-                {field_data_field_uwwaggliste} agg
-                    ON n.nid = agg.entity_id
-            join
-                {field_data_field_inspireidlocalid} agg_localid
-                    ON agg.field_uwwaggliste_nid = agg_localid.entity_id        
-            join
-                {node} agg_node
-                    ON agg.field_uwwaggliste_nid = agg_node.nid        
-            left join 
-                {field_data_field_physicalcapacityactivity} f_capacity
-                ON n.nid = f_capacity.entity_id
-        where n.type = :typenode
-            and f_annee.field_anneedata_value = :annee
-            and f_status.field_status_value = :status
-        order by physicalcapacity desc nulls last
-        ';
-    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 1]);
-    $uwwtp_past = [];
+        // Recuperation du nid du node MS_LEVEL de cette annee :
+        $query = db_select('node', 'n');
+        $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
+        $query->fields('n');
+        $query->fields('a', array('field_anneedata_value'));
+        $query->condition('a.field_anneedata_value', $annee, '=');
+        $query->condition('n.type', 'ms_level', '=');
+        $query->condition('n.status', 1, '=');
+        $nid = $query->execute()->fetchField();
+    $node = node_load($nid);
+    dsm($node);
     
-    while($row = $result->fetchAssoc()) {
-        $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
-    }
-    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
-    $uwwtp_current = [];
-    while($row = $result->fetchAssoc()) {
-        $uwwtp_current[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
-    }
-
-    $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
-    unset($uwwtp_current);
-    if(!empty($diff)){
-        foreach($diff as $k){
-            $data[$k] = $uwwtp_past[$k];
-        }
-    }
-    unset($uwwtp_past);
-    dsm($data);
     /*
     $data = [];
     if(!empty($diff)){
