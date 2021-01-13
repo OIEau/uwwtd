@@ -145,7 +145,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));
+    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));    
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -2923,39 +2924,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
         $cell = $sheet->getCell($x);
         $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
     }
-    /*$cell = $sheet->getCell('A54');
-
-    $years_cells = array('B3','D3','B21','B74','AB48','A62','AA41','AB41','AB62','AC41','AD41','AE41','AF41',
-    'A54','A55','A57','A58','A60','A61','A64','A65','A67','A68','A70','A71','AA65','AA66','AA68','AA69','AA71','AA72');
-    foreach($years_cells as $yc){
-        $cell = $sheet->getCell($yc);
-        $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    }
-    /*
-    $cell = $sheet->getCell('A54');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A55');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A57');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A58');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A60');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A61');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A64');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A65');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A67');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A68');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A70');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));
-    $cell = $sheet->getCell('A71');
-    $cell->setValue(str_replace(array('[#previous_year#]', '[#current_year#]'), array($replaceyearby, $annee), $cell->getValue()));*/
 
 	if (isset($context['results']['graph']['art3_C']['number'])) {
     	$sheet->setCellValue('B43', $context['results']['graph']['art3_C']['number']);
@@ -3204,44 +3172,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
 
 
     }
-
-    //array 8 Summary installation in place
-// $context['results']['graph']['summary_installation']
-// $sheet->getCell('C10')->setValue($context['sandbox']['summary']['total']['number']);
-// $sheet->getCell('D10')->setValue($context['sandbox']['summary']['total']['percentage']);
-// $sheet->getCell('E10')->setValue($context['sandbox']['summary']['total']['waste_pe']);
-// $sheet->getCell('F10')->setValue($context['sandbox']['summary']['total']['waste_percent']);
-//
-// $sheet->getCell('C11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['number']);
-// $sheet->getCell('D11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['percent']);
-// $sheet->getCell('E11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_pe']);
-// $sheet->getCell('F11')->setValue($context['sandbox']['summary']['total']['ias_in_place']['waste_percent']);
-//
-// $sheet->getCell('C12')->setValue($context['sandbox']['summary']['total']['collecting_system']['number']);
-// $sheet->getCell('D12')->setValue($context['sandbox']['summary']['total']['collecting_system']['percent']);
-// $sheet->getCell('E12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_pe']);
-// $sheet->getCell('F12')->setValue($context['sandbox']['summary']['total']['collecting_system']['waste_percent']);
-// //secondary treatment
-// $sheet->getCell('C15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['number']);
-// $sheet->getCell('D15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['percent']);
-// $sheet->getCell('E15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_pe']);
-// $sheet->getCell('F15')->setValue($context['sandbox']['summary']['secondary']['installation_in_place']['waste_percent']);
-//
-// $sheet->getCell('C16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['number']);
-// $sheet->getCell('D16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['percent']);
-// $sheet->getCell('E16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_pe']);
-// $sheet->getCell('F16')->setValue($context['sandbox']['summary']['secondary']['meet_requirement']['waste_percent']);
-// //more stringent treatment
-// $sheet->getCell('C19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['number']);
-// $sheet->getCell('D19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['percent']);
-// $sheet->getCell('E19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_pe']);
-// $sheet->getCell('F19')->setValue($context['sandbox']['summary']['more_stringent']['installation_in_place']['waste_percent']);
-//
-// $sheet->getCell('C20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['number']);
-// $sheet->getCell('D20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['percent']);
-// $sheet->getCell('E20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_pe']);
-// $sheet->getCell('F20')->setValue($context['sandbox']['summary']['more_stringent']['meet_requirement']['waste_percent']);
-
 
     $cell = $sheet->getCell('A75');
     $cell->setValue(str_replace(array('[#COUNTRY#]', '[#current_year#]'), array($country_name, $annee), $cell->getValue()));
@@ -3601,15 +3531,6 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['uwwtp_notreatment_nb'])) {
     	$sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
     }
-    
-
-
-
-    
-    
-        
-
-
 
     if (isset($context['results']['uwwtp_ias_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
     	$sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
@@ -3834,7 +3755,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
     $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
 
-    // R   cup   ration du nid du node MS_LEVEL de cette ann   e :
+    // Recuperation du nid du node MS_LEVEL de cette annee :
     $query = db_select('node', 'n');
     $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
     $query->fields('n');
@@ -4934,15 +4855,6 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['uwwtp_notreatment_nb'])) {
     	$sheet->setCellValue('D132', $context['results']['uwwtp_notreatment_nb']);
     }
-    
-
-
-
-    
-    
-        
-
-
 
     if (isset($context['results']['uwwtp_ias_pe']) && isset($context['results']['uwwtp_total_load_generated_pe'])) {
     	$sheet->setCellValue('B133', round($context['results']['uwwtp_ias_pe'] * 100 / $context['results']['uwwtp_total_load_generated_pe'], 1));
@@ -5133,31 +5045,31 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
     $arrayInPe = array();
-    $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('E55')->getValue();
-    $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('E58')->getValue();
-    $arrayInPe['Compliant']['Article 5'] = $sheet->getCell('E61')->getValue();
+    $arrayInPe['Compliant']['Article 3'] = $sheet->getCell('B54')->getValue();
+    $arrayInPe['Compliant']['Article 4'] = $sheet->getCell('B57')->getValue();
+    $arrayInPe['Compliant']['Article 5'] = $sheet->getCell('B60')->getValue();
 
-    $arrayInPe['Not compliant']['Article 3'] = $sheet->getCell('F55')->getValue();
-    $arrayInPe['Not compliant']['Article 4'] = $sheet->getCell('F58')->getValue();
-    $arrayInPe['Not compliant']['Article 5'] = $sheet->getCell('F61')->getValue();
+    $arrayInPe['Not compliant']['Article 3'] = $sheet->getCell('C54')->getValue();
+    $arrayInPe['Not compliant']['Article 4'] = $sheet->getCell('C57')->getValue();
+    $arrayInPe['Not compliant']['Article 5'] = $sheet->getCell('C60')->getValue();
 
-    $arrayInPe['Not relevant']['Article 3'] = $sheet->getCell('G55')->getValue();
-    $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('G58')->getValue();
-    $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('G61')->getValue();
+    $arrayInPe['Not relevant']['Article 3'] = $sheet->getCell('D54')->getValue();
+    $arrayInPe['Not relevant']['Article 4'] = $sheet->getCell('D57')->getValue();
+    $arrayInPe['Not relevant']['Article 5'] = $sheet->getCell('D60')->getValue();
 
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in number of agglomerations" :
     $arrayInNumOfAgg = array();
-    $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B43')->getValue();
-    $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B46')->getValue();
-    $arrayInNumOfAgg['Compliant']['Article 5'] = $sheet->getCell('B49')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 3'] = $sheet->getCell('B64')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 4'] = $sheet->getCell('B67')->getValue();
+    $arrayInNumOfAgg['Compliant']['Article 5'] = $sheet->getCell('B70')->getValue();
 
-    $arrayInNumOfAgg['Not compliant']['Article 3'] = $sheet->getCell('B44')->getValue();
-    $arrayInNumOfAgg['Not compliant']['Article 4'] = $sheet->getCell('B47')->getValue();
-    $arrayInNumOfAgg['Not compliant']['Article 5'] = $sheet->getCell('B50')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 3'] = $sheet->getCell('C64')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 4'] = $sheet->getCell('C67')->getValue();
+    $arrayInNumOfAgg['Not compliant']['Article 5'] = $sheet->getCell('C70')->getValue();
 
-    $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('B45')->getValue();
-    $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('B48')->getValue();
-    $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('B51')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 3'] = $sheet->getCell('D64')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 4'] = $sheet->getCell('D67')->getValue();
+    $arrayInNumOfAgg['Not relevant']['Article 5'] = $sheet->getCell('D70')->getValue();
 
     // Récupération des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
     $distancesExpired = array();
@@ -5192,7 +5104,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $distancesTotal['Tertiary treatment not in place'] = $sheet->getCell('C125')->getValue();
     $distancesTotal['Tertiary stringent treatment performance not met'] = $sheet->getCell('C126')->getValue();
 
-    // R   cup   ration du nid du node MS_LEVEL de cette ann   e :
+    // Recuperation du nid du node MS_LEVEL de cette annee :
     $query = db_select('node', 'n');
     $query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
     $query->fields('n');
@@ -7676,12 +7588,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     continue;
                 }
             } elseif ($type == 'CSA/SA') {
-                //todo A58 ?
                 if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
                     fputcsv($ragglodebugfile, $agglodebug, ';');
                     continue;
                 }
-            } 
+            } elseif ($type == 'A58') {
+                //=================================todo A58 ? case of RO
+            }
+            
             //compliance art3
             
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
@@ -12552,7 +12466,7 @@ function uwwtd_create_register_2015_rca_sheet1($annee, &$context)
             //'Designation criteria  a N', //;                         rcaANitro
             $ind['designation_criteria_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] == 0) ? '' : $rca[$i]->field_rcaanitro['und'][0]['value'],
             //'Starting date of designation a N', //;                  ?
-            $ind['starting_date_of_designation_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10) : '',
+            $ind['starting_date_of_designation_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaadatedesignation['und'][0]['value'], 0, 10) : '',
             //'Starting date of application a N', //;                  ?
             $ind['starting_date_of_application_a_n'] => ($rca[$i]->field_rcaanitro['und'][0]['value'] != 0) ? substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10) : '', // =rcaDateDesignation + 7 years
             //'Designation criteria  a P', //;                         rcaAPhos
