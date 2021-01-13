@@ -7588,12 +7588,14 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     continue;
                 }
             } elseif ($type == 'CSA/SA') {
-                //todo A58 ?
                 if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
                     fputcsv($ragglodebugfile, $agglodebug, ';');
                     continue;
                 }
-            } 
+            } elseif ($type == 'A58') {
+                //=================================todo A58 ? case of RO
+            }
+            
             //compliance art3
             
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
