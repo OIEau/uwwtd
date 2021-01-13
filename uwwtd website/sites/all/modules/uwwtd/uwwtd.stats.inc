@@ -811,8 +811,11 @@ function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibl
 	ksort($comparisonsCompliancesByPe);
 	ksort($comparisonsCompliancesByAgg);
 	
-	return array('comparisonsCompliancesByPe' => $comparisonsCompliancesByPe, 
-				 'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg);
+    $data = [
+        'comparisonsCompliancesByPe' => $comparisonsCompliancesByPe, 
+        'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg
+     ];
+	return $data;
 }
 
 function uwwtd_stat_national_ms_level_preprocess_sludge_chart($data, $year){
