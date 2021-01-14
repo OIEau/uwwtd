@@ -141,12 +141,14 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));    
-    
+      
+
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -1091,43 +1093,37 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
 
                     $other = node_load($history);
                     $otherY = $other->field_anneedata['und'][0]['value'];
-                        
-                        $designation_dt = [];
-                    
+             
                         $designation_criteria = $GLOBALS['uwwtd_value']['rcatype_labels'][$other->field_zonetype['und'][0]['value']];
                         if($other->field_specialisedzonetype['und'][0]['value']!=''){
                             $designation_criteria .= ' '.substr($GLOBALS['uwwtd_value']['rca_spe_type_labels'][$other->field_specialisedzonetype['und'][0]['value']], 0, -4);
                         } 
-                        if($other->field_rcaanitro['und'][0]['value']==1 && $other->field_rcaaphos['und'][0]['value']==1){
-                            $designation_criteria .= ', a (N+P)';
-                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
-                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
-                        }elseif($other->field_rcaanitro['und'][0]['value']==1){
-                            $designation_criteria .= ', a (N)';
-                            if($other->field_rcaadatedesignation['und'][0]['value']!='') $designation_dt['aN'] = strtotime($other->field_rcaadatedesignation['und'][0]['value']);
+                        if($other->field_rcaanitro['und'][0]['value']==1){
+                            $designation_criteria .= ",\n Art. 5(2,3) - N : ";
+                            if($other->field_rcaanstartdate['und'][0]['value']!='') $designation_criteria .= date('Y-m-d', strtotime($other->field_rcaanstartdate['und'][0]['value']));
                         }
-                        elseif($other->field_rcaaphos['und'][0]['value']==1){
-                            $designation_criteria .= ', a (P)';
-                            if($other->field_rcaapdatedesignation['und'][0]['value']!='') $designation_dt['aP'] = strtotime($other->field_rcaapdatedesignation['und'][0]['value']);
+                        if($other->field_rcaaphos['und'][0]['value']==1){
+                            $designation_criteria .= ",\n Art. 5(2,3) - P : ";
+                            if($other->field_rcaapstartdate['und'][0]['value']!='') $designation_criteria .= date('Y-m-d', strtotime($other->field_rcaapstartdate['und'][0]['value']));
                         }
                         if($other->field_rcab['und'][0]['value']==1){
-                            $designation_criteria .= ', b';
-                            if($other->field_rcabdatedesignation['und'][0]['value']!='') $designation_dt['b'] = strtotime($other->field_rcabdatedesignation['und'][0]['value']);
+                            $designation_criteria .= ",\n Art. 5(2,3) - b : ";
+                            if($other->field_rcabstartdate['und'][0]['value']!='') $designation_criteria .=date('Y-m-d', strtotime($other->field_rcabstartdate['und'][0]['value']));
                         }
                         if($other->field_rcac['und'][0]['value']==1){
-                            $designation_criteria .= ', c';
-                            if($other->field_rcacdatedesignation['und'][0]['value']!='') $designation_dt['c'] = strtotime($other->field_rcacdatedesignation['und'][0]['value']);
+                            $designation_criteria .= ",\n Art. 5(2,3) - c : ";
+                            if($other->field_rcacstardate['und'][0]['value']!='') $designation_criteria .= date('Y-m-d',strtotime($other->field_rcacstardate['und'][0]['value']));
                             if($other->field_rcacrelevantdirective['und'][0]['value'] !='' ){
                                 $designation_criteria .= '('.$other->field_rcacrelevantdirective['und'][0]['value'].')';
                             }
                         }
-                        /*
                         if($other->field_rca54applied['und'][0]['value']==1){
-                            $designation_dt['54'] = substr($other->field_rcadateart54['und'][0]['value'], 0, 10);
-                        }*/
+                            $designation_criteria .= ",\n Art. 5(4) :";
+                            if($other->field_rcadateart54['und'][0]['value']!='') $designation_criteria .= date('Y-m-d',substr($other->field_rcadateart54['und'][0]['value'], 0, 10));
+                        }
                         if($other->field_rca58applied['und'][0]['value']==1){
-                            $designation_criteria .= ', c';
-                            if($other->field_rcaart58datedesign['und'][0]['value']!='') $designation_dt['58'] = strtotime($other->field_rcaart58datedesign['und'][0]['value']);
+                            $designation_criteria .= ",\n Art. 5(8) : ";
+                            if($other->field_rcadateart5854['und'][0]['value']!='') $designation_criteria .= date('Y-m-d',strtotime($other->field_rcadateart5854['und'][0]['value']));
                         }
                         //a : field_rcaanitro + field_rcaaphos + field_rcaadatedesignation
                         //b : field_rcab + field_rcabdatedesignation 
@@ -1139,7 +1135,6 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
                     //$otherList[$otherY] =  [
                         'id'=>$other->field_inspireidlocalid['und'][0]['value'],
                         'name'=>$other->title,
-                        'designation_dt'=>date('d/m/Y', max(array_values($designation_dt))), 
                          'designation_criteria'=>$designation_criteria,                    
                         //'node'=>$other
                     ];
@@ -1178,7 +1173,6 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
                         'id'=>'',
                         'name'=>'',
                         'designation_criteria'=>'',
-                        'designation_dt'=>''
                     ];
                 }
                 
@@ -1208,7 +1202,6 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
                     'id'=>'Not reported - '.$id,
                     'name'=>'',
                     'designation_criteria'=>'',
-                    'designation_dt'=>''
                 ];
             }
             krsort($nr);
@@ -1225,8 +1218,7 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
     $keys = [
         'id'=>'ID of Sensitive Area',
         'name'=>'Name of Sensitive Area',
-        'designation_criteria'=>'Designation criteria',
-        'designation_dt'=>'Date of designation'
+        'designation_criteria'=>'Starting dates of application',
     ];
     $headers = [];
     for($i=$cyear; $i>=4; $i--){
@@ -5660,7 +5652,6 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
-            and field_agggenerated_value >=2000
         order by size desc nulls last
         ';
     $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 1]);
@@ -5672,7 +5663,10 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee ,':status' => 1]);
     $current = [];
     while($row = $result->fetchAssoc()) {
-        $current[$row['agg_id']]  = $row;
+        if($row['size'] < 2000 && isset($past[$row['agg_id']])){
+            $past[$row['agg_id']]['remark'] = 'agglo<2,000 p.e.';
+        }
+        else $current[$row['agg_id']]  = $row;
     }
 
     $diff = array_diff(array_keys($past), array_keys($current));
@@ -5826,7 +5820,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
+    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, field_physicalcapacityactivity_value as physicalcapacity, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_agggenerated_value as agg_size
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5845,7 +5839,10 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
                     ON agg.field_uwwaggliste_nid = agg_localid.entity_id        
             join
                 {node} agg_node
-                    ON agg.field_uwwaggliste_nid = agg_node.nid        
+                    ON agg.field_uwwaggliste_nid = agg_node.nid
+            left join 
+                {field_data_field_agggenerated} agggenerated
+                ON agg_node.nid = agggenerated.entity_id
             left join 
                 {field_data_field_physicalcapacityactivity} f_capacity
                 ON n.nid = f_capacity.entity_id
@@ -5863,7 +5860,14 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
     $uwwtp_current = [];
     while($row = $result->fetchAssoc()) {
-        $uwwtp_current[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+        $key = $row['uwwtp_id'].'-'.$row['agg_id'];
+        if($row['agg_size'] < 2000 && isset($past[$key])){
+            $past[$key]['remark'] = 'agglo<2,000 p.e.';
+        }
+        else{
+            $uwwtp_current[$key]  = $row;
+        }
+        
     }
 
     $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
@@ -7581,6 +7585,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $agglodebug[$indSup+0] = $type;
 
             $listrcatype = explode(';', $agglo[$ind['type_of_receiving_water']]);
+            //==================== FIX ME
             if ($type == 'NA') {
                     //type of receiving water
                 if (false === in_array('NA', $listrcatype)) {
@@ -7592,10 +7597,10 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     fputcsv($ragglodebugfile, $agglodebug, ';');
                     continue;
                 }
-            } elseif ($type == 'A58') {
-                //=================================todo A58 ? case of RO
-            }
-            
+                //=================================FIX ME  'A58 && A54) {
+                    //case with empty  $listrcatype
+            } 
+
             //compliance art3
             
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
@@ -9667,7 +9672,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['entirely_discharging_into_coastal_waters']] = $entirely_discharge_in_CW;  //=yes if column Z= CW?;
 
         //'type of receiving water',   ?dcpTypeOfReceivingArea
-        $line[$ind['type_of_receiving_water']] = $dcpTypeOfReceivingArea;
+        $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['register']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']);
         //'ID of the SA or LSA',   ?rcaID
         $line[$ind['id_of_the_sa_or_lsa']] = $rcaID;
         //'name',         ?title
@@ -10290,7 +10295,7 @@ function _get_compliance_art_4_no_compliant_perc($totalEnteringLoad, $ratioConne
 function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 {
     $listtypestat = array('expired', 'pending');
-
+    $cc = variable_get('siif_eru_country_code', '-1');
     if (!isset($context['sandbox']['progress'])) {
 
         $context['sandbox']['progress'] = 0;
@@ -11007,7 +11012,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             unset($WBT);
             $line[$ind['entirely discharging into coastal waters?']] = $entirely_discharge_in_CW;  //=yes if column Z= CW?
             //'type of receiving water',   ?dcpTypeOfReceivingArea
-            $line[$ind['type of receiving water']] = $dcpTypeOfReceivingArea;
+            $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['register']['default_by_cc'][$cc ]['rcaType']);
             //'ID of the SA or LSA',   ?rcaID
             $line[$ind['ID of the SA or LSA']] = $rcaID;
             //'name',         ?title
