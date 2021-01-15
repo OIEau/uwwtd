@@ -5863,7 +5863,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $uwwtp_current = [];
     while($row = $result->fetchAssoc()) {
         $key = $row['uwwtp_id'].'-'.$row['agg_id'];
-        if($row[$key] < 2000 && isset($past[$key])){
+        if($row['agg_size'] < 2000 && isset($past[$key])){
             $past[$key]['remark'] = 'agglo<2,000 p.e.';
         }
         else{
