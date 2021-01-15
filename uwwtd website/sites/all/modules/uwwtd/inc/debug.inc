@@ -1,7 +1,25 @@
 <?php 
 
 function uwwtd_debug(){
+    module_load_include('inc','uwwtd','/inc/register');
+    $annee = 2018;
+/*    
+    $previous_year = uwwtd_get_previous_year($annee);
     
+    $previous_SLC_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $previous_year);
+        if (true === file_exists($previous_SLC_model_path)) {
+            $previousSLCobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+            $previousSLCobjReader->setIncludeCharts(false);
+            $previousSLCobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
+            $previousSLCobjPHPExcel = $previousSLCobjReader->load(drupal_realpath($previous_SLC_model_path));
+            $previousSLCsheet = $previousSLCobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
+        }
+
+        dsm(uwwtd_register_get_cell_value($previousSLCsheet, 'E17'));
+        dsm(uwwtd_register_get_cell_value($previousSLCsheet, 'E27'));
+        dsm(uwwtd_register_get_cell_value($previousSLCsheet, 'E40'));
+*/        
+/*    
     $data = [];
     $lines =explode("\n",$GLOBALS['SA']);
     foreach($lines as $line){
@@ -55,7 +73,7 @@ function uwwtd_debug(){
     }
     //dsm($data['CY']);
     file_put_contents('public://sa_history.json', json_encode($data));
-    
+ */   
     
     //$year = 2018;
     //=== Load libs

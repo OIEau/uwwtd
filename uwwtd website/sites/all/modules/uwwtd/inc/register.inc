@@ -147,7 +147,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
 
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -2999,6 +2998,7 @@ function uwwtd_create_register_2015_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['art3_NC']['pe'])) {
     	$sheet->setCellValue('F55', round($context['results']['graph']['art3_NC']['pe']));
     }
+    //we can also use $context['results']['graph']['art3_NR_only']['pe']
     if (isset($context['results']['graph']['art3_NR']['pe'])) {
     	$sheet->setCellValue('G55', round($context['results']['graph']['art3_NR']['pe']));
     }
@@ -3851,17 +3851,25 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $previous_year_n2 = uwwtd_get_previous_year($previous_year);
     $previoussheet = null;
     $previoussheet_n2 = null;
-
+    $previousSLCsheet = null;
+    $previousSLCsheet_n2 = null;
+    
     if (false !== $previous_year) {
         $previous_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['graph']['xlsx_name'], $previous_year);
         if (true === file_exists($previous_model_path)) {
             $previousobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousobjReader->setIncludeCharts(false);
-            $previousobjReader->setLoadSheetsOnly( array(
-                                                 $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
-                                                ) );
+            $previousobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']] );
             $previousobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_model_path));
             $previoussheet = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
+        }
+        $previous_SLC_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $previous_year);
+        if (true === file_exists($previous_SLC_model_path)) {
+            $previousSLCobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+            $previousSLCobjReader->setIncludeCharts(false);
+            $previousSLCobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
+            $previousSLCobjPHPExcel = $previousSLCobjReader->load(drupal_realpath($previous_SLC_model_path));
+            $previousSLCsheet = $previousSLCobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
     if (false !== $previous_year_n2) {
@@ -3869,11 +3877,17 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
         if (true === file_exists($previous_model_path_n2)) {
             $previousobjReader_n2 = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousobjReader_n2->setIncludeCharts(false);
-            $previousobjReader_n2->setLoadSheetsOnly( array(
-                                                 $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
-                                                ) );
+            $previousobjReader_n2->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']] );
             $previousobjPHPExcel_n2 = $previousobjReader_n2->load(drupal_realpath($previous_model_path_n2));
             $previoussheet_n2 = $previousobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
+        }
+        $previous_SLC_model_path_n2 = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $previous_year);
+        if (true === file_exists($previous_SLC_model_path_n2)) {
+            $previousSLCobjReader_n2 = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+            $previousSLCobjReader_n2->setIncludeCharts(false);
+            $previousSLCobjReader_n2->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
+            $previousSLCobjPHPExcel_n2 = $previousSLCobjReader_n2->load(drupal_realpath($previous_SLC_model_path_n2));
+            $previousSLCsheet_n2 = $previousSLCobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
 
@@ -4061,20 +4075,9 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
         'A54','A55','A56','A57','A58','A59','A60','A61','A62',
          'A64','A65','A66','A67','A68','A69','A70','A71','A72',
          'M41','N41','O41','P41','Q41','R41','S41','T41','U41',
-         'F53',
-         //'M50', 'M51','M52','M53','M54','M55','M56','M57','M58',
-         'F63',
-         //'M65','M66','M67','M68','M69','M70','M71','M72','M73',
-         'B74',
-         /*
-         'AA31',
-         'Z33','Z34','Z35',
-        'AB48','AB62',
-         'AA77','AB77','AC77','AD77','AE77','AF77','AG77',
-         'AA86','AB86','AC86',
-         'AA103','AB103','AC103',
-         'AA118','AB118','AC118',
-         */
+         'H53',
+         'H63',
+         'B74'
      );
     foreach ($cell_to_repalce as $x){
         $cell = $sheet->getCell($x);
@@ -4187,6 +4190,13 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['art3_NR']['pe'])) {
     	$sheet->setCellValue('D54', round($context['results']['graph']['art3_NR']['pe']));
     }
+    if (isset($context['results']['graph']['art3_PD_only']['pe'])) {
+    	$sheet->setCellValue('E54', round($context['results']['graph']['art3_PD_only']['pe']));
+    }
+    if (isset($context['results']['graph']['art3_NR_only']['pe'])) {
+    	$sheet->setCellValue('F54', round($context['results']['graph']['art3_NR_only']['pe']));
+    }
+    
     if (isset($context['results']['graph']['art4_C']['pe'])) {
     	$sheet->setCellValue('B57', round($context['results']['graph']['art4_C']['pe']));
     }
@@ -4196,6 +4206,13 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['art4_NR']['pe'])) {
     	$sheet->setCellValue('D57', round($context['results']['graph']['art4_NR']['pe']));
     }
+    if (isset($context['results']['graph']['art4_PD_only']['pe'])) {
+    	$sheet->setCellValue('E57', round($context['results']['graph']['art4_PD_only']['pe']));
+    }
+    if (isset($context['results']['graph']['art4_NR_only']['pe'])) {
+    	$sheet->setCellValue('F57', round($context['results']['graph']['art4_NR_only']['pe']));
+    }
+    
     if (isset($context['results']['graph']['art5_C']['pe'])) {
     	$sheet->setCellValue('B60', round($context['results']['graph']['art5_C']['pe']));
     }
@@ -4205,30 +4222,42 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     if (isset($context['results']['graph']['art5_NR']['pe'])) {
     	$sheet->setCellValue('D60', round($context['results']['graph']['art5_NR']['pe']));
     }
-
+    if (isset($context['results']['graph']['art5_PD_only']['pe'])) {
+    	$sheet->setCellValue('E60', round($context['results']['graph']['art5_PD_only']['pe']));
+    }
+    if (isset($context['results']['graph']['art5_NR_only']['pe'])) {
+    	$sheet->setCellValue('F60', round($context['results']['graph']['art5_NR_only']['pe']));
+    }
+    
+    
     //previous
     $sheet->setCellValue('B55', uwwtd_register_get_cell_value($previoussheet, 'E55'));
     $sheet->setCellValue('C55', uwwtd_register_get_cell_value($previoussheet, 'F55'));
     $sheet->setCellValue('D55', uwwtd_register_get_cell_value($previoussheet, 'G55'));
+    $sheet->setCellValue('E55', uwwtd_register_get_cell_value($previousSLCsheet, 'E17'));
     $sheet->setCellValue('B58', uwwtd_register_get_cell_value($previoussheet, 'E58'));
     $sheet->setCellValue('C58', uwwtd_register_get_cell_value($previoussheet, 'F58'));
     $sheet->setCellValue('D58', uwwtd_register_get_cell_value($previoussheet, 'G58'));
+    $sheet->setCellValue('E58', uwwtd_register_get_cell_value($previousSLCsheet, 'E27'));
     $sheet->setCellValue('B61', uwwtd_register_get_cell_value($previoussheet, 'E61'));
     $sheet->setCellValue('C61', uwwtd_register_get_cell_value($previoussheet, 'F61'));
     $sheet->setCellValue('D61', uwwtd_register_get_cell_value($previoussheet, 'G61'));
-
+    $sheet->setCellValue('E61', uwwtd_register_get_cell_value($previousSLCsheet, 'E40'));
+    
     //previous_n2
     //=========nd@oieau.fr===17/12/2020========== FIX ME
     $sheet->setCellValue('B56', uwwtd_register_get_cell_value($previoussheet_n2, 'E55'));
     $sheet->setCellValue('C56', uwwtd_register_get_cell_value($previoussheet_n2, 'F55'));
     $sheet->setCellValue('D56', uwwtd_register_get_cell_value($previoussheet_n2, 'G55'));
+    $sheet->setCellValue('E56', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'E17'));
     $sheet->setCellValue('B59', uwwtd_register_get_cell_value($previoussheet_n2, 'E58'));
     $sheet->setCellValue('C59', uwwtd_register_get_cell_value($previoussheet_n2, 'F58'));
     $sheet->setCellValue('D59', uwwtd_register_get_cell_value($previoussheet_n2, 'G58'));
+    $sheet->setCellValue('E59', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'E27'));
     $sheet->setCellValue('B62', uwwtd_register_get_cell_value($previoussheet_n2, 'E61'));
     $sheet->setCellValue('C62', uwwtd_register_get_cell_value($previoussheet_n2, 'F61'));
     $sheet->setCellValue('D62', uwwtd_register_get_cell_value($previoussheet_n2, 'G61'));
-
+    $sheet->setCellValue('E62', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'E40'));
 
     //array 7
     if (isset($context['results']['graph']['art3_C']['number'])) {
@@ -4240,6 +4269,13 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 	if (isset($context['results']['graph']['art3_NR']['number'])) {
     	$sheet->setCellValue('D64', $context['results']['graph']['art3_NR']['number']);
 	}
+    if (isset($context['results']['graph']['art3_PD_only']['number'])) {
+    	$sheet->setCellValue('E64', $context['results']['graph']['art3_PD_only']['number']);
+	}
+	if (isset($context['results']['graph']['art3_NR_only']['number'])) {
+    	$sheet->setCellValue('F64', $context['results']['graph']['art3_NR_only']['number']);
+	}
+	
 	if (isset($context['results']['graph']['art4_C']['number'])) {
 	    $sheet->setCellValue('B67', $context['results']['graph']['art4_C']['number']);
 	}
@@ -4249,6 +4285,13 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 	if (isset($context['results']['graph']['art4_NR']['number'])) {
     	$sheet->setCellValue('D67', $context['results']['graph']['art4_NR']['number']);
 	}
+    if (isset($context['results']['graph']['art4_PD_only']['number'])) {
+    	$sheet->setCellValue('E67', $context['results']['graph']['art4_PD_only']['number']);
+	}
+	if (isset($context['results']['graph']['art4_NR_only']['number'])) {
+    	$sheet->setCellValue('F67', $context['results']['graph']['art4_NR_only']['number']);
+	}
+	
 	if (isset($context['results']['graph']['art5_C']['number'])) {
     	$sheet->setCellValue('B70', $context['results']['graph']['art5_C']['number']);
 	}
@@ -4258,27 +4301,41 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 	if (isset($context['results']['graph']['art5_NR']['number'])) {
     	$sheet->setCellValue('D70', $context['results']['graph']['art5_NR']['number']);
 	}
+    if (isset($context['results']['graph']['art5_PD_only']['number'])) {
+    	$sheet->setCellValue('E70', $context['results']['graph']['art5_PD_only']['number']);
+	}
+    if (isset($context['results']['graph']['art5_NR_only']['number'])) {
+    	$sheet->setCellValue('F70', $context['results']['graph']['art5_NR_only']['number']);
+	}
+    
 
     //previous
     $sheet->setCellValue('B65', uwwtd_register_get_cell_value($previoussheet, 'E65'));
     $sheet->setCellValue('C65', uwwtd_register_get_cell_value($previoussheet, 'F65'));
     $sheet->setCellValue('D65', uwwtd_register_get_cell_value($previoussheet, 'G65'));
+    $sheet->setCellValue('E65', uwwtd_register_get_cell_value($previousSLCsheet, 'C17'));
     $sheet->setCellValue('B68', uwwtd_register_get_cell_value($previoussheet, 'E68'));
     $sheet->setCellValue('C68', uwwtd_register_get_cell_value($previoussheet, 'F68'));
-    $sheet->setCellValue('D68', uwwtd_register_get_cell_value($previoussheet, 'G68'));
+    $sheet->setCellValue('D68', uwwtd_register_get_cell_value($previoussheet, 'G68'));   
+    $sheet->setCellValue('E68', uwwtd_register_get_cell_value($previousSLCsheet, 'C27'));    
     $sheet->setCellValue('B71', uwwtd_register_get_cell_value($previoussheet, 'E71'));
     $sheet->setCellValue('C71', uwwtd_register_get_cell_value($previoussheet, 'F71'));
     $sheet->setCellValue('D71', uwwtd_register_get_cell_value($previoussheet, 'G71'));
+    $sheet->setCellValue('E71', uwwtd_register_get_cell_value($previousSLCsheet, 'C40'));
+        
     //previous_n2
     $sheet->setCellValue('B66', uwwtd_register_get_cell_value($previoussheet_n2, 'E65'));
     $sheet->setCellValue('C66', uwwtd_register_get_cell_value($previoussheet_n2, 'F65'));
     $sheet->setCellValue('D66', uwwtd_register_get_cell_value($previoussheet_n2, 'G65'));
+    $sheet->setCellValue('E66', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'C17'));
     $sheet->setCellValue('B69', uwwtd_register_get_cell_value($previoussheet_n2, 'E68'));
     $sheet->setCellValue('C69', uwwtd_register_get_cell_value($previoussheet_n2, 'F68'));
     $sheet->setCellValue('D69', uwwtd_register_get_cell_value($previoussheet_n2, 'G68'));
+    $sheet->setCellValue('E69', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'C27'));
     $sheet->setCellValue('B72', uwwtd_register_get_cell_value($previoussheet_n2, 'E71'));
     $sheet->setCellValue('C72', uwwtd_register_get_cell_value($previoussheet_n2, 'F71'));
-    $sheet->setCellValue('D72', uwwtd_register_get_cell_value($previoussheet_n2, 'G71'));
+    $sheet->setCellValue('D72', uwwtd_register_get_cell_value($previoussheet_n2, 'C27'));
+    $sheet->setCellValue('E72', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'C40'));
 
 
     //array 3
@@ -9978,6 +10035,15 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['art3_compliance']] == 'NR' || $line[$ind['art3_compliance']] == 'PD') {
             $context['results']['graph']['art3_NR']['number']++;
             $context['results']['graph']['art3_NR']['pe'] += $field_agggenerated;
+            if($line[$ind['art3_compliance']] == 'NR'){
+                $context['results']['graph']['art3_NR_only']['number']++;
+                $context['results']['graph']['art3_NR_only']['pe'] += $field_agggenerated;
+            }
+            elseif($line[$ind['art3_compliance']] == 'PD'){
+                $context['results']['graph']['art3_PD_only']['number']++;
+                $context['results']['graph']['art3_PD_only']['pe'] += $field_agggenerated;
+            }
+            
         }
         //manage report of dwt values at art 4 level
         
@@ -9998,6 +10064,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art4_NR']['number']++;
             $context['results']['graph']['art4_NR']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            if($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR' ){
+                $context['results']['graph']['art4_NR_only']['number']++;
+                $context['results']['graph']['art4_NR_only']['pe'] += $field_agggenerated;
+            }
+            elseif($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD'){
+                $context['results']['graph']['art4_PD_only']['number']++;
+                $context['results']['graph']['art4_PD_only']['pe'] += $field_agggenerated;
+            }
         }
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'C') {
             $context['results']['graph']['art5_C']['number']++;
@@ -10018,6 +10092,14 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if ($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' || $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
             $context['results']['graph']['art5_NR']['number']++;
             $context['results']['graph']['art5_NR']['pe'] += $line[$ind['connected_to_collecting_system_p._e.']];
+            if($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'NR' ){
+                $context['results']['graph']['art5_NR_only']['number']++;
+                $context['results']['graph']['art5_NR_only']['pe'] += $field_agggenerated;
+            }
+            elseif($line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD'){
+                $context['results']['graph']['art5_PD_only']['number']++;
+                $context['results']['graph']['art5_PD_only']['pe'] += $field_agggenerated;
+            }
         }
         ////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////
@@ -12910,7 +12992,6 @@ function uwwtd_create_register_2015_final_file($annee, &$context){
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);
-
 if($annee <= 2016){
     $zip = new ZipArchive;
     if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
@@ -13011,6 +13092,22 @@ if($annee <= 2016){
     } else {
         // uwwtd_trace(var_export($er, true));
     }
+}
+
+//Since 2018 we create a zip archive with 2 files : register data + register_graph
+if($annee >=2018){
+    $cc = strtoupper(variable_get('siif_eru_country_code', 'und'));
+    $dirname = $cc.'_'.$annee.'_register';
+    
+    @unlink(drupal_realpath('public://register/'.$dirname.'.zip'));
+    
+
+    $zip = new ZipArchive;
+    $zip->open(drupal_realpath('public://register/'.$dirname.'.zip'), ZIPARCHIVE::CREATE);
+    $zip->addEmptyDir($dirname); 
+    $zip->addFile(drupal_realpath($target_path), $dirname.'/'.$annee.$GLOBALS['uwwtd']['sheet']['final_register']);
+    $zip->addFile(drupal_realpath($GLOBALS['uwwtd']['sheet']['path_model_file'].$GLOBALS['uwwtd']['sheet']['model_graph_2018']), $dirname.'/'.$annee.$GLOBALS['uwwtd']['sheet']['final_register_graph']);
+    $zip->close();
 }
 
     $context['sandbox']['progress']++;
@@ -13783,7 +13880,14 @@ function uwwtd_register_get_cell_value($sheet, $coord)
 
 function uwwtd_registre_create_html_link($annee)
 {
-    return '<a href="'.file_create_url(uwwtd_getregister_finalfile_path($annee)).'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
+    if($annee>=2018){
+        $cc = strtoupper(variable_get('siif_eru_country_code', 'und'));
+        $dirname = $cc.'_'.$annee.'_register';
+        $path = file_create_url('public://register/'.$dirname.'.zip');
+    }else{
+        $path = file_create_url(uwwtd_getregister_finalfile_path($annee));
+    }
+    return '<a href="'.$path.'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
 }
 
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
