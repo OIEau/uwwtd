@@ -1,7 +1,11 @@
 <?php 
 
 function uwwtd_debug(){
-    
+    //module_load_include('inc','uwwtd','/inc/register');
+    $annee = 2018;
+
+
+/*    
     $data = [];
     $lines =explode("\n",$GLOBALS['SA']);
     foreach($lines as $line){
@@ -55,7 +59,7 @@ function uwwtd_debug(){
     }
     //dsm($data['CY']);
     file_put_contents('public://sa_history.json', json_encode($data));
-    
+ */   
     
     //$year = 2018;
     //=== Load libs

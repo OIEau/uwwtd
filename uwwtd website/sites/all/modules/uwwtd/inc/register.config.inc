@@ -113,6 +113,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
 //     'model_reporting_2016_avec_acronym_et_label' => '2018_register_model_20181015_glossaire_colonne.xlsx',
     
     'final_register' => '_register_model_final.xlsx',
+    'final_register_graph' => '_graph_final.xlsx',
     'model_type' => 'Excel2007',
     'target_type' => 'Excel2007',
     'path_model_file' => drupal_get_path('module', 'uwwtd') . '/model/',

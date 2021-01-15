@@ -74,7 +74,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,7 +145,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-
 
 }
 
@@ -3860,13 +3858,17 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
         if (true === file_exists($previous_model_path)) {
             $previousobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousobjReader->setIncludeCharts(false);
-            $previousobjReader->setLoadSheetsOnly( [
-                     $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
-                     $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']
-            ] );
+            $previousobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']] );
             $previousobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_model_path));
             $previoussheet = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
-            $previousSLCsheet = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
+        }
+        $previous_SLC_model_path = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $previous_year);
+        if (true === file_exists($previous_SLC_model_path)) {
+            $previousSLCobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+            $previousSLCobjReader->setIncludeCharts(false);
+            $previousSLCobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
+            $previousSLCobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_SLC_model_path));
+            $previousSLCsheet = $previousSLCobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
     if (false !== $previous_year_n2) {
@@ -3874,13 +3876,17 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
         if (true === file_exists($previous_model_path_n2)) {
             $previousobjReader_n2 = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousobjReader_n2->setIncludeCharts(false);
-            $previousobjReader_n2->setLoadSheetsOnly( [
-                     $GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name'],
-                     $GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']
-             ] );
+            $previousobjReader_n2->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']] );
             $previousobjPHPExcel_n2 = $previousobjReader_n2->load(drupal_realpath($previous_model_path_n2));
             $previoussheet_n2 = $previousobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['graph']['xlsx_model_sheet_name']);
-            $previousSLCsheet_n2 = $previousobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
+        }
+        $previous_SLC_model_path_n2 = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_name'], $previous_year);
+        if (true === file_exists($previous_SLC_model_path_n2)) {
+            $previousSLCobjReader_n2 = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
+            $previousSLCobjReader_n2->setIncludeCharts(false);
+            $previousSLCobjReader_n2->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
+            $previousSLCobjPHPExcel_n2 = $previousobjReader_n2->load(drupal_realpath($previous_SLC_model_path_n2));
+            $previousSLCsheet_n2 = $previousSLCobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
 
@@ -4068,20 +4074,9 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
         'A54','A55','A56','A57','A58','A59','A60','A61','A62',
          'A64','A65','A66','A67','A68','A69','A70','A71','A72',
          'M41','N41','O41','P41','Q41','R41','S41','T41','U41',
-         'F53',
-         //'M50', 'M51','M52','M53','M54','M55','M56','M57','M58',
-         'F63',
-         //'M65','M66','M67','M68','M69','M70','M71','M72','M73',
-         'B74',
-         /*
-         'AA31',
-         'Z33','Z34','Z35',
-        'AB48','AB62',
-         'AA77','AB77','AC77','AD77','AE77','AF77','AG77',
-         'AA86','AB86','AC86',
-         'AA103','AB103','AC103',
-         'AA118','AB118','AC118',
-         */
+         'H53',
+         'H63',
+         'B74'
      );
     foreach ($cell_to_repalce as $x){
         $cell = $sheet->getCell($x);
@@ -12996,7 +12991,6 @@ function uwwtd_create_register_2015_final_file($annee, &$context){
     $objWriter->save(drupal_realpath($target_path));
     unset($finalPHPExcel);
     unset($objWriter);
-
 if($annee <= 2016){
     $zip = new ZipArchive;
     if (($er = $zip->open(drupal_realpath($target_path))) === TRUE) {
@@ -13097,6 +13091,22 @@ if($annee <= 2016){
     } else {
         // uwwtd_trace(var_export($er, true));
     }
+}
+
+//Since 2018 we create a zip archive with 2 files : register data + register_graph
+if($annee >=2018){
+    $cc = strtoupper(variable_get('siif_eru_country_code', 'und'));
+    $dirname = $cc.'_'.$annee.'_register';
+    
+    @unlink(drupal_realpath('public://register/'.$dirname.'.zip'));
+    
+
+    $zip = new ZipArchive;
+    $zip->open(drupal_realpath('public://register/'.$dirname.'.zip'), ZIPARCHIVE::CREATE);
+    $zip->addEmptyDir($dirname); 
+    $zip->addFile(drupal_realpath($target_path), $dirname.'/'.$annee.$GLOBALS['uwwtd']['sheet']['final_register']);
+    $zip->addFile(drupal_realpath($GLOBALS['uwwtd']['sheet']['path_model_file'].$GLOBALS['uwwtd']['sheet']['model_graph_2018']), $dirname.'/'.$annee.$GLOBALS['uwwtd']['sheet']['final_register_graph']);
+    $zip->close();
 }
 
     $context['sandbox']['progress']++;
@@ -13869,7 +13879,14 @@ function uwwtd_register_get_cell_value($sheet, $coord)
 
 function uwwtd_registre_create_html_link($annee)
 {
-    return '<a href="'.file_create_url(uwwtd_getregister_finalfile_path($annee)).'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
+    if($annee>=2018){
+        $cc = strtoupper(variable_get('siif_eru_country_code', 'und'));
+        $dirname = $cc.'_'.$annee.'_register';
+        $path = file_create_url('public://register/'.$dirname.'.zip');
+    }else{
+        $path = file_create_url(uwwtd_getregister_finalfile_path($annee));
+    }
+    return '<a href="'.$path.'?v='.time().'">'. t('Get the register for year @year', array('@year' => $annee)) .'</a>';
 }
 
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
