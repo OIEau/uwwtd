@@ -74,6 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,7 +146,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-
+*/
+$batch['operations'][]=array('uwwtd_create_register_2020_file_graph_sheet11', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -3867,7 +3869,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $previousSLCobjReader = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousSLCobjReader->setIncludeCharts(false);
             $previousSLCobjReader->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
-            $previousSLCobjPHPExcel = $previousobjReader->load(drupal_realpath($previous_SLC_model_path));
+            $previousSLCobjPHPExcel = $previousSLCobjReader->load(drupal_realpath($previous_SLC_model_path));
             $previousSLCsheet = $previousSLCobjPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
@@ -3885,7 +3887,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $previousSLCobjReader_n2 = PHPExcel_IOFactory::createReader($GLOBALS['uwwtd']['sheet']['model_type']);
             $previousSLCobjReader_n2->setIncludeCharts(false);
             $previousSLCobjReader_n2->setLoadSheetsOnly( [$GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name'] ] );
-            $previousSLCobjPHPExcel_n2 = $previousobjReader_n2->load(drupal_realpath($previous_SLC_model_path_n2));
+            $previousSLCobjPHPExcel_n2 = $previousSLCobjReader_n2->load(drupal_realpath($previous_SLC_model_path_n2));
             $previousSLCsheet_n2 = $previousSLCobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
