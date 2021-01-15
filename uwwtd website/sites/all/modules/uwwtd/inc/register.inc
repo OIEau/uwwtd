@@ -74,7 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-/*
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,8 +146,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //=============== 
     
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-*/
-$batch['operations'][]=array('uwwtd_create_register_2020_file_graph_sheet11', array($annee));
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -4239,7 +4238,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('B58', uwwtd_register_get_cell_value($previoussheet, 'E58'));
     $sheet->setCellValue('C58', uwwtd_register_get_cell_value($previoussheet, 'F58'));
     $sheet->setCellValue('D58', uwwtd_register_get_cell_value($previoussheet, 'G58'));
-    $sheet->setCellValue('D58', uwwtd_register_get_cell_value($previousSLCsheet, 'E27'));
+    $sheet->setCellValue('E58', uwwtd_register_get_cell_value($previousSLCsheet, 'E27'));
     $sheet->setCellValue('B61', uwwtd_register_get_cell_value($previoussheet, 'E61'));
     $sheet->setCellValue('C61', uwwtd_register_get_cell_value($previoussheet, 'F61'));
     $sheet->setCellValue('D61', uwwtd_register_get_cell_value($previoussheet, 'G61'));
@@ -4254,7 +4253,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('B59', uwwtd_register_get_cell_value($previoussheet_n2, 'E58'));
     $sheet->setCellValue('C59', uwwtd_register_get_cell_value($previoussheet_n2, 'F58'));
     $sheet->setCellValue('D59', uwwtd_register_get_cell_value($previoussheet_n2, 'G58'));
-    $sheet->setCellValue('D59', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'E27'));
+    $sheet->setCellValue('E59', uwwtd_register_get_cell_value($previousSLCsheet_n2, 'E27'));
     $sheet->setCellValue('B62', uwwtd_register_get_cell_value($previoussheet_n2, 'E61'));
     $sheet->setCellValue('C62', uwwtd_register_get_cell_value($previoussheet_n2, 'F61'));
     $sheet->setCellValue('D62', uwwtd_register_get_cell_value($previoussheet_n2, 'G61'));
