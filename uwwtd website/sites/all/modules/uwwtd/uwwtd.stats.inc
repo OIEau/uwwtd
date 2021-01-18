@@ -1158,7 +1158,6 @@ function uwwtd_stats_summary_chapter($year){
 
     
     $output = '<h2>Summary</h2>';
-
     $output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'%</b></p>';
     $output .= '<p>In '.$year.', '.$country_name.' counted '.$national_compliance_nb['Total'].' agglomerations generating ≥2,000 p.e. each, of which:</p>';
     $output .= '<ul>';
