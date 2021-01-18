@@ -1158,7 +1158,7 @@ function uwwtd_stats_summary_chapter($year){
 
     
     $output = '<h2>Summary</h2>';
-    $output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'%</b></p>';
+    $output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'% of agglomerations and '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of generated load.</b></p>';
     $output .= '<p>In '.$year.', '.$country_name.' counted '.$national_compliance_nb['Total'].' agglomerations generating ≥2,000 p.e. each, of which:</p>';
     $output .= '<ul>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Compliant']).' p.e. of waste water, complied with the requirements of the Directive; and</li>';
