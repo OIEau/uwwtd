@@ -74,7 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -144,8 +144,11 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     //=============== 
-    
+ */   
     //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
 }
 
@@ -5639,7 +5642,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $diff = array_diff(array_keys($current), array_keys($past));
     if(!empty($diff)){
         foreach($diff as $k){
-            $data[] = array_values($past[$k]);
+            $data[] = array_values($current[$k]);
         }
     }
     unset($past, $current);
@@ -5823,7 +5826,7 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
     $diff = array_diff(array_keys($uwwtp_current), array_keys($uwwtp_past));
     if(!empty($diff)){
         foreach($diff as $k){
-            $data[] = array_values($uwwtp_past[$k]);
+            $data[] = array_values($uwwtp_current[$k]);
         }
     }
     unset($uwwtp_past, $uwwtp_current);
