@@ -217,8 +217,8 @@ function uwwtd_virtual_field_aggart4compliance_hierarchical($node) {
   }
 
   $variables['element']['#items']['0']['value'] = $field_aggart4compliance;
-  $variables['element']['0']['#markup'] = $field_aggart4compliance;
-  $variables['items']['0']['#markup'] = $field_aggart4compliance;
+  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart4compliance];
+  $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart4compliance];
 
   uwwtd_get_format_markup_compliance($variables);
 

@@ -6479,14 +6479,10 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         if (false === is_null($art3compAdditionnal)) {
             $node->field_aggart3addcompliance['und'][0]['value'] = $art3compAdditionnal;
             uwwtd_trace('field_aggart3addcompliance for agglo nid ' . $node->nid);
-            
-                $verbose_msg.=" -- bDone = False && art3compAdditionnal IS NOT NULL ==> field_aggart3addcompliance = $art3compAdditionnal \n";
-            
+                $verbose_msg.=" -- bDone = False && art3compAdditionnal IS NOT NULL ==> field_aggart3addcompliance = $art3compAdditionnal \n"; 
         } 
         else{
-            
                 $verbose_msg.=" -- bDone = False && art3compAdditionnal IS NULL\n";
-            
         }
     } 
 
@@ -6503,8 +6499,9 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         }
         if (false === empty($aArtCompliance)) {
             if($aArtCompliance['compArt4'] == $GLOBALS['uwwtd_value']['compliance']['unknown']){
-                //Special rules for 10th report under instruction of DGEnv
+                //================================================Special rules for 10th report under instruction of DGEnv
                 $ids = explode('_', $node->field_siteid['und'][0]['value']);
+                //IT Case
                 if($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
@@ -6514,6 +6511,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                         $aArtCompliance['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     }
                 }
+                // DE case
                 elseif($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
@@ -6601,42 +6599,6 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
     $node->field_aggcompliance['und'][0]['value'] = uwwtd_agglomeration_compliance($node,  $infoAllAggUww);
     $verbose_msg.=" -- ALGO10 : field_aggcompliance = ".$node->field_aggcompliance['und'][0]['value']." \n";
     
-    // ALGO11 - BB - 26/08 - A VERIFIER AVEC BFB
-    // if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
-    //     if ($node->field_aggart6compliance['und'][0]['value'] != 'NR') {
-    //         $node->field_aggart4compliance['und'][0]['value'] = 'NR';
-    //         $node->field_aggart5compliance['und'][0]['value'] = 'NR';
-    //         $node->field_aggart6compliance['und'][0]['value'] = 'NC';
-    //     } else {
-    //         if ($node->field_aggart4compliance['und'][0]['value'] != 'NR' && $node->field_aggart4compliance['und'][0]['value'] != 'PD') {
-    //             // In case of compliance and still under pending deadline (for art 4 and 5) :
-    //             if ($node->field_aggart4compliance['und'][0]['value'] == 'C' &&
-    //                 deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
-    //                 $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-    //             } else {
-    //                 $node->field_aggart4compliance['und'][0]['value'] = 'PD';
-    //             }
-    //             if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD' &&
-    //                 $node->field_aggart5compliance['und'][0]['value'] == 'C' &&
-    //                 deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
-    //                 $node->field_aggart5compliance['und'][0]['value'] = 'NC';
-    //             } else {
-    //                 $node->field_aggart5compliance['und'][0]['value'] = 'PD';
-    //             }
-    //         }
-    //     }
-    // } else {
-    // 	if ($node->field_aggart4compliance['und'][0]['value'] == 'NC') {
-    //         if ($node->field_aggart5compliance['und'][0]['value'] != 'NR' && $node->field_aggart5compliance['und'][0]['value'] != 'PD') {
-    //             $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-    //             $node->field_aggart5compliance['und'][0]['value'] = 'NC';
-    //             $node->field_aggart6compliance['und'][0]['value'] = 'NR';
-    //         } else {
-    //             $node->field_aggart4compliance['und'][0]['value'] = 'NC';
-    //             $node->field_aggart6compliance['und'][0]['value'] = 'NR';
-    //         }
-    // 	}
-    // }
 
     if ($node->field_aggart3compliance['und'][0]['value'] == 'NC') {
          $verbose_msg.="===> application of hierarchical compliance because ART 3 is not compliant \n";
@@ -6715,8 +6677,7 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         uwwtd_trace(__LINE__);      
         return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
-    
-    if ($node->field_aggart3compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['compliant'] && (
+    if (in_array($node->field_aggart3compliance['und'][0]['value'], [$GLOBALS['uwwtd_value']['compliance']['compliant'], $GLOBALS['uwwtd_value']['compliance']['compliantQC']])  && (
         $node->field_aggart4compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
         || $node->field_aggart5compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown']
         || $node->field_aggart6compliance['und'][0]['value'] == $GLOBALS['uwwtd_value']['compliance']['unknown'])
@@ -6818,8 +6779,8 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
                 uwwtd_trace(__LINE__);
                 return $GLOBALS['uwwtd_value']['compliance']['compliant'];
             }
-            else{               
-                if ($node->field_aggc2['und'][0]['value'] > 98) {
+            else{     
+                if ($node->field_aggc2['und'][0]['value'] >= 98) {
                     uwwtd_trace(__LINE__);      
                     return $GLOBALS['uwwtd_value']['compliance']['compliant'];
                 }
