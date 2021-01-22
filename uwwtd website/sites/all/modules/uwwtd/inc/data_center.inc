@@ -8745,7 +8745,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         'NA'   => 6,
         'LSA'  => 7, //lower priority
     );
-
     foreach($dcps as $oneDcp){
         if (false === isset($dcp)) {
             $dcp = $oneDcp;
@@ -8831,10 +8830,12 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 } else {
                     $required_treatment->required = 'S';
                 }
-            } else {
+            } 
+            else {
             	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
             		if (true === uwwtd_rca_art54_applies($dcp)) {
                     	$required_treatment->required = 'S';
+                        $required_treatment->reason = 'Treatment required is secondary according to A54 requirements';
                 	}
             	} elseif ($dcp['rcatype'] == 'A58523' || $dcp['rcatype'] == 'A58') {
             		uwwtd_get_required_treatment_sa_or_a58($required_treatment, $dcp, $maxgen);
