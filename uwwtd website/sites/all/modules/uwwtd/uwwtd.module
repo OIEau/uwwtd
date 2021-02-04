@@ -2179,10 +2179,8 @@ function uwwtd_timeline_receiving_area_output($node){
     foreach($otherList as $other){
       $ting = $other['node'];
       $class = uwwtd_timeline_receiving_area_state($ting);
-      $nbAnnee = count($otherY);
       $j=0;
       $cell = 0;
-      for($a=1;$a<=$nbAnnee;$a++){
         if($ting->field_anneedata['und'][0]['value'] == $node->field_anneedata['und'][0]['value']){
           $output.='<td class="dispo-annee uwwtd-history-element uwwtd-history-element-current '.$class.'">';
           $output .= '<h4 style="color: #000;">'.$ting->field_anneedata['und'][0]['value'].'</h4>';
@@ -2201,7 +2199,6 @@ function uwwtd_timeline_receiving_area_output($node){
           $cell++;
         }
         $j++;
-      }
     }
     $output.='<td class="dispo-after"><div></div></td>';
     $output.='</tr>';
@@ -2215,11 +2212,27 @@ function uwwtd_timeline_receiving_area_state($node){
     $class = '';
     if($node->field_rca54applied['und'][0]['value'] == 1){
         //Test perf on N & P
-        $nincoming   = $node->field_rcanincomingmeasured['und'][0]['value']  + $node->field_rcanincomingcalculated['und'][0]['value']   + $node->field_rcanincomingestimated['und'][0]['value'];
-        $ndischarged = $node->field_rcandischargedmeasured['und'][0]['value']  + $node->field_rcandischargedcalculated['und'][0]['value']   + $node->field_rcandischargedestimated['und'][0]['value'];
+        $nincoming   = (
+            (isset($node->field_rcanincomingmeasured['und']) ? $node->field_rcanincomingmeasured['und'][0]['value']  :0)
+            + (isset($node->field_rcanincomingcalculated['und']) ?$node->field_rcanincomingcalculated['und'][0]['value']  :0)
+            + (isset($node->field_rcanincomingestimated['und']) ?$node->field_rcanincomingestimated['und'][0]['value']  :0)
+        );
+        $ndischarged = (
+            (isset($node->field_rcandischargedmeasured['und']) ?$node->field_rcandischargedmeasured['und'][0]['value']    :0)
+            + (isset($node->field_rcandischargedcalculated['und']) ?$node->field_rcandischargedcalculated['und'][0]['value']     :0)
+            + (isset($node->field_rcandischargedestimated['und']) ?$node->field_rcandischargedestimated['und'][0]['value']  :0)
+        );
 
-        $pincoming   = $node->field_rcapincomingmeasured['und'][0]['value']  + $node->field_rcapincomingcalculated['und'][0]['value']   + $node->field_rcapincomingestimated['und'][0]['value'];
-        $pdischarged = $node->field_rcapdischargedmeasured['und'][0]['value']  + $node->field_rcapdischargedcalculated['und'][0]['value']   + $node->field_rcapdischargedestimated['und'][0]['value'];  
+        $pincoming   = (
+            (isset($node->field_rcapincomingmeasured['und']) ?$node->field_rcapincomingmeasured['und'][0]['value']    :0)
+            + (isset($node->field_rcapincomingcalculated['und']) ?$node->field_rcapincomingcalculated['und'][0]['value']    :0) 
+            + (isset($node->field_rcapincomingestimated['und']) ?$node->field_rcapincomingestimated['und'][0]['value']  :0)
+        );
+        $pdischarged = (
+            (isset($node->field_rcapdischargedmeasured['und']) ?$node->field_rcapdischargedmeasured['und'][0]['value']    :0)
+            + (isset($node->field_rcapdischargedcalculated['und']) ?$node->field_rcapdischargedcalculated['und'][0]['value']     :0)
+            + (isset($node->field_rcapdischargedestimated['und']) ?$node->field_rcapdischargedestimated['und'][0]['value']  :0)
+        );  
         if ($nincoming > 0  && $pincoming > 0 ) {  
             if( (1 - ($ndischarged / $nincoming)) >= 0.75 && (1 - ($pdischarged / $pincoming)) >= 0.75){
                 $class= 'dispo-1';  
