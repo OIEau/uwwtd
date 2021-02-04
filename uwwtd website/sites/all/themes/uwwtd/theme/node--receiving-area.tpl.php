@@ -193,9 +193,9 @@ echo uwwtd_insert_errors_tab($node);
                         </tr>
                         <tr>
                             <td ><?php print render($content['field_rca58applied']); ?></td>
-                            <td><?php print ($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcaart58datedesign[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaart58datedesign[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
-                            <td><?php print ($node->field_rcadateart5854[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcadateart5854[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart5854[LANGUAGE_NONE][0]['value']) : '-'); ?></td>    
                         </tr>
                         <tr>
@@ -213,11 +213,11 @@ echo uwwtd_insert_errors_tab($node);
                                     <?php print $img75Percent; ?>
                                 </div>
                             </td>
-                            <td> <?php print ($node->field_rcadateart54[LANGUAGE_NONE][0]['value'] && $node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']?
+                            <td> <?php print (isset($node->field_rcadateart54[LANGUAGE_NONE]) && isset($node->field_rcaapdatedesignation[LANGUAGE_NONE])?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?>
                             
                             </td>
-                            <td><?php print ($node->field_rcadateart54[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcadateart54[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcadateart54[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
@@ -237,35 +237,35 @@ echo uwwtd_insert_errors_tab($node);
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rcaanitro']); ?></td>
-                            <td><?php print ($node->field_rcaadatedesignation[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcaadatedesignation[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaadatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
-                            <td><?php print ($node->field_rcaanstartdate[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcaanstartdate[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaanstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rcaaphos']); ?></td>
-                            <td><?php print ($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcaapdatedesignation[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
-                            <td><?php print ($node->field_rcaapstartdate[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcaapstartdate[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcaapstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rcab']); ?></td>
-                            <td><?php print ($node->field_rcabdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcabdatedesignation[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
-                            <td><?php print ($node->field_rcabstartdate[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcabstartdate[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabstartdate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
                             <td><?php print render($content['field_rcac']); ?></td>
-                            <td><?php print ($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcacdatedesignation[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacdatedesignation[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
-                            <td><?php print ($node->field_rcacstardate[LANGUAGE_NONE][0]['value'] ?
+                            <td><?php print (isset($node->field_rcacstardate[LANGUAGE_NONE]) ?
                                     uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcacstardate[LANGUAGE_NONE][0]['value']) : '-'); ?></td>
                         </tr>
                         <tr>
                             <td><div><b>Comment other directive:</b></div></td>
-                            <td colspan="2"><?php print $node->field_rcacrelevantdirective[LANGUAGE_NONE][0]['value']; ?></td>
+                            <td colspan="2"><?php print (isset($node->field_rcacrelevantdirective[LANGUAGE_NONE])?$node->field_rcacrelevantdirective[LANGUAGE_NONE][0]['value']:'-'); ?></td>
                         </tr>
                         <tr>
                             <td><br/></td>
@@ -300,14 +300,14 @@ echo uwwtd_insert_errors_tab($node);
                     </table>
                     <div class="under-characteristics-sentitive-area">
                         <p><b>General comment:</b></p>
-                        <?php print $node->field_rcaremarks[LANGUAGE_NONE][0]['value']; ?></td>
+                        <?php print (isset($node->field_rcaremarks[LANGUAGE_NONE])?$node->field_rcaremarks[LANGUAGE_NONE][0]['value']:'-'); ?></td>
                     </div>
                     <table class="characteristics-sentitive-area">
                         <tr>
                             <td>
                                <div class="field field-type-text field-label-inline">
                                 <div class="field-label"><?php print ("Beginlife of the SA"); ?>: </div>
-                                <div class="field-items"><div class="field-item"> <?php print ($node->field_rcabeginlife[LANGUAGE_NONE][0]['value']?uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabeginlife[LANGUAGE_NONE][0]['value']) : '-'); ?></div></div>
+                                <div class="field-items"><div class="field-item"> <?php print (isset($node->field_rcabeginlife[LANGUAGE_NONE])?uwwtd_get_DD_MM_YYYY_from_YYYY_MM_DD_XXX($node->field_rcabeginlife[LANGUAGE_NONE][0]['value']) : '-'); ?></div></div>
                                 </div>
                             </td>
                             <td></td>
@@ -335,7 +335,7 @@ echo uwwtd_insert_errors_tab($node);
     <?php endif; ?>
 
     <div class="uwwcontainer">
-    <?php if ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' ||	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1')) : ?>
+    <?php if ((isset($node->field_rca54applied[LANGUAGE_NONE]) && $node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1') ||	  ($node->field_rca54applied[LANGUAGE_NONE][0]['value'] === '1' && $node->field_rca58applied[LANGUAGE_NONE][0]['value'] === '1')) : ?>
 	      <div class="uwwthird">
 	        <fieldset class="group-aggdescription field-group-fieldset group-description panel panel-default form-wrapper">
 	          <legend class="panel-heading">
