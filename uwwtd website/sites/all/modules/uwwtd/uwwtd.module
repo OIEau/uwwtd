@@ -2210,7 +2210,7 @@ function uwwtd_timeline_receiving_area_output($node){
 }
 function uwwtd_timeline_receiving_area_state($node){
     $class = '';
-    if($node->field_rca54applied['und'][0]['value'] == 1){
+    if(isset($node->field_rca54applied['und']) && $node->field_rca54applied['und'][0]['value'] == 1){
         //Test perf on N & P
         $nincoming   = (
             (isset($node->field_rcanincomingmeasured['und']) ? $node->field_rcanincomingmeasured['und'][0]['value']  :0)
@@ -2575,30 +2575,6 @@ function uwwtd_node_view($node, $view_mode, $langcode) {
 
   $extra = uwwtd_field_extra_fields();
   
-//   static $test = null;
-//   if (!isset($test)) {
-//     $test = true;
-//     dsm(array_keys($node->content));
-// //     dsm($node->content['field_aggart6compliance']);
-//     dsm(array_keys($node->content['field_agggenerated']));
-//     dsm($node->content['field_agggenerated']['#theme']);
-//     dsm($node->content['field_agggenerated']['#title']);
-//     dsm($node->content['field_agggenerated']['#label_display']);
-//     dsm($node->content['field_agggenerated']['#weight']);
-//     dsm($node->content['field_agggenerated']['#field_type']);
-//     dsm($node->content['field_agggenerated']['#field_name']);
-//     dsm($node->content['field_agggenerated']['#bundle']);
-//     dsm($node->content['field_agggenerated']['#entity_type']);
-//     dsm($node->content['field_agggenerated']['#view_mode']);
-//     dsm($node->content['field_agggenerated']['#language']);
-//     dsm($node->content['field_agggenerated']['#formatter']);
-//     dsm($node->content['field_agggenerated']['#items']);
-//   }
-//   dsm(__FUNCTION__);
-//   dsm($view_mode);
-//   dsm($node->type);
-//   dsm($extra);
-
    // Check that we're supporting the node type being viewed.
   if (empty($extra['node'][$node->type]['display'])) {
     return;
@@ -2625,6 +2601,8 @@ function uwwtd_node_view($node, $view_mode, $langcode) {
           '#field_type' => 'text',
           '#field_name' => $field_name,
           'type_node' => $node->type,
+          '#entity_type' => 'node',
+          '#bundle' => $node->type,
           '#items' => array(
                0 => array('value' => $value),
            ),
