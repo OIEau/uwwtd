@@ -217,8 +217,8 @@ function uwwtd_virtual_field_aggart4compliance_hierarchical($node) {
   }
 
   $variables['element']['#items']['0']['value'] = $field_aggart4compliance;
-  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart4compliance];
-  $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart4compliance];
+  $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['all_compliance'][$field_aggart4compliance];
+  $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['all_compliance'][$field_aggart4compliance];
 
   uwwtd_get_format_markup_compliance($variables);
 
@@ -296,10 +296,18 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
       $colorart4P = '#4f91e1';
   }
   
+  
+  
   if ($node->field_aggart4compliance['und'][0]['value'] == 'NR') {
       $colorart4T = '#a2a2a2';
       $colorart4P = '#a2a2a2';
   } 
+  elseif ($node->field_aggart4compliance['und'][0]['value'] == 'PD'){
+      if($distanceToCompliance['art4_perf_pe'] > 0) $colorart4P = '#FF5200';
+      else{$colorart4P = '#a2a2a2';}
+      if($distanceToCompliance['art4_treat_pe'] > 0) $colorart4T = '#FF5200';
+      else{$colorart4T = '#a2a2a2';}
+  }
   
   // Article 5
   if ($distanceToCompliance['art5_treat_compliance'] == 'NC' &&

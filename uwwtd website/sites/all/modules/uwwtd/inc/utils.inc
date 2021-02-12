@@ -1533,6 +1533,9 @@ function uwwtd_get_distance_compliance($agg){
 function deadline_beforeorequal_to_referenceyear($deadlinedate, $referenceyear) 
 {
 	$date = explode('-', $deadlinedate);
+    /*dsm($date[0] .'<='. $referenceyear);
+    if($referenceyear > $date[0]) return true;
+    else return false;*/
 	return $date[0] <= $referenceyear;
 }
 
