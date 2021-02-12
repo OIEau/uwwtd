@@ -1886,7 +1886,12 @@ function uwwtd_get_agglo_graphic($node) {
                 <div class="graphic-title">
                     ' . t('Discharge without treatment:') . ' ' . uwwtd_format_number($totalWOT, 0) . ' p.e (' . uwwtd_format_number($node->field_aggpercwithouttreatment['und'][0]['value'], 1) . '%)<br>';
   if ($percentage_lost > 1  || $pe_lost > 2000) {
-    $output .= '<span style="color:red;">' . t('Warning : Agglomeration found not compliant because of notable difference between load collected in collective system and sum of load entering UWWTPs (> 2000pe or > 1% of the generated load).') . '</span>';
+      if($node->field_aggart4compliance['und'][0]['value']=='NC'){
+        $output .= '<span style="color:red;">' . t('Warning : Agglomeration found not compliant because of notable difference between load collected in collective system and sum of load entering UWWTPs (> 2000pe or > 1% of the generated load).') . '</span>';
+      }
+      else{
+          $output .= '<span style="color:grey;">' . t('Notice : Agglomeration has a notable difference between load collected in collective system and sum of load entering UWWTPs (> 2000pe or > 1% of the generated load).') . '</span>';
+      }
   }
   $output .= '</div>
                 <br>
