@@ -74,7 +74,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -141,14 +140,10 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     //=============== 
- */   
-    //     $batch['operations'][]=array('uwwtd_create_register_2015_final_file_testspreadsheet', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_agglomerations_sheet12', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_new_treatment_plants_sheet14', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+
 
 }
 
@@ -248,10 +243,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                     if(isset($conf['wrapper'])){
                         switch($conf['wrapper']){
                             case 'round':
-                                $val = round($val);
+                                $val = ($val!=''?round($val):$val);
                               break;
                             case 'round1':
-                                $val = round($val,1);
+                                $val = ($val!=''?round($val,1):$val);
                               break;
                             
                         }
@@ -749,10 +744,10 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
                     if(isset($conf['wrapper'])){
                         switch($conf['wrapper']){
                             case 'round':
-                                $val = round($val);
+                                $val = ($val!=''?round($val):$val);
                               break;
                             case 'round1':
-                                $val = round($val,1);
+                                $val = ($val!=''?round($val,1):$val);
                               break;
 
                         }
@@ -778,7 +773,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 
         //$sheet->insertNewRowBefore($context['sandbox']['line']+$j, 1);
     }
-    $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour    viter de copier le style de la premi  �re ligne! et copier la ligne blanche vide
+    $sheet->insertNewRowBefore($context['sandbox']['line']+1, $j+1);    //+1 pour    eviter de copier le style de la première ligne! et copier la ligne blanche vide
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
 
     //Special rules for cell's style
@@ -1329,7 +1324,7 @@ function uwwtd_create_register_2015_file_rca54_sheet1_1($annee, &$context)
             $sheet->setCellValueByColumnAndRow($ind['deadline_n'], $i, $rca[$ind['deadline_n']]);
             $sheet->setCellValueByColumnAndRow($ind['deadline_p'], $i, $rca[$ind['deadline_p']]);
             $sheet->setCellValueByColumnAndRow($ind['application_art_5_4'], $i, $rca[$ind['application_art_5_4']]);
-            $sheet->setCellValueByColumnAndRow($ind['uwwtp_number'], $i, $rca[$ind['uwwtp_number']]);
+            $sheet->setCellValueByColumnAndRow($ind['uwwtp_number'], $i, ($rca[$ind['uwwtp_number']]?$rca[$ind['uwwtp_number']]:'NI'));
             $sheet->setCellValueByColumnAndRow($ind['uwwtp_capacity_total'], $i, $rca[$ind['uwwtp_capacity_total']]);
             $sheet->setCellValueByColumnAndRow($ind['n_in'], $i, $rca[$ind['n_in']]);
             $sheet->setCellValueByColumnAndRow($ind['n_out'], $i, $rca[$ind['n_out']]);
@@ -7616,6 +7611,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 //     dsm($compliance);
 //     while ($agglo = fgetcsv($ragglofile, 5000, ';')) {
     $j = 0;
+    $flag_A54 = false;
     while ($j < 20 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         
         // uwwtd_trace(__LINE__);            
@@ -7722,6 +7718,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
             $agglodebug[$indSup+6] = $A54 === true ? '1' : '0';
             $agglodebug[$indSup+7] = $rcac === true ? '1' : '0';
             
+            if($A54) $flag_A54 = true; //needed for the final rendering of the 3rd table of the sheet
 //             dsm('art4');
 //             dsm($ind['art4_compliance_art._4_(hierarchical_approach)']);
             //art 4
@@ -8113,6 +8110,11 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+        
+        if($flag_A54){
+                $cell = $sheet->getCell('Q10');
+                $cell->setValue("SA/CSA applying Art. 5");
+        }
         foreach($list_type as $type) {
     //     foreach(array('all') as $type) {
             if (false === isset($context['sandbox']['compliance'][$type])) {
@@ -11299,19 +11301,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
             $line[$ind['difference between monitoring result N and P and treatment in place']] = $difference_monitoring;
 
-            ////////////////////////////////////////
-            //todo check : to delete ??
-//             $line[$ind['Number of discharge points for this UWWTP']] = 'TODO delete ?';
-//             $line[$ind['DCP ID']] = 'TODO delete ?';
-//             //current RCA info (Q 2013)
-//             $line[$ind['ID of receiving water body 2']] = 'TODO delete ?';
-//             $line[$ind['water body type 2']] = 'TODO delete ?';
-//             $line[$ind['ID of the SA or LSA 2']] = 'TODO delete ?';
-//             $line[$ind['rcaname 2']] = 'TODO delete ?';
-//             $line[$ind['designation date 2']] = 'TODO delete ?';
-            //todo check : to delete ??
-            ////////////////////////////////////////
-
             //check if uwwtp under expired or pending deadline
             $pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
                                                                               $line[$ind['deadline for Art. 3 compliance']],
@@ -11328,33 +11317,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                                                                   $line[$ind['deadline for Art. 5 compliance']],
                                                                                   $previousuwwtp);
             }
-
-// $previous_pending_or_expired = '';
-// if (isset($previousuwwtp)) {
-//     if (
-//         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
-//          || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
-//          || substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) < $annee
-//         )
-//          && ($previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
-//         ) {
-//         $previous_pending_or_expired = 'EXP';
-//     }
-//
-//     //pending deadline    PD + les C avec date pas d   pass   e
-//     if (
-//         (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) >= $annee
-//          && substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) >= $annee
-//          && substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) >= $annee
-//         )
-//         && ($previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $previousuwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ))
-//         ) {
-//         $previous_pending_or_expired = 'PD';
-//     }
-// }
-
-
-
 
             //Compliance of treatment plant under expired and pending deadline
 
@@ -11581,23 +11543,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             unset($uwwtp_compliance);
 
-            //Previous compliance of the treatment under expired deadlines
-//             $previous_art4_expired_treatment = 'TODO';
-//             $previous_art4_expired_monitoring = 'TODO';
-//             $previous_art4_expired_final = 'TODO';
-//             $previous_art5_expired_treatment = 'TODO';
-//             $previous_art5_expired_monitoring = 'TODO';
-//             $previous_art5_expired_final = 'TODO';
-//             $previous_art5_expired_difference = 'TODO';
-//             if (false !== $previousagglo_uwwtpnid && isset($previousuwwtp)) {
-//                 $previous_art4_expired_treatment = 'TODO';
-//                 $previous_art4_expired_monitoring = 'TODO';
-//                 $previous_art4_expired_final = 'TODO';
-//                 $previous_art5_expired_treatment = 'TODO';
-//                 $previous_art5_expired_monitoring = 'TODO';
-//                 $previous_art5_expired_final = 'TODO';
-//                 $previous_art5_expired_difference = 'TODO';
-//             }
 //             //'treatment type',
 //             $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment;
 //             //'monitoring',
