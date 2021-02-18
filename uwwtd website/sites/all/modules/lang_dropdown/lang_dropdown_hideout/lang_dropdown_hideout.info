@@ -5,12 +5,8 @@ dependencies[] = locale
 configure = 'admin/structure/block'
 core = 7.x
 
-files[] = lang_dropdown_hideout.module
-files[] = lang_dropdown_hideout.install
-
-; Information added by Drupal.org packaging script on 2018-02-02
-version = "7.x-2.6"
+; Information added by Drupal.org packaging script on 2020-12-30
+version = "7.x-2.7"
 core = "7.x"
 project = "lang_dropdown"
-datestamp = "1517540586"
-
+datestamp = "1609334707"

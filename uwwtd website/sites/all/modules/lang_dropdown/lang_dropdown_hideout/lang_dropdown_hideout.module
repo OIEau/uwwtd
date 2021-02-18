@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Implementation of hook_form_alter().
+ * @file
+ * LSD Hideout main module file.
+ */
+
+/**
+ * Implements hook_form_alter().
  */
 function lang_dropdown_hideout_form_block_admin_configure_alter(&$form, &$form_state, $form_id) {
 
@@ -17,7 +22,7 @@ function lang_dropdown_hideout_form_block_admin_configure_alter(&$form, &$form_s
       '#description' => t('Select which languages you want to hide to specific roles.'),
       '#weight' => 1,
       '#tree' => TRUE,
-      '#parents' => array('lang_dropdown','hideout'),
+      '#parents' => array('lang_dropdown', 'hideout'),
     );
 
     // Retrieve role names for columns.
@@ -44,14 +49,14 @@ function lang_dropdown_hideout_form_block_admin_configure_alter(&$form, &$form_s
       );
 
       foreach ($role_names as $rid => $name) {
-        // Builds arrays for checked boxes for each role
+        // Builds arrays for checked boxes for each role.
         if (isset($hidden_languages[$rid][$code])) {
           $status[$rid][] = $code;
         }
       }
     }
 
-    // Have to build checkboxes here after checkbox arrays are built
+    // Have to build checkboxes here after checkbox arrays are built.
     foreach ($role_names as $rid => $name) {
       $form['lang_dropdown']['hideout']['languages']['checkboxes'][$rid] = array(
         '#type' => 'checkboxes',
@@ -75,18 +80,22 @@ function lang_dropdown_hideout_submit($form, &$form_state) {
     'hidden_languages' => array(),
   );
 
-  foreach($form_state['values']['lang_dropdown']['hideout']['role_names'] as $rid => $name) {
+  foreach ($form_state['values']['lang_dropdown']['hideout']['role_names'] as $rid => $name) {
     $lang_dropdown_hideout_settings['hidden_languages'][$rid] = array_filter($form_state['values']['lang_dropdown']['hideout']['languages']['checkboxes'][$rid]);
   }
 
   // Clear the cached pages and blocks.
   cache_clear_all();
 
-  // notice that both language dropdown and locale switchers share same configuration for same type
-  // ex both the language dropdown switcher (content) and locale switcher (content) share this config
+  // Notice that both language dropdown and locale switchers share same
+  // configuration for same type, ex both the language dropdown switcher
+  // (content) and locale switcher (content) share this config.
   variable_set('lang_dropdown_hideout_' . $form['delta']['#value'], $lang_dropdown_hideout_settings);
 }
 
+/**
+ * Get hideout settings.
+ */
 function _lang_dropdown_hideout_get_settings($type = '') {
   $defaults = array(
     'hidden_languages' => array(),
@@ -96,7 +105,7 @@ function _lang_dropdown_hideout_get_settings($type = '') {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function lang_dropdown_hideout_theme($existing, $type, $theme, $path) {
   return array(
@@ -109,12 +118,14 @@ function lang_dropdown_hideout_theme($existing, $type, $theme, $path) {
 /**
  * Returns HTML for the hidden languages element.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: A render element representing the element.
  *
+ * @return string
+ *   Return HTML
  */
-function theme_lang_dropdown_hideout_hiddenlanguages($variables) {
+function theme_lang_dropdown_hideout_hiddenlanguages(array $variables) {
   $element = $variables['element'];
 
   $roles = user_roles();
@@ -139,12 +150,16 @@ function theme_lang_dropdown_hideout_hiddenlanguages($variables) {
     $header[] = array('data' => drupal_render($element['role_names'][$rid]), 'class' => array('checkbox'));
   }
 
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'languages')));
+  $output = theme('table', array(
+    'header' => $header,
+    'rows' => $rows,
+    'attributes' => array('id' => 'languages'),
+  ));
   return $output;
 }
 
 /**
- * Implementation of hook_language_switch_links_alter().
+ * Implements hook_language_switch_links_alter().
  */
 function lang_dropdown_hideout_language_switch_links_alter(array &$links, $type, $path) {
   $settings = _lang_dropdown_hideout_get_settings($type);
@@ -154,10 +169,10 @@ function lang_dropdown_hideout_language_switch_links_alter(array &$links, $type,
   $roles = $user->roles;
 
   foreach ($links as $langcode => $link) {
-    $hide_language = true;
-    foreach($roles as $key => $value) {
-      if ( !isset($hidden_languages[$key]) || !in_array($langcode, $hidden_languages[$key]) ) {
-        $hide_language = false;
+    $hide_language = TRUE;
+    foreach ($roles as $key => $value) {
+      if (!isset($hidden_languages[$key]) || !in_array($langcode, $hidden_languages[$key])) {
+        $hide_language = FALSE;
         break;
       }
     }
@@ -173,13 +188,14 @@ function lang_dropdown_hideout_language_switch_links_alter(array &$links, $type,
  * Implements hook_help().
  */
 function lang_dropdown_hideout_help($path, $arg) {
+  $output = '';
   switch ($path) {
     case 'admin/help#lang_dropdown_hideout':
       $output = '<p>' . t('This module adds new configuration options to allow you to hide languages for specific roles in your language switcher blocks. Both in "Language switcher" blocks provided by locale module and "Language switcher dropdown" blocks provided by language switcher dropdown module. Go to <a href="@block_admin">blocks admin page</a> to configure one of those blocks.', array('@block_admin' => check_plain(url('admin/structure/block')))) . '</p>';
       $output .= '<p>' . t('For more information on blocks, please see <a href="@blocks_help">block help section</a>.', array('@blocks_help' => check_plain(url('admin/help/block')))) . '</p>';
       $output .= '<p>' . t('To disable a language just use the checkbox for the corresponding role. Take in mind that a language would be hidden from a user if it is hidden for all roles of the user. For example an adminitrator has both authenticated user and adminitrator roles and if the language is only hidden for one of those roles the administrator would be still able to see the language on the switcher.') . '</p>';
       $output .= '<p>' . t('For more information on multilingual sites, please see <a href="@locale_help">locale help section</a>.', array('@locale_help' => check_plain(url('admin/help/locale')))) . '</p>';
-      return $output;
       break;
   }
+  return $output;
 }
