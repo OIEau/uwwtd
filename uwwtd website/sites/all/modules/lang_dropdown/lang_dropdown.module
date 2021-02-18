@@ -1,33 +1,37 @@
 <?php
 
-// Libraries and modules websites
-define('CHOSEN_WEB_URL', 'http://harvesthq.github.com/chosen');
-define('CHOSEN_MOD_URL', 'https://drupal.org/project/chosen');
-define('MSDROPDOWN_URL', 'https://github.com/marghoobsuleman/ms-Dropdown');
-define('LANGUAGEICONS_MOD_URL', 'https://drupal.org/project/languageicons');
-define('DDSLICK_WEB_URL', 'http://designwithpc.com/Plugins/ddSlick');
-define('JQUERYUPDATE_MOD_URL', 'https://drupal.org/project/jquery_update');
+/**
+ * @file
+ * Language dropdown select module main file.
+ */
 
-// Language name display formats
-define('LANGDROPDOWN_DISPLAY_TRANSLATED', 0);
-define('LANGDROPDOWN_DISPLAY_NATIVE', 1);
-define('LANGDROPDOWN_DISPLAY_LANGCODE', 2);
+// Libraries and modules websites.
+define('LANG_DROPDOWN_CHOSEN_WEB_URL', 'http://harvesthq.github.com/chosen');
+define('LANG_DROPDOWN_CHOSEN_MOD_URL', 'https://drupal.org/project/chosen');
+define('LANG_DROPDOWN_MSDROPDOWN_URL', 'https://github.com/marghoobsuleman/ms-Dropdown');
+define('LANG_DROPDOWN_LANGUAGEICONS_MOD_URL', 'https://drupal.org/project/languageicons');
+define('LANG_DROPDOWN_DDSLICK_WEB_URL', 'http://designwithpc.com/Plugins/ddSlick');
+define('LANG_DROPDOWN_JQUERYUPDATE_MOD_URL', 'https://drupal.org/project/jquery_update');
 
-// Widget styles
-define('LANGDROPDOWN_SIMPLE_SELECT', 0);
-define('LANGDROPDOWN_MSDROPDOWN', 1);
-define('LANGDROPDOWN_CHOSEN', 2);
-define('LANGDROPDOWN_DDSLICK', 3);
+// Language name display formats.
+define('LANG_DROPDOWN_DISPLAY_TRANSLATED', 0);
+define('LANG_DROPDOWN_DISPLAY_NATIVE', 1);
+define('LANG_DROPDOWN_DISPLAY_LANGCODE', 2);
 
-// Flag position
-define('LANGDROPDOWN_FLAG_POSITION_BEFORE', 0);
-define('LANGDROPDOWN_FLAG_POSITION_AFTER', 1);
+// Widget styles.
+define('LANG_DROPDOWN_SIMPLE_SELECT', 0);
+define('LANG_DROPDOWN_MSDROPDOWN', 1);
+define('LANG_DROPDOWN_CHOSEN', 2);
+define('LANG_DROPDOWN_DDSLICK', 3);
 
-// Image position in ddslick
-define('LANGDROPDOWN_DDSLICK_LEFT', 'left');
-define('LANGDROPDOWN_DDSLICK_RIGHT', 'right');
+// Flag position.
+define('LANG_DROPDOWN_FLAG_POSITION_BEFORE', 0);
+define('LANG_DROPDOWN_FLAG_POSITION_AFTER', 1);
 
-//TODO help on custom skins.
+// Image position in ddslick.
+define('LANG_DROPDOWN_DDSLICK_LEFT', 'left');
+define('LANG_DROPDOWN_DDSLICK_RIGHT', 'right');
+
 /**
  * Implements hook_help().
  */
@@ -57,6 +61,7 @@ function lang_dropdown_help($path, $arg) {
       $output .= '</ol>';
       $output .= '<p>' . t('The name of the custom skin does not neccesarely has to be ddsCustom but if you use other name you must change the name of the corresponding CSS file and the name of the class on all CSS rules on that file. For example if you want "myskin" as the name of your custom skin then you must rename the sample CSS file to "myskin.css" and edit the CSS so all the rules start with .myskin instead of .ddsCustom.') . '</p>';
       return $output;
+
     case 'admin/structure/block/manage/%/%':
       if ($arg[4] == 'lang_dropdown') {
         return '<p>' . t('This block is only shown if <a href="@languages">at least two languages are enabled</a> and <a href="@configuration">language negotiation</a> is set to <em>URL</em> or <em>Session</em>.', array('@languages' => url('admin/config/regional/language'), '@configuration' => url('admin/config/regional/language/configure'))) . '</p>';
@@ -125,9 +130,9 @@ function lang_dropdown_block_configure($delta = '') {
     '#type' => 'select',
     '#title' => t('Display format'),
     '#options' => array(
-      LANGDROPDOWN_DISPLAY_TRANSLATED => t('Translated into Current Language'),
-      LANGDROPDOWN_DISPLAY_NATIVE => t('Native Name'),
-      LANGDROPDOWN_DISPLAY_LANGCODE => t('Language Code'),
+      LANG_DROPDOWN_DISPLAY_TRANSLATED => t('Translated into Current Language'),
+      LANG_DROPDOWN_DISPLAY_NATIVE => t('Native Name'),
+      LANG_DROPDOWN_DISPLAY_LANGCODE => t('Language Code'),
     ),
     '#default_value' => $settings['display'],
   );
@@ -136,10 +141,10 @@ function lang_dropdown_block_configure($delta = '') {
     '#type' => 'select',
     '#title' => t('Output type'),
     '#options' => array(
-      LANGDROPDOWN_SIMPLE_SELECT => t('Simple HTML select'),
-      LANGDROPDOWN_MSDROPDOWN => t('Marghoob Suleman Dropdown jquery library'),
-      LANGDROPDOWN_CHOSEN => t('Chosen jquery library'),
-      LANGDROPDOWN_DDSLICK => t('ddSlick library'),
+      LANG_DROPDOWN_SIMPLE_SELECT => t('Simple HTML select'),
+      LANG_DROPDOWN_MSDROPDOWN => t('Marghoob Suleman Dropdown jquery library'),
+      LANG_DROPDOWN_CHOSEN => t('Chosen jquery library'),
+      LANG_DROPDOWN_DDSLICK => t('ddSlick library'),
     ),
     '#default_value' => $settings['widget'],
     '#element_validate' => array('_lang_dropdown_validate_output_value'),
@@ -151,7 +156,7 @@ function lang_dropdown_block_configure($delta = '') {
     '#weight' => 1,
     '#states' => array(
       'visible' => array(
-        ':input[name="lang_dropdown[widget]"]' => array('value' => LANGDROPDOWN_MSDROPDOWN),
+        ':input[name="lang_dropdown[widget]"]' => array('value' => LANG_DROPDOWN_MSDROPDOWN),
       ),
     ),
   );
@@ -159,12 +164,15 @@ function lang_dropdown_block_configure($delta = '') {
   if (!module_exists('languageicons')) {
     $form['lang_dropdown']['msdropdown']['#description'] = t(
       'This looks better with !languageicons module.',
-      array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL))
+      array('!languageicons' => l(t('language icons'), LANG_DROPDOWN_LANGUAGEICONS_MOD_URL))
     );
   }
 
   if (_lang_dropdown_get_msdropdown_path()) {
-    $num_rows = array(2, 3, 4, 5 , 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+    $num_rows = array(
+      2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+      12, 13, 14, 15, 16, 17, 18, 19, 20,
+    );
     $form['lang_dropdown']['msdropdown']['visible_rows'] = array(
       '#type' => 'select',
       '#title' => t('Maximum number of visible rows'),
@@ -221,7 +229,10 @@ function lang_dropdown_block_configure($delta = '') {
     );
   }
   else {
-    $form['lang_dropdown']['msdropdown']['#description'] = t('You need to download the !msdropdown and extract the entire contents of the archive into the %path directory on your server.', array('!msdropdown' => l(t('Marghoob Suleman Dropdown JavaScript library'), MSDROPDOWN_URL), '%path' => 'sites/all/libraries'));
+    $form['lang_dropdown']['msdropdown']['#description'] = t('You need to download the !msdropdown and extract the entire contents of the archive into the %path directory on your server.', array(
+      '!msdropdown' => l(t('Marghoob Suleman Dropdown JavaScript library'), LANG_DROPDOWN_MSDROPDOWN_URL),
+      '%path' => 'sites/all/libraries',
+    ));
   }
 
   $form['lang_dropdown']['languageicons'] = array(
@@ -232,8 +243,9 @@ function lang_dropdown_block_configure($delta = '') {
       'visible' => array(
         ':input[name="lang_dropdown[widget]"]' => array(
           'OR',
-          array('value' => LANGDROPDOWN_SIMPLE_SELECT),
-          array('value' => LANGDROPDOWN_CHOSEN)
+          array('value' => LANG_DROPDOWN_SIMPLE_SELECT),
+          array('value' => LANG_DROPDOWN_CHOSEN),
+          array('value' => LANG_DROPDOWN_MSDROPDOWN),
         ),
       ),
     ),
@@ -244,20 +256,25 @@ function lang_dropdown_block_configure($delta = '') {
     '#title' => t('Enable language icons'),
     '#default_value' => module_exists('languageicons') && !empty($settings['languageicons']['enable_icons']),
     '#disabled' => !module_exists('languageicons'),
-    '#description' => !module_exists('languageicons') ? t('Enable !languageicons module to get opportunity show a flag of the selected language before or after the select box.', array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL))) : '',
+    '#description' => !module_exists('languageicons') ? t('Enable !languageicons module to get opportunity show a flag of the selected language before or after the select box.', array('!languageicons' => l(t('language icons'), LANG_DROPDOWN_LANGUAGEICONS_MOD_URL))) : '',
   );
   if (module_exists('languageicons')) {
     $form['lang_dropdown']['languageicons']['flag_position'] = array(
       '#type' => 'select',
       '#title' => t('Position of the flag when the dropdown is show just as a select'),
       '#options' => array(
-        LANGDROPDOWN_FLAG_POSITION_BEFORE => t('Before'),
-        LANGDROPDOWN_FLAG_POSITION_AFTER => t('After'),
+        LANG_DROPDOWN_FLAG_POSITION_BEFORE => t('Before'),
+        LANG_DROPDOWN_FLAG_POSITION_AFTER => t('After'),
       ),
       '#default_value' => $settings['languageicons']['flag_position'],
       '#states' => array(
         'visible' => array(
           ':input[name="lang_dropdown[languageicons][enable_icons]"]' => array('checked' => TRUE),
+          ':input[name="lang_dropdown[widget]"]' => array(
+            'OR',
+            array('value' => LANG_DROPDOWN_SIMPLE_SELECT),
+            array('value' => LANG_DROPDOWN_CHOSEN),
+          ),
         ),
       ),
     );
@@ -269,15 +286,15 @@ function lang_dropdown_block_configure($delta = '') {
     '#weight' => 1,
     '#states' => array(
       'visible' => array(
-        ':input[name="lang_dropdown[widget]"]' => array('value' => LANGDROPDOWN_CHOSEN),
+        ':input[name="lang_dropdown[widget]"]' => array('value' => LANG_DROPDOWN_CHOSEN),
       ),
     ),
   );
 
   if (module_exists('chosen')) {
-    $form['lang_dropdown']['chosen']['#description'] = t('If you are already using the !chosenmod you must just choose to output language dropdown as a simple HTML select and allow !chosenmod to turn it into a chosen style select.', array('!chosenmod' => l(t('Chosen module'), CHOSEN_MOD_URL)));
+    $form['lang_dropdown']['chosen']['#description'] = t('If you are already using the !chosenmod you must just choose to output language dropdown as a simple HTML select and allow !chosenmod to turn it into a chosen style select.', array('!chosenmod' => l(t('Chosen module'), LANG_DROPDOWN_CHOSEN_MOD_URL)));
   }
-  else if (_lang_dropdown_get_chosen_path()) {
+  elseif (_lang_dropdown_get_chosen_path()) {
     $form['lang_dropdown']['chosen']['disable_search'] = array(
       '#type' => 'checkbox',
       '#title' => t('Disable search box'),
@@ -297,7 +314,10 @@ function lang_dropdown_block_configure($delta = '') {
     );
   }
   else {
-    $form['lang_dropdown']['chosen']['#description'] = t('You need to download the !chosen and extract the entire contents of the archive into the %path directory on your server.', array('!chosen' => l(t('Chosen library'), CHOSEN_WEB_URL), '%path' => 'sites/all/libraries'));
+    $form['lang_dropdown']['chosen']['#description'] = t('You need to download the !chosen and extract the entire contents of the archive into the %path directory on your server.', array(
+      '!chosen' => l(t('Chosen library'), LANG_DROPDOWN_CHOSEN_WEB_URL),
+      '%path' => 'sites/all/libraries',
+    ));
   }
 
   $form['lang_dropdown']['ddslick'] = array(
@@ -306,7 +326,7 @@ function lang_dropdown_block_configure($delta = '') {
     '#weight' => 1,
     '#states' => array(
       'visible' => array(
-        ':input[name="lang_dropdown[widget]"]' => array('value' => LANGDROPDOWN_DDSLICK),
+        ':input[name="lang_dropdown[widget]"]' => array('value' => LANG_DROPDOWN_DDSLICK),
       ),
     ),
   );
@@ -333,8 +353,8 @@ function lang_dropdown_block_configure($delta = '') {
         '#type' => 'select',
         '#title' => t('Flag Position'),
         '#options' => array(
-          LANGDROPDOWN_DDSLICK_LEFT => t('left'),
-          LANGDROPDOWN_DDSLICK_RIGHT => t('right'),
+          LANG_DROPDOWN_DDSLICK_LEFT => t('left'),
+          LANG_DROPDOWN_DDSLICK_RIGHT => t('right'),
         ),
         '#default_value' => $settings['ddslick']['imagePosition'],
         '#states' => array(
@@ -345,7 +365,7 @@ function lang_dropdown_block_configure($delta = '') {
       );
     }
     else {
-      $form['lang_dropdown']['ddslick']['#description'] = t('This looks better with !languageicons module.', array('!languageicons' => l(t('language icons'), LANGUAGEICONS_MOD_URL)));
+      $form['lang_dropdown']['ddslick']['#description'] = t('This looks better with !languageicons module.', array('!languageicons' => l(t('language icons'), LANG_DROPDOWN_LANGUAGEICONS_MOD_URL)));
     }
 
     $ddsSkinOptions = array();
@@ -374,35 +394,45 @@ function lang_dropdown_block_configure($delta = '') {
 
   }
   else {
-    $form['lang_dropdown']['ddslick']['#description'] = t('You need to download the !ddslick and extract the entire contents of the archive into the %path directory on your server.', array('!ddslick' => l(t('ddSlick library'), DDSLICK_WEB_URL), '%path' => 'sites/all/libraries/ddslick'));
+    $form['lang_dropdown']['ddslick']['#description'] = t('You need to download the !ddslick and extract the entire contents of the archive into the %path directory on your server.', array(
+      '!ddslick' => l(t('ddSlick library'), LANG_DROPDOWN_DDSLICK_WEB_URL),
+      '%path' => 'sites/all/libraries/ddslick',
+    ));
   }
 
   return $form;
 }
 
 /**
- * Validates output value
+ * Validates output value.
  */
 function _lang_dropdown_validate_output_value($element, &$form_state, $form) {
 
   switch ($element['#value']) {
 
-    case LANGDROPDOWN_MSDROPDOWN:
+    case LANG_DROPDOWN_MSDROPDOWN:
       if (!_lang_dropdown_get_msdropdown_path()) {
-        form_error($element, t('You can\'t use !msdropdown output. You don\'t have !msdropdown library installed.', array('!msdropdown' => l(t('Marghoob Suleman Dropdown'), MSDROPDOWN_URL))));
+        form_error($element, t("You can't use !msdropdown output. You don't have !msdropdown library installed.", array(
+          '!msdropdown' => l(t('Marghoob Suleman Dropdown'), LANG_DROPDOWN_MSDROPDOWN_URL),
+        )));
       }
       break;
 
-    case LANGDROPDOWN_CHOSEN:
+    case LANG_DROPDOWN_CHOSEN:
       if (module_exists('chosen')) {
-        form_error($element, t('You can\'t use !chosen output directly on language dropdown switcher. You have !chosenmod installed. Use simple HTML select as output and !chosenmod will render it with the !chosen library.', array('!chosen' => l(t('Chosen'), CHOSEN_WEB_URL), '!chosenmod' => l(t('Chosen module'), CHOSEN_MOD_URL))));
+        form_error($element, t("You can't use !chosen output directly on language dropdown switcher. You have !chosenmod installed. Use simple HTML select as output and !chosenmod will render it with the !chosen library.", array(
+          '!chosen' => l(t('Chosen'), LANG_DROPDOWN_CHOSEN_WEB_URL),
+          '!chosenmod' => l(t('Chosen module'), LANG_DROPDOWN_CHOSEN_MOD_URL),
+        )));
       }
       else {
         if (!_lang_dropdown_get_chosen_path()) {
-          form_error($element, t('You can\'t use !chosen output. You don\'t have !chosen library installed.', array('!chosen' => l(t('Chosen'), CHOSEN_WEB_URL))));
+          form_error($element, t("You can't use !chosen output. You don't have !chosen library installed.", array(
+            '!chosen' => l(t('Chosen'), LANG_DROPDOWN_CHOSEN_WEB_URL),
+          )));
         }
         if (!module_exists('jquery_update')) {
-          form_error($element, t('Chosen needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
+          form_error($element, t('Chosen needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), LANG_DROPDOWN_JQUERYUPDATE_MOD_URL))));
         }
         if (module_exists('jquery_update') && (version_compare(variable_get('jquery_update_jquery_version', '1.10'), '1.7', '<'))) {
           form_error($element, t('Chosen needs jquery 1.7 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
@@ -410,12 +440,14 @@ function _lang_dropdown_validate_output_value($element, &$form_state, $form) {
       }
       break;
 
-    case LANGDROPDOWN_DDSLICK:
+    case LANG_DROPDOWN_DDSLICK:
       if (!_lang_dropdown_get_ddslick_path()) {
-        form_error($element, t('You can\'t use !ddslick output. You don\'t have !ddslick library installed.', array('!ddslick' => l(t('ddSlick'), DDSLICK_WEB_URL))));
+        form_error($element, t("You can't use !ddslick output. You don't have !ddslick library installed.", array(
+          '!ddslick' => l(t('ddSlick'), LANG_DROPDOWN_DDSLICK_WEB_URL),
+        )));
       }
       if (!module_exists('jquery_update')) {
-        form_error($element, t('ddSlick needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), JQUERYUPDATE_MOD_URL))));
+        form_error($element, t('ddSlick needs jquery 1.7 or above. Install !jqueryupdate module to upgrade your drupal jquery version.', array('!jqueryupdate' => l(t('jquery update'), LANG_DROPDOWN_JQUERYUPDATE_MOD_URL))));
       }
       if (module_exists('jquery_update') && (version_compare(variable_get('jquery_update_jquery_version', '1.10'), '1.7', '<'))) {
         form_error($element, t('ddSlick needs jquery 1.7 or above. Configure !jqueryupdate module with a higher version.', array('!jqueryupdate' => l(t('jquery update'), 'admin/config/development/jquery_update'))));
@@ -451,13 +483,14 @@ function lang_dropdown_language_switch_links_alter(&$links, $type, $path) {
   $translations_data = $page_arguments->translations->data;
   foreach ($links as $langcode => $link) {
 
-    $translation_access  = FALSE;
-    if (module_exists('entity_translation')) {
-      $translation_access = entity_translation_access(
-        $translations_data[$langcode]['entity_type'],
-        $translations_data[$langcode]);
+    if (!isset($translations_data[$langcode])) {
+      unset($links[$langcode]['href']);
+      $links[$langcode]['attributes']['class'][] = 'locale-untranslated';
+      continue;
     }
-    if (!isset($translations_data[$langcode]) || !$translation_access) {
+
+    $translation_access = module_exists('entity_translation') && entity_translation_access($translations_data[$langcode]['entity_type'], $translations_data[$langcode]);
+    if (!$translation_access) {
       unset($links[$langcode]['href']);
       $links[$langcode]['attributes']['class'][] = 'locale-untranslated';
     }
@@ -472,11 +505,12 @@ function lang_dropdown_block_save($delta = '', $edit = array()) {
 
   $defaults = _lang_dropdown_get_defaults();
 
-  // array_replace_recursive is not available on PHP < 5.3
-  if ( ! function_exists('array_replace_recursive') ) {
-    $lang_dropdown_settings = _lang_dropdown_array_replace_recursive( $defaults, $edit['lang_dropdown'] );
-  } else {
-    $lang_dropdown_settings = array_replace_recursive( $defaults, $edit['lang_dropdown'] );
+  // Function array_replace_recursive is not available on PHP < 5.3.
+  if (!function_exists('array_replace_recursive')) {
+    $lang_dropdown_settings = _lang_dropdown_array_replace_recursive($defaults, $edit['lang_dropdown']);
+  }
+  else {
+    $lang_dropdown_settings = array_replace_recursive($defaults, $edit['lang_dropdown']);
   }
 
   variable_set('lang_dropdown_' . $delta, $lang_dropdown_settings);
@@ -502,13 +536,20 @@ function lang_dropdown_block_view($type = 'language') {
  * Function to build the select widget form.
  */
 function lang_dropdown_form($form, &$form_state, $languages, $type) {
-
+  global $language;
   global $language_url;
+
   $settings = _lang_dropdown_get_settings($type);
 
-  if ($settings['widget'] == LANGDROPDOWN_MSDROPDOWN && !_lang_dropdown_get_msdropdown_path()) { return array(); }
-  if ($settings['widget'] == LANGDROPDOWN_CHOSEN && !_lang_dropdown_get_chosen_path()) { return array(); }
-  if ($settings['widget'] == LANGDROPDOWN_DDSLICK && !_lang_dropdown_get_ddslick_path()) { return array(); }
+  if ($settings['widget'] == LANG_DROPDOWN_MSDROPDOWN && !_lang_dropdown_get_msdropdown_path()) {
+    return array();
+  }
+  if ($settings['widget'] == LANG_DROPDOWN_CHOSEN && !_lang_dropdown_get_chosen_path()) {
+    return array();
+  }
+  if ($settings['widget'] == LANG_DROPDOWN_DDSLICK && !_lang_dropdown_get_ddslick_path()) {
+    return array();
+  }
 
   $module_path = drupal_get_path('module', 'lang_dropdown');
 
@@ -524,51 +565,71 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
   );
 
   switch ($settings['display']) {
-    case LANGDROPDOWN_DISPLAY_TRANSLATED:
+    case LANG_DROPDOWN_DISPLAY_TRANSLATED:
       $language_names = locale_language_list();
       break;
-    case LANGDROPDOWN_DISPLAY_NATIVE:
+
+    case LANG_DROPDOWN_DISPLAY_NATIVE:
       $language_names = locale_language_list('native');
       break;
-    case LANGDROPDOWN_DISPLAY_LANGCODE:
+
+    case LANG_DROPDOWN_DISPLAY_LANGCODE:
       $language_names = locale_language_list('language');
       break;
+
     default:
       $language_names = locale_language_list('native');
       break;
   }
 
-  // Support Domain access
+  // Support Domain access.
   if ($domain_locale_exists = module_exists('domain_locale')) {
     global $_domain;
     $domain_languages = domain_locale_lookup($_domain['domain_id']);
   }
 
   $language_objects = language_list();
-  // Now we iterate on $languages to build the needed options for the select element.
+  // Now we iterate on $languages to build the needed options for
+  // the select element.
   foreach ($languages->links as $lang_code => $lang_options) {
 
-    // The language is not enabled on this domain
-    if ($domain_locale_exists && !array_key_exists($lang_code, $domain_languages)) continue;
+    // The language is not enabled on this domain.
+    if ($domain_locale_exists && !array_key_exists($lang_code, $domain_languages)) {
+      continue;
+    }
 
-    // There is no translation for this language and not all languages are shown
-    if (in_array('locale-untranslated', $lang_options['attributes']['class']) && !$settings['showall']) continue;
+    // There is no translation for this language and not all languages are
+    // shown.
+    if (in_array('locale-untranslated', $lang_options['attributes']['class']) && !$settings['showall']) {
+      continue;
+    }
 
-    // Build the options in an assosiative array, so it will be ready for #options in select form element.
+    // Build the options in an assosiative array, so it will be ready for
+    // #options in select form element.
     $options += array($lang_code => $language_names[$lang_code]);
 
-    // Identify selected language
+    // Identify selected language.
     if (isset($lang_options['href'])
-&& ($lang_options['href'] == $_GET['q'] || ($lang_options['href'] == '<front>' && drupal_is_front_page()))
-&& (empty($lang_options['language']) || $lang_options['language']->language == $language_url->language)) {
+      && ($lang_options['href'] == $_GET['q'] || ($lang_options['href'] == '<front>' && drupal_is_front_page()))
+      && (empty($lang_options['language']) || $lang_options['language']->language == $language_url->language)) {
 
       $language_selected = $lang_code;
     }
 
     // Identify if session negotiation had set session-active class
-    // the trim is needed because of a bug in locale.inc, drupal version <7.24 at least
+    // the trim is needed because of a bug in locale.inc, drupal
+    // version <7.24 at least.
     if (in_array('session-active', array_map('trim', $lang_options['attributes']['class']))) {
       $language_session_selected = $lang_code;
+    }
+
+    // In case no translated node go to no translated node and define selected language of non translated node.
+    if (!isset($lang_options['href'])) {
+      if (arg(0) == 'node' && is_numeric(arg(1))) {
+        $lang_options['href'] = 'node/' . arg(1);
+      }
+
+      $language_selected = $language->language;
     }
 
     // Now we build our hidden form inputs to handle the redirections.
@@ -589,13 +650,14 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
 
   }
 
-  // If session-active is set that's the selected language otherwise rely on $language_selected
+  // If session-active is set that's the selected language otherwise rely
+  // on $language_selected.
   $selected_option = ($language_session_selected == '') ? $language_selected : $language_session_selected;
 
-  // Icon for the selected language
+  // Icon for the selected language.
   if (module_exists('languageicons') && !empty($selected_option)
     && !empty($settings['languageicons']['enable_icons'])
-    && in_array($settings['widget'], array(LANGDROPDOWN_CHOSEN, LANGDROPDOWN_SIMPLE_SELECT))) {
+    && in_array($settings['widget'], array(LANG_DROPDOWN_CHOSEN, LANG_DROPDOWN_SIMPLE_SELECT))) {
     $selected_option_language_icon = theme('languageicons_icon', array(
       'language' => (object) array('language' => $selected_option),
       'title' => $language_names[$selected_option],
@@ -603,7 +665,7 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
   }
 
   // Add required files and settings for JS widget.
-  if ($settings['widget'] == LANGDROPDOWN_MSDROPDOWN) {
+  if ($settings['widget'] == LANG_DROPDOWN_MSDROPDOWN) {
     drupal_add_library('lang_dropdown', 'msdropdown');
 
     $js_settings += array(
@@ -621,7 +683,8 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
       $js_settings += array(
         'mainCSS' => $custom_skin,
       );
-    } else {
+    }
+    else {
       $skins = _lang_dropdown_get_msdropdown_skins();
       $skin_data = $skins[$selected_skin];
       drupal_add_css($skin_data['file']);
@@ -630,10 +693,11 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
       );
     }
 
-    drupal_add_js(array('lang_dropdown' => array( $type => array('jsWidget' => $js_settings))), 'setting');
-
+    drupal_add_js(array(
+      'lang_dropdown' => array($type => array('jsWidget' => $js_settings)),
+    ), 'setting');
   }
-  else if ($settings['widget'] == LANGDROPDOWN_CHOSEN) {
+  elseif ($settings['widget'] == LANG_DROPDOWN_CHOSEN) {
 
     drupal_add_library('lang_dropdown', 'chosen');
 
@@ -643,10 +707,12 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
       'no_results_text' => $settings['chosen']['no_results_text'],
     );
 
-    drupal_add_js(array('lang_dropdown' => array( $type => array('jsWidget' => $js_settings))), 'setting');
+    drupal_add_js(array(
+      'lang_dropdown' => array($type => array('jsWidget' => $js_settings)),
+    ), 'setting');
 
   }
-  else if ($settings['widget'] == LANGDROPDOWN_DDSLICK) {
+  elseif ($settings['widget'] == LANG_DROPDOWN_DDSLICK) {
 
     drupal_add_library('lang_dropdown', 'ddslick');
 
@@ -655,7 +721,8 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
       $custom_skin = check_plain($settings['ddslick']['custom_skin']);
       drupal_add_css(_lang_dropdown_get_ddslick_path() . '/' . $custom_skin . '.css');
       $ddsSkin = $custom_skin;
-    } else {
+    }
+    else {
       $skins = _lang_dropdown_get_ddslick_skins();
       $skin_data = $skins[$selected_skin];
       drupal_add_css($skin_data['file']);
@@ -670,7 +737,9 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
       'imagePosition' => $settings['ddslick']['imagePosition'],
     );
 
-    drupal_add_js(array('lang_dropdown' => array( $type => array('jsWidget' => $js_settings))), 'setting');
+    drupal_add_js(array(
+      'lang_dropdown' => array($type => array('jsWidget' => $js_settings)),
+    ), 'setting');
 
   }
 
@@ -687,7 +756,7 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
     ),
     '#attached' => array(
       'js' => array($module_path . '/lang_dropdown.js'),
-      'css' => (in_array($settings['widget'], array(LANGDROPDOWN_CHOSEN, LANGDROPDOWN_SIMPLE_SELECT))) ? array($module_path . '/lang_dropdown.css') : array(),
+      'css' => (in_array($settings['widget'], array(LANG_DROPDOWN_CHOSEN, LANG_DROPDOWN_SIMPLE_SELECT))) ? array($module_path . '/lang_dropdown.css') : array(),
     ),
   );
 
@@ -695,7 +764,9 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
     $form['lang_dropdown_select']['#attributes']['style'] = 'width:' . $settings['width'] . 'px';
   }
 
-  if (empty($hidden_elements)) return array();
+  if (empty($hidden_elements)) {
+    return array();
+  }
 
   $form += $hidden_elements;
   if (module_exists('languageicons') && !empty($settings['languageicons']['enable_icons'])) {
@@ -705,20 +776,20 @@ function lang_dropdown_form($form, &$form_state, $languages, $type) {
   $form['#attributes']['class'] = array('lang_dropdown_form', $type);
   $form['#attributes']['id'] = 'lang_dropdown_form_' . $type;
 
-  if ($settings['widget'] == LANGDROPDOWN_DDSLICK) {
+  if ($settings['widget'] == LANG_DROPDOWN_DDSLICK) {
     $form['#attributes']['class'][] = $ddsSkin;
   }
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Go'),
-    // The below prefix & suffix for gracefull fallback if JavaScript was disabled
+    // The below prefix & suffix for gracefull fallback if JavaScript
+    // was disabled.
     '#prefix' => "<noscript><div>\n",
     '#suffix' => "\n</div></noscript>",
   );
 
   return $form;
-
 }
 
 /**
@@ -731,10 +802,14 @@ function lang_dropdown_form_submit($form, &$form_state) {
   $tohome = $form_state['values']['lang_dropdown_tohome'];
 
   $language_codes = locale_language_list('language');
-  if (!in_array($language_code, $language_codes)) return;
+  if (!in_array($language_code, $language_codes)) {
+    return;
+  }
 
   $types = language_types_configurable(FALSE);
-  if (!in_array($type, $types)) $type = 'language';
+  if (!in_array($type, $types)) {
+    $type = 'language';
+  }
 
   $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
   $languages = language_negotiation_get_switch_links($type, $path);
@@ -752,15 +827,15 @@ function lang_dropdown_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper function to get Language switcher dropdown default settings
+ * Helper function to get Language switcher dropdown default settings.
  */
 function _lang_dropdown_get_defaults() {
   return array(
     'showall' => 0,
     'tohome' => 0,
     'width' => 148,
-    'display' => LANGDROPDOWN_DISPLAY_NATIVE,
-    'widget' => LANGDROPDOWN_SIMPLE_SELECT,
+    'display' => LANG_DROPDOWN_DISPLAY_NATIVE,
+    'widget' => LANG_DROPDOWN_SIMPLE_SELECT,
     'msdropdown' => array(
       'visible_rows' => 5,
       'rounded' => 1,
@@ -776,42 +851,43 @@ function _lang_dropdown_get_defaults() {
     'ddslick' => array(
       'ddslick_height' => 0,
       'showSelectedHTML' => 1,
-      'imagePosition' => LANGDROPDOWN_DDSLICK_LEFT,
+      'imagePosition' => LANG_DROPDOWN_DDSLICK_LEFT,
       'skin' => 'ddsDefault',
       'custom_skin' => '',
     ),
     'languageicons' => array(
-      'flag_position' => LANGDROPDOWN_FLAG_POSITION_AFTER,
+      'flag_position' => LANG_DROPDOWN_FLAG_POSITION_AFTER,
     ),
   );
 }
 
 /**
- * Helper function to get Language switcher dropdown settings
+ * Helper function to get Language switcher dropdown settings.
  */
 function _lang_dropdown_get_settings($type) {
 
   $defaults = _lang_dropdown_get_defaults();
 
-  // array_replace_recursive is not available on PHP < 5.3
-  if ( ! function_exists( 'array_replace_recursive' ) ) {
+  // Function array_replace_recursive is not available on PHP < 5.3.
+  if (!function_exists('array_replace_recursive')) {
     return _lang_dropdown_array_replace_recursive(
       $defaults,
-      variable_get('lang_dropdown', $defaults), // To preserve old version configuration
+      // To preserve old version configuration.
+      variable_get('lang_dropdown', $defaults),
       variable_get('lang_dropdown_' . $type, $defaults)
     );
   }
 
   return array_replace_recursive(
     $defaults,
-    variable_get('lang_dropdown', $defaults), // To preserve old version configuration
+    // To preserve old version configuration.
+    variable_get('lang_dropdown', $defaults),
     variable_get('lang_dropdown_' . $type, $defaults)
   );
-
 }
 
 /**
- * Helper function to handle msdropdown skins data
+ * Helper function to handle msdropdown skins data.
  */
 function _lang_dropdown_get_msdropdown_skins() {
   $module_path = drupal_get_path('module', 'lang_dropdown');
@@ -885,7 +961,7 @@ function _lang_dropdown_get_msdropdown_skins() {
 }
 
 /**
- * Helper function to handle ddSlick skins data
+ * Helper function to handle ddSlick skins data.
  */
 function _lang_dropdown_get_ddslick_skins() {
   $module_path = drupal_get_path('module', 'lang_dropdown');
@@ -912,7 +988,7 @@ function _lang_dropdown_get_ddslick_skins() {
 /**
  * Get the location of the chosen library.
  *
- * @return
+ * @return bool|string
  *   The location of the library, or FALSE if the library isn't installed.
  */
 function _lang_dropdown_get_chosen_path() {
@@ -932,7 +1008,7 @@ function _lang_dropdown_get_chosen_path() {
 /**
  * Get the location of the msdropdown library.
  *
- * @return
+ * @return bool|string
  *   The location of the library, or FALSE if the library isn't installed.
  */
 function _lang_dropdown_get_msdropdown_path() {
@@ -952,7 +1028,7 @@ function _lang_dropdown_get_msdropdown_path() {
 /**
  * Get the location of the ddslick library.
  *
- * @return
+ * @return bool|string
  *   The location of the library, or FALSE if the library isn't installed.
  */
 function _lang_dropdown_get_ddslick_path() {
@@ -977,7 +1053,7 @@ function lang_dropdown_library() {
   $msdropdown_library_path = (module_exists('libraries') && libraries_get_path('msdropdown')) ? libraries_get_path('msdropdown') : 'sites/all/libraries/ms-Dropdown';
   $libraries['msdropdown'] = array(
     'title' => 'Marghoob Suleman Dropdown jquery library',
-    'website' => MSDROPDOWN_URL,
+    'website' => LANG_DROPDOWN_MSDROPDOWN_URL,
     'version' => '3.5.2',
     'js' => array(
       $msdropdown_library_path . '/js/msdropdown/jquery.dd.min.js' => array('group' => 'JS_LIBRARY'),
@@ -990,7 +1066,7 @@ function lang_dropdown_library() {
   $chosen_library_path = (module_exists('libraries') && libraries_get_path('chosen')) ? libraries_get_path('chosen') : 'sites/all/libraries/chosen';
   $libraries['chosen'] = array(
     'title' => 'Chosen',
-    'website' => CHOSEN_WEB_URL,
+    'website' => LANG_DROPDOWN_CHOSEN_WEB_URL,
     'version' => '1.0.0',
     'js' => array(
       $chosen_library_path . '/chosen.jquery.min.js' => array('group' => 'JS_LIBRARY'),
@@ -1003,7 +1079,7 @@ function lang_dropdown_library() {
   $ddslick_library_path = (module_exists('libraries') && libraries_get_path('ddslick')) ? libraries_get_path('ddslick') : 'sites/all/libraries/ddslick';
   $libraries['ddslick'] = array(
     'title' => 'ddSlick',
-    'website' => DDSLICK_WEB_URL,
+    'website' => LANG_DROPDOWN_DDSLICK_WEB_URL,
     'version' => '2.0',
     'js' => array(
       $ddslick_library_path . '/jquery.ddslick.min.js' => array('group' => 'JS_LIBRARY'),
@@ -1013,40 +1089,50 @@ function lang_dropdown_library() {
   return $libraries;
 }
 
-// array_replace_recursive is not available on PHP < 5.3
-if ( ! function_exists( 'array_replace_recursive' ) ) {
+// Function array_replace_recursive is not available on PHP < 5.3.
+if (!function_exists('array_replace_recursive')) {
+
   /**
-   * Helper function to provide array_replace_recursive functionality
+   * Helper function to provide array_replace_recursive functionality.
    */
-  function _lang_dropdown_array_replace_recursive( $defaults, $old_values = array(), $new_values = array() ) {
+  function _lang_dropdown_array_replace_recursive($defaults, $old_values = array(), $new_values = array()) {
 
-    if ( is_null( $old_values ) ) $old_values = array();
-    if ( is_null( $new_values ) ) $new_values = array();
+    if (is_null($old_values)) {
+      $old_values = array();
+    }
+    if (is_null($new_values)) {
+      $new_values = array();
+    }
 
-    foreach( $old_values as $key => $value ) {
+    foreach ($old_values as $key => $value) {
       // If new_values does not have the key, assign the old_values value.
-      if ( ! array_key_exists( $key, $new_values ) || is_null( $new_values[$key] ) )
+      if (!array_key_exists($key, $new_values) || is_null($new_values[$key])) {
         $new_values[$key] = $value;
+      }
       else {
-        // if both are arrays, do the recursive process.
-        if ( is_array( $new_values[ $key ] ) && is_array( $value ) )
-          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );
+        // If both are arrays, do the recursive process.
+        if (is_array($new_values[$key]) && is_array($value)) {
+          $new_values[$key] = _lang_dropdown_array_replace_recursive($value, $new_values[$key]);
+        }
       }
     }
 
-    foreach( $defaults as $key => $value ) {
+    foreach ($defaults as $key => $value) {
       // If new_values does not have the key, assign the defaults value.
-      if ( ! array_key_exists( $key, $new_values ) || is_null( $new_values[$key] ) )
+      if (!array_key_exists($key, $new_values) || is_null($new_values[$key])) {
         $new_values[$key] = $value;
+      }
       else {
-        // if both are arrays, do the recursive process.
-        if ( is_array( $new_values[ $key ] ) && is_array( $value ) )
-          $new_values[ $key ] = _lang_dropdown_array_replace_recursive( $value, $new_values[ $key ] );
+        // If both are arrays, do the recursive process.
+        if (is_array($new_values[$key]) && is_array($value)) {
+          $new_values[$key] = _lang_dropdown_array_replace_recursive($value, $new_values[$key]);
+        }
       }
     }
 
     return $new_values;
   }
+
 }
 
 /**

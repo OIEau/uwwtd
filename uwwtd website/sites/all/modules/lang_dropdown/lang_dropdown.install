@@ -1,18 +1,19 @@
 <?php
-/**
-* @file
-* Install, update, and uninstall functions for the Language switcher dropdown module.
-*/
 
 /**
- * Implementation of hook_install().
+ * @file
+ * Install, update, and uninstall functions for the LSD module.
+ */
+
+/**
+ * Implements hook_install().
  */
 function lang_dropdown_install() {
   drupal_set_message(st("<b>Language switcher dropdown</b> is installed successfully.<br />Please refer to README.txt for help in configuration."));
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function lang_dropdown_uninstall() {
   variable_del('lang_dropdown');
@@ -26,10 +27,10 @@ function lang_dropdown_uninstall() {
  */
 function lang_dropdown_update_7201() {
   $types = array(
-  	'',
-  	LANGUAGE_TYPE_INTERFACE,
-  	LANGUAGE_TYPE_CONTENT,
-  	LANGUAGE_TYPE_URL,
+    '',
+    LANGUAGE_TYPE_INTERFACE,
+    LANGUAGE_TYPE_CONTENT,
+    LANGUAGE_TYPE_URL,
   );
   foreach ($types as $type) {
     if ($options = variable_get('lang_dropdown' . (empty($type) ? '' : '_' . $type), FALSE)) {

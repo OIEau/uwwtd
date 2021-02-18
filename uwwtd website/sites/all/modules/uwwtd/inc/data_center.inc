@@ -9002,7 +9002,8 @@ function uwwtd_get_all_info_agguwww($node)
     if (!empty($field) && isset($node->{$field}) && !empty($node->{$field}['und'])) {
         foreach($node->{$field}['und'] as $agguwwlist){
             $uww = node_load($agguwwlist['nid']);
-            if($uww->field_status['und'][0]['value']==1){
+            // we check if uwwtp is active (status = 1) and iscon (we check if value !=  notcon)
+            if($uww->field_status['und'][0]['value']==1 && $uww->field_uwwcollectingsystem['und'][0]['value']!='NOTCON'){
                 $aResult['listUww'][$uww->nid] = array(
     //          'node' => $uww,
                     'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
