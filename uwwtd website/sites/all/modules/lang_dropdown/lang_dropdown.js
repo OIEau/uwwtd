@@ -64,7 +64,7 @@ Drupal.behaviors.lang_dropdown = {
 
     $('select.lang-dropdown-select-element', context).change(function() {
       var lang = this.options[this.selectedIndex].value;
-      var href = $(this).parents('form').find('input[name="' + lang + '"]').val();
+      var href = $(this).closest('form').find('input[name="' + lang + '"]').val();
       window.location.href = href;
     });
 
