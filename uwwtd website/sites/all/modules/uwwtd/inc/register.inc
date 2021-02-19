@@ -74,10 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){
-            
-       
-
-                                                
+                                                      
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -143,11 +140,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 
-            
+  /*     
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    */
+    
     //=============== 
-
                                                                        
                                                                             
                                                 
@@ -1226,7 +1224,6 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
     $headers = [];
     for($i=$cyear; $i>=4; $i--){
         $headers[0][] = $i.'th Synthesis Report';
-        $headers[0][] = '';
         $headers[0][] = '';
         $headers[0][] = '';
         
@@ -3928,12 +3925,12 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('D7', uwwtd_register_get_cell_value($previoussheet, 'B7'));
     $sheet->setCellValue('E7', uwwtd_register_get_cell_value($previoussheet, 'C7'));
     //previous_n2
-    $sheet->setCellValue('F5', uwwtd_register_get_cell_value($previoussheet, 'B5'));
-    $sheet->setCellValue('G5', uwwtd_register_get_cell_value($previoussheet, 'C5'));
-    $sheet->setCellValue('F6', uwwtd_register_get_cell_value($previoussheet, 'B6'));
-    $sheet->setCellValue('G6', uwwtd_register_get_cell_value($previoussheet, 'C6'));
-    $sheet->setCellValue('F7', uwwtd_register_get_cell_value($previoussheet, 'B7'));
-    $sheet->setCellValue('G7', uwwtd_register_get_cell_value($previoussheet, 'C7'));
+    $sheet->setCellValue('F5', uwwtd_register_get_cell_value($previoussheet_n2, 'B5'));
+    $sheet->setCellValue('G5', uwwtd_register_get_cell_value($previoussheet_n2, 'C5'));
+    $sheet->setCellValue('F6', uwwtd_register_get_cell_value($previoussheet_n2, 'B6'));
+    $sheet->setCellValue('G6', uwwtd_register_get_cell_value($previoussheet_n2, 'C6'));
+    $sheet->setCellValue('F7', uwwtd_register_get_cell_value($previoussheet_n2, 'B7'));
+    $sheet->setCellValue('G7', uwwtd_register_get_cell_value($previoussheet_n2, 'C7'));
 
     //=============================================================array2
     if (isset($context['results']['graph']['total_generated']['pe'])) {
@@ -3962,10 +3959,10 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     //previous_n2
     $previousB15_n2 = uwwtd_register_get_cell_value($previoussheet_n2, 'B15'); 
     $sheet->setCellValue('D15', $previousB15_n2);
-    $sheet->setCellValue('D16', uwwtd_register_get_cell_value($previoussheet, 'B16'));
-    $sheet->setCellValue('D17', uwwtd_register_get_cell_value($previoussheet, 'B17'));
-    $sheet->setCellValue('D18', uwwtd_register_get_cell_value($previoussheet, 'B18'));
-    $sheet->setCellValue('D19', uwwtd_register_get_cell_value($previoussheet, 'B19'));
+    $sheet->setCellValue('D16', uwwtd_register_get_cell_value($previoussheet_n2, 'B16'));
+    $sheet->setCellValue('D17', uwwtd_register_get_cell_value($previoussheet_n2, 'B17'));
+    $sheet->setCellValue('D18', uwwtd_register_get_cell_value($previoussheet_n2, 'B18'));
+    $sheet->setCellValue('D19', uwwtd_register_get_cell_value($previoussheet_n2, 'B19'));
 
          
     $context['results']['auto_report']['COUNTRY']  = $country_name;
@@ -4771,7 +4768,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->setCellValue('G109', uwwtd_register_get_cell_value($previoussheet_n2, 'C109'));
     //Tertiary treatment n                                                      ent
     $sheet->setCellValue('F110', uwwtd_register_get_cell_value($previoussheet_n2, 'B110'));
-    $sheet->setCellValue('G110', uwwtd_register_get_cell_value($previoussheet, 'C110'));
+    $sheet->setCellValue('G110', uwwtd_register_get_cell_value($previoussheet_n2, 'C110'));
     //Tertiary stringent t                                                      ent
     $sheet->setCellValue('F111', uwwtd_register_get_cell_value($previoussheet_n2, 'B111'));
     $sheet->setCellValue('G111', uwwtd_register_get_cell_value($previoussheet_n2, 'C111'));
@@ -5037,10 +5034,10 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->getCell('D161')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C161'));
     $sheet->getCell('D162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));
     //previous_n2
-    $sheet->getCell('E159')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C159'));
-    $sheet->getCell('E160')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C160'));
-    $sheet->getCell('E161')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C161'));
-    $sheet->getCell('E162')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C162'));
+    $sheet->getCell('E159')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C159'));
+    $sheet->getCell('E160')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C160'));
+    $sheet->getCell('E161')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C161'));
+    $sheet->getCell('E162')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C162'));
 
     //array 15   totla volume
     if (isset($context['results']['country_volume_waste_water'])) {
@@ -5049,7 +5046,7 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     //previous
     $sheet->getCell('D166')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C166'));
     //previous_n2
-    $sheet->getCell('E166')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C166'));
+    $sheet->getCell('E166')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C166'));
 
     //array 16  average
     if (isset($context['results']['graph']['incoming_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
@@ -8176,16 +8173,16 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $sheet->setCellValue('C1', $country_name);
         unset($country_config);
         $sheet->setCellValue('C2', $reference_date);
-        $cell = $sheet->getCell('B7');
-        $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
+        //$cell = $sheet->getCell('B7');
+        //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B9');
-        $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        $cell = $sheet->getCell('J7');
+        //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
+        //$cell = $sheet->getCell('J7');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('J9');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        $cell = $sheet->getCell('Q7');
-        $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
+        //$cell = $sheet->getCell('Q7');
+        //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('Q9');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B18');
@@ -8207,10 +8204,10 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $cell = $sheet->getCell('Q41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         
-        if($flag_A54){
+        /*if($flag_A54){
                 $cell = $sheet->getCell('Q10');
                 $cell->setValue("SA/CSA applying Art. 5");
-        }
+        }*/
         foreach($list_type as $type) {
     //     foreach(array('all') as $type) {
             if (false === isset($context['sandbox']['compliance'][$type])) {
