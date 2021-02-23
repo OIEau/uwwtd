@@ -6080,7 +6080,7 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
     
     $j = 0;
     $nids = [];
-    while ($j < 50 && $i < $context['sandbox']['max']) {
+    while ($j < 20 && $i < $context['sandbox']['max']) {
         $nids[] = $context['sandbox']['ids'][$i]['nid'];       
         $i++;
         $j++;
