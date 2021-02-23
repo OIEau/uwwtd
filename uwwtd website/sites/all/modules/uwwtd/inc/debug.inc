@@ -1,8 +1,11 @@
 <?php 
 
 function uwwtd_debug(){
-    module_load_include('inc','uwwtd','/inc/register');
+    /*
+    module_load_include('inc','uwwtd','/inc/data_center');
     $annee = 2018;
+    */
+    
 /*    
     $previous_year = uwwtd_get_previous_year($annee);
     
