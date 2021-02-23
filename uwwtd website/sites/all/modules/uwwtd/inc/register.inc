@@ -139,11 +139,9 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
-
-  /*     
+     
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    */
     
     //=============== 
                                                                        
@@ -9017,13 +9015,19 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
     }
 
     $j = 0;
+    $nids = [];
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $nids[$j] = $context['sandbox']['id'][$context['sandbox']['progress']];
+        $j++;
+        $context['sandbox']['progress']++;
+    }
+    $nodes = node_load_multiple($nids); 
+    foreach($nodes as $agg){
         $line = array();
         $fieldsAndValues_EUFeed = array();
 
 
-		if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))
-        	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
+		//if (isset($context['sandbox']['id'][$context['sandbox']['progress']]))        	$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
             //Case of art 5.4 applied in RCA 
             /*
             if($agg->isInRca54){
@@ -10249,8 +10253,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         node_save($agg);
 
         unset($agg);
-        $j++;
-        $context['sandbox']['progress']++;
     }
     fclose($r);
 
@@ -10742,15 +10744,16 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
 
     $j = 0;
+    $nids = [];
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+        $nids[$j] = $context['sandbox']['id'][$context['sandbox']['progress']];
+        $j++;
+        $context['sandbox']['progress']++;
+    }
+    $nodes = node_load_multiple($nids);
+    foreach($nodes as $uwwtp){
 
-//         if ($context['sandbox']['id'][$context['sandbox']['progress']] != 173583 || $context['sandbox']['id'][$context['sandbox']['progress']] != 173557) {
-//             $context['sandbox']['progress']++;
-//             $j++;
-//             continue;
-//         }
-//         $uwwtp = node_load($niduwwtp);
-        $uwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
+        //$uwwtp = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 //         dsm($uwwtp->field_uwwaggliste['und']);
         //a uwwtp can be attach to multiple agglo
         $uwwtpCompliance5x = uwwtd_get_compliance_5abc_uwwtp($uwwtp);
@@ -12181,8 +12184,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //     $context['sandbox']['progress'] = $context['sandbox']['max'];
 //         break;
 //         $allline[] = $line;
-        $j++;
-        $context['sandbox']['progress']++;
     }
     fclose($r);
 
@@ -12343,9 +12344,15 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
     $r = fopen($filename, 'ab');
 
     $j = 0;
+    $nids = [];
     while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
-
-        $agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
+        $nids[$j] = $context['sandbox']['id'][$context['sandbox']['progress']];
+        $j++;
+        $context['sandbox']['progress']++;
+    }
+    $nodes = node_load_multiple($nids);
+    foreach($nodes as $agg){
+        //$agg = node_load($context['sandbox']['id'][$context['sandbox']['progress']]);
 
         $line = array();
 
@@ -12429,8 +12436,6 @@ function uwwtd_create_register_2015_agglo_without_uwwtp_sheet2($annee, &$context
 
         unset($agg);
 
-        $j++;
-        $context['sandbox']['progress']++;
     }
 
     fclose($r);
