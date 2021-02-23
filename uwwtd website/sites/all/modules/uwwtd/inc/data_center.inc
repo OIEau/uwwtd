@@ -6075,16 +6075,30 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['ids'] = $ids;
     }
+    
     $i = $context['sandbox']['progress'];
     
-    $data = $context['sandbox']['ids'][$i];
-    $node = node_load($data['nid']);
-    uwwtd_station_set_conformity($node);
-
-
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the station').': '.check_plain($node->title).' '.t('with a drupal id of: ').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+    $j = 0;
+    $nids = [];
+    while ($j < 50 && $i < $context['sandbox']['max']) {
+        $nids[] = $context['sandbox']['ids'][$i]['nid'];       
+        $i++;
+        $j++;
+    }
+    $msg = [];
+    if(!empty($nids)){
+        $nodes = node_load_multiple($nids);
+        if(!empty($nodes)){
+            foreach($nodes as $node){
+                uwwtd_station_set_conformity($node);
+                $context['results'][] = $node->nid . ' : ' . check_plain($node->title);
+                $msg[] = check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) ;
+            }
+        }
+    }
+    $context['sandbox']['progress']=$i;
+    $context['message'] =  '<b>(' .$annee . ') ' . t('Processing conformity for UWWTPs') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')'. ' : </b><br/>'. implode('<br/>', $msg);
+    
 
     if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
@@ -6170,8 +6184,6 @@ function uwwtd_station_set_conformity(&$node){
     node_save($node);
 }
 
-
-
 //Function change by nd@oieau.fr in order to fix errors on not provided data : Collective system + IAS + D without treatement = 100
 // and fix infinite loop in uwwtd_article3_compliance()
 function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
@@ -6188,6 +6200,8 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         $query->fields('n', array('nid', 'title'));
         $query->condition('n.type', 'agglomeration', '=');
         $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
+        //$query->join('field_data_field_aggcompliance', 'c', 'c.entity_id = n.nid');
+        //$query->condition('c.field_aggcompliance_value', 'NI');
         $query->orderBy('field_agggenerated_value', 'DESC');
         $agglos = $query->execute();
         foreach($agglos as $agglo){
@@ -6200,15 +6214,30 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
     }
     $i = $context['sandbox']['progress'];
     
-    $data = $context['sandbox']['ids'][$i];
-    $node = node_load($data['nid']);
-    uwwtd_agglo_set_conformity($node);
+    $j = 0;
+    $nids = [];
+    while ($j < 50 && $i < $context['sandbox']['max']) {
+        $nids[] = $context['sandbox']['ids'][$i]['nid'];       
+        $i++;
+        $j++;
+    }
     
+    $msg = [];
+    if(!empty($nids)){
+        $nodes = node_load_multiple($nids);
+        if(!empty($nodes)){
+            foreach($nodes as $node){
+                uwwtd_agglo_set_conformity($node);
+                $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
+                $msg[] = check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) ;
+            }
+        }
+    }
     
 
-    $context['sandbox']['progress']++;
-    $context['message'] = '(' .$annee . ') ' . t('Processing conformity for the agglomeration').' : '.check_plain($node->title).' '.t('with a drupal id of :').check_plain($node->nid) . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')';
-    $context['results'][] = $node->nid . ' : ' . check_plain($node->title); 
+    $context['sandbox']['progress']=$i;
+    $context['message'] =  '<b>(' .$annee . ') ' . t('Processing conformity for agglomerations') . ' ('.$context['sandbox']['progress'] .'/'. $context['sandbox']['max'].')'. ' : </b><br/>'. implode('<br/>', $msg);
+    
     
 
     if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
