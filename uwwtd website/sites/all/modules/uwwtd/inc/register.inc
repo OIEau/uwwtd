@@ -73,8 +73,7 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){
-                                                      
+function uwwtd_register_set_operation(&$batch, $annee){                                                  
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -140,13 +139,9 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
      
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
-    //=============== 
-                                                                       
-                                                                            
-                                                
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    //===============                                    
 
 }
 
@@ -10418,26 +10413,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
     if ($context['sandbox']['progress'] < $context['sandbox']['max']) {
         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
-
-//     dsm(file_get_contents($tmpfilename));
-//
-//     ini_set("auto_detect_line_endings", false); //for Mac user
-//     $aHeaders = array(
-//           'Content-Type'        => 'application/octet-stream',
-//           'Content-Disposition' => 'attachment; filename="'.$filename.'"',
-//           'Expires'             => '0',
-//           'Cache-Control'       => 'must-revalidate',
-//           'Pragma'              =>'public',
-//           'Content-Length'      => filesize($tmpfilename),
-//       );
-//     foreach ($aHeaders as $sName => $sValue) {
-//         drupal_add_http_header($sName, $sValue);
-//     }
-//
-//     readfile($tmpfilename);
-//     unlink($tmpfilename);
-//     exit();
-//     return $allline;
 }
 
 /**
@@ -10498,6 +10473,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 LEFT JOIN {field_data_field_agggenerated} f_agggenerated ON agg.field_uwwaggliste_nid = f_agggenerated.entity_id
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
+                AND f_agggenerated.field_agggenerated_value >= 2000
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST
             ;
@@ -10745,7 +10721,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
     $j = 0;
     $nids = [];
-    while ($j < 20 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 50 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         $nids[$j] = $context['sandbox']['id'][$context['sandbox']['progress']];
         $j++;
         $context['sandbox']['progress']++;
@@ -10758,13 +10734,13 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         //a uwwtp can be attach to multiple agglo
         $uwwtpCompliance5x = uwwtd_get_compliance_5abc_uwwtp($uwwtp);
 
-        if (!isset($context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']])) {
+        if (!isset($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']])) {
             if(isset($uwwtp->field_uwwwastewatertreated['und'])){
                 $context['results']['country_volume_waste_water'] += $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
             }
         }
 
-        $context['sandbox']['list_uwwtp_treated'][$agg->field_inspireidlocalid['und'][0]['value']] = 1;
+        $context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']] = 0;
 
         foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
 
@@ -10888,13 +10864,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 //'entering load  p. e.',
                 $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']] = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100 * $agg->field_agggenerated['und'][0]['value'];
 
-//                 $context['results']['uwwtp_notreatment_pe_eric_fuite_detail'][] = [
-//                   $agg->field_inspireidlocalid['und'][0]['value'],
-//                   $uwwtp->field_inspireidlocalid['und'][0]['value'],
-//                   $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'],
-//                   $agg->field_agggenerated['und'][0]['value'],
-//                   $line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']],
-//                 ];
 
                 $field_agglo_uww_perc_ent_uw = $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
                 unset($agglo_uwwtp, $siteid);
@@ -10912,32 +10881,17 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
               $line[$ind['uww_entering load  p. e.']] = $uwwtp->field_uwwloadenteringuwwtp['und'][0]['value'];
             }
 
-//             dsm($line[$ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load']]);
-//             dsm($line[$ind['uww_entering_load_calculated_UwwtpAgglo_p._e.']]);
-//             dsm($line[$ind['uww_entering this UWWTP % of gen. load']]);
-//             dsm($line[$ind['uww_entering load  p. e.']]);
-
-
             //'capacity p. e.',
             $line[$ind['uww_capacity p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             if (isset($uwwtp->field_physicalcapacityactivity['und'][0]['value'])) {
               $line[$ind['uww_capacity p. e.']] = $uwwtp->field_physicalcapacityactivity['und'][0]['value'];
             }
-            //'status',
-//             $line[$ind['uww2_status']] = $uwwtp->field_status['und'][0]['value'] == 1 ? 'active' : 'inactive'; //...again...
-
-
 
             //Previous UWWTP general info
             $previousagglonid = uwwtd_check_exist(uwwtd_get_siteid('agglomeration', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'])));
             $previousuwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('uwwtp', array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
             $previousagglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
-//             dsm(array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value']));
-//             dsm($previousagglonid);
-//             dsm(array('year' => $context['sandbox']['previous_year'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
-//             dsm($previousuwwtpnid);
-//             dsm(array('year' => $context['sandbox']['previous_year'], 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
-//             dsm($previousagglo_uwwtpnid);
+
             $previous_reference_year = '';
             $previous_entering_load_pe = '';
             $previous_capacity_pe = '';
@@ -11230,103 +11184,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 );
             }
             $previous_treatment_required = '';
-// if (isset($previousuwwtp)) {
-//     switch($previousuwwtp->field_uwwtreatmentrequired['und'][0]['value']) {
-//         case 'P':
-//             $previous_treatment_required = '1';
-//             break;
-//         case 'S':
-//             $previous_treatment_required = '2';
-//             break;
-//         case 'N':
-//             $previous_treatment_required = '3N';
-//             break;
-//         case 'NP':
-//             $previous_treatment_required = '3NP';
-//             break;
-//         case 'P':
-//             $previous_treatment_required = '3P';
-//             break;
-//         case 'O':
-//             $previous_treatment_required = '3other';
-//             break;
-//         case 'Appropriate':
-//             $previous_treatment_required = 'Appropriate';
-//             break;
-//         case 'NI':
-//             $previous_treatment_required = '0';
-//             break;
-//         default:
-//             $previous_treatment_required = '';
-//     }
-// }
-            //'treatment type in place (4)',
-            /*
-            IIf([uwwPRemoval]=True And [uwwNRemoval]=True,
-                "3NP",
-                IIf([uwwPRemoval]=True And [uwwNRemoval]=False,
-                    "3P",
-                    IIf([uwwPRemoval]=False And [uwwNRemoval]=True,
-                        "3N",
-                        IIf([uwwOtherTreatment]=True And [uwwNRemoval]=False And [uwwPRemoval]=False,
-                            "3other",
-                            IIf([uwwPRemoval]=False And [uwwNRemoval]=False And [uwwOtherTreatment]=False And [uwwSecondaryTreatment]=True,
-                                2,
-                                IIf([uwwPRemoval]=False And [uwwNRemoval]=False And [uwwOtherTreatment]=False And [uwwSecondaryTreatment]=False And [uwwPrimaryTreatment]=True,
-                                    1,
-                                    IIf([uwwPRemoval]=False And [uwwNRemoval]=False And [uwwOtherTreatment]=False And [uwwSecondaryTreatment]=False And [uwwPrimaryTreatment]=False,
-                                        0,
-                                        "error")))))))
-            */
-//             $treatmenttypeinplace = '';
-//
-//             if ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '1') {
-//                 $treatmenttypeinplace = '3NP';
-//             } elseif ($node->field_uwwpremoval['und'][0]['value'] == '1' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
-//                 $treatmenttypeinplace = '3P';
-//             } elseif ($node->field_uwwpremoval['und'][0]['value'] == '0' && $node->field_uwwnremoval['und'][0]['value'] = '1') {
-//                 $treatmenttypeinplace = '3N';
-//             } elseif ($node->field_uwwothertreat['und'][0]['value'] == '1' && $node->field_uwwpremoval['und'][0]['value'] == '0' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
-//                 $treatmenttypeinplace = '3other';
-//             } elseif ($node->field_uwwsecondarytreatment['und'][0]['value'] == '1' && $node->field_uwwothertreat['und'][0]['value'] == '0' && $node->field_uwwpremoval['und'][0]['value'] == '0' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
-//                 $treatmenttypeinplace = '2';
-//             } elseif ($node->field_uwwprimarytreatment['und'][0]['value'] == '1' && $node->field_uwwsecondarytreatment['und'][0]['value'] == '0' && $node->field_uwwothertreat['und'][0]['value'] == '0' && $node->field_uwwpremoval['und'][0]['value'] == '0' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
-//                 $treatmenttypeinplace = '1';
-//             } elseif ($node->field_uwwprimarytreatment['und'][0]['value'] == '0' && $node->field_uwwsecondarytreatment['und'][0]['value'] == '0' && $node->field_uwwothertreat['und'][0]['value'] == '0' && $node->field_uwwpremoval['und'][0]['value'] == '0' && $node->field_uwwnremoval['und'][0]['value'] = '0') {
-//                 $treatmenttypeinplace = '0';
-//             } else {
-//                 $treatmenttypeinplace = 'error';
-//             }
-
-
             $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
 
             $previous_treatmenttypeinplace = '';
             if (isset($previousuwwtp)) {
                 $previous_treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($previousuwwtp);
             }
-
-//             if (isset($previousuwwtp)) {
-//                 if ($previousuwwtp->field_uwwprimarytreatment['und'][0]['value'] == '1') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'1';
-//                 }
-//                 if ($previousuwwtp->field_uwwsecondarytreatment['und'][0]['value'] == '1') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'2';
-//                 }
-//                 if ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3NP';
-//                 } elseif ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '1' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '0') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3P';
-//                 } elseif ($previousuwwtp->field_uwwpremoval['und'][0]['value'] == '0' && $previousuwwtp->field_uwwnremoval['und'][0]['value'] == '1') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3N';
-//                 }
-//                 if ($previousuwwtp->field_uwwothertreat['und'][0]['value'] == '1') {
-//                     $previous_treatmenttypeinplace .= ($previous_treatmenttypeinplace == '' ? '': ';' ) .'3other';
-//                 }
-//                 if ($previous_treatmenttypeinplace == '') {
-//                     $previous_treatmenttypeinplace .= '0';
-//                 }
-//             }
 
 
             $line[$ind['treatment type in place (4)']] = $treatmenttypeinplace;
@@ -11937,12 +11800,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
               $line[$ind['Volume of waste water treated m3/y']] = $uwwtp->field_uwwwastewatertreated['und'][0]['value'];
             }
             
+            //====================Warning we repeat uwwtp line foreach linked agglomeration, we must only count values the first time and not for next iteration
 
             //'Incoming loads BOD-tot  t/y',       field_uwwbodincoming
             $bodincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
             if ($bodincoming > 0) {
                 $line[$ind['Incoming loads BOD-tot  t/y']] = $bodincoming;
-                $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['incoming_load_bod'] += $line[$ind['Incoming loads BOD-tot  t/y']];
             } else {
                 $line[$ind['Incoming loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -11951,7 +11816,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $boddischarge = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwboddischarge',  'field_uwwboddischargecalculated', 'field_uwwboddischargeestimated'], -1);
             if ($boddischarge > 0) {
                 $line[$ind['Discharged loads BOD-tot  t/y']] = $boddischarge;
-                $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['discharge_load_bod'] += $line[$ind['Discharged loads BOD-tot  t/y']] ;
             } else {
                 $line[$ind['Discharged loads BOD-tot  t/y']] =  $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -11978,10 +11844,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'Incoming concentration COD-tot   t/y',   field_uwwcodincoming
-            $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
+            $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwcodincoming',  'field_uwwcodincomingcalculated', 'field_uwwcodincomingestimated'], -1);
             if ( $codincoming > -1) {
                 $line[$ind['Incoming concentration COD-tot   t/y']] =  $codincoming;
-                $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming concentration COD-tot   t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['incoming_load_cod'] += $line[$ind['Incoming concentration COD-tot   t/y']];
             } else {
                 $line[$ind['Incoming concentration COD-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -11990,7 +11857,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $coddischarge = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwcoddischarge',  'field_uwwcoddischargecalculated', 'field_uwwcoddischargeestimated'], -1);
             if ( $coddischarge > -1) {
                 $line[$ind['Discharged concentration COD-tot  t/y']] = $coddischarge;
-                $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['discharge_load_cod'] += $line[$ind['Discharged concentration COD-tot  t/y']];
             } else {
                 $line[$ind['Discharged concentration COD-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -12020,7 +11888,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $nincoming = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwnincoming',  'field_uwwnincomingcalculated', 'field_uwwnincomingestimated'], -1);
             if ($nincoming>0) {
                 $line[$ind['Incoming loads N-tot   t/y']] = $nincoming;
-                $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['incoming_load_n'] += $line[$ind['Incoming loads N-tot   t/y']];
             } else {
                 $line[$ind['Incoming loads N-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -12028,7 +11897,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ndischarge = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwndischarge', 'field_uwwndischargecalculated', 'field_uwwndischargeestimated'], -1);
             if ($ndischarge >0) {
                 $line[$ind['Discharged loads N-tot  t/y']] = $ndischarge ;
-                $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['discharge_load_n'] += $context['results']['graph']['discharge_load_n'];
             } else {
                 $line[$ind['Discharged loads N-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -12059,7 +11929,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $pincoming = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwpincoming',  'field_uwwpincomingcalculated', 'field_uwwpincomingestimated'], -1);
             if ($pincoming>0) {
                 $line[$ind['Incoming concentration P-tot   t/y']] = $pincoming;
-                $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming concentration P-tot   t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1)  $context['results']['graph']['incoming_load_p'] += $line[$ind['Incoming concentration P-tot   t/y']];
             } else {
                 $line[$ind['Incoming concentration P-tot   t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -12068,7 +11939,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $pdischarge = uwwtd_get_multiple_field_value($uwwtp, ['field_uwwpdischarge', 'field_uwwpdischargecalculated', 'field_uwwpdischargeestimated'], -1);
             if ($pdischarge>0) {
                 $line[$ind['Discharged concentration P-tot  t/y']] = $pdischarge;
-                $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
+                //Only for the first time
+                if($context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']]!=1) $context['results']['graph']['discharge_load_p'] += $line[$ind['Discharged concentration P-tot  t/y']];
             } else {
                 $line[$ind['Discharged concentration P-tot  t/y']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             }
@@ -12176,6 +12048,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $context['sandbox'][$typestat]['previous_entering_pe'] +=  (is_numeric($line[$ind['previous_entering load p. e.']])?$line[$ind['previous_entering load p. e.']]:0);
                 $context['sandbox'][$typestat]['previous_capacity_pe'] +=  (is_numeric($line[$ind['previous_capacity p. e.']])?$line[$ind['previous_capacity p. e.']]:0);
             }
+            $context['sandbox']['list_uwwtp_treated'][$uwwtp->field_inspireidlocalid['und'][0]['value']] = 1;
         }
 
         unset($uwwtp);
