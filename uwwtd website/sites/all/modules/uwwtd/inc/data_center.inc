@@ -5847,162 +5847,6 @@ function uwwtd_conformity_form($form, &$form_state){
     else {
         // Definition des variables pour le formulaire
         $annee = $_SESSION['uwwtd_annee'];
-//      $sas = array();
-//      $csas = array();
-// 
-//      //Get all allos for the year that are in a SA
-//      $query = db_select('node', 'n');
-//      $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-//      $query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-//      $query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
-//      $query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
-//      $query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
-//      $query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
-//      $query->fields('n', array('nid', 'title'));
-//      $query->fields('s', array('field_siteid_value'));
-//      $query->fields('g', array('field_agggenerated_value'));
-//      $query->fields('u', array('field_agguwwliste_nid'));
-//      $query->fields('d', array('field_uwwdcpliste_nid'));
-//      $query->fields('t', array('field_rcatype_value'));
-//      $query->fields('a', array('field_inspireidlocalid_value'));
-//      $query->condition('n.type', 'agglomeration', '=');
-//      $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-//      $query->condition('g.field_agggenerated_value', 10000, '>');
-//      $query->condition('t.field_rcatype_value', 'SA', '=');
-//      $query->orderBy('t.field_rcatype_value', 'DESC');
-//      $query->orderBy('g.field_agggenerated_value', 'DESC');
-//      $aggs = $query->execute();
-//      foreach($aggs as $agg){
-//          $sas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
-//      }
-// 
-//      //Get all allos for the year that are in a CSA
-//      $query = db_select('node', 'n');
-//      $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
-//      $query->join('field_data_field_agggenerated', 'g', 'g.entity_id = n.nid');
-//      $query->join('field_data_field_agguwwliste', 'u', 'u.entity_id = n.nid');
-//      $query->join('field_data_field_uwwdcpliste', 'd', 'd.entity_id = u.field_agguwwliste_nid');
-//      $query->join('field_data_field_rcatype', 't', 't.entity_id = d.field_uwwdcpliste_nid');
-//      $query->join('field_data_field_inspireidlocalid', 'a', 'a.entity_id = n.nid');
-//      $query->fields('n', array('nid', 'title'));
-//      $query->fields('s', array('field_siteid_value'));
-//      $query->fields('g', array('field_agggenerated_value'));
-//      $query->fields('u', array('field_agguwwliste_nid'));
-//      $query->fields('d', array('field_uwwdcpliste_nid'));
-//      $query->fields('t', array('field_rcatype_value'));
-//      $query->fields('a', array('field_inspireidlocalid_value'));
-//      $query->condition('n.type', 'agglomeration', '=');
-//      $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
-//      $query->condition('g.field_agggenerated_value', 10000, '>');
-//      $query->condition('t.field_rcatype_value', 'CSA', '=');
-//      $query->orderBy('t.field_rcatype_value', 'DESC');
-//      $query->orderBy('g.field_agggenerated_value', 'DESC');
-//      $aggs = $query->execute();
-//      foreach($aggs as $agg){
-//          $csas[] = array('nid'=>$agg->nid, 'title'=>$agg->title, 'aggSize'=>$agg->field_agggenerated_value, 'stationId'=>$agg->field_agguwwliste_nid, 'dcpId'=>$agg->field_uwwdcpliste_nid, 'rcaType'=>$agg->field_rcatype_value, 'aggId'=>$agg->field_inspireidlocalid_value);
-//      }
-// 
-//      $sas = array_filter($sas);
-//      $csas = array_filter($csas);
-//      if (!empty($sas) || !(empty($csas))){
-// 
-//          $form['help'] = array(
-//              'name' => array(
-//              '#type' => 'item',
-//              '#markup' => t('The following agglomerations are eligable for criterion b, ca and cb for the article 5 a element for the calculation of conformity for the agglomerations.').'<br>'.t('If any of the criterions apply to the agglomerations below, please tick the boxes and press the send button.'),
-//              '#weight' => 0
-//          ));
-// 
-//          $form['Agglo'] = array(
-//              'name' => array(
-//              '#type' => 'item',
-//              '#markup' => '<strong>'.t('Agglomeration').'</strong>',
-//              '#weight' => 0
-//          ));
-//          $form['critb'] = array(
-//              'name' => array(
-//              '#type' => 'item',
-//              '#markup' => '<strong>'.t('Criterion b applied').'</strong>',
-//              '#weight' => 0
-//          ));
-//          $form['critca'] = array(
-//              'name' => array(
-//              '#type' => 'item',
-//              '#markup' => '<strong>'.t('Criterion ca applied').'</strong>',
-//              '#weight' => 0
-//          ));
-//          $form['critcb'] = array(
-//              'name' => array(
-//              '#type' => 'item',
-//              '#markup' => '<strong>'.t('Criterion cb applied').'</strong>',
-//              '#weight' => 0
-//          ));
-// 
-//          foreach ($sas as $sa){
-// 
-//              $node = node_load($sa['nid']);
-// 
-//              $form['SA']['#tree'] = TRUE;
-// 
-//              $form['SA'][] = array(
-//                  'nid' => array(
-//                      '#type' => 'hidden',
-//                      '#value' => $sa['nid'],
-//                  ),
-//                  'name' => array(
-//                      '#type' => 'item',
-//                      '#markup' => check_plain($sa['title']).' : '.$sa['aggId'],
-//                  ),
-//                  'art5b' => array(
-//                      '#type' => 'checkbox',
-//                      '#default_value' => $node->field_aggcritb['und'][0]['value'],
-//                  ),
-//                  'art5ca' => array(
-//                      '#type' => 'checkbox',
-//                      '#default_value' => $node->field_aggcritca['und'][0]['value'],
-//                  ),
-//                  'art5cb' => array(
-//                      '#type' => 'checkbox',
-//                      '#default_value' => $node->field_aggcritcb['und'][0]['value'],
-//                  )
-//              );
-//          }
-// 
-//          foreach ($csas as $csa){
-// 
-//              $node = node_load($csa['nid']);
-// 
-//              $form['CSA']['#tree'] = TRUE;
-// 
-//              $form['CSA'][] = array(
-//                  'nid' => array(
-//                      '#type' => 'hidden',
-//                      '#value' => $csa['nid'],
-//                  ),
-//                  'name' => array(
-//                      '#type' => 'item',
-//                      '#markup' => check_plain($csa['title']).' : '.$csa['aggId'],
-//                  ),
-//                  'art5b' => array(
-//                      '#type' => 'checkbox',
-//                      '#default_value' => $node->field_aggcritb['und'][0]['value'],
-//                  ),
-//                  'art5ca' => array(
-//                      '#type' => 'item',
-//                  ),
-//                  'art5cb' => array(
-//                      '#type' => 'item',
-//                  ),
-//              );
-//          }
-//      }
-//      else{
-//          $form['uwwtd_text'] = array(
-//              '#markup' => '<h3>'.t('No agglomerations that could be concerned with article 5 criterion b, ca or cb could be found. You can continue to the next step').'</h3>'
-//          );
-//      }
-
-
         
         // definition du champ input de type file
         $form['uwwtd_text'] = array(
@@ -6217,8 +6061,10 @@ function uwwtd_station_conformity_batch_process($annee, $timestamp, &$context){
         //Get the uwwtps
         $query = db_select('node', 'n');
         $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
+        //$query->join('field_data_field_uwwcompliance', 'c', 'c.entity_id = n.nid');
         $query->fields('n', array('nid', 'title'));
         $query->condition('n.type', 'uwwtp', '=');
+        //$query->condition('c.field_uwwcompliance_value', 'NC', '=');
         $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
         $uwwtps = $query->execute();
         foreach($uwwtps as $uwwtp){
@@ -7212,7 +7058,6 @@ function uwwtd_no_uwwtp_with_required_morestringent_has_complianceart5_notreleva
 function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
 {        
     uwwtd_trace(__FUNCTION__);
-    
     //Case of transboundary UWWTP in BE 
     /*
     if(in_array($uwwtp->field_inspireidlocalid['und'][0]['value'], array('BERW0000601','BERW5401001','BERW0000201','BERW0000104'))){
@@ -7976,6 +7821,15 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         $compliance_info->compliance = 'NI';
         $compliance_info->reason = 'Station found to have no information on agglomerations';
         uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station found to have no information on agglomerations.', $timestamp, null, $node);
+        $compliance_info->required = 'NI';
+        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+        return $compliance_info;
+    }
+    if($node->field_status['und'][0]['value'] == 1 && isset($node->field_uwwcollectingsystem['und']) && $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
+        $compliance_info->compliance = 'NR';
+        $compliance_info->reason = "Station is not connected to collecting system";
+        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station  is active and it is not connected to collecting system.', $timestamp, null, $node);
         $compliance_info->required = 'NI';
         $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
         $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
