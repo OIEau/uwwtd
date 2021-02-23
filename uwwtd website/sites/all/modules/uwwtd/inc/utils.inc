@@ -1292,69 +1292,72 @@ function uwwtd_get_distance_compliance($agg){
     if(!empty($agg->field_agguwwliste['und'])){
         foreach ($agg->field_agguwwliste['und'] as $uwwtpnid) {
             $uwwtp = node_load($uwwtpnid['nid']);
+            if($uwwtp->field_status['und'][0]['value'] == 1 && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON'){
+                $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
+                $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
+                $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
+                $agglo_uwwtp = node_load($agglo_uwwtpnid);
 
-            $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
-            $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
-            $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
-            $agglo_uwwtp = node_load($agglo_uwwtpnid);
+                $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
+                $totalLoadenteringPercent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
 
-            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
-            $totalLoadenteringPercent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                $collected_by_uww_for_this_agglo = $agg->field_agggenerated['und'][0]['value'] * ($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
 
-            $collected_by_uww_for_this_agglo = $agg->field_agggenerated['und'][0]['value'] * ($agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'] / 100);
+                // if($agg->field_aggart4compliance['und'][0]['value'] == 'NC') {
+                    // $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+                // dsm($treatment_required);
+                if (false === strpos($treatmenttypeinplace, '2')) {
+                    $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
+                    $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $art4complianceTreat = 'NC';
+                }
 
-            // if($agg->field_aggart4compliance['und'][0]['value'] == 'NC') {
-                // $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            // dsm($treatment_required);
-            if (false === strpos($treatmenttypeinplace, '2')) {
-                $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
-                $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art4complianceTreat = 'NC';
-            }
+                if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
+                    $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
+                    $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $art4compliancePerf = 'NC';
+                }
+                // }
 
-            if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
-                $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
-                $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art4compliancePerf = 'NC';
-            }
-            // }
-
-            // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
-            if($agg->isInRca54){
-                $art5_treatment_compliance = 'NR';
-                $art5_perf_compliance = 'NR';
-            }
-            else {
-                $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            }
-            
-            if (!$agg->isInRca54 && !empty($treatment_required)) {
-                $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
-                    $treatment_required,
-                    $uwwtp->field_uwwcodperf['und'][0]['value'],
-                    $uwwtp->field_uwwbod5perf['und'][0]['value'],
-                    $uwwtp->field_uwwntotperf['und'][0]['value'],
-                    $uwwtp->field_uwwptotperf['und'][0]['value'],
-                    $uwwtp->field_uwwotherperf['und'][0]['value'],
-                    $uwwtp->field_uwww_required_rcab['und'][0]['value'],
-                    $uwwtp->field_uwww_required_rcac['und'][0]['value'],
-                    $uwwtp->field_uwww_required_rcaap['und'][0]['value'],
-                    $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
-            }
-            if ($art5_treatment_compliance == 'NC') {
-                $dist_art5_treatment_pe += $collected_by_uww_for_this_agglo;
-                $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art5complianceTreat = 'NC';
-            }
-            if ($art5_perf_compliance == 'NC') {
-                $dist_art5_perf_pe += $collected_by_uww_for_this_agglo;
-                $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                $art5compliancePerf = 'NC';
-            }
-            if ($art5_perf_compliance == 'NR') {
-                $dist_art5_perf_pe = '-';
-                $dist_art5_perf_percent = '-';
-            }
+                // if($agg->field_aggart5compliance['und'][0]['value'] == 'NC') {
+                if($agg->isInRca54){
+                    $art5_treatment_compliance = 'NR';
+                    $art5_perf_compliance = 'NR';
+                }
+                else {
+                    $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
+                }
+                
+                if (!$agg->isInRca54 && !empty($treatment_required)) {
+                    $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
+                        $treatment_required,
+                        $uwwtp->field_uwwcodperf['und'][0]['value'],
+                        $uwwtp->field_uwwbod5perf['und'][0]['value'],
+                        $uwwtp->field_uwwntotperf['und'][0]['value'],
+                        $uwwtp->field_uwwptotperf['und'][0]['value'],
+                        $uwwtp->field_uwwotherperf['und'][0]['value'],
+                        $uwwtp->field_uwww_required_rcab['und'][0]['value'],
+                        $uwwtp->field_uwww_required_rcac['und'][0]['value'],
+                        $uwwtp->field_uwww_required_rcaap['und'][0]['value'],
+                        $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
+                }
+                if ($art5_treatment_compliance == 'NC') {
+                    $dist_art5_treatment_pe += $collected_by_uww_for_this_agglo;
+                    $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $art5complianceTreat = 'NC';
+                }
+                if ($art5_perf_compliance == 'NC') {
+                    $dist_art5_perf_pe += $collected_by_uww_for_this_agglo;
+                    $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $art5compliancePerf = 'NC';
+                }
+                if ($art5_perf_compliance == 'NR') {
+                    $dist_art5_perf_pe = '-';
+                    $dist_art5_perf_percent = '-';
+                }
+          }elseif($uwwtp->field_status['und'][0]['value'] == 1 && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
+              //if needed manage notcon case of UWWTP
+          }
         }
     }
 
