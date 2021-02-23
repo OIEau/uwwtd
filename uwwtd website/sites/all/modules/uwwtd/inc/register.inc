@@ -73,8 +73,7 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){
-                                                      
+function uwwtd_register_set_operation(&$batch, $annee){                                                  
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -140,13 +139,9 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
      
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
-    //=============== 
-                                                                       
-                                                                            
-                                                
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    //===============                                    
 
 }
 
@@ -10478,6 +10473,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 LEFT JOIN {field_data_field_agggenerated} f_agggenerated ON agg.field_uwwaggliste_nid = f_agggenerated.entity_id
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
+                AND f_agggenerated.field_agggenerated_value >= 2000
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST
             ;
@@ -10725,7 +10721,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
     $j = 0;
     $nids = [];
-    while ($j < 40 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    while ($j < 50 && $context['sandbox']['progress'] < $context['sandbox']['max']) {
         $nids[$j] = $context['sandbox']['id'][$context['sandbox']['progress']];
         $j++;
         $context['sandbox']['progress']++;
@@ -11848,7 +11844,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             //'Incoming concentration COD-tot   t/y',   field_uwwcodincoming
-            $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwbodincoming',  'field_uwwbodincomingcalculated', 'field_uwwbodincomingestimated'], -1);
+            $codincoming = (float) uwwtd_get_multiple_field_value($uwwtp, ['field_uwwcodincoming',  'field_uwwcodincomingcalculated', 'field_uwwcodincomingestimated'], -1);
             if ( $codincoming > -1) {
                 $line[$ind['Incoming concentration COD-tot   t/y']] =  $codincoming;
                 //Only for the first time
