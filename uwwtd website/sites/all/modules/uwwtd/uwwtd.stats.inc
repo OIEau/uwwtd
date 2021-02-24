@@ -326,7 +326,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
               {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
             JOIN {field_data_field_uwwcollectingsystem}  con
-                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
+                ON n.nid = con.entity_id
             JOIN
               {field_data_field_agguwwliste} f_uwwtp_agglo
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
@@ -339,7 +339,8 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         GROUP BY n.nid
         )
     ';
-	$query = $with. 'SELECT f_annee.field_anneedata_value as year, ' . $group_by . ',';
+	$query = $with. 'SELECT f_annee.field_anneedata_value as year, con.field_uwwcollectingsystem_value as con, ' . $group_by . ',';
+    //AND con.field_uwwcollectingsystem_value = \'ISCON\'
     //warning this request count the number of agglomeration and not just the number of uwwtp
 	$query .= ' COUNT(n.nid) AS  total_count, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS loadentering_sum
     FROM {node} n
@@ -349,7 +350,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
         JOIN {field_data_field_uwwcollectingsystem}  con
-                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
+                ON n.nid = con.entity_id 
         LEFT JOIN
             {field_data_field_uwwcompliance} f_comp
                 ON n.nid = f_comp.entity_id
@@ -368,7 +369,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 		WHERE n.type = :typenode
     ' .
     $conditions . '
-		GROUP BY f_annee.field_anneedata_value,' . $group_by;
+		GROUP BY f_annee.field_anneedata_value, con.field_uwwcollectingsystem_value, ' . $group_by;
 
     $param = array(
         ':typenode' => 'uwwtp',
@@ -389,8 +390,14 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
                     if($row['field_uwwtreatmenttype_value']==''){
                         $row['field_uwwtreatmenttype_value']='NI';
                     }
-    				$complianceState = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
-                    $color = $GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']];
+                    if($row['field_uwwtreatmenttype_value']=='NI' && $row['con'] == 'NOTCON'){
+                        $complianceState = 'Not connected';
+                        $color = '#ea8b2e';
+                    }
+                    else{
+                        $complianceState = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
+                        $color = $GLOBALS['uwwtd']['treatment_type_color'][$row['field_uwwtreatmenttype_value']];
+                    }
     				break;
     			default:
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];

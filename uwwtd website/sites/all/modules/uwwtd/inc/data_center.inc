@@ -6333,8 +6333,6 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         $bDone = true;
         
             $verbose_msg.=" -- art3comp == NI (Algo 4) => bDone = TRUE \n";
-        
-
     }
     //case < 2000p.e  algo4 too
     if ($bDone === false && $art3comp == 'NR' && true === isset($art4comp) && $art4comp == 'NR') {
@@ -6366,7 +6364,6 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         if($node->field_aggc1['und'][0]['value'] > 0){  //algo5  
             
                 $verbose_msg.=" --- Algo 5 : field_aggc1 = ".$node->field_aggc1['und'][0]['value']." run uwwtd_article4_5_6_agglomeration_compliance_step_a\n";
-            
             $aArtCompliance = uwwtd_article4_5_6_agglomeration_compliance_step_a($infoAllAggUww, $verbose);  //algo5
         } else {             
            $aArtCompliance = array();  
@@ -6415,7 +6412,9 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             
                 $verbose_msg.=" X-- Algo 5 : uwwtd_article4_5_6_agglomeration_compliance_step_a fail ==> run uwwtd_article4_5_6_agglomeration_compliance_step_b\n";
             
+            //dsm($infoAllAggUww);
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
+            //dsm($aggArt456Compliance);
             //dsm($aggArt456Compliance);
             //=========ART 4
             $node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
@@ -6725,9 +6724,18 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
             //ALGO6
             //$agg->field_aggart3compliance['und'][0]['value']
-            
-            $listStationArticleAndUwwtpCompliance[$niduwwtp] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node'], $infoAllAggUww['rca']);
-            //add field necessary for next function call
+            $listStationArticleAndUwwtpCompliance[$niduwwtp] = [];
+            if($uwwtp['connected']==1){
+                $listStationArticleAndUwwtpCompliance[$niduwwtp] = uwwtd_article4_5_6_station_compliance($agg, $uwwtp['node'], $infoAllAggUww['rca']);
+                //add field necessary for next function call
+                $listStationArticleAndUwwtpCompliance[$niduwwtp]['connected'] = $uwwtp['connected'];
+                $listStationArticleAndUwwtpCompliance[$niduwwtp]['agglo_uww_perc_ent_uw'] = $uwwtp['agglo_uww_perc_ent_uw'];
+                $listStationArticleAndUwwtpCompliance[$niduwwtp]['treatmenttype'] = $uwwtp['treatmenttype'];
+            }
+            else{
+                $listStationArticleAndUwwtpCompliance[$niduwwtp]['required'] = $uwwtp['required'];
+            }
+            $listStationArticleAndUwwtpCompliance[$niduwwtp]['connected'] = $uwwtp['connected'];
             $listStationArticleAndUwwtpCompliance[$niduwwtp]['agglo_uww_perc_ent_uw'] = $uwwtp['agglo_uww_perc_ent_uw'];
             $listStationArticleAndUwwtpCompliance[$niduwwtp]['treatmenttype'] = $uwwtp['treatmenttype'];
         }
@@ -6735,7 +6743,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     else{
         
     }
-    
 //     uwwtd_trace(var_export($listStationArticleAndUwwtpCompliance, true));
     //ALGO7
     $compArt4 = uwwtd_article4_agglomeration_compliance($agg, 'compArt4', $listStationArticleAndUwwtpCompliance);
@@ -6798,8 +6805,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;
     $totalLoadenteringPE_P_NI = 0;
-    $totalLoadenteringPercent_P_NI = 0;
-    
+    $totalLoadenteringPercent_P_NI = 0;  
     foreach($listUwwtpCompliance as $uwwtp) {
         $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
         $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
@@ -6808,10 +6814,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $totalLoadenteringPercent_P_NI += $uwwtp['agglo_uww_perc_ent_uw'];
         }
     }
-
     uwwtd_trace($totalLoadenteringPE);
     uwwtd_trace($totalLoadenteringPercent);
-    
     if ($totalLoadenteringPE === 0) {
         if(true !== deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'totalLoadenteringPE === 0 but agglomeration is still in pending deadline for art 4'];
@@ -8888,7 +8892,7 @@ function uwwtd_get_all_info_agguwww($node)
             // we check if uwwtp is active (status = 1) and iscon (we check if value !=  notcon)
             if($uww->field_status['und'][0]['value']==1 && $uww->field_uwwcollectingsystem['und'][0]['value']!='NOTCON'){
                 $aResult['listUww'][$uww->nid] = array(
-    //          'node' => $uww,
+                    'connected'=> 1,
                     'required' => $uww->field_uwwtreatmentrequired['und'][0]['value'],
                     'bod5' => $uww->field_uwwbod5perf['und'][0]['value'],
                     'cod' => $uww->field_uwwcodperf['und'][0]['value'],
@@ -8898,7 +8902,7 @@ function uwwtd_get_all_info_agguwww($node)
                     'treatmenttype' => $uww->field_uwwtreatmenttype['und'][0]['value'],
                 );
 
-                // get reste of information from node that collected joint information
+                // get others information from node that collected joint information
                 $query = db_select('node', 'n');
                 $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
                 $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
@@ -8970,6 +8974,39 @@ function uwwtd_get_all_info_agguwww($node)
                 }
                 $aResult['listUww'][$uww->nid]['node'] = $uww;
             }
+            elseif($uww->field_status['und'][0]['value']==1 && $uww->field_uwwcollectingsystem['und'][0]['value']=='NOTCON'){
+                $aResult['listUww'][$uww->nid] = array(
+                    'connected'=> 0,
+                    'treatmenttype'=> 'NI'
+                );
+                // get others information from node that collected joint information
+                $query = db_select('node', 'n');
+                $query->join('field_data_field_agglo_uww_agglo', 'a', 'a.entity_id = n.nid');
+                $query->join('field_data_field_agglo_uww_uww', 'u', 'u.entity_id = n.nid');
+                $query->fields('n',array('title','created'))
+                    ->condition('a.field_agglo_uww_agglo_nid', $node->nid, '=')
+                    ->condition('u.field_agglo_uww_uww_nid', $uww->nid, '=')
+                    ->fields('n',array('nid'));
+                
+                $result = $query->execute();
+                $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = 0;
+                while($record = $result->fetchAssoc()){
+                    $agguww = node_load($record['nid']);
+                    $uwwperccollec = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    //$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
+                    $aResult['total'] += $uwwperccollec;
+                    $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $aResult['listUww'][$uww->nid]['required'] = 'S';
+                    /*
+                    if($node->field_agggenerated['und'][0]['value'] * $node->field_aggc1['und'][0]['value'] * $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'] > 10000){
+                        $aResult['listUww'][$uww->nid]['required'] = 'S';
+                    }else{
+                        $aResult['listUww'][$uww->nid]['required'] = 'P';
+                    }*/
+                }
+                $aResult['listUww'][$uww->nid]['node'] = $uww;
+            }
+            
             unset($uww);
         }
     }    
