@@ -1,6 +1,12 @@
 <?php 
 
 function uwwtd_debug(){
+    
+    module_load_include('inc','uwwtd','uwwtd.stats');
+    $yearSelected = 2018;
+    
+    $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, 'compliance');
+    dsm($results);
     /*
     module_load_include('inc','uwwtd','/inc/data_center');
     $annee = 2018;
