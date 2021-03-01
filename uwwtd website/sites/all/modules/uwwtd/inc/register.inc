@@ -1,5 +1,6 @@
 <?php
 
+require_once(drupal_get_path('module', 'uwwtd') . '/inc/uwwtd.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/register.config.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
@@ -9826,7 +9827,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['entirely_discharging_into_coastal_waters']] = $entirely_discharge_in_CW;  //=yes if column Z= CW?;
 
         //'type of receiving water',   ?dcpTypeOfReceivingArea
-        $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['register']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']);
+        $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']);
         //'ID of the SA or LSA',   ?rcaID
         $line[$ind['id_of_the_sa_or_lsa']] = $rcaID;
         //'name',         ?title
@@ -11142,7 +11143,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             unset($WBT);
             $line[$ind['entirely discharging into coastal waters?']] = $entirely_discharge_in_CW;  //=yes if column Z= CW?
             //'type of receiving water',   ?dcpTypeOfReceivingArea
-            $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['register']['default_by_cc'][$cc ]['rcaType']);
+            $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['default_by_cc'][$cc ]['rcaType']);
             //'ID of the SA or LSA',   ?rcaID
             $line[$ind['ID of the SA or LSA']] = $rcaID;
             //'name',         ?title

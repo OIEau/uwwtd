@@ -7819,7 +7819,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_a(&$infoAllAggUww, $ve
 }
 
 function uwwtd_station_compliance_algo($node, $timestamp){
-
+    global $conf;
     uwwtd_trace(__FUNCTION__);
     // Get all data needed to calculate compliance
     // Get aglo data first
@@ -7859,17 +7859,8 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
         return $compliance_info;
     }
-    if($node->field_status['und'][0]['value'] == 1 && isset($node->field_uwwcollectingsystem['und']) && $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
-        $compliance_info->compliance = 'NR';
-        $compliance_info->reason = "Station is not connected to collecting system";
-        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station  is active and it is not connected to collecting system.', $timestamp, null, $node);
-        $compliance_info->required = 'NI';
-        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
-        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-        return $compliance_info;
-    }
-
-    // Get dcp data
+    
+        // Get dcp data
     $dcps = array();
     if(isset($node->field_uwwdcpliste['und'])){
         foreach($node->field_uwwdcpliste['und'] as $dcplist){
@@ -7976,6 +7967,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             $dcps[] = array(
                 'nid' => $dcp->nid,
                 'title' => $dcp->title,
+                'status'=>field_status['und'][0]['value'],
                 'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
                 'rcatype' => $rcaTypeid,
                 'rcazonetype' => $zonetypeIsSet,
@@ -7995,6 +7987,39 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 
     uwwtd_trace('dcp and rca info use : ' . var_export($dcps, true));
     // If we cant find any discharge points attached to this station then we return no information to the user
+    
+    if($node->field_status['und'][0]['value'] == 1 && isset($node->field_uwwcollectingsystem['und']) && $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
+        $compliance_info->compliance = 'NR';
+        $compliance_info->reason = "Station is not connected to collecting system";
+        uwwtd_add_error($node->field_anneedata['und'][0]['value'], $GLOBALS['uwwtd_errors_type']['type']['warning'], $GLOBALS['uwwtd_errors_type']['category']['conformity data'], 'Station  is active and it is not connected to collecting system.', $timestamp, null, $node);
+        
+        
+        $required_treatment = new stdClass();
+        $required_treatment->reason = '';
+        $required_treatment->required = '';
+        $required_treatment->required_rcaan = 0;
+        $required_treatment->required_rcaap = 0;
+        $required_treatment->required_rcab = 0;
+        $required_treatment->required_rcac = 0;
+        //if we don't have dcp, try to fill default information (very low chance of success)
+        if(empty($dcps)){
+            $dcps = [[
+                'rcatype'=>$GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']
+            ]];
+        }
+        
+        uwwtd_get_required_treatment($required_treatment, $dcps, $maxgen);
+        if(isset($required_treatment->required)){
+            $compliance_info->required =$required_treatment->required;
+        }else{
+            $compliance_info->required = 'NI';
+        }
+        $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
+        $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
+        
+        return $compliance_info;
+    }
+
     if(count($dcps) == 0){
         $compliance_info->compliance = $GLOBALS['uwwtd_value']['compliance']['unknown'];
         $compliance_info->reason = 'Station found to have no information on discharge points';
@@ -8674,7 +8699,6 @@ function uwwtd_zipped_csvs_to_array($files){
 
 function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 	uwwtd_trace(__FUNCTION__);
-
     $required_treatment->reason = '';
     if ($maxgen < 2000) {
     	$required_treatment->required = 'Appropriate';
@@ -8709,6 +8733,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $dcp = $oneDcp;
         }
     }
+    
     switch ($dcp['rcatype']) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
@@ -8779,6 +8804,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
         case 'A58523':
         case 'A54523':
         case 'A5854523':
+        case 'A5854523':
         	if ($maxgen < 10000) {
         		if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
                 	$required_treatment->required = 'Appropriate';
@@ -8810,7 +8836,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $required_treatment->reason = 'Station found to be missing rcatype information required to calculate proper compliance';
             break;
     }
-
     // BB - 04/11 - Adding a step for 9th report format
     if ($dcp['rcazonetype'] === 'UWWTDLSA') {
         if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {

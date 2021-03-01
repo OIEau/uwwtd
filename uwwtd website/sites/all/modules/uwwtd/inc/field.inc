@@ -258,6 +258,7 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
 //   return __FUNCTION__;
 
   $distanceToCompliance = uwwtd_get_distance_compliance($node);
+  dsm($distanceToCompliance);
   // Set the colors of "Distance to compliance" table
   // Article 3
   if ($node->field_aggart3compliance['und'][0]['value'] == 'C'
