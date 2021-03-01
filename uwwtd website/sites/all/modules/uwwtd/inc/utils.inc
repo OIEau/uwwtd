@@ -1292,7 +1292,8 @@ function uwwtd_get_distance_compliance($agg){
     if(!empty($agg->field_agguwwliste['und'])){
         foreach ($agg->field_agguwwliste['und'] as $uwwtpnid) {
             $uwwtp = node_load($uwwtpnid['nid']);
-            if($uwwtp->field_status['und'][0]['value'] == 1 && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON'){
+            // && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON'
+            if($uwwtp->field_status['und'][0]['value'] == 1){
                 $treatment_required = uwwtd_get_register_treatment_required($uwwtp->field_uwwtreatmentrequired['und'][0]['value']);
                 $treatmenttypeinplace = uwwtd_get_register_treatmenttype_inplace($uwwtp);
                 $agglo_uwwtpnid = uwwtd_check_exist(uwwtd_get_siteid('agglo_uww', array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value'])));
@@ -1306,16 +1307,19 @@ function uwwtd_get_distance_compliance($agg){
                 // if($agg->field_aggart4compliance['und'][0]['value'] == 'NC') {
                     // $art4_treatment_compliance = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
                 // dsm($treatment_required);
-                if (false === strpos($treatmenttypeinplace, '2')) {
+                
+                if (false === strpos($treatmenttypeinplace, '2') || $treatmenttypeinplace == 0) {
                     $dist_art4_treatment_pe += $collected_by_uww_for_this_agglo;
                     $dist_art4_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                    $art4complianceTreat = 'NC';
+                    if ( $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON') {
+                        $art4complianceTreat = 'NC';
+                    }
                 }
 
                 if ($uwwtp->field_uwwbod5perf['und'][0]['value'] != 'P' || $uwwtp->field_uwwcodperf['und'][0]['value'] != 'P') {
                     $dist_art4_perf_pe += $collected_by_uww_for_this_agglo;
                     $dist_art4_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                    $art4compliancePerf = 'NC';
+                    if ( $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON') { $art4compliancePerf = 'NC';}
                 }
                 // }
 
@@ -1324,11 +1328,18 @@ function uwwtd_get_distance_compliance($agg){
                     $art5_treatment_compliance = 'NR';
                     $art5_perf_compliance = 'NR';
                 }
+                elseif($uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
+                    $dist_art5_treatment_pe +=  $collected_by_uww_for_this_agglo;
+                    $dist_art5_treatment_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    $dist_art5_perf_pe +=  $collected_by_uww_for_this_agglo;
+                    $dist_art5_perf_percent += $agglo_uwwtp->field_agglo_uww_perc_ent_uw['und'][0]['value'];
+                    
+                }
                 else {
                     $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
                 }
                 
-                if (!$agg->isInRca54 && !empty($treatment_required)) {
+                if (!$agg->isInRca54 && !empty($treatment_required) && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] != 'NOTCON') {
                     $art5_perf_compliance = uwwtd_get_register_art5_monitoring_compliance(
                         $treatment_required,
                         $uwwtp->field_uwwcodperf['und'][0]['value'],
@@ -1355,12 +1366,9 @@ function uwwtd_get_distance_compliance($agg){
                     $dist_art5_perf_pe = '-';
                     $dist_art5_perf_percent = '-';
                 }
-          }elseif($uwwtp->field_status['und'][0]['value'] == 1 && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
-              //if needed manage notcon case of UWWTP
           }
         }
     }
-
     // dsm($totalLoadenteringPE);
     // dsm($totalLoadenteringPercent);
 

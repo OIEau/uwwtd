@@ -5,92 +5,6 @@ $GLOBALS['uwwtd']['register']['message'] = array(
   
 );
 
-$GLOBALS['uwwtd']['register']['default_by_cc'] = array(
-    'at'=>array(
-        'rcaType'=>'A54',
-	),
-    'be'=>array(
-        'rcaType'=>'NA',
-    ),
-    'bg'=>array(
-        'rcaType'=>'NA',
-	),
-    'cy'=>array(
-        'rcaType'=>'NA',
-    ),
-    'cz'=>array(
-        'rcaType'=>'A58',
-	),
-    'de'=>array(
-        'rcaType'=>'A54',
-	),
-    'dk'=>array(
-        'rcaType'=>'A58',
-    ),
-    'ee'=>array(
-        'rcaType'=>'A58',
-	),
-    'es'=>array(
-        'rcaType'=>'NA',
-	),
-    'fi'=>array(
-        'rcaType'=>'A58',
-	),
-    'fr'=>array(
-        'rcaType'=>'NA',
-    ),
-    'gr'=>array(
-        'rcaType'=>'NA',
-	),
-    'hr'=>array(
-        'rcaType'=>'NA',
-    ),
-    'hu'=>array(
-        'rcaType'=>'NA',
-	),
-    'ie'=>array(
-        'rcaType'=>'NA',
-    ),
-    'it'=>array(
-        'rcaType'=>'NA',
-	),
-    'lt'=>array(
-        'rcaType'=>'A58',
-    ),
-    'lu'=>array(
-        'rcaType'=>'A58',
-	),
-    'lv'=>array(
-        'rcaType'=>'A58',
-	),
-    'mt'=>array(
-        'rcaType'=>'NA',
-	),
-    'nl'=>array(
-        'rcaType'=>'A54',
-	),
-    'pl'=>array(
-        'rcaType'=>'A58',
-    ),
-    'pt'=>array(
-        'rcaType'=>'NA',
-	),
-    'ro'=>array(
-        'rcaType'=>'A58',
-    ),
-    'se'=>array(
-        'rcaType'=>'NA',
-	),
-    'si'=>array(
-        'rcaType'=>'NA',
-    ),
-    'sk'=>array(
-        'rcaType'=>'A54',
-	),
-    'uk'=>array(
-        'rcaType'=>'NA',
-	), 
-);
 
 
 
@@ -320,6 +234,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'uww_code' => array('k'=>$i++, 'xls'=>true),
     'uww_name' => array('k'=>$i++, 'xls'=>true),
     'uww_status' => array('k'=>$i++, 'xls'=>true),
+    'uww_iscon' => array('k'=>$i++, 'xls'=>false),
     
     'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'uww_entering_load_calculated_UwwtpAgglo_p._e.' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
