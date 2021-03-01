@@ -234,6 +234,7 @@ $GLOBALS['uwwtd']['sheet2_uwwtp'] = array(
     'uww_code' => array('k'=>$i++, 'xls'=>true),
     'uww_name' => array('k'=>$i++, 'xls'=>true),
     'uww_status' => array('k'=>$i++, 'xls'=>true),
+    'uww_iscon' => array('k'=>$i++, 'xls'=>false),
     
     'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'uww_entering_load_calculated_UwwtpAgglo_p._e.' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),

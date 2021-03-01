@@ -74,7 +74,8 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){      
+function uwwtd_register_set_operation(&$batch, $annee){   
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -751,19 +752,19 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
 
                         }
                     }
+                    if($k == 'uww_status'){
+                        //If not connected add the information
+                        if($uwwtp[$ind['uww_iscon']['k']] == 'no'){
+                            $val.=' (not connected)';
+                        }
+                    }
                 }else{
                     $val = null;
                 }
                 //Other condition on field ?
                 $line[$conf['k']] = (string)$val;
                 $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
-            }
-
-            
-            
-
-   
-            
+            }            
         }
         $lines[$j] = $line;
         $j++;
@@ -8430,13 +8431,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             left join
                 {field_data_field_status} status
                     ON n.nid = status.entity_id
-                    
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
             and status.field_status_value::integer = 1
         order by f_agggenerated.field_agggenerated_value desc
         ';
+        //AND n.nid = 238941
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
@@ -8667,25 +8668,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
             if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false === strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] =
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+            elseif($uwwtp[$induww['uww_iscon']] == 'no'){
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art4_monitoring']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] =
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+            elseif ($uwwtp[$induww['uww_iscon']] == 'no') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art5_treatment type']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] =
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
+            elseif ($uwwtp[$induww['uww_iscon']] == 'no') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
             if ($uwwtp[$induww['art5_monitoring']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
-                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] =
-                            $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-
+            elseif ($uwwtp[$induww['uww_iscon']] == 'no') {
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
+            }
             //for all uwwtp with more stringent treatment, check art5
 
             if (false !== strpos($uwwtp[$induww['treatment required']], '3')) {
@@ -9282,7 +9294,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		//cn@oieau 19/01/2017 addition in order to add the leak to the C/NC/NR load : leak = connected load - total entering load
 		$agg_leak = ($line[$ind['connected_to_collecting_system_p._e.']] - $line[$ind['total_entering_load_p._e.']]);
         //In 2016 for CY, we need to add $line[$ind['neither_collecting_system_nor_ias_p._e.']] in leak value 
-        if($annee >= 2016 && $conf['siif_eru_country_code'] == 'cy'){
+        if($annee == 2016 && $conf['siif_eru_country_code'] == 'cy'){
             $agg_leak+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];
         }
 		if ($agg_leak > 0){
@@ -9318,7 +9330,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				}
 			}
 			else{
-				$uwwtpinfo_for_agglo['art5_C_pe'] += $agg_leak;;
+				$uwwtpinfo_for_agglo['art5_C_pe'] += $agg_leak;
 			}
 		}
 		$agg_leak = NULL;
@@ -9400,24 +9412,26 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //Distance to compliance art. 4',
         //Treatment',
         //'% of connected Load',
-        if($line[$ind['generated load  p. e.']]>0) {
-            $line[$ind['dist_art4_treat__%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated_load_p.e.']]>0) {
+            $line[$ind['dist_art4_treat__%_of_connected_load']] =   $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated_load_p.e.']];
         }
         else {
             $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
         }
         //'in p.e. (4)',
-        $line[$ind['dist_art4_treat_in_p.e._(4)']] = $uwwtpinfo_for_agglo['distart4_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
+
+        $line[$ind['dist_art4_treat_in_p.e._(4)']] = $uwwtpinfo_for_agglo['distart4_treatment']  +agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
+               
                 
         //Performance',
         //'% of connected Load',
-        if($line[$ind['generated load  p. e.']]>0) $line[$ind['dist_art4_perf_%_of_connected_load']] = $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated_load_p.e.']]>0) $line[$ind['dist_art4_perf_%_of_connected_load']] =  $uwwtpinfo_for_agglo['distart4_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated_load_p.e.']];
         else $line[$ind['dist_art4_perf_%_of_connected_load']] = '';
         //'in p.e. (5)',
         $line[$ind['dist_art4_perf_in_p.e._(5)']] = $uwwtpinfo_for_agglo['distart4_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
-        
         /*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
         //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
+        */
         if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
             //Treatment',
             $line[$ind['dist_art4_treat__%_of_connected_load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
@@ -9426,7 +9440,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['dist_art4_perf_%_of_connected_load']] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $line[$ind['dist_art4_perf_in_p.e._(5)']]+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];  
         }
-        */
+
         $compliance = NULL;
 
         //Compliance Art. 5',
@@ -9555,18 +9569,18 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 		}else{
 			$compliance = 'NC';
 		}
-        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated_load_p.e.']]>0) $line[$ind['distance_art5_treat_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated_load_p.e.']];
         else $line[$ind['distance_art5_treat_%_of_gen._load']] = '';
         //'in p.e. (6)',
         $line[$ind['distance_art5_treat_in_p.e._(6)']] = $uwwtpinfo_for_agglo['distart5_treatment'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         //Performance',
         //'% of gen. Load',
-        if($line[$ind['generated load  p. e.']]>0) $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated load  p. e.']];
+        if($line[$ind['generated_load_p.e.']]>0) $line[$ind['distance_art5_perf_%_of_gen._load']] = $uwwtpinfo_for_agglo['distart5_monitoring_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated_load_p.e.']];
         else $line[$ind['distance_art5_perf_%_of_gen._load']] = '';
         //'in p.e. (7)',
         $line[$ind['distance_art5_perf_in_p.e._(7)']] = $uwwtpinfo_for_agglo['distart5_monitoring'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]);
         
-        /*/*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
+        //nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
         //If dicharge without treament > 2% and 2000 eq the load is reported in art 5
         //Set DTT but if no more stringent treatment is required => this value will be empty later
         if( $line[$ind['compliance_art._5_(whole_agglo)']] != 'NR' && ($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2)){
@@ -9579,7 +9593,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['distance_art5_perf_in_p.e._(7)']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
             $line[$ind['distance_art5_perf_%_of_gen._load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]; 
         }
-        */
         
 		$compliance = NULL;
 
@@ -10475,11 +10488,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
                 AND f_agggenerated.field_agggenerated_value >= 2000
+                
             GROUP BY n.nid
-            ORDER BY agggenerated desc NULLS LAST
-            ;
+            ORDER BY agggenerated desc NULLS LAST;
         ';        
-        
+        //AND agg.field_uwwaggliste_nid = 238941
         $param = array(
             ':typenode' => 'uwwtp',
             ':annee' => $annee,
@@ -10573,6 +10586,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $ind['uww_code'] => 'code',
             $ind['uww_name'] => 'name',
             $ind['uww_status'] => 'status',
+            $ind['uww_iscon'] => 'iscon',
 
             $ind['uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load'] => 'uww_entering_this_UWWTP_UwwtpAgglo_%_of_gen._load',
             $ind['uww_entering_load_calculated_UwwtpAgglo_p._e.'] => 'uww_entering_load_calculated_UwwtpAgglo_p._e.',
@@ -10842,6 +10856,12 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         break;
                 }
             }
+            
+            $line[$ind['uww_iscon']] = 'yes';
+            if($uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
+                $line[$ind['uww_iscon']] = 'no';
+            }
+            
             //load the agg_uwwtp node to get the percentage enering the uwwtp for this agglo
 //             dsm($agg);
 //             dsm(array('year' => $annee, 'aggCode' => $agg->field_inspireidlocalid['und'][0]['value'], 'uwwCode' => $uwwtp->field_inspireidlocalid['und'][0]['value']));
