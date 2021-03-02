@@ -7967,7 +7967,7 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             $dcps[] = array(
                 'nid' => $dcp->nid,
                 'title' => $dcp->title,
-                'status'=>field_status['und'][0]['value'],
+                'status'=>$dcp->field_status['und'][0]['value'],
                 'waterbody' => $dcp->field_dcpwaterbodytype['und'][0]['value'],
                 'rcatype' => $rcaTypeid,
                 'rcazonetype' => $zonetypeIsSet,

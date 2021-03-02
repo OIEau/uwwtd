@@ -1066,7 +1066,7 @@ function uwwtd_stats_sum($data, $year, $col){
     return $out;
 }
 
-function uwwtd_stats_summary_chapter($year){
+function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     
     module_load_include('inc','uwwtd','script/country/country');
     module_load_include('inc','uwwtd','inc/pages');
@@ -1075,8 +1075,16 @@ function uwwtd_stats_summary_chapter($year){
     module_load_include('inc','uwwtd','inc/register');
     module_load_include('inc','uwwtd','inc/inc/register.config');
     */
-    
-    
+    dsm($year);
+    dsm( $yearsPossibles);
+    if($y == 'allyears'){
+        $years = $yearsPossibles;
+        unset($years['allyears']);
+    }else{
+        $years = [$y];
+    }
+    $output = '';
+    foreach($years as $year){
     //===Set options and const
     
     $option['field_anneedata_value'] = $year;
@@ -1164,7 +1172,7 @@ function uwwtd_stats_summary_chapter($year){
     //include($path);
 
     
-    $output = '<h2>Summary</h2>';
+    $output .= '<h2>'.$year.'</h2>';
     $output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'% of agglomerations and '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of generated load.</b></p>';
     $output .= '<p>In '.$year.', '.$country_name.' counted '.$national_compliance_nb['Total'].' agglomerations generating ≥2,000 p.e. each, of which:</p>';
     $output .= '<ul>';
@@ -1403,7 +1411,7 @@ if(!empty($overflow)){
 if(!empty($no_ms_level)){
     $output.='<p>No information was reported on '.implode(', ', $no_ms_level).' by '.$country_name.'.</p>';
 }
-
+   }
     return '<div class="view-content">'.$output.'</div>';
 }
 
