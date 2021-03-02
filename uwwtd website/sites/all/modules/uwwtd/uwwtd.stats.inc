@@ -1075,8 +1075,6 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     module_load_include('inc','uwwtd','inc/register');
     module_load_include('inc','uwwtd','inc/inc/register.config');
     */
-    dsm($year);
-    dsm( $yearsPossibles);
     if($y == 'allyears'){
         $years = $yearsPossibles;
         unset($years['allyears']);
@@ -1084,12 +1082,15 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
         $years = [$y];
     }
     $output = '';
-    foreach($years as $year){
-    //===Set options and const
     
-    $option['field_anneedata_value'] = $year;
+    //===Set const
     $country_code = variable_get('siif_eru_country_code', '-1');
     $country_name = variable_get('siif_eru_country_name');
+    
+    foreach($years as $year){
+    //===Set options
+    
+    $option['field_anneedata_value'] = $year;
     if(isset($GLOBALS['pop_ms'][strtoupper($country_code)][$year])){
         $population =$GLOBALS['pop_ms'][strtoupper($country_code)][$year];
     }else{
