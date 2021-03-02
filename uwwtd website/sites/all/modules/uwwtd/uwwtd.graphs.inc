@@ -46,7 +46,7 @@ function uwwtd_stats_summary_chapter_form($form, &$form_state){
         }
         
 		if(!isset($form_state['storage']['result']) && empty($form_state['input'])) {
-			$form_state['storage']['result'] = uwwtd_stats_summary_chapter($year);
+			$form_state['storage']['result'] = uwwtd_stats_summary_chapter($year, $years);
 		}
         $form['#suffix'] = $form_state['storage']['result'];
 	return $form;
