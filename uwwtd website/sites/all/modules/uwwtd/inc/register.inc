@@ -7254,8 +7254,9 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         //secondary treatement
         if (isset($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']))
         	$sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
-        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']))
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace'])){
         	$sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
+        }
         if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%']))
         	$sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
         if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%']))
