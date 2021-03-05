@@ -141,8 +141,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
       
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+//    $batch['operations'][]=array('uwwtd_create_report', array($annee));
+//    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     //===============                                    
 
 }
@@ -5044,30 +5044,32 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->getCell('E166')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C166'));
 
     //array 16  average
-    if (isset($context['results']['graph']['incoming_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C169')->setValue(round(($context['results']['graph']['incoming_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['incoming_load_bod_avg']) && !empty($context['results']['graph']['incoming_load_bod_avg'])) {
+    	$sheet->getCell('C169')->setValue(round(array_sum($context['results']['graph']['incoming_load_bod_avg'])/count($context['results']['graph']['incoming_load_bod_avg'])));
     }
-    if (isset($context['results']['graph']['discharge_load_bod']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C170')->setValue(round(($context['results']['graph']['discharge_load_bod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['discharge_load_bod_avg']) && !empty($context['results']['graph']['discharge_load_bod_avg'])) {
+    	$sheet->getCell('C170')->setValue(round(array_sum($context['results']['graph']['discharge_load_bod_avg'])/count($context['results']['graph']['discharge_load_bod_avg'])));
     }
-    if (isset($context['results']['graph']['incoming_load_cod']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C171')->setValue(round(($context['results']['graph']['incoming_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['incoming_load_cod_avg']) && !empty($context['results']['graph']['incoming_load_cod_avg'])) {
+    	$sheet->getCell('C171')->setValue(round(array_sum($context['results']['graph']['incoming_load_cod_avg'])/count($context['results']['graph']['incoming_load_cod_avg'])));
     }
-    if (isset($context['results']['graph']['discharge_load_cod']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C172')->setValue(round(($context['results']['graph']['discharge_load_cod'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['discharge_load_cod_avg']) && !empty($context['results']['graph']['discharge_load_cod_avg'])) {
+    	$sheet->getCell('C172')->setValue(round(array_sum($context['results']['graph']['discharge_load_cod_avg'])/count($context['results']['graph']['discharge_load_cod_avg'])));
     }
-    if (isset($context['results']['graph']['incoming_load_n']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C173')->setValue(round(($context['results']['graph']['incoming_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['incoming_load_n_avg']) && !empty($context['results']['graph']['incoming_load_n_avg'])) {
+    	$sheet->getCell('C173')->setValue(round(array_sum($context['results']['graph']['incoming_load_n_avg'])/count($context['results']['graph']['incoming_load_n_avg'])));
     }
-    if (isset($context['results']['graph']['discharge_load_n']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C174')->setValue(round(($context['results']['graph']['discharge_load_n'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['discharge_load_n_avg']) && !empty($context['results']['graph']['discharge_load_n_avg'])) {
+    	$sheet->getCell('C174')->setValue(round(array_sum($context['results']['graph']['discharge_load_n_avg'])/count($context['results']['graph']['discharge_load_n_avg'])));
     }
-    if (isset($context['results']['graph']['incoming_load_p']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C175')->setValue(round(($context['results']['graph']['incoming_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['incoming_load_p_avg']) && !empty($context['results']['graph']['incoming_load_p_avg'])) {
+    	$sheet->getCell('C175')->setValue(round(array_sum($context['results']['graph']['incoming_load_p_avg'])/count($context['results']['graph']['incoming_load_p_avg'])));
     }
-    if (isset($context['results']['graph']['discharge_load_p']) && isset($context['results']['country_volume_waste_water'])) {
-    	$sheet->getCell('C176')->setValue(round(($context['results']['graph']['discharge_load_p'] / $context['results']['country_volume_waste_water']) * 1000000));
+    if (isset($context['results']['graph']['discharge_load_p_avg']) && !empty($context['results']['graph']['discharge_load_p_avg'])) {
+    	$sheet->getCell('C176')->setValue(round(array_sum($context['results']['graph']['discharge_load_p_avg'])/count($context['results']['graph']['discharge_load_p_avg'])));
     }
+
+
 
     //previous
     $sheet->getCell('D169')->setValue(uwwtd_register_get_cell_value($previoussheet, 'C169'));
@@ -7254,8 +7256,9 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         //secondary treatement
         if (isset($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']))
         	$sheet->getCell('C16')->setValue($context['sandbox']['data']['expired']['secondary_target']['total_load_pe']);
-        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']))
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace'])){
         	$sheet->getCell('C17')->setValue($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace']);
+        }
         if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%']))
         	$sheet->getCell('D17')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_%'], 1));
         if (isset($context['sandbox']['data']['expired']['secondary_target']['treatement_inplace_distance_%']))
@@ -11853,6 +11856,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Incoming concentration BOD mg/l', ($uwwtp->field_uwwbodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($bodincoming >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration BOD mg/l']] = ($bodincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['incoming_load_bod_avg'][]= ($bodincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration BOD mg/l']] = '';
             }
@@ -11860,6 +11864,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Discharge concentration BOD mg/l', ($uwwtp->field_uwwboddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($boddischarge > 0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration BOD mg/l']] = ($boddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['discharge_load_bod_avg'][]= ($boddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration BOD mg/l']] = '';
             }
@@ -11894,6 +11899,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Incoming concentration COD mg/l',  ($uwwtp->field_uwwcodincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($codincoming >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration COD mg/l']] = ($codincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['incoming_load_cod_avg'][]= ($codincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration COD mg/l']] = '';
             }
@@ -11901,6 +11907,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Discharge concentration COD mg/l',  ($uwwtp->field_uwwcoddischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($coddischarge >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration COD mg/l']] = ($coddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['discharge_load_cod_avg'][]= ($coddischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration COD mg/l']] = '';
             }
@@ -11935,6 +11942,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Incoming concentration N mg/l',         ($uwwtp->field_uwwnincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($nincoming>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration N mg/l']] = ($nincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['incoming_load_n_avg'][]= ($nincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration N mg/l']] = '';
             }
@@ -11942,6 +11950,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Discharge concentration N mg/l',    ($uwwtp->field_uwwndischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($ndischarge >0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Discharge concentration N mg/l']] = ($ndischarge  / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['discharge_load_n_avg'][]= ($ndischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration N mg/l']] = '';
             }
@@ -11977,6 +11986,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Incoming concentration P mg/l',  ($uwwtp->field_uwwpincoming[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($pincoming>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value'])) {
                 $line[$ind['average Incoming concentration P mg/l']] = ($pincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['incoming_load_p_avg'][]= ($pincoming / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Incoming concentration P mg/l']] = '';
             }
@@ -11984,6 +11994,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //'average Discharge concentration P mg/l', ($uwwtp->field_uwwpdischarge[LANGUAGE_NONE][0]['value'] / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000;
             if ($pdischarge>0 && isset($uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) && $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']>0) {
                 $line[$ind['average Discharge concentration P mg/l']] = ($pdischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
+                $context['results']['graph']['discharge_load_p_avg'][]= ($pdischarge / $uwwtp->field_uwwwastewatertreated[LANGUAGE_NONE][0]['value']) *1000000;
             } else {
                 $line[$ind['average Discharge concentration P mg/l']] = '';
             }
