@@ -747,7 +747,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         $subkeys = array(
             'ReceivingAreasSAParameter'=>'Row',
             'ReceivingAreasSA54'=>'Row',
-            'ReceivingAreasLSA'=>'Row',
             'ReceivingAreasSASA'=>'Row',
             'ReceivingAreasSALSAPredecessor'=>'Row'
         );
@@ -777,8 +776,19 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
         }
     }
-
-
+    elseif(isset($datas['ReceivingAreasLSA'])){
+        if(!isset($datas['ReceivingAreasLSA']['Row']['rcaCode'])){
+            foreach($datas['ReceivingAreasLSA']['Row'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        //nd@oieau.fr 17/07/2018 : check how this tag appear in $datas when we have only one item
+        else{
+            foreach($datas['ReceivingAreasLSA'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+    }
     if (!empty($imports)) {
 
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
