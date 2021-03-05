@@ -788,6 +788,34 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
                 $imports[$rca['rcaCode']] = $rca;
             }
         }
+        $subkeys = array(
+            'ReceivingAreasSALSAPredecessor'=>'Row'
+        );
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas[$root]) && isset($datas[$root][$key])) {
+                foreach ($datas[$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas[$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
+
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
+                    }
+                }
+            }
+        }
     }
     if (!empty($imports)) {
 
