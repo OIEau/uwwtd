@@ -776,7 +776,7 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
         }
     }
-    elseif(isset($datas['ReceivingAreasLSA'])){
+    if(isset($datas['ReceivingAreasLSA'])){
         if(!isset($datas['ReceivingAreasLSA']['Row']['rcaCode'])){
             foreach($datas['ReceivingAreasLSA']['Row'] as $rca){
                 $imports[$rca['rcaCode']] = $rca;
