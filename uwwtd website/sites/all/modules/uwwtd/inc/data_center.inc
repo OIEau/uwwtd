@@ -5818,8 +5818,7 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $id = str_replace(' ', '', trim($id));
     }
     else return false;
-    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326); 
-    
+    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326);     
     $ids = array();
     $query = db_select('node', 'n');
         $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
@@ -5846,7 +5845,10 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
 
         node_save($node);
     }
-    else return false;        
+    else{
+        dsm('fail to find ID:'.$id);
+        return false; 
+    }        
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {
