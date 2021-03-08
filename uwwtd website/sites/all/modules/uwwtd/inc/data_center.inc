@@ -747,7 +747,6 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
         $subkeys = array(
             'ReceivingAreasSAParameter'=>'Row',
             'ReceivingAreasSA54'=>'Row',
-            'ReceivingAreasLSA'=>'Row',
             'ReceivingAreasSASA'=>'Row',
             'ReceivingAreasSALSAPredecessor'=>'Row'
         );
@@ -777,8 +776,47 @@ function uwwtd_setup_batch($newFile, $annee, $datas, $repCode, $timestamp){
             }
         }
     }
+    if(isset($datas['ReceivingAreasLSA'])){
+        if(!isset($datas['ReceivingAreasLSA']['Row']['rcaCode'])){
+            foreach($datas['ReceivingAreasLSA']['Row'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        //nd@oieau.fr 17/07/2018 : check how this tag appear in $datas when we have only one item
+        else{
+            foreach($datas['ReceivingAreasLSA'] as $rca){
+                $imports[$rca['rcaCode']] = $rca;
+            }
+        }
+        $subkeys = array(
+            'ReceivingAreasSALSAPredecessor'=>'Row'
+        );
+        foreach ($subkeys as $root=>$key) {
+            if (isset($datas[$root]) && isset($datas[$root][$key])) {
+                foreach ($datas[$root][$key] as $baliseName => $rcaValue){
+                    if (!is_array($rcaValue)) {
+                        // Get rcaCode :
+                        $rcaCode = '';
+                        foreach($datas[$root][$key] as $key2 => $rcaValue2) {
+                            if ($key2 === 'rcaCode') {
+                                $rcaCode = $rcaValue2;
+                            }
+                        }
 
-
+                        // if $rcaCode found :
+                        if (!empty($rcaCode)) {
+                            $imports[$rcaCode][$root][0][$baliseName] = $rcaValue;
+                        }
+                    } else {
+                        if(isset($imports[$rcaValue['rcaCode']])){
+                            //ajout d'un tableau
+                            $imports[$rcaValue['rcaCode']][$root][] = $rcaValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
     if (!empty($imports)) {
 
     	$batch['operations'][]=array('uwwtd_import_rca_batch_process', array($newFile, $annee, $imports, $repCode, $timestamp));
@@ -5780,8 +5818,7 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
         $id = str_replace(' ', '', trim($id));
     }
     else return false;
-    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326); 
-    
+    $geo = uwwtd_wkt_transform($record['shp'],  $proj, 4326);     
     $ids = array();
     $query = db_select('node', 'n');
         $query->join('field_data_field_siteid', 's', 's.entity_id = n.nid');
@@ -5808,7 +5845,10 @@ function rca_set_geo_obj($record, $annee,  $proj='4258'){
 
         node_save($node);
     }
-    else return false;        
+    else{
+        dsm('fail to find ID:'.$id);
+        return false; 
+    }        
 }
 
 function uwwtd_shapes_finished($success, $results, $operations) {

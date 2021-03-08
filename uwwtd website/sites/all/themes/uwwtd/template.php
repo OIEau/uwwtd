@@ -1641,6 +1641,12 @@ function uwwtd_get_agglo_graphic($node) {
     $reseau[$uwws['nid']]['mstype'] = $msType;
     $reseau[$uwws['nid']]['hasMoreStringent'] = $uww->field_uwwtreatmenttype['und'][0]['value'] == 'MS' ? true : false;
     $reseau[$uwws['nid']]['title'] = $uww->title;
+    //dsm($uww);
+    /*
+    if(isset($uww->field_uwwcompliance['und']) && in_array($uww->field_uwwcompliance['und'][0]['value'], ['C','NC','NR'])){
+        $reseau[$uwws['nid']]['compStation'] = $uww->field_uwwcompliance['und'][0]['value'];
+    }
+    */
     if ($uww->field_uwwcompliance['und'][0]['value'] == 'NR') {
       $reseau[$uwws['nid']]['compStation'] = 'NR';
     } elseif ($uww->field_uwwsecondarytreatment['und'][0]['value'] == '1' &&
@@ -1651,7 +1657,8 @@ function uwwtd_get_agglo_graphic($node) {
       $uww->field_uwwcodperf['und'][0]['value'] == 'F' ||
       $uww->field_uwwbod5perf['und'][0]['value'] == 'F') {
       $reseau[$uwws['nid']]['compStation'] = 'NC';
-    } else {
+    }    
+    else {
       $reseau[$uwws['nid']]['compStation'] = 'NR';
     }
 
