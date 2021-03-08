@@ -205,6 +205,7 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
+    dsm($results);
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
