@@ -285,6 +285,7 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
  * Récupère en base les données pour Graph 1 et 2 de la ligne 3 et 4.
  */
 function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
+    unset($yearsPossibles['allyears']);
 	$conditions = '';
 	switch($yearSelected){
 		case ALL_YEARS :
@@ -339,7 +340,8 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         GROUP BY n.nid
         )
     ';
-	$query = $with. 'SELECT f_annee.field_anneedata_value as year, con.field_uwwcollectingsystem_value as con, ' . $group_by . ',';
+    //, con.field_uwwcollectingsystem_value as con
+	$query = $with. 'SELECT f_annee.field_anneedata_value as year, ' . $group_by . ',';
     //AND con.field_uwwcollectingsystem_value = \'ISCON\'
     //warning this request count the number of agglomeration and not just the number of uwwtp
 	$query .= ' COUNT(n.nid) AS  total_count, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS loadentering_sum
@@ -349,7 +351,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         JOIN
             {field_data_field_anneedata} f_annee
                 ON n.nid = f_annee.entity_id
-        JOIN {field_data_field_uwwcollectingsystem}  con
+        LEFT JOIN {field_data_field_uwwcollectingsystem}  con
                 ON n.nid = con.entity_id 
         LEFT JOIN
             {field_data_field_uwwcompliance} f_comp
@@ -369,8 +371,8 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 		WHERE n.type = :typenode 
     ' .
     $conditions . '
-		GROUP BY f_annee.field_anneedata_value, con.field_uwwcollectingsystem_value, ' . $group_by;
-
+		GROUP BY f_annee.field_anneedata_value,  ' . $group_by;
+    //con.field_uwwcollectingsystem_value,
     $param = array(
         ':typenode' => 'uwwtp',
         ':min_agg' => variable_get('min_aggenerated_display', '2000'),
