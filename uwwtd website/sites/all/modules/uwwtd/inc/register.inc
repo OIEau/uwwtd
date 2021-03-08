@@ -143,7 +143,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    //===============                                    
+
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
 
 }
 
@@ -6556,11 +6557,13 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $context['sandbox']['data']['expired']['secondary_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['expired']['secondary_target']['treatement_inplace'] = 0;
         $context['sandbox']['data']['expired']['secondary_target']['monitoring_result'] = 0;
+        $context['sandbox']['data']['expired']['secondary_target']['dwt'] = 0;
 
         $context['sandbox']['data']['expired']['morestringent_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['expired']['morestringent_target']['installation_inplace'] = 0;
         $context['sandbox']['data']['expired']['morestringent_target']['monitoring_result'] = 0;
 		$context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe'] = 0;
+        $context['sandbox']['data']['expired']['morestringent_target']['dwt'] = 0;
         
 		$context['sandbox']['data']['exp_big_cities']['target_connection']['total_load_pe'] = 0;
         $context['sandbox']['data']['exp_big_cities']['target_connection']['collected_system_inplace'] = 0;
@@ -6569,11 +6572,13 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $context['sandbox']['data']['exp_big_cities']['secondary_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['exp_big_cities']['secondary_target']['treatement_inplace'] = 0;
         $context['sandbox']['data']['exp_big_cities']['secondary_target']['monitoring_result'] = 0;
+        $context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt'] = 0;
 
         $context['sandbox']['data']['exp_big_cities']['morestringent_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['exp_big_cities']['morestringent_target']['installation_inplace'] = 0;
         $context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result'] = 0;
 		$context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_distance_pe'] = 0;
+		$context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt'] = 0;
 		
 		$context['sandbox']['data']['pending']['target_connection']['total_load_pe'] = 0;
         $context['sandbox']['data']['pending']['target_connection']['collected_system_inplace'] = 0;
@@ -6582,11 +6587,14 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
         $context['sandbox']['data']['pending']['secondary_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['pending']['secondary_target']['treatement_inplace'] = 0;
         $context['sandbox']['data']['pending']['secondary_target']['monitoring_result'] = 0;
-
+        $context['sandbox']['data']['pending']['secondary_target']['dwt'] = 0;
+        
         $context['sandbox']['data']['pending']['morestringent_target']['total_load_pe'] = 0;
         $context['sandbox']['data']['pending']['morestringent_target']['installation_inplace'] = 0;
         $context['sandbox']['data']['pending']['morestringent_target']['monitoring_result'] = 0;
 		$context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe'] = 0;
+        $context['sandbox']['data']['pending']['morestringent_target']['dwt'] = 0;
+        
         unset($listtypestattmp);
     }
 
@@ -6609,10 +6617,13 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['total_load_pe'] = 0;
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['monitoring_result'] = 0;
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['monitoring_result_distance_pe'] = 0;
+            $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['dwt'] = 0;
 
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['total_load_pe'] = 0;           
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['monitoring_result'] = 0;           
             $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['monitoring_result_distance_pe'] = 0;  
+            $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['dwt'] = 0;  
+            
         }
 
         //AGGLO distance $agglo[$ind['aggcode']]
@@ -6623,10 +6634,12 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['total_load_pe'] = 0;
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['monitoring_result'] = 0;
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['monitoring_result_distance_pe'] = 0;
+            $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['dwt'] = 0;
 
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['total_load_pe'] = 0;           
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['monitoring_result'] = 0;   
             $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['monitoring_result_distance_pe'] = 0;  
+            $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['dwt'] = 0;
         }
 
         if (isset($agglo[$ind['art3_compliance']]) &&
@@ -6700,6 +6713,11 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                     if($agglo[$ind['bccode']]!=''){$context['sandbox']['data']['exp_big_cities']['secondary_target']['total_load_pe'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];}
                     $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                     $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    
+                    $context['sandbox']['data']['expired']['secondary_target']['dwt'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    if($agglo[$ind['bccode']]!=''){$context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];}
+                    $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                 }
                 
             }
@@ -6712,6 +6730,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                         $context['sandbox']['data']['pending']['secondary_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                         $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                         $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['pending']['secondary_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['secondary_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['secondary_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        
                     }
             }
         }
@@ -6754,6 +6776,11 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                     if($agglo[$ind['bccode']]!=''){$context['sandbox']['data']['exp_big_cities']['morestringent_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];}
                     $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                     $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    $context['sandbox']['data']['expired']['morestringent_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    if($agglo[$ind['bccode']]!=''){$context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];}
+                    $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                    
                 }
             }
             elseif($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD'){
@@ -6766,6 +6793,10 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
                         $context['sandbox']['data']['pending']['morestringent_target']['total_load_pe'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                         $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['total_load_pe'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
                         $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['total_load_pe'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['pending']['morestringent_target']['dwt'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['nuts2'][$agglo[$ind['nuts_2_code']]]['morestringent_target']['dwt'] +=$agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        $context['sandbox']['data']['agg'][$agglo[$ind['aggcode']]]['morestringent_target']['dwt'] += $agglo[$ind['neither_collecting_system_nor_ias_p._e.']];
+                        
                     }
                     
             }
@@ -7155,12 +7186,19 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
             }
+            
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['dwt']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['dwt_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['secondary_target']['dwt']* 100 / $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'];
+            }
 
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
+            }
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['dwt'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['dwt_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['dwt'];
             }
 
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_%'])) {
@@ -7169,13 +7207,18 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_%'];
             }
-
+             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['dwt_%'])) {
+            	$context['sandbox']['data'][$typedeadline]['secondary_target']['dwt_distance_%'] = ($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['secondary_target']['dwt_%'];
+            }
             //more stringent % and distance
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 :  $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace'];
+			}
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_distance_pe'] = $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt'];
 			}
 
             // BB - 07/11 - Removing this as the DTC is calculated before
@@ -7186,6 +7229,9 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 :  $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt']) && isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'])) {
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 :  $context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt']* 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            }
 
             if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'])) {
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : 100 - $context['sandbox']['data'][$typedeadline]['morestringent_target']['installation_inplace_%'];
@@ -7194,8 +7240,12 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
                 // Changing this - See above
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_%'])) {
+                // Changing this - See above
+            	$context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_distance_pe'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
+            }
         }
-
+        
         //build excel sheet
         $model_path = uwwtd_getregister_modelfile_path($annee);
         //change to public://
@@ -7273,6 +7323,14 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('E18')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']))
         	$sheet->getCell('F18')->setValue($context['sandbox']['data']['expired']['secondary_target']['monitoring_result_distance_pe']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['dwt_distance_pe']))
+        	$sheet->getCell('C19')->setValue($context['sandbox']['data']['expired']['secondary_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['dwt_distance_%']))
+        	$sheet->getCell('D19')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['dwt_%']))
+        	$sheet->getCell('E19')->setValue(round($context['sandbox']['data']['expired']['secondary_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['secondary_target']['dwt']))
+        	$sheet->getCell('F19')->setValue($context['sandbox']['data']['expired']['secondary_target']['dwt']);
 
         //more stringent treatment
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['total_load_pe']))
@@ -7293,6 +7351,15 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('E22')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']))
         	$sheet->getCell('F22')->setValue($context['sandbox']['data']['expired']['morestringent_target']['monitoring_result_distance_pe']);
+     if (isset($context['sandbox']['data']['expired']['morestringent_target']['dwt_distance_pe']))
+        	$sheet->getCell('C23')->setValue($context['sandbox']['data']['expired']['morestringent_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['dwt_distance_%']))
+        	$sheet->getCell('D23')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['dwt_%']))
+        	$sheet->getCell('E23')->setValue(round($context['sandbox']['data']['expired']['morestringent_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['expired']['morestringent_target']['dwt']))
+        	$sheet->getCell('F23')->setValue($context['sandbox']['data']['expired']['morestringent_target']['dwt']);
+
 
         //pending
         //target connection
@@ -7314,8 +7381,8 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('D34')->setValue(round($context['sandbox']['data']['pending']['target_connection']['ias_%'], 1));
 
         //secondary treatement
-        if (isset($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']))
-        	$sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['total_load_pe']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['dwt']))
+        	$sheet->getCell('C36')->setValue($context['sandbox']['data']['pending']['secondary_target']['dwt']);
         if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']))
 	        $sheet->getCell('C37')->setValue($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace']);
         if (isset($context['sandbox']['data']['pending']['secondary_target']['treatement_inplace_%']))
@@ -7332,6 +7399,16 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 	        $sheet->getCell('E38')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F38')->setValue($context['sandbox']['data']['pending']['secondary_target']['monitoring_result_distance_pe']);
+             if (isset($context['sandbox']['data']['pending']['secondary_target']['dwt_distance_pe']))
+        	$sheet->getCell('C39')->setValue($context['sandbox']['data']['pending']['secondary_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['dwt_distance_%']))
+        	$sheet->getCell('D39')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['dwt_%']))
+        	$sheet->getCell('E39')->setValue(round($context['sandbox']['data']['pending']['secondary_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['secondary_target']['dwt']))
+        	$sheet->getCell('F39')->setValue($context['sandbox']['data']['pending']['secondary_target']['dwt']);    
+            
+        
 
         //more stringent treatment
         if (isset($context['sandbox']['data']['pending']['morestringent_target']['total_load_pe']))
@@ -7352,6 +7429,14 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 	        $sheet->getCell('E42')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']))
 	        $sheet->getCell('F42')->setValue($context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe']);
+     if (isset($context['sandbox']['data']['pending']['morestringent_target']['dwt_distance_pe']))
+        	$sheet->getCell('C43')->setValue($context['sandbox']['data']['pending']['morestringent_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['dwt_distance_%']))
+        	$sheet->getCell('D43')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['dwt_%']))
+        	$sheet->getCell('E43')->setValue(round($context['sandbox']['data']['pending']['morestringent_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['pending']['morestringent_target']['dwt']))
+        	$sheet->getCell('F43')->setValue($context['sandbox']['data']['pending']['morestringent_target']['dwt']);         
 
         //total
         //target connection
@@ -7390,8 +7475,19 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 	        $sheet->getCell('C57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result']);
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']))
 	        $sheet->getCell('D57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%'], 1));
-        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%']))
-	        $sheet->getCell('E57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']))
+	        $sheet->getCell('E57')->setValue($context['sandbox']['data']['total']['secondary_target']['monitoring_result_%']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F57')->setValue(round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe'], 1));
+         if (isset($context['sandbox']['data']['total']['secondary_target']['dwt_distance_pe']))
+        	$sheet->getCell('C58')->setValue($context['sandbox']['data']['total']['secondary_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['total']['secondary_target']['dwt_distance_%']))
+        	$sheet->getCell('D58')->setValue(round($context['sandbox']['data']['total']['secondary_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['dwt_%']))
+        	$sheet->getCell('E58')->setValue(round($context['sandbox']['data']['total']['secondary_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['total']['secondary_target']['dwt']))
+        	$sheet->getCell('F58')->setValue($context['sandbox']['data']['total']['secondary_target']['dwt']);  
+       
 
          $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1);         
 
@@ -7415,7 +7511,17 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 	        $sheet->getCell('D61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_%'], 1));
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%']))
 	        $sheet->getCell('E61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1));
-
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
+	        $sheet->getCell('F61')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['dwt_distance_pe']))
+        	$sheet->getCell('C62')->setValue($context['sandbox']['data']['total']['morestringent_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['dwt_distance_%']))
+        	$sheet->getCell('D62')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['dwt_%']))
+        	$sheet->getCell('E62')->setValue(round($context['sandbox']['data']['total']['morestringent_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['total']['morestringent_target']['dwt']))
+        	$sheet->getCell('F62')->setValue($context['sandbox']['data']['total']['morestringent_target']['dwt']);       
+                        
          $context['results']['auto_report']['ART5_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_%'], 1);
 
         if (isset($context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe']))
@@ -7464,6 +7570,15 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('E76')->setValue(round($context['sandbox']['data']['exp_big_cities']['secondary_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['exp_big_cities']['secondary_target']['monitoring_result_distance_pe']))
         	$sheet->getCell('F76')->setValue($context['sandbox']['data']['exp_big_cities']['secondary_target']['monitoring_result_distance_pe']);
+            
+         if (isset($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_distance_pe']))
+        	$sheet->getCell('C77')->setValue($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_distance_%']))
+        	$sheet->getCell('D77')->setValue(round($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_%']))
+        	$sheet->getCell('E77')->setValue(round($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt']))
+        	$sheet->getCell('F77')->setValue($context['sandbox']['data']['exp_big_cities']['secondary_target']['dwt']);   
 
         //more stringent treatment
         if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['total_load_pe']))
@@ -7480,10 +7595,20 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('C80')->setValue($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result']);
         if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_%']))
         	$sheet->getCell('D80')->setValue(round($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_%'], 1));
-        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_%']))
+        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_distance_%']))
         	$sheet->getCell('E80')->setValue(round($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_distance_%'], 1));
         if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_distance_pe']))
         	$sheet->getCell('F80')->setValue($context['sandbox']['data']['exp_big_cities']['morestringent_target']['monitoring_result_distance_pe']);
+            
+        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_distance_pe']))
+        	$sheet->getCell('C81')->setValue($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_distance_pe']);
+        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_distance_%']))
+        	$sheet->getCell('D81')->setValue(round($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_distance_%'], 1));
+        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_%']))
+        	$sheet->getCell('E81')->setValue(round($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt_%'], 1));
+        if (isset($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt']))
+        	$sheet->getCell('F81')->setValue($context['sandbox']['data']['exp_big_cities']['morestringent_target']['dwt']);
+            
 
 
         //write
