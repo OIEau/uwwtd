@@ -366,7 +366,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         LEFT JOIN
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-		WHERE n.type = :typenode
+		WHERE n.type = :typenode 
     ' .
     $conditions . '
 		GROUP BY f_annee.field_anneedata_value, con.field_uwwcollectingsystem_value, ' . $group_by;
