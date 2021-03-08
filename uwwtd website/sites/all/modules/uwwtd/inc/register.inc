@@ -6,7 +6,7 @@ require_once(drupal_get_path('module', 'uwwtd') . '/inc/utils.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/inc/data_center.inc');
 require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
 
-// dsm( DRUPAL_ROOT . '/vendor/autoload.php');
+// dsm( DRUPAL_ROOT . '/vendor/autoload.php');'total'
 
 // require DRUPAL_ROOT . '/vendor/autoload.php';
 // 
@@ -6536,6 +6536,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 
     $ragglofile = fopen($filename, 'rb');
     $listtypestat = array('expired', 'pending', 'exp_big_cities');
+    $listtypestat_sum = array('expired', 'pending');
 
     if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['file_position'] = 0;
@@ -6879,9 +6880,8 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
     fclose($ragglofile);
 
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
-
         //calcul total
-        foreach($listtypestat as $typedeadline) {
+        foreach($listtypestat_sum as $typedeadline) {
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
             	$context['sandbox']['data']['total']['target_connection']['total_load_pe'] += $context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'];
         	}
