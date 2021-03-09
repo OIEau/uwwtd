@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){   
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -141,10 +140,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
 // 
     $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
       
-    $batch['operations'][]=array('uwwtd_create_report', array($annee));
-    $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_distance_to_compliance_sheet5', array($annee));
+    //$batch['operations'][]=array('uwwtd_create_report', array($annee));
+    //$batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
 
 }
 
@@ -6918,7 +6915,7 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
             	$context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'];
         	}
         }
-
+        
         /////////////////////////////////////////////////
         //calcul % NUTS2
         foreach ($context['sandbox']['data']['nuts2'] as $nuts2code => $tmp) {
@@ -7161,7 +7158,7 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
 
 
         //calcul % and distance
-        $listtypestattmp = $listtypestat;
+        $listtypestattmp = $listtypestat_sum;
         $listtypestattmp[] = 'total';
         foreach($listtypestattmp as $typedeadline) {
         	if (isset($context['sandbox']['data'][$typedeadline]['target_connection']['collected_system_inplace']) && isset($context['sandbox']['data'][$typedeadline]['target_connection']['total_load_pe'])) {
@@ -7192,7 +7189,7 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
             }
 
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'])) {
-            	$context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
+                $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['treatement_inplace'];
             }
             if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe']) && isset($context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'])) {
             	$context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result_distance_pe'] = $context['sandbox']['data'][$typedeadline]['secondary_target']['total_load_pe'] - $context['sandbox']['data'][$typedeadline]['secondary_target']['monitoring_result'];
