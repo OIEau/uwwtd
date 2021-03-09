@@ -63,7 +63,7 @@ function uwwtd_stat_collect_data($yearSelected, $yearsPossibles){
 			// Pour chaque colonne de la ligne :
 			foreach ($dataByYear as $key => $data) {
 				if ($key != 'year' && $key!='Generated load') {
-					$out[$year][] = array(
+					$out[$year][$key] = array(
 						"value" => (float)$data,
 						"label" => $GLOBALS['ms_level']['connection'][$key]['label'],
 						"valueformat" => uwwtd_format_number(round($data, 0)).' '.t('pe'),
@@ -1199,7 +1199,7 @@ $output .= '<ul>
         <li>'.(
             $stat_collect_values['Discharged without treatment']>0?
             round(100 * $stat_collect_values['Discharged without treatment']/$stat_collect_values['Total'], 1).' % of the waste water load must still be collected (approximately '.uwwtd_format_number(round($stat_collect_values['Discharged without treatment'], -2)).' p.e.); and'
-            : 'All the waste water load is connected to collecting system or to Individual and Appropriate Systems; and'
+            : 'All the waste water load is connected to collecting system'.( $stat_collect_values['Individual and Appropriate Systems'] > 0 ?' or to Individual and Appropriate Systems':'').'; and'
             ).'
         </li>
         <li>'.( $art4_pe_NC>0?
@@ -1220,6 +1220,11 @@ $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there
     <li>'.(isset($treatmenttype_nb['More stringent treatment'])?format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology for more stringent treatment than secondary.</li>
 </ul>
 ';
+if($national_compliance_pe['Total'] <= $nbPhysicalCapacity ){
+    $output .='<p>Based on the '.$year.' data, it seems that the load generated is lower than the design capacity. </p>';
+}else{
+    $output .='<p>Based on the '.$year.' data, it seems that the load generated is larger than the design capacity. <i>[...]</i></p>';
+}
 $output.='<h3>Compliance rate by Article</h3>';
 $output.='
 <table class="table">
@@ -1251,19 +1256,19 @@ $output.='
         </tr>
         <tr>
             <td><b>Article 4 (secondary treatment)</b></td>
-            <td>'. $art4_nb .'</td>
+            <td>'. $art4_nb .'*</td>
             <td>'.$art4_C.'</td>
             <td>'.round(100 * $art4_C/$art4_nb , 1).' %</td>
-            <td>'. uwwtd_format_number($art4_pe_nb) .'</td>
+            <td>'. uwwtd_format_number($art4_pe_nb) .'**</td>
             <td>'.uwwtd_format_number($art4_pe_C).'</td>
             <td>'.round(100 * $art4_pe_C/$art4_pe_nb , 1).' %</td>
         </tr>
         <tr>
             <td><b>Article 5 (more stringent treatment)</b></td>
-            <td>'. $art5_nb .'</td>
+            <td>'. $art5_nb .'*</td>
             <td>'.$art5_C.'</td>
             <td>'.round(100 * $art5_C/$art5_nb , 1).' %</td>
-            <td>'. uwwtd_format_number($art5_pe_nb) .'</td>
+            <td>'. uwwtd_format_number($art5_pe_nb) .'**</td>
             <td>'.uwwtd_format_number($art5_pe_C).'</td>
             <td>'.round(100 * $art5_pe_C/$art5_pe_nb , 1).' %</td>
         </tr>
@@ -1275,6 +1280,13 @@ $output.='
 <p><i>**The total [p.e. waste water load] is the sum of the load of all of the agglomerations that must provide secondary treatment or more stringent treatment than secondary before discharging waste water from their treatment plants. </i></p>
 <p align="right"><i>Data source for table: Register, summary of MS data</i></p>
 ';
+
+if((integer)$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 4"} > 0 ){
+    $output.='<p>'.$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 4"} .' agglomerations were not taken into account in the calculations of the compliance rate for Article 4, all of which generate <10,000 p.e. and discharge into coastal waters .</p>';
+}
+if((integer)$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 5"} > 0 ){
+    $output.='<p>'.$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 5"} .' agglomerations were not taken into account in the calculation of the compliance rate for Article 5 because the agglomerations generate ≤10,000 p.e..</p>';
+}
 
 $output.='<h3>Distance to target </h3>';
 $output.='
@@ -1299,13 +1311,13 @@ $output.='
             <td>'.round(100 * $art3_pe_NC/$art3_pe_nb , 1).' %</td>
         </tr>
         <tr>
-            <td><b>Secondary treatment</b></td>
+            <td><b>Secondary treatment*</b></td>
             <td>'. uwwtd_format_number($art4_pe_nb) .'</td>
             <td>'.uwwtd_format_number($art4_pe_NC).'</td>
             <td>'.round(100 * $art4_pe_NC/$art4_pe_nb , 1).' %</td>
         </tr>
         <tr>
-            <td><b>More stringent treatment</b></td>
+            <td><b>More stringent treatment**</b></td>
             <td>'. uwwtd_format_number($art5_pe_nb) .'</td>
             <td>'.uwwtd_format_number($art5_pe_NC).'</td>
             <td>'.round(100 * $art5_pe_NC/$art5_pe_nb , 1).' %</td>
@@ -1349,7 +1361,9 @@ if(!empty($art17_mslevel )){
     $output.='The investment needs  for ensuring adequate urban waste water collection and treatment, i.e. compliance with the Directive, as estimated by the national authorities and included in their national plan, are at the level of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soeinvtot')).' million for the period '.$begin_y.'-'.$end_y.'. ';
     $output.='This covers works on treatment plants, with the forecasted investment cost of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvcol')).' million ('.$begin_y.'-'.$end_y.'), and works on collecting systems and/or IAS, with a forecasted investment cost of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvtp')).' million ('.$begin_y.'-'.$end_y.'). ';
    $output.='However, as indicated in a recent OECD study, '. $country_name.' would need to increase their investments further to reach and maintain compliance. ';
-    $output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for water supply and sanitation) is EUR '.round($GLOBALS['ocde_data'][strtoupper($country_code)]['sum'],1).' billion. ';
+   //dsm($GLOBALS['ocde_data'][strtoupper($country_code)]);
+    //$output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for water supply and sanitation) is EUR '.round($GLOBALS['ocde_data'][strtoupper($country_code)]['sum'],1).' billion. ';
+     $output.='The OECD projected that the financing needs by 2030 (total cumulative additional expenditures for sanitation) is EUR '.round($GLOBALS['ocde_data'][strtoupper($country_code)]['waste_water'],1).' billion.';
     $output.='</p>';
 }
 
@@ -1363,16 +1377,28 @@ if(isset($ms_level[$year]['sludge']['production']) && $ms_level[$year]['sludge']
     if(!empty($ms_level[$year]['sludge']['destination'])){
         arsort($ms_level[$year]['sludge']['destination']);
         $output.='The sludge is mainly ';
-        $slude_use = [];
+        $sludge_use = [];
         foreach($ms_level[$year]['sludge']['destination'] as $k=>$v){
             $rate = round(100 * $v /$ms_level[$year]['sludge']['production']);
             if($rate >= 10){
-                $slude_use[]= strtolower($GLOBALS['ms_level']['sludge'][$k]['label']).' ('.$rate.' %)';
+                $label = explode(':',strtolower($GLOBALS['ms_level']['sludge'][$k]['label']));           
+                $sludge_use[$label[0]][]= $label[1].' ('.$rate.' %)';
             }else{
                 break;
             }
         }
-        $output.= implode(' or ',$slude_use) .'.';
+        if(!empty($sludge_use)){
+            foreach($sludge_use as $cat=>$labels){
+                if(count($labels) == 1){
+                    $sludge_use[$cat] = $cat .' for '. $labels[0];
+                }
+                else{
+                    $end_label = array_pop($labels);
+                    $sludge_use[$cat] = $cat .' for '. implode(',  ', $labels) .' and '.$end_label;
+                }
+            }
+        }
+        $output.= implode(' or ',$sludge_use) .'.';
         if($ms_level[$year]['remark']!=''){
             $output.=$ms_level[$year]['remark'];
         }
@@ -1386,8 +1412,7 @@ else{
 }
 
 
-
-if(isset($ms_level[$year]['waste_water']['rate of re-used']) || !empty($dcp_reuse)){
+if((isset($ms_level[$year]['waste_water']['rate of re-used']) && $ms_level[$year]['waste_water']['rate of re-used'] > 0)|| !empty($dcp_reuse)){
     $output.='<p>';
     if(!empty($dcp_reuse)){
         $uses = array_unique(array_column($dcp_reuse, 'field_dcpirrigation_value'));
