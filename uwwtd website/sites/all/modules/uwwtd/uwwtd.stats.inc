@@ -1186,7 +1186,12 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
 $output .= '<p>The waste water load generated in '.$country_name.' in '.$year.' was reported to be '.uwwtd_format_number($national_compliance_pe['Total']).' p.e. </p>';
 
 //Display this text only if compliance art 3 is < 100 %
-$output .= '<p>In '.$year.', '.$country_name.' had not yet reached the target for collecting and treating waste water to fully comply with the Directive.</p>';
+if($art3_NC > 0){
+    $output .= '<p>In '.$year.', '.$country_name.' had not yet reached the target for collecting and treating waste water to fully comply with the Directive.</p>';
+}
+else{
+    $output .= '<p>In '.$year.', '.$country_name.' had reached the target for collecting and treating waste water to fully comply with the Directive.</p>';
+}
 $output .= '<ul>
         <li>'.(
             $stat_collect_values['Discharged without treatment']>0?
