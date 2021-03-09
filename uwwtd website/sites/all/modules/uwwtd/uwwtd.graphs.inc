@@ -205,7 +205,6 @@ function uwwtd_page_stats_graphs_result($yearSelected = array(), $yearsPossibles
     //==============================================
     // Récupération des données des graphs :
     $results = uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles,'treatmenttype');
-    dsm($results);
     $frontAndBackGraph1 = getRow2Graph1and2($results, $yearSelected);
     
     // Création du code html pour ces graphs :
@@ -433,12 +432,15 @@ function getRow1Graph1($yearSelected, $yearsPossibles) {
 					}
 				}
 			}
-			
+            //graph only acept numeric keys
+			foreach ($front as $year => $groupElements) {
+                $front[$year] = array_values($groupElements);
+            }
             $rows = array();
         
             // Transforme les clefs en 0, 1, 2, ...
-            $dataByYears = array_values($frontTmp);
             
+            $dataByYears = array_values($frontTmp);
             // Pour chaque groupe d'éléments de la première année :
             $destinations = array();
             if (array_key_exists('0', $dataByYears) && !empty($dataByYears[0])) {
