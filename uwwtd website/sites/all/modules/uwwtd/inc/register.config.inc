@@ -468,6 +468,7 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'distance_art5_perf_%_of_gen._load' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'distance_art5_perf_in_p.e._(7)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
+    //This column only appear in 2018
     'global_compliance'=> array('k'=>$i++, 'xls'=>true),
     
     //current_rca_details' => array('k'=>$i++, 'xls'=>true),
@@ -494,8 +495,6 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
     'more_str._treatment_installed_(p._e.)' => array('k'=>$i++, 'xls'=>false, 'wrapper'=>'round'),
     'more_str._treatment_installed_treatment_met_(%_of_gen._load)'  => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'more_str._treatment_installed_treatment_met_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
-    
-
     'monitoring_results_f._more_string._ok_(%_of_gen._load)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round1'),
     'monitoring_results_f._more_string._ok_(p._e.)' => array('k'=>$i++, 'xls'=>true, 'wrapper'=>'round'),
     
@@ -507,9 +506,6 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
             
     //debug data
     'compliance_agglo_global' => array('k'=>$i++, 'xls'=>false), //use in sheet16_agglo_compliance
- 
-
-
 );
 
 $i = 0;
