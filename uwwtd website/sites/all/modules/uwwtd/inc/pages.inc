@@ -249,8 +249,6 @@ function uwwtd_get_data_uwwtp($option)
             JOIN
               {field_data_field_status f_status}
                 ON n.nid = f_status.entity_id
-            JOIN {field_data_field_uwwcollectingsystem}  con
-                ON n.nid = con.entity_id AND con.field_uwwcollectingsystem_value = \'ISCON\'
             JOIN
               {field_data_field_agguwwliste f_uwwtp_agglo}
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
@@ -268,6 +266,7 @@ function uwwtd_get_data_uwwtp($option)
 		f_annee.field_anneedata_value,
 		f_uwwcode.field_inspireidlocalid_value,
 		f_comp.field_uwwcompliance_value,
+        con.field_uwwcollectingsystem_value as con,
 		f_primarytreatment.field_uwwprimarytreatment_value,
 		f_secondarytreatment.field_uwwsecondarytreatment_value,
 		f_nremoval.field_uwwnremoval_value,
@@ -298,6 +297,8 @@ function uwwtd_get_data_uwwtp($option)
         JOIN
             {field_data_field_anneedata} f_annee 
                 ON n.nid = f_annee.entity_id AND f_annee.field_anneedata_value = :annee
+        LEFT JOIN {field_data_field_uwwcollectingsystem}  con
+                ON n.nid = con.entity_id
         LEFT JOIN
             {field_data_field_inspireidlocalid} f_uwwcode
                 ON n.nid = f_uwwcode.entity_id
@@ -431,11 +432,15 @@ function uwwtd_get_data_uwwtp($option)
             if (isset($GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ])) {
                 $row['field_uwwcompliance_value'] = $GLOBALS['uwwtd']['ui']['compliance_connection'][ $row['field_uwwcompliance_value'] ];
             }
+            
 
             $row['field_uwwloadenteringuwwtp_value_format'] = is_null($row['field_uwwloadenteringuwwtp_value']) ? '' : uwwtd_format_number($row['field_uwwloadenteringuwwtp_value']);
 
             $row['field_uwwcompliance_value_format'] = is_null($row['field_uwwcompliance_value']) ? '' : $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
-
+            if ($row['con'] !='ISCON' ) {
+                $row['field_uwwcompliance_value_format'] = 'Not connected';
+                $row['field_uwwcompliance_value'] = 'NOTCON';
+            }
             $row['field_uwwprimarytreatment_value_format'] = is_null($row['field_uwwprimarytreatment_value']) ? '' : $GLOBALS['uwwtd']['ui']['yes_no'][$row['field_uwwprimarytreatment_value']];
             $row['field_uwwsecondarytreatment_value_format'] = is_null($row['field_uwwsecondarytreatment_value']) ? '' : $GLOBALS['uwwtd']['ui']['yes_no'][$row['field_uwwsecondarytreatment_value']];
             $row['field_uwwnremoval_value_format'] = is_null($row['field_uwwnremoval_value']) ? '' : $GLOBALS['uwwtd']['ui']['yes_no'][$row['field_uwwnremoval_value']];
@@ -447,7 +452,10 @@ function uwwtd_get_data_uwwtp($option)
             $row['field_uwwptotperf_value_format'] = is_null($row['field_uwwptotperf_value']) ? '' : $GLOBALS['uwwtd']['ui']['test_pass'][$row['field_uwwptotperf_value']];
 
             $row['field_uwwtreatmenttype_value_format'] = is_null($row['field_uwwtreatmenttype_value']) ? '' : $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
-
+            if ($row['con'] !='ISCON' ) {
+                $row['field_uwwtreatmenttype_value_format'] = 'Not connected';
+                $row['field_uwwtreatmenttype_value'] = 'NOTCON';
+            }
             $row['field_physicalcapacityactivity_value_format'] = is_null($row['field_physicalcapacityactivity_value']) ? '' : uwwtd_format_number($row['field_physicalcapacityactivity_value']);
 
             $row['field_uwwboddischarge_value_format'] = is_null($row['field_uwwboddischarge_value']) ? '' : uwwtd_format_number($row['field_uwwboddischarge_value'], 2);

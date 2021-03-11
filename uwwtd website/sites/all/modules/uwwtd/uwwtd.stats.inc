@@ -284,7 +284,7 @@ function uwwtd_stat_national_compliance($yearSelected, $yearsPossibles) {
 /**
  * Récupère en base les données pour Graph 1 et 2 de la ligne 3 et 4.
  */
-function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
+function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy, $filter = '') {
     unset($yearsPossibles['allyears']);
 	$conditions = '';
 	switch($yearSelected){
@@ -341,7 +341,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
         )
     ';
     //, con.field_uwwcollectingsystem_value as con
-	$query = $with. 'SELECT f_annee.field_anneedata_value as year, ' . $group_by . ',';
+	$query = $with. 'SELECT f_annee.field_anneedata_value as year, con.field_uwwcollectingsystem_value as con, ' . $group_by . ',';
     //AND con.field_uwwcollectingsystem_value = \'ISCON\'
     //warning this request count the number of agglomeration and not just the number of uwwtp
 	$query .= ' COUNT(n.nid) AS  total_count, SUM(f_uwwloadenteringuwwtp.field_uwwloadenteringuwwtp_value) AS loadentering_sum
@@ -371,7 +371,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
 		WHERE n.type = :typenode 
     ' .
     $conditions . '
-		GROUP BY f_annee.field_anneedata_value,  ' . $group_by;
+		GROUP BY f_annee.field_anneedata_value,  con.field_uwwcollectingsystem_value, ' . $group_by;
     //con.field_uwwcollectingsystem_value,
     $param = array(
         ':typenode' => 'uwwtp',
@@ -385,8 +385,13 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
                     if($row['field_uwwcompliance_value']==''){
                         $row['field_uwwcompliance_value']='NI';
                     }
-    				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
-                    $color = $GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']];
+                    if($row['field_uwwcompliance_value']=='NR' && $row['con'] == 'NOTCON'){
+                        $complianceState = 'Not connected';
+                        $color = '#696969';
+                    }else{
+                        $complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
+                        $color = $GLOBALS['uwwtd']['compliance_color'][$row['field_uwwcompliance_value']];
+                    }
     				break;
     			case 'treatmenttype' :
                     if($row['field_uwwtreatmenttype_value']==''){
@@ -394,7 +399,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy) {
                     }
                     if($row['field_uwwtreatmenttype_value']=='NI' && $row['con'] == 'NOTCON'){
                         $complianceState = 'Not connected';
-                        $color = '#ea8b2e';
+                        $color = '#696969';
                     }
                     else{
                         $complianceState = $GLOBALS['uwwtd']['ui']['treatment_type_in_place'][$row['field_uwwtreatmenttype_value']];
@@ -1102,6 +1107,7 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     //===Load data
     //=$national_compliance
     $national_compliance = uwwtd_stat_national_compliance($year, []);
+    $national_compliance_con_only = uwwtd_stat_national_compliance($year, []);
     $national_compliance_nb = uwwtd_stats_sum($national_compliance, $year, 'nb');
     $national_compliance_pe = uwwtd_stats_sum($national_compliance, $year, 'pe');
     
@@ -1213,10 +1219,11 @@ $output .= '<ul>
     </ul>';
 
 $output .='<p>'.round(100 * $stat_collect_values['Individual and Appropriate Systems']/$stat_collect_values['Total'], 1).'% of waste water load is addressed by means of individual or other appropriate systems (IAS) i.e. non-centralised sanitation systems (approximately '.uwwtd_format_number(round($stat_collect_values['Individual and Appropriate Systems'], -2)).' p.e.).  </p>';
-
+dsm($treatmenttype_nb);
 $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$treatmenttype_nb['Total'].' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>
 <ul>
-    <li>'.(isset($treatmenttype_nb['Secondary treatment'])?format_plural($treatmenttype_nb['Secondary treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology only for primary and secondary treatment,</li>
+    <li>'.(isset($treatmenttype_nb['Not connected']) && $treatmenttype_nb['Not connected'] > 0?format_plural($treatmenttype_nb['Not connected'], '1 plant is' , '@count plants are'):'There is no plant').' active but not connected to collecting system,</li>
+    <li>'.(isset($treatmenttype_nb['Secondary treatment']) || isset($treatmenttype_nb['Primary treatment'])?format_plural($treatmenttype_nb['Secondary treatment']+$treatmenttype_nb['Primary treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology only for primary and secondary treatment,</li>
     <li>'.(isset($treatmenttype_nb['More stringent treatment'])?format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology for more stringent treatment than secondary.</li>
 </ul>
 ';

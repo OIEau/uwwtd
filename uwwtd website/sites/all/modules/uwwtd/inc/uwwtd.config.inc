@@ -565,12 +565,15 @@ $GLOBALS['uwwtd']['compliance_color']  = array(
     '?' => '#ea8b2e',
     'PD' => '#8fbc8f',
     'QC' => '#e9967a',
+    'NOTCON' => '#696969',
 );
 $GLOBALS['uwwtd']['treatment_type_color']  = array(
     'P' => '#ea8b2e',
     'S' => '#3cc53c',
     'MS' => '#5ddfff',
     'NI' => '#d93c3c',
+    'NOTCON' => '#696969',
+    
 );
 $GLOBALS['uwwtd']['uwwtp_size_color']  = array(
     '< 10,000 pe' => '#005572',
