@@ -326,8 +326,6 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy, $fi
             JOIN
               {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
-            JOIN {field_data_field_uwwcollectingsystem}  con
-                ON n.nid = con.entity_id
             JOIN
               {field_data_field_agguwwliste} f_uwwtp_agglo
                 ON f_uwwtp_agglo.field_agguwwliste_nid = n.nid
@@ -413,13 +411,21 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy, $fi
     		$data[$complianceState]['data'][$table_key_label] = $complianceState;
     		if (is_null($row['loadentering_sum'])) {$row['loadentering_sum'] =0;}
             if(is_null($row['total_count'])) {$row['total_count']=0;}
-            $data[$complianceState]['data'][(string)$row['year']] = array(
-                'pe'=>$row['loadentering_sum'], 
-                'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' '.t('pe'), 
-                'nb'=>$row['total_count'],
-                'nb_format'=>uwwtd_format_number($row['total_count'], 0),
-                'color'=>$color
-            );
+            if(!isset($data[$complianceState]['data'][(string)$row['year']])){
+                    $data[$complianceState]['data'][(string)$row['year']] = array(
+                    'pe'=>$row['loadentering_sum'], 
+                    'pe_format'=>uwwtd_format_number($row['loadentering_sum'], 0) .' '.t('pe'), 
+                    'nb'=>$row['total_count'],
+                    'nb_format'=>uwwtd_format_number($row['total_count'], 0),
+                    'color'=>$color
+                );
+            }else{
+                $data[$complianceState]['data'][(string)$row['year']]['pe'] += $row['loadentering_sum'];
+                $data[$complianceState]['data'][(string)$row['year']]['pe_format'] = uwwtd_format_number($data[$complianceState]['data'][(string)$row['year']]['pe'], 0).' '.t('pe');
+                $data[$complianceState]['data'][(string)$row['year']]['nb'] += $row['total_count'];
+                $data[$complianceState]['data'][(string)$row['year']]['nb'] = uwwtd_format_number($data[$complianceState]['data'][(string)$row['year']]['nb'], 0);
+            }
+            
     	}
     }catch(Exception $e) {
     	dsm($e->getMessage());
