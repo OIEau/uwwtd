@@ -10,88 +10,116 @@ if ( !defined('DEBUG_ALGO')) {
 
 $GLOBALS['uwwtd']['default_by_cc'] = array(
     'at'=>array(
-        'rcaType'=>'A54',
+        'rcaType'=>'SA',
+        'formal'=>'5854'
 	),
     'be'=>array(
-        'rcaType'=>'NA',
+        'rcaType'=>'SA',
+        'formal'=>'54/523'
     ),
     'bg'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
 	),
     'cy'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
     ),
     'cz'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
 	),
     'de'=>array(
         'rcaType'=>'A54',
+        'formal'=>'5454'
 	),
     'dk'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
     ),
     'ee'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
 	),
     'es'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
 	),
     'fi'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
 	),
     'fr'=>array(
         'rcaType'=>'NA',
+        'formal'=>'54/523/NA'
     ),
     'gr'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
 	),
     'hr'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
     ),
     'hu'=>array(
         'rcaType'=>'NA',
+        'formal'=>'54'
 	),
     'ie'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
     ),
     'it'=>array(
         'rcaType'=>'NA',
+        'formal'=>'54/523/NA'
 	),
     'lt'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
     ),
     'lu'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
 	),
     'lv'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
 	),
     'mt'=>array(
-        'rcaType'=>'NA',
+        'rcaType'=>'SA',
+        'formal'=>'NA/523'
 	),
     'nl'=>array(
-        'rcaType'=>'A54',
+        'rcaType'=>'NA',
+        'formal'=>'5854'
 	),
     'pl'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
     ),
     'pt'=>array(
         'rcaType'=>'NA',
+        'formal'=>'LSA/NA/523'
 	),
     'ro'=>array(
-        'rcaType'=>'A58',
+        'rcaType'=>'SA',
+        'formal'=>'58523'
     ),
     'se'=>array(
-        'rcaType'=>'NA',
+        'rcaType'=>'SA',
+        'formal'=>'523'
 	),
     'si'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
     ),
     'sk'=>array(
-        'rcaType'=>'A54',
+        'rcaType'=>'CSA',
+        'formal'=>'58523'
 	),
     'uk'=>array(
         'rcaType'=>'NA',
+        'formal'=>'NA/523'
 	), 
 );
 
