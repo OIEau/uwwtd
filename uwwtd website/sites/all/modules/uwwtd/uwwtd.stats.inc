@@ -1064,6 +1064,40 @@ function uwwtd_stat_national_uwwtp_agglo($options)
 	return $data;
 }
 
+
+function get_uwwtp_notcon_load($year){
+    $query = "SELECT n.nid, n.title, (ent_pc.field_agglo_uww_perc_ent_uw_value::numeric  * (f_agggenerated.field_agggenerated_value::numeric/100) * (aggc1.field_aggc1_value::numeric/100)) as dwt
+    FROM {node}  n
+        JOIN {field_data_field_agglo_uww_uww} ent_uwwtp
+            ON n.nid = ent_uwwtp.entity_id
+        JOIN  {field_data_field_agglo_uww_agglo} ent_agg 
+            ON n.nid =ent_agg.entity_id
+        JOIN {field_data_field_agglo_uww_perc_ent_uw} ent_pc
+            ON n.nid = ent_pc.entity_id AND ent_pc.field_agglo_uww_perc_ent_uw_value IS NOT NULL AND ent_pc.field_agglo_uww_perc_ent_uw_value != '0'
+        JOIN {field_data_field_anneedata} f_annee
+            ON ent_uwwtp.field_agglo_uww_uww_nid = f_annee.entity_id 
+        JOIN {field_data_field_status} f_status
+            ON ent_uwwtp.field_agglo_uww_uww_nid = f_status.entity_id 
+        JOIN {field_data_field_uwwcollectingsystem}  con
+                ON ent_uwwtp.field_agglo_uww_uww_nid = con.entity_id AND con.field_uwwcollectingsystem_value = 'NOTCON'
+        JOIN {field_data_field_agggenerated} f_agggenerated
+                ON ent_agg.field_agglo_uww_agglo_nid = f_agggenerated.entity_id
+        JOIN {field_data_field_aggc1} aggc1
+                ON ent_agg.field_agglo_uww_agglo_nid = aggc1.entity_id
+                
+    WHERE n.type = 'agglo_uww'
+        AND n.status =1
+        AND f_annee.field_anneedata_value = :year
+        AND f_status.field_status_value = '1'
+    ";
+    $result = db_query($query, ['year'=>$year]);
+    $data = [];
+    while ($row = $result->fetchAssoc()) {
+        $data[] = $row;
+    }
+    return $data; 
+}
+
 function uwwtd_stats_sum($data, $year, $col){
     $out = [];
     if(!empty($data)){
@@ -1126,7 +1160,16 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     $treatmenttype = uwwtd_stat_national_uwwtp($year, [],'treatmenttype');
     $treatmenttype_nb = uwwtd_stats_sum($treatmenttype, $year, 'nb');
     $treatmenttype_pe = uwwtd_stats_sum($treatmenttype, $year, 'pe');
+    $treatmenttype_comp = uwwtd_stat_national_uwwtp($year, [],'compliance');
     
+    $uwwtp_active_notcon_load = get_uwwtp_notcon_load($year);
+    if(!empty($uwwtp_active_notcon_load )){
+        $uwwtp_active_notcon_load_nb = count($uwwtp_active_notcon_load);
+        $uwwtp_active_notcon_load_pe = round(array_sum(array_column($uwwtp_active_notcon_load, 'dwt')),0);
+    }else{
+        $uwwtp_active_notcon_load_nb =0;
+        $uwwtp_active_notcon_load_pe = 0;
+    }
     //= Design capacity 
     $dataUwwtp = uwwtd_get_data_uwwtp($option);
     $uwwtp_ids = [];
@@ -1188,7 +1231,8 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
 
     
     $output .= '<h2>'.$year.'</h2>';
-    $output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'% of agglomerations and '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of generated load.</b></p>';
+    //$output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'% of agglomerations and '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of generated load.</b></p>';
+    $output .= '<p><b>'.$country_name.' has '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of its generated load compliant to the Urban Waste Water Treatment Directive (91/271/EEC).</b></p>';
     $output .= '<p>In '.$year.', '.$country_name.' counted '.$national_compliance_nb['Total'].' agglomerations generating ≥2,000 p.e. each, of which:</p>';
     $output .= '<ul>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Compliant']).' p.e. of waste water, complied with the requirements of the Directive; and</li>';
@@ -1225,9 +1269,20 @@ $output .= '<ul>
     </ul>';
 
 $output .='<p>'.round(100 * $stat_collect_values['Individual and Appropriate Systems']/$stat_collect_values['Total'], 1).'% of waste water load is addressed by means of individual or other appropriate systems (IAS) i.e. non-centralised sanitation systems (approximately '.uwwtd_format_number(round($stat_collect_values['Individual and Appropriate Systems'], -2)).' p.e.).  </p>';
-$output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$treatmenttype_nb['Total'].' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>
-<ul>
-    <li>'.(isset($treatmenttype_nb['Not connected']) && $treatmenttype_nb['Not connected'] > 0?format_plural($treatmenttype_nb['Not connected'], '1 plant is' , '@count plants are'):'There is no plant').' active but not connected to collecting system,</li>
+
+/*
+$uwwtp_active_notcon_load_nb =0;
+        $uwwtp_active_notcon_load_pe = 0;
+*/
+//there are 13 discharges without treatment with a total load of YY" et "there are 269 urban waste water treatment plants, with a total design capacity of XX p.e., of which:
+if($uwwtp_active_notcon_load_nb > 0){
+    $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$uwwtp_active_notcon_load_nb.' discharges without treatment with a total load of '.uwwtd_format_number($uwwtp_active_notcon_load_pe).' p.e. and there are '.($treatmenttype_nb['Total'] - $uwwtp_active_notcon_load_nb).' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>';
+}
+else{
+    $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$treatmenttype_nb['Total'].' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>';
+}
+$output .='<ul>
+    <!-- <li>'.(isset($treatmenttype_nb['Not connected']) && $treatmenttype_nb['Not connected'] > 0?format_plural($treatmenttype_nb['Not connected'], '1 plant is' , '@count plants are'):'There is no plant').' active but not connected to collecting system,</li> -->
     <li>'.(isset($treatmenttype_nb['Secondary treatment']) || isset($treatmenttype_nb['Primary treatment'])?format_plural($treatmenttype_nb['Secondary treatment']+$treatmenttype_nb['Primary treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology only for primary and secondary treatment,</li>
     <li>'.(isset($treatmenttype_nb['More stringent treatment'])?format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology for more stringent treatment than secondary.</li>
 </ul>
@@ -1293,12 +1348,16 @@ $output.='
 <p align="right"><i>Data source for table: Register, summary of MS data</i></p>
 ';
 
+/*
 if((integer)$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 4"} > 0 ){
-    $output.='<p>'.$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 4"} .' agglomerations were not taken into account in the calculations of the compliance rate for Article 4, all of which generate <10,000 p.e. and discharge into coastal waters .</p>';
+    $output.='<p>'.uwwtd_format_number($legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 4"} ).' pe were not taken into account in the calculations of the compliance rate for Article 4, all of which generate <10,000 p.e. and discharge into coastal waters .</p>';
 }
 if((integer)$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 5"} > 0 ){
-    $output.='<p>'.$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 5"} .' agglomerations were not taken into account in the calculation of the compliance rate for Article 5 because the agglomerations generate ≤10,000 p.e..</p>';
+    $output.='<p>'.uwwtd_format_number($legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not relevant"}->{"Article 5"} ).' pe were not taken into account in the calculation of the compliance rate for Article 5 because the agglomerations generate ≤10,000 p.e..</p>';
 }
+*/
+if($art3_nb > $art4_nb) $output.='<p>'.($art3_nb - $art4_nb).' agglomerations were not taken into account in calculations of the compliance rate for Article 4 because the agglomerations use IAS for more than 98% of the collected load.</p>';
+if($art3_nb > $art5_nb)$output.='<p>'.($art3_nb - $art5_nb).' agglomerations were not taken into account in the calculation of the compliance rate for Article 5 because these agglomerations generate ≤10,000 p.e. each.</p>';
 
 $output.='<h3>Distance to target </h3>';
 $output.='
