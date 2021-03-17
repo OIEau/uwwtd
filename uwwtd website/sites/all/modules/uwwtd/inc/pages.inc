@@ -1339,7 +1339,7 @@ function uwwtd_page_uwwtps_compliance($type_export = ''){
         return $cache->data['page'];
     }
 //     dsm('not in cache');    
-	$data = uwwtd_get_data_uwwtp($filter['filter']);      
+	$data = uwwtd_get_data_uwwtp($filter['filter']);     
 	if(uwwtd_data_contain_art17($data, 'field_article17_uwwtp_nid')){
          $list_field = array(
             'field_anneedata_value'         => array('title' => t('Year of data'), 'type' => 'select', 'data' => $option['allyear']),
@@ -2224,16 +2224,16 @@ function uwwtd_sensitive_areas_page($type_export = ''){
     $option['default']['sort'] = 'desc';
     $option['allyear'] = uwwtd_get_all_year();
     $option['zonetype'] = $GLOBALS['uwwtd_value']['rcatype_labels'];
+    $option['zonetype_spe'] = $GLOBALS['uwwtd_value']['rca_spe_type_labels'];
 
     $filter = uwwtd_get_form_filter($option);
-    
 
     $cache = '';
     $cache_name = uwwtd_get_cache_key_page_sensitive_area($filter['filter']);
 
     //use cache only for page with no filter , or only the year and default sort
     $put_in_cache = uwwtd_is_filter_default($filter, $option) && uwwtd_is_user_anonymous() && $type_export == '';
-    if ( UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
+    if (UWWTD_CACHE_ACTIVE === true && true === $put_in_cache) {
         $cache = cache_get($cache_name, 'cache_page');
     }
     if (!empty($cache) && isset($cache->data) && !empty($cache->data)) {
@@ -3757,6 +3757,9 @@ function uwwtd_get_form_filter($option){
     }
     if (isset($_GET['zonetype']) && array_key_exists($_GET['zonetype'], $option['zonetype'])  && $_GET['zonetype'] != 'All') {
 	  $filter['filter']['zonetype'] = $_GET['zonetype'];
+    }
+    if (isset($_GET['zonetype_spe']) && array_key_exists($_GET['zonetype_spe'], $option['zonetype_spe'])  && $_GET['zonetype_spe'] != 'All') {
+	  $filter['filter']['zonetype_spe'] = $_GET['zonetype_spe'];
     }
     if (isset($_GET['rcacat']) && array_key_exists($_GET['rcacat'], $option['rcacat'])  && $_GET['rcacat'] != 'All') {
 	  $filter['filter']['rcacat'] = $_GET['rcacat'];
