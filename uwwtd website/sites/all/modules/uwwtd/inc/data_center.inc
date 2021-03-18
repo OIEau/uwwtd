@@ -7020,7 +7020,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     }
     
     $aTmp['listUww'] = $listUwwtpCompliance;
-        
     if (false === uwwtd_atleastone_uwwtp_required_in(array(
                             $GLOBALS['uwwtd_value']['required']['morestringent'],
                             $GLOBALS['uwwtd_value']['required']['nitrogen'],
@@ -7035,11 +7034,10 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                             ), $aTmp)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>'not uwwtp require more stringent treatment'];
     }
-    
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
-    foreach($listUwwtpCompliance as $uwwtp) {       
+    foreach($listUwwtpCompliance as $uwwtp) {  
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
                                                     $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
@@ -9061,7 +9059,7 @@ function uwwtd_get_all_info_agguwww($node)
                     //$uwwquantcollec = ($quantLoadCollecting * $uwwperccollec) / 100;
                     $aResult['total'] += $uwwperccollec;
                     $aResult['listUww'][$uww->nid]['agglo_uww_perc_ent_uw'] = $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'];
-                    $aResult['listUww'][$uww->nid]['required'] = 'S';
+                    $aResult['listUww'][$uww->nid]['required'] =$uww->field_uwwtreatmentrequired['und'][0]['value'];
                     /*
                     if($node->field_agggenerated['und'][0]['value'] * $node->field_aggc1['und'][0]['value'] * $agguww->field_agglo_uww_perc_ent_uw['und'][0]['value'] > 10000){
                         $aResult['listUww'][$uww->nid]['required'] = 'S';

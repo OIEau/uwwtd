@@ -295,7 +295,7 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
   } elseif ($distanceToCompliance['art4_perf_compliance'] == 'NC' && 
           deadline_beforeorequal_to_referenceyear($node->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === false) {
       $colorart4P = '#FF5200';
-  }elseif($node->field_aggart4compliance['und'][0]['value'] == 'NC' && $distanceToCompliance['art4_perf_compliance'] == '' && $distanceToCompliance['art4_treat_pe'] > 0){
+  }elseif($node->field_aggart4compliance['und'][0]['value'] == 'NC' && $distanceToCompliance['art4_perf_compliance'] == '' && $distanceToCompliance['art4_perf_pe'] > 0){
       $colorart4P = '#d93c3c';
   } else {
       $colorart4P = '#4f91e1';
@@ -322,6 +322,8 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
   } elseif ($distanceToCompliance['art5_treat_compliance'] == 'NC' &&
       deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === false) {
       $colorart5T = '#FF5200';
+  }elseif($node->field_aggart5compliance['und'][0]['value'] == 'NC' && $distanceToCompliance['art5_treat_compliance'] == '' && $distanceToCompliance['art5_treat_pe'] > 0){
+      $colorart5T = '#d93c3c';
   } else {
       $colorart5T = '#4f91e1';
   }
@@ -333,6 +335,8 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
   } elseif ($distanceToCompliance['art5_perf_compliance'] == 'NC' &&
       deadline_beforeorequal_to_referenceyear($node->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value']) === false) {
       $colorart5P = '#FF5200';
+  }elseif($node->field_aggart5compliance['und'][0]['value'] == 'NC' && $distanceToCompliance['art5_perf_compliance'] == '' && $distanceToCompliance['art5_perf_pe'] > 0){
+      $colorart5P = '#d93c3c';
   } else {
       $colorart5P = '#4f91e1';
   }
