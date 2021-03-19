@@ -407,7 +407,6 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy, $fi
     			default:
     				$complianceState = $GLOBALS['uwwtd']['ui']['field']['compliance_label'][$row['field_uwwcompliance_value']];
     		}
-            
     		$data[$complianceState]['data'][$table_key_label] = $complianceState;
     		if (is_null($row['loadentering_sum'])) {$row['loadentering_sum'] =0;}
             if(is_null($row['total_count'])) {$row['total_count']=0;}
@@ -423,7 +422,7 @@ function uwwtd_stat_national_uwwtp($yearSelected, $yearsPossibles, $groupBy, $fi
                 $data[$complianceState]['data'][(string)$row['year']]['pe'] += $row['loadentering_sum'];
                 $data[$complianceState]['data'][(string)$row['year']]['pe_format'] = uwwtd_format_number($data[$complianceState]['data'][(string)$row['year']]['pe'], 0).' '.t('pe');
                 $data[$complianceState]['data'][(string)$row['year']]['nb'] += $row['total_count'];
-                $data[$complianceState]['data'][(string)$row['year']]['nb'] = uwwtd_format_number($data[$complianceState]['data'][(string)$row['year']]['nb'], 0);
+                $data[$complianceState]['data'][(string)$row['year']]['nb_format'] = uwwtd_format_number($data[$complianceState]['data'][(string)$row['year']]['nb'], 0);
             }
             
     	}
