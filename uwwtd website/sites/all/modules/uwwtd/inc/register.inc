@@ -6598,6 +6598,15 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 		$context['sandbox']['data']['pending']['morestringent_target']['monitoring_result_distance_pe'] = 0;
         $context['sandbox']['data']['pending']['morestringent_target']['dwt'] = 0;
         
+        $context['sandbox']['data']['total']['secondary_target']['dwt'] = 0;
+		$context['sandbox']['data']['total']['secondary_target']['dwt_%'] = 0;
+        $context['sandbox']['data']['total']['secondary_target']['dwt_distance_pe'] = 0;
+        $context['sandbox']['data']['total']['secondary_target']['dwt_distance_%'] = 0;
+        $context['sandbox']['data']['total']['morestringent_target']['dwt'] = 0;
+		$context['sandbox']['data']['total']['morestringent_target']['dwt_%'] = 0;
+        $context['sandbox']['data']['total']['morestringent_target']['dwt_distance_pe'] = 0;
+        $context['sandbox']['data']['total']['morestringent_target']['dwt_distance_%'] = 0;
+        
         unset($listtypestattmp);
     }
 
@@ -6913,6 +6922,14 @@ function uwwtd_create_register_2015_file_distance_to_compliance_sheet5($annee, &
 			if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'])) {
                     $context['sandbox']['data']['total']['morestringent_target']['monitoring_result_distance_pe'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['monitoring_result_distance_pe'];
         	}
+            if (isset($context['sandbox']['data'][$typedeadline]['secondary_target']['dwt'])) {
+                    $context['sandbox']['data']['total']['secondary_target']['dwt'] += $context['sandbox']['data'][$typedeadline]['secondary_target']['dwt'];
+        	}
+            if (isset($context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt'])) {
+                    $context['sandbox']['data']['total']['morestringent_target']['dwt'] += $context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt'];
+        	}
+            
+            
         }
         
         /////////////////////////////////////////////////
@@ -7241,7 +7258,6 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
             	$context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_distance_%'] = ($context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'] == 0) ? 0 : $context['sandbox']['data'][$typedeadline]['morestringent_target']['dwt_distance_pe'] * 100 / $context['sandbox']['data'][$typedeadline]['morestringent_target']['total_load_pe'];
             }
         }
-        
         //build excel sheet
         $model_path = uwwtd_getregister_modelfile_path($annee);
         //change to public://
@@ -7483,8 +7499,7 @@ if (isset($context['sandbox']['data']['agg'][$aggcode]['morestringent_target']['
         	$sheet->getCell('E58')->setValue(round($context['sandbox']['data']['total']['secondary_target']['dwt_%'], 1));
         if (isset($context['sandbox']['data']['total']['secondary_target']['dwt']))
         	$sheet->getCell('F58')->setValue($context['sandbox']['data']['total']['secondary_target']['dwt']);  
-       
-
+        
          $context['results']['auto_report']['ART4_DISTANCE_TO_COMPLIANCE'] = round($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_%'], 1);         
 
         if (isset($context['sandbox']['data']['total']['secondary_target']['monitoring_result_distance_pe']))
