@@ -5330,6 +5330,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
 
         // need to save at each step
         // rcas
+        
         foreach($rcas as $rcanid){
             // load rca
             $rca = node_load($rcanid);
@@ -5348,7 +5349,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
             if(isset($dcp->field_dcpuwwliste['und'])){
                 foreach($dcp->field_dcpuwwliste['und'] as $uwwitem){
                     $uwwnid = $uwwitem['nid'];
-                    $uww = node_load($uwwnid);
+                    if($uww = node_load($uwwnid)){
                     $flag_uww = false;
                     // rca <-> uwwtp
                     if(!uwwtd_in_array_r($uwwnid, $rca->field_linked_treatment_plants)){
@@ -5373,7 +5374,8 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
                     if(isset($uww->field_uwwaggliste['und'])){
                         foreach($uww->field_uwwaggliste['und'] as $aggitem){
                             $aggnid = $aggitem['nid'];
-                            $agg = node_load($aggnid);
+                            
+                            if($agg = node_load($aggnid)){
                             $flag_agg = false;
                             // uww <-> agg
                             if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)){
@@ -5408,15 +5410,18 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
                                 $agg->field_linked_discharge_points['und'][]['nid'] = $dcpnid;
                                 $flag_agg = true;
                             }
-                            if($flag_agg){node_save($agg);}
+                            if($flag_agg){
+                                node_save($agg);}
+                            }
                         }
                     }
                     if($flag_uww){node_save($uww);}
+                    }
                 }
                 if($flag_rca){node_save($rca);}
             }
         }
-        if($flag_dcp){node_save($dcp);}
+        if($flag_dcp){ node_save($dcp);}
         $flag_dcp = false;
         // Sometimes rcadata is not given or incorrectly inserted so we now go from the treatment plants
         $uwws = array();
@@ -5425,7 +5430,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
             $uwws[] = $item['nid'];
         }
         foreach($uwws as $uwwnid){
-            $uww = node_load($uwwnid);
+            if($uww = node_load($uwwnid)){
             $flag_uww = false;
             // dcp <-> uwwtp
             if(!uwwtd_in_array_r($uwwnid, $dcp->field_linked_treatment_plants)){
@@ -5441,7 +5446,7 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
             if(isset($uww->field_uwwaggliste['und'])){
                 foreach($uww->field_uwwaggliste['und'] as $aggitem){
                     $aggnid = $aggitem['nid'];
-                    $agg = node_load($aggnid);
+                    if($agg = node_load($aggnid)){
                     $flag_agg = false;
                     // uww <-> agg
                     if(!uwwtd_in_array_r($aggnid, $uww->field_linked_agglomerations)){
@@ -5468,8 +5473,10 @@ function uwwtd_mega_links_batch_process($newFile, $annee, $timestamp, &$context)
                         $flag_agg = true;
                     } 
                     if($flag_agg){node_save($agg);}
+                  }
                 }
                 if($flag_uww) {node_save($uww);}
+            }
             }
         }
         if($flag_dcp){node_save($dcp);}
@@ -8690,9 +8697,12 @@ function uwwtd_country_cases($node){
 }
 
 function uwwtd_in_array_r($needle, $haystack, $strict = false){
-    foreach ($haystack as $item){
-        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && uwwtd_in_array_r($needle, $item, $strict))){
-            return true;
+
+    if(!empty($haystack) && $needle!=''){
+        foreach ($haystack as $item){
+            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && uwwtd_in_array_r($needle, $item, $strict))){
+                return true;
+            }
         }
     }
     return false;
