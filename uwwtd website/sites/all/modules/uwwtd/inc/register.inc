@@ -8574,7 +8574,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
             and status.field_status_value::integer = 1
-            AND n.nid = 82223
         order by f_agggenerated.field_agggenerated_value desc
         ';
         //AND n.nid = 238941
