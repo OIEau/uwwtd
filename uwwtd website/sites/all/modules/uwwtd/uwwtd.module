@@ -2279,7 +2279,7 @@ function uwwtd_get_query_data_sensitive_areas($isWithNid = FALSE) {
             
             st_astext(st_transform(f_geo.the_geom, 4326)) wkt,
             st_area(st_transform(f_geo.the_geom, 3035)) area,
-            COUNT(uwwtp.field_linked_treatment_plants_nid) as uwwtps,
+            COUNT(DISTINCT uwwtp.field_linked_treatment_plants_nid) as uwwtps,
             SUM(capa.field_physicalcapacityactivity_value) as tot_design_capacity,
             SUM(entering.field_uwwloadenteringuwwtp_value ) as tot_entering_load
         FROM {node} n
