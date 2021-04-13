@@ -143,6 +143,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
     if ($annee >= 2018) {$batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));}
+    $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -12813,7 +12814,6 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
         }
 
         $compliant_5_4 = $GLOBALS['glossary'][$compliant_5_4];
-
         $line = array(              
             $ind['code'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
             $ind['name'] => $rca[$i]->title,
@@ -12821,7 +12821,8 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
             $ind['deadline_n'] => substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10),
             $ind['deadline_p'] => substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10),
             $ind['application_art_5_4'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
-            $ind['uwwtp_number'] => isset($rca[$i]->field_rcaPlants['und'][0]['value']) ? $rca[$i]->field_rcaPlants['und'][0]['value'] : '',  
+            //$ind['uwwtp_number'] => isset($rca[$i]->field_rca_nb_uwwtps ['und'][0]['value']) ? $rca[$i]->field_rca_nb_uwwtps ['und'][0]['value'] : '',  
+            $ind['uwwtp_number'] => isset($rca[$i]->field_rcaplants ['und'][0]['value']) ? $rca[$i]->field_rcaplants ['und'][0]['value'] : '',  
             $ind['uwwtp_capacity_total'] => isset($rca[$i]->field_rcaplantscapacity['und'][0]['value']) ? $rca[$i]->field_rcaplantscapacity['und'][0]['value'] : '',  
             $ind['n_in'] => $nIn,
             $ind['n_out'] => $nOut,
