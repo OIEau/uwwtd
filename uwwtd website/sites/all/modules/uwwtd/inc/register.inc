@@ -142,6 +142,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    if ($annee >= 2018) {$batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));}
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -1116,7 +1117,9 @@ function uwwtd_create_register_2020_sa_history($annee, &$context){
                         }
                         if($other->field_rca54applied['und'][0]['value']==1){
                             $designation_criteria .= ",\n Art. 5(4) :";
-                            if($other->field_rcadateart54['und'][0]['value']!='') $designation_criteria .= date('Y-m-d',substr($other->field_rcadateart54['und'][0]['value'], 0, 10));
+                            if($other->field_rcadateart54['und'][0]['value']!=''){
+                                $designation_criteria .= date('Y-m-d',strtotime($other->field_rcadateart54['und'][0]['value']));
+                            } 
                         }
                         if($other->field_rca58applied['und'][0]['value']==1){
                             $designation_criteria .= ",\n Art. 5(8) : ";
