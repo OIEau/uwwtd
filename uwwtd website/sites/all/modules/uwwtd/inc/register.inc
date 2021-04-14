@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -99,7 +100,9 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
     $batch['operations'][]=array('uwwtd_create_register_2015_file_rca54_sheet1_1', array($annee));
-    if ($annee >= 2018) {$batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));}
+    if ($annee >= 2018) {
+        $batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));
+    }
  //    //optimize : ok
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_uwwtp_sheet2', array($annee));
 	// //optimize : ok
@@ -142,8 +145,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    if ($annee >= 2018) {$batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));}
-    $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
+
+ 
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -969,52 +972,90 @@ function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 
     //ignore header //decomment for debug on xls final file
     $rca = fgetcsv($rrcafile, 5000, ';');
-
     while ($rca = fgetcsv($rrcafile, 5000, ';')) {
-
+         
+         $addcol = 0;
+         
 //     foreach($listrca as $rca) {
-        $sheet->setCellValueByColumnAndRow($ind['id_of_sensitive_area'], $i, $rca[$ind['id_of_sensitive_area']]);
-        $sheet->setCellValueByColumnAndRow($ind['name_of_sensitive_area'], $i, $rca[$ind['name_of_sensitive_area']]);
-        $sheet->setCellValueByColumnAndRow($ind['zone_type_code'], $i, $rca[$ind['zone_type_code']]);
-        $sheet->setCellValueByColumnAndRow($ind['specialised_zone_type_code'], $i, $rca[$ind['specialised_zone_type_code']]);
-        $sheet->setCellValueByColumnAndRow($ind['parameters_subject_to_more_stringent_treatment:_n'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_n']]);
-        $sheet->setCellValueByColumnAndRow($ind['parameters_subject_to_more_stringent_treatment:_p'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_p']]);
-        $sheet->setCellValueByColumnAndRow($ind['parameters_subject_to_more_stringent_treatment:_m'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_m']]);
-        $sheet->setCellValueByColumnAndRow($ind['parameters_subject_to_more_stringent_treatment:_other'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_other']]);
-        $sheet->setCellValueByColumnAndRow($ind['date_of_designation_of_art._5(8)'], $i, $rca[$ind['date_of_designation_of_art._5(8)']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_of_art._5(8)'], $i, $rca[$ind['starting_date_of_application_of_art._5(8)']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_of_art._5(4)'], $i, $rca[$ind['starting_date_of_application_of_art._5(4)']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_a_n'], $i, $rca[$ind['designation_criteria_a_n']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_designation_a_n'], $i, $rca[$ind['starting_date_of_designation_a_n']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_a_n'], $i, $rca[$ind['starting_date_of_application_a_n']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_a_p'], $i, $rca[$ind['designation_criteria_a_p']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_designation_a_p'], $i, $rca[$ind['starting_date_of_designation_a_p']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_a_p'], $i, $rca[$ind['starting_date_of_application_a_p']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_b'], $i, $rca[$ind['designation_criteria_b']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_designation_b'], $i, $rca[$ind['starting_date_of_designation_b']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_b'], $i, $rca[$ind['starting_date_of_application_b']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_c'], $i, $rca[$ind['designation_criteria_c']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_designation_c'], $i, $rca[$ind['starting_date_of_designation_c']]);
-        $sheet->setCellValueByColumnAndRow($ind['starting_date_of_application_c'], $i, $rca[$ind['starting_date_of_application_c']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'], $i, $rca[$ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'], $i, $rca[$ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive']]);
-        $sheet->setCellValueByColumnAndRow($ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'], $i, $rca[$ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive']]);
-        $sheet->setCellValueByColumnAndRow($ind['number_of_uwwtps_of_the_article_5.4_area_(1)'], $i, $rca[$ind['number_of_uwwtps_of_the_article_5.4_area_(1)']]);
-        $sheet->setCellValueByColumnAndRow($ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'], $i, $rca[$ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)']]);
-        $sheet->setCellValueByColumnAndRow($ind['incoming_loads_(t/y)_n-tot_(1)'], $i, $rca[$ind['incoming_loads_(t/y)_n-tot_(1)']]);
-        $sheet->setCellValueByColumnAndRow($ind['rate_of_removal_n-tot'], $i, $rca[$ind['rate_of_removal_n-tot']]);
-        $sheet->setCellValueByColumnAndRow($ind['discharged_loads_(t/y)_n-tot_(1)'], $i, $rca[$ind['discharged_loads_(t/y)_n-tot_(1)']]);
-        $sheet->setCellValueByColumnAndRow($ind['incoming_loads_(t/y)_p-tot_(1)'], $i, $rca[$ind['incoming_loads_(t/y)_p-tot_(1)']]);
-        $sheet->setCellValueByColumnAndRow($ind['rate_of_removal_p-tot'], $i, $rca[$ind['rate_of_removal_p-tot']]);
-        $sheet->setCellValueByColumnAndRow($ind['discharged_loads_(t/y)_p-tot:_'], $i, $rca[$ind['discharged_loads_(t/y)_p-tot:_']]);
-        $sheet->setCellValueByColumnAndRow($ind['general_remark'], $i, $rca[$ind['general_remark']]);
-        $sheet->setCellValueByColumnAndRow($ind['rcabeginlife'], $i, $rca[$ind['rcabeginlife']]);
-        $sheet->setCellValueByColumnAndRow($ind['rcaendlife'], $i, $rca[$ind['rcaendlife']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_code_of_successor_(2)'], $i, $rca[$ind['id_code_of_successor_(2)']]);
-        $sheet->setCellValueByColumnAndRow($ind['id_code_of_predecessor_(2)'], $i, $rca[$ind['id_code_of_predecessor_(2)']]);
-        $sheet->setCellValueByColumnAndRow($ind['remark_successor/predecessor_sa'], $i, $rca[$ind['remark_successor/predecessor_sa']]);
-        $sheet->setCellValueByColumnAndRow($ind['related_sensitive_area_(2)'], $i, $rca[$ind['related_sensitive_area_(2)']]);
-        $sheet->setCellValueByColumnAndRow($ind['remark_related_sensitive_area_(2)'], $i, $rca[$ind['remark_related_sensitive_area_(2)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['id_of_sensitive_area'], $i, $rca[$ind['id_of_sensitive_area']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['name_of_sensitive_area'], $i, $rca[$ind['name_of_sensitive_area']]);
+        if($annee >=2018){
+            //Add summary column
+            $designation_criteria = $rca[$ind['zone_type_code']];
+            if( $rca[$ind['specialised_zone_type_code']]!=''){
+                $designation_criteria .= ' '. $rca[$ind['specialised_zone_type_code']];
+            } 
+            if($rca[$ind['parameters_subject_to_more_stringent_treatment:_n']]==1){
+                $designation_criteria .= ",\n Art. 5(2,3) - N : ";
+                if($rca[$ind['starting_date_of_application_a_n']]!='') $designation_criteria .= date('Y-m-d', strtotime($rca[$ind['starting_date_of_application_a_n']]));
+            }
+            if($rca[$ind['parameters_subject_to_more_stringent_treatment:_p']]==1){
+                $designation_criteria .= ",\n Art. 5(2,3) - P : ";
+                if($rca[$ind['starting_date_of_application_a_p']]!='') $designation_criteria .= date('Y-m-d', strtotime($rca[$ind['starting_date_of_application_a_p']]));
+            }
+            if($rca[$ind['designation_criteria_b']]==1){
+                $designation_criteria .= ",\n Art. 5(2,3) - b : ";
+                if($rca[$ind['starting_date_of_application_b']]!='') $designation_criteria .=date('Y-m-d', strtotime($rca[$ind['starting_date_of_application_b']]));
+            }
+            if($rca[$ind['designation_criteria_c']]==1){
+                $designation_criteria .= ",\n Art. 5(2,3) - c : ";
+                if($rca[$ind['starting_date_of_application_c']]!='') $designation_criteria .= date('Y-m-d',strtotime($rca[$ind['starting_date_of_application_c']]));
+                if($rca[$ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters']] !='' ){
+                    $designation_criteria .= '('.$rca[$ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters']].')';
+                }
+            }
+            if( $rca[$ind['starting_date_of_application_of_art._5(4)']]!=''){
+                $designation_criteria .= ",\n Art. 5(4) :";
+                $designation_criteria .= date('Y-m-d',strtotime( $rca[$ind['starting_date_of_application_of_art._5(4)']]));
+            } 
+            if( $rca[$ind['starting_date_of_application_of_art._5(8)']]!=''){
+                $designation_criteria .= ",\n Art. 5(8) : ";
+                if( $rca[$ind['starting_date_of_application_of_art._5(8)']]!='') $designation_criteria .= date('Y-m-d',strtotime( $rca[$ind['starting_date_of_application_of_art._5(8)']]));
+            }
+            $sheet->setCellValueByColumnAndRow($addcol+$ind['zone_type_code'], $i, $designation_criteria);
+            $addcol++;
+        }
+        
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['zone_type_code'], $i, $rca[$ind['zone_type_code']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['specialised_zone_type_code'], $i, $rca[$ind['specialised_zone_type_code']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['parameters_subject_to_more_stringent_treatment:_n'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_n']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['parameters_subject_to_more_stringent_treatment:_p'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_p']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['parameters_subject_to_more_stringent_treatment:_m'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_m']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['parameters_subject_to_more_stringent_treatment:_other'], $i, $rca[$ind['parameters_subject_to_more_stringent_treatment:_other']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['date_of_designation_of_art._5(8)'], $i, $rca[$ind['date_of_designation_of_art._5(8)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_of_art._5(8)'], $i, $rca[$ind['starting_date_of_application_of_art._5(8)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_of_art._5(4)'], $i, $rca[$ind['starting_date_of_application_of_art._5(4)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_a_n'], $i, $rca[$ind['designation_criteria_a_n']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_designation_a_n'], $i, $rca[$ind['starting_date_of_designation_a_n']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_a_n'], $i, $rca[$ind['starting_date_of_application_a_n']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_a_p'], $i, $rca[$ind['designation_criteria_a_p']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_designation_a_p'], $i, $rca[$ind['starting_date_of_designation_a_p']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_a_p'], $i, $rca[$ind['starting_date_of_application_a_p']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_b'], $i, $rca[$ind['designation_criteria_b']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_designation_b'], $i, $rca[$ind['starting_date_of_designation_b']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_b'], $i, $rca[$ind['starting_date_of_application_b']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_c'], $i, $rca[$ind['designation_criteria_c']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_designation_c'], $i, $rca[$ind['starting_date_of_designation_c']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['starting_date_of_application_c'], $i, $rca[$ind['starting_date_of_application_c']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters'], $i, $rca[$ind['designation_criteria_c_-_relevant_eu-directives_and_related_parameters']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive'], $i, $rca[$ind['designation_criteria_c_-_id_applied_to_the_area_according_to_this_directive']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive'], $i, $rca[$ind['designation_criteria_c_-_reference_date_of_the_area_according_to_this_directive']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['number_of_uwwtps_of_the_article_5.4_area_(1)'], $i, $rca[$ind['number_of_uwwtps_of_the_article_5.4_area_(1)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)'], $i, $rca[$ind['total_organic_design_capacity_of_the_uwwtps_(p.e.)_of_the_article_5.4_area_(1)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['incoming_loads_(t/y)_n-tot_(1)'], $i, $rca[$ind['incoming_loads_(t/y)_n-tot_(1)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['rate_of_removal_n-tot'], $i, $rca[$ind['rate_of_removal_n-tot']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['discharged_loads_(t/y)_n-tot_(1)'], $i, $rca[$ind['discharged_loads_(t/y)_n-tot_(1)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['incoming_loads_(t/y)_p-tot_(1)'], $i, $rca[$ind['incoming_loads_(t/y)_p-tot_(1)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['rate_of_removal_p-tot'], $i, $rca[$ind['rate_of_removal_p-tot']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['discharged_loads_(t/y)_p-tot:_'], $i, $rca[$ind['discharged_loads_(t/y)_p-tot:_']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['general_remark'], $i, $rca[$ind['general_remark']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['rcabeginlife'], $i, $rca[$ind['rcabeginlife']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['rcaendlife'], $i, $rca[$ind['rcaendlife']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['id_code_of_successor_(2)'], $i, $rca[$ind['id_code_of_successor_(2)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['id_code_of_predecessor_(2)'], $i, $rca[$ind['id_code_of_predecessor_(2)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['remark_successor/predecessor_sa'], $i, $rca[$ind['remark_successor/predecessor_sa']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['related_sensitive_area_(2)'], $i, $rca[$ind['related_sensitive_area_(2)']]);
+        $sheet->setCellValueByColumnAndRow($addcol+$ind['remark_related_sensitive_area_(2)'], $i, $rca[$ind['remark_related_sensitive_area_(2)']]);
         $i++;
         $sheet->insertNewRowBefore($i, 1);
     }
@@ -12822,8 +12863,8 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
             $ind['deadline_p'] => substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10),
             $ind['application_art_5_4'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
             //$ind['uwwtp_number'] => isset($rca[$i]->field_rca_nb_uwwtps ['und'][0]['value']) ? $rca[$i]->field_rca_nb_uwwtps ['und'][0]['value'] : '',  
-            $ind['uwwtp_number'] => isset($rca[$i]->field_rcaplants ['und'][0]['value']) ? $rca[$i]->field_rcaplants ['und'][0]['value'] : '',  
-            $ind['uwwtp_capacity_total'] => isset($rca[$i]->field_rcaplantscapacity['und'][0]['value']) ? $rca[$i]->field_rcaplantscapacity['und'][0]['value'] : '',  
+            $ind['uwwtp_number'] => isset($rca[$i]->field_rcaplants ['und'][0]['value']) ? $rca[$i]->field_rcaplants ['und'][0]['value'] : 'NI',  
+            $ind['uwwtp_capacity_total'] => isset($rca[$i]->field_rcaplantscapacity['und'][0]['value']) ? $rca[$i]->field_rcaplantscapacity['und'][0]['value'] : 'NI',  
             $ind['n_in'] => $nIn,
             $ind['n_out'] => $nOut,
             $ind['p_in'] => $pIn,
