@@ -11633,7 +11633,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $art5_final =  $uwwtp_compliance['compArt5'];
 
             //save date in array
-            if ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP') {
+            if ($annee >= 2018 && $pending_or_expired == 'PD' ) {
+                $line[$ind['art4_treatment type']] = $art4_treatment_type;
+                $line[$ind['art4_monitoring']] = $art4_monitoring;
+                $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
+                $line[$ind['art5_treatment type']] = $art5_treatment;
+                $line[$ind['art5_monitoring']] = $art5_monitoring;
+                $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
+            }elseif ($annee < 2018 && ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP')) {
                 $line[$ind['art4_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_monitoring']] = $art4_monitoring;
                 $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
