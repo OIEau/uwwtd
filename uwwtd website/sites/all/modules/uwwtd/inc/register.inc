@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,8 +144,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-
- 
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -7712,7 +7709,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
     $filename_agglo_debug = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo_debug']['csv_name'], $annee);
 
     // uwwtd_trace(__LINE__);
-    $list_type = array('all', 'NA', 'CSA/SA');
+    $list_type = array('all', 'NA', 'CSA/SA', 'A54');
     //pass header line
     if (!isset($context['sandbox']['progress'])) {
         $ragglodebugfile = fopen($filename_agglo_debug, 'wb');
@@ -7923,11 +7920,15 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 if (false === in_array('SA', $listrcatype) && false === in_array('CSA', $listrcatype)) {
                     fputcsv($ragglodebugfile, $agglodebug, ';');
                     continue;
-                }
+                } 
                 //=================================FIX ME  'A58 && A54) {
                     //case with empty  $listrcatype
-            } 
-
+            } elseif ($type == 'A54') {
+                if (false === in_array('A54', $listrcatype) ) {
+                    fputcsv($ragglodebugfile, $agglodebug, ';');
+                    continue;
+                }
+            }
             //compliance art3
             
             $context['sandbox']['compliance'][$type]['art3']['country_total']['agglo']['number']++;
@@ -8223,8 +8224,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
         
     }
-//     dsm($compliance);
-    fclose($ragglofile);
+    fclose($ragglofile);    
     if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
         foreach($list_type as $type) {
             if (false === isset($context['sandbox']['compliance'][$type])) {
@@ -8355,14 +8355,12 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         //$cell = $sheet->getCell('B7');
         //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B9');
-        //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        //$cell = $sheet->getCell('J7');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('J9');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
-        //$cell = $sheet->getCell('Q7');
-        //$cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('Q9');
+        $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
+        $cell = $sheet->getCell('X9');
         $cell->setValue(str_replace(array('[#COUNTRY#]', '[#DATE#]'), array($country_name, $reference_date), $cell->getValue()));
         $cell = $sheet->getCell('B18');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
@@ -8370,17 +8368,23 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q18');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+        $cell = $sheet->getCell('X18');
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('B28');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('J28');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q28');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+         $cell = $sheet->getCell('X28');
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('B41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('J41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         $cell = $sheet->getCell('Q41');
+        $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
+        $cell = $sheet->getCell('X41');
         $cell->setValue(str_replace(array('[#COUNTRY#]'), array($country_name), $cell->getValue()));
         
         /*if($flag_A54){
@@ -8402,7 +8406,13 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 $col['D'] = 'L';
                 $col['E'] = 'M';
                 $col['F'] = 'N';
-            }else {
+            }elseif($type == 'A54'){
+                $col['C'] = 'Y';
+                $col['D'] = 'Z';
+                $col['E'] = 'AA';
+                $col['F'] = 'AB';
+            }
+            else {
                 $col['C'] = 'R';
                 $col['D'] = 'S';
                 $col['E'] = 'T';
