@@ -12875,7 +12875,8 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
         $line = array(              
             $ind['code'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
             $ind['name'] => $rca[$i]->title,
-            $ind['designation_date'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),
+            //$ind['designation_date'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),
+            $ind['designation_date'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
             $ind['deadline_n'] => substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10),
             $ind['deadline_p'] => substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10),
             $ind['application_art_5_4'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
