@@ -506,6 +506,8 @@ $GLOBALS['uwwtd']['sheet3_agglo'] = array(
             
     //debug data
     'compliance_agglo_global' => array('k'=>$i++, 'xls'=>false), //use in sheet16_agglo_compliance
+    'rca_compliance' => array('k'=>$i++, 'xls'=>false), //use in sheet16_agglo_compliance
+    
 );
 
 $i = 0;
@@ -646,8 +648,27 @@ $GLOBALS['uwwtd']['sheet16_agglo_compliance'] = array(
     //This data are from csv sheet3_agglo!!
     'aggcode' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['aggcode']['k'], 'xls'=>true),               
     'aggname' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['aggname']['k'], 'xls'=>true),
-    'generated_load_p_e' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['generated_load_p.e.']['k'], 'xls'=>true),
+    'generated_load_p_e' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['generated_load_p.e.']['k'], 'xls'=>true, 'wrapper'=>'round'),
+    'deadline_for_art._3_compliance' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['deadline_for_art._3_compliance']['k'], 'xls'=>true),
+    'deadline_for_art._4_compliance' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['deadline_for_art._4_compliance']['k'], 'xls'=>true),
+    'deadline_for_art._5_compliance' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['deadline_for_art._5_compliance']['k'], 'xls'=>true),
+    'pending_or_expired_deadline_exp/pd/exp-pd' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['pending_or_expired_deadline_exp/pd/exp-pd']['k'], 'xls'=>true, 'glossary' => false), //'glossary' => true
+    
+    'type_of_receiving_water' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['type_of_receiving_water']['k'], 'xls'=>true, 'glossary_composed' => false),
+    'id_of_the_sa_or_lsa' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['id_of_the_sa_or_lsa']['k'], 'xls'=>true),
+    'rca_name' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['rca_name']['k'], 'xls'=>true),
+    'rca_compliance' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['rca_compliance']['k'], 'xls'=>true),
+    
+    'art3_compliance' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['art3_compliance']['k'], 'xls'=>true, 'glossary' => false), 
+    'art4_compliance_art._4_(hierarchical_approach)' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['art4_compliance_art._4_(hierarchical_approach)']['k'], 'xls'=>true, 'glossary' => false),
+    'compliance_art._5_(whole_agglo)_(hierarchical_approach)' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['compliance_art._5_(whole_agglo)_(hierarchical_approach)']['k'], 'xls'=>true, 'glossary' => false),
+    
+    //'global_compliance'=> array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['global_compliance']['k'], 'xls'=>false),
     'compliance_agglo_global' => array('k'=>$GLOBALS['uwwtd']['sheet3_agglo']['compliance_agglo_global']['k'], 'xls'=>true),
+    
+    
+    
+    
     
 );
 

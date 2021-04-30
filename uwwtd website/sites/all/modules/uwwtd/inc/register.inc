@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -144,6 +145,10 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+*/    
+    
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -9607,8 +9612,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //'% of connected Load',
         if($line[$ind['generated_load_p.e.']]>0) {
             $line[$ind['dist_art4_treat__%_of_connected_load']] =   $uwwtpinfo_for_agglo['distart4_treatment_%'] + agglo_leak_pe($compliance,$line[$ind['connected_to_collecting_system_p._e.']],$line[$ind['total_entering_load_p._e.']]) * 100/$line[$ind['generated_load_p.e.']];
-        }
-        else {
+        }else {
             $line[$ind['dist_art4_treat__%_of_connected_load']] ='';
         }
         //'in p.e. (4)',
@@ -9899,6 +9903,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                             if($dcp->isInRca54){
                                 //$dcpTypeOfReceivingArea .= ($dcpTypeOfReceivingArea == '' ? '' : ';') . 'A54';
                                 $dcpTypeOfReceivingArea  = 'A54';
+                                $compliance_rca = 'NI';
+                            }else{
+                                $compliance_rca = 'NR';
                             }
                             
                             if(isset($dcp->field_dcprcaliste['und'])){
@@ -9994,7 +10001,36 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                             $rcaArtApplied .= ($rcaArtApplied == $GLOBALS['uwwtd']['register']['message']['info_empty'] ? '' : ';') . 'A54';
                                         }
                                     }
+                                    $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
+                                    if (uwwtd_rca_art54_applies(array('rcatype' => $rcaArtApplied, 'rca54applied' => $isrca54applied))) {
+                                        $rcainfo['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
+                                        $rcainfo['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
+                                        $rcainfo['rca_n_incoming_estimated']    = $rca->field_rcanincomingestimated['und'][0]['value'];
+                                        $rcainfo['rca_n_discharged_measured']   = $rca->field_rcandischargedmeasured['und'][0]['value'];
+                                        $rcainfo['rca_n_discharged_calculated'] = $rca->field_rcandischargedcalculated['und'][0]['value'];
+                                        $rcainfo['rca_n_discharged_estimated']  = $rca->field_rcandischargedestimated['und'][0]['value'];
 
+                                        $rcainfo['rca_p_incoming_measured']     = $rca->field_rcapincomingmeasured['und'][0]['value'];
+                                        $rcainfo['rca_p_incoming_calculated']   = $rca->field_rcapincomingcalculated['und'][0]['value'];
+                                        $rcainfo['rca_p_incoming_estimated']    = $rca->field_rcapincomingestimated['und'][0]['value'];
+                                        $rcainfo['rca_p_discharged_measured']   = $rca->field_rcapdischargedmeasured['und'][0]['value'];
+                                        $rcainfo['rca_p_discharged_calculated'] = $rca->field_rcapdischargedcalculated['und'][0]['value'];
+                                        $rcainfo['rca_p_discharged_estimated']  = $rca->field_rcapdischargedestimated['und'][0]['value'];
+                                        
+                                        $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
+                                        $ndischarged = $rcainfo['rca_n_discharged_measured'] + $rcainfo['rca_n_discharged_calculated'] + $rcainfo['rca_n_discharged_estimated'];
+
+                                        $pincoming   = $rcainfo['rca_p_incoming_measured']   + $rcainfo['rca_p_incoming_calculated']   + $rcainfo['rca_p_incoming_estimated'];
+                                        $pdischarged = $rcainfo['rca_p_discharged_measured'] + $rcainfo['rca_p_discharged_calculated'] + $rcainfo['rca_p_discharged_estimated'];
+                                        if (
+                                            ($nincoming > 0 && (1 - ($ndischarged / $nincoming)) >= 0.75) &&
+                                            ($pincoming > 0 && (1 - ($pdischarged / $pincoming)) >= 0.75)
+                                        ){
+                                            $compliance_rca = 'C';
+                                        }else{
+                                            $compliance_rca = 'NC';
+                                        }
+                                    }
                                     unset($rca);
 			                    }
                             }
@@ -10034,6 +10070,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //'type of receiving water',   ?dcpTypeOfReceivingArea
         $line[$ind['type_of_receiving_water']] = ($dcpTypeOfReceivingArea!=''?$dcpTypeOfReceivingArea:$GLOBALS['uwwtd']['default_by_cc'][$conf['siif_eru_country_code'] ]['rcaType']);
+        
+        $line[$ind['rca_compliance']] = $compliance_rca;
+        
         //'ID of the SA or LSA',   ?rcaID
         $line[$ind['id_of_the_sa_or_lsa']] = $rcaID;
         //'name',         ?title
@@ -10128,7 +10167,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['required_rcab']]  = $uwwtpinfo_for_agglo['required_rcab'];
         $line[$ind['required_rcac']]  = $uwwtpinfo_for_agglo['required_rcac'];
 
-        //data info addied to csv but not xls (only for agglo_compliance sheet 16 )
+        //data info added to csv but not xls (only for agglo_compliance sheet 16 )
         $line[$ind['compliance_agglo_global']] = $agg->field_aggcompliance['und'][0]['value'];
 
 
@@ -12817,7 +12856,7 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
     );
 
     $rca = uwwtd_get_all_rca($annee);
-    //wee must sort on $rca[$i]->field_rcaplantscapacity['und'][0]['value'] if exists
+    //we must sort on $rca[$i]->field_rcaplantscapacity['und'][0]['value'] if exists
     usort($rca, "sort_rca_by_field_rcaplantscapacity");
 
     fwrite($r, $GLOBALS['uwwtd']['sheet']['BOM']);
@@ -12964,9 +13003,11 @@ function uwwtd_create_register_2015_file_agglo_compliance_sheet16($annee, &$cont
 	
 	$j = 0;
     $lines = array();
+    dsm($indConf);
 	//Warning if the csv file contain more than 3000 lines => the system can probably never re-open the excel file
     while ($j < 10000 && $agglo = fgetcsv($ragglofile, 5000, ';')) {
         $line = array();
+        
         
         foreach($indConf as $k=>$conf){
             if($conf['xls']){
@@ -12976,13 +13017,20 @@ function uwwtd_create_register_2015_file_agglo_compliance_sheet16($annee, &$cont
                     $val = null;
                 }
                 //Other condition on field ?
+                
+                //Case of art 3 = QC 
+                if($k=='art3_compliance' && $val=='QC'){
+                    $val = 'C';
+                }                
                 $line[$conf['k']] = $val;
                 // $line[$conf['k']] = uwwtd_register_get_glossary_label($conf, $line[$conf['k']]);
             }
-
-            
         }
-
+        //Case of Art 54
+        if($line[$indConf['type_of_receiving_water']['k']] =='A54'){
+            $line[$indConf['compliance_art._5_(whole_agglo)_(hierarchical_approach)']['k']] = 'NR';
+        }
+        dsm($line);
         $lines[$j] = $line;
         // uwwtd_trace(var_export($line, true)); 
         $j++;
