@@ -7091,8 +7091,7 @@ function uwwtd_article5_54_as_523_compliance($agg, $article, $listUwwtpComplianc
         $listUwwtpCompliance[$k]['required'] = $GLOBALS['uwwtd_value']['required']['nitrogen_phosphorus'];
         $listUwwtpCompliance[$k]['compArt5'] = $listUwwtpCompliance[$k]['compArt54-523'];
         //Get compliance status of uwwtp with new input data
-    }   
-
+    }       
     return uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo);
 }
 
