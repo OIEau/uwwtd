@@ -75,7 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-/*
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,11 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-*/    
-    
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_compliance_sheet16', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -10001,7 +9997,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                                         }
                                     }
                                     $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
-                                    if (uwwtd_rca_art54_applies(array('rcatype' => $rcaArtApplied, 'rca54applied' => $isrca54applied))) {
+                                    //if (uwwtd_rca_art54_applies(array('rcatype' => $rcaArtApplied, 'rca54applied' => $isrca54applied))) {
+                                     if ($isrca54applied ) {
                                         $rcainfo = [];
                                         $rcainfo['rca_n_incoming_measured']     = $rca->field_rcanincomingmeasured['und'][0]['value'];
                                         $rcainfo['rca_n_incoming_calculated']   = $rca->field_rcanincomingcalculated['und'][0]['value'];
@@ -13029,6 +13026,11 @@ function uwwtd_create_register_2015_file_agglo_compliance_sheet16($annee, &$cont
         //Case of Art 54
         if($line[$indConf['type_of_receiving_water']['k']] =='A54'){
             $line[$indConf['compliance_art._5_(whole_agglo)_(hierarchical_approach)']['k']] = 'NR';
+            
+            
+            if($line[$indConf['rca_compliance']['k']] == 'NC'){
+                $line[$indConf['compliance_agglo_global']['k']] = 'NC';
+            }
         }
         $lines[$j] = $line;
         // uwwtd_trace(var_export($line, true)); 
