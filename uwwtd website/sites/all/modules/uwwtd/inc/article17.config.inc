@@ -1,4 +1,6 @@
 <?php
+$GLOBALS['uwwtd']['article17']['model'] = '/model/Article_17_model_2018.xlsx';
+
 // Content types to export
 $GLOBALS['uwwtd']['article17']['content_types'] = array(
     'article_17_ms_level',
@@ -19,39 +21,71 @@ $GLOBALS['article17']['glossary'] = array(
   "ESF"=> "European Social Fund (ESF)"
 );
 
-// Fields not to export in article_17_ms_level
-$GLOBALS['uwwtd']['article17']['article_17_ms_level']['fields_to_remove'] = array(
-    'body',
-    'field_linked_ms_level',
+$GLOBALS['uwwtd']['article17']['article_17_ms_level']['fields'] = array(
+    'field_year_of_datas',
+    'field_soeccode',
+    'field_soecinvcol',
+    'field_soecinvcomments',
+    'field_soecopcosts',
+    'field_soecperiod',
+    'field_soeclenghtcocs',  
+    'field_soecstartyear',
+    'field_soecinvias',
+    'field_soeceufunds',
+    'field_soecjobs',
+    'field_soecnumbias',
+    'field_soecpop',
+    'field_soeclenghtsacs',
+    'field_soeclenghtstcs',
+    'field_soecinvtp',
+    'field_soeccapacity',
+    'field_soecendyear'
 );
-
-// Fields to reorder in article_17_ms_level
-$GLOBALS['uwwtd']['article17']['article_17_ms_level']['fields_to_reorder'] = array(
-    1 => 'field_year_of_datas', // Should be 1st in excel output
-    2 => 'field_soeccode', // Should be seoncde in excel output
+$GLOBALS['uwwtd']['article17']['article_17_agglomeration']['fields'] = array(
+'field_art17agg_aggcode',
+'field_art17agg_aggname',
+'field_art17_flaggstatus',
+'field_art17_flaggotherfund',
+'field_art17_flaggloan',
+'field_art17_flaggotherfundname',
+'field_art17_flaggloanname',
+'field_anneedata',
+'field_art17_flaggreasons',
+'field_art17_flaggmeasures',
+'field_art17_flagginv',
+'field_art17_flaggeufund',
+'field_art17_flaggeufundname',
+'field_art17_flaggexpecdatestartw',
+'field_art17_flaggexpecdatecomple',
+'field_art17_flaggcomments',
+'field_art17_flaggexpload',
+'field_art17_flaggexploadcoll',
+'field_art17_flaggexploadias',
+'field_art17_flaggexpecdatestart'
 );
-
-// Fields not to export in article_17_agglomeration
-$GLOBALS['uwwtd']['article17']['article_17_agglomeration']['fields_to_remove'] = array(
-    'field_art17agg_link_agglo ',
-);
-
-// Fields not to export in article_17_agglomeration
-$GLOBALS['uwwtd']['article17']['article_17_agglomeration']['fields_to_reorder'] = array(
-    2 => 'field_art17agg_aggcode',
-    3 => 'field_art17agg_aggname',
-    4 => 'field_art17_flaggstatus'
-);
-
-// Fields not to export in article_17_uwwtp
-$GLOBALS['uwwtd']['article17']['article_17_uwwtp']['fields_to_remove'] = array(
-    'field_art17uwwtp_link_uwwtp',
-);
-
-// Fields to reorder in article_17_uwwtp
-$GLOBALS['uwwtd']['article17']['article_17_uwwtp']['fields_to_reorder'] = array(
-    1 => 'field_anneedata',
-    2 => 'field_art17uwwtp_uwwcode',
-    3 => 'field_art17uwwtp_uwwname',
-    4 => 'field_art17_flatpstatus',
+$GLOBALS['uwwtd']['article17']['article_17_uwwtp']['fields'] = array(
+    'field_anneedata',
+    'field_art17uwwtp_uwwcode',
+    'field_art17uwwtp_uwwname',
+    'field_art17_flatpstatus',
+    'field_art17_flatpinv',
+    'field_art17_flatpeufund',
+    'field_art17_flatpotherfund',
+    'field_art17_flatpmeasures',
+    'field_art17_flatpeufundname',
+    'field_art17uwwtp_aggcode',
+    'field_art17uwwtp_aggname',
+    'field_art17_flatpreasons',
+    'field_art17_flatpexpload',
+    'field_art17_flatpexpcapacity',
+    'field_art17_flatptexpectreatment',
+    'field_art17_flatpcomments',
+    'field_art17_flatpexploadtruck',
+    'field_art17_flatpexpecdatecomple',
+    'field_art17_flatpexpecdateperfor',
+    'field_art17_flatpotherfundname',
+    'field_art17_flatploanname',
+    'field_art17_flatploan',
+    'field_art17_flatpexpecdatestart',
+    'field_art17_flatpexpecdatestartw'
 );
