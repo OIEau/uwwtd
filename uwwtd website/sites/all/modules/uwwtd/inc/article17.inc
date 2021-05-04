@@ -23,7 +23,7 @@ function uwwtd_article17_export($year)
     try {
         // Load de excel model
         $objReader = PHPExcel_IOFactory::createReader("Excel2007");
-        $objPHPExcel = $objReader->load(drupal_get_path('module', 'uwwtd') . '/model/'."Article_17_model.xlsx");
+        $objPHPExcel = $objReader->load(drupal_get_path('module', 'uwwtd') . $GLOBALS['uwwtd']['article17']['model']);
 
         // Foreach article 17 content type
         foreach ($content_types as $content_type) {
@@ -36,21 +36,25 @@ function uwwtd_article17_export($year)
             }
             // Convert nodes to phparray
             $csvarray = uwwtd_article_17_csvarray($content_type, $nids); 
+            //dsm($content_type);
+            //dsm($csvarray);
             // Export to excel sheets
             $sheet = $objPHPExcel->getSheetByName($content_type);
             foreach ($csvarray as $line => $row) {
                 foreach ($row as $col => $val) {
-                    $sheet->setCellValueByColumnAndRow($col, $line+1, $val);
+                    $sheet->setCellValueByColumnAndRow($col, $line+2, $val);
                 }
             }
         }
 
         // Write the excel output to browser
+        
         $writer = new PHPExcel_Writer_Excel2007($objPHPExcel);
         header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition:inline;filename=Article_17_'.variable_get('siif_eru_country_name').'_'.$year.'.xlsx ');
         $writer->save('php://output');
         exit;
+        
     } catch (Exception $e) {
         dsm($e->getMessage());
         return "";
@@ -172,17 +176,8 @@ function uwwtd_article_17_csvarray($content_type, $nids)
     $fields = field_info_instances('node', $content_type);
 
     // Remove fields to hide in CSV and reorganized accordingly
-    $fields = uwwtd_article17_reorganize_fields($content_type, $fields);
-
-    // Get labels for 1st row
-    $csvheader = array();
-    foreach ($fields as $fieldname => $values) {
-        if($fieldname =='field_art17agg_link_agglo'){
-            continue;
-        }
-        $csvheader[0][] = $values['label'];
-    }
-
+    //$fields = uwwtd_article17_reorganize_fields($content_type, $fields);
+    $fields = $GLOBALS['uwwtd']['article17'][$content_type]['fields'];
     // Export every node
     $nodes    = node_load_multiple($nids);
     $csvnodes = array();
@@ -190,7 +185,7 @@ function uwwtd_article_17_csvarray($content_type, $nids)
     foreach ($nodes as $node) {
         $csvnodes[] = uwwtd_article17_export_node($node, $fields);
     }
-    return array_merge($csvheader, $csvnodes);
+    return $csvnodes;
 }
 
 /**
@@ -201,11 +196,8 @@ function uwwtd_article17_export_node($node, $fields)
     $csv = array();
 
     // Foreach field
-    foreach ($fields as $fieldname => $values) {
+    foreach ($fields as $fieldname) {
         $csvvalue = "";
-        if($fieldname =='field_art17agg_link_agglo'){
-            continue;
-        }
         // Plugg in functions that will transform node content here :
         if(function_exists("uwwtd_article17_transform_".$fieldname)) {
             $csvvalue = call_user_func("uwwtd_article17_transform_".$fieldname, array($node->{$fieldname}));
