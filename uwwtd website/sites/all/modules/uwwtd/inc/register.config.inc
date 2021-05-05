@@ -142,7 +142,7 @@ $GLOBALS['uwwtd']['sheet'] = array(
     'agglo_compliance' => array(
         'csv_name' => '_agglo_compliance.csv',
         'xlsx_name' => '_agglo_compliance.xlsx',
-        'xlsx_model_sheet_name' => 'Agglo Compliance',
+        'xlsx_model_sheet_name' => 'Agglomeration legal compliance',
     ),                                                       
 );
 
