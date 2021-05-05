@@ -8776,14 +8776,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 //             dsm($context['sandbox']['uwwtpinfo_for_agglo']);
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['entering'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['capacity'] += $uwwtp[$induww['uww_capacity p. e.']];
-
-            if ($uwwtp[$induww['art4_final']] == 'C') {
+            if ($uwwtp[$induww['art4_final']] == 'C'|| $uwwtp[$induww['art4_expired_final']] == 'C') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
 
             }
-            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD') {
+            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD' || $uwwtp[$induww['art4_expired_final']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -8792,25 +8791,25 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['results']['uwwtp_notreatment_pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];    //eric : desactivate ? todo ?
                 $context['results']['uwwtp_notreatment_nb']++;
             }
-            if ($uwwtp[$induww['art4_final']] == 'NR') {
+            if ($uwwtp[$induww['art4_final']] == 'NR'|| $uwwtp[$induww['art4_expired_final']] == 'NR') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NR']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
 
-            if ($uwwtp[$induww['art4_final']] == 'NI') {
+            if ($uwwtp[$induww['art4_final']] == 'NI'|| $uwwtp[$induww['art4_expired_final']] == 'NI') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NI']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
 
-            if ($uwwtp[$induww['art4_final']] == 'PD') {
+            if ($uwwtp[$induww['art4_final']] == 'PD'|| $uwwtp[$induww['art4_expired_final']] == 'PD') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['PD']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
 
-            if ($uwwtp[$induww['art4_final']] == '?') {
+            if ($uwwtp[$induww['art4_final']] == '?' || $uwwtp[$induww['art4_expired_final']] == '?') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe']      += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['?']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -8860,7 +8859,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }
 
-            if ($uwwtp[$induww['art4_treatment type']] == 'NC' && false === strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
+            if (($uwwtp[$induww['art4_expired_treatment type type']] == 'NC' || $uwwtp[$induww['art4_treatment type']] == 'NC') && false === strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
@@ -8868,7 +8867,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            if ($uwwtp[$induww['art4_monitoring']] == 'NC') {
+            if (($uwwtp[$induww['art4_expired_monitoring']] == 'NC' || $uwwtp[$induww['art4_monitoring']] == 'NC')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
@@ -8876,7 +8875,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            if ($uwwtp[$induww['art5_treatment type']] == 'NC') {
+            if ($uwwtp[$induww['art5_treatment type']] == 'NC' || $uwwtp[$induww['art5_expired_treatment type']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
@@ -8884,7 +8883,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            if ($uwwtp[$induww['art5_monitoring']] == 'NC') {
+            if ($uwwtp[$induww['art5_monitoring']] == 'NC' || $uwwtp[$induww['art5_expired_monitoring']] == 'NC') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart5_monitoring'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
@@ -8970,13 +8969,13 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 }
 
                 //5
-                if ($uwwtp[$induww['art5_final']] == 'C') {
+                if ($uwwtp[$induww['art5_final']] == 'C' || $uwwtp[$induww['art5_expired_final']] == 'C') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
-                if ($uwwtp[$induww['art5_final']] == 'NC') {
+                if ($uwwtp[$induww['art5_final']] == 'NC' || $uwwtp[$induww['art5_expired_final']] == 'NC') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
-                if ($uwwtp[$induww['art5_final']] == 'NR') {
+                if ($uwwtp[$induww['art5_final']] == 'NR' || $uwwtp[$induww['art5_expired_final']] == 'NR') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NR_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
 
@@ -9506,7 +9505,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 				$uwwtpinfo_for_agglo['NC']['percent'] += ($agg_leak * 100 / $field_agggenerated);
 			}
 		}
-
 		if ($agg_leak > 0){
 			if($agg->field_aggart5compliance['und'][0]['value'] == 'NR'){
 				$uwwtpinfo_for_agglo['art5_NR_pe'] += $agg_leak;
