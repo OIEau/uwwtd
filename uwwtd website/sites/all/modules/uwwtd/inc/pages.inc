@@ -1,4 +1,4 @@
-<?php 
+ <?php 
 
 /**
  * Generates the sensitive areas stats table.

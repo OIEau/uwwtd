@@ -795,10 +795,16 @@ function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibl
 	$query->leftJoin('field_data_field_anneedata', 'a', 'n.nid = a.entity_id AND a.entity_type = \'node\'');
 	$query->leftJoin('field_data_field_comparison_of_compliance_p', 'cp', 'n.nid = cp.entity_id AND cp.entity_type = \'node\'');
 	$query->leftJoin('field_data_field_comparison_of_compliance_a', 'ca', 'n.nid = ca.entity_id AND ca.entity_type = \'node\'');
+	$query->leftJoin('field_data_field_compliance_expired', 'exp', 'n.nid = exp.entity_id AND exp.entity_type = \'node\'');
+	$query->leftJoin('field_data_field_compliance_pending', 'pend', 'n.nid = pend.entity_id AND pend.entity_type = \'node\'');
+	$query->leftJoin('field_data_field_compliance_total', 'tot', 'n.nid = tot.entity_id AND tot.entity_type = \'node\'');
 	$query->fields('n');
 	$query->fields('a', array('field_anneedata_value'));
 	$query->fields('cp', array('field_comparison_of_compliance_p_value'));
 	$query->fields('ca', array('field_comparison_of_compliance_a_value'));
+	$query->fields('exp', array('field_compliance_expired_value'));
+	$query->fields('pend', array('field_compliance_pending_value'));
+	$query->fields('tot', array('field_compliance_total_value'));
 	switch ($yearSelected) {
 		case ALL_YEARS :
 			$query->condition('a.field_anneedata_value', $yearsPossibles, 'IN');
@@ -814,6 +820,9 @@ function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibl
 	// Pour chaque node :
 	$comparisonsCompliancesByPe = array();
 	$comparisonsCompliancesByAgg = array();
+	$exp = array();
+	$pend = array();
+	$tot = array();
 	foreach ($nodes as $node) {
 		if (!empty($node->field_anneedata_value)) {
 			// Récupération des tableaux "Comparison of Compliance PE" et "Comparison of Compliance Agg" :
@@ -823,16 +832,32 @@ function uwwtd_stat_national_distance_to_compliance($yearSelected, $yearsPossibl
 			if (!empty($node->field_comparison_of_compliance_a_value)) {
 				$comparisonsCompliancesByAgg[$node->field_anneedata_value] = json_decode($node->field_comparison_of_compliance_a_value);
 			}
+            if (!empty($node->field_compliance_expired_value)) {
+				$exp[$node->field_anneedata_value] = (array)json_decode($node->field_compliance_expired_value);
+			}
+            if (!empty($node->field_compliance_pending_value)) {
+				$pend[$node->field_anneedata_value] = (array)json_decode($node->field_compliance_pending_value);
+			}
+            if (!empty($node->field_compliance_total_value)) {
+				$tot[$node->field_anneedata_value] = (array)json_decode($node->field_compliance_total_value);
+			}
 		}
 	}
 	
 	// Tri selon les clés (année) :
 	ksort($comparisonsCompliancesByPe);
 	ksort($comparisonsCompliancesByAgg);
+	ksort($exp);
+	ksort($pend);
+	ksort($tot);
 	
     $data = [
         'comparisonsCompliancesByPe' => $comparisonsCompliancesByPe, 
-        'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg
+        'comparisonsCompliancesByAgg' => $comparisonsCompliancesByAgg,
+        'dttExp'=>$exp,
+        'dttPend'=>$pend,
+        'dtttot'=>$tot,
+        
      ];
 	return $data;
 }
@@ -1357,7 +1382,6 @@ if((integer)$legal_compliance['comparisonsCompliancesByPe'][$year]->{"Not releva
 */
 if($art3_nb > $art4_nb) $output.='<p>'.($art3_nb - $art4_nb).' agglomerations were not taken into account in calculations of the compliance rate for Article 4 because the agglomerations use IAS for more than 98% of the collected load.</p>';
 if($art3_nb > $art5_nb)$output.='<p>'.($art3_nb - $art5_nb).' agglomerations were not taken into account in the calculation of the compliance rate for Article 5 because these agglomerations generate ≤10,000 p.e. each.</p>';
-
 $output.='<h3>Distance to target </h3>';
 $output.='
 <table class="table">
@@ -1376,21 +1400,21 @@ $output.='
     <tbody>
         <tr>
             <td><b>Collection</b></td>
-            <td>'. uwwtd_format_number($art3_pe_nb) .'</td>
-            <td>'.uwwtd_format_number($art3_pe_NC).'</td>
-            <td>'.round(100 * $art3_pe_NC/$art3_pe_nb , 1).' %</td>
+            <td>'. uwwtd_format_number($legal_compliance['dtttot'][$year]['Target connection']) .'</td>
+            <td>'.uwwtd_format_number($legal_compliance['dtttot'][$year]['Not connected']).'</td>
+            <td>'.round(100 * $legal_compliance['dtttot'][$year]['Not connected']/$legal_compliance['dtttot'][$year]['Target connection'] , 1).' %</td>
         </tr>
         <tr>
             <td><b>Secondary treatment*</b></td>
-            <td>'. uwwtd_format_number($art4_pe_nb) .'</td>
-            <td>'.uwwtd_format_number($art4_pe_NC).'</td>
-            <td>'.round(100 * $art4_pe_NC/$art4_pe_nb , 1).' %</td>
+            <td>'. uwwtd_format_number($legal_compliance['dtttot'][$year]['2nd treatment target']) .'</td>
+            <td>'.uwwtd_format_number($legal_compliance['dtttot'][$year]['2nd treatment performance not met']).'</td>
+            <td>'.round(100 * $legal_compliance['dtttot'][$year]['2nd treatment performance not met']/$legal_compliance['dtttot'][$year]['2nd treatment target'] , 1).' %</td>
         </tr>
         <tr>
             <td><b>More stringent treatment**</b></td>
-            <td>'. uwwtd_format_number($art5_pe_nb) .'</td>
-            <td>'.uwwtd_format_number($art5_pe_NC).'</td>
-            <td>'.round(100 * $art5_pe_NC/$art5_pe_nb , 1).' %</td>
+            <td>'. uwwtd_format_number($legal_compliance['dtttot'][$year]['Tertiary treatment target']) .'</td>
+            <td>'.uwwtd_format_number($legal_compliance['dtttot'][$year]['Tertiary stringent treatment performance not met']).'</td>
+            <td>'.round(100 * $legal_compliance['dtttot'][$year]['Tertiary stringent treatment performance not met']/$legal_compliance['dtttot'][$year]['Tertiary treatment target'] , 1).' %</td>
         </tr>
     </tbody>
 </table>
