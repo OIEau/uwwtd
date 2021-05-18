@@ -5167,25 +5167,25 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
 
     // Récupération des valeurs du tableau "Comparison of distance to compliance expired deadline for previous year and current year" :
     $distancesExpired = array();
-    $distancesExpired['Target connection'] = $sheet->getCell('B88')->getValue();
-    $distancesExpired['Not connected'] = $sheet->getCell('B89')->getValue();
-    $distancesExpired['2nd treatment target'] = $sheet->getCell('B90')->getValue();
-    $distancesExpired['2nd treatment not in place'] = $sheet->getCell('B91')->getValue();
-    $distancesExpired['2nd treatment performance not met'] = $sheet->getCell('B92')->getValue();
-    $distancesExpired['Tertiary treatment target'] = $sheet->getCell('B93')->getValue();
-    $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('B94')->getValue();
-    $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('B95')->getValue();
+    $distancesExpired['Target connection'] = $sheet->getCell('C88')->getValue();
+    $distancesExpired['Not connected'] = $sheet->getCell('C89')->getValue();
+    $distancesExpired['2nd treatment target'] = $sheet->getCell('C90')->getValue();
+    $distancesExpired['2nd treatment not in place'] = $sheet->getCell('C91')->getValue();
+    $distancesExpired['2nd treatment performance not met'] = $sheet->getCell('C92')->getValue();
+    $distancesExpired['Tertiary treatment target'] = $sheet->getCell('C93')->getValue();
+    $distancesExpired['Tertiary treatment not in place'] = $sheet->getCell('C94')->getValue();
+    $distancesExpired['Tertiary stringent treatment performance not met'] = $sheet->getCell('C95')->getValue();
 
     // R   cup   ration des valeurs du tableau "Comparison of distance to compliance pending deadlines for previous year and current year" :
     $distancesPending = array();
-    $distancesPending['Target connection'] = $sheet->getCell('B104')->getValue();
-    $distancesPending['Not connected'] = $sheet->getCell('B105')->getValue();
-    $distancesPending['2nd treatment target'] = $sheet->getCell('B106')->getValue();
-    $distancesPending['2nd treatment not in place'] = $sheet->getCell('B107')->getValue();
-    $distancesPending['2nd treatment performance not met'] = $sheet->getCell('B108')->getValue();
-    $distancesPending['Tertiary treatment target'] = $sheet->getCell('B109')->getValue();
-    $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('B110')->getValue();
-    $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('B111')->getValue();
+    $distancesPending['Target connection'] = $sheet->getCell('C104')->getValue();
+    $distancesPending['Not connected'] = $sheet->getCell('C105')->getValue();
+    $distancesPending['2nd treatment target'] = $sheet->getCell('C106')->getValue();
+    $distancesPending['2nd treatment not in place'] = $sheet->getCell('C107')->getValue();
+    $distancesPending['2nd treatment performance not met'] = $sheet->getCell('C108')->getValue();
+    $distancesPending['Tertiary treatment target'] = $sheet->getCell('C109')->getValue();
+    $distancesPending['Tertiary treatment not in place'] = $sheet->getCell('C110')->getValue();
+    $distancesPending['Tertiary stringent treatment performance not met'] = $sheet->getCell('C111')->getValue();
 
     // R   cup   ration des valeurs du tableau "Distance to compliance total" :
     $distancesTotal = array();
@@ -10491,6 +10491,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         unset($agg);
     }
+    
     fclose($r);
 
 
@@ -10498,8 +10499,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
 
     //write last lines with aggregate data
-    if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
-
+    if ($context['sandbox']['progress'] == $context['sandbox']['max']) {        
         $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['agglo']['csv_total_name'], $annee);
         $r = fopen($filename, 'wb');
         $totalline = array_pad(array(), count($ind), '');

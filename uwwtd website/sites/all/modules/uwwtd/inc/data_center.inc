@@ -6503,12 +6503,17 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             
                 $verbose_msg.=" ---- uwwtd_article4_5_6_agglomeration_compliance_step_b \n";
                 $verbose_msg.=" ---- field_aggart4compliance = ".$aggArt456Compliance['compArt4']."\n";
-                    if(isset($aggArt456Compliance['compArt4_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt4_info']['reason']."\n";
-                if(isset($aggArt456Compliance['compArt5_info']) && isset($aggArt456Compliance['compArt5_info']['art54applies']) && $aggArt456Compliance['compArt5_info']['art54applies']){
-                    $verbose_msg.=" ---- field_aggart5compliance = ".$aggArt456Compliance['compArt5']." with : \n";
-                    $verbose_msg.=" --------------- RCA compliance = ".$aggArt456Compliance['compArt5_info']['rca_compliance']." \n";
-                    $verbose_msg.=" --------------- Art5.2,3 = ".$aggArt456Compliance['compArt5_info']['compliance_523']." \n";
-                    if(isset($aggArt456Compliance['compArt5_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt5_info']['reason']."\n";
+                if(isset($aggArt456Compliance['compArt4_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt4_info']['reason']."\n";
+                if(isset($aggArt456Compliance['compArt5_info'])){
+                    if(isset($aggArt456Compliance['compArt5_info']['art54applies']) && $aggArt456Compliance['compArt5_info']['art54applies']){
+                        $verbose_msg.=" ---- field_aggart5compliance = ".$aggArt456Compliance['compArt5']." with : \n";
+                        $verbose_msg.=" --------------- RCA compliance = ".$aggArt456Compliance['compArt5_info']['rca_compliance']." \n";
+                        $verbose_msg.=" --------------- Art5.2,3 = ".$aggArt456Compliance['compArt5_info']['compliance_523']." \n";
+                        if(isset($aggArt456Compliance['compArt5_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt5_info']['reason']."\n";
+                    }else{
+                        $verbose_msg.=" ---- field_aggart5compliance = ".$aggArt456Compliance['compArt5']." with : \n";
+                        if(isset($aggArt456Compliance['compArt5_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt5_info']['reason']."\n";
+                    }
                 }
                 $verbose_msg.=" ---- field_aggart6compliance = ".$aggArt456Compliance['compArt6']."\n"; 
                     if(isset($aggArt456Compliance['compArt6_info'])) $verbose_msg.=" -------> reason : ".$aggArt456Compliance['compArt6_info']['reason']."\n";
@@ -6725,7 +6730,8 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
 }
 
 /**
- * Get the compliance art 4,5,6 of an agglomaeration
+ * Get the compliance art 4,5,6 of an agglomeration
+ * Algo 6
  *
  * @param   object  $agg            the agglomeration node of the uwwtp node
  * @param   array   $infoAllAggUww  list of all uwwtp of the agglomeration with their information    
@@ -6820,6 +6826,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     return $aResult;    
 }
 
+//Algo 7
 function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompliance) 
 {
     uwwtd_trace(__FUNCTION__);
@@ -6872,7 +6879,6 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['no_information'], 'reason'=>'totalLoadenteringPE === 0'];
         }
     }
-
     if (false === ($totalLoadenteringPE_P_NI < 2000 && $totalLoadenteringPercent_P_NI <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'totalLoadenteringPE_P_NI < 2000 && totalLoadenteringPercent_P_NI <= 1'];
@@ -6887,22 +6893,35 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     // $percentage_lost = ($pe_lost * 100) / $agg->field_aggc1['und'][0]['value'];
     // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
     $totalLoadenteringPercent = 0;
+    $totalLoadentering_NC_Percent = 0;
     foreach ($listUwwtpCompliance as $aUwwtp) {
         $totalLoadenteringPercent += $aUwwtp['agglo_uww_perc_ent_uw'];
+        if(in_array($aUwwtp['compArt4'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
+            $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+        }
     }
     $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
-
+    $percentage_nc = $totalLoadentering_NC_Percent;
+    $pe_nc = ($percentage_nc * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
+    
     uwwtd_trace('WOLOLOLO');
     uwwtd_trace($agg->title);
     uwwtd_trace($pe_lost);
     uwwtd_trace($percentage_lost);
 
-
-
-    if ((true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) || (true === $percentage_lost > 1 || $pe_lost >= 2000)) {
-        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
-            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'at least one uwwtp is not compliant'];
+    /*
+    ([(load collected in collecting system- sum of load entering the treatment plants)] + (Sum of load entering for all stations with treatment in place = primary or NI or compliance for article 4 = NC)) <=1% and < 2000p.e" (herewith updated algorithms)
+    */
+    if (
+        (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance) ) || 
+        (true === $percentage_lost > 1 || $pe_lost >= 2000)
+    ) {
+        if($pe_nc <= 2000 && $percentage_nc <= 1 && $percentage_lost <= 1 && $pe_lost <= 2000){
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
+        }
+        elseif(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'at least one uwwtp is not compliant and pe_nc > 2000 pe or $percentage_nc > 1%'];
         } else {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'at least one uwwtp is not compliant but under pending deadline for art 4'];
         }
@@ -6915,12 +6934,12 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
     }
-    
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];       
 }
 
 /**
  * Return the cagglomeration compliance of the article $article based on the compliance article of all his station
+ * Algo 8
  * 
  * @param   string   $article               key of the article to look in the second parameter 
  * @param   array    $listUwwtpCompliance   List of all the sstation with all there article 4,5,6 compliance
@@ -6953,6 +6972,7 @@ function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompl
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];    
 }
 
+//Algo 9
 function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo) 
 {
     uwwtd_trace(__FUNCTION__);
@@ -7044,6 +7064,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     //sum of load entering for all station with treatment in place = primary or ni <= 1% et < 2000pe
     $totalLoadenteringPE = 0;
     $totalLoadenteringPercent = 0;      
+    $totalLoadentering_NC_Percent = 0;
     foreach($listUwwtpCompliance as $uwwtp) {  
         if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
                                                     $GLOBALS['uwwtd_value']['inplace']['secondary'],
@@ -7052,8 +7073,12 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
             $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
         }
+        if(in_array($aUwwtp['compArt5'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
+            $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+        }
     }
-      
+    $percentage_nc = $totalLoadentering_NC_Percent;
+    $pe_nc = ($percentage_nc * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
     if (false === ($totalLoadenteringPE < 2000 && $totalLoadenteringPercent <= 1)) {
         if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'totalLoadenteringPE < 2000 && totalLoadenteringPercent <= 1 AND expired deadline'];
@@ -7063,7 +7088,10 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     }
     
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
-        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+        if($pe_nc <= 2000 && $percentage_nc <= 1 ){
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
+        }
+        elseif(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>'at least one uwwtp not compliant and expired deadline'];
         } else {
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'at least one uwwtp not compliant and no expired deadline'];
