@@ -5543,6 +5543,10 @@ function uwwtd_update_7179(&$context = null) {
 
 function uwwtd_update_7180(&$context) {
     uwwtd_install_trace(__FUNCTION__);
+        uwwtd_delete_view('UWWTD_Agglomeration');
+    uwwtd_delete_view('UWWTD_Compliance_Agglo');
+    uwwtd_delete_view('UWWTD_Compliance_UWWTP');
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
     
     uwwtd_create_or_replace_view('UWWTD_Agglomeration');
     uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
