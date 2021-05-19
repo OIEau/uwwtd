@@ -1433,28 +1433,43 @@ $art17_agglomeration = uwwtd_stat_art17_agglomeration(['year'=>$year]);
 $art17_uwwtp = uwwtd_stat_art17_uwwtp(['year'=>$year]);
 
 $art_17_agg_inv_sum = 0;//array_sum(array_column($art17_agglomeration, 'flagginv'));
+$art_17_agg_inv_min_year = $year+2;
+$art_17_agg_inv_max_year = $year+2;
 $art_17_uwwtp_inv_sum = 0;//array_sum(array_column($art17_uwwtp, 'flatpinv'));
+$art_17_uwwtp_inv_min_year = $year+2;
+$art_17_uwwtp_inv_max_year = $year+2;
 $ref_date = strtotime( ($year+2) .'-12-31T23:59:00');
     foreach($art17_agglomeration as $v){
         $date = $v['flaggexpecdatecomple']!='' ? strtotime($v['flaggexpecdatecomple']) : strtotime($v['flaggexpecdatestartw']);
-        
+        $y = date('Y', $date);
         if($v['flagginv']!='' && $date>=$ref_date){
             $art_17_agg_inv_sum+=$v['flagginv'];
+            if($y>$art_17_agg_inv_max_year ){
+                $art_17_agg_inv_max_year = $y;
+            }
+            if($y<$art_17_agg_inv_min_year ){
+                $art_17_agg_inv_min_year = $y;
+            }
         }
     }
     foreach($art17_uwwtp as $v){
         $date = strtotime($v['flatpexpecdateperfor']);
+        $y = date('Y', $date);
         if($v['flatpinv']!='' && $date>=$ref_date){
             $art_17_uwwtp_inv_sum+=$v['flatpinv'];
+            if($y>$art_17_uwwtp_inv_max_year ){
+                $art_17_uwwtp_inv_max_year = $y;
+            }
+            if($y<$art_17_uwwtp_inv_min_year ){
+                $art_17_uwwtp_inv_min_year = $y;
+            }
         }
     }
     foreach($art17_mslevel as $v){
         $v['soeinvtot'] = $v['soecinvtp']+$v['soecinvcol'];
         $v['nb_year'] = 1 + (integer)substr($v['soecendyear'],0,4) - (integer)substr($v['soecstartyear'],0,4);
         $v['yearly_inv'] = $v['soeinvtot']/$v['nb_year'];
-        
-        $art17_mslevel_data[$v['soecperiod']][substr($v['soecstartyear'],0,4)] = $v;
-        
+        $art17_mslevel_data[$v['soecperiod']][substr($v['soecstartyear'],0,4)] = $v;  
     }
     $cu_invest = array_column($art17_mslevel_data['CU'], 'yearly_inv');
     $cu_investment_inh = (array_sum($cu_invest)*1000000/$population)/count($cu_invest);
@@ -1465,6 +1480,8 @@ $ref_date = strtotime( ($year+2) .'-12-31T23:59:00');
     $max_k = max($years);
     $begin_y = (integer)substr($art17_mslevel_data['EXP'][$min_k]['soecstartyear'],0,4);
     $end_y =  (integer)substr($art17_mslevel_data['EXP'][$max_k]['soecendyear'],0,4);
+    $begin_y = min([$art_17_uwwtp_inv_min_year, $art_17_agg_inv_min_year]);
+    $end_y =  max([$art_17_uwwtp_inv_max_year, $art_17_agg_inv_max_year]);
     
     //Expected date of completion of the collecting system or IAS works
     //
@@ -1473,7 +1490,7 @@ $ref_date = strtotime( ($year+2) .'-12-31T23:59:00');
     $output.='<p>The expected annual investment costs per capita for installing and renewing waste water collecting systems and treatment plants is '.uwwtd_format_number(round($exp_invest_inh)).' EUR/inhabitant/year.</p>';
     $output.='<p>';
     $output.='The investment needs  for ensuring adequate urban waste water collection and treatment, i.e. compliance with the Directive, as estimated by the national authorities and included in their national plan, are at the level of EUR '. ($art_17_agg_inv_sum + $art_17_uwwtp_inv_sum) .' million for the period '.$begin_y.'-'.$end_y.'. ';
-    $output.='This covers works on treatment plants, with the forecasted investment cost of EUR '.$art_17_uwwtp_inv_sum.' million ('.$begin_y.'-'.$end_y.') , and works on collecting systems and/or IAS, with a forecasted investment cost of EUR '.$art_17_agg_inv_sum .' million ('.$begin_y.'-'.$end_y.').'; 
+    $output.='This covers works on treatment plants, with the forecasted investment cost of EUR '.$art_17_uwwtp_inv_sum.' million ('.$art_17_uwwtp_inv_min_year.'-'.$art_17_uwwtp_inv_max_year.') , and works on collecting systems and/or IAS, with a forecasted investment cost of EUR '.$art_17_agg_inv_sum .' million ('.$art_17_agg_inv_min_year.'-'.$art_17_agg_inv_max_year.').'; 
     //array_sum(array_column($art17_mslevel_data['EXP'], 'soeinvtot'))
     //  ['.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvcol')).']'
 //    ['.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvtp')).']
