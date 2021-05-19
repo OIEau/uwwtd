@@ -3,7 +3,7 @@
     repcode.field_repcode_value AS "repCode",
     comp.field_aggcompliance_value AS caggtreated,
     art3.field_aggart3compliance_value AS cagg3,
-    art3add.field_aggart3addcompliance_value AS cagg3,
+    art3add.field_aggart3addcompliance_value AS cagg3add,
     art4.field_aggart4compliance_value AS cagg4,
     art5.field_aggart5compliance_value AS cagg5,
     art6.field_aggart6compliance_value AS cagg6,
