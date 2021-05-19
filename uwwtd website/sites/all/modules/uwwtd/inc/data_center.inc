@@ -6900,7 +6900,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
         }
     }
-    $percentage_lost = $agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent;
+    $percentage_lost = $agg->field_aggpercwithouttreatment['und'][0]['value'] + ($agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent);
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
     $percentage_nc = $totalLoadentering_NC_Percent;
     $pe_nc = ($percentage_nc * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
@@ -6934,6 +6934,8 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
     }
+    dsm("aaaaaa");
+    
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];       
 }
 
