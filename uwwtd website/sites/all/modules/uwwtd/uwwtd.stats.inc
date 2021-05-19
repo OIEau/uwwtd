@@ -1466,12 +1466,15 @@ $ref_date = strtotime( ($year+2) .'-12-31T23:59:00');
     $begin_y = (integer)substr($art17_mslevel_data['EXP'][$min_k]['soecstartyear'],0,4);
     $end_y =  (integer)substr($art17_mslevel_data['EXP'][$max_k]['soecendyear'],0,4);
     
+    //Expected date of completion of the collecting system or IAS works
+    //
     
     //$output.='<p>#CURRENT == The expected annual investment costs per capita for installing and renewing waste water collecting systems and treatment plants is '.uwwtd_format_number(round($cu_investment_inh)).' EUR/inhabitant/year.</p>';
     $output.='<p>The expected annual investment costs per capita for installing and renewing waste water collecting systems and treatment plants is '.uwwtd_format_number(round($exp_invest_inh)).' EUR/inhabitant/year.</p>';
     $output.='<p>';
-    $output.='The investment needs  for ensuring adequate urban waste water collection and treatment, i.e. compliance with the Directive, as estimated by the national authorities and included in their national plan, are at the level of EUR '.array_sum(array_column($art17_mslevel_data['EXP'], 'soeinvtot')).' million for the period '.$begin_y.'-'.$end_y.'. ';
+    $output.='The investment needs  for ensuring adequate urban waste water collection and treatment, i.e. compliance with the Directive, as estimated by the national authorities and included in their national plan, are at the level of EUR '. ($art_17_agg_inv_sum + $art_17_uwwtp_inv_sum) .' million for the period '.$begin_y.'-'.$end_y.'. ';
     $output.='This covers works on treatment plants, with the forecasted investment cost of EUR '.$art_17_uwwtp_inv_sum.' million ('.$begin_y.'-'.$end_y.') , and works on collecting systems and/or IAS, with a forecasted investment cost of EUR '.$art_17_agg_inv_sum .' million ('.$begin_y.'-'.$end_y.').'; 
+    //array_sum(array_column($art17_mslevel_data['EXP'], 'soeinvtot'))
     //  ['.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvcol')).']'
 //    ['.array_sum(array_column($art17_mslevel_data['EXP'], 'soecinvtp')).']
    $output.='However, as indicated in a recent OECD study, '. $country_name.' would need to increase their investments further to reach and maintain compliance. ';
