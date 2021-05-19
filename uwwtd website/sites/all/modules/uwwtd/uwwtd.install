@@ -5539,6 +5539,19 @@ function uwwtd_update_7179(&$context = null) {
     } 
     //throw new DrupalUpdateException(__FUNCTION__);
 }
+
+
+function uwwtd_update_7180(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    
+    uwwtd_create_or_replace_view('UWWTD_Agglomeration');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_Agglo');
+    uwwtd_create_or_replace_view('UWWTD_Compliance_UWWTP');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
+
 /**
  * Create a big city or update it
  * @param  array $row  Code/ country code / Label

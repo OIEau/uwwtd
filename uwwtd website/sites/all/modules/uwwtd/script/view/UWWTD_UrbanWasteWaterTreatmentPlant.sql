@@ -64,7 +64,16 @@ SELECT siteid.field_siteid_value AS "siteId",
         CASE
             WHEN ttype.field_uwwtreatmenttype_value::text = 'P'::text THEN 'Primary'::text
             WHEN ttype.field_uwwtreatmenttype_value::text = 'S'::text THEN 'Secondary'::text
-            WHEN ttype.field_uwwtreatmenttype_value::text = 'MS'::text THEN 'More Stringent'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'MS'::text THEN 'More Stringent: Other'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'O'::text THEN 'More Stringent'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'MP'::text THEN 'More Stringent: Phosphorus'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'PO'::text THEN 'More Stringent: Phosphorus and Other'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'N'::text THEN 'More Stringent: Nitrogen'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'NO'::text THEN 'More Stringent: Nitrogen and Other'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'NP'::text THEN 'More Stringent: Nitrogen and Phosphorus'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'NPO'::text THEN 'More Stringent: Nitrogen, Phosphorus and Other'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'NR'::text THEN 'Not relevant'::text
+            WHEN ttype.field_uwwtreatmenttype_value::text = 'Appropriate'::text THEN 'Appropriate'::text
             ELSE NULL::text
         END AS "uwwTreatmentType",
     annee.field_anneedata_value AS "repReportedPerdiod",
@@ -134,6 +143,7 @@ SELECT siteid.field_siteid_value AS "siteId",
      LEFT JOIN drupal_field_data_field_uwwpincomingcalculated pinccal ON n.nid = pinccal.entity_id
      LEFT JOIN drupal_field_data_field_uwwpincomingestimated pincest ON n.nid = pincest.entity_id
      LEFT JOIN drupal_field_data_field_uwwbaddesign bad ON n.nid = bad.entity_id
+     
      LEFT JOIN drupal_field_data_field_anneedata year ON n.nid = year.entity_id
      LEFT JOIN drupal_field_data_field_uwwbeginlife bl ON n.nid = bl.entity_id
      LEFT JOIN drupal_field_data_field_uwwendlife el ON n.nid = el.entity_id
