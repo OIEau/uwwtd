@@ -6934,7 +6934,6 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
     }
-    dsm("aaaaaa");
     
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];       
 }
