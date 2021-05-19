@@ -2258,7 +2258,7 @@ function uwwtd_art17_import_FLAInvestment($investment, $newFile, $annee){
         $field_art17_soecCapacity = isset($investment['soecCapacity']) ? $investment['soecCapacity'] : null;
         $field_art17_soecInvCol = isset($investment['soecInvCol']) ? $investment['soecInvCol'] : null;
         $field_art17_soecInvTp = isset($investment['soecInvTp']) ? $investment['soecInvTp'] : null;
-        $field_art17_soeInvComments = isset($investment['soeInvComments']) ? $investment['soeInvComments'] : null;
+        $field_art17_soeInvComments = isset($investment['soecInvComments']) ? $investment['soecInvComments'] : null;
         $field_art17_soecInvIAS = isset($investment['soecInvIAS']) ? $investment['soecInvIAS'] : null;
         $field_art17_soecOpCosts = isset($investment['soecOpCosts']) ? $investment['soecOpCosts'] : null;
         $field_art17_soecEUFunds = isset($investment['soecEUFunds']) ? $investment['soecEUFunds'] : null;
