@@ -76,6 +76,23 @@ SELECT siteid.field_siteid_value AS "siteId",
             WHEN ttype.field_uwwtreatmenttype_value::text = 'Appropriate'::text THEN 'Appropriate'::text
             ELSE NULL::text
         END AS "uwwTreatmentType",
+        CASE
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'P'::text THEN 'Primary'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'S'::text THEN 'Secondary'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'MS'::text THEN 'More Stringent: Other'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'O'::text THEN 'More Stringent'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'MP'::text THEN 'More Stringent: Phosphorus'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'PO'::text THEN 'More Stringent: Phosphorus and Other'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'N'::text THEN 'More Stringent: Nitrogen'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'NO'::text THEN 'More Stringent: Nitrogen and Other'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'NP'::text THEN 'More Stringent: Nitrogen and Phosphorus'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'NPO'::text THEN 'More Stringent: Nitrogen, Phosphorus and Other'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'NR'::text THEN 'Not relevant'::text
+            WHEN ttype_r.field_uwwtreatmentrequired_value::text = 'Appropriate'::text THEN 'Appropriate'::text
+            ELSE NULL::text
+        END AS "uwwTreatmentTypeRequired",
+    treat.field_uwwtreatment_met_value as "uwwTreatmentMet",
+    perf.field_uwwperformance_met_value as "uwwPerformanceMet",
     annee.field_anneedata_value AS "repReportedPerdiod",
     bl.field_uwwbeginlife_value AS "uwwBeginLife",
     el.field_uwwendlife_value AS "uwwEndLife"
@@ -143,7 +160,9 @@ SELECT siteid.field_siteid_value AS "siteId",
      LEFT JOIN drupal_field_data_field_uwwpincomingcalculated pinccal ON n.nid = pinccal.entity_id
      LEFT JOIN drupal_field_data_field_uwwpincomingestimated pincest ON n.nid = pincest.entity_id
      LEFT JOIN drupal_field_data_field_uwwbaddesign bad ON n.nid = bad.entity_id
-     
+     LEFT JOIN drupal_field_data_field_uwwtreatmentrequired ttype_r ON n.nid = ttype_r.entity_id
+     LEFT JOIN drupal_field_data_field_uwwperformance_met  perf ON n.nid = perf.entity_id
+     LEFT JOIN drupal_field_data_field_uwwtreatment_met treat ON n.nid = treat.entity_id
      LEFT JOIN drupal_field_data_field_anneedata year ON n.nid = year.entity_id
      LEFT JOIN drupal_field_data_field_uwwbeginlife bl ON n.nid = bl.entity_id
      LEFT JOIN drupal_field_data_field_uwwendlife el ON n.nid = el.entity_id
