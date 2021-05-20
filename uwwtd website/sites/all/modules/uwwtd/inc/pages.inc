@@ -280,6 +280,10 @@ function uwwtd_get_data_uwwtp($option)
 		f_uwwtreatmenttype.field_uwwtreatmenttype_value,
 		f_physicalcapacityactivity.field_physicalcapacityactivity_value,
 		f_uwwspecification.field_uwwspecification_value,
+        COALESCE(field_uwwbodincoming_value,field_uwwbodincomingestimated_value,field_uwwbodincomingcalculated_value) AS field_uwwbodincoming_value,
+		COALESCE(field_uwwcodincoming_value,field_uwwcodincomingestimated_value,field_uwwcodincomingcalculated_value) AS field_uwwcodincoming_value,
+		COALESCE(field_uwwnincoming_value,field_uwwnincomingestimated_value,field_uwwnincomingcalculated_value) AS field_uwwnincoming_value,
+		COALESCE(field_uwwpincoming_value,field_uwwpincomingestimated_value,field_uwwpincomingcalculated_value) AS field_uwwpincoming_value,
 		COALESCE(field_uwwboddischarge_value,field_uwwboddischargeestimated_value,field_uwwboddischargecalculated_value) AS field_uwwboddischarge_value,
 		COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value) AS field_uwwcoddischarge_value,
         COALESCE(field_uwwndischarge_value,field_uwwndischargeestimated_value,field_uwwndischargecalculated_value) AS field_uwwndischarge_value,
@@ -382,6 +386,50 @@ function uwwtd_get_data_uwwtp($option)
         LEFT JOIN
             {field_data_field_uwwpdischargecalculated} f_uwwpdischargecalculated
                 ON n.nid = f_uwwpdischargecalculated.entity_id   
+                
+               
+		 LEFT JOIN
+            {field_data_field_uwwbodincoming} f_uwwbodincoming
+                ON n.nid = f_uwwbodincoming.entity_id
+         LEFT JOIN
+            {field_data_field_uwwbodincomingestimated} f_uwwbodincomingestimated
+                ON n.nid = f_uwwbodincomingestimated.entity_id
+         LEFT JOIN
+            {field_data_field_uwwbodincomingcalculated} f_uwwbodincomingcalculated
+                ON n.nid = f_uwwbodincomingcalculated.entity_id
+                
+		 LEFT JOIN
+            {field_data_field_uwwcodincoming} f_uwwcodincoming
+                ON n.nid = f_uwwcodincoming.entity_id
+         LEFT JOIN
+            {field_data_field_uwwcodincomingestimated} f_uwwcodincomingestimated
+                ON n.nid = f_uwwcodincomingestimated.entity_id
+         LEFT JOIN
+            {field_data_field_uwwcodincomingcalculated} f_uwwcodincomingcalculated
+                ON n.nid = f_uwwcodincomingcalculated.entity_id
+                
+		 LEFT JOIN
+            {field_data_field_uwwnincoming} f_uwwnincoming
+                ON n.nid = f_uwwnincoming.entity_id
+         LEFT JOIN
+            {field_data_field_uwwnincomingestimated} f_uwwnincomingestimated
+                ON n.nid = f_uwwnincomingestimated.entity_id
+         LEFT JOIN
+            {field_data_field_uwwnincomingcalculated} f_uwwnincomingcalculated
+                ON n.nid = f_uwwnincomingcalculated.entity_id
+                
+		 LEFT JOIN
+            {field_data_field_uwwpincoming} f_uwwpincoming
+                ON n.nid = f_uwwpincoming.entity_id
+        LEFT JOIN
+            {field_data_field_uwwpincomingestimated} f_uwwpincomingestimated
+                ON n.nid = f_uwwpincomingestimated.entity_id
+         LEFT JOIN
+            {field_data_field_uwwpincomingcalculated} f_uwwpincomingcalculated
+                ON n.nid = f_uwwpincomingcalculated.entity_id
+                 
+                
+                
         LEFT JOIN
             {field_data_field_status} f_status
                 ON n.nid = f_status.entity_id
@@ -425,6 +473,7 @@ function uwwtd_get_data_uwwtp($option)
   
     
     try {
+        //dsm($query);
         $result = db_query($query, $param);
 
         while($row = $result->fetchAssoc()) {
@@ -2011,7 +2060,6 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
     );
 
 //     dsm($optionstyle);
-//     dsm($data);
 
     //todo format data in table
 //     $graph = array();
@@ -2045,9 +2093,9 @@ function uwwtd_page_uwwtps_pressure($type_export = ''){
 				'field_uwwndischarge_value_format'=>$row['field_uwwndischarge_value_format'],
 				'field_uwwpdischarge_value_format'=>$row['field_uwwpdischarge_value_format'],
 			));
-		}
+            
+		}       
     }
-    
     $header = array();
     $header_export = array();
     $keys = array_keys($rows[0]['data']);
