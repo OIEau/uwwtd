@@ -5555,6 +5555,13 @@ function uwwtd_update_7180(&$context) {
 
     variable_set('siif_eru_version', __FUNCTION__);
 } 
+function uwwtd_update_7181(&$context) {
+    uwwtd_install_trace(__FUNCTION__);
+    uwwtd_delete_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+    uwwtd_create_or_replace_view('UWWTD_UrbanWasteWaterTreatmentPlant');
+
+    variable_set('siif_eru_version', __FUNCTION__);
+} 
 
 /**
  * Create a big city or update it
