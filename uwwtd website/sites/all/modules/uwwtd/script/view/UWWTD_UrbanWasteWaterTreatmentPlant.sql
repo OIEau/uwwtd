@@ -93,6 +93,7 @@ SELECT siteid.field_siteid_value AS "siteId",
         END AS "uwwTreatmentTypeRequired",
     treat.field_uwwtreatment_met_value as "uwwTreatmentMet",
     perf.field_uwwperformance_met_value as "uwwPerformanceMet",
+    comp.field_uwwcompliance_value AS "uwwCompliance",
     annee.field_anneedata_value AS "repReportedPerdiod",
     bl.field_uwwbeginlife_value AS "uwwBeginLife",
     el.field_uwwendlife_value AS "uwwEndLife"
@@ -163,6 +164,7 @@ SELECT siteid.field_siteid_value AS "siteId",
      LEFT JOIN drupal_field_data_field_uwwtreatmentrequired ttype_r ON n.nid = ttype_r.entity_id
      LEFT JOIN drupal_field_data_field_uwwperformance_met  perf ON n.nid = perf.entity_id
      LEFT JOIN drupal_field_data_field_uwwtreatment_met treat ON n.nid = treat.entity_id
+     LEFT JOIN drupal_field_data_field_uwwcompliance comp ON n.nid = comp.entity_id
      LEFT JOIN drupal_field_data_field_anneedata year ON n.nid = year.entity_id
      LEFT JOIN drupal_field_data_field_uwwbeginlife bl ON n.nid = bl.entity_id
      LEFT JOIN drupal_field_data_field_uwwendlife el ON n.nid = el.entity_id
