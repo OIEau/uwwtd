@@ -6915,7 +6915,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     */
     if (
         (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance) ) || 
-        (true === $percentage_lost > 1 || $pe_lost >= 2000)
+        (true === $percentage_lost > 1 && $pe_lost >= 2000)
     ) {
         if($pe_nc <= 2000 && $percentage_nc <= 1 && $percentage_lost <= 1 && $pe_lost <= 2000){
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
