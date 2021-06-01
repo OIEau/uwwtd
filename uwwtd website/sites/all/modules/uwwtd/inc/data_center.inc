@@ -6295,6 +6295,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 function uwwtd_agglo_set_conformity(&$node, $verbose = false){
     $verbose_msg = '';
     //We need to fix error due to not provided data : Collective system + IAS + D without treatement = 100
+
     if(!isset($node->field_aggc1['und']) || !isset($node->field_aggc2['und']) || !isset($node->field_aggpercwithouttreatment['und'])){
         //debug
         
@@ -6350,7 +6351,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
     uwwtd_trace('calculate compliance for agglo : ' . $node->field_inspireidlocalid['und'][0]['value']);        
     
     $yearReporting = $node->field_anneedata['und'][0]['value'];
-    //ALGO4
+    //ALGO4  
     list($art3comp, $art3compAdditionnal, $art4comp, $art5comp, $art6comp, $reason) = uwwtd_article3_compliance($node, $yearReporting);
     if( $reason!=''){
         $node->field_article_3_compliance_expli['und'][0]=[
@@ -6372,6 +6373,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
     
     $infoAllAggUww = uwwtd_get_all_info_agguwww($node);
     $bDone = false; 
+    
     if($art3comp == 'NI'){ //ALGO4 too
         $node->field_aggart3compliance['und'][0]['value'] = 'NI';
         $node->field_aggart4compliance['und'][0]['value'] = 'NI';
@@ -6421,7 +6423,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                 //================================================Special rules for 10th report under instruction of DGEnv
                 $ids = explode('_', $node->field_siteid['und'][0]['value']);
                 //IT Case
-                if($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
+                if($ids[0]==2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     if($node->field_agggenerated['und'][0]['value'] >= 10000){
@@ -6431,7 +6433,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                     }
                 }
                 // DE case
-                elseif($ids[0]>=2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
+                elseif($ids[0]==2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     if($node->field_agggenerated['und'][0]['value'] >= 10000){
@@ -7796,6 +7798,14 @@ function uwwtd_article3_compliance($node, $yearReporting){
     //check if aggGenerated exists
     if(!isset($node->field_agggenerated['und'][0]['value'])){
         return array('NI', null, null, null, null, 'Article 3 compliance found to have no information because no data could be found on the "Generated load (p.e.)".');
+    }
+    if($node->field_status['und'][0]['value']!=1){
+        $art3comp = 'NR';
+        $art4comp = 'NR';
+        $art5comp = 'NR';
+        $art6comp = 'NR';
+        $reason = "Compliance can't be computed because the agglomeration is not active";
+        return array($art3comp, null, $art4comp, $art5comp, $art6comp, $reason);
     }
 
     // check if aggGenerated over 2000
