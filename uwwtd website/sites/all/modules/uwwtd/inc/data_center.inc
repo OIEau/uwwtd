@@ -6742,7 +6742,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     uwwtd_trace(__FUNCTION__);    
     $d_wot = ($agg->field_aggpercwithouttreatment['und'][0]['value']/100) *  $agg->field_agggenerated['und'][0]['value'];
       
-
     //collected in collective system = 0 ==> it's probably an error in data or there is no linked uwwtp or all the load is manage in IAS
     if($agg->field_aggc1['und'][0]['value'] == 0){
         if($d_wot > 2000 || $agg->field_aggpercwithouttreatment['und'][0]['value'] > 2){
@@ -6760,7 +6759,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
             $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         }
-         
+        
         return $aResult;
     }    
     
@@ -6771,7 +6770,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
         $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
         return $aResult;
     }  
-    
     $listStationArticleAndUwwtpCompliance = array();
     if(!empty($infoAllAggUww['listUww'])){
         foreach($infoAllAggUww['listUww'] as $niduwwtp => $uwwtp){
@@ -7369,9 +7367,6 @@ function uwwtd_article4_5_6_station_compliance($agg, $uwwtp, $rca = null)
 //    uwwtd_trace(__LINE__);
    return $aResult;   
 }
-
-
-
 
 function uwwtd_conformity_finished($success, $results, $operations) {
     if ($success) {

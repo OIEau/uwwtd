@@ -242,6 +242,9 @@ function uwwtd_virtual_field_aggart5compliance_hierarchical($node) {
   elseif($node->field_aggart4compliance['und'][0]['value']=='NC' && $field_aggart5compliance=='C'){
     $field_aggart5compliance='NC';  
   }
+    elseif( $field_aggart5compliance=='PD'){
+    $field_aggart5compliance='NR';  
+  }
 
   $variables['element']['#items']['0']['value'] = $field_aggart5compliance;
   $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['ui']['compliance'][$field_aggart5compliance] . $msg;

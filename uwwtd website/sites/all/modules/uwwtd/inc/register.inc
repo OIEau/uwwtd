@@ -145,7 +145,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -8854,8 +8853,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-
-            if ($uwwtp[$induww['uwwtp_collecting_without_treatment']] == '1') {
+            if ($uwwtp[$induww['uww_status']] != 'active') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }
 
@@ -9530,9 +9528,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['art4_not_compliant_%_of_gen._load']] = $uwwtpinfo_for_agglo['NC']['percent'];
         //'not compliant',
         $line[$ind['art4_not_compliant']] = $uwwtpinfo_for_agglo['NC']['pe'];
-        if($uwwtpinfo_for_agglo['uwwtp_collecting_without_treatment'] == 1 && ($uwwtpinfo_for_agglo['entering'] > 2000 || ($uwwtpinfo_for_agglo['entering']*100/ $field_agggenerated) > 2 ) ){
+        if($uwwtpinfo_for_agglo['uwwtp_collecting_without_treatment'] >= 1 && ($uwwtpinfo_for_agglo['entering'] > 2000 || ($uwwtpinfo_for_agglo['entering']*100/ $field_agggenerated) > 2 ) ){
             $line[$ind['art4_not_compliant_%_of_gen._load']]  += ($uwwtpinfo_for_agglo['entering']*100)/ $field_agggenerated;
-            
             $line[$ind['art4_not_compliant']]+= $uwwtpinfo_for_agglo['entering'];
         }
         if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
@@ -10186,6 +10183,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
 
         //Before insert the line we need t sort table by key
+        //dsm($ind);
+        //dsm($line);
+        
         ksort($line);
         fputcsv($r, $line, ';');
 
