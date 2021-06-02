@@ -8614,7 +8614,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $context['results']['uwwtp_other_morestringent_nb'] = 0;
 
         $context['sandbox']['id'] = array();
-
+            //
         $query = 'select n.nid
         from {node} n
             left join
@@ -8630,7 +8630,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and f_annee.field_anneedata_value = :annee
             and f_agggenerated.field_agggenerated_value >= 2000
             and status.field_status_value::integer = 1
-            and status.deleted!=0
+            and status.deleted = 0
         order by f_agggenerated.field_agggenerated_value desc
         ';
         //AND n.nid = 238941
