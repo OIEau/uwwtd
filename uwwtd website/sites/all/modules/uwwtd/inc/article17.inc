@@ -36,8 +36,6 @@ function uwwtd_article17_export($year)
             }
             // Convert nodes to phparray
             $csvarray = uwwtd_article_17_csvarray($content_type, $nids); 
-            //dsm($content_type);
-            //dsm($csvarray);
             // Export to excel sheets
             $sheet = $objPHPExcel->getSheetByName($content_type);
             foreach ($csvarray as $line => $row) {
@@ -51,7 +49,7 @@ function uwwtd_article17_export($year)
         
         $writer = new PHPExcel_Writer_Excel2007($objPHPExcel);
         header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition:inline;filename=Article_17_'.variable_get('siif_eru_country_name').'_'.$year.'.xlsx ');
+        header('Content-Disposition:inline;filename=Article_17_'.variable_get('siif_eru_country_name').'_'.$year.'-'.time().'.xlsx ');
         $writer->save('php://output');
         exit;
         
