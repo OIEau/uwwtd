@@ -145,6 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -12903,10 +12904,18 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
            $compliant_5_4 = $n_reduction >= 0.75 ? 'C' : 'NC';
         } elseif ($rca[$i]->field_rcaaphos['und'][0]['value'] == 1) {
            $compliant_5_4 = $p_reduction >= 0.75 ? 'C' : 'NC';
-        } else {
+        } elseif ($rca[$i]->field_rcab['und'][0]['value'] == 1) {
+           //$compliant_5_4 = $n_reduction >= 0.75 && $p_reduction >= 0.75 ? 'C' : 'NC';
+           $compliant_5_4 = 'NR';
+           drupal_set_message("Error on 5(4)-areas sheet: Art 5.4 sensitive area can only use 5aN or 5aP, ".$rca[$i]->title." use '5b case' ", 'error');
+        } elseif ($rca[$i]->field_rcac['und'][0]['value'] == 1) {
+           //$compliant_5_4 = $n_reduction >= 0.75 && $p_reduction >= 0.75 ? 'C' : 'NC';
+           drupal_set_message("Error on 5(4)-areas sheet: Art 5.4 sensitive area can only use 5aN or 5aP, ".$rca[$i]->title." area use '5c case' ", 'error');
+           $compliant_5_4 = 'NR';
+        } 
+        else {
            $compliant_5_4 = 'NR';
         }
-
         $compliant_5_4 = $GLOBALS['glossary'][$compliant_5_4];
         $line = array(              
             $ind['code'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
