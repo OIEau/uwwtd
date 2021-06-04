@@ -5754,6 +5754,9 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
             left join 
                 {field_data_field_agggenerated} agggenerated
                 ON n.nid = agggenerated.entity_id
+            left join 
+                {field_data_field_aggremarks} r
+                ON n.nid = r.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status

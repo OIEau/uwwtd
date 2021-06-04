@@ -6463,8 +6463,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             
             //dsm($infoAllAggUww);
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
-            //dsm($aggArt456Compliance);
-            //dsm($aggArt456Compliance);
+           
             //=========ART 4
             $node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
             if($aggArt456Compliance['compArt4_info']['reason']) {
@@ -6753,7 +6752,17 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
             else{
                 $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
             }
-            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            if($agg->field_agggenerated['und'][0]['value'] > 10000){
+                if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+                }
+                else{
+                    $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+                }
+            }else{
+                $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            }
+            
             $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant']; 
         }
         else{
@@ -6894,11 +6903,16 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
     // $pe_lost = ($agg->field_aggc1['und'][0]['value'] * 100 / $agg->field_agggenerated['und'][0]['value']) - $totalLoadenteringPE;
     $totalLoadenteringPercent = 0;
     $totalLoadentering_NC_Percent = 0;
+    $uwwtp_connected = 0;
     foreach ($listUwwtpCompliance as $aUwwtp) {
-        $totalLoadenteringPercent += $aUwwtp['agglo_uww_perc_ent_uw'];
-        if(in_array($aUwwtp['compArt4'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
-            $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+        if($aUwwtp['connected']==1) {
+            $uwwtp_connected++;
+            $totalLoadenteringPercent += $aUwwtp['agglo_uww_perc_ent_uw'];
+            if(in_array($aUwwtp['compArt4'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
+                $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+            }
         }
+        else $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
     }
     $percentage_lost = $agg->field_aggpercwithouttreatment['und'][0]['value'] + ($agg->field_aggc1['und'][0]['value'] - $totalLoadenteringPercent);
     $pe_lost = ($percentage_lost * ($agg->field_aggc1['und'][0]['value'] * $agg->field_agggenerated['und'][0]['value'])) / 10000;
@@ -6926,15 +6940,15 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'at least one uwwtp is not compliant but under pending deadline for art 4'];
         }
     }
-    
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'at least one uwwtp is at PD state'];
-    } 
-        
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+    }  
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
+    }elseif($uwwtp_connected==0){
+        //If there is no uwwpt and required treatment >= S
+        return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
     }
-    
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];       
 }
 
@@ -7067,15 +7081,18 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     $totalLoadenteringPercent = 0;      
     $totalLoadentering_NC_Percent = 0;
     foreach($listUwwtpCompliance as $uwwtp) {  
-        if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
-                                                    $GLOBALS['uwwtd_value']['inplace']['secondary'],
-                                                    $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
+        if($uwwtp['connected']==1) {
+            $uwwtp_connected++;
+            if (in_array($uwwtp['treatmenttype'], array($GLOBALS['uwwtd_value']['inplace']['primary'], 
+                                                        $GLOBALS['uwwtd_value']['inplace']['secondary'],
+                                                        $GLOBALS['uwwtd_value']['inplace']['noinformation']))) {
 
-            $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
-            $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
-        }
-        if(in_array($aUwwtp['compArt5'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
-            $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+                $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
+                $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
+            }
+            if(in_array($aUwwtp['compArt5'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
+                $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+            }
         }
     }
     $percentage_nc = $totalLoadentering_NC_Percent;
@@ -7088,7 +7105,7 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }
     }
     
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
         if($pe_nc <= 2000 && $percentage_nc <= 1 ){
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
         }
@@ -7099,17 +7116,20 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
         }
     }
     
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['pending_deadline']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'at least one uwwtp with PD compliance state'];
     } 
     
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['compliant']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
     }        
-    if (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['no_information']), $listUwwtpCompliance)) {
+    elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['no_information']), $listUwwtpCompliance)) {
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['no_information'], 'reason'=>'UWWTP have NI status probably because Nperf & Pperf are unavailable'];
     }        
-        
+    elseif($uwwtp_connected==0){
+        //If there is no uwwpt and required treatment >= S
+        return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
+    }    
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];    
 }
 

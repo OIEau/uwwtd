@@ -1336,6 +1336,7 @@ function uwwtd_get_distance_compliance($agg){
                     
                 }
                 else {
+                    
                     $art5_treatment_compliance = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
                 }
                 
@@ -1368,6 +1369,10 @@ function uwwtd_get_distance_compliance($agg){
                 }
           }
         }
+    }
+    //There is not linked treatment plants, but treatment require is more stringent
+    elseif($agg->field_agggenerated['und'][0]['value']>10000){
+        $treatment_required = 3;
     }
     // dsm($totalLoadenteringPE);
     // dsm($totalLoadenteringPercent);
