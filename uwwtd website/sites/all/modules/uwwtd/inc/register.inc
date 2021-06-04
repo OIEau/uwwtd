@@ -5772,7 +5772,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $current = [];
     while($row = $result->fetchAssoc()) {
         if($row['size'] < 2000 && isset($past[$row['agg_id']])){
-            $past[$row['agg_id']]['remark'] .= ($past[$key]['remark']!=''?' && ':'').'agglo<2,000 p.e.';
+            $past[$row['agg_id']]['remark'] .= ($past[$key]['remark']!=''?' AND ':'').'agglo<2,000 p.e.';
         }
         else $current[$row['agg_id']]  = $row;
     }
@@ -5981,7 +5981,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     while($row = $result->fetchAssoc()) {
         $key = $row['uwwtp_id'].'-'.$row['agg_id'];
         if($row['agg_size'] < 2000 && isset($uwwtp_past[$key])){
-            $uwwtp_past[$key]['remark'] .= ($uwwtp_past[$key]['remark']!=''?' && ':'').'agglo<2,000 p.e.';
+            $uwwtp_past[$key]['remark'] .= ($uwwtp_past[$key]['remark']!=''?' AND ':'').'agglo<2,000 p.e.';
         }
         else{
             $uwwtp_current[$key]  = $row;
