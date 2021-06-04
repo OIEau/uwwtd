@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,7 +144,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -2772,7 +2771,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
 
         $sheet->getCell('C10')->setValue($field_mslremarks);//13 >10
 
-        $sheet->getCell('C18')->setValue($volume_treated);//21 > 18
+        $sheet->getCell('C18')->setValue($volume_treated>0?$volume_treated:'NI');//21 > 18
         $sheet->getCell('C19')->setValue($reuse);
         $sheet->getCell('C20')->setValue($reuse_agriculture);
         $sheet->getCell('C21')->setValue($reuse_industry);
@@ -5737,7 +5736,11 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select localid.field_inspireidlocalid_value as agg_id, n.title, field_agggenerated_value as size
+    $query = 'select 
+            localid.field_inspireidlocalid_value as agg_id,
+            n.title, 
+            field_agggenerated_value as size,
+            field_aggremarks_value as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5766,7 +5769,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
     $current = [];
     while($row = $result->fetchAssoc()) {
         if($row['size'] < 2000 && isset($past[$row['agg_id']])){
-            $past[$row['agg_id']]['remark'] = 'agglo<2,000 p.e.';
+            $past[$row['agg_id']]['remark'] .= ($past[$key]['remark']!=''?' && ':'').'agglo<2,000 p.e.';
         }
         else $current[$row['agg_id']]  = $row;
     }
@@ -5922,7 +5925,14 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, field_physicalcapacityactivity_value as physicalcapacity, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_agggenerated_value as agg_size
+    $query = 'select 
+                localid.field_inspireidlocalid_value as uwwtp_id,
+                n.title, 
+                field_physicalcapacityactivity_value as physicalcapacity, 
+                agg_localid.field_inspireidlocalid_value as agg_id, 
+                agg_node.title as agg_name, 
+                field_agggenerated_value as agg_size,
+                field_uwwremarks_value as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5948,6 +5958,10 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
             left join 
                 {field_data_field_physicalcapacityactivity} f_capacity
                 ON n.nid = f_capacity.entity_id
+             left join 
+                {field_data_field_uwwremarks} r
+                ON n.nid = r.entity_id
+                
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
@@ -5964,7 +5978,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     while($row = $result->fetchAssoc()) {
         $key = $row['uwwtp_id'].'-'.$row['agg_id'];
         if($row['agg_size'] < 2000 && isset($uwwtp_past[$key])){
-            $uwwtp_past[$key]['remark'] = 'agglo<2,000 p.e.';
+            $uwwtp_past[$key]['remark'] .= ($uwwtp_past[$key]['remark']!=''?' && ':'').'agglo<2,000 p.e.';
         }
         else{
             $uwwtp_current[$key]  = $row;
