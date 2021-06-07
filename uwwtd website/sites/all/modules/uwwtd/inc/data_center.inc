@@ -6931,6 +6931,7 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance) ) || 
         (true === $percentage_lost > 1 && $pe_lost >= 2000)
     ) {
+        //FIX ME : imcompatible with previous condition 
         if($pe_nc <= 2000 && $percentage_nc <= 1 && $percentage_lost <= 1 && $pe_lost <= 2000){
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
         }
@@ -7090,8 +7091,8 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
                 $totalLoadenteringPE += ($agg->field_agggenerated['und'][0]['value'] * $uwwtp['agglo_uww_perc_ent_uw'] / 100);
                 $totalLoadenteringPercent += $uwwtp['agglo_uww_perc_ent_uw'];
             }
-            if(in_array($aUwwtp['compArt5'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
-                $totalLoadentering_NC_Percent += $aUwwtp['agglo_uww_perc_ent_uw'];
+            if(in_array($uwwtp['compArt5'], [$GLOBALS['uwwtd_value']['compliance']['not_compliant'], $GLOBALS['uwwtd_value']['compliance']['no_information']] )){
+                $totalLoadentering_NC_Percent += $uwwtp['agglo_uww_perc_ent_uw'];
             }
         }
     }
@@ -7104,7 +7105,6 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>'totalLoadenteringPE < 2000 && totalLoadenteringPercent <= 1 AND no expired deadline'];
         }
     }
-    
     elseif (true === uwwtd_atleastone_uwwtp_complianceart_in($article, array($GLOBALS['uwwtd_value']['compliance']['not_compliant']), $listUwwtpCompliance)) {
         if($pe_nc <= 2000 && $percentage_nc <= 1 ){
             return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>'at least one uwwtp is not compliant but pe_nc< 2000 pe and percentage_nc < 1% so agglo is compliant'];
