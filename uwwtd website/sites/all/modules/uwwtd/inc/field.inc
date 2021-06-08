@@ -343,7 +343,6 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
   } else {
       $colorart5P = '#4f91e1';
   }
-  
   //if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' || $node->isInRca54) {
   if ($node->field_aggart5compliance['und'][0]['value'] == 'NR' ) {
       $colorart5T = '#a2a2a2';
@@ -355,10 +354,9 @@ function uwwtd_virtual_field_table_distance_to_compliance($node) {
   } 
   
   
-  if ($distanceToCompliance['art5_perf_pe'] == '-') {
+  if ($distanceToCompliance['art5_perf_pe'] == '-' && $node->field_aggart5compliance['und'][0]['value'] != 'C') {
       $colorart5P = '#a2a2a2';
   }
-  
   $html = '
 
   <div class="distance">

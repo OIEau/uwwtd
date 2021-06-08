@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -144,6 +145,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+
+    //$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
 }
 
@@ -8651,7 +8654,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and status.deleted = 0
         order by f_agggenerated.field_agggenerated_value desc
         ';
-        //AND n.nid = 238941
+        //AND n.nid = 182188
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
@@ -8800,7 +8803,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['C']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
 
             }
-            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD' || $uwwtp[$induww['art4_expired_final']] == 'NC') {
+            if ($uwwtp[$induww['art4_final']] == 'NC' || $uwwtp[$induww['art4_final']] == 'PD' || $uwwtp[$induww['art4_expired_final']] == 'NC' || $uwwtp[$induww['uww_iscon']] == 'no') {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['percent']  =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['NC']['pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
@@ -8989,7 +8992,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 if ($uwwtp[$induww['art5_final']] == 'C' || $uwwtp[$induww['art5_expired_final']] == 'C') {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_C_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
-                if ($uwwtp[$induww['art5_final']] == 'NC' || $uwwtp[$induww['art5_expired_final']] == 'NC') {
+                if ($uwwtp[$induww['art5_final']] == 'NC' || $uwwtp[$induww['art5_expired_final']] == 'NC' || ($uwwtp[$induww['uww_iscon']] == 'no' && $uwwtp[$induww['generated load  p. e.']] > 10000)) {
                     $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['art5_NC_pe']  += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 }
                 if ($uwwtp[$induww['art5_final']] == 'NR' || $uwwtp[$induww['art5_expired_final']] == 'NR') {
@@ -9503,7 +9506,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         if($annee == 2016 && $conf['siif_eru_country_code'] == 'cy'){
             $agg_leak+=$line[$ind['neither_collecting_system_nor_ias_p._e.']];
         }
-		if ($agg_leak > 0){
+		
+
+        if ($agg_leak > 0){
 			if($agg->field_aggart4compliance['und'][0]['value'] == 'NR'){
 				$uwwtpinfo_for_agglo['NR']['pe'] += $agg_leak;
 				$uwwtpinfo_for_agglo['NR']['percent'] += ($agg_leak * 100 / $field_agggenerated);
@@ -10735,7 +10740,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
                 AND f_agggenerated.field_agggenerated_value >= 2000
-                
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST;
         ';        
@@ -12016,7 +12020,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             } elseif ($art5_monitoring == 'NC') {
 				$morestringentpassed = '0';
             } else {
-            	if (false !== strpos($treatmenttypeinplace, '3NP')) {
+            	if (false !== strpos($treatment_required, '3NP')) {
                 	if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
                     	$line[$ind['Monitoring results -Ptot']] == 'Pass' &&
                     	$secondarypass == '1') {
@@ -12024,14 +12028,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 	                } else {
 	                    $morestringentpassed = '0';
 	                }
-	            } elseif (false !== strpos($treatmenttypeinplace, '3P')) {
+	            } elseif (false !== strpos($treatment_required, '3P')) {
 	                if ($line[$ind['Monitoring results -Ptot']] == 'Pass' &&
 	                    $secondarypass == '1') {
 	                    $morestringentpassed = '1';
 	                } else {
 	                    $morestringentpassed = '0';
 	                }
-	            } elseif (false !== strpos($treatmenttypeinplace, '3N')) {
+	            } elseif (false !== strpos($treatment_required, '3N')) {
 	                if ($line[$ind['Monitoring results -Ntot']] == 'Pass' &&
 	                    $secondarypass == '1') {
 	                    $morestringentpassed = '1';
@@ -12055,7 +12059,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 	                $morestringentpassed = '0';
 	            }
             }
-
             $line[$ind['More stringent: monitoring passed?']] = $morestringentpassed;
             //'More stringent:  FINAL',
             /*
