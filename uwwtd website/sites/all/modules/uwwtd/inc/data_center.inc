@@ -7982,7 +7982,10 @@ function uwwtd_station_compliance_algo($node, $timestamp){
             if(isset($dcp->field_dcprcaliste['und'])){
                 foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                     $rca = node_load($rcalist['nid']);
-                    
+                    //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+                    if($rca->field_anneedata['und'][0]['value'] == '2018' && $conf['siif_eru_country_code'] == 'fr' && isset($rca->field_rca54applied['und'])){
+                        $rca->field_rca54applied['und'][0]['value'] = 0;
+                    }
                     
                     $isrca54applied = (isset($rca->field_rca54applied['und']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
                     $isrcaANitro = (isset($rca->field_rcaanitro['und']) ? $rca->field_rcaanitro['und'][0]['value'] == 1: false);
@@ -7997,7 +8000,10 @@ function uwwtd_station_compliance_algo($node, $timestamp){
                     if (isset($rca->field_specialisedzonetype['und'][0]['value'])) {
                         $rcaTypeid = $rca->field_specialisedzonetype['und'][0]['value'];
                     }
-
+                    //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+                    if($rca->field_anneedata['und'][0]['value'] == '2018' && $conf['siif_eru_country_code'] == 'fr' && $rcaTypeid = 'A54'){
+                        $rcaTypeid = 'A523';
+                    }
                     if($isrca54applied) $rca54applied = true;
                     
                     
@@ -8997,6 +9003,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
 function uwwtd_get_all_info_agguwww($node) 
 {
     uwwtd_trace(__FUNCTION__);
+    global $conf;
     $aResult = array();
     $aResult['total']   = 0;
 
@@ -9074,6 +9081,10 @@ function uwwtd_get_all_info_agguwww($node)
                         if(isset($dcp->field_dcprcaliste['und'])){
                             foreach($dcp->field_dcprcaliste['und'] as $rcalist){
                                 $rca = node_load($rcalist['nid']);
+                                //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+                                /*if($rca->field_anneedata['und'][0]['value'] == '2018' && $conf['siif_eru_country_code'] == 'fr' && isset($rca->field_rca54applied['und'])){
+                                    $rca->field_rca54applied['und'][0]['value'] = 0;
+                                }*/
                                 $isrca54applied = (isset($rca->field_rca54applied['und'][0]['value']) ? $rca->field_rca54applied['und'][0]['value'] == 1 : false);
                                 if (uwwtd_rca_art54_applies(array('rcatype' => $rcaTypeid, 'rca54applied' => $isrca54applied))) {
                                     $aResult['rca']['art54applies'] = true;

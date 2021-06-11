@@ -2622,6 +2622,7 @@ function uwwtd_node_view($node, $view_mode, $langcode) {
 
 
 function uwwtd_node_load($nodes, $types){
+    global $conf;
     if(!empty($nodes)){
         foreach($nodes as $nid=>$node){
             if(in_array($node->type, ['agglomeration', 'uwwtp', 'discharge_point'])){
@@ -2635,6 +2636,10 @@ function uwwtd_node_load($nodes, $types){
                     $r = $query->execute()->fetchCol();  
                     if(!empty($r)){$is54 = true;}
                     
+                }
+                //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+                if($node->field_anneedata['und'][0]['value'] == '2018' && $conf['siif_eru_country_code'] == 'fr'){
+                    $is54 = false;
                 }
                 $nodes[$nid]->isInRca54 = $is54;
             }

@@ -230,10 +230,12 @@ function uwwtd_virtual_field_aggart4compliance_hierarchical($node) {
  *
  */
 function uwwtd_virtual_field_aggart5compliance_hierarchical($node) {   
+    //global $conf;
 //   return __FUNCTION__;
   //Gestion de la "legal compliance" (hierarchical)
   $field_aggart5compliance = $node->field_aggart5compliance['und'][0]['value'];
   $msg = '';
+  dsm($node);
   if($node->isInRca54){
     //$field_aggart5compliance='NR'; 
     $field_aggart523compliance = $node->field_aggart523compliance['und'][0]['value'];
