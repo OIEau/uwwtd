@@ -63,7 +63,8 @@ function uwwtd_run_compliance_page($node){
         }
         
         uwwtd_agglo_set_conformity($node, true);
-        drupal_set_message("Processing conformity for the agglomeration ".$node->title." : Ok");
+        if($node->field_agggenerated['und'][0]['value'] > 10000) drupal_set_message("Compliance at RCA was not evaluated, It can change the result at agglomeration level when article 5.4 is applied for the RCA", 'warning');
+                drupal_set_message("Processing conformity for the agglomeration ".$node->title." : Ok");
     }
     elseif($node->type=='uwwtp'){
         uwwtd_station_set_conformity($node);
@@ -6249,6 +6250,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
         $query->condition('s.field_siteid_value', db_like($annee).'%', 'LIKE');
         //$query->join('field_data_field_aggcompliance', 'c', 'c.entity_id = n.nid');
         //$query->condition('c.field_aggcompliance_value', 'NI');
+        //$query->condition('n.nid', 302472);
         $query->orderBy('field_agggenerated_value', 'DESC');
         $agglos = $query->execute();
         foreach($agglos as $agglo){
@@ -6293,6 +6295,7 @@ function uwwtd_agglo_conformity_batch_process($annee, $timestamp, &$context){
 }
 
 function uwwtd_agglo_set_conformity(&$node, $verbose = false){
+    global $conf;
     $verbose_msg = '';
     //We need to fix error due to not provided data : Collective system + IAS + D without treatement = 100
 
@@ -6421,9 +6424,9 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
         if (false === empty($aArtCompliance)) {
             if($aArtCompliance['compArt4'] == $GLOBALS['uwwtd_value']['compliance']['unknown']){
                 //================================================Special rules for 10th report under instruction of DGEnv
-                $ids = explode('_', $node->field_siteid['und'][0]['value']);
+                //$ids = explode('_', $node->field_siteid['und'][0]['value']);
                 //IT Case
-                if($ids[0]==2016 && strtoupper(substr($ids[2], 0, 2)) =='IT'){
+                if($node->field_anneedata['und'][0]['value'] ==2016 && $conf['siif_eru_country_code'] =='it'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     if($node->field_agggenerated['und'][0]['value'] >= 10000){
@@ -6433,7 +6436,7 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
                     }
                 }
                 // DE case
-                elseif($ids[0]==2016 && strtoupper(substr($ids[2], 0, 2)) =='DE'){
+                elseif($node->field_anneedata['und'][0]['value'] ==2016 && $conf['siif_eru_country_code'] =='de'){
                     $aArtCompliance['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['compliant'];
                     $aArtCompliance['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
                     if($node->field_agggenerated['und'][0]['value'] >= 10000){
@@ -6474,7 +6477,13 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             }
             
             //=======ART 5
-            if(isset($aggArt456Compliance['compArt5_info']) && isset($aggArt456Compliance['compArt5_info']['art54applies']) && $aggArt456Compliance['compArt5_info']['art54applies']){
+            if(
+                isset($aggArt456Compliance['compArt5_info']) && 
+                isset($aggArt456Compliance['compArt5_info']['art54applies']) && 
+                $aggArt456Compliance['compArt5_info']['art54applies'] &&
+                //nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+                $node->field_anneedata['und'][0]['value'] != '2018' && $conf['siif_eru_country_code'] != 'fr'
+                ){
                 //nd@oieau.fr : 16/05/2019 (technical workshop)==> if art54applies is apply art5 is NR even if receiving area is not compliant
                 $node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['rca_compliance'];
                 //$node->field_aggart5compliance['und'][0]['value'] = $aggArt456Compliance['compArt5_info']['compliance'];
@@ -6817,7 +6826,6 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     //ALGO9         
 //FIX ME case of art 5.4 : keep compliance (NR) or RCA compliance or art 5.2,3   
     $compArt5 = uwwtd_article5_agglomeration_compliance($agg, 'compArt5', $listStationArticleAndUwwtpCompliance, $infoAllAggUww['rca']);
-    //dsm($compArt5);
     if(isset($compArt5['compliance_523'])){
         if($compArt4['compliance']==$GLOBALS['uwwtd_value']['compliance']['not_compliant']){
             $aResult['compArt523'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
@@ -6992,8 +7000,10 @@ function uwwtd_article6_agglomeration_compliance($agg, $article, $listUwwtpCompl
 function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompliance, $rcainfo) 
 {
     uwwtd_trace(__FUNCTION__);
+    global $conf;
     //art5(4) applies ?
-    if (true === $rcainfo['art54applies']) {
+    ////nd@oieau.fr :  11/06/2021 : Special rule ask by Benilde. In 2018, rule Art 5.2,3 have to be applied for France. Art 5.4 is not applicable for compliance assessement
+    if (true === $rcainfo['art54applies'] && $agg->field_anneedata['und'][0]['value'] !=2018 && $conf['siif_eru_country_code']!='fr') {
         uwwtd_trace('art54applies applies to agglo');
         uwwtd_trace(var_export($rcainfo, true));
         $nincoming   = $rcainfo['rca_n_incoming_measured']   + $rcainfo['rca_n_incoming_calculated']   + $rcainfo['rca_n_incoming_estimated'];
