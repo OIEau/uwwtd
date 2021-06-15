@@ -7815,7 +7815,7 @@ function uwwtd_wkt_transform($wkt, $prj_src, $prj_target){
 }
 
 
-/**
+/** ======= ALGO n°4
  * return art3,4,5,6 compliance and a reason (4,5,6 are optional)
  * 
  * @return  array      (art3compliance, 4 or null,5 or null,6, or nullreason)
@@ -7864,16 +7864,13 @@ function uwwtd_article3_compliance($node, $yearReporting){
         $reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
         return array($art3comp, null, null, null, null, $reason);
     }
-
-
-    if ( ! ($aggpercwithouttreatment_pe > 2000 || $aggpercwithouttreatment_percent > 2)) {
+    elseif ( $aggpercwithouttreatment_pe <= 2000 && $aggpercwithouttreatment_percent <= 2 ) {
         $art3comp = $GLOBALS['uwwtd_value']['compliance']['compliantQC'];
         $reason = 'Article 3 compliance found to be compliantQC because the amount of "waste discharged without treatment" is equal or less than 2 000 or the percentage of "waste discharged without treatment" is equal or less than 2% of total waste.';
         uwwtd_trace('field_aggart3compliance QC for agglo nid ' . $node->nid);
         return array($art3comp, null, null, null, null, $reason);
     }
-
-    if (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+    elseif (true === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
         $art3comp = 'NC';
         $reason = 'Not compliant with article 3 because the deadline has been reached';
         $art3compAddictionnal = null;

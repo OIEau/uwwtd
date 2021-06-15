@@ -148,6 +148,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
     //$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
+//$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -8608,6 +8609,9 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 	global $conf;
     $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
     $induww = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
+    
+    //dsm($induww);
+    
     $listtypestat = array('expired', 'pending');
     $list_type_rca = array('all', 'na', 'sa_csa');
     if (!isset($context['sandbox']['progress'])) {
@@ -8654,7 +8658,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and status.deleted = 0
         order by f_agggenerated.field_agggenerated_value desc
         ';
-        //AND n.nid = 182188
+        //AND n.nid = 12333
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
@@ -8875,7 +8879,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
-            if ($uwwtp[$induww['uww_status']] != 'active') {
+            if ($uwwtp[$induww['uww_status']] != 'active' && $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']] > 1) {
+                //understand : uww_status =  inactive || active (not connected)
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
+            }
+            elseif ($uwwtp[$induww['uww_status']] == 'active' && $uwwtp[$induww['uww_iscon']] == 'no' && $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']] > 1) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }
 
@@ -9556,7 +9564,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['art4_not_compliant_%_of_gen._load']]  += ($uwwtpinfo_for_agglo['entering']*100)/ $field_agggenerated;
             $line[$ind['art4_not_compliant']]+= $uwwtpinfo_for_agglo['entering'];
         }
-        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
+        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2){
             $line[$ind['art4_not_compliant_%_of_gen._load']]  +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $line[$ind['art4_not_compliant']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
         }
@@ -9645,7 +9653,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         /*nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
         //If dicharge without treament > 2% and 2000 eq the load is reported in art 4
         */
-        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2){
+        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2){
             //Treatment',
             $line[$ind['dist_art4_treat__%_of_connected_load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
             $line[$ind['dist_art4_treat_in_p.e._(4)']] += $line[$ind['neither_collecting_system_nor_ias_p._e.']];
@@ -9657,18 +9665,38 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $compliance = NULL;
 
         //Compliance Art. 5',
-        //'compliant 5 a  (% of gen. load)',
-        $line[$ind['compliant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_C_%'];
-        //'compliant 5 a  (p. e.)',
-        $line[$ind['compliant_5_a_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_C_pe'];
-        //'not compliant 5 a  (% of gen. load)',
-        $line[$ind['not_compliant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NC_%'];
-        //'not compliant 5 a  (p. e.)',
-        $line[$ind['not_compliant_5_a_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NC_pe'];
-        //'not relevant 5 a   (% of gen. load)',
-        $line[$ind['not_relevant_5_a_(%_of_gen._load)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NR_%'];
-        //'not relevant 5 a   (p. e.)',
-        $line[$ind['not_relevant_5_a_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5a_NR_pe'];
+        if(($agg->field_agggenerated['und'][0]['value'] > 10000) ){
+            //'compliant 5 a  (% of gen. load)',
+            $line[$ind['compliant_5_a_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5a_C_%'];
+            //'compliant 5 a  (p. e.)',
+            $line[$ind['compliant_5_a_(p._e.)']] =  $uwwtpinfo_for_agglo['art5a_C_pe'];
+            //'not compliant 5 a  (% of gen. load)',
+            $line[$ind['not_compliant_5_a_(%_of_gen._load)']] =  $uwwtpinfo_for_agglo['art5a_NC_%'];
+            //'not compliant 5 a  (p. e.)',
+            $line[$ind['not_compliant_5_a_(p._e.)']] =  $uwwtpinfo_for_agglo['art5a_NC_pe'];
+            if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2){
+                $line[$ind['not_compliant_5_a_(%_of_gen._load)']] += $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']];
+                $line[$ind['not_compliant_5_a_(p._e.)']] +=$line[$ind['neither_collecting_system_nor_ias_p._e.']];
+            }
+            //'not relevant 5 a   (% of gen. load)',
+            $line[$ind['not_relevant_5_a_(%_of_gen._load)']] =  $uwwtpinfo_for_agglo['art5a_NR_%'];
+            //'not relevant 5 a   (p. e.)',
+            $line[$ind['not_relevant_5_a_(p._e.)']] =  $uwwtpinfo_for_agglo['art5a_NR_pe'];
+        }else{
+            //'compliant 5 a  (% of gen. load)',
+            $line[$ind['compliant_5_a_(%_of_gen._load)']] = 0;
+            //'compliant 5 a  (p. e.)',
+            $line[$ind['compliant_5_a_(p._e.)']] = 0;
+            //'not compliant 5 a  (% of gen. load)',
+            $line[$ind['not_compliant_5_a_(%_of_gen._load)']] = 0;
+            //'not compliant 5 a  (p. e.)',
+            $line[$ind['not_compliant_5_a_(p._e.)']] = 0;
+            //'not relevant 5 a   (% of gen. load)',
+            $line[$ind['not_relevant_5_a_(%_of_gen._load)']] =0;
+            //'not relevant 5 a   (p. e.)',
+            $line[$ind['not_relevant_5_a_(p._e.)']] = 0;
+        }
+
 
         //'Compliance Art. 5a (only)',
 
@@ -9718,6 +9746,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_C_pe'];
         //'not compliant Art. 5 (p. e.)',
         $line[$ind['not_compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NC_pe'];
+        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2){
+            $line[$ind['not_compliant_art._5_(p._e.)']] = $line[$ind['neither_collecting_system_nor_ias_p._e.']] ;
+            
+        }
         //'Art. 5 not relevant  (p. e.)',
         $line[$ind['art._5_not_relevant_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NR_pe'];
 
@@ -9757,7 +9789,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                   ) {
             $compart5hierarchical = 'NC';
         }
-        $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] = $compart5hierarchical;
+        $line[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] = $compart5hierarchical;   
     
     //Compliance Art. 5 previous reporting',
         //'Compliance',
@@ -9796,7 +9828,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         //nd@oieau.fr, 01/04/2019, block disabled  see : https://github.com/OIEau/uwwtd/issues/499 for more detail
         //If dicharge without treament > 2% and 2000 eq the load is reported in art 5
         //Set DTT but if no more stringent treatment is required => this value will be empty later
-        if( $line[$ind['compliance_art._5_(whole_agglo)']] != 'NR' && ($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] >= 2)){
+        if( $line[$ind['compliance_art._5_(whole_agglo)']] != 'NR' && ($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2)){
             if($line[$ind['compliance_art._5_(whole_agglo)']] == 'C')  $line[$ind['compliance_art._5_(whole_agglo)']] = 'NC';
             
             //Treatment',
@@ -9806,7 +9838,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $line[$ind['distance_art5_perf_in_p.e._(7)']]+= $line[$ind['neither_collecting_system_nor_ias_p._e.']];
             $line[$ind['distance_art5_perf_%_of_gen._load']] +=$line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']]; 
         }
-        
 		$compliance = NULL;
 
         //current RCA details',
@@ -10207,7 +10238,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
 
         //Before insert the line we need t sort table by key
-        //dsm($ind);
+       // dsm($ind);
         //dsm($line);
         
         ksort($line);
