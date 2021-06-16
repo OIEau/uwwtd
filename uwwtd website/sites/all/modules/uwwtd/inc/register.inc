@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -96,9 +97,11 @@ function uwwtd_register_set_operation(&$batch, $annee){
     //$batch['operations'][] = array('uwwtd_create_register_2015_new_treatment_plants_sheet14', array($annee));
     //$batch['operations'][] = array('uwwtd_create_register_2015_uwwtpsout_sheet15', array($annee));
  //    //excel 
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
+    
 	$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca54_sheet1_1', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_rca54_sheet1_1', array($annee)); //This operation set the drupal var $cc_apply_art54_year require in lot of other sheet in order to manage Art54 special column naming
+    
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
     if ($annee >= 2018) {
         $batch['operations'][]=array('uwwtd_create_register_2020_sa_history', array($annee));
     }
@@ -147,6 +150,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
 
 //$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+//$batch['operations'][]=array('uwwtd_create_register_2015_file_glossary_sheet0', array($annee));   
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -184,6 +188,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     $indConf = $GLOBALS['uwwtd']['sheet3_agglo'];
 	//Keep compatibility
 	$ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet3_agglo']);
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
+    
     if($annee <= 2016){
         $indConf['global_compliance']['xls'] = false;
          $ind['global_compliance']['xls'] = false;
@@ -222,6 +228,10 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['agglo']['xlsx_model_sheet_name']);
+
+    if($cc_apply_art54_year[$annee]==true){
+        $sheet->setCellValue('AZ1', "Compliance Art. 5 (see disclaimer)");
+    }
 
     $dataArray = $sheet->rangeToArray(
         'A7:CV41',   //A6:CV40        A7:CV41
@@ -889,7 +899,11 @@ function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
 //     }
 
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
-
+    //$path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
+    //include($path);
+    $country_code = variable_get('siif_eru_country_code', '-1');
+    $country_name = variable_get('siif_eru_country_name');
+    
     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
 //     $target_path = $GLOBALS['uwwtd']['sheet']['path_created_file'] . $GLOBALS['uwwtd']['sheet']['rca']['xlsx_name'] .'.xlsx';
@@ -903,6 +917,15 @@ function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name']);
 
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
+    if($cc_apply_art54_year[$annee]==true){
+        $sheet->setCellValue('A1', "DISCLAIMER");
+        $sheet->setCellValue('A2', $country_name." applies article 5.4 in part or the entirety of its territory.");
+                
+        $sheet->setCellValue('A3', "Article 5.4 applies at sensitive area level only. Details of its application and implementation results are developed in the spreadsheet “5.4 areas”.");
+        $sheet->setCellValue('A4', "In order to enable the calculation of compliance rates for article 5 at Member State, RBD and NUTS level, a theoretical compliance assessment for article 5 as per agglomeration is also performed. This theoretical assessment (C/NC), applicable just to agglomerations with more than 10,000 p.e., is reflected in five sheets of the registers, namely \"final graphs\", \"agglomeration level\", \"Summary_big_cities\", \"Nuts2_level analyse\", \"Graphs\".");
+        $sheet->setCellValue('A5', "The legal compliance assessment for article 5 at agglomeration’s level is reflected in the spreadsheets: “summary legal compliance” and “breach list”, and it always results to be NR (not relevant) for every agglomeration discharging into an article 5.4 SA.");
+    }
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -2352,7 +2375,9 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_big_cities']['xlsx_model_sheet_name']);
-
+    
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
+    
     $ind = $GLOBALS['uwwtd']['sheet8_summary_big_cities'];
 
 //     $path = $GLOBALS['uwwtd']['sheet']['path_created_file'];
@@ -2377,6 +2402,13 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
         'morestringent_distance_pe' => 0,
         'morestringent_total_pe' => 0
     ];
+    
+    if($cc_apply_art54_year[$annee]==true){
+        $sheet->setCellValue('X2', "More stringent treatment (see disclaimer)");
+    }
+    
+    
+    
     while ($bc = fgetcsv($rbcfile, 5000, ';')) {
 //         dsm($bc);
 //         dsm($ind);
@@ -2533,9 +2565,9 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
 function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$context)
 {
     $ind = $GLOBALS['uwwtd']['sheet9_nuts2_analyse'];
-
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['nuts_level2']['csv_name'], $annee);
-
+    
     $rnuts = fopen($filename, 'rb');
 
     //pass header line
@@ -2576,7 +2608,10 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
     $objPHPExcel = $objReader->load(drupal_realpath($path_xlsx));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['nuts_level2']['xlsx_model_sheet_name']);
-
+    if($cc_apply_art54_year[$annee]==true){
+        $sheet->setCellValue('Y1', "Compliance Art. 5 (hierarchical approach), (see disclaimer)");
+        $sheet->setCellValue('AH2', "More stringent treatment (see disclaimer)");
+    }
     $j = 0;
     while ($j < 20 && $nuts = fgetcsv($rnuts, 5000, ';')) {
         $sheet->setCellValueByColumnAndRow($ind['nuts2_code'], $context['sandbox']['line'], $nuts[$ind['nuts2_code'] ]);
@@ -3870,6 +3905,8 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $country_code = variable_get('siif_eru_country_code', '-1');
     $country_name = variable_get('siif_eru_country_name');
 
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
+
     if (!isset($context['sandbox']['progress'])) {
         $context['sandbox']['progress'] = 0;
         $context['sandbox']['max'] = 1;
@@ -3934,6 +3971,12 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
             $previousSLCsheet_n2 = $previousSLCobjPHPExcel_n2->getSheetByName($GLOBALS['uwwtd']['sheet']['summary_legal_comp']['xlsx_model_sheet_name']);
         }
     }
+    
+    //Add reference to disclaimer if country apply Art 5.4
+    if($cc_apply_art54_year[$annee]==true){
+        $sheet->setCellValue('A1', "For calculation of compliance Art. 5, see disclaimer");
+    }
+
 
     //size of agglo/pe per class
     //=========================================array1
@@ -12995,9 +13038,12 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
 
     fclose($r);
     //Remove the file if the country doesn't have RCA under Art 5.4
+    $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
     if(!$flag){
         unlink ($filename);
     }
+    $cc_apply_art54_year[$annee] = $flag;
+    variable_set('cc_apply_art54_year', $cc_apply_art54_year);
     $context['sandbox']['progress']++;
     $context['message'] = '('.$annee.') ' . t('Processing  @name', array('@name' => $GLOBALS['uwwtd']['sheet']['rcaA54']['xlsx_model_sheet_name'])) . ' ' . $context['sandbox']['progress'] . '/' . $context['sandbox']['max'];
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
