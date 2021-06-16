@@ -789,14 +789,14 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     if(!empty($lines)){
 //         uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
-            $idx = $ind['previous_Percentage of change of entering load (1) %']['k'];
+            $idx = $ind['previous_Percentage of change of entering load (1) %']['k'] -1; //we add a hidden column for notcon uwwtp
             if(isset($line[$idx]) && abs((float)$line[$idx])>20){
                 $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                         ->getFill()
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFFFC000');
             }
-            $idx = $ind['previous_Percentage of change of capacity (2) %']['k'];
+            $idx = $ind['previous_Percentage of change of capacity (2) %']['k']-1; //we add a hidden column for notcon uwwtp
             if (isset($line[$idx]) && $line[$idx] != 'NI' && abs((float)$line[$idx])>0  ) {
                 $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                     ->getFill()
