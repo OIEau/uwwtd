@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -148,8 +147,8 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
 
-*/
-$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
+
+//$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -12920,7 +12919,6 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
 
     $flag =false; //if this var is still false at the end of this function, remove the filename
     $ind = $GLOBALS['uwwtd']['sheet1_rcaA54'];
-    dsm($ind);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rcaA54']['csv_name'], $annee);
 
     $r = fopen($filename, 'wb');
@@ -13042,7 +13040,6 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
             $ind['remarks_by_ms'] => '',
         );
         fputcsv($r, $line, ';');
-        dsm($line);
         $flag = true;
     }
 
