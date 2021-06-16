@@ -149,7 +149,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
 
 */
-$batch['operations'][]=array('uwwtd_create_register_2015_file_rca_sheet1', array($annee)); 
+$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -12920,7 +12920,7 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
 
     $flag =false; //if this var is still false at the end of this function, remove the filename
     $ind = $GLOBALS['uwwtd']['sheet1_rcaA54'];
-
+    dsm($ind);
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['rcaA54']['csv_name'], $annee);
 
     $r = fopen($filename, 'wb');
@@ -13010,11 +13010,21 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
            $compliant_5_4 = 'NR';
         }
         $compliant_5_4 = $GLOBALS['glossary'][$compliant_5_4];
+        
+        $datedesignation = [
+             substr($rca[$i]->field_rcaadatedesignation['und'][0]['value'], 0, 10),
+             substr($rca[$i]->field_rcaapdatedesignation['und'][0]['value'], 0, 10),
+             substr($rca[$i]->field_rcadateart5854['und'][0]['value'], 0, 10),
+             substr($rca[$i]->field_rcacdatedesignation['und'][0]['value'], 0, 10),
+             substr($rca[$i]->field_rcabdatedesignation['und'][0]['value'], 0, 10),
+        ];
+        $datedesignation =array_filter( $datedesignation);
         $line = array(              
             $ind['code'] => $rca[$i]->field_inspireidlocalid['und'][0]['value'],
             $ind['name'] => $rca[$i]->title,
             //$ind['designation_date'] => substr($rca[$i]->field_rcabeginlife['und'][0]['value'], 0, 10),
-            $ind['designation_date'] => substr($rca[$i]->field_rcadateart5854['und'][0]['value'], 0, 10),
+            //$ind['designation_date'] => substr($rca[$i]->field_rcadateart5854['und'][0]['value'], 0, 10),
+            $ind['designation_date'] => min($datedesignation),
             $ind['deadline_n'] => substr($rca[$i]->field_rcaanstartdate['und'][0]['value'], 0, 10),
             $ind['deadline_p'] => substr($rca[$i]->field_rcaapstartdate['und'][0]['value'], 0, 10),
             $ind['application_art_5_4'] => substr($rca[$i]->field_rcadateart54['und'][0]['value'], 0, 10),
@@ -13032,6 +13042,7 @@ function uwwtd_create_register_2015_rca54_sheet1_1($annee, &$context) {
             $ind['remarks_by_ms'] => '',
         );
         fputcsv($r, $line, ';');
+        dsm($line);
         $flag = true;
     }
 
