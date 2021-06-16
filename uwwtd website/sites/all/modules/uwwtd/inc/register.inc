@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -149,6 +150,11 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
 
 //$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
+*/
+$batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigdischargers_sheet8', array($annee));
+      $batch['operations'][] = array('uwwtd_create_register_2015_summary_big_cities_10th_report_step_bigcity_sheet8', array($annee));
+$batch['operations'][]=array('uwwtd_create_register_2015_file_summary_big_cities_sheet8', array($annee));
+$batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
