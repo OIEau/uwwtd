@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,7 +145,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
 
-    //$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 
 //$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 }
@@ -8611,6 +8609,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
     $induww = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
     
     //dsm($induww);
+    //dsm($ind);
     
     $listtypestat = array('expired', 'pending');
     $list_type_rca = array('all', 'na', 'sa_csa');
@@ -9665,7 +9664,8 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $compliance = NULL;
 
         //Compliance Art. 5',
-        if(($agg->field_agggenerated['und'][0]['value'] > 10000) ){
+        //art5compliance car be NR when agg is linked to LSA as in PT
+        if($agg->field_agggenerated['und'][0]['value'] > 10000 && $agg->field_aggart5compliance['und'][0]['value']!='NR' ){
             //'compliant 5 a  (% of gen. load)',
             $line[$ind['compliant_5_a_(%_of_gen._load)']] = $uwwtpinfo_for_agglo['art5a_C_%'];
             //'compliant 5 a  (p. e.)',
@@ -9746,7 +9746,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         $line[$ind['compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_C_pe'];
         //'not compliant Art. 5 (p. e.)',
         $line[$ind['not_compliant_art._5_(p._e.)']] = ($agg->field_agggenerated['und'][0]['value'] <= 10000) ? 0 : $uwwtpinfo_for_agglo['art5_NC_pe'];
-        if($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2){
+        if(($line[$ind['neither_collecting_system_nor_ias_p._e.']] > 2000 || $line[$ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2) && $agg->field_aggart5compliance['und'][0]['value']!='NR' ){
             $line[$ind['not_compliant_art._5_(p._e.)']] = $line[$ind['neither_collecting_system_nor_ias_p._e.']] ;
             
         }
