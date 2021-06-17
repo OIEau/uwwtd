@@ -1259,7 +1259,7 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     $output .= '<ul>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Compliant']).' p.e. of waste water, complied with the requirements of the Directive; and</li>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Not Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Not Compliant']).' p.e. of waste water, did not comply with the requirements of the Directive.</li>';
-    if(isset($national_compliance_nb['Not relevant']) && $national_compliance_nb['Not relevant']>0) $output .= '    <li>'.format_plural($national_compliance_nb['Not relevant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Not relevant']).' p.e. of waste water, did not relevant with the requirements of the Directive (probably beacuse there are still under pending deadline).</li>';
+    if(isset($national_compliance_nb['Not relevant']) && $national_compliance_nb['Not relevant']>0) $output .= '    <li>'.format_plural($national_compliance_nb['Not relevant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Not relevant']).' p.e. of waste water, did not relevant with the requirements of the Directive (probably because there are still under pending deadline).</li>';
     //Manage PD & NR case ?
     $output .= '</ul>';
 $output .= '<p>The waste water load generated in '.$country_name.' in '.$year.' was reported to be '.uwwtd_format_number($national_compliance_pe['Total']).' p.e. </p>';
