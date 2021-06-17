@@ -8098,7 +8098,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
 
     uwwtd_trace('dcp and rca info use : ' . var_export($dcps, true));
     // If we cant find any discharge points attached to this station then we return no information to the user
-    
     if($node->field_status['und'][0]['value'] == 1 && isset($node->field_uwwcollectingsystem['und']) && $node->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'){
         $compliance_info->compliance = 'NR';
         $compliance_info->reason = "Station is not connected to collecting system";
@@ -8127,7 +8126,6 @@ function uwwtd_station_compliance_algo($node, $timestamp){
         }
         $compliance_info->treatment_met = $GLOBALS['uwwtd_value']['treatementmet']['false'];
         $compliance_info->performance_met = $GLOBALS['uwwtd_value']['performancemet']['false'];
-        
         return $compliance_info;
     }
 

@@ -298,6 +298,15 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFFFC000');
             }
+            
+            $idx = $indConf['ratio_total_entering_load/total_design_capacity_%']['k'];
+            if(isset($line[$idx]) && abs((float)$line[$idx])>30){
+                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+                        ->getFill()
+                        ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFFFC000');
+            }
+            
             $idx = $indConf['total_%_(2)']['k'];
             if (isset($line[$idx]) && $line[$idx] < 100) {
                 $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
