@@ -300,7 +300,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             }
             
             $idx = $indConf['ratio_total_entering_load/total_design_capacity_%']['k'];
-            if(isset($line[$idx]) && abs((float)$line[$idx])>30){
+            if(isset($line[$idx]) && ((float)$line[$idx]>130 || (float)$line[$idx])<70){
                 $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                         ->getFill()
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
