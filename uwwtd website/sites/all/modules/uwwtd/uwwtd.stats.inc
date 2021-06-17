@@ -1252,7 +1252,6 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     //$path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     //include($path);
 
-    
     $output .= '<h2>'.$year.'</h2>';
     //$output .= '<p><b>'.$country_name.' compliance rate: '. round(100 * ($national_compliance_nb['Compliant']/$national_compliance_nb['Total']),1) .'% of agglomerations and '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of generated load.</b></p>';
     $output .= '<p><b>'.$country_name.' has '. round(100 * ($national_compliance_pe['Compliant']/$national_compliance_pe['Total']),1) .'% of its generated load compliant to the Urban Waste Water Treatment Directive (91/271/EEC).</b></p>';
@@ -1260,6 +1259,7 @@ function uwwtd_stats_summary_chapter($y, $yearsPossibles){
     $output .= '<ul>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Compliant']).' p.e. of waste water, complied with the requirements of the Directive; and</li>';
     $output .= '    <li>'.format_plural($national_compliance_nb['Not Compliant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Not Compliant']).' p.e. of waste water, did not comply with the requirements of the Directive.</li>';
+    if(isset($national_compliance_nb['Not relevant']) && $national_compliance_nb['Not relevant']>0) $output .= '    <li>'.format_plural($national_compliance_nb['Not relevant'], '1 agglomeration',  '@count agglomerations').', generating '.uwwtd_format_number($national_compliance_pe['Not relevant']).' p.e. of waste water, did not relevant with the requirements of the Directive (probably beacuse there are still under pending deadline).</li>';
     //Manage PD & NR case ?
     $output .= '</ul>';
 $output .= '<p>The waste water load generated in '.$country_name.' in '.$year.' was reported to be '.uwwtd_format_number($national_compliance_pe['Total']).' p.e. </p>';
@@ -1366,6 +1366,7 @@ $output.='
 </table>
 ';
 $output.='
+<p><i><u>Notice</u> : This table contains only agglomerations with expired deadlines.</i></p>
 <p><i>*The total [No of agglomerations] includes only those agglomerations that must provide secondary treatment / or more stringent treatment than secondary before discharging waste water from their treatment plants.</i></p>
 <p><i>**The total [p.e. waste water load] is the sum of the load of all of the agglomerations that must provide secondary treatment or more stringent treatment than secondary before discharging waste water from their treatment plants. </i></p>
 <p align="right"><i>Data source for table: Register, summary of MS data</i></p>
