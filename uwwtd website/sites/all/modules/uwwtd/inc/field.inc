@@ -215,7 +215,9 @@ function uwwtd_virtual_field_aggart4compliance_hierarchical($node) {
   if($node->field_aggart3compliance['und'][0]['value']=='NC' && $field_aggart4compliance=='C'){
     $field_aggart4compliance='NC';  
   }
-
+  if($field_aggart4compliance == 'PD'){
+      $field_aggart4compliance='NR';  
+  }
   $variables['element']['#items']['0']['value'] = $field_aggart4compliance;
   $variables['element']['0']['#markup'] = $GLOBALS['uwwtd']['all_compliance'][$field_aggart4compliance];
   $variables['items']['0']['#markup'] = $GLOBALS['uwwtd']['all_compliance'][$field_aggart4compliance];

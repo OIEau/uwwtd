@@ -150,7 +150,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
 
 
 //$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
-
+//$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -8700,7 +8700,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             and status.deleted = 0
         order by f_agggenerated.field_agggenerated_value desc
         ';
-        //AND n.nid = 12333
+        //AND n.nid = 10955
 //         dsm($query);
         $param = array(
             ':typenode' => 'agglomeration',
@@ -9347,25 +9347,38 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //'Pending or expired deadline EXP/PD/EXP-PD',
         $pending_or_expired = '';
-
-//         if ((substr($line[$ind['deadline_for_art._3_compliance']], 0, 4) < $annee
-//              || substr($line[$ind['deadline_for_art._4_compliance']], 0, 4) < $annee
-//              || substr($line[$ind['deadline_for_art._5_compliance']], 0, 4) < $annee
-//             )
-        if (isset($line[$ind['deadline_for_art._3_compliance']]) 
-        	|| isset($line[$ind['deadline_for_art._4_compliance']]) 
-        	|| isset($line[$ind['deadline_for_art._5_compliance']])) {
-        	$deadline_before = (deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)
-                               || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)
-                               || deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)
-                               );
+        $deadline_before = false;
+        $deadline_expired = false;
+        if (isset($line[$ind['deadline_for_art._3_compliance']]) && $line[$ind['deadline_for_art._3_compliance']]!=''){
+            if(TRUE === deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._3_compliance']], $annee)){
+                $deadline_expired = true;
+            }else{
+                $deadline_before = true;
+            }
+        }
+        if (isset($line[$ind['deadline_for_art._4_compliance']]) && $line[$ind['deadline_for_art._4_compliance']]!=''){
+            if(TRUE === deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._4_compliance']], $annee)){
+                $deadline_expired = true;
+            }else{
+                $deadline_before = true;
+            }
+        }
+        if (isset($line[$ind['deadline_for_art._5_compliance']]) && $line[$ind['deadline_for_art._5_compliance']]!='') {
+            if(TRUE === deadline_beforeorequal_to_referenceyear($line[$ind['deadline_for_art._5_compliance']], $annee)){
+                 $deadline_expired = true;
+            }else{
+                $deadline_before = true;
+            }
         }
 
         if (isset($agg->field_aggcompliance['und'][0]['value'])) {
             $line[$ind['global_compliance']] = $agg->field_aggcompliance['und'][0]['value'];
-	        if ( true === $deadline_before){
+	        if ($deadline_expired == true && $deadline_before == false){
 	            $pending_or_expired = 'EXP';
-	        }else{
+	        }elseif ($deadline_expired == true && $deadline_before == true){
+	            $pending_or_expired = 'EXP-PD';
+	        }
+            elseif ($deadline_expired == false && $deadline_before == true){
 	            $pending_or_expired = 'PD';
 	        }
         }
@@ -10282,7 +10295,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
 
         //Before insert the line we need t sort table by key
        // dsm($ind);
-        //dsm($line);
         
         ksort($line);
         fputcsv($r, $line, ';');
@@ -10552,7 +10564,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             $art6_compliance_EU_feed = 'PD';
         }
 
-        if ($line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']] == 'EXP') {
+        if (in_array($line[$ind['pending_or_expired_deadline_exp/pd/exp-pd']], ['EXP', 'EXP-PD'])) {
             $agg_compliance_EU_feed = $agg->field_aggcompliance['und'][0]['value'];
         } else {
             $agg_compliance_EU_feed = 'PD';
@@ -11782,7 +11794,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['art5_treatment type']] = $art5_treatment;
                 $line[$ind['art5_monitoring']] = $art5_monitoring;
                 $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
-            }elseif ($annee < 2018 && ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP')) {
+            }elseif ($annee < 2018 && ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP'|| $pending_or_expired == 'EXP-PD')) {
                 $line[$ind['art4_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_monitoring']] = $art4_monitoring;
                 $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
@@ -11800,7 +11812,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
 
             //Compliance of treatment plant under expired deadlines
-            if ($pending_or_expired == 'EXP') {
+            if ($pending_or_expired == 'EXP' || $pending_or_expired == 'EXP-PD') {
                 $line[$ind['art4_expired_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_expired_monitoring']] = $art4_monitoring;
                 $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];
@@ -11879,7 +11891,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //                 $previous_art5_monitoring = '';
 //                 $previous_art5_expired_difference = '';
 
-                if ($previous_pending_or_expired == 'EXP') {
+                if ($previous_pending_or_expired == 'EXP' || $previous_pending_or_expired == 'EXP-PD') {
                     // $line[$ind['previous_art4_expired_treatment']] = $previous_art4_treatment_type;
                     // $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_monitoring;
                     // $line[$ind['previous_art4_expired_final']] = $previous_uwwtp_compliance['compArt4'];
@@ -12374,6 +12386,17 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
                 //expired deadline   (toutes les NC +  les C qui ont date d   pass   e)
                 if ($typestat == 'expired' && $pending_or_expired != 'EXP') {
+    //                 if (false === (
+    //                     (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
+    //                      || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
+    //                      || substr($line[$ind['deadline for Art. 5 compliance']], 0, 4) < $annee
+    //                     )
+    //                      && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' )
+    //                     )) {
+                        continue;
+    //                 }
+                }
+                if ($typestat == 'expired' && $pending_or_expired != 'EXP-PD') {
     //                 if (false === (
     //                     (substr($line[$ind['deadline for Art. 3 compliance']], 0, 4) < $annee
     //                      || substr($line[$ind['deadline for Art. 4 compliance']], 0, 4) < $annee
@@ -13833,6 +13856,32 @@ function uwwtd_get_register_treatmenttype_inplace($uwwtp)
 function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $deadlineart4, $deadlineart5, $uwwtp)
 {
     $pending_or_expired = '';
+    $deadline_before = false;
+    $deadline_expired = false;
+
+    if ($deadlineart3!=''){
+        if(TRUE === deadline_beforeorequal_to_referenceyear($deadlineart3, $annee)){
+            $deadline_expired = true;
+        }else{
+            $deadline_before = true;
+        }
+    }
+    if ($deadlineart4!=''){
+        if(TRUE === deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)){
+            $deadline_expired = true;
+        }else{
+            $deadline_before = true;
+        }
+    }
+    if ($deadlineart5!='') {
+        if(TRUE === deadline_beforeorequal_to_referenceyear($deadlineart5, $annee)){
+             $deadline_expired = true;
+        }else{
+            $deadline_before = true;
+        }
+    }
+
+
 
     $deadline_before = (deadline_beforeorequal_to_referenceyear($deadlineart3, $annee)
          || deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)
@@ -13840,16 +13889,25 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
         );
 	//cn@oieau 14-02-2017 add the condition  """$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'""" in order to force the value of the result
     if (
-        true === $deadline_before
+        $deadline_expired == true 
+        && $deadline_before == false
          && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
         ) {
         $pending_or_expired = 'EXP';
+    }
+    if (
+        $deadline_expired == true 
+        && $deadline_before == true
+         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
+        ) {
+        $pending_or_expired = 'EXP-PD';
     }
 
     //pending deadline    PD + les C avec date pas d   pass   e
     // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
     if (
-        false === $deadline_before
+        $deadline_expired == false 
+        && $deadline_before == true
         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
         ) {
         $pending_or_expired = 'PD';
