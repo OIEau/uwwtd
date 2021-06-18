@@ -6210,7 +6210,6 @@ function uwwtd_station_set_conformity(&$node){
     //                 $deadLineBeforeReference = true;
     //                 break;
     //             } 
-                
                 if (deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover4['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
                     || deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover5['und'][0]['value'], $node->field_anneedata['und'][0]['value'])
                     || deadline_beforeorequal_to_referenceyear($dateaggl->field_aggperiodover6['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
@@ -6466,7 +6465,6 @@ function uwwtd_agglo_set_conformity(&$node, $verbose = false){
             
             //dsm($infoAllAggUww);
             $aggArt456Compliance = uwwtd_article4_5_6_agglomeration_compliance_step_b($node, $infoAllAggUww);
-           
             //=========ART 4
             $node->field_aggart4compliance['und'][0]['value'] = $aggArt456Compliance['compArt4'];
             if($aggArt456Compliance['compArt4_info']['reason']) {
@@ -6763,6 +6761,7 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
             }
             if($agg->field_agggenerated['und'][0]['value'] > 10000){
                 if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+                    dsm("TEST1");
                     $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
                 }
                 else{
@@ -6956,7 +6955,11 @@ function uwwtd_article4_agglomeration_compliance($agg, $article, $listUwwtpCompl
         return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['compliant'], 'reason'=>''];
     }elseif($uwwtp_connected==0){
         //If there is no uwwpt and required treatment >= S
-        return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover4['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
+        }else{
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>"There is no connected uwwtp but agglomeration stil under pending deadline"];
+        }
     }
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];       
 }
@@ -7138,7 +7141,11 @@ function uwwtd_article5_agglomeration_compliance($agg, $article, $listUwwtpCompl
     }        
     elseif($uwwtp_connected==0){
         //If there is no uwwpt and required treatment >= S
-        return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
+        if(true === deadline_beforeorequal_to_referenceyear($agg->field_aggperiodover5['und'][0]['value'], $agg->field_anneedata['und'][0]['value'])) {
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_compliant'], 'reason'=>"There is no connected uwwtp"];
+        }else{
+            return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['pending_deadline'], 'reason'=>"There is no connected uwwtp but agglomeration stil under pending deadline"];
+        }
     }    
     return ['compliance'=>$GLOBALS['uwwtd_value']['compliance']['not_relevant'], 'reason'=>''];    
 }
