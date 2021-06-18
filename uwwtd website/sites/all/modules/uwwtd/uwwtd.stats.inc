@@ -1298,18 +1298,18 @@ $uwwtp_active_notcon_load_nb =0;
         $uwwtp_active_notcon_load_pe = 0;
 */
 //there are 13 discharges without treatment with a total load of YY" et "there are 269 urban waste water treatment plants, with a total design capacity of XX p.e., of which:
-if($uwwtp_active_notcon_load_nb > 0){
-    $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$uwwtp_active_notcon_load_nb.' discharges without treatment with a total load of '.uwwtd_format_number($uwwtp_active_notcon_load_pe).' p.e. and there are '.($treatmenttype_nb['Total'] - $uwwtp_active_notcon_load_nb).' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>';
-}
-else{
     $output .='<p>For the '.$national_compliance_nb['Total'].' agglomerations, there are '.$treatmenttype_nb['Total'].' urban waste water treatment plants, with a total design capacity of '.uwwtd_format_number(round($nbPhysicalCapacity, -3)).' p.e., of which:</p>';
-}
 $output .='<ul>
-    <!-- <li>'.(isset($treatmenttype_nb['Not connected']) && $treatmenttype_nb['Not connected'] > 0?format_plural($treatmenttype_nb['Not connected'], '1 plant is' , '@count plants are'):'There is no plant').' active but not connected to collecting system,</li> -->
+    <li>'.(isset($treatmenttype_nb['Not connected']) && $treatmenttype_nb['Not connected'] > 0?format_plural($treatmenttype_nb['Not connected'], '1 plant is' , '@count plants are'):'There is no plant').' active but not connected to collecting system,</li>
     <li>'.(isset($treatmenttype_nb['Secondary treatment']) || isset($treatmenttype_nb['Primary treatment'])?format_plural($treatmenttype_nb['Secondary treatment']+$treatmenttype_nb['Primary treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology only for primary and secondary treatment,</li>
     <li>'.(isset($treatmenttype_nb['More stringent treatment'])?format_plural($treatmenttype_nb['More stringent treatment'], '1 plant' , '@count plants'):'There is no plant').' equipped with technology for more stringent treatment than secondary.</li>
 </ul>
 ';
+
+if($uwwtp_active_notcon_load_nb > 0){
+    $output .='<p>For the '.$treatmenttype_nb['Total'].' urban waste water treatment plants, there are '.$uwwtp_active_notcon_load_nb.' discharges without treatment with a total load of '.uwwtd_format_number($uwwtp_active_notcon_load_pe).' p.e. </p>';
+}
+
 if($national_compliance_pe['Total'] <= $nbPhysicalCapacity ){
     $output .='<p>Based on the '.$year.' data, it seems that the load generated is lower than the design capacity. </p>';
 }else{
