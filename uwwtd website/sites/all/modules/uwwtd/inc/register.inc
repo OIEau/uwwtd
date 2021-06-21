@@ -8940,6 +8940,7 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_percent'] =
                             $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['morestringent_monitoring_pe'] * 100 / $uwwtp[$induww['generated load  p. e.']];
             }
+            /*
             if ($uwwtp[$induww['uww_status']] != 'active' && $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']] > 1) {
                 //understand : uww_status =  inactive || active (not connected)
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
@@ -8947,7 +8948,11 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
             elseif ($uwwtp[$induww['uww_status']] == 'active' && $uwwtp[$induww['uww_iscon']] == 'no' && $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']] > 1) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
             }
-
+            */
+            if ($uwwtp[$induww['uww_status']] == 'active' && $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']] > 1) {
+                //understand : uww_status =  inactive || active (not connected)
+                $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['uwwtp_collecting_without_treatment']++;
+            }
             if (($uwwtp[$induww['art4_expired_treatment type type']] == 'NC' || $uwwtp[$induww['art4_treatment type']] == 'NC') && false === strpos($uwwtp[$induww['treatment type in place (4)']], '2')) {
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment']   += $uwwtp[$induww['uww_entering_load_calculated_UwwtpAgglo_p._e.']];
                 $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment_%'] = $context['sandbox']['uwwtpinfo_for_agglo'][$uww_aggcode]['distart4_treatment'] * 100 / $uwwtp[$induww['generated load  p. e.']];
