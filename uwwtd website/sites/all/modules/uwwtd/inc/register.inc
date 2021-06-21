@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){  
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -147,8 +146,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-
-//$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -8245,7 +8242,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     $agglodebug[$indSup+11] = 'test4=0'; 
                 }
                 //   - due to 0% collection in collecting   ...system
-                if ($agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
+                if ($agglo[$ind['generated_load_p.e.']] > 10000 && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art5']['no_collecting']['agglo']['number']++;
                     $agglodebug[$indSup+12] = 'test5=1';
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])){
