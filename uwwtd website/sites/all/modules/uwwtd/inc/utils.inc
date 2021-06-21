@@ -112,7 +112,13 @@ if (!function_exists('array_column')) {
         return $resultArray;
     }
 }
-
+if (!function_exists('delete_col')) {
+    function delete_col(&$array, $offset) {
+        return array_walk($array, function (&$v) use ($offset) {
+            array_splice($v, $offset, 1);
+        });
+    }
+}
 
 function uwwtd_force_cache(){
     //get all available year

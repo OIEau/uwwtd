@@ -148,9 +148,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
 
-
 //$batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
-$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -5794,7 +5792,8 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
             localid.field_inspireidlocalid_value as agg_id,
             n.title, 
             field_agggenerated_value as size,
-            field_aggremarks_value as remark
+            field_aggremarks_value as remark,
+            f_status.field_status_value as status
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5813,32 +5812,40 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
                 ON n.nid = r.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
-            and f_status.field_status_value = :status
+            and f_status.field_status_value != :status
         order by size desc nulls last
         ';
-    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 1]);
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 0]);
     $past = [];
     
     while($row = $result->fetchAssoc()) {
         $past[$row['agg_id']]  = $row;
     }
-    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee ,':status' => 1]);
+    
+    $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee ,':status' => 3]); // use a fake status in order to select all agglomeration
     $current = [];
     while($row = $result->fetchAssoc()) {
-        if($row['size'] < 2000 && isset($past[$row['agg_id']])){
-            $past[$row['agg_id']]['remark'] .= ($past[$key]['remark']!=''?' AND ':'').'agglo<2,000 p.e.';
+        if($row['size'] < 2000 && isset($past[$row['agg_id']]) && $row['status'] == 1){
+            $past[$row['agg_id']]['remark'] = ($row['remark']!=''? $row['remark']. ' AND ':'').'agglo<2,000 p.e.';
         }
-        else $current[$row['agg_id']]  = $row;
+        elseif($row['status'] == 0 && isset($past[$row['agg_id']])){
+            $past[$row['agg_id']]  = $row;
+        }
+        else{
+            $current[$row['agg_id']]  = $row;
+        }
     }
 
     $diff = array_diff(array_keys($past), array_keys($current));
     if(!empty($diff)){
         foreach($diff as $k){
+            unset($past[$k]['status']);
             $data[] = array_values($past[$k]);
         }
+        
     }
-    unset($past, $current);
     
+    unset($past, $current);
     //Insert data in the sheet
     $sheet->fromArray($data, null, 'A6', true);
 
@@ -5989,7 +5996,8 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
                 agg_localid.field_inspireidlocalid_value as agg_id, 
                 agg_node.title as agg_name, 
                 field_agggenerated_value as agg_size,
-                field_uwwremarks_value as remark
+                field_uwwremarks_value as remark,
+                f_status.field_status_value as status
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -6018,34 +6026,36 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
              left join 
                 {field_data_field_uwwremarks} r
                 ON n.nid = r.entity_id
-                
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
-            and f_status.field_status_value = :status
+            and f_status.field_status_value != :status
         order by physicalcapacity desc nulls last
         ';
-    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 1]);
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 0]);
     $uwwtp_past = [];
     
     while($row = $result->fetchAssoc()) {
         $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
     }
-    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 1]);
+    $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 3]);
     $uwwtp_current = [];
     while($row = $result->fetchAssoc()) {
-        $key = $row['uwwtp_id'].'-'.$row['agg_id'];
-        if($row['agg_size'] < 2000 && isset($uwwtp_past[$key])){
-            $uwwtp_past[$key]['remark'] .= ($uwwtp_past[$key]['remark']!=''?' AND ':'').'agglo<2,000 p.e.';
+        $key = $row['uwwtp_id'].'-'.$row['agg_id'];       
+        if($row['agg_size'] < 2000 && isset($uwwtp_past[$key]) && $row['status'] == 1){
+            $uwwtp_past[$key]['remark'] .= ($row['remark']!=''?$row['remark'].' AND ':'').'agglo<2,000 p.e.';
+        }
+        elseif($row['status'] == 0 && isset($uwwtp_past[$key])){
+            $uwwtp_past[$key]  = $row;
         }
         else{
             $uwwtp_current[$key]  = $row;
         }
-        
     }
 
     $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
     if(!empty($diff)){
         foreach($diff as $k){
+            unset($uwwtp_past[$k]['status']);
             $data[] = array_values($uwwtp_past[$k]);
         }
     }
