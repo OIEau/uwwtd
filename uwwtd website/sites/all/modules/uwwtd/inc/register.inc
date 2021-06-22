@@ -74,7 +74,8 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){  
+function uwwtd_register_set_operation(&$batch, $annee){ 
+/* 
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,6 +147,11 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+ */
+    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -295,7 +301,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             }
             
             $idx = $indConf['ratio_total_entering_load/total_design_capacity_%']['k'];
-            if(isset($line[$idx]) && ((float)$line[$idx]>130 || (float)$line[$idx])<70){
+            if(isset($line[$idx]) && ((float)$line[$idx]>130 || (float)$line[$idx]<70)){
                 $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
                         ->getFill()
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
