@@ -2063,13 +2063,15 @@ function uwwtd_get_possible_localids($localid){
   else{
       $localids[]=substr_replace($localid, '_', 2, 0);
       $localids[]=substr_replace($localid, ' ', 2, 0);
-      
   }
   //Greek case
   //nd@oieau.fr 13/11/2018: In 2016, Greece have change his country code from "gr" to "el".
   if(in_array(strtolower(variable_get('siif_eru_country_code')), ['gr', 'el'])){
     $localids[]=str_replace('EL', 'GR',$localid);
     $localids[]=str_replace('GR', 'EL',$localid);
+  }elseif(strtolower(variable_get('siif_eru_country_code')) == 'pl'){
+     if($localid=='PL') $localids[]='PL1';
+      elseif($localid=='PL1') $localids[]='PL'; 
   }
   return $localids;
 }
