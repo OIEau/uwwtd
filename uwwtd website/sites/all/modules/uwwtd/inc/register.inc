@@ -282,8 +282,8 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
 //     $sheet->insertNewRowBefore($context['sandbox']['line'], $j+1);
     $sheet->insertNewRowBefore($context['sandbox']['line'] + 1, $j+1);
     $sheet->fromArray($lines, null, 'A'.$context['sandbox']['line'], true);
-	//Special rules for cell's style
-	
+	//Special rules for cell's style  
+    
     if(!empty($lines)){
         foreach($lines as $lid=>$line){
             $idx = $indConf['previous_percentage_of_change_of_size_(1)']['k'];
@@ -430,6 +430,12 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
             //exempted  collected
             $sheet->setCellValueByColumnAndRow(6, $line_to_fill++, $agglo[11]);
         }
+        
+            $i = $context['sandbox']['line']+5;
+            if($cc_apply_art54_year[$annee]==true){
+                uwwtd_register_add_A54_disclaimer($sheet, 'A', $line_to_fill++);
+            }
+        
         fclose($r);
     }
     //$debug_times['end_loop2'] = time()-$debug_times['start'];
@@ -905,8 +911,7 @@ function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
 //     require_once(drupal_get_path('module', 'uwwtd') . '/lib/PHPExcel-1.8.1/Classes/PHPExcel/IOFactory.php');
     //$path = drupal_get_path('module', 'uwwtd') . '/script/country/country.inc';
     //include($path);
-    $country_code = variable_get('siif_eru_country_code', '-1');
-    $country_name = variable_get('siif_eru_country_name');
+
     
     $model_path = uwwtd_getregister_modelfile_path($annee);
     //change to public://
@@ -920,16 +925,12 @@ function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
     $objPHPExcel = $objReader->load(drupal_realpath($model_path));
 
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['glossary']['xlsx_model_sheet_name']);
-
+    /*
     $cc_apply_art54_year = variable_get("cc_apply_art54_year", []);
     if($cc_apply_art54_year[$annee]==true){
-        $sheet->setCellValue('A1', "DISCLAIMER");
-        $sheet->setCellValue('A2', $country_name." applies article 5.4 in part or the entirety of its territory.");
-                
-        $sheet->setCellValue('A3', "Article 5.4 applies at sensitive area level only. Details of its application and implementation results are developed in the spreadsheet “5.4 areas”.");
-        $sheet->setCellValue('A4', "In order to enable the calculation of compliance rates for article 5 at Member State, RBD and NUTS level, a theoretical compliance assessment for article 5 as per agglomeration is also performed. This theoretical assessment (C/NC), applicable just to agglomerations with more than 10,000 p.e., is reflected in five sheets of the registers, namely \"final graphs\", \"agglomeration level\", \"Summary_big_cities\", \"Nuts2_level analyse\", \"Graphs\".");
-        $sheet->setCellValue('A5', "The legal compliance assessment for article 5 at agglomeration’s level is reflected in the spreadsheets: “summary legal compliance” and “breach list”, and it always results to be NR (not relevant) for every agglomeration discharging into an article 5.4 SA.");
+        uwwtd_register_add_A54_disclaimer($sheet, 'A', 1);
     }
+    */
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
     $objWriter->setPreCalculateFormulas(false);
@@ -950,6 +951,19 @@ function uwwtd_create_register_2015_file_glossary_sheet0($annee, &$context)
 //         $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
 //     }
 }
+
+function uwwtd_register_add_A54_disclaimer(&$sheet, $col='A', $line=1){
+        $country_code = variable_get('siif_eru_country_code', '-1');
+        $country_name = variable_get('siif_eru_country_name');
+    
+    
+        $sheet->setCellValue($col.$line, "DISCLAIMER");
+        $sheet->setCellValue($col.($line+1), $country_name." applies article 5.4 in part or the entirety of its territory.");
+        $sheet->setCellValue($col.($line+2), "Article 5.4 applies at sensitive area level only. Details of its application and implementation results are developed in the spreadsheet “5.4 areas”.");
+        $sheet->setCellValue($col.($line+3), "In order to enable the calculation of compliance rates for article 5 at Member State, RBD and NUTS level, a theoretical compliance assessment for article 5 as per agglomeration is also performed. This theoretical assessment (C/NC), applicable just to agglomerations with more than 10,000 p.e., is reflected in five sheets of the registers, namely \"final graphs\", \"agglomeration level\", \"Summary_big_cities\", \"Nuts2_level analyse\", \"Graphs\".");
+        $sheet->setCellValue($col.($line+4), "The legal compliance assessment for article 5 at agglomeration’s level is reflected in the spreadsheets: “summary legal compliance” and “breach list”, and it always results to be NR (not relevant) for every agglomeration discharging into an article 5.4 SA.");
+}
+
 
 function uwwtd_create_register_2015_file_rca_sheet1($annee, &$context)
 {
@@ -2537,6 +2551,13 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
         }
     }
     
+    $i++;
+    $i++;
+    if($cc_apply_art54_year[$annee]==true){
+        uwwtd_register_add_A54_disclaimer($sheet, 'A', $i);
+    }
+
+
     
     fclose($rbcfile);
     unset($context['sandbox']['dist']);
@@ -2681,6 +2702,12 @@ function uwwtd_create_register_2015_file_nuts_level2_analyse_sheet9($annee, &$co
         $context['sandbox']['progress'] = $context['sandbox']['file_position'];
     }
     fclose($rnuts);
+
+    $i = $context['sandbox']['line']+10;
+    if($cc_apply_art54_year[$annee]==true){
+        uwwtd_register_add_A54_disclaimer($sheet, 'A', $i);
+    }
+
 
     //write
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $GLOBALS['uwwtd']['sheet']['target_type']);
@@ -5184,6 +5211,13 @@ function uwwtd_create_register_2020_file_graph_sheet11($annee, &$context)
     $sheet->getCell('E174')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C174'));
     $sheet->getCell('E175')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C175'));
     $sheet->getCell('E176')->setValue(uwwtd_register_get_cell_value($previoussheet_n2, 'C176'));
+
+
+    if($cc_apply_art54_year[$annee]==true){
+        uwwtd_register_add_A54_disclaimer($sheet, 'A', 180);
+    }
+
+
 
     // Récupération des valeurs du tableau "Comparison of Compliance between previous year and current year in p.e." :
     $arrayInPe = array();
