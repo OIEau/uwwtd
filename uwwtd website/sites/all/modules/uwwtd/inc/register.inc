@@ -2772,7 +2772,7 @@ function uwwtd_create_register_2015_file_sewage_sludge_and_re_use_sheet10($annee
         //Volume of waste water treated
         $volume_treated = $context['results']['country_volume_waste_water'];
         //Rate of treated waste water re-used
-        $reuse = isset($node->field_mslwwreuseperc['und'][0]['value']) ? $node->field_mslwwreuseperc['und'][0]['value'] : '';
+        $reuse = isset($node->field_mslwwreuseperc['und'][0]['value']) && $node->field_mslwwreuseperc['und'][0]['value'] !=''? $node->field_mslwwreuseperc['und'][0]['value'] : '0';
         //re-use in agriculture
         $reuse_agriculture = '';
         if (isset($node->field_mslwwreuseagri['und'][0]['value'])) {
