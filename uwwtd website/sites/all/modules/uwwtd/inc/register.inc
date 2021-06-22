@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
-/* 
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -147,10 +146,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
- */
-    $batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
-    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
     
 }
 
@@ -8234,7 +8229,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 }
                 //   - size > 10000 p.e., but discharge into   ...Art. 5(4)- area
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
-                    && $A54) {
+                    && $A54
+                    &&  $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] != 'PD') {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
                     $agglodebug[$indSup+11] = 'test4=1';
                     if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])){
@@ -8278,7 +8274,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                 }
                 //   - size > 10000 p.e. and discharge into   ..SA/CSA, but transition period pending
                 if ($agglo[$ind['generated_load_p.e.']] > 10000
-                    && ($SA  || $CSA)
+                    && ($SA  || $CSA || $A54)
                     &&  $agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']] == 'PD') {
                     $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number']++;
                     $agglodebug[$indSup+14] = 'test7=1';
@@ -8291,6 +8287,19 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                     }
                 } else {
                     $agglodebug[$indSup+14] = 'test7=0'; 
+                }
+            }elseif(
+                in_array($agglo[$ind['compliance_art._5_(whole_agglo)_(hierarchical_approach)']], array('NC', 'C'))
+                && $A54
+                && $agglo[$ind['generated_load_p.e.']] > 10000
+            ){
+                $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['agglo']['number']++;
+                if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']])){
+                    $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']];
+                    //Report discharge without treatment in not compliant case in Art 5
+                    if ($agglo[ $ind['neither_collecting_system_nor_ias_%_of_gen._load']] > 2 || $agglo[ $ind['neither_collecting_system_nor_ias_p._e.']] > 2000){
+                        $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe']  += $agglo[ $ind['neither_collecting_system_nor_ias_p._e.']];
+                    }
                 }
             }
             $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number']++;
