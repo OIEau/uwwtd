@@ -6728,11 +6728,6 @@ function uwwtd_agglomeration_compliance($node, &$infoAllAggUww)
         return $GLOBALS['uwwtd_value']['compliance']['unknown'];
     }
 
-
-    
-
-    
-
     uwwtd_trace(__LINE__);
     return $GLOBALS['uwwtd_value']['compliance']['not_relevant'];          
 }
@@ -7866,7 +7861,13 @@ function uwwtd_article3_compliance($node, $yearReporting){
     $aggc2_percent = $node->field_aggc2['und'][0]['value'];
 
     // start calculations
-    if (($aggpercwithouttreatment_pe + $aggc2_pe) <= 2000 && ($aggpercwithouttreatment_percent + $aggc2_percent) <= 2){
+    if (isset($node->field_aggperiodover3['und']) &&  $node->field_aggperiodover3['und'][0]['value']!='' && false === deadline_beforeorequal_to_referenceyear($node->field_aggperiodover3['und'][0]['value'], $node->field_anneedata['und'][0]['value'])) {
+        $art3comp = $GLOBALS['uwwtd_value']['compliance']['pending_deadline'];
+        $reason = 'Article 3 compliance found to be still under pending deadline because';
+        uwwtd_trace('field_aggart3compliance PD for agglo nid ' . $node->nid);
+        return array($art3comp, null, null, null, null, $reason);
+    }
+    elseif (($aggpercwithouttreatment_pe + $aggc2_pe) <= 2000 && ($aggpercwithouttreatment_percent + $aggc2_percent) <= 2){
         $art3comp = 'C';
         $reason = 'Article 3 compliance found to be compliant because the amount of "waste discharged without treatment" and "treated through IAS" is equal or less than 2 000. Also the percentage of "waste discharged without treatment" and "treated through IAS" is equal or less than 2% of total waste.';
         return array($art3comp, null, null, null, null, $reason);
