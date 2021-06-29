@@ -335,11 +335,16 @@ function uwwtd_get_nuts($cd, $key='n3cd', $year=null){
     }
     if($year>=2016){
         $label = str_replace('cd','nm',$key);
-        $results = db_query(
-            "SELECT nuts_id as \"$key\" ,levl_code,cntr_code, nuts_id||' '||nuts_name as \"$label\"
-            FROM  nuts_rg_v2016 nut 
-            WHERE nuts_id = '".$cd."'
-        ");
+        if(isset($GLOBALS['nuts'][$cd])){
+            return [$label=>$cd.' '.$GLOBALS['nuts'][$cd]];
+        }
+        else{
+            $results = db_query(
+                "SELECT nuts_id as \"$key\" ,levl_code,cntr_code, nuts_id||' '||nuts_name as \"$label\"
+                FROM  nuts_rg_v2016 nut 
+                WHERE nuts_id = '".$cd."'
+            ");
+        }
     }
     elseif($year>=2012 && $year <  2016){
         $label = str_replace('cd','nm',$key);
