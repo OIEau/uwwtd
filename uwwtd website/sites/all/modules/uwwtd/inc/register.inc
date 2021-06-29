@@ -146,7 +146,6 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -10977,7 +10976,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
     }
 
     $ind = uwwtd_get_ind($GLOBALS['uwwtd']['sheet2_uwwtp']);
-
     $filename = uwwtd_getregister_file_path($GLOBALS['uwwtd']['sheet']['uwwtp']['csv_name'], $annee);
 
 
@@ -11698,8 +11696,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                                                               $line[$ind['deadline for Art. 4 compliance']],
                                                                               $line[$ind['deadline for Art. 5 compliance']],
                                                                               $uwwtp);
-
-
+            break;
             $previous_pending_or_expired = '';
             if (isset($previousuwwtp)) {
                 $previous_pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
@@ -13961,13 +13958,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
         }
     }
 
-
-
-    $deadline_before = (deadline_beforeorequal_to_referenceyear($deadlineart3, $annee)
-         || deadline_beforeorequal_to_referenceyear($deadlineart4, $annee)
-         || deadline_beforeorequal_to_referenceyear($deadlineart5, $annee)
-        );
-	//cn@oieau 14-02-2017 add the condition  """$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'""" in order to force the value of the result
+    //cn@oieau 14-02-2017 add the condition  """$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'""" in order to force the value of the result
     if (
         $deadline_expired == true 
         && $deadline_before == false
@@ -13975,7 +13966,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
         ) {
         $pending_or_expired = 'EXP';
     }
-    if (
+    elseif (
         $deadline_expired == true 
         && $deadline_before == true
          && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
@@ -13985,7 +13976,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
 
     //pending deadline    PD + les C avec date pas d   pass   e
     // 2016-03-03 - BB - Added NC for stations connected to multiple agg, where deadlines might be different
-    if (
+    elseif (
         $deadline_expired == false 
         && $deadline_before == true
         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
