@@ -11713,7 +11713,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                                                                               $line[$ind['deadline for Art. 4 compliance']],
                                                                               $line[$ind['deadline for Art. 5 compliance']],
                                                                               $uwwtp);
-            break;
             $previous_pending_or_expired = '';
             if (isset($previousuwwtp)) {
                 $previous_pending_or_expired = uwwtd_get_register_pending_or_expired_uwwtp($annee,
