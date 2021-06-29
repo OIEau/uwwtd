@@ -146,6 +146,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -5732,7 +5733,11 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select localid.field_inspireidlocalid_value as agg_id, n.title, field_agggenerated_value as size
+    $query = 'select 
+                localid.field_inspireidlocalid_value as agg_id,
+                n.title, 
+                field_agggenerated_value as size,
+                field_aggremarks_value as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5746,6 +5751,9 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
             left join 
                 {field_data_field_agggenerated} agggenerated
                 ON n.nid = agggenerated.entity_id
+            left join 
+                {field_data_field_aggremarks} r
+                ON n.nid = r.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
@@ -5924,7 +5932,13 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select localid.field_inspireidlocalid_value as uwwtp_id, n.title, agg_localid.field_inspireidlocalid_value as agg_id, agg_node.title as agg_name, field_physicalcapacityactivity_value as physicalcapacity
+    $query = 'select 
+            localid.field_inspireidlocalid_value as uwwtp_id, 
+            n.title, 
+            agg_localid.field_inspireidlocalid_value as agg_id, 
+            agg_node.title as agg_name, 
+            field_physicalcapacityactivity_value as physicalcapacity,
+            field_uwwremarks_value as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5947,6 +5961,9 @@ function uwwtd_create_register_2015_file_new_treatment_plants_sheet14($annee, &$
             left join 
                 {field_data_field_physicalcapacityactivity} f_capacity
                 ON n.nid = f_capacity.entity_id
+            left join 
+                {field_data_field_uwwremarks} r
+                ON n.nid = r.entity_id
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
