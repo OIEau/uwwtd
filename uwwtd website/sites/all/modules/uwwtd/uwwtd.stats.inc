@@ -1277,16 +1277,16 @@ else{
 $output .= '<ul>
         <li>'.(
             $stat_collect_values['Discharged without treatment']>0?
-            round(100 * $stat_collect_values['Discharged without treatment']/$stat_collect_values['Total'], 1).' % of the waste water load must still be collected (approximately '.uwwtd_format_number(round($stat_collect_values['Discharged without treatment'], -2)).' p.e.); and'
+            round(100 * $legal_compliance['dtttot'][$year]['Not connected']/$legal_compliance['dtttot'][$year]['Target connection'] , 1).' % of the waste water load must still be collected (approximately '.uwwtd_format_number(round($legal_compliance['dtttot'][$year]['Not connected'], -2)).' p.e.); and'
             : 'All the waste water load is connected to collecting system'.( $stat_collect_values['Individual and Appropriate Systems'] > 0 ?' or to Individual and Appropriate Systems':'').'; and'
             ).'
         </li>
         <li>'.( $art4_pe_NC>0?
-                round(100 * $art4_pe_NC/$art4_pe_nb,1) .'% of the collected waste water load must still undergo secondary treatment in line with the requirements of the Directive (approximately '.uwwtd_format_number(round($art4_pe_NC, -2)).' p.e.),'
+                round(100 * $legal_compliance['dtttot'][$year]['2nd treatment performance not met']/$legal_compliance['dtttot'][$year]['2nd treatment target'] , 1) .'% of the collected waste water load must still undergo secondary treatment in line with the requirements of the Directive (approximately '.uwwtd_format_number(round($legal_compliance['dtttot'][$year]['2nd treatment performance not met'], -2)).' p.e.),'
                 :'All of the collected waste water load underwent secondary treatment in line with the requirements of the Directive,').
         '</li>
         <li>'. ($art5_pe_NC>0?
-            round(100 * $art5_pe_NC/$art5_pe_nb,1) .'% of the collected waste water load from agglomerations generating >10,000 p.e. and discharging into sensitive areas must still undergo more stringent treatment in line with the requirements of the Directive (approximately '.uwwtd_format_number(round($art5_pe_NC, -2)).' p.e.).'
+            round(100 * $legal_compliance['dtttot'][$year]['Tertiary stringent treatment performance not met']/$legal_compliance['dtttot'][$year]['Tertiary treatment target'] , 1) .'% of the collected waste water load from agglomerations generating >10,000 p.e. and discharging into sensitive areas must still undergo more stringent treatment in line with the requirements of the Directive (approximately '.uwwtd_format_number(round($legal_compliance['dtttot'][$year]['Tertiary stringent treatment performance not met'], -2)).' p.e.).'
             :'All of the collected waste water load from agglomerations generating >10,000 p.e. and discharging into sensitive areas underwent more stringent treatment in line with the requirements of the Directive').'
         </li>
     </ul>';
