@@ -8853,7 +8853,6 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
             $dcp = $oneDcp;
         }
     }
-    
     switch ($dcp['rcatype']) {
 		case 'LSA':
             if ($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') {
@@ -8933,6 +8932,7 @@ function uwwtd_get_required_treatment(&$required_treatment, $dcps, $maxgen) {
                 }
             } 
             else {
+                
             	if ($dcp['rcatype'] == 'A54' || $dcp['rcatype'] == 'A5154' || $dcp['rcatype'] == 'A5854') {
             		if (true === uwwtd_rca_art54_applies($dcp)) {
                     	$required_treatment->required = 'S';
@@ -9670,7 +9670,7 @@ function uwwtd_get_required_treatment_sa_or_a58(&$required_treatment, $dcp, $max
 {
     uwwtd_trace(__FUNCTION__);
     // dsm(func_get_args());
-    if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen <= 10000){
+    if(($dcp['waterbody'] == 'LC' || $dcp['waterbody'] == 'CW') && $maxgen < 10000){
         $required_treatment->required = 'Appropriate';
     } elseif (($dcp['waterbody'] == 'ES' || $dcp['waterbody'] == 'FW' || $dcp['waterbody'] == 'LF') && $maxgen <= 10000 ) {
         $required_treatment->required = 'S';
