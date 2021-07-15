@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,7 +147,9 @@ function uwwtd_register_set_operation(&$batch, $annee){
       
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
+*/  
+$batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));  
+$batch['operations'][]=array('uwwtd_create_register_2015_file_summary_legal_compliance_sheet4', array($annee));
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -5868,6 +5871,7 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
             $past[$row['agg_id']]['remark'] = ($row['remark']!=''? $row['remark']. ' AND ':'').'agglo<2,000 p.e.';
         }
         elseif($row['status'] == 0 && isset($past[$row['agg_id']])){
+            $row['size'] = $past[$row['agg_id']]['size'];
             $past[$row['agg_id']]  = $row;
         }
         else{
@@ -5883,7 +5887,6 @@ function uwwtd_create_register_2015_file_agglomerationout_sheet13($annee, &$cont
         }
         
     }
-    
     unset($past, $current);
     //Insert data in the sheet
     $sheet->fromArray($data, null, 'A6', true);
@@ -6037,14 +6040,14 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select 
+    $query = "select 
                 localid.field_inspireidlocalid_value as uwwtp_id,
                 n.title, 
                 field_physicalcapacityactivity_value as physicalcapacity, 
                 agg_localid.field_inspireidlocalid_value as agg_id, 
                 agg_node.title as agg_name, 
                 field_agggenerated_value as agg_size,
-                field_uwwremarks_value as remark,
+                concat(field_uwwremarks_value , ' ' , field_uwwhistorie_value , ' ' ,  field_uwwendlife_value ) as remark,
                 f_status.field_status_value as status
         from {node} n
             join
@@ -6074,11 +6077,18 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
              left join 
                 {field_data_field_uwwremarks} r
                 ON n.nid = r.entity_id
+             left join 
+                {field_data_field_uwwhistorie} h
+                ON n.nid = h.entity_id
+             left join 
+                {field_data_field_uwwendlife} e
+                ON n.nid = e.entity_id
+                
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value != :status
         order by physicalcapacity desc nulls last
-        ';
+        ";
     $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 0]);
     $uwwtp_past = [];
     
@@ -6093,6 +6103,7 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
             $uwwtp_past[$key]['remark'] .= ($row['remark']!=''?$row['remark'].' AND ':'').'agglo<2,000 p.e.';
         }
         elseif($row['status'] == 0 && isset($uwwtp_past[$key])){
+            $row['agg_size'] = $uwwtp_past[$key]['agg_size'];
             $uwwtp_past[$key]  = $row;
         }
         else{
@@ -8168,8 +8179,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
     //            - due to 0% collection in collecting   ...system
                 if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) && $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
-                	if (isset($agglo[ $ind['connected_to_collecting_system_p._e.']]))
-                    	$context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['connected_to_collecting_system_p._e.']]; //connected to collecting system p. e.
+                    	$context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['addressed_through_ias_p._e.']]; //connected to collecting system p. e.
                 }
     //            - due to discharge into LSA
     			if (isset($agglo[ $ind['type_of_receiving_water']]))
@@ -8452,6 +8462,7 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_SA/CSA_pending']['agglo']['number'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['agglo']['number'];
             }
+
             if ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] != 0) {
                 $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['total_actual']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['target']['waste_water']['pe'];
 
@@ -8459,10 +8470,8 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
 
                 $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['exempt_total']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
 
-                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['size_<=_10000']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-
+                $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_<=_10000']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_NA']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
-
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_CSA_crit_c']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
 
                 $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['percentage'] = ($context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'] == 0) ? 0 : $context['sandbox']['compliance'][$type]['art5']['size_>_10000_discharge_art54']['waste_water']['pe'] * 100 / $context['sandbox']['compliance'][$type]['art5']['country_total']['waste_water']['pe'];
