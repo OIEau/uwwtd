@@ -679,7 +679,6 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
         ':typenode' => 'uwwtp',
         ':min_agg' => variable_get('min_aggenerated_display', '1999'),
 	);
-    dsm($query);
     
 	try {
 		$data['BOD']['data']['Parameter'] = 'BOD';
@@ -716,7 +715,6 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 	} catch(Exception $e) {
 		dsm($e->getMessage());
 	}
-    dsm($data);
 	return $data;
 }
 
