@@ -873,8 +873,8 @@ function getRow6Graph1And2($results) {
                             
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering'=>isset($element['in']['c'])?$element['in']['c']:!is_null($element['vol'])?round(($element['in']/$element['vol']) , 3):null,
-                                'Discharged'=>isset($element['out']['c'])?$element['out']['c']:!is_null($element['vol'])?round(($element['out']/$element['vol']) , 3):null,
+                                'Entering'=>isset($element['in']['c'])?$element['in']['c']:(!is_null($element['vol'])&&$element['vol']>0?round(($element['in']/$element['vol']) , 3):null),
+                                'Discharged'=>isset($element['out']['c'])?$element['out']['c']:(!is_null($element['vol'])&&$element['vol']>0?round(($element['out']/$element['vol']) , 3):null),
                             );
 						} else {
 							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
