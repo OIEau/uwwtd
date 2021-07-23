@@ -689,7 +689,6 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		while($row = $result->fetchAssoc()) {
 			// Récupération de la somme :
 			$sum = is_null($row['uwwt_sum']) ? false : (float)$row['uwwt_sum']; // in m3
-
             //For concentration we want mg/l and we have Ton/year and m3/year so we have to apply a 1 000 000 000 factor
 			
 			// Récupération du BOD :
