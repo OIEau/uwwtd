@@ -8174,9 +8174,9 @@ function uwwtd_create_register_2015_file_summary_legal_compliance_sheet4($annee,
                         }
                 }
     //            - due to 0% collection in collecting   ...system
-                if ((!isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) || $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) && (!isset($agglo[ $ind['addressed_through_ias_p._e.']]) || $agglo[ $ind['addressed_through_ias_p._e.']] > 0)) {
+                if ((!isset($agglo[ $ind['connected_to_collecting_system_p._e.']]) || $agglo[ $ind['connected_to_collecting_system_p._e.']] == 0) && $agglo[ $ind['neither_collecting_system_nor_ias_%_of_gen._load']] <= 2 && $agglo[ $ind['neither_collecting_system_nor_ias_p._e.']] <= 2000) {
                     $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['agglo']['number']++;
-                    	$context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['addressed_through_ias_p._e.']]; //connected to collecting system p. e.
+                    $context['sandbox']['compliance'][$type]['art4']['exempt_due_nocollecting']['waste_water']['pe'] += $agglo[ $ind['addressed_through_ias_p._e.']]; //connected to collecting system p. e.
                 }
     //            - due to discharge into LSA
     			if (isset($agglo[ $ind['type_of_receiving_water']]))
