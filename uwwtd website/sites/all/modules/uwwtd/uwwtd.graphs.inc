@@ -873,8 +873,8 @@ function getRow6Graph1And2($results) {
                             
 							//Convert to mg/l
 							$graph2Rows[$rowName]['data'][$keyElement] = array(
-                                'Entering'=>isset($element['in']['c'])?$element['in']['c']:round(($element['in']/$element['vol']) , 3),
-                                'Discharged'=>isset($element['out']['c'])?$element['out']['c']:round(($element['out']/$element['vol']) , 3),
+                                'Entering'=>isset($element['in']['c'])?$element['in']['c']:!is_null($element['vol'])?round(($element['in']/$element['vol']) , 3):null,
+                                'Discharged'=>isset($element['out']['c'])?$element['out']['c']:!is_null($element['vol'])?round(($element['out']/$element['vol']) , 3):null,
                             );
 						} else {
 							$graph1Rows[$rowName]['data'][$keyElement] = array('Entering'=>0, 'Discharged'=>0);
@@ -916,7 +916,7 @@ function getRow6Graph1And2($results) {
                 
                 foreach($item as $k=>$v){
                     $header1[1][$key.'_'.$k]=$k;
-                    $line[$k] = uwwtd_format_number($v,2).' '.t('tons/year');
+                    $line[$k] = $v>0 ?uwwtd_format_number($v,2).' '.t('tons/year'):t('data not available');
                     $graph1Front[$rowName][]=array(
                         'value'=>(float)$v,
                         'valueformat'=>uwwtd_format_number($v,2).' '.t('tons/year'),
@@ -957,7 +957,7 @@ function getRow6Graph1And2($results) {
                 
                 foreach($item as $k=>$v){
                     $header2[1][$key.'_'.$k]=$k;
-                    $line[$k] = uwwtd_format_number($v,2).' '.t('mg/l');
+                    $line[$k] = $v>0?uwwtd_format_number($v,2).' '.t('mg/l'):t('data not available');;
                     $graph2Front[$rowName][]=array(
                         'value'=>(float)$v,
                         'valueformat'=>uwwtd_format_number($v,2).' '.t('mg/l'),

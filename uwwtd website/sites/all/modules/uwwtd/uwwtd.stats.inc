@@ -576,7 +576,7 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		SUM(COALESCE(field_uwwcodincoming_value,field_uwwcodincomingestimated_value,field_uwwcodincomingcalculated_value)) AS codin_sum,
 		SUM(COALESCE(field_uwwcoddischarge_value,field_uwwcoddischargeestimated_value,field_uwwcoddischargecalculated_value)) AS codout_sum,
 		SUM(COALESCE(field_uwwnincoming_value,field_uwwnincomingestimated_value,field_uwwnincomingcalculated_value,0)) AS nin_sum,
-		SUM(COALESCE(field_uwwndischargecalculated_value,0)) AS nout_sum, 
+		SUM(COALESCE(field_uwwndischarge_value, field_uwwndischargeestimated_value, field_uwwndischargecalculated_value, 0)) AS nout_sum, 
 		SUM(COALESCE(field_uwwpincoming_value,field_uwwpincomingestimated_value,field_uwwpincomingcalculated_value)) AS pin_sum,
 		SUM(COALESCE(field_uwwpdischarge_value,field_uwwpdischargeestimated_value,field_uwwpdischargecalculated_value)) AS pout_sum,
 		SUM(f_uwwwastewatertreated.field_uwwwastewatertreated_value) AS uwwt_sum
@@ -679,7 +679,7 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
         ':typenode' => 'uwwtp',
         ':min_agg' => variable_get('min_aggenerated_display', '1999'),
 	);
-    //dsm($query);
+    dsm($query);
     
 	try {
 		$data['BOD']['data']['Parameter'] = 'BOD';
@@ -689,33 +689,34 @@ function uwwtd_stat_national_treatmentplant($yearSelected, $yearsPossibles) {
 		$result = db_query($query,$param);
 		while($row = $result->fetchAssoc()) {
 			// Récupération de la somme :
-			$sum = (float)is_null($row['uwwt_sum']) ? 1 : $row['uwwt_sum']; // expresse in m3
+			$sum = is_null($row['uwwt_sum']) ? false : (float)$row['uwwt_sum']; // in m3
 
             //For concentration we want mg/l and we have Ton/year and m3/year so we have to apply a 1 000 000 000 factor
 			
 			// Récupération du BOD :
-			$in = is_null($row['bodin_sum']) ? 0 : array('q'=>$row['bodin_sum'], 'c'=>$row['bodin_sum']*1000000/(float)$sum);
-			$out = is_null($row['bodout_sum']) ? 0 : array('q'=>$row['bodout_sum'], 'c'=>$row['bodout_sum']*1000000/(float)$sum);
-			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
+			$in = is_null($row['bodin_sum']) ? 0 : array('q'=>$row['bodin_sum'], 'c'=>!$sum?null:$row['bodin_sum']*1000000/(float)$sum);
+			$out = is_null($row['bodout_sum']) ? 0 : array('q'=>$row['bodout_sum'], 'c'=>!$sum?null:$row['bodout_sum']*1000000/(float)$sum);
+			$data['BOD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' =>!$sum?null: (float)$sum);
 			
 			// Récupération du COD :
-			$in = is_null($row['codin_sum']) ? 0 : array('q'=>$row['codin_sum'], 'c'=>$row['codin_sum']*1000000/(float)$sum);
-			$out = is_null($row['codout_sum']) ? 0 : array('q'=>$row['codout_sum'], 'c'=>$row['codout_sum']*1000000/(float)$sum);
-			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
+			$in = is_null($row['codin_sum']) ? 0 : array('q'=>$row['codin_sum'], 'c'=>!$sum?null:$row['codin_sum']*1000000/(float)$sum);
+			$out = is_null($row['codout_sum']) ? 0 : array('q'=>$row['codout_sum'], 'c'=>!$sum?null:$row['codout_sum']*1000000/(float)$sum);
+			$data['COD']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' =>!$sum?null: (float)$sum);
 			
 			// Récupération du N :
-			$in = is_null($row['nin_sum']) ? 0 : array('q'=>$row['nin_sum'], 'c'=>$row['nin_sum']*1000000/(float)$sum );
-			$out = is_null($row['nout_sum']) ? 0 : array('q'=>$row['nout_sum'], 'c'=>$row['nout_sum']*1000000/(float)$sum);
-			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
+			$in = is_null($row['nin_sum']) ? 0 : array('q'=>$row['nin_sum'], 'c'=>!$sum?null:$row['nin_sum']*1000000/(float)$sum );
+			$out = is_null($row['nout_sum']) ? 0 : array('q'=>$row['nout_sum'], 'c'=>!$sum?null:$row['nout_sum']*1000000/(float)$sum);
+			$data['N']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' =>!$sum?null: (float)$sum);
 			
 			// Récupération du P :
-			$in = is_null($row['pin_sum']) ? 0 : array('q'=>$row['pin_sum'], 'c'=>$row['pin_sum']*1000000/(float)$sum);
-			$out = is_null($row['pout_sum']) ? 0 : array('q'=>$row['pout_sum'], 'c'=>$row['pout_sum']*1000000/(float)$sum);
-			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' => (float)$sum);
+			$in = is_null($row['pin_sum']) ? 0 : array('q'=>$row['pin_sum'], 'c'=>!$sum?null:$row['pin_sum']*1000000/(float)$sum);
+			$out = is_null($row['pout_sum']) ? 0 : array('q'=>$row['pout_sum'], 'c'=>!$sum?null:$row['pout_sum']*1000000/(float)$sum);
+			$data['P']['data'][$row['year']] = array('in' => $in, 'out' => $out, 'vol' =>!$sum?null: (float)$sum);
 		}
 	} catch(Exception $e) {
 		dsm($e->getMessage());
 	}
+    dsm($data);
 	return $data;
 }
 
