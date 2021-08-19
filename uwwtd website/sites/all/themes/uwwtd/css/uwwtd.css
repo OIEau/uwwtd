@@ -1388,6 +1388,10 @@ section#block-lang-dropdown-language{
     right:170px;
 }
 
+div.form-item-search-api-views-fulltext div.input-group{
+    width:241px;
+}
+
 
 @media (max-width: 768px) {
   .node-type-agglomeration .flip .front,
