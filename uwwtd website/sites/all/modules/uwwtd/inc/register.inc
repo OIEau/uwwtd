@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
+
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -6088,16 +6089,20 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
         ";
     $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee_p ,':status' => 0]);
     $uwwtp_past = [];
+    $uwwtp_id_past = [];
+    
     
     while($row = $result->fetchAssoc()) {
         $uwwtp_past[$row['uwwtp_id'].'-'.$row['agg_id']]  = $row;
+        $uwwtp_id_past[$row['uwwtp_id']] = $row['uwwtp_id'];
     }
     $result = db_query($query, [':typenode' => 'uwwtp', ':annee' => $annee ,':status' => 3]);
     $uwwtp_current = [];
+    $uwwtp_id_current = [];
     while($row = $result->fetchAssoc()) {
         $key = $row['uwwtp_id'].'-'.$row['agg_id'];       
         if($row['agg_size'] < 2000 && isset($uwwtp_past[$key]) && $row['status'] == 1){
-            $uwwtp_past[$key]['remark'] .= ($row['remark']!=''?$row['remark'].' AND ':'').'agglo<2,000 p.e.';
+            $uwwtp_past[$key]['remark'] .= (trim($row['remark'])!=''?trim($row['remark']).' AND ':'').'agglo<2,000 p.e.';
         }
         elseif($row['status'] == 0 && isset($uwwtp_past[$key])){
             $row['agg_size'] = $uwwtp_past[$key]['agg_size'];
@@ -6106,17 +6111,27 @@ function uwwtd_create_register_2015_file_uwwtpsout_sheet15($annee, &$context)
         else{
             $uwwtp_current[$key]  = $row;
         }
+        $uwwtp_id_current[$row['uwwtp_id']] = $row['uwwtp_id'];
     }
 
     $diff = array_diff(array_keys($uwwtp_past), array_keys($uwwtp_current));
     if(!empty($diff)){
         foreach($diff as $k){
             unset($uwwtp_past[$k]['status']);
-            $data[] = array_values($uwwtp_past[$k]);
+            $data[] = $uwwtp_past[$k];
         }
     }
     unset($uwwtp_past, $uwwtp_current);
     
+    if(!empty($data)){
+        foreach($data as $k=>$v){
+            //Check if only the relationship between the uwwtp && the agglo have disappear or if is the uwwtp
+            if(isset($uwwtp_id_current[$v['uwwtp_id']]) && isset($uwwtp_id_past[$v['uwwtp_id']])){
+                $data[$k]['remark'] = (trim($data[$k]['remark'])!=''?trim($data[$k]['remark']).' AND ':''). 'the uwwtp still exists but the relation with the agglomeration has disappeared';
+            }
+            $data[$k] = array_values($data[$k]);
+        }
+    }
     //Insert data in the sheet
     $sheet->fromArray($data, null, 'A6', true);
 
