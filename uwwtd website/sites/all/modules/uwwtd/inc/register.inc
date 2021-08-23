@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -141,12 +140,12 @@ function uwwtd_register_set_operation(&$batch, $annee){
     }
     $batch['operations'][]=array('uwwtd_create_register_2015_file_agglo_debug', array($annee));
 
-
 // 
-    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));
-      
+    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));   
+    
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+
 
 }
 
@@ -809,16 +808,16 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     if(!empty($lines)){
 //         uwwtd_trace('set style');
         foreach($lines as $lid=>$line){
-            $idx = $ind['previous_Percentage of change of entering load (1) %']['k'] -1; //we add a hidden column for notcon uwwtp
-            if(isset($line[$idx]) && abs((float)$line[$idx])>20){
-                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+            $idx = $ind['previous_Percentage of change of entering load (1) %']['k'] ; //we add a hidden column for notcon uwwtp
+            if(isset($line[$idx]) && abs((float)$line[$idx])>30){
+                $sheet->getStyleByColumnAndRow($idx-1, $context['sandbox']['line']+$lid)
                         ->getFill()
                         ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('FFFFC000');
             }
-            $idx = $ind['previous_Percentage of change of capacity (2) %']['k']-1; //we add a hidden column for notcon uwwtp
-            if (isset($line[$idx]) && $line[$idx] != 'NI' && abs((float)$line[$idx])>0  ) {
-                $sheet->getStyleByColumnAndRow($idx, $context['sandbox']['line']+$lid)
+            $idx = $ind['previous_Percentage of change of capacity (2) %']['k']; //we add a hidden column for notcon uwwtp
+            if (isset($line[$idx]) && $line[$idx] != 'NI' && abs((float)$line[$idx])>30  ) {
+                $sheet->getStyleByColumnAndRow($idx-1, $context['sandbox']['line']+$lid)
                     ->getFill()
                     ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)      // 255 192 0 FFC000
                     ->getStartColor()->setARGB('FFFFC000');
@@ -5734,11 +5733,11 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
     $annee_p = uwwtd_get_previous_year($annee);
     $data = [];
     
-    $query = 'select 
+    $query = "select 
                 localid.field_inspireidlocalid_value as agg_id,
                 n.title, 
                 field_agggenerated_value as size,
-                field_aggremarks_value as remark
+                concat(field_aggremarks_value ,'  ',  field_aggchanges_value) as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5753,14 +5752,18 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
                 {field_data_field_agggenerated} agggenerated
                 ON n.nid = agggenerated.entity_id
             left join 
-                {field_data_field_aggremarks} r
+                {field_data_field_aggchanges} r
                 ON n.nid = r.entity_id
+             left join 
+                {field_data_field_aggremarks} c
+                ON n.nid = c.entity_id
+                
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
             and f_status.field_status_value = :status
             and field_agggenerated_value >=2000
         order by size desc nulls last
-        ';
+        ";
     $result = db_query($query, [':typenode' => 'agglomeration', ':annee' => $annee_p ,':status' => 1]);
     $past = [];
     
@@ -11747,112 +11750,9 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //calculate compliance of art 4 and 5 for this station and this agglo
             $uwwtp_compliance = uwwtd_article4_5_6_station_compliance($agg, $uwwtp);
-
-            //ev 2019/03/20 previous
-            // $previous_uwwtp_compliance = array();
-            // if (isset($previousagglo) && isset($previousuwwtp)) {
-            //     $previous_uwwtp_compliance = uwwtd_article4_5_6_station_compliance($previousagglo, $previousuwwtp);
-            // }
-
-            //compliance Art. 4    //secondary treatment in place
-            //'treatment type', //Treatment met
-
-            // =IF(
-            //     OR(  �  generated load   �  <2000;
-            //           �  neither collecting system nor IAS  � � =100;
-            //           �  entering this UWWTP  � �=0;
-            //           �  deadline for Art. 4 compliance  � � >  � �reference date  � �;
-            //           �  UWWTP status  � �=  � �inactive  � �;
-            //         AND(
-            //             OR(  �  water body type  � �="to coastal water";
-            //                  �  water body type  � �="on land (catchment of coastal water)"
-            //                );
-            //               �  generated load  � � <=10000
-            //             )
-            //         );
-            //         "NR";
-            //         IFERROR(IF(SEARCH("1";  � �treatment type  � �)>0;
-            //                     "NC"
-            //                   );
-            //                     IFERROR(IF(SEARCH("0";  � �treatment type  � �)>0;
-            //                                 "NC"
-            //                                );
-            //                                 "C"
-            //                             )
-            //                 )
-            //     )
-
             $art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            //ev 2019/03/20 previous
-            // $previous_art4_treatment_type = '';
-            // if (isset($previousuwwtp)) {
-            //     $previous_art4_treatment_type = uwwtd_get_register_art4_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
-            // }
-
-//             if ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['false']) {
-//                 $line[$ind['art4_treatment type']] = 'TODO';
-//             } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['true']) {
-//                 $line[$ind['art4_treatment type']] = 'TODO';
-//             } elseif ($uwwtp->field_uwwtreatment_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['treatementmet']['not_calculable']) {
-//                 $line[$ind['art4_treatment type']] = 'TODO';
-//             } else {
-//                 $line[$ind['art4_treatment type']] = 'TODO';
-//             }
-
-            //'monitoring',     //Performance met
-
-            // =IF(OR(  �  generated load  � � <2000;
-            //          �  neither collecting system nor IAS  � � =100;
-            //          �  entering this UWWTP  � �=0;
-            //          � �deadline for Art. 4 compliance  � � >  � �reference date  � �;
-            //          � � Monitoring results - BOD5  � �="reported as NR";
-            //          �  Monitoring results   �  COD  � �="reported as NR";
-            //          �  Compliance Art. 4   �   treatment type  � �="NR");
-            //        "NR";
-            //        IF(OR(;   � �Monitoring results - BOD5  � �="fail  � �;
-            //                  �  Monitoring results - BOD5  � �=  � � not reported";
-            //                  �  Monitoring results   �  COD  � �="fail";
-            //                  �  Monitoring results   �  COD  � �="not reported";
-            //                  �  Monitoring results - BOD5  � �="--";
-            //                  �  Monitoring results   �  COD  � �="--");
-            //                "NC";
-            //                IF(AND(  �  Monitoring results - BOD5  � �="pass";
-            //                         �  Monitoring results   �  COD  � �="pass");
-            //                       "C";
-            //                       "NC")
-            //          )
-            //    )
-
-
             $art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($treatment_required, $line[$ind['Monitoring results - BOD5']], $line[$ind['Monitoring results -COD']]);
-            //ev 2019/03/20 previous
-            // $previous_art4_monitoring = '';
-            // if (isset($previousuwwtp)) {
-            //     $previous_art4_monitoring = uwwtd_get_register_art4_monitoring_compliance($previous_treatment_required, $bod5monitoring, $codmonitoring);
-            // }
-
-//             if ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['false']) {
-//                 $line[$ind['art4_monitoring']] = 'TODO';
-//             } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['true']) {
-//                 $line[$ind['art4_monitoring']] = 'TODO';
-//             } elseif ($uwwtp->field_uwwperformance_met['und'][0]['value'] == $GLOBALS['uwwtd_value']['performancemet']['not_calculable']) {
-//                 $line[$ind['art4_monitoring']] = 'TODO';
-//             } else {
-//                 $line[$ind['art4_monitoring']] = 'TODO';
-//             }
-
-            //'final',
-            // =IF(OR(  �  Compliance Art. 4   �   treatment type  � �="NC";
-            //          � �Compliance Art. 4   �   monitoring results  � �="NC");
-            //        "NC";
-            //        IF(OR(  �  Compliance Art. 4   �   treatment type  � �="NR";
-            //                � �Compliance Art. 4   �   monitoring results  � �="NR");
-            //              "NR";
-            //              IF(AND(  �  Compliance Art. 4   �   treatment type  � �="C";
-            //                       � �Compliance Art. 4   �   monitoring results  � �="C");
-            //                     "C";
-            //                     "EXIT")))
-            $art4_final = '';
+             $art4_final = '';
             if(isset($line[$ind['art4_treatment type']]) || $line[$ind['art4_monitoring']]){
                 if ($line[$ind['art4_treatment type']] == 'NC' || $line[$ind['art4_monitoring']] == 'NC') {
                     $art4_final = 'NC';
@@ -11866,49 +11766,17 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             //compliance Art. 5   //more stringent treatment in place
             //'treatment type',
             $art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($treatment_required, $treatmenttypeinplace);
-            //ev 2019/03/20 previous
-            // $previous_art5_treatment = '';
-            // if (isset($previousuwwtp)) {
-            //     $previous_art5_treatment = uwwtd_get_register_art5_treatement_type_compliance($previous_treatment_required, $previous_treatmenttypeinplace);
-            // }
 
             //'monitoring',
             $art5_monitoring = uwwtd_get_register_art5_monitoring_compliance($treatment_required, $line[$ind['Monitoring results -COD']], $line[$ind['Monitoring results - BOD5']], $line[$ind['Monitoring results -Ntot']], $line[$ind['Monitoring results -Ptot']], $line[$ind['Monitoring results -other']], $uwwtp->field_uwww_required_rcab['und'][0]['value'], $uwwtp->field_uwww_required_rcac['und'][0]['value'],$uwwtp->field_uwww_required_rcaap['und'][0]['value'], $uwwtp->field_uwww_required_rcaan['und'][0]['value']);
-            //ev 2019/03/20 previous
-            // $previous_art5_monitoring = '';
-            // if (isset($previousuwwtp)) {
-            //     if(!isset($ind['Monitoring results -other']) && !isset($line[$ind['Monitoring results -other']])){
-            //         $monit = null;
-            //     }
-            //     else{
-            //         $monit = $line[$ind['Monitoring results -other']];
-            //     }
-            //     $previous_art5_monitoring = uwwtd_get_register_art5_monitoring_compliance(
-            //         $previous_treatment_required,
-			// 		$codmonitoring,
-			// 		$bod5monitoring,
-            //         $monitoring_Ntot, 
-            //         $monitoring_Ptot, 
-            //         $monit, 
-            //         $previousuwwtp->field_uwww_required_rcab['und'][0]['value'], 
-            //         $previousuwwtp->field_uwww_required_rcac['und'][0]['value'], 
-            //         $uwwtp->field_uwww_required_rcaap['und'][0]['value'], 
-            //         $uwwtp->field_uwww_required_rcaan['und'][0]['value']
-            //     );
-            // }
 
             //'final',
             $art5_final =  $uwwtp_compliance['compArt5'];
 
             //save date in array
-            if ($annee >= 2018 && $pending_or_expired == 'PD' ) {
-                $line[$ind['art4_treatment type']] = $art4_treatment_type;
-                $line[$ind['art4_monitoring']] = $art4_monitoring;
-                $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
-                $line[$ind['art5_treatment type']] = $art5_treatment;
-                $line[$ind['art5_monitoring']] = $art5_monitoring;
-                $line[$ind['art5_final']] = $uwwtp_compliance['compArt5'];
-            }elseif ($annee < 2018 && ($pending_or_expired == 'PD' || $pending_or_expired == 'EXP'|| $pending_or_expired == 'EXP-PD')) {
+            //=====FIX ME==========in case the plant status is active not connected, columns AX-BI are empty while the agglomerations have obligations
+            //if deadline art4 is expired insert EXP in columns AX-AZ, and NC in columns BD-BF else insert PD everywhere columns AX-AZ & BD-BF, if deadline art5 is expired insert EXP in columns BA-BC and check if column AF 
+            if (in_array($pending_or_expired , [ 'PD' ,'EXP', 'EXP-PD'])) {
                 $line[$ind['art4_treatment type']] = $art4_treatment_type;
                 $line[$ind['art4_monitoring']] = $art4_monitoring;
                 $line[$ind['art4_final']] = $uwwtp_compliance['compArt4'];
@@ -11924,72 +11792,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $line[$ind['art5_final']] = $pending_or_expired;
             }
 
-
-            //Compliance of treatment plant under expired deadlines
-            if ($pending_or_expired == 'EXP' || $pending_or_expired == 'EXP-PD') {
-                $line[$ind['art4_expired_treatment type']] = $art4_treatment_type;
-                $line[$ind['art4_expired_monitoring']] = $art4_monitoring;
-                $line[$ind['art4_expired_final']] = $uwwtp_compliance['compArt4'];
-                $line[$ind['art5_expired_treatment type']] = $art5_treatment;
-                $line[$ind['art5_expired_monitoring']] = $art5_monitoring;
-                $line[$ind['art5_expired_final']] = $uwwtp_compliance['compArt5'];
-            } else {
-                $line[$ind['art4_expired_treatment type']] = '';
-                $line[$ind['art4_expired_monitoring']] = '';
-                $line[$ind['art4_expired_final']] = '';
-                $line[$ind['art5_expired_treatment type']] = '';
-                $line[$ind['art5_expired_monitoring']] = '';
-                $line[$ind['art5_expired_final']] = '';
-            }
-
-
-            //Compliance of treatment plant under expired deadlines
-//             $art4_expired_treatment = '';
-//             $art4_expired_monitoring = '';
-//             $art4_expired_final = '';
-//             $art5_expired_treatment = '';
-//             $art5_expired_monitoring = '';
-//             $art5_expired_final = '';
-//             if ($uwwtp->field_uwwcompliance['und'][0]['value'] != 'PD') {
-//                 $art4_expired_treatment = $line[$ind['art4_treatment type']];
-//                 $art4_expired_monitoring = $line[$ind['art4_monitoring']];
-//                 $art4_expired_final = $line[$ind['art4_final']];
-//                 $art5_expired_treatment = $line[$ind['art5_treatment type']];
-//                 $art5_expired_monitoring = $line[$ind['art5_monitoring']];
-//                 $art5_expired_final = $line[$ind['art5_final']];
-//             }
-            //compliance Art. 4
-            //'treatment type',
-//             $line[$ind['art4_expired_treatment type']] = $art4_expired_treatment;
-//             //'monitoring',
-//             $line[$ind['art4_expired_monitoring']] = $art4_expired_monitoring;
-//             //'final',
-//             $line[$ind['art4_expired_final']] = $art4_expired_final;
-//             //compliance Art. 5
-//             //'treatment type',
-//             $line[$ind['art5_expired_treatment type']] = $art5_expired_treatment;
-//             //'monitoring',
-//             $line[$ind['art5_expired_monitoring']] = $art5_expired_monitoring;
-//             //'final',
-//             $line[$ind['art5_expired_final']] = $art5_expired_final;
-
             unset($uwwtp_compliance);
 
-//             //'treatment type',
-//             $line[$ind['previous_art4_expired_treatment']] = $previous_art4_expired_treatment;
-//             //'monitoring',
-//             $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_expired_monitoring;
-//             //'final',
-//             $line[$ind['previous_art4_expired_final']] = $previous_art4_expired_final;
-//             //'treatment type',
-//             $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_expired_treatment;
-//             //'monitoring',
-//             $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_expired_monitoring;
-//             //'final',
-//             $line[$ind['previous_art5_expired_final']] = $previous_art5_expired_final;
-//
-//             //'difference between the previous situation and now',
-//             $line[$ind['previous_art5_expired_difference between the previous situation and now']] = $previous_art5_expired_difference;
 
             $line[$ind['previous_art4_expired_treatment']] = '';
             $line[$ind['previous_art4_expired_monitoring']] = '';
@@ -11999,19 +11803,8 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['previous_art5_expired_final']] = '';
             $line[$ind['previous_art5_expired_difference between the previous situation and now']] = '';
             if (isset($previousuwwtp)) {
-//                 $previous_art4_treatment_type = '';
-//                 $previous_art4_monitoring = '';
-//                 $previous_art5_treatment = '';
-//                 $previous_art5_monitoring = '';
-//                 $previous_art5_expired_difference = '';
 
                 if ($previous_pending_or_expired == 'EXP' || $previous_pending_or_expired == 'EXP-PD') {
-                    // $line[$ind['previous_art4_expired_treatment']] = $previous_art4_treatment_type;
-                    // $line[$ind['previous_art4_expired_monitoring']] = $previous_art4_monitoring;
-                    // $line[$ind['previous_art4_expired_final']] = $previous_uwwtp_compliance['compArt4'];
-                    // $line[$ind['previous_art5_expired_treatment type']] = $previous_art5_treatment;
-                    // $line[$ind['previous_art5_expired_monitoring']] = $previous_art5_monitoring;
-                    // $line[$ind['previous_art5_expired_final']] = $previous_uwwtp_compliance['compArt5'];
 
                     //ev 2019/03/20 take the data from the last report year instead of calculated another time all the data
                     if (isset($context['sandbox']['previous_data'][$line[$ind['uww_code']]])) {
@@ -12050,29 +11843,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
             //Installations for wastewater treatment in place
             //'Secondary: installed?',
-            /*
-            =IF((  �  generated load  � � <2000);
-                    "NR";
-                    IFERROR (
-                            IF(SEARCH("1";  � �treatment type  � �)>0;
-                                "0"
-                            );
-                            IFERROR(
-                                    IF(SEARCH("0";  � �treatment type  � �)>0;
-                                        "0"
-                                      );
-                                    "1"
-                                   )
-                            )
-                )
-            */
-//             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
-//                 $secondaryinstalled = 'NR';
-//             } elseif ($uwwtp->field_uwwtreatmenttype['und'][0]['value'] == 'MS' || $uwwtp->field_uwwtreatmenttype['und'][0]['value']== 'S') {
-//                 $secondaryinstalled = '1';
-//             } else {
-//                 $secondaryinstalled = '0';
-//             }
 
 //             dsm('$treatmenttypeinplace : ' . $treatmenttypeinplace);
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
@@ -12119,17 +11889,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 $secondaryfinal = 'NR';
             }
             $line[$ind['Secondary:  FINAL']] = $secondaryfinal;
-            //'More stringent:  installed?',
-            /*
-            =IF(OR(  �  neither collecting system nor IAS  � � =100;
-                     �  entering this UWWTP  � � =0);
-                   0;
-                   IF(  �  generated load  � � <2000;
-                    "NR";
-                    IFERROR(IF(SEARCH("3";  � �treatment type  � �)>0;
-                                1);
-                            0)))
-            */
+
             $morestringentinstalled = '0';
 //             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
 //                 $morestringentinstalled = 'NR';
@@ -12146,75 +11906,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             }
 
             $line[$ind['More stringent:  installed?']] = $morestringentinstalled;
-            //'More stringent: monitoring passed?',
-//             /*
-            // Part 1
-            // =IF(  �  generated load  � � <2000;
-            //     "NR";
-            //     IFERROR(IF(AND(
-            //                     FIND("3NP";  � �treatment type  � �)>0;
-            //                     OR(AND(  �  Monitoring results   �  Ntot  � �="pass";
-            //                              � �Monitoring results   �  Ptot  � �="pass");
-            //                        AND(  �  Monitoring results   �  Ntot  � �="pass";
-            //                              � �Monitoring results   �  Ptot  � �="not relevant";
-            //                              � �SECONDARY:  MONITORING PASSED  � �=1);
-            //                        AND(  �  Monitoring results   �  Ntot  � �="not relevant";
-            //                              � �Monitoring results   �  Ptot  � �="not relevant";
-            //                              � �SECONDARY:  MONITORING PASSED  � �=1);
-            //                        AND(  �  Monitoring results   �  Ntot  � �="not relevant";
-            //                              � �Monitoring results   �  Ptot  � �="pass";
-            //                              � �SECONDARY:  MONITORING PASSED  � �=1)
-            //                       )
-            //                     ) ;
-            //                     1;
-            //                     0
-            //                 );
-            //             IFERROR(IF(AND(
-            //                             FIND("3N";  � �treatment type  � �)>0;
-            //                             OR(  �  Monitoring results   �  Ntot  � �="pass";
-            //                                AND(  �  Monitoring results   �  Ntot  � �="not relevant";
-            //                                      � �SECONDARY:  MONITORING PASSED  � �=1)
-            //                                )
-            //                           ) ;
-            //                         1;
-            //                         0);
-            //                       IFERROR(IF(AND(
-            //                                      FIND("3P";  � �treatment type  � �)>0;
-            //                                      OR(  �  Monitoring results   �  Ptot  � �="pass";
-            //                                         AND(  �  Monitoring results   �  Ptot  � �="not relevant";
-            //                                               � �SECONDARY:  MONITORING PASSED  � �=1)
-            //                                         )
-            //                                      );
-            //                                 1;
-            //                                 0);
-            //                             "EXIT")
-            //                     )
-            //          ))
-            // Part 2
-            // =IF(NOT(  �  Part 1  � �="EXIT");  � �Part 1  � �;
-            //     IFERROR(IF(AND(FIND("3other";  � �treatment type  � �)>0;
-            //                      � �SECONDARY:  MONITORING PASSED  � �=1);
-            //                1;
-            //                0);
-            //             IFERROR(IF(AND(FIND("2";  � �treatment type  � �)>0;
-            //                            OR(  �  Monitoring results   �  Ntot  � �="pass";
-            //                                  � �Monitoring results   �  Ptot  � �="pass");
-            //                                  � �SECONDARY:  MONITORING PASSED  � �=1
-            //                            );
-            //                         1;
-            //                         0);
-            //                       IF(OR(  �  treatment type  � �=0;
-            //                               � �treatment type  � �=1
-            //                             );
-            //                         0;
-            //                         0)
-            //                       )
-            //               )
-            //     )
-//             */
-//cn@oieau 20/10/2016 modified 
-            // $morestringentpassed = '';
-             
+ 
 			if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $morestringentpassed = 'NR';
             } elseif ($art5_monitoring == 'NC') {
@@ -12487,8 +12179,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['debug_art4_final']] = $art4_final;
 
             fputcsv($r, $line, ';');
-
-
+            
             foreach ($listtypestat as $typestat) {
                 if ( !isset($context['sandbox'][$typestat])) {
                     $context['sandbox'][$typestat]['generated_pe'] = 0;
@@ -13994,19 +13685,18 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
             $deadline_before = true;
         }
     }
-
     //cn@oieau 14-02-2017 add the condition  """$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'""" in order to force the value of the result
     if (
         $deadline_expired == true 
         && $deadline_before == false
-         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
+         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'||($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NR' && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'))
         ) {
         $pending_or_expired = 'EXP';
     }
     elseif (
         $deadline_expired == true 
         && $deadline_before == true
-         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD')
+         && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' ||$uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD'||($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NR' && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'))
         ) {
         $pending_or_expired = 'EXP-PD';
     }
@@ -14016,7 +13706,7 @@ function uwwtd_get_register_pending_or_expired_uwwtp($annee, $deadlineart3, $dea
     elseif (
         $deadline_expired == false 
         && $deadline_before == true
-        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC')
+        && ($uwwtp->field_uwwcompliance['und'][0]['value'] == 'PD' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'C' || $uwwtp->field_uwwcompliance['und'][0]['value'] == 'NC'||($uwwtp->field_uwwcompliance['und'][0]['value'] == 'NR' && $uwwtp->field_uwwcollectingsystem['und'][0]['value'] == 'NOTCON'))
         ) {
         $pending_or_expired = 'PD';
     }
