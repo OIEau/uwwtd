@@ -75,6 +75,7 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
+/*
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,8 +146,10 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+*/
 
-
+    $batch['operations'][] = array('uwwtd_create_register_2015_agglo_sheet3', array($annee));
+    $batch['operations'][]=array('uwwtd_create_register_2015_final_file', array($annee));   
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -9763,7 +9766,10 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
         //'Compliance Art. 4 (hierarchical approach)',
         $compart4hierarchical = '';
-        if ($line[$ind['art4_compliance_art._4_(only)']] == 'NR' ||
+        if ($line[$ind['art3_compliance']] == 'PD') {
+            $compart4hierarchical = 'PD';
+        }
+        elseif ($line[$ind['art4_compliance_art._4_(only)']] == 'NR' ||
             $line[$ind['art4_compliance_art._4_(only)']] == 'NI' ||
             $line[$ind['art4_compliance_art._4_(only)']] == '?' ||
             $line[$ind['art3_compliance']] == 'NR' ||
@@ -9776,8 +9782,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
                   && $line[$ind['art4_compliance_art._4_(only)']] == 'C'
                   ) {
             $compart4hierarchical = 'C';
-        } elseif ($line[$ind['art3_compliance']] == 'PD') {
-            $compart4hierarchical = 'PD';
         } elseif ($line[$ind['art4_compliance_art._4_(only)']] == 'PD') {
             $compart4hierarchical = 'PD';
         }else {
@@ -9785,7 +9789,6 @@ function uwwtd_create_register_2015_agglo_sheet3($annee, &$context)
         }
 
         $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] = $compart4hierarchical;
-
         //Compliance Art. 4 previous reporting',
         //'Compliance',
         $previous_art4_compliance = '';
@@ -14053,6 +14056,11 @@ function uwwtd_registre_create_html_link($annee)
 
 function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 {
+    
+    if ($line[$ind['generated_load_p.e.']] <= 10000) {
+        return 'NR';
+    }
+    
     switch($type) {
         case 'a':
             $compart5x = $line[$ind['compliance_art._5a_(only)']];
@@ -14067,6 +14075,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
 
 
    if ($line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NI'
+        || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'PD'
         || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == '?'
         || $line[$ind['art4_compliance_art._4_(hierarchical_approach)']] == 'NR') {
             return $line[$ind['art4_compliance_art._4_(hierarchical_approach)']];
@@ -14076,9 +14085,7 @@ function uwwtd_register_getcompliance_art5x_hierarchical($type, $ind, $line)
         return 'PD';
     }
 
-    if ($line[$ind['generated_load_p.e.']] <= 10000) {
-        return 'NR';
-    }
+
 
     if ($compart5x == 'NR') {
         return 'NR';
