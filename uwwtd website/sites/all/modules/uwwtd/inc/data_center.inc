@@ -6778,7 +6778,21 @@ function uwwtd_article4_5_6_agglomeration_compliance_step_b($agg, &$infoAllAggUw
     }    
     
     // all uwwtp treatment required in (appropriate or NR)
-    if (true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate'], $GLOBALS['uwwtd_value']['required']['notrelevant']), $infoAllAggUww)) {
+    if (true === uwwtd_all_uwwtp_required_in(array($GLOBALS['uwwtd_value']['required']['appropriate']), $infoAllAggUww)) {
+        //if there is not connected uwwtp, we can't consider that the required treatment is in place so art 4 is not compliant
+        if(array_sum(array_column($infoAllAggUww['listUww'], 'connected'))==0){
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_compliant'];
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
+        }
+        else{
+            $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
+            $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
+        }
+        return $aResult;
+    }  
+    elseif (true === uwwtd_all_uwwtp_required_in(array( $GLOBALS['uwwtd_value']['required']['notrelevant']), $infoAllAggUww)) {
         $aResult['compArt4'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         $aResult['compArt5'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];
         $aResult['compArt6'] = $GLOBALS['uwwtd_value']['compliance']['not_relevant'];  
