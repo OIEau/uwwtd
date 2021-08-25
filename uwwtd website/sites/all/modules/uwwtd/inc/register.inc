@@ -229,7 +229,7 @@ function uwwtd_create_register_2015_file_agglo_sheet3($annee, &$context)
     }
 
     $dataArray = $sheet->rangeToArray(
-        'A7:CV41',   //A6:CV40        A7:CV41
+        'A7:CV50',   //A6:CV40        A7:CV41
         NULL,
         FALSE,
         TRUE,
@@ -739,7 +739,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
     $sheet = $objPHPExcel->getSheetByName($GLOBALS['uwwtd']['sheet']['uwwtp']['xlsx_model_sheet_name']);
 
     $dataArray = $sheet->rangeToArray(
-        'A7:CQ13',   //A6:CQ12   A7:CQ13
+        'A7:CQ20',   //A6:CQ12   A7:CQ13
         NULL,
         FALSE,
         TRUE,
