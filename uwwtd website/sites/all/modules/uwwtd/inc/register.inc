@@ -75,7 +75,6 @@ function uwwtd_register_form_submit($form, &$form_state){
 }
 
 function uwwtd_register_set_operation(&$batch, $annee){ 
-
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -146,6 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
+    
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -2405,6 +2405,15 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
     $rbcfile = fopen($filename, 'rb');
 
     $start_line = 5;   //4 -> 5
+    
+    $dataArray = $sheet->rangeToArray(
+        'A12:Y20',   //A6:CQ12   A7:CQ13
+        NULL,
+        FALSE,
+        TRUE,
+        FALSE
+    );
+    
     //ignore header //decomment for debug on xls final file
     $bc = fgetcsv($rbcfile, 5000, ';');
     $i = $start_line;
@@ -2549,15 +2558,20 @@ function uwwtd_create_register_2015_file_summary_big_cities_sheet8($annee, &$con
         foreach($total as $k=>$v){
             $sheet->setCellValueByColumnAndRow($ind[$k], $i, $v);
         }
+        $sheet->setCellValueByColumnAndRow(0, $i, 'TOTAL');
     }
     
-    $i++;
-    $i++;
+
+    // Adding bottom tables
+    if($i < 12) $i=12;
+    else{$i++;}
+    $sheet->fromArray($dataArray, null, 'A'.$i, true);
+
     if($cc_apply_art54_year[$annee]==true){
+            $i++;
+            $i++;
         uwwtd_register_add_A54_disclaimer($sheet, 'A', $i);
     }
-
-
     
     fclose($rbcfile);
     unset($context['sandbox']['dist']);
@@ -5736,7 +5750,7 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
                 localid.field_inspireidlocalid_value as agg_id,
                 n.title, 
                 field_agggenerated_value as size,
-                concat(field_aggremarks_value ,'  ',  field_aggchanges_value) as remark
+                concat(field_aggremarks_value,  ' ',field_aggchanges_value) as remark
         from {node} n
             join
                 {field_data_field_anneedata} f_annee
@@ -5751,11 +5765,12 @@ function uwwtd_create_register_2015_file_new_agglomerations_sheet12($annee, &$co
                 {field_data_field_agggenerated} agggenerated
                 ON n.nid = agggenerated.entity_id
             left join 
-                {field_data_field_aggchanges} r
-                ON n.nid = r.entity_id
-             left join 
                 {field_data_field_aggremarks} c
                 ON n.nid = c.entity_id
+            left join 
+                {field_data_field_aggchanges} r
+                ON n.nid = r.entity_id
+             
                 
         where n.type = :typenode
             and f_annee.field_anneedata_value = :annee
@@ -10939,11 +10954,13 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         $query = '
             SELECT n.nid, max(f_agggenerated.field_agggenerated_value) as agggenerated
             FROM {node} n
-                LEFT JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+                JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
+                JOIN {field_data_field_status} s ON n.nid = s.entity_id
                 LEFT JOIN {field_data_field_uwwaggliste} agg ON n.nid = agg.entity_id
                 LEFT JOIN {field_data_field_agggenerated} f_agggenerated ON agg.field_uwwaggliste_nid = f_agggenerated.entity_id
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
+                AND s.field_status_value = 1
                 AND f_agggenerated.field_agggenerated_value >= 2000
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST;
@@ -11239,6 +11256,10 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                         break;
                 }
             }
+            if($line[$ind['aggstatus']] != 'active'){
+                continue;
+            }
+            
             //'generated load  p. e.',
             $line[$ind['generated load  p. e.']] = $GLOBALS['uwwtd']['register']['message']['info_empty'];
             if (isset($agg->field_agggenerated['und'][0]['value'])) {
