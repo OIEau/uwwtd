@@ -761,7 +761,6 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         //}
         //$trace ++;
         $line = array();
-        dsm($uwwtp);
         foreach($ind as $k=>$conf){
             if($conf['xls']){
                 if(isset($uwwtp[$conf['k']])){
