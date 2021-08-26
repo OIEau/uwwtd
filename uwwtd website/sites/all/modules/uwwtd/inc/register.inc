@@ -74,7 +74,7 @@ function uwwtd_register_form_submit($form, &$form_state){
     }
 }
 
-function uwwtd_register_set_operation(&$batch, $annee){ 
+function uwwtd_register_set_operation(&$batch, $annee){
     //CSV
     $batch['operations'][] = array('uwwtd_create_register_2015_rca_sheet1', array($annee));
     $batch['operations'][] = array('uwwtd_create_register_2015_rca54_sheet1_1', array($annee));
@@ -145,7 +145,7 @@ function uwwtd_register_set_operation(&$batch, $annee){
     
     $batch['operations'][]=array('uwwtd_create_report', array($annee));
     $batch['operations'][]=array('uwwtd_retreive_agg_dtt', array($annee));  
-    
+
 }
 
 function uwwtd_setup_register_batch($annee)
@@ -761,7 +761,7 @@ function uwwtd_create_register_2015_file_uwwtp_sheet2($annee, &$context)
         //}
         //$trace ++;
         $line = array();
-
+        dsm($uwwtp);
         foreach($ind as $k=>$conf){
             if($conf['xls']){
                 if(isset($uwwtp[$conf['k']])){
@@ -11232,6 +11232,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
         foreach($uwwtp->field_uwwaggliste['und'] as $nidagg) {
 
             $line = array();
+            $line = array_fill(0, count($ind), '');
 //             dsm($nidagg);
             $agg = node_load($nidagg['nid']);
             //Agglomeration info
@@ -11828,12 +11829,14 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
                     //ev 2019/03/20 take the data from the last report year instead of calculated another time all the data
                     if (isset($context['sandbox']['previous_data'][$line[$ind['uww_code']]])) {
-                        $line[$ind['previous_art4_expired_treatment']] =$context['sandbox']['previous_data'][$line[$ind['uww_code']]]['prevArt4Treatment'];
-                        $line[$ind['previous_art4_expired_monitoring']] = $context['sandbox']['previous_data'][$line[$ind['uww_code']]]['prevArt4Treatment'];
-                        $line[$ind['previous_art4_expired_final']] = $context['sandbox']['previous_data'][$line[$ind['uww_code']]]['compArt4'];
-                        $line[$ind['previous_art5_expired_treatment type']] = $context['sandbox']['previous_data'][$line[$ind['uww_code']]]['prevArt4Treatment'];
-                        $line[$ind['previous_art5_expired_monitoring']] = $context['sandbox']['previous_data'][$line[$ind['uww_code']]]['prevArt4Treatment'];
-                        $line[$ind['previous_art5_expired_final']] = $context['sandbox']['previous_data'][$line[$ind['uww_code']]]['compArt5'];
+                        $prev = $context['sandbox']['previous_data'][$line[$ind['uww_code']]];
+                        if(!is_null($prev['prevArt4Treatment'])) $line[$ind['previous_art4_expired_treatment']] =$prev['prevArt4Treatment'];
+                        if(!is_null($prev['prevArt4Monitoring'])) $line[$ind['previous_art4_expired_monitoring']] =$prev['prevArt4Monitoring'];
+                        if(!is_null($prev['compArt4'])) $line[$ind['previous_art4_expired_final']] = $prev['compArt4'];
+                        if(!is_null($prev['prevArt5Treatment'])) $line[$ind['previous_art5_expired_treatment type']] = $prev['prevArt5Treatment'];
+                        if(!is_null($prev['prevArt5Monitoring'])) $line[$ind['previous_art5_expired_monitoring']] = $prev['prevArt5Monitoring'];
+                        if(!is_null($prev['compArt5'])) $line[$ind['previous_art5_expired_final']] = $prev['compArt5'];
+                        unset($prev);
                     }
 
                     if ($line[$ind['previous_art4_expired_final']] != $line[$ind['art4_expired_final']]
@@ -11875,17 +11878,6 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 //             dsm('$secondaryinstalled:'.$secondaryinstalled);
 
             $line[$ind['Secondary: installed?']] = $secondaryinstalled;
-            //'Secondary:  monitoring passed?',
-            /*
-            =IF(  �  generated load  � � <2000;
-                "NR";
-                IF(  �  Secondary   �   installed  � � =0;
-                    0;
-                    IF(AND(  �  Monitoring results - BOD5  � �="pass";
-                             �  Monitoring results   �  COD  � �);
-                        1;
-                        0)))
-            */
             if ($agg->field_agggenerated['und'][0]['value'] < 2000) {
                 $secondarypass = 'NR';
             //  BB - 09/01
@@ -12190,10 +12182,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
             $line[$ind['compliance5b']] = $uwwtpCompliance5x['5b'];
             $line[$ind['compliance5c']] = $uwwtpCompliance5x['5c'];
             $line[$ind['treatment_met']] = $uwwtp->field_uwwtreatment_met['und'][0]['value'];
-            
-            
-            
-            
+
             //debug value
             $line[$ind['debug_pending_or_expired']] = $pending_or_expired;
             $line[$ind['debug_art4_final']] = $art4_final;
