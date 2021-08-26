@@ -10951,7 +10951,7 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
 
         //get all uwwtp (repeat agglo info if one agglo has more than one uwwtp)
         //we need to sort rows by generated load of agglomeration
-        $query = '
+        $query = "
             SELECT n.nid, max(f_agggenerated.field_agggenerated_value) as agggenerated
             FROM {node} n
                 JOIN {field_data_field_anneedata} f_annee ON n.nid = f_annee.entity_id
@@ -10960,11 +10960,11 @@ function uwwtd_create_register_2015_uwwtp_sheet2($annee, &$context)
                 LEFT JOIN {field_data_field_agggenerated} f_agggenerated ON agg.field_uwwaggliste_nid = f_agggenerated.entity_id
             WHERE n.type = :typenode
                 AND f_annee.field_anneedata_value = :annee
-                AND s.field_status_value = 1
+                AND s.field_status_value = '1'
                 AND f_agggenerated.field_agggenerated_value >= 2000
             GROUP BY n.nid
             ORDER BY agggenerated desc NULLS LAST;
-        ';        
+        ";        
         //AND agg.field_uwwaggliste_nid = 238941
         $param = array(
             ':typenode' => 'uwwtp',
